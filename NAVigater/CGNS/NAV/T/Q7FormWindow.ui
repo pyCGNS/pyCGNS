@@ -10,6 +10,12 @@
     <height>591</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -78,61 +84,6 @@
       <enum>Qt::Vertical</enum>
      </property>
     </widget>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="geometry">
-      <rect>
-       <x>280</x>
-       <y>0</y>
-       <width>201</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Size</string>
-     </property>
-     <widget class="QRadioButton" name="radioButton">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>10</y>
-        <width>104</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Unit</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="radioButton_2">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>10</y>
-        <width>104</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>10e3</string>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="radioButton_3">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>10</y>
-        <width>104</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>10e6</string>
-      </property>
-     </widget>
-    </widget>
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
@@ -151,30 +102,7 @@
       <rect>
        <x>49</x>
        <y>35</y>
-       <width>127</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_7">
-     <property name="geometry">
-      <rect>
-       <x>278</x>
-       <y>35</y>
-       <width>29</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Node</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="eNodeSize">
-     <property name="geometry">
-      <rect>
-       <x>313</x>
-       <y>35</y>
-       <width>161</width>
+       <width>211</width>
        <height>20</height>
       </rect>
      </property>
@@ -182,8 +110,8 @@
     <widget class="QLabel" name="label_22">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>430</y>
+       <x>280</x>
+       <y>30</y>
        <width>47</width>
        <height>16</height>
       </rect>
@@ -195,9 +123,9 @@
     <widget class="QComboBox" name="cShowAs">
      <property name="geometry">
       <rect>
-       <x>70</x>
-       <y>430</y>
-       <width>111</width>
+       <x>330</x>
+       <y>30</y>
+       <width>151</width>
        <height>20</height>
       </rect>
      </property>
@@ -234,6 +162,12 @@
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="Q7TableView" name="tableView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="selectionMode">
          <enum>QAbstractItemView::ContiguousSelection</enum>
         </property>
@@ -288,6 +222,19 @@
      </property>
      <property name="text">
       <string>Row</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="cMinimize">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>5</y>
+       <width>151</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Minimize cell size</string>
      </property>
     </widget>
    </widget>

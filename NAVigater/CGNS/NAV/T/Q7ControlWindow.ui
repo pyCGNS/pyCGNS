@@ -24,6 +24,18 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QToolButton" name="bTreeLoadLast">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>Load an existing CGNS file</string>
        </property>
@@ -38,6 +50,18 @@
      </item>
      <item>
       <widget class="QToolButton" name="bTreeLoad">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>Load an existing CGNS file</string>
        </property>
@@ -52,6 +76,18 @@
      </item>
      <item>
       <widget class="QToolButton" name="bEditTree">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>Create a new CGNS tree from scratch</string>
        </property>
@@ -79,6 +115,18 @@
      </item>
      <item>
       <widget class="QToolButton" name="bPatternView">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>Open CGNS/SIDS sub-trees database</string>
        </property>
@@ -132,6 +180,18 @@
      </item>
      <item>
       <widget class="QToolButton" name="bOptionView">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>Set user defined options</string>
        </property>
@@ -146,6 +206,18 @@
      </item>
      <item>
       <widget class="QToolButton" name="bAbout">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>About....</string>
        </property>
@@ -184,7 +256,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QTableWidget" name="Q7ControlTable">
+    <widget class="QTableWidget" name="controlTable">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>

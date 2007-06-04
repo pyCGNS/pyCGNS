@@ -5,28 +5,51 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 
+colordict={'high':'#7ebaff', 'low':'#78b5e9'}
+
+Q7CONTROLVIEWSTYLESHEET="""
+ QTableView {
+ show-decoration-selected: 1;
+ }
+
+ QTableView::item:selected {
+ background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 %(high)s,stop:1 %(low)s);
+ color:black;
+ border: 1px solid #bfcde4;
+ }
+
+ QTableView::item
+ {
+ border: 0px;
+ padding: 0px;
+ }
+"""%colordict
+
 Q7TABLEVIEWSTYLESHEET="""
  QTableView {
  show-decoration-selected: 1;
  }
 
- QTableView::item {
- border: 1px solid #d9d9d9;
- border-top-color: transparent;
- border-bottom-color: transparent;
- text-align:right;
- font-family: "Fixed"
- font-size: 10
+ QTableView::item:selected {
+ background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 %(high)s,stop:1 %(low)s);
+ color:black;
+ border: 1px solid #bfcde4;
  }
-"""
+
+ QTableView::item
+ {
+ border: 0px;
+ padding: 0px;
+ }
+"""%colordict
 
 Q7TREEVIEWSTYLESHEET="""
  QTreeView {
  show-decoration-selected: 1;
  }
 
-QTreeView::branch {
-background: palette(base);
+ QTreeView::branch {
+ background: palette(base);
  }
 
  QTreeView::item {
@@ -34,10 +57,11 @@ background: palette(base);
  border-top-color: transparent;
  border-bottom-color: transparent;
  text-align:right;
+ color:black;
  }
 
  QTreeView::item:hover {
- background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #e7effd,stop:1 #cbdaf1);
+ background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 %(high)s,stop:1 %(low)s);
  border: 1px solid #bfcde4;
  }
 
@@ -46,11 +70,11 @@ background: palette(base);
  }
 
  QTreeView::item:selected:active{
- background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #6ea1f1,stop:1 #567dbc);
+ background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 %(high)s,stop:1 %(low)s);
  }
 
  QTreeView::item:selected:!active {
- background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #6b9be8,stop:1 #577fbf);
+ background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 %(high)s,stop:1 %(low)s);
  }
 
  QTreeView::branch:has-siblings:!adjoins-item {
@@ -80,7 +104,7 @@ background: palette(base);
  QTreeView::branch:open:has-children:!has-siblings {
  border-image: url(:/images/icons/branch-end.gif) 0;
  }
-"""
+"""%colordict
 
 # -----------------------------------------------------------------
 

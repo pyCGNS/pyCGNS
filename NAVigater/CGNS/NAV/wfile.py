@@ -167,8 +167,6 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.getBoxes()
         for n in range(3):
             self.treeview.resizeColumnToContents(n)
-    def closeEvent(self, event):
-        self.close()
     def backDir(self,*args):
         p=os.path.split(self.path())[0]
         self.setCurrentDir(p)

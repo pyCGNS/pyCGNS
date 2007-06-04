@@ -14,6 +14,7 @@ import CGNS.NAV.moption   as MOP
 from CGNS.NAV.defaults import G__OPTIONS,G__TOOLNAME,G__TOOLVERSION
 from CGNS.NAV.defaults import G__COPYRIGHTNOTICE
 from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
+from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
 
 # -----------------------------------------------------------------
 class Q7Window(QWidget,object):
@@ -30,6 +31,8 @@ class Q7Window(QWidget,object):
         self._stylesheet=None
         if (vtype==Q7Window.VIEW_TREE): self._stylesheet=Q7TREEVIEWSTYLESHEET
         if (vtype==Q7Window.VIEW_FORM): self._stylesheet=Q7TABLEVIEWSTYLESHEET
+        if (vtype==Q7Window.VIEW_CONTROL):
+            self._stylesheet=Q7CONTROLVIEWSTYLESHEET
         self.setupUi(self)
         if (self._stylesheet is not None): self.setStyleSheet(self._stylesheet)
         self.getOptions()
@@ -88,7 +91,9 @@ class Q7Window(QWidget,object):
         l+=[self._fgprint.filedir,self._fgprint.filename,self._path]
         self._control.addLine(l)
         return self._index
-    
+    def closeEvent(self, event):
+        self._control.delLine('%.3d'%self._index)
+        event.accept()
     
 # -----------------------------------------------------------------
 class Q7fingerPrint:
@@ -108,6 +113,12 @@ class Q7fingerPrint:
     @classmethod
     def closeAllTrees(cls):
         for x in cls.__extension: x.closeAllViews()
+    @classmethod
+    def raiseView(cls,idx):
+        for x in cls.__extension:
+            for vtype in x.views:
+                for (v,i) in x.views[vtype]:
+                    if (i==int(idx)): v.raise_()
     def __init__(self,control,filedir,filename,tree,links,**kw):
         self.filename=filename
         self.tree=tree
@@ -120,12 +131,13 @@ class Q7fingerPrint:
         Q7fingerPrint.__extension.append(self)
     def addChild(self,viewtype,view):
         Q7fingerPrint.__viewscounter+=1
+        idx=Q7fingerPrint.__viewscounter
         if not self.views.has_key(viewtype): self.views[viewtype]=[]
-        self.views[viewtype].append(view)
+        self.views[viewtype].append((view,idx))
         return Q7fingerPrint.__viewscounter
     def closeAllViews(self):
         for vtype in self.views:
-            for v in self.views[vtype]: v.close()
+            for (v,i) in self.views[vtype]: v.close()
             
     
 # -----------------------------------------------------------------

@@ -32,8 +32,11 @@ class Q7TableModel(QAbstractTableModel):
         self.ls=showparams['ls']
         self.fmt="%-s"
         if (self.node.sidsDataType() in ['R4','R8']): self.fmt="% 0.12e"
-        if (self.node.sidsDataType() in ['I4','i8']): self.fmt="%12d"
-        self.flatarray=self.node.sidsValue().flat
+        if (self.node.sidsDataType() in ['I4','I8']): self.fmt="%12d"
+        if (self.node.sidsDataType() not in ['MT','LK8']):
+            self.flatarray=self.node.sidsValue().flat
+        else:
+            self.flatarray=None
     def columnCount(self, parent):
         return self.cs
     def rowCount(self, parent):
@@ -42,14 +45,10 @@ class Q7TableModel(QAbstractTableModel):
         return self.createIndex(row, column, 0)  
     def data(self, index, role):
         if (role!=Qt.DisplayRole): return None
+        if (self.flatarray is None): return None
         return self.fmt%self.flatarray[index.row()*self.cs+index.column()]
     def flags(self, index):  
         if (not index.isValid()):  return Qt.NoItemFlags  
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable  
-    #def headerData(self, section, orientation, role):
-    #    if (role!=Qt.DisplayRole): return None
-    #    return section
-    #def parent(self,child):
-    #    return self.createIndex(-1,-1,0) 
 
 # -----------------------------------------------------------------

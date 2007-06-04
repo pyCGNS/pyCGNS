@@ -15,6 +15,14 @@ from CGNS.NAV.wfingerprint import Q7Window
 import CGNS.PAT.cgnsutils as CGU
 
 # -----------------------------------------------------------------
+class Q7TableItemDelegate(QStyledItemDelegate):
+    def paint(self, painter, option, index):
+        t=index.data(Qt.DisplayRole)
+        r=option.rect.adjusted(2, 2, -2, -2);
+        painter.drawText(r,Qt.AlignVCenter|Qt.AlignLeft,t, r)
+        #QStyledItemDelegate.paint(self, painter, option, index)
+
+# -----------------------------------------------------------------
 class Q7Form(Q7Window,Ui_Q7FormWindow):
     showas=['Array','Text','Python']
     def __init__(self,control,node,fgprint):
@@ -46,7 +54,6 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.eDims.setText(str(dims))
         self.setDataType(self._node)
         self.eItems.setText(str(its))
-        self.eNodeSize.setText(str(ndz))
         self.ls=dims[0]
         self.cs=1
         if (len(dims)>1): self.cs=reduce(lambda x,y: x*y, dims[1:])
@@ -54,6 +61,14 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.model=Q7TableModel(self._node,showparams)
         self.tableView.setModel(self.model)
         self.tableView.setStyleSheet(self._stylesheet)
+        QObject.connect(self.cMinimize,
+                        SIGNAL("stateChanged(int)"),
+                        self.minimizeCells)
+        #self.tableView.setItemDelegate(Q7TableItemDelegate(self))
+    def minimizeCells(self,*args):
+        if (self.cMinimize.isChecked()):
+            self.tableView.resizeColumnsToContents()
+            self.tableView.resizeRowsToContents()
     def setCurrentType(self,ntype):
         idx=self.eType.findText(ntype)
         self.eType.setCurrentIndex(idx)

@@ -16,7 +16,7 @@ import CGNS.NAV.wconstants as Q7WC
 from CGNS.NAV.wfingerprint import Q7Window
 
 # -----------------------------------------------------------------
-class Q7ItemDelegate(QStyledItemDelegate):
+class Q7TreeItemDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         if ((index.column()==0) and
             (index.internalPointer().sidsName() not in Q7WC.reservedNames)):
@@ -59,7 +59,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.popupmenu = QMenu()
         self.popupmenu.addAction(QAction("Open form",self))
         self.treeview.setModel(self._fgprint.model)
-        self.treeview.setItemDelegate(Q7ItemDelegate(self))
+        self.treeview.setItemDelegate(Q7TreeItemDelegate(self))
     def expandMinMax(self):
         if (self._depthExpanded==self._fgprint.depth-2):
             self._depthExpanded=-1
@@ -102,14 +102,13 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
        super(Q7Tree, self).show()
     def formview(self):
         node=self.treeview.currentIndex().internalPointer()
+        if (node.sidsType()=='CGNSTree_t'): return
         form=Q7Form(self._control,node,self._fgprint)
         form.show()
     def vtkview(self):
         node=self.treeview.currentIndex().internalPointer()
         vtk=Q7VTK(self._control,node,self._fgprint)
         vtk.show()
-    def closeEvent(self, event):
-        event.accept()
     def closeAlone(self):
         pass
     def forceapply(self):
