@@ -3,11 +3,11 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-import CGNS.PAT.cgnsutils      as CGU
-import CGNS.PAT.cgnstypes      as CGT
-import CGNS.PAT.cgnskeywords   as CGK
-import CGNS.VAL.parse.messages as CGM
-import CGNS.VAL.grammars.SIDS  as CGS
+import CGNS.PAT.cgnsutils          as CGU
+import CGNS.PAT.cgnstypes          as CGT
+import CGNS.PAT.cgnskeywords       as CGK
+import CGNS.VAL.parse.messages     as CGM
+import CGNS.VAL.grammars.SIDSbase  as CGS
 
 messagetable=(
 ('NOZONE','U101',CGM.CHECK_WARN,'No Zone in this Base'),
@@ -28,7 +28,7 @@ for (v,k,l,m) in messagetable:
   USER_MESSAGES[k]=(l,m)
 
 # -----------------------------------------------------------------------------
-class CGNS_VAL_USER_Checks(CGS.SIDSbase):
+class CGNS_VAL_USER_checks(CGS.SIDSbase):
   def __init__(self,log):
     CGS.SIDSbase.__init__(self,log)
     self.log.addMessages(USER_MESSAGES)

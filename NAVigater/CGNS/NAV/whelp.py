@@ -306,7 +306,7 @@ for text data.
 # --------------------------------------------------------------------------
 'Selection':('Selection view',
 """
-<h2>Selectione view</h2>
+<h2>Selection view</h2>
 
 <h3>Buttons</h3>
 <p>

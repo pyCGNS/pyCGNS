@@ -217,14 +217,15 @@ class Q7fingerPrint:
             flags|=CGNS.MAP.S2P_FOLLOWLINKS
         try:
             if (maxdataload):
-                (tree,links,paths,diag)=CGNS.MAP.load2(f,flags,lksearch=slp,
+                (tree,links,paths)=CGNS.MAP.load(f,flags,lksearch=slp,
                                                        maxdata=maxdataload)
             else:
-                (tree,links,paths,diag)=CGNS.MAP.load2(f,flags,lksearch=slp)
-            if (diag is not None):
-                txt="""Loading process returns:"""
-                control.readyCursor()
-                MSG.wError(diag[0],txt,diag[1])
+                (tree,links,paths)=CGNS.MAP.load(f,flags,lksearch=slp)
+        except (CGNS.MAP.error,),chlex:
+            txt="""The current load operation has been aborted:"""
+            control.readyCursor()
+            MSG.wError(chlex[0],txt,chlex[1])
+            return None
         except Exception, e:
             txt="""The current operation has been aborted: %s"""%e
             control.readyCursor()
@@ -239,7 +240,18 @@ class Q7fingerPrint:
         tree=fgprint.tree
         #for p in CGU.getAllPaths(tree): print p
         lk=[]
-        CGNS.MAP.save(f,tree,lk,flags)
+        try:
+            CGNS.MAP.save(f,tree,lk,flags)
+        except (CGNS.MAP.error,),chlex:
+            txt="""The current save operation has been aborted:"""
+            control.readyCursor()
+            MSG.wError(chlex[0],txt,chlex[1])
+            return None
+        except (Exception,), e:
+            txt="""The current save operation has been aborted: %s"""%e
+            control.readyCursor()
+            MSG.wError(0,txt,'')
+            return None
         fgprint.updateFileStats(f)
     @classmethod
     def closeAllTrees(cls):

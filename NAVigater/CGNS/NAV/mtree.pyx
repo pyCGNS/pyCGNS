@@ -1093,7 +1093,7 @@ class Q7TreeModel(QAbstractItemModel):
         self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
         return True
     def checkTree(self,T,pathlist):
-        tag='elsA'
+        tag='SIDS'
         pths=[]
         oldsys=sys.path
         for p in OCTXT.GrammarSearchPathList:

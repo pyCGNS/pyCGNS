@@ -56,7 +56,10 @@ def importUserGrammars(key,verbose=False):
           return None
   try:
     fp=tp[0]
-    mod=imp.load_module(modname, *tp)
+    if (tp[2][2]!=imp.C_EXTENSION):
+      mod=imp.load_module(modname, *tp)
+    else:
+      mod=imp.load_dynamic(modname,tp[1],tp[0])      
     # print '### CGNS.VAL [info]: Module info',tp
   finally:
     if fp:

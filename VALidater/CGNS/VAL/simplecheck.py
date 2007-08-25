@@ -5,7 +5,7 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 
-import CGNS.VAL.grammars.SIDS
+import CGNS.VAL.grammars.SIDSbase
 import CGNS.VAL.parse.messages as CGM
 import CGNS.VAL.parse.findgrammar
 
@@ -20,11 +20,11 @@ def getParser(trace,user):
     if (user is not None):
         mod=CGNS.VAL.parse.findgrammar.importUserGrammars(user)
         if (mod is None):
-            parser=CGNS.VAL.grammars.SIDS.SIDSbase(None)
+            parser=CGNS.VAL.grammars.SIDSbase.SIDSbase(None)
         else:
             parser=mod.CGNS_VAL_USER_Checks(None)
     else:
-        parser=CGNS.VAL.grammars.SIDS.SIDSbase(None)
+        parser=CGNS.VAL.grammars.SIDSbase.SIDSbase(None)
     return parser
 
 def listdiags(trace,user):

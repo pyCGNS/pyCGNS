@@ -74,8 +74,8 @@ else:
   if (verbose):
     print '### CGNS.VAL %s'%__vid__
     print '### Loading file [%s]'%filename
-  (tree,links,paths,diag)=CGNS.MAP.load2(filename,CGNS.MAP.S2P_DEFAULTS,
-                                         lksearch=['.'],maxdata=200)
+  (tree,links,paths)=CGNS.MAP.load(filename,CGNS.MAP.S2P_DEFAULTS,
+                                        lksearch=['.'],maxdata=200)
   checkdiag=CGV.run(tree,verbose,user)
   CGV.showDiag(checkdiag,idlist,bypath=pathsort)
 
