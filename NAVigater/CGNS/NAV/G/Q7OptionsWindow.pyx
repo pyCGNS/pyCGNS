@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Mon Oct 29 10:58:58 2012
+# Created: Wed Nov 14 09:00:59 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -151,6 +151,12 @@ class Ui_Q7OptionsWindow(object):
         self.__O_forcefortranflag = QtGui.QCheckBox(self.tab_6)
         self.__O_forcefortranflag.setGeometry(QtCore.QRect(10, 50, 274, 22))
         self.__O_forcefortranflag.setObjectName("__O_forcefortranflag")
+        self.eValKeys = QtGui.QPlainTextEdit(self.tab_6)
+        self.eValKeys.setGeometry(QtCore.QRect(10, 95, 104, 91))
+        self.eValKeys.setObjectName("eValKeys")
+        self.label_25 = QtGui.QLabel(self.tab_6)
+        self.label_25.setGeometry(QtCore.QRect(10, 75, 106, 16))
+        self.label_25.setObjectName("label_25")
         self.tabs.addTab(self.tab_6, "")
         self.tab_3 = QtGui.QWidget()
         self.tab_3.setObjectName("tab_3")
@@ -402,6 +408,7 @@ class Ui_Q7OptionsWindow(object):
         self.__O_checkonthefly.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Check on the fly", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_forcesidslegacymapping.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Force SIDS legacy mapping", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_forcefortranflag.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Force fortran flag in numpy arrays", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_25.setText(QtGui.QApplication.translate("Q7OptionsWindow", "CGNS.VAL keys:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.tab_6), QtGui.QApplication.translate("Q7OptionsWindow", "Checks", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Tree view node name", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Form view Table contents", None, QtGui.QApplication.UnicodeUTF8))

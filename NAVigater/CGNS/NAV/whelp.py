@@ -303,7 +303,7 @@ See user options for directory and file used for this snapshot.</td></tr>
 
 <h3>Buttons</h3>
 <p>
-<img source=":/images/icons/unselected.gif">
+
 """),
 # --------------------------------------------------------------------------
 'Form':('Form view',
@@ -343,10 +343,47 @@ for text data.
 'Query':('Query view',
 """
 <h2>Query view</h2>
+The query view is one of CGNS.NAV most powerful feature. It provides a
+true Python scripting access on the CGNS tree, the script you write is
+applied to each node of the whole CGNS/Python tree. You have to write the
+script using the usual Python syntax and semantics, including the required
+<b>import</b>s statements, however CGNS.NAV adds a pre-script and a post-script
+to your actual text.<br><br>
+
+The pre-script is used to defined local variable that would be useful for you.
+The variables are setting the node context, you can get/set these values as
+these are the actual node:
+
+<table>
+<tr><td><b>NODE</b></td><td>the NODE as a CGNS/Python NODE, that is a list
+with <i>[ NAME, VALUE, CHILDREN, SIDSTYPE]</i></td></tr>
+<tr><td><b>NAME</b></td><td>the NAME of the NODE, same as NODE[0]</td></tr>
+<tr><td><b>VALUE</b></td><td>the VALUE of the NODE, same as NODE[1]</td></tr>
+<tr><td><b>SIDSTYPE</b></td><td>the CGNS/SIDS type of the NODE, same
+as NODE[3]</td></tr>
+<tr><td><b>CHILDREN</b></td><td>the list of CHILDREN of the NODE,
+same as NODE[2]</td></tr>
+<tr><td><b>TREE</b></td><td>the complete CGNS/Python TREE</td></tr>
+<tr><td><b>PATH</b></td><td>the PATH to the current NODE</td></tr>
+<tr><td><b>ARGS</b></td><td>The arguments tuple you may have passed (in
+the Tree view for example)</td></tr>
+<tr><td><b>RESULT</b></td><td>the output of your script, this result value
+is inserted into the global result list for all nodes. Thus, you would
+rather add a tuple containing the current PATH and the result if you
+want to find back which result matches which value (see example)</td></tr>
+</table>
 
 <h3>Buttons</h3>
 <p>
-<img source=":/images/icons/unselected.gif">
+<table>
+<tr><td><img source=":/images/icons/operate-add.gif"></td>
+<td>Add a new query</td></tr>
+<tr><td><img source=":/images/icons/operate-delete.gif"></td>
+<td>Remove an existing query</td></tr>
+<tr><td><img source=":/images/icons/operate-save.gif"></td>
+<td>Save all queries</td></tr>
+</table>
+
 """),
 # --------------------------------------------------------------------------
 'Option':('Option panel',

@@ -3,7 +3,6 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-
 import sys
 import os
 import fnmatch
@@ -11,7 +10,7 @@ import imp
 
 def findAllUserGrammars(verbose=False):
   kdict={}
-  for pth in sys.path:
+  for pth in [p for p in sys.path if p!='']:
     if (verbose): print '### CGNS.VAL: scanning',pth
     try:
       for pthroot, dirs, files in os.walk(pth):
