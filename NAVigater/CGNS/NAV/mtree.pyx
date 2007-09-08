@@ -313,14 +313,15 @@ class Q7TreeView(QTreeView):
               last.setUserState(kval-48)
               self.exclusiveSelectRow(nix)
           elif (kval==KEYMAPPING[EDITNODE]):
-              last.setEditCheck(False)
               if (kmod==Qt.ControlModifier):
                   eix=self._model.createIndex(nix.row(),COLUMN_SIDS,
                                               nix.internalPointer())
+                  last.setEditCheck(False)
                   self.edit(eix)
               elif (kmod==Qt.ShiftModifier):
                   eix=self._model.createIndex(nix.row(),COLUMN_VALUE,
                                               nix.internalPointer())
+                  last.setEditCheck(False)
                   self.edit(eix)
               else:
                   self.edit(nix)

@@ -20,6 +20,8 @@ from CGNS.NAV.wfingerprint import Q7Window,Q7fingerPrint
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import CGNS.PAT.cgnskeywords as CGK
 
+import CGNS.NAV.wmessages as MSG
+
 (CELLCOMBO,CELLTEXT)=range(2)
 CELLEDITMODE=(CELLCOMBO,CELLTEXT)
 

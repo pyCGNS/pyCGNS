@@ -322,6 +322,7 @@ class Q7fingerPrint:
         self.addTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
         if (saveas):
             self.converted=False
+            self.isfile=True
             self.tmpfile=''
             self.removeTreeStatus(Q7fingerPrint.STATUS_CONVERTED)
             self.addTreeStatus(Q7fingerPrint.STATUS_SAVEABLE)
