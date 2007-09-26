@@ -84,7 +84,6 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
                     if (l):
                         cset.add(l)
                 v=list(cset)
-                v.sort()
                 if (self.validateOption(k,v)): data[k]=v
         self.setOptions()
         self.reset()

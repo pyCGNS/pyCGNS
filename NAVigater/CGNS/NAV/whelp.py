@@ -315,6 +315,19 @@ the pick of a node would show corresponding value.</td></tr>
 </table>
 
 
+<h3>Displaying actual values</h3>
+<p>
+
+
+<h3>User defined camera views</h3>
+<p>
+You can the current camera and reset to this stored point of view later on.
+<table>
+<tr><td><img source=":/images/icons/camera-snap.gif"></td>
+<td>Sotre an existing camera</td></tr>
+</table>
+
+
 <h3>Interactions</h3>
 
 <h4>Mouse buttons</h4>

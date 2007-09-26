@@ -84,7 +84,9 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             self.popupmenu.popup(self.controlTable.lastPos)
     def closeView(self):
         self.updateLastView()
-        if (self.lastView): Q7fingerPrint.getView(self.lastView).close()
+        if (self.lastView):
+            fg=Q7fingerPrint.getFingerPrint(self.lastView)
+            fg.closeView(self.lastView)
     def raiseView(self):
         self.updateLastView()
         if (self.lastView): Q7fingerPrint.raiseView(self.lastView)
@@ -113,17 +115,13 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
                             MSG.YESNO)
         if (reply == QMessageBox.Yes):
             f.closeAllViews()
-    def closeAllViews(self):
+    def closeAllTrees(self):
         reply = MSG.message('Double check...',
                             """Do you want to close all the views,<br>
                             and <b>forget unsaved</b> modifications?""",
                             MSG.YESNO)
         if (reply == QMessageBox.Yes):
             Q7fingerPrint.closeAllTrees()
-    def pop6(self):
-        pass
-    def pop7(self):
-        pass
     def updateLastView(self):
         r=self.controlTable.currentItem().row()
         self.lastView=self.getIdxFromLine(r)
@@ -133,12 +131,11 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         if (lv is not None):
           self.lastView=lv
           actlist=(("View information (Enter)",self.info),
-                   ("Raise view (Space)",self.raiseView),
-#                   ("Update tree",self.pop6),
+                   ("Raise selected view (Space)",self.raiseView),
                    None,
-                   ("Close tree",self.closeTree),
-                   ("Close all views",self.closeAllViews),
-                   ("Close view (Del)",self.closeView))
+                   ("Close all trees",self.closeAllTrees),
+                   ("Close selected tree",self.closeTree),
+                   ("Close selected view (Del)",self.closeView))
           self.popupmenu.clear()
           self.popupmenu.setTitle('Control view menu')
           for aparam in actlist:

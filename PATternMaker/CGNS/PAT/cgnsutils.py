@@ -170,8 +170,9 @@ def checkName(name,dienow=False):
    * Name cannot be empty
    * No '/' in the name
    * A single '.' or '..' are not allowed
+   * A name with ' ' as first char is not allowed
    * A name with only ' ' is not allowed
-   * Raises :ref:`cgnsnameerror` codes 22,23,24,25,29 if `dienow` is True
+   * Raises :ref:`cgnsnameerror` codes 22,23,24,25,29,31,32 if `dienow` is True
   
   """
   if (type(name) not in [str, unicode]):
@@ -191,6 +192,9 @@ def checkName(name,dienow=False):
     return False
   if (name.count(' ')==len(name)):
     if (dienow): raise CE.cgnsNameError(31)
+    return False
+  if (name[0]==' '):
+    if (dienow): raise CE.cgnsNameError(32)
     return False
   return True
 

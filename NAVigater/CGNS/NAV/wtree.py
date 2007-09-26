@@ -35,6 +35,8 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         self._model=model
     def createEditor(self, parent, option, index):
         if (index.internalPointer().sidsIsCGNSTree()): return None
+        if (index.internalPointer().sidsIsLink()): return None
+        if (index.internalPointer().sidsIsLinkChild()): return None
         ws=option.rect.width()
         hs=option.rect.height()+4
         xs=option.rect.x()
@@ -153,6 +155,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._lastEntered=None
         self.lastdiag=None
         self.linkview=None
+        self.qryview=None
         QObject.connect(self.treeview,
                         SIGNAL("expanded(QModelIndex)"),
                         self.expandNode)
@@ -284,6 +287,12 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.lineEdit.insert(node.sidsPath())
     def popform(self):
         self.formview()
+    def openLkTree(self):
+        self.busyCursor()
+        filename=self.getLastEntered().sidsLinkFilename()
+        if (filename is not None):
+            self._control.loadfile(filename)
+        self.readyCursor()
     def openSubTree(self):
         self.busyCursor()
         node=self.getLastEntered().sidsPath()
@@ -332,29 +341,32 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.setLastEntered(nodeidxs)
         if (nodeidx != -1):
           node=nodeidx.internalPointer()
-          actlist=(("About %s"%node.sidsType(),self.pop0,None),
-                   None,
-                   ("Mark/unmark node",self.marknode,'Space'),
-                   ("Add new child node",self.newnodechild,'Ctrl+A'),
-                   ("Add new brother node",self.newnodebrother,'Ctrl+Z'),
-                   None,
-                   ("Open form",self.popform,'Ctrl+F'),
-                   ("Open view",self.openSubTree,'Ctrl+W'),
-                   None,
-                   ("Load node data in memory",self.popform,'Ctrl+F'),
-                   ("Release memory node data",self.popform,'Ctrl+F'),
-                   None,
-                   ("Copy",self.mcopy,'Ctrl+C'),
-                   ("Cut",self.mcut,'Ctrl+X'),
-                   ("Paste as brother",self.mpasteasbrother,'Ctrl+V'),
-                   ("Paste as child",self.mpasteaschild,'Ctrl+Y'),
-                   None,
-                   ("Cut all selected",self.mcutselected,'Ctrl+O'),
-                   ("Paste as brother for each selected",
-                    self.mpasteasbrotherselected,'Ctrl+K'),
-                   ("Paste as child for each selected",
-                    self.mpasteaschildselected,'Ctrl+I'),
-                   )
+          lknode=not node.sidsIsLink()
+          actlist=(
+              ("About %s"%node.sidsType(),self.pop0,None,False),
+              None,
+              ("Mark/unmark node",self.marknode,'Space',False),
+              ("Add new child node",self.newnodechild,'Ctrl+A',False),
+              ("Add new brother node",self.newnodebrother,'Ctrl+Z',False),
+              None,
+              ("Open form",self.popform,'Ctrl+F',False),
+              ("Open view",self.openSubTree,'Ctrl+W',False),
+              ("Open view on linked-to file",self.openLkTree,'Ctrl+O',lknode),
+              None,
+              ("Load node data in memory",self.popform,'Ctrl+L',True),
+              ("Release memory node data",self.popform,'Ctrl+R',True),
+              None,
+              ("Copy",self.mcopy,'Ctrl+C',False),
+              ("Cut",self.mcut,'Ctrl+X',False),
+              ("Paste as brother",self.mpasteasbrother,'Ctrl+V',False),
+              ("Paste as child",self.mpasteaschild,'Ctrl+Y',False),
+              None,
+              ("Cut all selected",self.mcutselected,'Ctrl+S',False),
+              ("Paste as brother for each selected",
+               self.mpasteasbrotherselected,'Ctrl+K',False),
+              ("Paste as child for each selected",
+               self.mpasteaschildselected,'Ctrl+I',False),
+              )
           self.popupmenu.clear()
           self.popupmenu.setTitle('Node menu')
           for aparam in actlist:
@@ -363,6 +375,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                   a=QAction(aparam[0],self,triggered=aparam[1])
                   if (aparam[2] is not None): a.setShortcut(aparam[2])
                   self.popupmenu.addAction(a)
+                  a.setDisabled(aparam[3])
           return True
     def setLastEntered(self,nix=None):
         if ((nix is None) or (not nix.isValid())):
@@ -433,12 +446,14 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (not node.isLink()): return
     def linklist(self):
         if (self.linkview is None):
-            self.linkview=Q7LinkList(self._control,self._fgprint)
-        self.linkview.show()
+            self.linkview=Q7LinkList(self._control,self._fgprint,self)
+            self.linkview.show()
+        self.linkview.raise_()
     def patternlist(self):
         if (self._control.pattern is None):
             self._control.pattern=Q7PatternList(self._control,self._fgprint)
-        self._control.pattern.show()
+            self._control.pattern.show()
+        self._control.pattern.raise_()
     def check(self):
         self.busyCursor()
         if (self.diagview is not None):
@@ -507,8 +522,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                """<b>Fail to parse or to interpret CGNSTree data</b>""",
                MSG.INFO)
     def queryview(self):
-        qry=Q7Query(self._control,self._fgprint,self)
-        qry.show()
+        if (self.qryview is None):
+            self.qryview=Q7Query(self._control,self._fgprint,self)
+            self.qryview.show()
+        self.qryview.raise_()
     def closeAlone(self):
         pass
     def forceapply(self):

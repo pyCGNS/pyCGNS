@@ -496,7 +496,9 @@ class Q7TreeItem(object):
         return self._itemnode[0]
     def sidsNameSet(self,name):
         if (type(name) not in [str,unicode]): return False
-        name=str(name)
+        try:
+            name=str(name)
+        except UnicodeEncodeError: return False
         if (self._checkable):
             if (name==''): return False
             if (not CGU.checkName(name)): return False
@@ -547,7 +549,9 @@ class Q7TreeItem(object):
         return self._itemnode[3]
     def sidsTypeSet(self,value):
         if (type(value) not in [str,unicode]): return False
-        value=str(value)
+        try:
+            value=str(value)
+        except UnicodeEncodeError: return False
         if (self._checkable and (value not in self.sidsTypeList())):
             return False
         self._itemnode[3]=value
@@ -599,6 +603,11 @@ class Q7TreeItem(object):
             if (pit.sidsIsLink()): return True
             pit=pit.parentItem()
         return False
+    def sidsLinkFilename(self):
+        pth=CGU.getPathNoRoot(self.sidsPath())
+        for lk in self._fingerprint.links:
+            if (pth in lk[-2]): return "%s/%s"%(lk[0],lk[1])
+        return None
     def sidsLinkValue(self):
         pth=CGU.getPathNoRoot(self.sidsPath())
         for lk in self._fingerprint.links:
@@ -688,6 +697,7 @@ class Q7TreeItem(object):
         if (column==COLUMN_FLAG_LINK): return self.sidsLinkStatus()
         if (column==COLUMN_SHAPE):
             if (self.sidsValue() is None): return None
+            if (type(self.sidsValue())!=numpy.ndarray): return None
             return str(self.sidsValue().shape)
         if (column==COLUMN_FLAG_SELECT): return self._states['mark']
         if (column==COLUMN_DATATYPE):    return self.sidsDataType()

@@ -15,10 +15,11 @@ import CGNS.MAP as CGM
 
 # -----------------------------------------------------------------
 class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
-    def __init__(self,parent,fgprint):
+    def __init__(self,parent,fgprint,master):
         Q7Window.__init__(self,Q7Window.VIEW_LINK,parent,None,fgprint)
         self.bClose.clicked.connect(self.reject)
         self._fgprint=fgprint
+        self._master=master
         self._links=fgprint.links
         self.setLabel(self.eDirSource,fgprint.filedir)
         self.setLabel(self.eFileSource,fgprint.filename)
@@ -26,6 +27,18 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
         self.bAddLink.setDisabled(True)
         self.bDeleteLink.setDisabled(True)
         self.bSave.setDisabled(True)
+        self.bLoadTree.clicked.connect(self.loadLinkFile)
+    def loadLinkFile(self):
+        i=self.linkTable.currentItem()
+        if (i is None): return
+        r=i.row()
+        d=self.linkTable.item(r,4).text()
+        f=self.linkTable.item(r,2).text()
+        filename="%s/%s"%(d,f)
+        self.busyCursor()
+        if (filename is not None):
+            self._control.loadfile(filename)
+        self.readyCursor()
     def infoLinkView(self):
         self._control.helpWindow('Link')
     def show(self):
@@ -57,8 +70,8 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
         return it
     def reset(self):
         v=self.linkTable
-        for r in range(v.rowCount()):
-            v.removeRow(r+1)
+        v.clear()
+        v.setRowCount(0)
         lh=v.horizontalHeader()
         lv=v.verticalHeader()
         h=['S','Source Node','Linked-to file','Linked-to Node','Found in dir']
@@ -67,10 +80,10 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
             v.setHorizontalHeaderItem(i,hi)
             lh.setResizeMode(i,QHeaderView.ResizeToContents)
         lh.setResizeMode(len(h)-1,QHeaderView.Stretch)
+        v.setRowCount(len(self._links))
+        r=0
         for lk in self._links:
           (ld,lf,ln,sn,st)=lk
-          v.setRowCount(v.rowCount()+1)
-          r=v.rowCount()-1
           t1item=self.statusIcon(st)
           t2item=QTableWidgetItem(sn)
           t2item.setFont(QFont("Courier"))
@@ -85,11 +98,13 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
           v.setItem(r,2,t3item)
           v.setItem(r,3,t4item)
           v.setItem(r,4,t5item)
+          r+=1
         for i in (2,3):
           v.resizeColumnToContents(i)
         for i in range(v.rowCount()):
           v.resizeRowToContents(i)
     def reject(self):
+        self._master.linkview=None
         self.close()
          
 # -----------------------------------------------------------------

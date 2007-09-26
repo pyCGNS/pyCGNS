@@ -202,8 +202,13 @@ class Q7fingerPrint:
         control.loadOptions()
         kw={}
         f=selectedfile
-        (filedir,filename)=(os.path.normpath(os.path.dirname(f)),
+        (filedir,filename)=(os.path.abspath(os.path.dirname(f)),
                             os.path.basename(f))
+        if ("%s/%s"%(filedir,filename) in cls.getExpandedFilenameList()):
+            txt="""The current file is already open:"""
+            MSG.message(txt,"%s/%s"%(filedir,filename),MSG.INFO)
+            control.readyCursor()
+            return None
         slp=OCTXT.LinkSearchPathList
         slp+=[filedir]
         if (   (os.path.splitext(filename)[1] in OCTXT.CGNSFileExtension)
@@ -260,7 +265,9 @@ class Q7fingerPrint:
         fgprint.updateFileStats(f,saveas=True)
     @classmethod
     def closeAllTrees(cls):
-        for x in cls.__extension: x.closeAllViews()
+        while cls.__extension:
+            x=cls.__extension[0]
+            x.closeAllViews()
     @classmethod
     def raiseView(cls,idx):
         for x in cls.__extension:
@@ -282,12 +289,26 @@ class Q7fingerPrint:
                     if (i==int(idx)): return v
         return None
     @classmethod
+    def getViewType(cls,idx):
+        vw=cls.getView(idx)
+        for x in cls.__extension:
+            for vtype in x.views:
+                for (v,i) in x.views[vtype]:
+                    if ((v==vw) and (i==int(idx))): return vtype
+        return None
+    @classmethod
     def getFingerPrint(cls,idx):
         for x in cls.__extension:
             for vtype in x.views:
                 for (v,i) in x.views[vtype]:
                     if (i==int(idx)): return x
         return None
+    @classmethod
+    def getExpandedFilenameList(cls):
+        l=[]
+        for x in cls.__extension:
+            l.append("%s/%s"%(x.filedir,x.filename))
+        return l
     # -------------------------------------------------------------
     def __init__(self,control,filedir,filename,tree,links,paths,**kw):
         self.filename=filename
@@ -399,9 +420,19 @@ class Q7fingerPrint:
         if not self.views.has_key(viewtype): self.views[viewtype]=[]
         self.views[viewtype].append((view,idx))
         return Q7fingerPrint.__viewscounter
+    def closeView(self,i):
+        idx=int(i)
+        fg=self.getFingerPrint(idx)
+        vw=self.getView(idx)
+        vt=self.getViewType(idx)
+        vw.close()
+        self.views[vt].remove((vw,idx))
+        if (self.views[vt]==[]): del self.views[vt]
+        if (self.views=={}):  self.__extension.remove(fg)
     def closeAllViews(self):
-        for vtype in self.views:
-            for (v,i) in self.views[vtype]: v.close()
+        vtlist=self.views.keys()
+        for vtype in vtlist:
+            for (v,i) in self.views[vtype]: self.closeView(i)
     def isModified(self):
         return (Q7fingerPrint.STATUS_MODIFIED in self._status)
     def isSaveable(self):

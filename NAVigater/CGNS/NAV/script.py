@@ -14,11 +14,11 @@ def run(args=[],files=[],flags=(False,False,False,False),ppath=None):
   app=QApplication(args)
   wcontrol=Q7Main()
   wcontrol.setOptionValue('NAVTrace',flags[2])
-  wcontrol.transientRecurse=flags[0]
-  wcontrol.transientVTK=flags[3]
   wcontrol._T('start')
   if (flags[1]): wcontrol.loadlast()
   for f in files:
+    wcontrol.transientRecurse=flags[0]
+    wcontrol.transientVTK=flags[3]
     wcontrol.loadfile(f)
   wcontrol.show()
   app.exec_()

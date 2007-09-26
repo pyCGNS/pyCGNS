@@ -130,6 +130,7 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.bCommitDoc.clicked.connect(self.queryCommit)
         self.bRevertDoc.clicked.connect(self.queryRevert)
         self.bSave.clicked.connect(self.queriesSave)
+        self._master=treeview
         QObject.connect(self.cQueryName,
                         SIGNAL("currentIndexChanged(int)"),
                         self.changeCurrentQuery)
@@ -193,6 +194,7 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
     def queryRevert(self):
         self.showQuery()
     def reject(self):
+        self._master.qryview=None
         self.close()
     def reset(self):
         gq=set()

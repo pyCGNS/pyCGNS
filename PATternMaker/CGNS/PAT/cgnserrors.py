@@ -65,6 +65,7 @@ errorTable={
    29 : "Node name cannot be '.' or '..'",
    30 : "Nodes [%s] and [%s] are different",
    31 : "Node name cannot be only ' '",
+   32 : "Node name cannot start with  ' '",
    40 : "Node [%s] has type [%s] which is not a CGNS/SIDS type",
    90 : "Node is None!",
    91 : "Root node can have only CGNSBase_t or CGNSLibraryVersion_t children",
