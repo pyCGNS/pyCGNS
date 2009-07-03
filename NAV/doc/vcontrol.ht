@@ -1,0 +1,50 @@
+
+The control view is the central window, it is in charge of opening,
+closing and managing the views you will open on trees.  It shows a
+list of all the open views you have. When you open a file, or create a
+new tree, the main view of the tree is open. From this so-called tree
+view you can open sub-views of the same tree. The tree is identified
+by its filename without extension, and the directory where it has been
+found.  Thus, if you want to load a file with the same name and
+directory but with another file type, you will be asked for
+confirmation and the tree would be replaced by the new one. A sub-view
+is a view on a part of a tree, starting from a given node. This node
+is kept as an identifier for the sub-view. These sub-views also appear
+in the control view list, each new view has a number. A line in the
+view control list gathers all this information:
+
+<type> <number> <filename> <directory> <node>
+
+
+The icons you can find on the top of the window have the following
+bindings.
+
+The new tree icon creates a view on an empty tree. It has no name, no node,
+you have to add children to the root node using copy/paste or by using the
+popup menu.
+
+Use the load file icon to open the file dialog window. You can load
+Python, ADF or HDF5 files. In the case of a Python file, the actual
+performed command is an import. If you have an ADF binary file, it is
+read using the ADF library from the original CGNS library
+rerlease. The HDF5 binary files are read using the pyCGNS lightweight
+library.
+
+The pattern base icon opens a view on a window with all known patterns.
+
+The user preference icon opens a window where you can set various
+flags and constants that drive the behavior of pyS7, you can save
+these options.
+
+The help icon starts a firefox browser with the help you are currently reading.
+
+The last icon is the close icon, you can find it on many windows but not
+on the view tree window. The only way to close such a view is to use the
+view control. On the control view, the close icon closes all the views and
+terminates pyS7.
+
+Key Bindings:
+
+Supr: Remove the selected view
+Ctrl-Supr: Remove all views for the selected tree (i.e. tree of the selected view)
+

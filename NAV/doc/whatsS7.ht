@@ -1,0 +1,32 @@
+The S7 tools is a CGNS/SIDS editor. You can browse, create, modify
+CGNS trees using a graphical user interface. The S7 can also check the
+CGNS trees or part of trees you want to validate with respect to the
+SIDS standard or you own profile.  S7 is a Python module, some
+features have been designed to allow you to extend the function with
+your own needs.
+
+<p /> 
+<img src="img/overview.png" align="center" border=0 />
+
+<p /> 
+
+The tool has a main window, so-called <a href="vcontrol.html">Control
+View</a>. Use this window to manage several views of the same or
+different CGNS trees.  You can create trees from scratch or load CGNS
+trees from disk. These files can have any of the CGNS binary or ASCII
+(text) formats: <em>ADF</em>, <em>HDF5</em> or <em>Python</em>.
+
+Once you have a view on a tree, the <a href="vtree.html">Tree View</a>, 
+you can browse it, 
+add or remove nodes or sub-trees. You select nodes in the view and you can
+operate on these list of selected nodes. These two views, the 
+<a href="vcontrol.html">Control View</a> and the 
+<a href="vtree.html">Tree View</a> are the main views or windows you
+would use with S7. Some other windows such as 
+the <a href="voperate.html">Operate View</a>, the 
+<a href="vlink.html">Link View</a>... just navigate through the CGNS tree
+using one or more views, this is the purpose of S7.
+
+
+
+

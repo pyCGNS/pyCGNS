@@ -1,0 +1,16 @@
+# =============================================================================
+# pyS7 - SIDS Surveyor and Sketcher 
+#        with Several Services and Specializable Su pervisor 
+# =============================================================================
+#
+# pyS7 is a graphical tool for CGNS trees
+#
+# You can browse, edit, check... CGNS trees
+# The trees can be created from scratch, using patterns, using Python lists
+# or even reading ADF and/or HDF5 files. In that later case, you should gave
+# pyCGNS available.
+#
+# add TCLLIBPATH for treectl:
+# export TCLLIBPATH=/home/tools/lib/treectrl2.2.3
+#
+#

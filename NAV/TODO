@@ -1,0 +1,46 @@
+# -----------------------------------------------------------------------------
+# pyS7 - CGNS/SIDS editor
+# ONERA/DSNA - marc.poinot@onera.fr
+# pyS7 - $Rev: 70 $ $Date: 2009-01-30 11:49:10 +0100 (Fri, 30 Jan 2009) $
+# -----------------------------------------------------------------------------
+# See file COPYING in the root directory of this Python module source
+# tree for license information.
+
+# Sequential list of things to do
+# Items are removed once solved/realized/corrected...
+
+# 01 Increase doc
+# 02 Increase speed
+# 03 Complete patterns
+# 04 Load on the fly when node is open
+# 05 Complete checks
+# 06 Reduce memory footprint
+# 07 Remove selection rectangle persistance
+# 08 Auto-save
+# 09 Change name/type on place but not in status line
+# 10 Link save fails
+# 11 Links not correct
+# 12 Better balloons
+# 13 Clean up all options stuff, many are not even taken into account!
+# 14 You have to be in local dir to follow links
+# 15 Better setup management for icons
+# 16 TCLLIBPATH  management
+# 17 Check actual links are saved or not
+# 18 Check fortran/C ordering
+# 19 Better profile check/seach
+# 20 Edit table
+# 21 Refresh view wrt show size
+# 22 Clear dirs search list in load/save dialog
+# 23 Auto-raise for control window
+# 24 Show box when string including spaces
+# 25 Same keys and click behavior for all windows
+# 26 C-h key should start help window
+# 27 Types in fixed font
+# 28 Allow install/use without pyCGNS (if found no copy)
+# 29 Better open/close level in tree view
+# 30 Open sub-window on SSL-node with raw data
+# 31 Allow user-defined key shortcuts
+# 32 Save linked-files and create files if required
+# 33 Load/save a layout (?)
+
+# --- last line

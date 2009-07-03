@@ -1,0 +1,56 @@
+h2.head
+{
+ font-color: #ffca22
+ font-family:arial
+ font-size: 5
+}
+
+h3.fn
+{
+  font-color: #ffca22
+  margin-left: 1cm;
+  text-indent: -1cm;
+}
+
+a:link
+{
+  color: #004faf;
+  text-decoration: none
+}
+
+a:visited
+{
+  color: #672967;
+  text-decoration: none
+}
+
+td.theader
+{
+  font-family: sans-serif
+}
+
+td.rheader
+{
+  font-color: #00ca22
+  font-family: sans-serif
+}
+
+td.rticon
+{
+  border: 3
+}
+
+body
+{
+  background: #ffffff;
+  color: black
+}
+
+body pre
+{
+  padding: 0.2em;
+  border: #e7e7e7 1px solid;
+  background: #f1f1f1;
+  color: black
+}
+

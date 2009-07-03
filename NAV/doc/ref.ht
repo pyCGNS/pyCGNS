@@ -1,0 +1,54 @@
+
+<h2>Key Bindings</h2>
+
+The key and mouse bindings depends on the view you are and on the
+visual element your mouse is (i.e. a node name, a value...). The table
+hereafter lists these bindings.
+
+<table width=100% border=1>
+<tr>
+ <td class="rheader">View</td>
+ <td class="rheader">Column/Element</td>
+ <td class="rheader">Key/Mouse</td>
+ <td class="rheader">Action</td>
+</tr>
+<tr>
+<td><a href="vtree.html">Tree View</a></td><td>Graph</td>
+  <td>Return</td><td>Open the sub-tree and show children nodes</td>
+</tr>
+
+</table>
+
+<h2>Icons</h2>
+
+The icons have the same meaning, whichever view you find them. The
+table hereafter gives the list of all icons.
+
+<table width=100% border=1>
+<tr>
+ <td class="rheader">View</a></td>
+ <td class="rheader">Icon</td>
+ <td class="rheader">Target</td>
+ <td class="rheader">Action</td>
+</tr>
+<tr>
+ <td><a href="vtree.html">Tree View</a></td>
+ <td class="rticon"><img src="img/check-all.gif" border=0 /></td>
+ <td>All tree</td>
+ <td>Checks all the tree starting from root node</td>
+</tr>
+<tr>
+ <td><a href="vtree.html">Tree View</a></td>
+ <td class="rticon"><img src="img/check-clear.gif" border=0 /></td>
+ <td>All tree</td>
+ <td>Clears all the check flags</td>
+</tr>
+<tr>
+ <td><a href="vtree.html">Tree View</a></td>
+ <td class="rticon"><img src="img/check-save.gif"/></td>
+ <td>Current log view</td>
+ <td>Saves the last log view for current tree</td>
+</tr>
+
+</table>
+
