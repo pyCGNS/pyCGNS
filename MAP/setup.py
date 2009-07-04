@@ -31,10 +31,11 @@ except:
 
 setup (
   name         = "CGNS.MAP",
-  version      = pyCGNSconfig.version,
+  version      = "0.0.1",
   description  = "pyCGNS MAPping SIDS-to-Python",
   author       = "marc Poinot",
   author_email = "marc.poinot@onera.fr",
+  packages=['CGNS'],
   ext_modules  = [Extension('CGNS.MAP',sources = ['MAPmodule.c'],
                   include_dirs = cf_include_dirs,
                   library_dirs = cf_library_dirs,

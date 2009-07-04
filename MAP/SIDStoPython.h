@@ -21,12 +21,14 @@
 #define S2P_FUPDATE        0x0080
 #define S2P_FDELETEMISSING 0x0100
 
+#define s2p_id double
+
 /* ------------------------------------------------------------------------- */
 typedef struct s2p_ent_t
 {
   char   	   *filename;
   char   	   *dirname;
-  double 	    root_id;
+  s2p_id 	    root_id;
   struct s2p_ent_t *next;
 } s2p_ent_t;
 

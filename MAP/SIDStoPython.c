@@ -46,9 +46,9 @@ static char *DT_R8="R8";
 static char *DT_C1="C1";
 
 /* ------------------------------------------------------------------------- */
-static double s2p_addoneADF(char *filename,s2p_ctx_t *context)
+static s2p_id s2p_addoneADF(char *filename,s2p_ctx_t *context)
 {
-  double root_id;
+  s2p_id root_id;
   int openfile,error;
   s2p_ent_t *nextdbs,*prevdbs;
 
@@ -83,7 +83,7 @@ static double s2p_addoneADF(char *filename,s2p_ctx_t *context)
   if (openfile)
   {
     ADF_Database_Open(filename,"OLD","NATIVE",&root_id,&error);
-    nextdbs->filename=(char*)malloc(sizeof(char)*strlen(filename));
+    nextdbs->filename=(char*)malloc(sizeof(char)*strlen(filename)+1);
     strcpy(nextdbs->filename,filename);
     nextdbs->dirname=NULL;
     nextdbs->root_id=root_id;
@@ -250,7 +250,7 @@ static void s2p_linkstack(char 	     *curpath,
   strcpy(curlink->localnodename,curpath);
 }
 /* ------------------------------------------------------------------------- */
-static double s2p_linktrack(double      rootid,
+static s2p_id s2p_linktrack(s2p_id      rootid,
 			    char       *nodename,
 			    s2p_ctx_t  *context)
 {
@@ -259,7 +259,7 @@ static double s2p_linktrack(double      rootid,
   char destnode[ADF_NAME_LENGTH+1];
   char destfile[MAXFILENAMESIZE];
   int error,pathlength,parsepath,c;
-  double id,nid,lkrootid;
+  s2p_id id,nid,lkrootid;
   char *p;
 
   parsepath=1;
@@ -326,7 +326,7 @@ static char *s2p_transpose(PyObject *dobject,
 			   s2p_ctx_t  *context)
 {
   char *ddata,*tdata=NULL;
-  int  l[MAXDIMENSIONVALUES],level,didx,tidx;
+  int  l[MAXDIMENSIONVALUES],level;
 
   ddata=(char*)PyArray_DATA(dobject);
   level=ndims;
@@ -350,19 +350,19 @@ static char *s2p_transpose(PyObject *dobject,
   if (ptype==NPY_FLOAT)
   {
     context->_c_float=(float*)malloc(total*sizeof(float));
-    tdata=context->_c_float;
+    tdata=(char*)context->_c_float;
     TRANSP_BLOC( float );
   }
   if (ptype==NPY_LONG)
   {
     context->_c_long=(long*)malloc(total*sizeof(long));
-    tdata=context->_c_long;
+    tdata=(char*)context->_c_long;
     TRANSP_BLOC( long );
   }
   if (ptype==NPY_INT)
   {
     context->_c_int=(int*)malloc(total*sizeof(int));
-    tdata=context->_c_int;
+    tdata=(char*)context->_c_int;
     TRANSP_BLOC( int );
   }
 
@@ -498,9 +498,10 @@ static int s2p_getData(PyObject *dobject,
     }
     return 1;
   }
+  return 1;
 }
 /* ------------------------------------------------------------------------- */
-static PyObject* s2p_parseAndReadADF(double    	 id,
+static PyObject* s2p_parseAndReadADF(s2p_id    	 id,
                                      char      	*name,
                                      char*     	 curpath,    
                                      char*     	 path,    
@@ -514,7 +515,7 @@ static PyObject* s2p_parseAndReadADF(double    	 id,
   int       ndim,tsize,n,pathlength,count,child,rcount;
   int       dim_vals[MAXDIMENSIONVALUES];
   int       error,isdataarray,arraytype,toknpath;
-  double    childid,actualid,lkrootid;
+  s2p_id    childid,actualid,lkrootid;
   PyObject *o_clist,*o_value,*o_child,*o_node;
   npy_intp  npy_dim_vals[MAXDIMENSIONVALUES];
   void     *data;
@@ -582,7 +583,7 @@ static PyObject* s2p_parseAndReadADF(double    	 id,
     {
       arraytype=NPY_CHAR;
       data=(void *)malloc((tsize)*sizeof(char));
-      memset(data,0,tsize+1);
+      memset(data,0,tsize);
     }
     else if (!strcmp(datatype,"R8"))
     {
@@ -675,7 +676,7 @@ static PyObject* s2p_parseAndReadADF(double    	 id,
   return o_node;
 }
 /* ------------------------------------------------------------------------- */
-static int s2p_parseAndWriteADF(double     id,
+static int s2p_parseAndWriteADF(s2p_id     id,
                                 PyObject  *tree,
                                 char      *curpath,
                                 char      *path,
@@ -683,7 +684,7 @@ static int s2p_parseAndWriteADF(double     id,
 {
   char *name,*label,*tdat=NULL;
   int sz,n,error,ret=0;
-  double nid;
+  s2p_id nid;
   int ndat=0,ddat[NPY_MAXDIMS];
   char *vdat=NULL;
 
@@ -733,7 +734,7 @@ PyObject* s2p_loadAsADF(char *filename,
                         int   depth,
                         char *path)
 {
-  double root_id;
+  s2p_id root_id;
   int error;
   char name[ADF_NAME_LENGTH+1];
   char cpath[MAXPATHSIZE];
@@ -781,7 +782,7 @@ int s2p_saveAsADF(char      *filename,
                   int        depth,
                   char*      path)    
 {
-  double root_id,nid,n;
+  s2p_id root_id,nid,n;
   int error,ret=0,sz;
   char cpath[MAXPATHSIZE],*tdat=NULL;
   s2p_ctx_t *context;
