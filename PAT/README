@@ -1,8 +1,8 @@
-# CFD General Notation System - CGNS lib wrapper
-# ONERA/DSNA/ELSA - poinot@onera.fr
-# pyCGNS - $Rev: 35 $ $Date: 2007-12-14 14:54:02 +0100 (Fri, 14 Dec 2007) $
-# See file COPYING in the root directory of this Python module source 
-# tree for license information. 
+# -------------------------------------------------------------------------
+# pyCGNS - CFD General Notation System - SIDS PATterns
+# $Rev: 56 $ $Date: 2008-06-10 09:44:23 +0200 (Tue, 10 Jun 2008) $         
+# See license file in the root directory of this Python module source      
+# -------------------------------------------------------------------------
 #
 
 # in each pattern, one would find:
