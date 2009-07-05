@@ -9,8 +9,6 @@ from  distutils.util import get_platform
 # --- pyCGNSconfig search
 import os
 import sys
-import shutil
-
 spath=sys.path[:]
 sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]
 try:
@@ -18,19 +16,10 @@ try:
 except ImportError:
   print 'pyGCNS[ERROR]: PAT cannot find pyCGNSconfig.py file!'
   sys.exit(1)
-
-bptarget='./build/lib/CGNS'
-bxtarget='./build/lib.%s-%s/CGNS'%(get_platform(),sys.version[0:3])
-for d in sys.path:
-  if (os.path.exists("%s/pyCGNSconfig.py"%d)):
-    try:
-      os.makedirs(bptarget)
-      os.makedirs(bxtarget)
-    except os.error: pass
-    shutil.copy("%s/pyCGNSconfig.py"%d,"%s/pyCGNSconfig.py"%bptarget)
-    shutil.copy("%s/pyCGNSconfig.py"%d,"%s/pyCGNSconfig.py"%bxtarget)
-
-sys.path=spath
+sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]+spath
+import setuputils
+setuputils.installConfigFiles([os.getcwd(),'%s/..'%(os.getcwd())])
+sys.prefix=sys.exec_prefix
 # ---
 
 try:

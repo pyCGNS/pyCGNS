@@ -6,7 +6,7 @@
 # THIS FILE IS GENERATED DURING INSTALLATION
 
 VERSION='3.2'
-DATE='2009-04-11 20:25:27'
+DATE='2009-07-05 18:25:09'
 PLATFORM=('Linux', 'localhost.localdomain', '2.6.9-42.ELsmp', '#1 SMP Wed Jul 12 23:32:02 EDT 2006', 'x86_64')
 HAS_MLL=True
 PATH_MLL='/home/tools/local/x86_64/lib/libcgns.so'

@@ -9,29 +9,25 @@ from distutils import sysconfig
 # --- pyCGNSconfig search
 import os
 import sys
-import shutil
-
 spath=sys.path[:]
 sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]
-import setuputils
 try:
   import pyCGNSconfig
 except ImportError:
   print 'pyGCNS[ERROR]: PAT cannot find pyCGNSconfig.py file!'
   sys.exit(1)
-sys.path=spath
+sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]+spath
+import setuputils
 setuputils.installConfigFiles([os.getcwd(),'%s/..'%(os.getcwd())])
-# ---
-
 sys.prefix=sys.exec_prefix
+# ---
 
 setup (
   name         = "CGNS.PAT",
-  version      = "0.1.1",
+  version      = "0.2.1",
   description  = "pyCGNS SIDS PATterns",
   author       = "marc Poinot",
   author_email = "marc.poinot@onera.fr",
   packages=['CGNS','CGNS.PAT']
 )
-
 # --- last line
