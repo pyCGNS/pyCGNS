@@ -306,7 +306,7 @@ if setconfig:
 
 # --- add common stuff
 nincs='%s/lib/python%s/site-packages/numpy/core/include'%(xdir,sys.version[:3])
-include_dirs+=cgnsincdir+[nincs,'CGNS/adf']
+include_dirs+=cgnsincdir+[nincs,'modadf']
 if (mll):
   optional_libs+=['cgns','hdf5']
 if (hdf):
@@ -343,7 +343,7 @@ glob.glob('CGNS/demo/UsersGuide/*.py')),
 if hdf:
   lext_modules  += [
                 Extension('CGNS.hdfmodule', 
-                sources=['CGNS/hdf/hdfmodule.c'],
+                sources=['modhdf/hdfmodule.c'],
                           include_dirs = include_dirs,
                           library_dirs = library_dirs,
                           extra_link_args=extraargslk,
@@ -358,16 +358,16 @@ if mll:
                 # adf through midlevel should be clearly scoped in the
                 # python code
                 Extension('CGNS.midlevelmodule', 
-                sources=['CGNS/adf/adfmodule.c',
-                         'CGNS/cgns/cgnsmodule.c',
-                         'CGNS/cgns/cgnsdict.c'],
+                sources=['modadf/adfmodule.c',
+                         'modmll/cgnsmodule.c',
+                         'modmll/cgnsdict.c'],
                           include_dirs = include_dirs,
                           library_dirs = library_dirs,
                           libraries    = optional_libs,
                           extra_compile_args=extraargs,
                           extra_link_args=extraargslk),
                 Extension('CGNS.adfmodule', 
-                sources=['CGNS/adf/adfmodule.c'],
+                sources=['modadf/adfmodule.c'],
                           include_dirs = include_dirs,
                           library_dirs = library_dirs,
                           extra_link_args=extraargslk,

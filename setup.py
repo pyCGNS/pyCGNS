@@ -13,6 +13,7 @@ import getopt
 version=4
 versionList=[4]
 
+# order IS significant
 CGNSmodList=['MAP','WRA','PAT','NAV','DAT','VAL','TRA']
 modList=CGNSmodList[:]
 
