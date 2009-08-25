@@ -1,0 +1,54 @@
+<CGNSTree CGNSLibraryVersion="2.3" >
+<CGNSBase_t Name="F01=naca012-B" 
+	    CellDimension="3"
+	    PhysicalDimension="3">
+  <Zone_t Name="UnstructuredZone" 
+	  CellDimension="1" 
+	  PhysicalDimension="1" 
+	  ZoneType="Unstructured" 
+	  VertexSize="1" 
+	  CellSize="1">
+    <!--<Zone_t Name="UnstructuredZone" -->
+    <Elements_t Name="TetraElements" 
+		ElementSizeBoundary="10" 
+		ElementType="TETRA_4">
+      <IndexRange_t Name="ElementRange" 
+		    IndexDimension="1" 
+		    Begin="[1]" 
+		    End="[15]"/>
+      <ElementConnectivity_t Name="ElementConnectivity" 
+			     DataType="Integer" 
+			     Dimension="1" 
+			     DimensionValues="NPE[TETRA_4] × 15"> 
+	<!-- Data -->
+      </ElementConnectivity_t>
+      <ParentData_t Name="ParentData" 
+		    DataType="Integer" 
+		    Dimension="2" 
+		    DimensionValues="[15,4]"> 
+	<!-- Data -->
+      </ParentData_t>     
+    </Elements_t>
+    <Elements_t Name="HexaElements" 
+		ElementSizeBoundary="0" 
+		ElementType="HEXA_8">
+      <IndexRange_t Name="ElementRange" 
+		    IndexDimension="1" 
+		    Begin="[16]" 
+		    End="[25]"/>
+      <ElementConnectivity_t Name="ElementConnectivity" 
+			     DataType="Integer" 
+			     Dimension="1" 
+			     DimensionValues="NPE[HEXA_8] × 10"> 
+	<!-- Data -->
+      </ElementConnectivity_t>
+      <ParentData_t Name="ParentData" 
+		    DataType="Integer" 
+		    Dimension="2" 
+		    DimensionValues="[10,4]"> 
+	<!-- Data -->
+      </ParentData_t>     
+    </Elements_t>
+  </Zone_t>
+</CGNSBase_t>
+</CGNSTree>

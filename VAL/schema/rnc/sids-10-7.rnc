@@ -1,0 +1,18 @@
+ThermalRelaxationModel_t = element ThermalRelaxationModel_t 
+{
+ attribute Name                       {Name_t},
+ attribute ThermalRelaxationModelType {ThermalRelaxationModelType_t},
+ attribute DataClass                  {DataClass_t}?,
+ ( Descriptor_t *
+ & DataArray_t *
+ & DimensionalUnits_t ?
+ & UserDefinedData_t*    
+ )
+}
+
+ThermalRelaxationModelType_t =
+ "Null"              |
+ "Frozen"            |
+ "ThermalEquilib"    |
+ "ThermalNonequilib" |
+ "UserDefined"

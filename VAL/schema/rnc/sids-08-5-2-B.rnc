@@ -1,0 +1,9 @@
+AverageInterfaceType_t =
+ "Null"                   |
+ "AverageAll"             |
+ "AverageCircumferential" |
+ "AverageRadial"          |
+ "AverageI"               |
+ "AverageJ"               |
+ "AverageK"               |
+ "UserDefined" 

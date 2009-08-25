@@ -1,0 +1,25 @@
+TurbulenceModel_t = element TurbulenceModel_t 
+{
+ attribute Name                {Name_t},
+ attribute CellDimension       {DimensionInteger3D_t},
+ attribute TurbulenceModelType {TurbulenceModelType_t},
+ attribute DataClass           {DataClass_t}?,
+ attribute DiffusionModel      {DiffusionModel_t}?,
+ ( Descriptor_t *
+ & DataArray_t *
+ & DimensionalUnits_t ?
+ & UserDefinedData_t *
+ )
+}
+
+TurbulenceModelType_t = 
+ "Null"                         |
+ "Algebraic_BaldwinLomax"       |
+ "Algebraic_CebeciSmith"        |
+ "HalfEquation_JohnsonKing"     |
+ "OneEquation_BaldwinBarth"     |
+ "OneEquation_SpalartAllmaras"  |
+ "TwoEquation_JonesLaunder"     |
+ "TwoEquation_MenterSST"        |
+ "TwoEquation_Wilcox"           |
+ "UserDefined"

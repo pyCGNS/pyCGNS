@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="Gravity_t">
+    <element name="Gravity_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <optional>
+        <attribute name="DataClass">
+          <ref name="DataClass_t"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="DataArray_t"/>
+        </zeroOrMore>
+        <ref name="GravityVector_t"/>
+        <optional>
+          <ref name="DimensionalUnits_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="GravityVector_t">
+    <element name="GravityVector_t">
+      <attribute name="Name">
+        <value type="string">GravityVector</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+</grammar>

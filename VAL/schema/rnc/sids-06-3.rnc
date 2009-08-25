@@ -1,0 +1,40 @@
+Zone_t = element Zone_t 
+{
+ attribute Name               {Name_t},
+ attribute CellDimension      {DimensionInteger3D_t},
+ attribute PhysicalDimension  {DimensionInteger3D_t},
+ attribute ZoneType           {ZoneType_t},
+ attribute VertexSize         {VertexSize_t},
+ attribute CellSize           {CellSize_t},
+ attribute VertexSizeBoundary {VertexSizeBoundary_t}?,
+ attribute FamilyName         {FamilyName_t}?,
+ attribute DataClass          {DataClass_t}?,
+ attribute Ordinal            {Ordinal_t}?,
+ ( Descriptor_t *                
+ & ( element GridCoordinates_t 
+             { attribute Name {xsd:string "GridCoordinates"},
+               GridCoordinatesExt},
+     GridCoordinates_t *) ?
+ & Elements_t *
+ & RigidGridMotion_t *
+ & ArbitraryGridMotion_t *
+ & FlowSolution_t *
+ & DiscreteData_t *
+ & IntegralData_t *
+ & ZoneGridConnectivity_t ?
+ & ZoneBC_t ?
+ & ZoneIterativeData_t ?
+ & ReferenceState_t ?
+ & RotatingCoordinates_t ?
+ & DimensionalUnits_t ?
+ & FlowEquationSet_t ?
+ & ConvergenceHistory_t ?
+ & UserDefinedData_t *
+ )       
+}
+
+ZoneType_t =
+ "Null"         |       
+ "Structured"   | 
+ "Unstructured" |
+ "UserDefined"

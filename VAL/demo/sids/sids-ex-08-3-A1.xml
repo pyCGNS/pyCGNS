@@ -1,0 +1,13 @@
+    <GridConnectivity1to1_t Name="Zone1/ZoneGridConnectivity/KMax" 
+			    IndexDimension="3" 
+			    Transform="[1,2,3]" 
+			    ZoneDonorName="Zone2" > 
+      <PointRange_t Name="PointRange" 
+		    IndexDimension="3" 
+		    Begin="[1,1,11]" 
+		    End="[9,17,11]"/>
+      <PointRangeDonor_t Name="PointRangeDonor" 
+			 IndexDimension="3" 
+			 Begin="[1,1,11]" 
+			 End="[9,17,11]"/>
+    </GridConnectivity1to1_t> 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="Area_t">
+    <element name="Area_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <ref name="AreaType_t"/>
+        <ref name="SurfaceArea_t"/>
+        <ref name="RegionName_t"/>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="AreaType_t">
+    <choice>
+      <value>Null</value>
+      <value>BleedArea</value>
+      <value>CaptureArea</value>
+      <value>UserDefined</value>
+    </choice>
+  </define>
+  <define name="SurfaceArea_t">
+    <element name="SurfaceArea_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <attribute name="DataType">
+        <ref name="DataType_t"/>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <value>1</value>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="RegionName_t">
+    <element name="RegionName_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <attribute name="DataType">
+        <ref name="DataType_t"/>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <value>32</value>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+</grammar>

@@ -1,0 +1,16 @@
+ArbitraryGridMotion_t = element ArbitraryGridMotion_t 
+{
+ attribute Name                    {Name_t},
+ attribute IndexDimension          {DimensionInteger3D_t},
+ attribute VertexSize              {VertexSize_t},
+ attribute CellSize                {CellSize_t},
+ attribute ArbitraryGridMotionType {ArbitraryGridMotionType_t},
+ attribute GridLocation            {GridLocation_t}?,
+ attribute DataClass               {DataClass_t},
+ ( DataArray_t *
+ & Descriptor_t *
+ & Rind_t ?
+ & DimensionalUnits_t ?
+ & UserDefinedData_t *
+ )
+}

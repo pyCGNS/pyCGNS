@@ -1,0 +1,51 @@
+<TurbulenceClosure_t Name="TurbulenceClosure"  
+		     TurbulenceClosureType="EddyViscosity"  >
+</TurbulenceClosure_t>
+<TurbulenceModel_t Name="TurbulenceModel"  
+		   CellDimension="3"  
+		   TurbulenceModelType="OneEquation_SpalartAllmaras"  >
+<DataArray_t Name="TurbulentSACb1" DataType="RealDouble" 
+	                           Dimension="1" DimensionValues="1" > 
+                  [ 0.1355 ] 
+</DataArray_t>
+<DataArray_t Name="TurbulentSACb2" DataType="RealDouble" 
+	                           Dimension="1" DimensionValues="1" > 
+                  [ 0.622 ] 
+</DataArray_t>
+<DataArray_t Name="TurbulentSASigma" DataType="RealDouble" 
+	                           Dimension="1" DimensionValues="1" > 
+                  [ 2/3. ] 
+</DataArray_t>
+<DataArray_t Name="TurbulentSACw1" DataType="RealDouble" 
+	                           Dimension="1" DimensionValues="1" > 
+                  [ 3.2391 ] 
+</DataArray_t>
+<DataArray_t Name="TurbulentSACw2" DataType="RealDouble" 
+	                           Dimension="1" DimensionValues="1" > 
+                  [ 0.3 ] 
+</DataArray_t>
+<DataArray_t Name="TurbulentSACw3" DataType="RealDouble" 
+	                           Dimension="1" DimensionValues="1" > 
+                  [ 2. ] 
+</DataArray_t>
+<DataArray_t Name="TurbulentSACv1" DataType="RealDouble" 
+	                           Dimension="1" DimensionValues="1" > 
+                  [ 7.1 ] 
+</DataArray_t>
+<DataArray_t Name="TurbulentSACt1" DataType="RealDouble" 
+	                           Dimension="1" DimensionValues="1" > 
+                  [ 1. ] 
+</DataArray_t>
+<DataArray_t Name="TurbulentSACt2" DataType="RealDouble" 
+	                           Dimension="1" DimensionValues="1" > 
+                  [ 2. ] 
+</DataArray_t>
+<DataArray_t Name="TurbulentSACt3" DataType="RealDouble" 
+	                           Dimension="1" DimensionValues="1" > 
+                  [ 1.2 ] 
+</DataArray_t>
+<DataArray_t Name="TurbulentSACt4" DataType="RealDouble" 
+	                           Dimension="1" DimensionValues="1" > 
+                  [ 0.5 ] 
+</DataArray_t>
+    </TurbulenceModel_t>

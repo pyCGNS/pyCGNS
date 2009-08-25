@@ -1,0 +1,5 @@
+RigidGridMotionType_t =
+ "Null"		|
+ "ConstantRate"	|
+ "VariableRate"	|
+ "UserDefined" 	

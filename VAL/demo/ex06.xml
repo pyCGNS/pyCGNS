@@ -1,0 +1,39 @@
+<CGNSTree CGNSLibraryVersion="2.3" > 
+<CGNSBase_t Name="D02=Rotor-7A"
+            CellDimension="3" 
+            PhysicalDimension="3" 
+            SimulationType="UserDefined" >
+  <Zone_t Name="Zone-001" 
+	  CellDimension="3" 
+	  PhysicalDimension="3"
+	  ZoneType="Structured"
+	  VertexSize="[3,5,7]"
+	  CellSize="[2,4,6]"
+	  VertexSizeBoundary="[0,0,0]">
+    <GridCoordinates_t Name="GridCoordinates" 
+		       IndexDimension="2" 
+		       VertexSize="[17,33]" 
+		       DataClass="Dimensional">
+      <DimensionalUnits_t Name="DimensionalUnits" 
+			  MassUnits="Null" 
+			  LengthUnits="Foot" 
+			  TimeUnits="Null" 
+			  TemperatureUnits="Null" 
+			  AngleUnits="Null"/>
+      <DataArray_t Name="CoordinateX" 
+		   DataType="RealDouble" 
+		   Dimension="2" 
+		   DimensionValues="[17,33]">
+	<!-- Data -->
+      </DataArray_t>
+      <DataArray_t Name="CoordinateY" 
+		   DataType="RealDouble" 
+		   Dimension="2" 
+		   DimensionValues="[17,33]">
+	<!-- Data -->
+      </DataArray_t>
+    </GridCoordinates_t>
+  </Zone_t>
+</CGNSBase_t>
+</CGNSTree>
+    

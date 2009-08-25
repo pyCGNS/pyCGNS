@@ -1,0 +1,34 @@
+BCData_t = element BCData_t 
+{
+ attribute Name {Name_t},
+ BCDataExt
+}
+        
+BCDataExt = 
+ attribute ListLength {xsd:unsignedInt},
+ attribute DataClass  {DataClass_t}?,
+ ( Descriptor_t*         
+ & DataGlobal_t*         
+ & DataLocal_t*          
+ & DimensionalUnits_t?           
+ & UserDefinedData_t*
+ )
+  
+DataGlobal_t = element DataGlobal_t 
+{
+ attribute Name            {Name_t},
+ attribute DataType        {DataType_t},
+ attribute Dimension       {xsd:unsignedInt "1"},
+ attribute DimensionValues {xsd:string "[1]"},
+ DataArrayExt
+}
+
+DataLocal_t = element DataLocal_t 
+{
+ attribute Name            {Name_t},
+ attribute DataType        {DataType_t},
+ attribute Dimension       {xsd:unsignedInt "1"},
+ attribute DimensionValues {xsd:string},
+ DataArrayExt
+}
+

@@ -1,0 +1,12 @@
+IndexArray_t = element IndexArray_t 
+{
+ attribute Name {Name_t},
+
+ IndexArrayExt
+}
+  
+IndexArrayExt = 
+ attribute IndexDimension {DimensionInteger3D_t},
+ attribute ArraySize      {xsd:unsignedInt},
+ attribute DataType       {DataType_t},
+ xsd:string

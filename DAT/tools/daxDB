@@ -1,0 +1,122 @@
+#!/usr/bin/env python 
+# ------------------------------------------------------------
+# pyDAX - Tools - daxDB
+# ------------------------------------------------------------
+# $Id: daxDB 35 2003-08-22 15:21:06Z mpoinot $
+#
+import DAX.db.connect as dx
+import DAX.exceptions as ex
+import DAX.utils      as ut
+#
+import getopt
+daxDBoptionError="daxDBoptionError"
+# ------------------------------------------------------------
+def parseAndRun(args):
+  opt,arg=getopt.getopt(args,"tETx:c:r:u:p:a:v:o:i:")
+  connection   = None
+  command      = None
+  baseid       = None
+  path         = None
+  empty        = None  
+  attribute    = []
+  value        = []
+  for o,v in opt:
+    if (o == "-x"):
+      connection=tuple(v.split(":"))
+    if (o == "-E"):
+      if (not command):    raise daxDBoptionError
+      if (command != "-c"):raise daxDBoptionError
+      empty=1
+    if (o == "-T"):
+      ut.DAXtraceFlag=2
+    if (o == "-t"):
+      ut.DAXtraceFlag=1
+    if (o in ["-c","-r","-u","-o","-i"]):
+      if (not connection): raise daxDBoptionError
+      if (command):        raise daxDBoptionError
+      command=o
+      baseid =v
+    if (o == "-p"):
+      if (not command):    raise daxDBoptionError
+      if (command == "-r"):raise daxDBoptionError
+      if (path):           raise daxDBoptionError
+      if (empty):          raise daxDBoptionError            
+      path=v
+    if (o == "-a"):
+      if (not command):    raise daxDBoptionError
+      if (command != "-u"):raise daxDBoptionError
+      attribute+=[v]
+    if (o == "-v"):
+      if (not command):    raise daxDBoptionError
+      if (command != "-u"):raise daxDBoptionError
+      if (not attribute):  raise daxDBoptionError
+      value+=[v]
+  if (   (not command)
+      or (not connection)
+      or (not baseid)
+      or (attribute and not value)
+      or (value and not attribute)): raise daxDBoptionError
+  # ----------    
+  if (command == "-c"):
+    ut.ptrace("Connection")
+    d=dx.daxDB(connection)
+    ut.ptrace("Create")
+    if   ((not path) and (empty)): d.create(baseid)
+    elif  (not path)             : d.create(baseid,".")
+    else:                          d.create(baseid,path)
+    ut.ptrace("Leave")
+    del d
+  # ----------    
+  if (command == "-o"):
+    d=dx.daxDB(connection)
+    d.checkout(baseid,path)
+    del d
+  # ----------    
+  if (command == "-i"):
+    d=dx.daxDB(connection)
+    d.checkin(baseid,path)
+    del d
+  # ----------    
+  if (command == "-u"):
+    if (len(attribute) != len(value)): raise daxDBoptionError
+    d=dx.daxDB(connection)
+    d.update(baseid,[attribute,value])
+    del d
+  # ----------    
+  if (command == "-r"):
+    d=dx.daxDB(connection)
+    d.remove(baseid)
+    del d
+      
+    
+# ------------------------------------------------------------
+# -T (trace) option is not documented
+# 
+def usage():
+    print """\
+daxDB   : DAX Database interface class
+usage   : daxDB -x <database-connection> [command and option]
+        : commands are exclusives, options should be ordered
+        : <database-connection> is <databasename>:<username>:<password>
+        : No -p argument means use the current directory
+        : Use -E for a creation without checkin
+        : -t option give a short trace, -T gives verbose trace
+commands:
+ -c create   = [-t|-T] -c <file-identifier> [ -p <unix-file-path> | -E ]
+ -r remove   = [-t|-T] -r <file-identifier>
+ -u update   = [-t|-T] -u <file-identifier> [ -a <attribute> -v <value> ]
+ -o checkout = [-t|-T] -o <file-identifier> [ -p <unix-file-path> ]
+ -i checkin  = [-t|-T] -i <file-identifier> [ -p <unix-file-path> ]
+"""
+if (__name__ == "__main__"):
+  import sys
+  try:
+    parseAndRun(sys.argv[1:]) 
+  except daxDBoptionError:   usage()
+  except IndexError:         usage()
+  except getopt.GetoptError: usage()
+
+  # DAX exceptions
+  except ex.DAXException, e: print e
+
+    

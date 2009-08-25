@@ -1,0 +1,51 @@
+<FlowEquationSet_t Name="NSEquations"  
+		   CellDimension="3"  
+		   EquationDimension="3" >
+  <GasModel_t Name="GasModel"  
+	      GasModelType="CaloricallyPerfect"  >
+    <DataArray_t Name="SpecificHeatRatio"  
+		 DataType="RealDouble"  
+		 Dimension="1"  
+		 DimensionValues="1" > [ 1.4 ]
+    </DataArray_t>
+  </GasModel_t>
+  <GoverningEquations_t Name="GoverningEquations"  
+			CellDimension="3"  
+			GoverningEquationsType="NSTurbulent"  
+			DiffusionModel="(1, 1, 1, 1, 1, 1)" />
+  <ThermalConductivityModel_t Name="ThermalConductivityModel"  
+			      ThermalConductivityModelType="ConstantPrandtl"  >
+    <DataArray_t Name="Prandtl"  
+		 DataType="RealDouble"  
+		 Dimension="1"  
+		 DimensionValues="1" > [ 0.72 ]
+    </DataArray_t>
+  </ThermalConductivityModel_t>
+  <TurbulenceClosure_t Name="TurbulenceClosure"  
+		       TurbulenceClosureType="EddyViscosity"  >
+    <DataArray_t Name="PrandtlTurbulent"  
+		 DataType="RealDouble"  
+		 Dimension="1"  
+		 DimensionValues="1" > [ 0.9 ]
+    </DataArray_t>
+  </TurbulenceClosure_t>
+  <TurbulenceModel_t Name="TurbulenceModel"  
+		     CellDimension="3"  
+		     TurbulenceModelType="OneEquation_SpalartAllmaras"
+		     DiffusionModel="(1, 1, 1, 1, 1, 1)" />
+  <ViscosityModel_t Name="ViscosityModel"  
+		    ViscosityModelType="SutherLandLaw"  
+		    DataClass="Dimensional"  >
+    <DataArray_t Name="SutherLandLawConstant"  
+		 DataType="RealDouble"  
+		 Dimension="1"  
+		 DimensionValues="1" > 
+    </DataArray_t>
+    <DimensionalUnits_t Name="DimensionalUnits"  
+			MassUnits="Null"  
+			LengthUnits="Null"  
+			TimeUnits="Null"  
+			TemperatureUnits="Kelvin"  
+			AngleUnits="Null"  />
+  </ViscosityModel_t>
+</FlowEquationSet_t>

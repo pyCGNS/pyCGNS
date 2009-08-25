@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+# CFD General Notation System - CGNS XML tools
+# ONERA/DSNA - poinot@onera.fr - henaux@onera.fr
+# pyCCCCC - $Id: cgt 22 2005-02-02 09:57:08Z  $
+#
+# See file COPYING in the root directory of this Python module source 
+# tree for license information. 
+#
+
+import CCCCC.gui.cgt as cgt
+import sys
+
+cgt.cgt(sys.argv)

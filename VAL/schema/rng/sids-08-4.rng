@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="GridConnectivity_t">
+    <element name="GridConnectivity_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <attribute name="IndexDimension">
+        <ref name="DimensionInteger3D_t"/>
+      </attribute>
+      <attribute name="CellDimension">
+        <ref name="DimensionInteger3D_t"/>
+      </attribute>
+      <optional>
+        <attribute name="GridConnectivityType">
+          <ref name="GridConnectivityType_t"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="GridLocation">
+          <ref name="GridLocation_t"/>
+        </attribute>
+      </optional>
+      <attribute name="ZoneDonorName">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="Ordinal">
+          <ref name="Ordinal_t"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <choice>
+          <ref name="PointRange_t"/>
+          <ref name="PointList_t"/>
+        </choice>
+        <choice>
+          <ref name="PointListDonor_t"/>
+          <interleave>
+            <ref name="CellListDonor_t"/>
+            <ref name="InterpolantsDonor_t"/>
+          </interleave>
+        </choice>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="GridConnectivityType_t">
+    <choice>
+      <value>Null</value>
+      <value>Overset</value>
+      <value>Abutting</value>
+      <value>Abutting1to1</value>
+      <value>UserDefined</value>
+    </choice>
+  </define>
+  <define name="PointListDonor_t">
+    <element name="PointListDonor_t">
+      <attribute name="Name">
+        <value type="string">PointListDonor</value>
+      </attribute>
+      <ref name="IndexArrayExt"/>
+    </element>
+  </define>
+  <define name="CellListDonor_t">
+    <element name="CellListDonor_t">
+      <attribute name="Name">
+        <value type="string">CellListDonor</value>
+      </attribute>
+      <ref name="IndexArrayExt"/>
+    </element>
+  </define>
+  <define name="InterpolantsDonor_t">
+    <element name="InterpolantsDonor_t">
+      <attribute name="Name">
+        <value type="string">InterpolantsDonor_t</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">2</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+</grammar>

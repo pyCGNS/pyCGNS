@@ -1,0 +1,30 @@
+<Zone_t Name="Zone">
+
+ <!-- Time independant data -->
+ <GridCoordinates_t Name="GridCoordinates" />
+ <ZoneBC_t Name="ZoneBC" />
+ <ZoneGridConnectivity_t Name="ZoneGridConnectivity" /> 
+
+ <!-- Time dependant data -->
+ <RigidGridMotion_t Name="RigidGridMotion#1" />    
+ <RigidGridMotion_t Name="RigidGridMotion#2" />
+ ...
+ <RigidGridMotion_t Name="RigidGridMotion#N" />    
+
+ <FlowSolution_t Name="Solution#0" />    
+ <FlowSolution_t Name="Solution#1" />
+ <FlowSolution_t Name="Solution#2" /> 
+ ...
+ <FlowSolution_t Name="Solution#N" />    
+
+ <ZoneIterativeData_t Name="ZoneIterativeData"  
+		      NumberOfSteps="N"  >
+     <DataArray_t Name="FlowSolutionsPointers"  
+		  DataType="Character"  Dimension="1"  DimensionValues="(32,N)" >
+     [ "Solution#1","Solution#2", ..., "Solution#N"]
+     </DataArray_t>
+     <DataArray_t Name="RigidGridMotionPointers"  
+		  DataType="Character"  Dimension="2"  DimensionValues="(32,N)" > 
+     [ "RigidGridMotion#1","RigidGridMotion#2", ..., "RigidGridMotion#N"]
+     </DataArray_t>
+ </ZoneIterativeData_t>

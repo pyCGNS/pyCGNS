@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="DataClass_t">
+    <choice>
+      <value>Null</value>
+      <value>Dimensional</value>
+      <value>NormalizedByDimensional</value>
+      <value>NormalizedByUnknownDimensional</value>
+      <value>NondimensionalParameter</value>
+      <value>DimensionlessConstant</value>
+      <value>UserDefined</value>
+    </choice>
+  </define>
+</grammar>

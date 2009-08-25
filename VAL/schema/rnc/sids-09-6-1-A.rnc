@@ -1,0 +1,8 @@
+WallFunction_t = element WallFunction_t
+{
+ attribute Name {Name_t},
+ ( Descriptor_t       *
+ & WallFunctionType_t
+ & UserDefinedData_t  *
+ )        
+}

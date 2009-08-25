@@ -1,0 +1,8 @@
+Descriptor_t = element Descriptor_t 
+{ 
+ attribute Name {Name_t}, 
+
+ DescriptorExt
+}
+
+DescriptorExt = xsd:string

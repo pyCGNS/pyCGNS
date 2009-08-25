@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="ArbitraryGridMotion_t">
+    <element name="ArbitraryGridMotion_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <attribute name="IndexDimension">
+        <ref name="DimensionInteger3D_t"/>
+      </attribute>
+      <attribute name="VertexSize">
+        <ref name="VertexSize_t"/>
+      </attribute>
+      <attribute name="CellSize">
+        <ref name="CellSize_t"/>
+      </attribute>
+      <attribute name="ArbitraryGridMotionType">
+        <ref name="ArbitraryGridMotionType_t"/>
+      </attribute>
+      <optional>
+        <attribute name="GridLocation">
+          <ref name="GridLocation_t"/>
+        </attribute>
+      </optional>
+      <attribute name="DataClass">
+        <ref name="DataClass_t"/>
+      </attribute>
+      <interleave>
+        <zeroOrMore>
+          <ref name="DataArray_t"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="Rind_t"/>
+        </optional>
+        <optional>
+          <ref name="DimensionalUnits_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="ArbitraryGridMotionType_t">
+    <choice>
+      <value>Null</value>
+      <value>NonDeformingGrid</value>
+      <value>DeformingGrid</value>
+      <value>UserDefined</value>
+    </choice>
+  </define>
+</grammar>

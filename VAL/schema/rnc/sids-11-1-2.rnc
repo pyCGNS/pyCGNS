@@ -1,0 +1,51 @@
+ZoneIterativeData_t = element ZoneIterativeData_t 
+{
+ attribute Name          {Name_t},
+ attribute NumberOfSteps {xsd:unsignedInt},
+ attribute DataClass     {DataClass_t}?,
+ ( RigidGridMotionPointers_t ?
+ & ArbitraryGridMotionPointers_t ?
+ & GridCoordinatesPointers_t ?
+ & FlowSolutionsPointers_t ?
+ & DataArray_t *
+ & Descriptor_t *
+ & DimensionalUnits_t ?
+ & UserDefinedData_t *
+ )
+}
+  
+RigidGridMotionPointers_t = element RigidGridMotionPointers_t 
+{
+ attribute Name            {xsd:string "RigidGridMotionPointers"},
+ attribute DataType        {xsd:string "Character"},
+ attribute Dimension       {xsd:unsignedInt "2"},
+ attribute DimensionValues {xsd:string},
+ DataArrayExt
+}
+
+ArbitraryGridMotionPointers_t = element ArbitraryGridMotionPointers_t 
+{
+ attribute Name            {xsd:string "ArbitraryGridMotionPointers"},
+ attribute DataType        {xsd:string "Character"},
+ attribute Dimension       {xsd:unsignedInt "2"},
+ attribute DimensionValues {xsd:string},
+ DataArrayExt
+}
+
+GridCoordinatesPointers_t = element GridCoordinatesPointers_t 
+{
+ attribute Name            {xsd:string "GridCoordinatesPointers"},
+ attribute DataType        {xsd:string "Character"},
+ attribute Dimension       {xsd:unsignedInt "2"},
+ attribute DimensionValues {xsd:string},
+ DataArrayExt
+}
+
+FlowSolutionsPointers_t =  element FlowSolutionsPointers_t 
+{
+ attribute Name            {xsd:string "FlowSolutionsPointers"},
+ attribute DataType        {xsd:string "Character"},
+ attribute Dimension       {xsd:unsignedInt "2"},
+ attribute DimensionValues {xsd:string},
+ DataArrayExt
+}

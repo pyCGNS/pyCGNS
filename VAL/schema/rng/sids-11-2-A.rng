@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="RigidGridMotion_t">
+    <element name="RigidGridMotion_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <attribute name="RigidGridMotionType">
+        <ref name="RigidGridMotionType_t"/>
+      </attribute>
+      <optional>
+        <attribute name="DataClass">
+          <ref name="DataClass_t"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <ref name="OriginLocation_t"/>
+        <optional>
+          <ref name="RigidRotationAngle_t"/>
+        </optional>
+        <optional>
+          <ref name="RigidVelocity_t"/>
+        </optional>
+        <optional>
+          <ref name="RigidRotationRate_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="DataArray_t"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="DimensionalUnits_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="OriginLocation_t">
+    <element name="OriginLocation_t">
+      <attribute name="Name">
+        <value type="string">OriginLocation</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">2</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="RigidRotationAngle_t">
+    <element name="RigidRotationAngle_t">
+      <attribute name="Name">
+        <value type="string">RigidRotationAngle</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="RigidVelocity_t">
+    <element name="RigidVelocity_t">
+      <attribute name="Name">
+        <value type="string">RigidVelocity</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="RigidRotationRate_t">
+    <element name="RigidRotationRate_t">
+      <attribute name="Name">
+        <value type="string">RigidRotationRate</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+</grammar>

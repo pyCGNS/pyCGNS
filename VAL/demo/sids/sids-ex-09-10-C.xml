@@ -1,0 +1,35 @@
+<BC_t Name="BC3"  
+      IndexDimension="2"  
+      PhysicalDimension="2"  
+      BCType="BCInflowSubsonic"  
+      GridLocation="FaceCenter"  >
+  <PointRange_t Name="PointRange"  
+		IndexDimension="2"  
+		Begin="[1 2]"  
+		End="[1 6]" />      
+  <BCDataSet_t Name="BCDataSet1"  
+	       ListLength="5"  
+	       BCTypeSimple="BCInflowSubsonic"  >
+    <DirichletData_t Name="DirichletData" 
+		     ListLength="5"  >
+      <DataGlobal_t Name="EntropyApprox"  
+		    DataType="RealDouble"  
+		    Dimension="1"  
+		    DimensionValues="1" > 
+	[0.94]
+      </DataGlobal_t>
+      <DataGlobal_t Name="EnthalpyStagnation"  
+		    DataType="RealDouble"  
+		    Dimension="1"  
+		    DimensionValues="1" > 
+	[2.85]
+      </DataGlobal_t>
+      <DataGlobal_t Name="VelocityY"  
+		    DataType="RealDouble"  
+		    Dimension="1"  
+		    DimensionValues="1" > 
+	<!-- Data(real,1,5) = (v_inflow(j), j=37) ; -->
+      </DataGlobal_t>
+    </DirichletData_t>
+  </BCDataSet_t>
+</BC_t>

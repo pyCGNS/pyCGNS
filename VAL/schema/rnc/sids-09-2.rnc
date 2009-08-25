@@ -1,0 +1,13 @@
+ZoneBC_t = element ZoneBC_t 
+{ 
+ attribute Name              {Name_t},
+ attribute IndexDimension    {DimensionInteger3D_t},
+ attribute PhysicalDimension {DimensionInteger3D_t},
+ attribute DataClass         {DataClass_t}?,
+ ( Descriptor_t       *		
+ & BC_t               *
+ & ReferenceState_t   ?	
+ & DimensionalUnits_t ?   	
+ & UserDefinedData_t  *
+ )
+}

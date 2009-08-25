@@ -1,0 +1,12 @@
+ZoneGridConnectivity_t = element ZoneGridConnectivity_t 
+{ 
+ attribute Name           {Name_t},
+ attribute IndexDimension {DimensionInteger3D_t},
+ attribute CellDimension  {DimensionInteger3D_t},
+ ( Descriptor_t          *               
+ & GridConnectivity1to1_t*
+ & GridConnectivity_t    *               
+ & OversetHoles_t        *       
+ & UserDefinedData_t     *
+ ) 
+}

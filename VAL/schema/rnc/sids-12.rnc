@@ -1,0 +1,21 @@
+# CFD General Notation System - CGNS XML tools
+# ONERA/DSNA - poinot@onera.fr - henaux@onera.fr
+# pyCHEXC - $Id: sids-12.rnc 389 2004-08-31 08:15:27Z  $ 
+# 
+# See file COPYING in the root directory of this Python module source 
+# tree for license information.
+# 
+#-----------------------------#
+#Miscellaneous Data Structures#
+#-----------------------------#
+
+include "sids-12-1.rnc"
+include "sids-12-3.rnc"
+include "sids-12-4.rnc"
+include "sids-12-5.rnc"
+include "sids-12-6.rnc"
+include "sids-12-7-A.rnc"
+include "sids-12-7-B.rnc"
+include "sids-12-8.rnc"
+include "sids-12-9.rnc"
+include "sids-12-10.rnc"

@@ -1,0 +1,20 @@
+GoverningEquations_t = element GoverningEquations_t 
+{
+ attribute Name                   {Name_t},
+ attribute CellDimension          {DimensionInteger3D_t},
+ attribute GoverningEquationsType {GoverningEquationsType_t},
+ attribute DiffusionModel         {DiffusionModel_t}?,
+ ( Descriptor_t *
+ & UserDefinedData_t *
+ )
+}
+
+GoverningEquationsType_t =
+ "Null"                      |
+ "FullPotential"             |
+ "Euler"                     |       
+ "NSLaminar"                 |
+ "NSTurbulent"               |
+ "NSLaminarIncompressible"   |
+ "NSTurbulentIncompressible" |
+ "UserDefined"

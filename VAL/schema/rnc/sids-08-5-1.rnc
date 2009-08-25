@@ -1,0 +1,32 @@
+Periodic_t = element Periodic_t
+{
+ attribute Name      {Name_t},
+ attribute DataClass {DataClass_t}?,
+ ( Descriptor_t *
+ & RotationCenter_t
+ & RotationAngle_t
+ & Translation_t
+ & DimensionalUnits_t ?
+ & UserDefinedData_t *                     
+ )
+}
+
+RotationAngle_t = element RotationAngle_t 
+{
+ attribute Name            {xsd:string "RotationAngle_t"},
+ attribute DataType        {xsd:string "RealDouble"},
+ attribute Dimension       {xsd:unsignedInt "1"},
+ attribute DimensionValues {xsd:string},
+
+ DataArrayExt
+}
+
+Translation_t = element Translation_t 
+{
+ attribute Name            {xsd:string "Translation_t"},
+ attribute DataType        {xsd:string "RealDouble"},
+ attribute Dimension       {xsd:unsignedInt "1"},
+ attribute DimensionValues {xsd:string},
+
+ DataArrayExt
+}

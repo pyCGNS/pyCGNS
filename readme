@@ -1,8 +1,8 @@
 
-VAL - Validate
-TRA - Translate
+VAL - Validate  (pyC5)
+TRA - Translate (pyCRAB)
 MAP - Mapping
-DAT - DBMS
-WRA - Wrapper
+DAT - DBMS      (pyDAX)
+WRA - Wrapper   (pyCGNS)
 PAT - Pattern
-NAV - Navigate
+NAV - Navigate  (pyS7)

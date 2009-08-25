@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="BCTypeSimple_t">
+    <choice>
+      <value>Null</value>
+      <value>BCGeneral</value>
+      <value>BCDirichlet</value>
+      <value>BCNeumann</value>
+      <value>BCExtrapolate</value>
+      <value>BCWallInviscid</value>
+      <value>BCWallViscousHeatFlux</value>
+      <value>BCWallViscousIsothermal</value>
+      <value>BCWallViscous</value>
+      <value>BCWall</value>
+      <value>BCInflowSubsonic</value>
+      <value>BCInflowSupersonic</value>
+      <value>BCOutflowSubsonic</value>
+      <value>BCOutflowSupersonic</value>
+      <value>BCTunnelInflow</value>
+      <value>BCTunnelOutflow</value>
+      <value>BCDegenerateLine</value>
+      <value>BCDegeneratePoint</value>
+      <value>BCSymmetryPlane</value>
+      <value>BCSymmetryPolar</value>
+      <value>BCAxisymmetricWedge</value>
+      <value>FamilySpecified</value>
+      <value>UserDefined</value>
+    </choice>
+  </define>
+  <define name="BCTypeCompound_t">
+    <choice>
+      <value>Null</value>
+      <value>BCInflow</value>
+      <value>BCOutflow</value>
+      <value>BCFarfield</value>
+      <value>UserDefined</value>
+    </choice>
+  </define>
+  <define name="BCType_t">
+    <choice>
+      <ref name="BCTypeSimple_t"/>
+      <ref name="BCTypeCompound_t"/>
+    </choice>
+  </define>
+</grammar>

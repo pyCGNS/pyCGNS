@@ -1,0 +1,5 @@
+ArbitraryGridMotionType_t =
+ "Null"              |
+ "NonDeformingGrid"  |
+ "DeformingGrid"     |
+ "UserDefined"

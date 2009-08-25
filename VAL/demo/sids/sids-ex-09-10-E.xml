@@ -1,0 +1,46 @@
+<BC_t Name="BC5"  
+      IndexDimension="2"  
+      PhysicalDimension="2"  
+      BCType="BCFarField"  
+      InwardNormalIndex="(0, -1)"  >
+ <PointRange_t Name="PointRange"  
+	       IndexDimension="2"  
+	       Begin=""  
+	       End="" />
+      <BCDataSet_t Name="BCDataSetInflowSupersonic"  
+		   ListLength=""  
+		   BCTypeSimple="BCInflowSupersonic" />
+      <BCDataSet_t Name="BCDataSetInflowSubsonic"  
+		   ListLength=""  
+		   BCTypeSimple="BCInflowSubsonic"  >
+       <DirichletData_t Name="DirichletData" 
+			ListLength=""  >
+        <DataGlobal_t Name="CharacteristicEntropy"  
+		      DataType="RealDouble"  
+		      Dimension="1"  
+		      DimensionValues="1" /> 
+        <DataGlobal_t Name="CharacteristicVorticity1"  
+		      DataType="RealDouble"  
+		      Dimension="1"  
+		      DimensionValues="1" /> 
+        <DataGlobal_t Name="CharacteristicAcousticPlus"  
+		      DataType="RealDouble"  
+		      Dimension="1"  
+		      DimensionValues="1" /> 
+       </DirichletData_t>
+      </BCDataSet_t>
+      <BCDataSet_t Name="BCDataSetOutflowSupersonic"  
+		   ListLength=""  
+		   BCTypeSimple="BCOutlowSupersonic" />
+      <BCDataSet_t Name="BCDataSetOutflowSubsonic"  
+		   ListLength=""  
+		   BCTypeSimple="BCOutflowSubsonic">
+       <DirichletData_t Name="DirichletData" 
+			ListLength=""  >
+        <DataGlobal_t Name="CharacteristicAcousticMinus"  
+		      DataType="RealDouble"  
+		      Dimension="1"  
+		      DimensionValues="1" /> 
+       </DirichletData_t>
+      </BCDataSet_t>
+</BC_t>

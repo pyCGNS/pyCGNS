@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<CGNSTree CGNSLibraryVersion="2.3"> 
+<CGNSBase_t Name="D02=Rotor-7A" CellDimension="3" PhysicalDimension="3" SimulationType="UserDefined">
+  <Zone_t Name="Zone-001" CellDimension="3" PhysicalDimension="3" ZoneType="Structured" VertexSize="[3,5,7]" CellSize="[2,4,6]" VertexSizeBoundary="[0,0,0]">
+    <GridCoordinates_t Name="GridCoordinates" IndexDimension="3" VertexSize="[3,5,7]">
+      <DataArray_t Name="CoordinateX" DataType="RealDouble" Dimension="3" DimensionValues="[3,5,7]">
+[ [23,23,23,23] ]
+      </DataArray_t>
+      <DataArray_t Name="CoordinateY" DataType="RealDouble" Dimension="3" DimensionValues="[3,5,7]">
+        <!-- Data -->
+      </DataArray_t>
+    </GridCoordinates_t>
+  </Zone_t>
+</CGNSBase_t>
+</CGNSTree>

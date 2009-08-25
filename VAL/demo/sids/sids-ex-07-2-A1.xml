@@ -1,0 +1,30 @@
+    <GridCoordinates_t Name="GridCoordinates" 
+		       IndexDimension="2" 
+		       VertexSize="[17,33]">
+      <DataArray_t Name="CoordinateX" 
+		   DataType="real" 
+		   Dimension="2" 
+		   DimensionValues="[17,33]" 
+		   DataClass="Dimensional" >
+	<DimensionalUnits_t Name="DimensionalUnits" 
+			    MassUnits="Null" 
+			    LengthUnits="Foot" 
+			    TimeUnits="Null" 
+			    TemperatureUnits="Null" 
+			    AngleUnits="Null"/>
+	<!-- Data(real, 2, [17,33]) = ((x(i,j), i=1,17), j=1,33) ; -->
+      </DataArray_t>
+      <DataArray_t Name="CoordinateY" 
+		   DataType="real" 
+		   Dimension="2" 
+		   DimensionValues="[17,33]" 
+		   DataClass="Dimensional">
+	<DimensionalUnits_t Name="DimensionalUnits" 
+			    MassUnits="Null" 
+			    LengthUnits="Foot" 
+			    TimeUnits="Null" 
+			    TemperatureUnits="Null" 
+			    AngleUnits="Null" />
+	<!-- Data(real, 2, [17,33]) = ((y(i,j), i=1,17), j=1,33) ; -->
+      </DataArray_t>
+    </GridCoordinates_t>

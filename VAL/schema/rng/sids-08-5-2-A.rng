@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="AverageInterface_t">
+    <element name="AverageInterface_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <ref name="AverageInterfaceType_t"/>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+</grammar>

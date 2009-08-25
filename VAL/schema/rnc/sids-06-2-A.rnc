@@ -1,0 +1,5 @@
+SimulationType_t =
+ "Null"            |
+ "UserDefined"     |
+ "TimeAccurate"    |
+ "NonTimeAccurate"

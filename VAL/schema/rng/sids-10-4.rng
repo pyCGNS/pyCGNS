@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="ViscosityModel_t">
+    <element name="ViscosityModel_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <attribute name="ViscosityModelType">
+        <ref name="ViscosityModelType_t"/>
+      </attribute>
+      <optional>
+        <attribute name="DataClass">
+          <ref name="DataClass_t"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="DataArray_t"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="DimensionalUnits_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="ViscosityModelType_t">
+    <choice>
+      <value>Null</value>
+      <value>Constant</value>
+      <value>PowerLaw</value>
+      <value>SutherlandLaw</value>
+      <value>UserDefined</value>
+    </choice>
+  </define>
+</grammar>

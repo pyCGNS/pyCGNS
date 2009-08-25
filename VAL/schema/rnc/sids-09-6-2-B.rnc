@@ -1,0 +1,6 @@
+AreaType_t =
+ "Null"        |
+ "BleedArea"   |
+ "CaptureArea" |
+ "UserDefined" 
+

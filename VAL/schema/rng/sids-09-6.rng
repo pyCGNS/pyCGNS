@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <include href="sids-09-6-A.rng"/>
+  <include href="sids-09-6-1-A.rng"/>
+  <include href="sids-09-6-1-B.rng"/>
+  <include href="sids-09-6-2-A.rng"/>
+  <include href="sids-09-6-2-B.rng"/>
+</grammar>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="BCProperty_t">
+    <element name="BCProperty_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="WallFunction_t"/>
+        </optional>
+        <optional>
+          <ref name="Area_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+</grammar>

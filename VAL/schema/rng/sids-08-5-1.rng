@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="Periodic_t">
+    <element name="Periodic_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <optional>
+        <attribute name="DataClass">
+          <ref name="DataClass_t"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <ref name="RotationCenter_t"/>
+        <ref name="RotationAngle_t"/>
+        <ref name="Translation_t"/>
+        <optional>
+          <ref name="DimensionalUnits_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="RotationAngle_t">
+    <element name="RotationAngle_t">
+      <attribute name="Name">
+        <value type="string">RotationAngle_t</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="Translation_t">
+    <element name="Translation_t">
+      <attribute name="Name">
+        <value type="string">Translation_t</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+</grammar>

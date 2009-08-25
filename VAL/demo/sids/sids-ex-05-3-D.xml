@@ -1,0 +1,7 @@
+<DataArray_t Name="Enthalpy" 
+	     DataType="real" 
+	     Dimension="3" 
+	     DimensionValues="[33,9,17]" 
+	     DataClass="NormalizedByUnknownDimensional">
+ <!-- Data(real, 3, [33,9,17]) = (((H(i,j,k), i=1,33), j=1,9), k=1,17) ;-->
+</DataArray_t>

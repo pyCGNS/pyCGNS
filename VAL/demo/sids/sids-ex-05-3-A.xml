@@ -1,0 +1,7 @@
+<DataArray_t Name="Data1" 
+	     DataType="int" 
+	     Dimension="1" 
+	     DimensionValues="[10]" 
+	     DataClass="DimensionLessConstant">
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+</DataArray_t>

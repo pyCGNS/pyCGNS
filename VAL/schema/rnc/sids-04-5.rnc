@@ -1,0 +1,10 @@
+GridLocation_t =
+ "Null"        |
+ "Vertex"      |
+ "CellCenter"  |
+ "FaceCenter"  |
+ "IFaceCenter" |
+ "JFaceCenter" |
+ "KFaceCenter" |
+ "EdgeCenter"  |
+ "UserDefined"

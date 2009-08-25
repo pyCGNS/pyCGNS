@@ -1,0 +1,22 @@
+<DataArray_t Name="Enthalpy" 
+	     DataType="real" 
+	     Dimension="3" 
+	     DimensionValues="[33,9,17]" 
+	     DataClass="NormalizedByDimensional">
+ <!-- Data(real, 3, [33,9,17]) = (((H(i,j,k), i=1,33), j=1,9), k=1,17) ;-->
+ <DataConversion_t Name="DataConversion" 
+		   ConversionScale="100" 
+		   ConversionOffset="0"/>
+ <DimensionalUnits_t Name="DimensionalUnits" 
+		     MassUnits="Null" 
+		     LengthUnits="Meter" 
+		     TimeUnits="Second" 
+		     TemperatureUnits="Null" 
+		     AngleUnits="Null" />
+ <DimensionalExponents_t Name="DimensionalExponents"
+			 MassExponent="0" 
+			 LengthExponent="+2" 
+			 TimeExponent="-2" 
+			 TemperatureExponent="0" 
+			 AngleExponent="0"/>
+</DataArray_t>

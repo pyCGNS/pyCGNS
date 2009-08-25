@@ -1,0 +1,10 @@
+<!-- basé sur le fichier /data/Wksp/poinot/CGNS/Files/sq.cgns -->
+<CGNSTree CGNSLibraryVersion="1.0" >
+  <CGNSBase_t name="Base" PhysicalDimension="3" CellDimension="2" >
+    <Zone_t name="Zone-001" PhysicalDimension="3" CellDimension="2" ZoneType="Unstructured">
+      <VertexSize_t name='VertexSize' IndexDimension='2'>[21]</VertexSize_t>
+      <CellSize_t name='CellSize' IndexDimension='1'>[21]</CellSize_t>
+    </Zone_t>
+    <FlowEquationSet_t name="FlowEquation" CellDimension="1"/>
+  </CGNSBase_t>
+</CGNSTree>

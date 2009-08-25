@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="TurbulenceModel_t">
+    <element name="TurbulenceModel_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <attribute name="CellDimension">
+        <ref name="DimensionInteger3D_t"/>
+      </attribute>
+      <attribute name="TurbulenceModelType">
+        <ref name="TurbulenceModelType_t"/>
+      </attribute>
+      <optional>
+        <attribute name="DataClass">
+          <ref name="DataClass_t"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="DiffusionModel">
+          <ref name="DiffusionModel_t"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="DataArray_t"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="DimensionalUnits_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="TurbulenceModelType_t">
+    <choice>
+      <value>Null</value>
+      <value>Algebraic_BaldwinLomax</value>
+      <value>Algebraic_CebeciSmith</value>
+      <value>HalfEquation_JohnsonKing</value>
+      <value>OneEquation_BaldwinBarth</value>
+      <value>OneEquation_SpalartAllmaras</value>
+      <value>TwoEquation_JonesLaunder</value>
+      <value>TwoEquation_MenterSST</value>
+      <value>TwoEquation_Wilcox</value>
+      <value>UserDefined</value>
+    </choice>
+  </define>
+</grammar>

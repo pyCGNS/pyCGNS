@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="FlowSolution_t">
+    <element name="FlowSolution_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <attribute name="IndexDimension">
+        <ref name="DimensionInteger3D_t"/>
+      </attribute>
+      <attribute name="VertexSize">
+        <ref name="VertexSize_t"/>
+      </attribute>
+      <attribute name="CellSize">
+        <ref name="CellSize_t"/>
+      </attribute>
+      <optional>
+        <attribute name="GridLocation">
+          <ref name="GridLocation_t"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="DataClass">
+          <ref name="DataClass_t"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="Rind_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="DataArray_t"/>
+        </zeroOrMore>
+        <optional>
+          <!--
+            Dimension=IndexDimension 
+            DimensionValues=Constraint(VertexSize,CellSize,Rind)
+          -->
+          <ref name="DimensionalUnits_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+</grammar>

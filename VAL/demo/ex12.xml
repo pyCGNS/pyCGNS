@@ -1,0 +1,41 @@
+<CGNSTree CGNSLibraryVersion="2.3" >
+<CGNSBase_t Name="F01=naca012-B" 
+	    CellDimension="3"
+	    PhysicalDimension="3">
+  <Zone_t Name="UnstructuredZone" 
+	  CellDimension="1" 
+	  PhysicalDimension="1" 
+	  ZoneType="Unstructured" 
+	  VertexSize="1" 
+	  CellSize="1">
+   <ZoneGridConnectivity_t Name="ZoneGridConnectivity" CellDimension="1" IndexDimension="3">
+    <GridConnectivity1to1_t Name="Zone1/ZoneGridConnectivity/KMax" 
+			    IndexDimension="3" 
+			    Transform="[1,2,3]" 
+			    ZoneDonorName="Zone2" > 
+      <PointRange_t Name="PointRange" 
+		    IndexDimension="3" 
+		    Begin="[1,1,11]" 
+		    End="[9,17,11]"/>
+      <PointRangeDonor_t Name="PointRangeDonor" 
+			 IndexDimension="3" 
+			 Begin="[1,1,11]" 
+			 End="[9,17,11]"/>
+    </GridConnectivity1to1_t> 
+    <GridConnectivity1to1_t Name="Zone2/ZoneGridConnectivity/KMin" 
+			    IndexDimension="3" 
+			    Transform="[1,2,3]" 
+			    ZoneDonorName="Zone1" > 
+      <PointRange_t Name="PointRange" 
+		    IndexDimension="3" 
+		    Begin="[1,1,11]" 
+		    End="[9,17,11]"/>
+      <PointRangeDonor_t Name="PointRangeDonor" 
+			 IndexDimension="3" 
+			 Begin="[1,1,11]" 
+			 End="[9,17,11]"/>
+    </GridConnectivity1to1_t> 
+    </ZoneGridConnectivity_t >
+  </Zone_t>
+</CGNSBase_t>
+</CGNSTree> 

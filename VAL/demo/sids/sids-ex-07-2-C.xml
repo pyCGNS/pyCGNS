@@ -1,0 +1,22 @@
+    <GridCoordinates_t Name="GridCoordinates" 
+		       IndexDimension="1" 
+		       VertexSize="[15]">
+      <DataArray_t Name="CoordinateX" 
+		   DataType="real" 
+		   Dimension="1" 
+		   DimensionValues="[15]">
+	<!-- Data(real, 1, 15) = (x(i), i=1,15) ; -->
+      </DataArray_t>
+      <DataArray_t Name="CoordinateY" 
+		   DataType="real" 
+		   Dimension="1" 
+		   DimensionValues="[15]">
+	<!-- Data(real, 1, 15) = (y(i), i=1,15) ; -->
+      </DataArray_t>
+      <DataArray_t Name="CoordinateZ" 
+		   DataType="real" 
+		   Dimension="1" 
+		   DimensionValues="[15]">
+	<!-- Data(real, 1, 15) = (z(i), i=1,15) ; -->
+      </DataArray_t>
+    </GridCoordinates_t>  

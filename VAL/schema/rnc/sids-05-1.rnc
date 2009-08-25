@@ -1,0 +1,20 @@
+DataArray_t = element DataArray_t 
+{ 
+ attribute Name            {Name_t},
+ attribute DataType        {DataType_t},
+ attribute Dimension       {xsd:int},
+ attribute DimensionValues {xsd:string},
+
+ DataArrayExt
+}
+        
+        
+DataArrayExt = 
+ attribute DataClass { DataClass_t }?,
+ ( ( Descriptor_t *
+   & DimensionalUnits_t ?        
+   & DimensionalExponents_t?
+   & DataConversion_t ? 
+   )
+   & text
+ )

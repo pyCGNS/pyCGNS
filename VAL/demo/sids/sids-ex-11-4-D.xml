@@ -1,0 +1,82 @@
+<CGNSBase_t Name="Base" SimulationType="TimeAccurate">
+ <BaseIterativeData_t Name="BaseIterativeData" NumberOfSteps="2" >
+  <TimeValues_t      Name="TimeValues"> [15.5,31.0] </TimeValues_t>
+  <IterationValues_t Name="IterationValues"> [1000,2000] </IterationValues_t>
+  </BaseIterativeData_t>
+  <Zone_t Name="Zone#1">
+   <GridCoordinates_t Name="GridCoordinates" >
+    <DataArray_t Name="CoordinateX" /> 
+    <DataArray_t Name="CoordinateY" /> 
+   </GridCoordinates_t >
+   <RigidGridMotion_t Name="RigidGridMotion#1" RigidGridMotionType="ConstantRate">
+    <DataArray_t Name="OriginLocation" > [[0,0,0],[0,0,0]] </DataArray_t>
+    <DataArray_t Name="RigidRotationAngle"> [5.,0.,0.]] </DataArray_t>
+   </RigidGridMotion_t>    
+   <RigidGridMotion_t Name="RigidGridMotion#2" RigidGridMotionType="ConstantRate">
+    <DataArray_t Name="OriginLocation"> [[0,0,0],[0,0,0]] </DataArray_t>
+    <DataArray_t Name="RigidRotationAngle"> [10.,0.,0.]] </DataArray_t>
+   </RigidGridMotion_t>    
+   <ZoneIterativeData_t Name="ZoneIterativeData" NumberOfSteps="2"  >
+    <DataArray_t Name="RigidGridMotionPointers"> ["RigidGridMotion#1","RigidGridMotion#2"] </DataArray_t>
+    <DataArray_t Name="FlowSolutionsPointers"> ["Soln#1","Soln#2"] </DataArray_t>
+   </ZoneIterativeData_t>
+   <FlowSolution_t Name="Soln#1">
+     <DataArray_t Name="Density" />
+     <DataArray_t Name="VelocityX" />
+   </FlowSolution_t>
+   <FlowSolution_t Name="Soln#2" >
+     <DataArray_t Name="Density" />
+     <DataArray_t Name="VelocityX" />
+   </FlowSolution_t>
+  </Zone_t>
+  <Zone_t Name="Zone#2">
+   <GridCoordinates_t Name="GridCoordinates" >
+    <DataArray_t Name="CoordinateX" /> 
+    <DataArray_t Name="CoordinateY" /> 
+   </GridCoordinates_t >
+   <GridCoordinates_t Name="MovedGrid#1" >
+    <DataArray_t Name="CoordinateX" /> 
+    <DataArray_t Name="CoordinateY" /> 
+   </GridCoordinates_t >
+   <GridCoordinates_t Name="MovedGrid#2" >
+    <DataArray_t Name="CoordinateX" /> 
+    <DataArray_t Name="CoordinateY" /> 
+   </GridCoordinates_t >
+   <ArbitraryGridMotion_t Name="ArbitraryGridMotion#1" ArbitraryGridMotionType="DeformingGrid" />
+   <ArbitraryGridMotion_t Name="ArbitraryGridMotion#2" ArbitraryGridMotionType="DeformingGrid" >
+    <DataArray_t Name="GridVelocityX" /> 
+    <DataArray_t Name="GridVelocityY" /> 
+   </ArbitraryGridMotion_t>
+   <ZoneIterativeData_t Name="ZoneIterativeData" NumberOfSteps="2"  >
+    <DataArray_t Name="ArbitraryGridMotionPointers"> ["ArbitraryGridMotion#1","ArbitraryGridMotion#2"] </DataArray_t>
+    <DataArray_t Name="GridCoordinatesPointers"> ["MovedGrid#1","MovedGrid#2"] </DataArray_t>
+    <DataArray_t Name="FlowSolutionsPointers"> ["Soln#1","Soln#2"] </DataArray_t>
+   </ZoneIterativeData_t>
+   <FlowSolution_t Name="Soln#1">
+     <DataArray_t Name="Density" />
+     <DataArray_t Name="VelocityX" />
+   </FlowSolution_t>
+   <FlowSolution_t Name="Soln#2" >
+     <DataArray_t Name="Density" />
+     <DataArray_t Name="VelocityX" />
+   </FlowSolution_t>
+  </Zone_t>
+  <Zone_t Name="Zone#3">
+   <GridCoordinates_t Name="GridCoordinates" >
+    <DataArray_t Name="CoordinateX" /> 
+    <DataArray_t Name="CoordinateY" /> 
+   </GridCoordinates_t >
+   <ZoneIterativeData_t Name="ZoneIterativeData" NumberOfSteps="2"  >
+    <DataArray_t Name="FlowSolutionsPointers"> ["Soln#1","Soln#2"] </DataArray_t>
+   </ZoneIterativeData_t>
+   <FlowSolution_t Name="Soln#1">
+     <DataArray_t Name="Density" />
+     <DataArray_t Name="VelocityX" />
+   </FlowSolution_t>
+   <FlowSolution_t Name="Soln#2" >
+     <DataArray_t Name="Density" />
+     <DataArray_t Name="VelocityX" />
+   </FlowSolution_t>
+  </Zone_t>
+</CGNSBase_t>
+

@@ -1,0 +1,19 @@
+<DataArray_t Name="Pressure" 
+	     DataType="real" 
+	     Dimension="2" 
+	     DimensionValues="[11,9]" 
+	     DataClass="Dimensional">
+ <!-- Data(real, 2, [11,9]) = ((P(i,j), i=1,11), j=1,9) ; -->
+ <DimensionalUnits_t Name="DimensionalUnits" 
+		     MassUnits="Kilogram" 
+		     LengthUnits="Meter" 
+		     TimeUnits="Second" 
+		     TemperatureUnits="Null" 
+		     AngleUnits="Null" />
+ <DimensionalExponents_t Name="DimensionalExponents"
+			 MassExponent="+1" 
+			 LengthExponent="-1" 
+			 TimeExponent="-2" 
+			 TemperatureExponent="0" 
+			 AngleExponent="0"/>
+</DataArray_t>

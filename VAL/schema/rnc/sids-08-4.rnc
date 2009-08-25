@@ -1,0 +1,47 @@
+GridConnectivity_t = element GridConnectivity_t 
+{
+ attribute Name                 {Name_t},
+ attribute IndexDimension       {DimensionInteger3D_t},
+ attribute CellDimension        {DimensionInteger3D_t},
+ attribute GridConnectivityType {GridConnectivityType_t}?,
+ attribute GridLocation         {GridLocation_t}?,
+ attribute ZoneDonorName        {xsd:string},
+ attribute Ordinal              {Ordinal_t}?,
+
+ ( Descriptor_t *
+ & (PointRange_t | PointList_t)
+ & (PointListDonor_t | (CellListDonor_t & InterpolantsDonor_t)) 
+ & UserDefinedData_t *
+ )
+}
+
+GridConnectivityType_t =
+ "Null"         |
+ "Overset"      |
+ "Abutting"     |
+ "Abutting1to1" |
+ "UserDefined"
+  
+PointListDonor_t = element PointListDonor_t 
+{
+ attribute Name {xsd:string "PointListDonor"},
+
+ IndexArrayExt
+}
+ 
+CellListDonor_t = element CellListDonor_t 
+{
+ attribute Name {xsd:string "CellListDonor"},
+
+ IndexArrayExt
+}
+
+InterpolantsDonor_t = element InterpolantsDonor_t 
+{
+ attribute Name            {xsd:string "InterpolantsDonor_t"},
+ attribute DataType        {xsd:string "RealDouble"},
+ attribute Dimension       {xsd:unsignedInt "2"},
+ attribute DimensionValues {xsd:string},
+
+ DataArrayExt
+}

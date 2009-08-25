@@ -1,0 +1,19 @@
+FlowEquationSet_t = element FlowEquationSet_t 
+{
+ attribute Name              {Name_t},
+ attribute CellDimension     {DimensionInteger3D_t},
+ attribute EquationDimension {xsd:int}?,
+ attribute DataClass         {DataClass_t}?,
+ ( Descriptor_t *
+ & GoverningEquations_t ?
+ & GasModel_t ?
+ & ViscosityModel_t ?
+ & ThermalConductivityModel_t ?
+ & TurbulenceClosure_t ?
+ & TurbulenceModel_t ?
+ & ThermalRelaxationModel_t ?
+ & ChemicalKineticsModel_t ?
+ & DimensionalUnits_t ?
+ & UserDefinedData_t *
+ )
+  }

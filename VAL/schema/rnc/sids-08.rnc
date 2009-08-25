@@ -1,0 +1,19 @@
+# CFD General Notation System - CGNS XML tools
+# ONERA/DSNA - poinot@onera.fr - henaux@onera.fr
+# pyCHEXC - $Id: sids-8.rnc 389 2004-08-31 08:15:27Z  $ 
+# 
+# See file COPYING in the root directory of this Python module source 
+# tree for license information.
+# 
+#--------------------------------#
+#Multizone Interface Connectivity#
+#--------------------------------#
+
+include "sids-08-1.rnc"
+include "sids-08-2.rnc"
+include "sids-08-4.rnc"
+include "sids-08-5-A.rnc"
+include "sids-08-5-1.rnc"
+include "sids-08-5-2-A.rnc"
+include "sids-08-5-2-B.rnc"
+include "sids-08-6.rnc"

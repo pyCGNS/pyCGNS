@@ -1,0 +1,21 @@
+<BCData_t Name="DirichletData" ListLength="1">
+  <DataArray_t Name="PressureStagnation" DataType="real" 
+                                         Dimension="1" DimensionValues="[1]">
+               [2.56]
+  </DataArray_t>
+  <DataArray_t Name="MassFlow" 
+               DataType="real" Dimension="1" DimensionValues="[1]">
+               [1.34]
+  </DataArray_t>
+  <DataArray_t Name="VelocityAngleY" 
+               DataType="real" Dimension="1" DimensionValues="[1]">
+               [0.043]
+  </DataArray_t>
+  <DataArray_t Name="VelocityAngleZ" 
+               DataType="real" Dimension="1" DimensionValues="[1]">
+               [0.02]
+  </DataArray_t>
+
+</BCData_t>
+
+          

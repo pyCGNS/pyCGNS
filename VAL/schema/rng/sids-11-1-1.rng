@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="BaseIterativeData_t">
+    <element name="BaseIterativeData_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <attribute name="NumberOfSteps">
+        <data type="unsignedInt"/>
+      </attribute>
+      <optional>
+        <attribute name="DataClass">
+          <ref name="DataClass_t"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <choice>
+          <ref name="TimeValues_t"/>
+          <ref name="IterationValues_t"/>
+          <interleave>
+            <ref name="TimeValues_t"/>
+            <ref name="IterationValues_t"/>
+          </interleave>
+        </choice>
+        <optional>
+          <ref name="NumberOfZones_t"/>
+        </optional>
+        <optional>
+          <ref name="NumberOfFamilies_t"/>
+        </optional>
+        <optional>
+          <ref name="ZonePointers_t"/>
+        </optional>
+        <optional>
+          <ref name="FamilyPointers_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="DataArray_t"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="DimensionalUnits_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="TimeValues_t">
+    <element name="TimeValues_t">
+      <attribute name="Name">
+        <value type="string">TimeValues</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="IterationValues_t">
+    <element name="IterationValues_t">
+      <attribute name="Name">
+        <value type="string">IterationValues</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">Integer</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="NumberOfZones_t">
+    <element name="NumberOfZones_t">
+      <attribute name="Name">
+        <value type="string">NumberOfZones</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">Integer</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="NumberOfFamilies_t">
+    <element name="NumberOfFamilies_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">Integer</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="ZonePointers_t">
+    <element name="ZonePointers_t">
+      <attribute name="Name">
+        <value type="string">ZonePointers</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">Character</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">3</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="FamilyPointers_t">
+    <element name="FamilyPointers_t">
+      <attribute name="Name">
+        <value type="string">FamilyPointers</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">Character</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">3</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+</grammar>

@@ -1,0 +1,3 @@
+<CGNSTree CGNSLibraryVersion="1.0" >
+  <CGNSBase_t Name="Base" PhysicalDimension="3" CellDimension="2" SimulationType="TimeAccurate" />
+</CGNSTree>

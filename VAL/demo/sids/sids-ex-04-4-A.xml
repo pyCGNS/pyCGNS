@@ -1,0 +1,6 @@
+<DimensionalExponents_t Name="DimensionalExponents"
+			MassExponent="0" 
+			LengthExponent="+1" 
+			TimeExponent="-1" 
+			TemperatureExponent="0" 
+			AngleExponent="0"/>

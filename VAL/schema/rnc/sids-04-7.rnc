@@ -1,0 +1,11 @@
+IndexRange_t = element IndexRange_t 
+{
+ attribute Name           {Name_t},
+ attribute IndexDimension {DimensionInteger3D_t},
+
+ IndexRangeExt
+}  
+
+IndexRangeExt = 
+ attribute Begin {xsd:string},
+ attribute End   {xsd:string}

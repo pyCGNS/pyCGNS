@@ -1,0 +1,29 @@
+  <Zone_t Name="UnstructuredZone" 
+	  CellDimension="1" 
+	  PhysicalDimension="1" 
+	  ZoneType="Unstructured" 
+	  VertexSize="1" 
+	  CellSize="1">
+    <Elements_t Name="MixedElementsSection" 
+		ElementSizeBoundary="0" 
+		ElementType="MIXED">
+      <IndexRange_t Name="ElementRange" 
+		    IndexDimension="1" 
+		    Begin="[1]" 
+		    End="[25]"/>
+      <ElementConnectivity_t Name="ElementConnectivity" 
+			     DataType="int" 
+			     Dimension="1" 
+			     DimensionValues="ElementDataSize"> 
+	<!-- Data(int, 1, ElementDataSize) 
+             = (etype(j),(node(i,j),i=1,NPE[etype(j)]), j=1,25) ; -->
+      </ElementConnectivity_t>
+      <ParentData_t Name="ParentData" 
+		    DataType="int" 
+		    Dimension="2" 
+		    DimensionValues="[25,4]"> 
+	<!-- Data(int, 2, [25,4]) 
+             = (parent1(j),parent2(j),face1(j),face2(j), j=1,25) ; -->
+      </ParentData_t>
+    </Elements_t>
+  </Zone_t>

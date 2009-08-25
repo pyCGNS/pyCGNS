@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="Axisymmetry_t">
+    <element name="Axisymmetry_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <optional>
+        <attribute name="DataClass">
+          <ref name="DataClass_t"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Descriptor_t"/>
+        </zeroOrMore>
+        <ref name="AxisymmetryReferencePoint_t"/>
+        <ref name="AxisymmetryAxisVector_t"/>
+        <optional>
+          <ref name="AxisymmetryAngle_t"/>
+        </optional>
+        <optional>
+          <ref name="CoordinateNames_t"/>
+        </optional>
+        <optional>
+          <ref name="DimensionalUnits_t"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="UserDefinedData_t"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="AxisymmetryReferencePoint_t">
+    <element name="AxisymmetryReferencePoint_t">
+      <attribute name="Name">
+        <value type="string">AxisymmetryReferencePoint</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <value type="string">[2]</value>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="AxisymmetryAxisVector_t">
+    <element name="AxisymmetryAxisVector_t">
+      <attribute name="Name">
+        <value type="string">AxisymmetryAxisVector</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <value type="string">[2]</value>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="AxisymmetryAngle_t">
+    <element name="AxisymmetryAngle_t">
+      <attribute name="Name">
+        <value type="string">AxisymmetryAngle</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">RealDouble</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">1</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <value type="string">[1]</value>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+  <define name="CoordinateNames_t">
+    <element name="CoordinateNames_t">
+      <attribute name="Name">
+        <value type="string">CoordinateNames</value>
+      </attribute>
+      <attribute name="DataType">
+        <value type="string">Character</value>
+      </attribute>
+      <attribute name="Dimension">
+        <value type="unsignedInt">2</value>
+      </attribute>
+      <attribute name="DimensionValues">
+        <data type="string"/>
+      </attribute>
+      <ref name="DataArrayExt"/>
+    </element>
+  </define>
+</grammar>

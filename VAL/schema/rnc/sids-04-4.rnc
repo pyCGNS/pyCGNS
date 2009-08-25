@@ -1,0 +1,10 @@
+DimensionalExponents_t = element DimensionalExponents_t 
+{
+ attribute   Name                {Name_t},
+ ( attribute MassExponent        {xsd:float}     
+ & attribute LengthExponent      {xsd:float}     
+ & attribute TimeExponent        {xsd:float}      
+ & attribute TemperatureExponent {xsd:float}
+ & attribute AngleExponent       {xsd:float}
+ )
+}

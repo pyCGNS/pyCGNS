@@ -1,0 +1,50 @@
+Axisymmetry_t = element Axisymmetry_t
+{
+ attribute Name  { Name_t },
+ attribute DataClass { DataClass_t } ?,
+ (  Descriptor_t                 *
+ &  AxisymmetryReferencePoint_t   
+ &  AxisymmetryAxisVector_t 
+ &  AxisymmetryAngle_t           ?
+ &  CoordinateNames_t            ? 
+ &  DimensionalUnits_t           ?    
+ &  UserDefinedData_t            *
+ ) 
+    
+}
+
+AxisymmetryReferencePoint_t = element AxisymmetryReferencePoint_t 
+{
+ attribute Name            {xsd:string "AxisymmetryReferencePoint"},
+ attribute DataType        {xsd:string "RealDouble"},
+ attribute Dimension       {xsd:unsignedInt "1"},
+ attribute DimensionValues {xsd:string "[2]"},
+ DataArrayExt
+}
+
+AxisymmetryAxisVector_t = element AxisymmetryAxisVector_t 
+{
+ attribute Name            {xsd:string "AxisymmetryAxisVector"},
+ attribute DataType        {xsd:string "RealDouble"},
+ attribute Dimension       {xsd:unsignedInt "1"},
+ attribute DimensionValues {xsd:string "[2]"},
+ DataArrayExt
+}
+
+AxisymmetryAngle_t = element AxisymmetryAngle_t 
+{
+ attribute Name            {xsd:string "AxisymmetryAngle"},
+ attribute DataType        {xsd:string "RealDouble"},
+ attribute Dimension       {xsd:unsignedInt "1"},
+ attribute DimensionValues {xsd:string "[1]"},
+ DataArrayExt
+}
+
+CoordinateNames_t = element CoordinateNames_t 
+{
+ attribute Name            {xsd:string "CoordinateNames"},
+ attribute DataType        {xsd:string "Character"},
+ attribute Dimension       {xsd:unsignedInt "2"},
+ attribute DimensionValues {xsd:string},
+ DataArrayExt
+}

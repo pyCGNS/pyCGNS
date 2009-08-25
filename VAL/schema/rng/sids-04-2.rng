@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="Descriptor_t">
+    <element name="Descriptor_t">
+      <attribute name="Name">
+        <ref name="Name_t"/>
+      </attribute>
+      <ref name="DescriptorExt"/>
+    </element>
+  </define>
+  <define name="DescriptorExt">
+    <data type="string"/>
+  </define>
+</grammar>

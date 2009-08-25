@@ -1,0 +1,10 @@
+OversetHoles_t = element OversetHoles_t 
+{
+ attribute Name         {Name_t},
+ attribute GridLocation {GridLocation_t}?,
+ ( Descriptor_t *                        
+ & IndexRange_t *
+ & PointList_t ? 
+ & UserDefinedData_t *
+ )
+}

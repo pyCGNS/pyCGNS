@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <!--
+    CFD General Notation System - CGNS XML tools
+    ONERA/DSNA - poinot@onera.fr - henaux@onera.fr
+    pyCHEXC - $Id: sids-4.rnc 389 2004-08-31 08:15:27Z  $ 
+    
+    See file COPYING in the root directory of this Python module source 
+    tree for license information.
+    
+  -->
+  <include href="sids-05-1.rng"/>
+  <include href="sids-05-1-1.rng"/>
+</grammar>

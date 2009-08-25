@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="GeometryFormat_t">
+    <choice>
+      <value>Null</value>
+      <value>NASA-IGES</value>
+      <value>SDRC</value>
+      <value>Unigraphics</value>
+      <value>ProEngineer</value>
+      <value>ICEM-CFD</value>
+      <value>UserDefined</value>
+    </choice>
+  </define>
+</grammar>
