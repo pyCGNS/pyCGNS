@@ -18,6 +18,7 @@ except ImportError:
   sys.exit(1)
 sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]+spath
 import setuputils
+if (not os.path.exists('./build')): os.mkdir('./build')
 setuputils.installConfigFiles([os.getcwd(),'%s/..'%(os.getcwd())])
 sys.prefix=sys.exec_prefix
 # ---

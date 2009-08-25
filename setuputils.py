@@ -18,8 +18,8 @@ def installConfigFiles(searchpath):
   for d in searchpath:
     if (os.path.exists("%s/pyCGNSconfig.py"%d)):
       try:
-        os.makedirs(bptarget)
-        os.makedirs(bxtarget)
+        if (not os.path.exists(bptarget)): os.makedirs(bptarget)
+        if (not os.path.exists(bxtarget)): os.makedirs(bxtarget)
       except os.error: pass
       shutil.copy("%s/pyCGNSconfig.py"%d,"%s/pyCGNSconfig.py"%bptarget)
       shutil.copy("%s/pyCGNSconfig.py"%d,"%s/pyCGNSconfig.py"%bxtarget)
