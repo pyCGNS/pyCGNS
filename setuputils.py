@@ -6,6 +6,8 @@
 import os
 import sys
 import shutil
+import re
+from   distutils.dir_util import remove_tree
 
 from  distutils.core import setup
 from  distutils.util import get_platform
@@ -23,4 +25,32 @@ def installConfigFiles(searchpath):
       except os.error: pass
       shutil.copy("%s/pyCGNSconfig.py"%d,"%s/pyCGNSconfig.py"%bptarget)
       shutil.copy("%s/pyCGNSconfig.py"%d,"%s/pyCGNSconfig.py"%bxtarget)
+
+# --------------------------------------------------------------------
+# Clean target redefinition - force clean everything
+relist=['^.*~$','^core\.*$','^pyCGNS\.log\..*$',
+        '^#.*#$','^.*\.aux$','^.*\.pyc$','^.*\.bak$','^.*\.l2h',
+        '^Output.*$']
+reclean=[]
+
+for restring in relist:
+  reclean.append(re.compile(restring))
+
+def wselect(args,dirname,names):
+  for n in names:
+    for rev in reclean:
+      if (rev.match(n)):
+        # print "%s/%s"%(dirname,n)
+        os.remove("%s/%s"%(dirname,n))
+        break
+
+class clean(_clean):
+  def walkAndClean(self):
+    os.path.walk(".",wselect,[])
+  def run(self):
+    if os.path.exists("./build"):     remove_tree("./build")
+    if os.path.exists("./Doc/_HTML"): remove_tree("./Doc/_HTML")
+    if os.path.exists("./Doc/_PS"):   remove_tree("./Doc/_PS")
+    if os.path.exists("./Doc/_PDF"):  remove_tree("./Doc/_PDF")
+    self.walkAndClean()
 

@@ -7,6 +7,7 @@
 #define __SIDSTOPYTHON__H__
 
 #include "Python.h"
+#include "CHLone_l3.h"
 
 /* ------------------------------------------------------------------------- */
 #define S2P_FNONE          0x0000
@@ -21,14 +22,12 @@
 #define S2P_FUPDATE        0x0080
 #define S2P_FDELETEMISSING 0x0100
 
-#define s2p_id double
-
 /* ------------------------------------------------------------------------- */
 typedef struct s2p_ent_t
 {
   char   	   *filename;
   char   	   *dirname;
-  s2p_id 	    root_id;
+  L3_Cursor_t 	   *l3db;
   struct s2p_ent_t *next;
 } s2p_ent_t;
 
@@ -57,13 +56,13 @@ typedef struct s2p_ctx_t
 } s2p_ctx_t;
 
 /* ------------------------------------------------------------------------- */
-PyObject* s2p_loadAsADF(char *filename,
+PyObject* s2p_loadAsHDF(char *filename,
 			int flags,
 			int threshold,
 			int depth,
 			char *path);
 /* ------------------------------------------------------------------------- */
-int 	  s2p_saveAsADF(char      *filename,
+int 	  s2p_saveAsHDF(char      *filename,
     	                PyObject  *tree,
     	                PyObject  *links,
     	                int        flags,

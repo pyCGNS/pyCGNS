@@ -15,7 +15,6 @@ tree=Z.data
 try:
   os.unlink("Z.cgns")
 except os.error: pass
-print tree
 print '# CGNS.MAP.save'
 flags=CGNS.MAP.S2P_TRACE
 start=time.clock()

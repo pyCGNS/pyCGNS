@@ -44,6 +44,7 @@ setup (
                   include_dirs = cf_include_dirs,
                   library_dirs = cf_library_dirs,
                   libraries    = cf_optional_libs)],
+  cmdclass={'clean':setuputils.clean}
 )
 
 # --- last line

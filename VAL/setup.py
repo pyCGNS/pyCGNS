@@ -16,6 +16,22 @@ import sys
 import glob
 import getopt
 
+# --- pyCGNSconfig search
+import os
+import sys
+spath=sys.path[:]
+sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]
+try:
+  import pyCGNSconfig
+except ImportError:
+  print 'pyGCNS[ERROR]: PAT cannot find pyCGNSconfig.py file!'
+  sys.exit(1)
+sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]+spath
+import setuputils
+setuputils.installConfigFiles([os.getcwd(),'%s/..'%(os.getcwd())])
+sys.prefix=sys.exec_prefix
+# ---
+
 dsubdir="share/CGNS"
 dsubdir1="share/CGNS/SIDS/grammar"
 dsubdir2="share/CGNS/Demo"
@@ -71,10 +87,7 @@ fdatalist=[
   'CCCCC/schema/rng/sids.rng',
   'CCCCC/schema/rnc/sids.rnc',
   'CCCCC/schema/rng/cgns.rng',
-  'CCCCC/schema/rnc/cgns.rnc',
-  'CCCCC/demo/Eclipps/c5semantic.sch',
-  'CCCCC/demo/Eclipps/c5syntax.rnc',
-  'CCCCC/demo/Eclipps/c5syntax.rng'
+  'CCCCC/schema/rnc/cgns.rnc'
   ]
 
 # files to install
@@ -131,19 +144,19 @@ webfiles=[]
 webfiles+=glob.glob('CCCCC/demo/cgns/*.xml')
 
 # change path
-if 1:
+if 0:
   import os
   for fdata in fdatalist:
     substituteAbsolutePath(ddir,fdata,r3,'%s'%(ddir))
 
-print fdatalist[0][:-4]+".py"
-os.rename("build/"+os.path.split(fdatalist[0])[-1],fdatalist[0][:-4]+".py")
+#print fdatalist[0][:-4]+".py"
+#os.rename("build/"+os.path.split(fdatalist[0])[-1],fdatalist[0][:-4]+".py")
 
 sys.path.append('./CCCCC')
 from __init__ import __vid__
 
 setup (
-name         = "pyC5",
+name         = "CGNS.VAL",
 version      = __vid__,
 description  = "XML tools for CFD General Notation System",
 author       = "ONERA/DSNA Poinot, Henaux",
@@ -167,6 +180,8 @@ data_files   = [ (dsubdir1,gfiles),       # SIDS grammar files
                  (dsubdir6,demorncfiles), # RNC restricted examples
                  (dsubdir7,demousrfiles), # Full user restriction examples
                  (dsubdir,xfiles),        # non-SIDS xml files
-               ]
+               ],
+  cmdclass={'clean':setuputils.clean}
+
 ) # close setup
 

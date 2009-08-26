@@ -11,12 +11,12 @@ releaseversion=1
 version="v%d.%d.%d"
 
 include_dirs=[\
-    '/home_local/eucass/tools/include',\
-    '/home_local/eucass/tools/lib/python2.6/site-packages/numpy/core/include'\
+    '/home/poinot/Tools-2/include',\
+    '/home/poinot/Tools-2/lib/python2.6/site-packages/numpy/core/include'\
 ]
 
-library_dirs=['/home_local/eucass/tools/lib']
-optional_libs=['cgns','hdf5']
+library_dirs=['/home/poinot/Tools-2/lib']
+optional_libs=['CHLone','hdf5']
 
 HAS_HDF5=1
 MLL_VERSION=2.4

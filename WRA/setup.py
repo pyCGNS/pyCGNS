@@ -8,8 +8,6 @@
 import os
 
 from   distutils.core import setup, Extension
-from   distutils.dir_util import remove_tree
-from   distutils.command.clean import clean as _clean
 import distutils.util
 import distutils.sysconfig
 
@@ -18,6 +16,22 @@ import re
 import sys
 import glob
 import string
+
+# --- pyCGNSconfig search
+import os
+import sys
+spath=sys.path[:]
+sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]
+try:
+  import pyCGNSconfig
+except ImportError:
+  print 'pyGCNS[ERROR]: PAT cannot find pyCGNSconfig.py file!'
+  sys.exit(1)
+sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]+spath
+import setuputils
+setuputils.installConfigFiles([os.getcwd(),'%s/..'%(os.getcwd())])
+sys.prefix=sys.exec_prefix
+# ---
 
 setconfig=0
 for distcom in sys.argv:
@@ -31,34 +45,6 @@ if setconfig:
   ftrace.write(largs)
   ftrace.write('\n')
   ftrace.close()
-
-# --------------------------------------------------------------------
-# Clean target redefinition - force clean everything
-relist=['^.*~$','^core\.*$','^pyCGNS\.log\..*$',
-        '^#.*#$','^.*\.aux$','^.*\.pyc$','^.*\.bak$','^.*\.l2h',
-        '^Output.*$']
-reclean=[]
-
-for restring in relist:
-  reclean.append(re.compile(restring))
-
-def wselect(args,dirname,names):
-  for n in names:
-    for rev in reclean:
-      if (rev.match(n)):
-        # print "%s/%s"%(dirname,n)
-        os.remove("%s/%s"%(dirname,n))
-        break
-
-class clean(_clean):
-  def walkAndClean(self):
-    os.path.walk(".",wselect,[])
-  def run(self):
-    if os.path.exists("./build"):     remove_tree("./build")
-    if os.path.exists("./Doc/_HTML"): remove_tree("./Doc/_HTML")
-    if os.path.exists("./Doc/_PS"):   remove_tree("./Doc/_PS")
-    if os.path.exists("./Doc/_PDF"):  remove_tree("./Doc/_PDF")
-    self.walkAndClean()
 
 # ---------------------------------------------------------------------------
 # pyCGNS build options:
@@ -388,7 +374,7 @@ setup (
   scripts      = lscripts,
   data_files   = ldata_files,
 
-  cmdclass={'clean':clean}
+  cmdclass={'clean':setuputils.clean}
 
 ) # close setup
 

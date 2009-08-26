@@ -21,7 +21,7 @@ MAP_load(PyObject *self, PyObject *args)
   {
     return NULL;
   }
-  return s2p_loadAsADF(filename,flags,threshold,depth,path);
+  return s2p_loadAsHDF(filename,flags,threshold,depth,path);
 }
 /* ------------------------------------------------------------------------- */
 static PyObject *
@@ -41,7 +41,7 @@ MAP_save(PyObject *self, PyObject *args)
   {
     return NULL;
   }
-  ret=s2p_saveAsADF(filename,tree,links,flags,threshold,depth,path);
+  ret=s2p_saveAsHDF(filename,tree,links,flags,threshold,depth,path);
   return PyInt_FromLong(ret);
 }
 /* ------------------------------------------------------------------------- */

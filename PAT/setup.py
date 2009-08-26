@@ -28,6 +28,7 @@ setup (
   description  = "pyCGNS SIDS PATterns",
   author       = "marc Poinot",
   author_email = "marc.poinot@onera.fr",
-  packages=['CGNS','CGNS.PAT']
+  packages=['CGNS','CGNS.PAT'],
+  cmdclass={'clean':setuputils.clean}
 )
 # --- last line

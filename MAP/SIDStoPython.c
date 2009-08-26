@@ -4,7 +4,6 @@
 /* See license file in the root directory of this Python module source       */
 /* ------------------------------------------------------------------------- */
 #include "SIDStoPython.h"
-#include "ADF.h"
 #include "numpy/arrayobject.h"
 /* ------------------------------------------------------------------------- */
 #define MAXCHILDRENCOUNT   1024
@@ -16,8 +15,6 @@
 #define MAXFORMATSIZE      20
 #define MAXERRORSIZE       80
 #define MAXVERSIONSIZE     32
-
-#define S2P_CLEARCONTEXTPTR( ctxt ) \
 
 #define S2P_FREECONTEXTPTR( ctxt ) \
 if (ctxt->_c_float !=NULL){free(ctxt->_c_float);};\
@@ -46,13 +43,13 @@ static char *DT_R8="R8";
 static char *DT_C1="C1";
 
 /* ------------------------------------------------------------------------- */
-static s2p_id s2p_addoneADF(char *filename,s2p_ctx_t *context)
+static L3_Cursor_t *s2p_addoneHDF(char *filename,s2p_ctx_t *context)
 {
-  s2p_id root_id;
-  int openfile,error;
+  L3_Cursor_t *l3db;
+  int openfile;
   s2p_ent_t *nextdbs,*prevdbs;
 
-  root_id=0;
+  l3db=NULL;
   openfile=1;
   nextdbs=context->dbs;
   if (nextdbs==NULL)
@@ -67,8 +64,9 @@ static s2p_id s2p_addoneADF(char *filename,s2p_ctx_t *context)
     {
       if (!strcmp(nextdbs->filename,filename))
       {
-	root_id=nextdbs->root_id;
+	l3db=nextdbs->l3db;
 	openfile=0;
+	S2P_TRACE(("### open [%s] (already opened)\n",filename));
 	break;
       }
       prevdbs=nextdbs;
@@ -82,27 +80,28 @@ static s2p_id s2p_addoneADF(char *filename,s2p_ctx_t *context)
   }
   if (openfile)
   {
-    ADF_Database_Open(filename,"OLD","NATIVE",&root_id,&error);
+    /* L3_F_OWNDATA|L3_F_WITHCHILDREN */
+    nextdbs->l3db=L3_openFile(filename,L3_OPEN_OLD,L3_F_OPEN_DEFAULT);
     nextdbs->filename=(char*)malloc(sizeof(char)*strlen(filename)+1);
     strcpy(nextdbs->filename,filename);
     nextdbs->dirname=NULL;
-    nextdbs->root_id=root_id;
     nextdbs->next=NULL;
+    l3db=nextdbs->l3db;
+    S2P_TRACE(("### open [%s]\n",filename));
   }
-  return root_id;
+  return l3db;
 }
 /* ------------------------------------------------------------------------- */
-static void s2p_closeallADF(s2p_ctx_t *context)
+static void s2p_closeallHDF(s2p_ctx_t *context)
 {
   s2p_ent_t *nextdbs,*dbs;
-  int error;
 
   dbs=context->dbs;
   if (dbs!=NULL)
   {
     while (dbs->next!=NULL)
     {
-      ADF_Database_Close(dbs->root_id,&error);
+      L3_close(dbs->l3db);
       if (dbs->filename!=NULL){ free(dbs->filename); }
       if (dbs->dirname!=NULL){ free(dbs->dirname); }
       nextdbs=dbs->next;
@@ -137,8 +136,7 @@ static s2p_ctx_t *s2p_filllinktable(PyObject *linktable, s2p_ctx_t *context)
   }
   for (n=0;n<linktablesize;n++)
   {
-    /* Remark 05:
-       No check on list contents here, it's far easier at the Python level
+    /* No check on list contents here, it's far easier at the Python level
        and it would lead to something too hairy here. */
     sz=PyString_Size(PySequence_GetItem(PyList_GetItem(linktable,n),0));
     st=PyString_AsString(PySequence_GetItem(PyList_GetItem(linktable,n),0));
@@ -250,21 +248,22 @@ static void s2p_linkstack(char 	     *curpath,
   strcpy(curlink->localnodename,curpath);
 }
 /* ------------------------------------------------------------------------- */
-static s2p_id s2p_linktrack(s2p_id      rootid,
-			    char       *nodename,
-			    s2p_ctx_t  *context)
+static hid_t s2p_linktrack(L3_Cursor_t *l3db,
+			    char        *nodename,
+			    s2p_ctx_t   *context)
 {
   char curpath[MAXPATHSIZE];
-  char name[ADF_NAME_LENGTH+1];
-  char destnode[ADF_NAME_LENGTH+1];
+  char name[L3_MAX_NAME+1];
+  char destnode[L3_MAX_NAME+1];
   char destfile[MAXFILENAMESIZE];
-  int error,pathlength,parsepath,c;
-  s2p_id id,nid,lkrootid;
+  int parsepath,c;
+  hid_t id,nid;
   char *p;
+  L3_Cursor_t *lkhdfdb;
 
   parsepath=1;
   p=nodename;
-  nid=rootid;
+  nid=l3db->root_id;
   curpath[0]='\0';
 
   while (parsepath)
@@ -285,16 +284,14 @@ static s2p_id s2p_linktrack(s2p_id      rootid,
     strcat(curpath,name);
 
     /*    printf("linktrack [%s][%s]\n",curpath,name);fflush(stdout); */
-    ADF_Get_Node_ID(id,name,&nid,&error);
-    ADF_Is_Link(nid,&pathlength,&error);
-    if (pathlength)
+    nid=L3_path2Node(l3db,curpath);
+    if (L3_isLinkNode(l3db,nid,destfile,destnode))
     {
-      ADF_Get_Link_Path(nid,destfile,destnode,&error);
-      S2P_TRACE(("\n### Link Follow link: [%s][%s]",destfile,destnode));
+      S2P_TRACE(("\n### Link Follow link: [%s][%s]\n",destfile,destnode));
 
       s2p_linkstack(curpath,destfile,destnode,context);
-      lkrootid=s2p_addoneADF(destfile,context);
-      nid=s2p_linktrack(lkrootid,destnode,context);
+      lkhdfdb=s2p_addoneHDF(destfile,context);
+      nid=s2p_linktrack(lkhdfdb,destnode,context);
     } 
   }
   return nid;
@@ -380,6 +377,8 @@ static int s2p_getData(PyObject *dobject,
   ddims[0]=0;
   *dvalue=NULL;
 
+  L3M_CLEARDIMS(dshape);
+
   /* --- Integer */
   if (   (PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_INT))
       || (PyLong_Check(dobject)))
@@ -432,13 +431,11 @@ static int s2p_getData(PyObject *dobject,
     {
       *dtype=DT_R8;
       ddims[0]=PyArray_NDIM(dobject);
-      for (n=0; n<ddims[0]; n++)
-      {
-        dshape[n]=(int)PyArray_DIM(dobject,n);
-      } 
       total=1;
       for (n=0; n<ddims[0]; n++)
       {
+/*         dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n); */
+/*         total*=dshape[ddims[0]-n-1]; */
         dshape[n]=(int)PyArray_DIM(dobject,n);
         total*=dshape[n];
       } 
@@ -501,25 +498,24 @@ static int s2p_getData(PyObject *dobject,
   return 1;
 }
 /* ------------------------------------------------------------------------- */
-static PyObject* s2p_parseAndReadADF(s2p_id    	 id,
-                                     char      	*name,
-                                     char*     	 curpath,    
-                                     char*     	 path,    
-                                     s2p_ctx_t  *context)
+static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
+                                     char      	 *name,
+                                     char*     	  curpath,    
+                                     char*     	  path,    
+                                     s2p_ctx_t   *context,
+				     L3_Cursor_t *l3db)
 {
-  char      label[ADF_NAME_LENGTH+1];
-  char      childname[ADF_NAME_LENGTH+1];
-  char      destnode[ADF_NAME_LENGTH+1];
+  char      destnode[L3_MAX_NAME+1];
   char      destfile[MAXFILENAMESIZE];
-  char      datatype[MAXDATATYPESIZE];
-  int       ndim,tsize,n,pathlength,count,child,rcount;
-  int       dim_vals[MAXDIMENSIONVALUES];
+  int       ndim,tsize,n,count,child;
   int       error,isdataarray,arraytype,toknpath;
-  s2p_id    childid,actualid,lkrootid;
+  hid_t    actualid;
   PyObject *o_clist,*o_value,*o_child,*o_node;
   npy_intp  npy_dim_vals[MAXDIMENSIONVALUES];
   void     *data;
   char     *nextpath;
+  L3_Cursor_t *lkl3db;
+  L3_Node_t *rnode,*cnode;
 
   context->dpt-=1;
 
@@ -530,11 +526,27 @@ static PyObject* s2p_parseAndReadADF(s2p_id    	 id,
   
   /* In case of path, we are in a link search or sub-tree retrieval. We
      skip the Python node creation but we keep track of links. */
-  ADF_Get_Label(id,label,&error);
-  S2P_TRACE(("### %s [%s]",curpath,label));
-  if (    !strcmp(label,"DataArray_t") 
-       || !strcmp(label,"ExponentUnits_t") 
-       || !strcmp(label,"DimensionalUnits_t"))
+  actualid=id;
+  if (L3_isLinkNode(l3db,id,destfile,destnode))
+  {
+    if (S2P_HASFLAG(S2P_FFOLLOWLINKS) && s2p_trustlink(destfile,destnode))
+    {
+      S2P_TRACE(("\n### Parse Follow link: [%s][%s]\n",destfile,destnode));
+      /* We recurse on destination file, S2P functions should be used and
+         not HDF functions, because HDF lib would hide links to S2P.
+         Then we start our parse from the root node and keep track of links,
+         the actual node is finally used at the end. */
+      s2p_linkstack(curpath,destfile,destnode,context);
+      lkl3db=s2p_addoneHDF(destfile,context);
+      actualid=s2p_linktrack(lkl3db,destnode,context);
+    }
+  }
+  L3M_SETFLAG(l3db,L3_F_WITHCHILDREN|L3_F_WITHDATA);
+  rnode=L3_nodeRetrieve(l3db,actualid);
+  S2P_TRACE(("### (%s) [%s]",curpath,rnode->label));
+  if (    !strcmp(rnode->label,DataArray_ts) 
+       || !strcmp(rnode->label,DimensionalExponents_ts) 
+       || !strcmp(rnode->label,DimensionalUnits_ts))
   {
     isdataarray=1;
   }
@@ -542,60 +554,63 @@ static PyObject* s2p_parseAndReadADF(s2p_id    	 id,
   {
     isdataarray=0;
   }
-  ADF_Is_Link(id,&pathlength,&error);
-  actualid=id;
-  if (pathlength)
+  if (rnode->dtype!=L3E_VOID)
   {
-    ADF_Get_Link_Path(id,destfile,destnode,&error);
-    if (S2P_HASFLAG(S2P_FFOLLOWLINKS) && s2p_trustlink(destfile,destnode))
-    {
-      S2P_TRACE(("\n### Parse Follow link: [%s][%s]",destfile,destnode));
-      /* Remark 01:
-         We recurse on destination file, S2P functions should be used and
-         not ADF function, because ADF lib would hide links to S2P.
-         Then we start our parse from the root node and keep track of links,
-         the actual node is finally used at the end. See also remark 02. */
-      s2p_linkstack(curpath,destfile,destnode,context);
-      lkrootid=s2p_addoneADF(destfile,context);
-      actualid=s2p_linktrack(lkrootid,destnode,context);
-    }
-  }
-  ADF_Get_Data_Type(actualid,datatype,&error);
-  if (strcmp(datatype,"MT"))
-  {
-    ADF_Get_Number_of_Dimensions(actualid,&ndim,&error);
-    ADF_Get_Dimension_Values(actualid,dim_vals,&error);
+    S2P_TRACE(("[%s]",L3_typeAsStr(rnode->dtype)));
     tsize=1;
-    S2P_TRACE(("[%s]",datatype));
-    for (n=0; n<ndim; n++)
+    n=0;
+    ndim=0;
+    while ((n<L3_MAX_DIMS)&&(rnode->dims[n]!=-1))
     {
-      tsize*=dim_vals[n];
-      npy_dim_vals[n]=dim_vals[n];
-        S2P_TRACE(("[%d]",dim_vals[n]));
+      tsize*=rnode->dims[n];
+      ndim++;
+      n++;
+    }
+    n=0;
+    while ((n<L3_MAX_DIMS)&&(rnode->dims[n]!=-1))
+    {
+      if (isdataarray)
+      {
+        npy_dim_vals[ndim-n-1]=rnode->dims[n];
+      }
+      else
+      {
+        npy_dim_vals[n]=rnode->dims[n];
+      }
+      n++;
     } 
-    S2P_TRACE(("=%d",tsize));
-    if (!strcmp(datatype,"I4"))
+    S2P_TRACE(("{"));
+    for (n=0;n<ndim;n++)
+    {
+      S2P_TRACE(("%d",rnode->dims[n]));
+      if (n<ndim+1)
+      {
+	S2P_TRACE(("x"));
+      }
+    } 
+    S2P_TRACE(("}=%d",tsize));
+    if ((rnode->dtype==L3E_I4) || (rnode->dtype==L3E_I4ptr))
     {
       arraytype=NPY_INT;
       data=(void *)malloc((tsize)*sizeof(int));
     }
-    else if (!strcmp(datatype,"C1"))
+    else if ((rnode->dtype==L3E_C1) || (rnode->dtype==L3E_C1ptr))
     {
       arraytype=NPY_CHAR;
       data=(void *)malloc((tsize)*sizeof(char));
       memset(data,0,tsize);
     }
-    else if (!strcmp(datatype,"R8"))
+    else if ((rnode->dtype==L3E_R8) || (rnode->dtype==L3E_R8ptr))
     {
       arraytype=NPY_DOUBLE;
       data=(void *)malloc((tsize)*sizeof(double));
     }
-    else if (!strcmp(datatype,"I8"))
+    else if ((rnode->dtype==L3E_I8) || (rnode->dtype==L3E_I8ptr))
     {
       arraytype=NPY_LONG;
       data=(void *)malloc((tsize)*sizeof(long));
     }
-    else if (!strcmp(datatype,"R4"))
+    else if ((rnode->dtype==L3E_R4) || (rnode->dtype==L3E_R4ptr))
     {
       arraytype=NPY_FLOAT;
       data=(void *)malloc((tsize)*sizeof(float));
@@ -606,7 +621,8 @@ static PyObject* s2p_parseAndReadADF(s2p_id    	 id,
     }
     if (data!=NULL)
     {
-      ADF_Read_All_Data(actualid,(char*)data,&error);
+      /* TO FIX: duplicate memory zone */
+      data=rnode->data;
       if (isdataarray)
       {
         o_value=(PyObject*)PyArray_New(&PyArray_Type,
@@ -630,19 +646,18 @@ static PyObject* s2p_parseAndReadADF(s2p_id    	 id,
   S2P_TRACE(("\n"));
   /* Loop on children. This is a depth first recurse. In case of a path search,
      skip until we have the right name. */
-  ADF_Number_of_Children(actualid,&count,&error);
   o_clist=PyList_New(0);
   nextpath=path;
-  for (child=1;child<=count;child++)
+  child=0;
+  if (rnode->children == NULL)
   {
-    /* Remark 03:
-       ADF API uses node ids and the list of chidren returns the names, not the
-       ids. So we avoid a call to Get_Node_Name: we pass the child name as a
-       recurse function parameter. */
-    ADF_Children_Names(actualid,child,1,ADF_NAME_LENGTH+1,
-		       &rcount,childname,&error);
+    S2P_TRACE(("### No child \n"));
+  }
+  while ((rnode->children != NULL) && (rnode->children[child] != -1))
+  {
+    cnode=L3_nodeRetrieve(l3db,rnode->children[child]);
     strcat(curpath,"/");
-    strcat(curpath,childname);
+    strcat(curpath,cnode->name);
     if ((path!=NULL) && (strlen(path)!=0))
     {
       nextpath=strchr(path,'/');
@@ -650,43 +665,44 @@ static PyObject* s2p_parseAndReadADF(s2p_id    	 id,
       {
         toknpath=(int)(nextpath-path); /* should work for chars */
         S2P_TRACE(("### Path compare [%s] to [%s] up to [%d]\n",
-                   path+1,childname,toknpath));
-        if (!strncmp(path+1,childname,toknpath))
+                   path+1,cnode->name,toknpath));
+        if (!strncmp(path+1,cnode->name,toknpath))
         {
           S2P_TRACE(("### Path compare OK\n"));
         } 
       }
     }
-    /* Remark 02:
-       ADF_Get_Node_ID can parse paths, i.e. a node name can be a path and the
+    /* HDF can parse paths, i.e. a node name can be a path and the
        resulting ID is the actual last node. However, we SHOULD not use that
        because we want to have control on link parse. */
-    ADF_Get_Node_ID(actualid,childname,&childid,&error);
-    o_child=s2p_parseAndReadADF(childid,childname,curpath,nextpath,context);
-    curpath[strlen(curpath)-strlen(childname)-1]='\0';
+    o_child=s2p_parseAndReadHDF(cnode->id,cnode->name,curpath,nextpath,
+				context,l3db);
+    curpath[strlen(curpath)-strlen(cnode->name)-1]='\0';
     PyList_Append(o_clist,o_child);
+    child++;
   }
   if (o_value==NULL)
   {
     Py_INCREF(Py_None);
     o_value=Py_None;
   };
-  o_node=Py_BuildValue("[sOOs]",name,o_value,o_clist,label);
+  o_node=Py_BuildValue("[sOOs]",name,o_value,o_clist,rnode->label);
 
   return o_node;
 }
 /* ------------------------------------------------------------------------- */
-static int s2p_parseAndWriteADF(s2p_id     id,
+static int s2p_parseAndWriteHDF(hid_t     id,
                                 PyObject  *tree,
                                 char      *curpath,
                                 char      *path,
-                                s2p_ctx_t *context)
+                                s2p_ctx_t *context,
+				L3_Cursor_t *l3db)
 {
-  char *name,*label,*tdat=NULL;
-  int sz,n,error,ret=0;
-  s2p_id nid;
+  char *name=NULL,*label=NULL,*tdat=NULL;
+  int sz=0,n=0,ret=0,tsize=1;
   int ndat=0,ddat[NPY_MAXDIMS];
   char *vdat=NULL;
+  L3_Node_t *node=NULL;
 
   if (    (PyList_Check(tree))
        && (PyList_Size(tree) == 4)
@@ -697,28 +713,37 @@ static int s2p_parseAndWriteADF(s2p_id     id,
     label=PyString_AsString(PyList_GetItem(tree,3));
     strcat(curpath,"/");
     strcat(curpath,name);
-    S2P_TRACE(("### create [%s][%s]\n",curpath,label));
+    S2P_TRACE(("### create [%s][%s]",curpath,label));
     if (s2p_checklinktable(context,curpath))
     {
       S2P_TRACE(("### linked to [%s][%s]\n",curpath,label));
     }
     S2P_FREECONTEXTPTR(context);
     s2p_getData(PyList_GetItem(tree,1),&tdat,&ndat,ddat,&vdat,context);
-    ADF_Create(id,name,&nid,&error);
-    printf("ERR %d\n",error);
-    ADF_Set_Label(nid,label,&error);
-    printf("ERR %d\n",error);
-    ADF_Put_Dimension_Information(nid,tdat,ndat,ddat,&error);
-    printf("ERR %d\n",error);
-    ADF_Write_All_Data(nid,(char*)vdat,&error);
-    printf("ERR %d\n",error);
+    n=0;
+    tsize=1;
+    S2P_TRACE(("{"));
+    while ((n<L3_MAX_DIMS)&&(ddat[n]!=-1))
+    {
+      tsize*=ddat[n];
+      S2P_TRACE(("%d",ddat[n]));
+      n++;
+      if ((n<L3_MAX_DIMS)&&(ddat[n]!=-1))
+      {
+	S2P_TRACE(("x"));
+      }
+    } 
+    S2P_TRACE(("}=%d\n",tsize));
+    node=L3_nodeSet(l3db,node,name,label,ddat,L3_typeAsEnum(tdat),vdat);
+    L3_nodeCreate(l3db,id,node);
     if (PyList_Check(PyList_GetItem(tree,2)))
     {
       sz=PyList_Size(PyList_GetItem(tree,2));
       for (n=0;n<sz;n++)
       {
-        ret=s2p_parseAndWriteADF(nid,PyList_GetItem(PyList_GetItem(tree,2),n),
-                                 curpath,path,context); 
+        ret=s2p_parseAndWriteHDF(node->id,
+				 PyList_GetItem(PyList_GetItem(tree,2),n),
+                                 curpath,path,context,l3db); 
       } 
     }
     curpath[strlen(curpath)-strlen(name)-1]='\0';
@@ -728,18 +753,18 @@ static int s2p_parseAndWriteADF(s2p_id     id,
 /* ------------------------------------------------------------------------- */
 /* Interface Functions                                                       */
 /* ------------------------------------------------------------------------- */
-PyObject* s2p_loadAsADF(char *filename,
+PyObject* s2p_loadAsHDF(char *filename,
                         int   flags,
                         int   threshold,
                         int   depth,
                         char *path)
 {
-  s2p_id root_id;
-  int error;
-  char name[ADF_NAME_LENGTH+1];
+  char name[L3_MAX_NAME+1];
   char cpath[MAXPATHSIZE];
   PyObject *tree,*ret,*links;
   s2p_ctx_t *context;
+  L3_Cursor_t *l3db;
+  L3_Node_t   *rnode;
 
   context=(s2p_ctx_t*)malloc(sizeof(s2p_ctx_t));
   context->flg=flags;
@@ -754,19 +779,18 @@ PyObject* s2p_loadAsADF(char *filename,
   name[0]='\0';
   cpath[0]='\0';
 
-  /* Remark 04:
-     We do NOT check file name or file access, it's up to the caller to make
-     such checks. */
-  root_id=s2p_addoneADF(filename,context);
-  ADF_Get_Name(root_id,name,&error);
-  ret=s2p_parseAndReadADF(root_id,name,cpath,path,context);
+  /* We do NOT check file name or file access, it's up to the caller to make
+     such checks. Anyway, HDF will check. */
+  l3db=s2p_addoneHDF(filename,context);
+  rnode=L3_nodeRetrieve(l3db,l3db->root_id);
+  ret=s2p_parseAndReadHDF(l3db->root_id,rnode->name,cpath,path,context,l3db);
   links=s2p_getlinktable(context);
   s2p_freelinktable(context);
 
   tree=Py_BuildValue("([sOOs]O)",
-		     "CGNSTree",Py_None,PyList_GetItem(ret,2),"CGNSTree_t",
+		     CGNSTree_n,Py_None,PyList_GetItem(ret,2),CGNSTree_ts,
 		     links);
-  s2p_closeallADF(context);
+  s2p_closeallHDF(context);
   Py_INCREF(Py_None);
   S2P_FREECONTEXTPTR(context);
   free(context);
@@ -774,7 +798,7 @@ PyObject* s2p_loadAsADF(char *filename,
   return tree;
 }
 /* ------------------------------------------------------------------------- */
-int s2p_saveAsADF(char      *filename,
+int s2p_saveAsHDF(char      *filename,
                   PyObject  *tree,
                   PyObject  *links,
                   int        flags,
@@ -782,13 +806,15 @@ int s2p_saveAsADF(char      *filename,
                   int        depth,
                   char*      path)    
 {
-  s2p_id root_id,nid,n;
-  int error,ret=0,sz;
+  int ret=0,sz=-1;
   char cpath[MAXPATHSIZE],*tdat=NULL;
-  s2p_ctx_t *context;
-  PyObject *rtree,*otree;
-  int ndat=0,ddat[NPY_MAXDIMS];
+  s2p_ctx_t *context=NULL;
+  PyObject *rtree,*otree=NULL;
+  int dims[L3_MAX_DIMS];
+  int ndat=0,ddat[NPY_MAXDIMS],n=0;
   char *vdat=NULL;
+  L3_Cursor_t *l3db=NULL;
+  L3_Node_t *node=NULL;
 
   context=(s2p_ctx_t*)malloc(sizeof(s2p_ctx_t));
   context->flg=flags;
@@ -802,6 +828,7 @@ int s2p_saveAsADF(char      *filename,
   context->_c_char=NULL;
   cpath[0]='\0';
 
+  S2P_TRACE(("### save in file [%s]\n",filename));
   if (    (PyList_Check(tree))
        && (PyList_Size(tree) == 4)
        && (PyString_Check(PyList_GetItem(tree,0)))
@@ -809,10 +836,10 @@ int s2p_saveAsADF(char      *filename,
        && (PyString_Check(PyList_GetItem(tree,3))))
   {
     s2p_filllinktable(links,context);
-    ADF_Database_Open(filename,"NEW","NATIVE",&root_id,&error);
-    if (error == REQUESTED_NEW_FILE_EXISTS)
+    l3db=L3_openFile(filename,L3_OPEN_NEW,L3_F_OPEN_DEFAULT);
+    if (!L3M_ECHECK(l3db))
     {
-      printf("Error %d\n",error);fflush(stdout);
+      L3_printError(l3db);
       return -1;
     }
     rtree=PyList_GetItem(tree,2);
@@ -827,25 +854,24 @@ int s2p_saveAsADF(char      *filename,
 	    && PyString_Check(PyList_GetItem(otree,0))
 	    && PyString_Check(PyList_GetItem(otree,3))
 	    && !strcmp(PyString_AsString(PyList_GetItem(otree,3)),
-		       "CGNSLibraryVersion_t"))
+		       CGNSLibraryVersion_ts))
 	{
-	  S2P_TRACE(("### create [CGNSLibraryVersion][CGNSLibraryVersion_t]"));
+	  S2P_TRACE(("### create [CGNSLibraryVersion]\n"));
 	  S2P_FREECONTEXTPTR(context);
 	  s2p_getData(PyList_GetItem(otree,1),&tdat,&ndat,ddat,&vdat,context);
-	  ADF_Create(root_id,"CGNSLibraryVersion",&nid,&error);
-	  ADF_Set_Label(nid,"CGNSLibraryVersion_t",&error);
-	  ADF_Put_Dimension_Information(nid,tdat,ndat,ddat,&error);
-	  ADF_Write_All_Data(nid,(char*)vdat,&error);
-	  S2P_TRACE(("### value [CGNSLibraryVersion][%.4f]",*((float*)vdat)));
+	  L3_initDims(dims,1,-1);
+	  node=L3_nodeSet(l3db,node,CGNSLibraryVersion_n,CGNSLibraryVersion_ts,
+			  dims,L3E_R4,vdat);
+	  L3_nodeCreate(l3db,l3db->root_id,node);
 	}
 	else
 	{
-	  ret=s2p_parseAndWriteADF(root_id,otree,cpath,path,context);
+	  ret=s2p_parseAndWriteHDF(l3db->root_id,otree,
+				   cpath,path,context,l3db);
 	}
       } 
-
     }
-    ADF_Database_Close(root_id,&error);
+    L3_close(l3db);
     s2p_freelinktable(context);
     S2P_FREECONTEXTPTR(context);
     free(context);

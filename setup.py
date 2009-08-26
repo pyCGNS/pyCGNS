@@ -54,5 +54,7 @@ for mod in modList:
     os.system(com)
     os.chdir('..')
 
+print '\n', 69*'-'
+  
 # --- last line
 
