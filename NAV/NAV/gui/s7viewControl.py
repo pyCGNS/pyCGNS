@@ -16,7 +16,7 @@ import numpy as Num
 #import threading
 import time
 
-from pyCGNSconfig import version as __vid__
+from CGNS.pyCGNSconfig import version as __vid__
 
 import s7globals
 G___=s7globals.s7G
@@ -201,7 +201,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
           if (lfile==lk[0]):
             tlinks.append(lk)
         if (not G___.saveLinks): tlinks=[]
-        CGNS.saveAsADF(file,tree,tlinks)
+        CGNS.WRA.utils.saveAsADF(file,tree,tlinks)
       else:
         s7utils.fileWarning(fileext)
         return 0
@@ -262,11 +262,11 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
        G___.expandRecurse=0
     try:
       if (not treefingerprint and (fileext in G___.cgnslibFiles)):
-        import CGNS
-        lk=CGNS.getLinksAsADF(filename)
+        import CGNS.WRA.utils
+        lk=CGNS.WRA.utils.getLinksAsADF(filename)
         if (G___.noData): vmax=G___.maxDisplaySize
         else:             vmax=sys.maxint
-        tt=CGNS.loadAsADF(filename,G___.followLinks,vmax)
+        tt=CGNS.WRA.utils.loadAsADF(filename,G___.followLinks,vmax)
         treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
         if (not treefingerprint.status):
           s7utils.badFileError(filename)

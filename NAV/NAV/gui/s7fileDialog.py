@@ -282,7 +282,7 @@ class SaveFileDialog(FileDialog):
 
 # ------------------------------------------------------------
 
-from pyCGNSconfig import version as __vid__
+from CGNS.pyCGNSconfig import version as __vid__
 
 import s7globals
 G___=s7globals.s7G

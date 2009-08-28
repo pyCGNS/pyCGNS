@@ -15,7 +15,7 @@ import sys
 import string
 import numpy as Num
 
-from pyCGNSconfig import version as __vid__
+from CGNS.pyCGNSconfig import version as __vid__
 
 import s7globals
 G___=s7globals.s7G

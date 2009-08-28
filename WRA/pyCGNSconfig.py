@@ -6,7 +6,7 @@
 # THIS FILE IS GENERATED DURING INSTALLATION
 
 VERSION='3.2'
-DATE='2009-08-26 19:35:09'
+DATE='2009-08-27 09:31:28'
 PLATFORM=('Linux', 'localhost.localdomain', '2.6.9-42.ELsmp', '#1 SMP Wed Jul 12 23:32:02 EDT 2006', 'x86_64')
 HAS_MLL=True
 PATH_MLL='/home/poinot/Tools-2/lib/libcgns.so'

@@ -88,7 +88,7 @@ author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
 packages     = ['CGNS','CGNS.NAV','CGNS.NAV.gui','CGNS.NAV.supervisor'],
 scripts      = ['CGNS/CGNS.NAV'],
-data_files   = [('share/CGNS/NAV/icons',glob.glob('CGNS/gui/icons/*'))],
+data_files   = [('share/CGNS/NAV/icons',glob.glob('CGNS/NAV/gui/icons/*'))],
 
 cmdclass={'clean': clean}
 )

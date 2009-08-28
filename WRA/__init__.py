@@ -7,13 +7,13 @@
 import CGNS.pyCGNSconfig
 
 if (CGNS.pyCGNSconfig.HAS_MLL != False):
-  from CGNS.midlevel  import *
-  from CGNS.wrap      import *
-  from CGNS.utils     import *
+  from CGNS.WRA.midlevel  import *
+  from CGNS.WRA.wrap      import *
+  from CGNS.WRA.utils     import *
 
-from CGNS.cgnslib      import *
-from CGNS.cgnskeywords import *
-from CGNS.version      import *
+from CGNS.WRA.cgnslib      import *
+from CGNS.WRA.cgnskeywords import *
+from CGNS.WRA.version      import *
 
 config="# pyCGNS v%s - The Python CGNS API\n"%version
 config+="# produced %s on %s %s %s"%(CGNS.pyCGNSconfig.DATE,

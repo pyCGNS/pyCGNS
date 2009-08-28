@@ -262,7 +262,7 @@ if setconfig:
   print summary,
   print 72*'='
 
-  configfile=open("CGNS/pyCGNSconfig.py","w+")
+  configfile=open("../pyCGNSconfig.py","a")
   configfile.write("# CFD General Notation System - CGNS lib wrapper\n")
   configfile.write("# ONERA/DSNA/ELSA - poinot@onera.fr\n")
   configfile.write("# See file COPYING in the root directory")
