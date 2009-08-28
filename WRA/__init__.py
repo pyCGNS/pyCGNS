@@ -6,16 +6,7 @@
 #
 import CGNS.pyCGNSconfig
 
-if (CGNS.pyCGNSconfig.HAS_MLL != False):
-  from CGNS.WRA.midlevel  import *
-  from CGNS.WRA.wrap      import *
-  from CGNS.WRA.utils     import *
-
-from CGNS.WRA.cgnslib      import *
-from CGNS.WRA.cgnskeywords import *
-from CGNS.WRA.version      import *
-
-config="# pyCGNS v%s - The Python CGNS API\n"%version
+config="# pyCGNS v%s - The Python CGNS API\n"%CGNS.pyCGNSconfig.version
 config+="# produced %s on %s %s %s"%(CGNS.pyCGNSconfig.DATE,
                             CGNS.pyCGNSconfig.PLATFORM[0],
                             CGNS.pyCGNSconfig.PLATFORM[2],
@@ -40,7 +31,11 @@ if (CGNS.pyCGNSconfig.NUM_LIBRARY == "numpy"):
 config+="# using module %s %s\n"%(CGNS.pyCGNSconfig.NUM_LIBRARY,vnum)
 
 def test():
-  import CGNS.test
-  CGNS.test.showConfig()
-  CGNS.test.run()
+  import sys
+  syspathold=sys.path
+  sys.path.append("%s/%s"%(sys.prefix,'share/CGNS/WRA/test'))
+  import CGNSWRAtest
+  CGNSWRAtest.showConfig()
+  CGNSWRAtest.run(sys.path)
+  sys.path=syspathold
 #

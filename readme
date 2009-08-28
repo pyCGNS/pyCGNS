@@ -6,3 +6,8 @@ DAT - DBMS      (pyDAX)
 WRA - Wrapper   (pyCGNS)
 PAT - Pattern
 NAV - Navigate  (pyS7)
+
+
+remove:
+
+  - cgnserrors changed to full exceptions at pyCGNS global level

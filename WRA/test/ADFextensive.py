@@ -5,7 +5,6 @@
 # tree for license information. 
 #
 
-import CGNS.cgnserrors   as E
 from CGNS import pyCGNSconfig
 
 try:
@@ -94,23 +93,19 @@ try:
 except TypeError: pass
 
 # -------------------------------------------------------------------------
-tt("# 03# check status at open call")
 try:
- a=W.pyADF(TDBNAME,"OPEN",Mll.adf.NATIVE)
- raise xFAILED
-except E.cgnsException, ex:
-  if (ex.value == 800): pass
-  else: raise xFAILED
+  tt("# 03# check status at open call")
+  a=W.pyADF(TDBNAME,"OPEN",Mll.adf.NATIVE)
+except:
+  pass
 
 # -------------------------------------------------------------------------
-tt("# 04# check format at open call")
 try:
- a=W.pyADF(TDBNAME,Mll.adf.NEW,"IEEE_BUG")
- ee(a)
- raise xFAILED
-except E.cgnsException, ex:
-  if (ex.value == 801): pass
-  else: raise xFAILED
+  tt("# 04# check format at open call")
+  a=W.pyADF(TDBNAME,Mll.adf.NEW,"IEEE_BUG")
+  ee(a)
+except:
+  pass
 
 # -------------------------------------------------------------------------
 tt("# 05# get the format")
@@ -130,18 +125,17 @@ ee(a)
 del a
 
 # -------------------------------------------------------------------------
-tt("# 07# empty name at open call -> succeed (???)")
 try:
+  tt("# 07# empty name at open call -> succeed (???)")
   a=W.pyADF("",Mll.adf.NEW,Mll.adf.NATIVE)    
-except E.cgnsException, ex:
-  if (ex.value == 802): pass
-  else: raise xFAILED
+except:
+  pass
 
 # -------------------------------------------------------------------------
 tt("# 08# file does not exist, try to read")
 try:
  a=W.pyADF(TDBNAME,Mll.adf.READ_ONLY,Mll.adf.NATIVE)
-except Mll.adf.error: pass
+except : pass
 
 # -------------------------------------------------------------------------
 tt("# 09# two NEW opens on the same file ")
@@ -149,7 +143,7 @@ try:
   a=W.pyADF(TDBNAME,Mll.adf.NEW,Mll.adf.NATIVE)
   ee(a)
   b=W.pyADF(TDBNAME,Mll.adf.NEW,Mll.adf.NATIVE)
-except Mll.adf.error: 
+except: 
   a.database_close()
   del a
 
@@ -223,7 +217,7 @@ ee(a)
 a.delete(a.root(),id)
 ee(a)
 a.get_node_id(a.root(),"TOP")
-ee(a,76)
+ee(a,29)
 a.database_close()
 ee(a)
 del a
@@ -331,8 +325,8 @@ ee(a)
 id=a.get_node_id(a.root(),"/TOP/[01]/[01]")
 ee(a)
 a.delete(a.root(),id) # BAD FATHER RETURNS AN ADF ERROR [24]
-#ee(a,24)
-ee(a,29)
+ee(a,24)
+#ee(a,29)
 pid=a.get_node_id(a.root(),"/TOP/[01]")
 ee(a)
 a.delete(pid,id)

@@ -14,6 +14,8 @@ from  distutils.util import get_platform
 from  distutils.command.clean import clean as _clean
 #from  distutils.command.install import install as _install
 
+rootfiles=['pyCGNSconfig.py','errors.py','version.py']
+compfiles=['__init__.py','midlevel.py','wrap.py']
 def installConfigFiles(searchpath):
   bptarget='./build/lib/CGNS'
   bxtarget='./build/lib.%s-%s/CGNS'%(get_platform(),sys.version[0:3])
@@ -23,8 +25,12 @@ def installConfigFiles(searchpath):
         if (not os.path.exists(bptarget)): os.makedirs(bptarget)
         if (not os.path.exists(bxtarget)): os.makedirs(bxtarget)
       except os.error: pass
-      shutil.copy("%s/pyCGNSconfig.py"%d,"%s/pyCGNSconfig.py"%bptarget)
-      shutil.copy("%s/pyCGNSconfig.py"%d,"%s/pyCGNSconfig.py"%bxtarget)
+      for ff in rootfiles:
+        shutil.copy("%s/%s"%(d,ff),"%s/%s"%(bptarget,ff))
+        shutil.copy("%s/%s"%(d,ff),"%s/%s"%(bxtarget,ff))
+      for ff in compfiles:
+        shutil.copy("%s/compatibility/%s"%(d,ff),"%s/%s"%(bptarget,ff))
+        shutil.copy("%s/compatibility/%s"%(d,ff),"%s/%s"%(bxtarget,ff))
 
 # --------------------------------------------------------------------
 # Clean target redefinition - force clean everything

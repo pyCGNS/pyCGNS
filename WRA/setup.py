@@ -25,7 +25,7 @@ sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]
 try:
   import pyCGNSconfig
 except ImportError:
-  print 'pyGCNS[ERROR]: PAT cannot find pyCGNSconfig.py file!'
+  print 'pyGCNS[ERROR]: WRA cannot find pyCGNSconfig.py file!'
   sys.exit(1)
 sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]+spath
 import setuputils
@@ -316,24 +316,11 @@ lpackages     = ['CGNS.WRA']
 lscripts      = []
 
 ldata_files   = [
-('share/CGNS/demo',glob.glob('CGNS/demo/*.py')),
-('share/CGNS/demo/UsersGuide',
-glob.glob('CGNS/demo/UsersGuide/*.py')),
-('share/CGNS/test',glob.glob('CGNS/test/*.py')),
-('share/CGNS/test',glob.glob('CGNS/test/README')),
-('share/CGNS/test/coverageData',glob.glob('CGNS/test/cov*/*.py')),
-('share/CGNS/test/coverageData/FileADF',glob.glob('CGNS/test/cov*/*ADF/*')),
-('share/CGNS/test/coverageData/FilePY',glob.glob('CGNS/test/cov*/*PY/*')),
-                 ]
-# ---
-if hdf:
-  lext_modules  += [
-                Extension('CGNS.hdfmodule', 
-                sources=['modhdf/hdfmodule.c'],
-                          include_dirs = include_dirs,
-                          library_dirs = library_dirs,
-                          extra_link_args=extraargslk,
-                          libraries    = optional_libs)]
+('share/CGNS/WRA/demo',glob.glob('CGNS/WRA/demo/*.py')),
+('share/CGNS/WRA/demo/UsersGuide',
+glob.glob('CGNS/WRA/demo/UsersGuide/*.py')),
+('share/CGNS/WRA/test',glob.glob('CGNS/test/*.py'))]
+
 # ---
 if mll:
   lext_modules += [
@@ -343,7 +330,7 @@ if mll:
                 # Thus, adf module has to be duplicated and the calls to
                 # adf through midlevel should be clearly scoped in the
                 # python code
-                Extension('CGNS.midlevelmodule', 
+                Extension('CGNS.WRA.midlevelmodule', 
                 sources=['modadf/adfmodule.c',
                          'modmll/cgnsmodule.c',
                          'modmll/cgnsdict.c'],
@@ -352,7 +339,7 @@ if mll:
                           libraries    = optional_libs,
                           extra_compile_args=extraargs,
                           extra_link_args=extraargslk),
-                Extension('CGNS.adfmodule', 
+                Extension('CGNS.WRA.adfmodule', 
                 sources=['modadf/adfmodule.c'],
                           include_dirs = include_dirs,
                           library_dirs = library_dirs,
@@ -379,8 +366,8 @@ setup (
 ) # close setup
 
 if setconfig:
-  print '### Test the installation with:'
-  print "python -c 'import CGNS;CGNS.test()'"
+  print '### Leave the installation directory and test with:'
+  print "python -c 'import CGNS.WRA;CGNS.WRA.test()'"
   
 # --- last line
   

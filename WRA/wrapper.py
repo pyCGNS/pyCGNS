@@ -4,11 +4,9 @@
 # See file COPYING in the root directory of this Python module source 
 # tree for license information. 
 #
-
-import CGNS.midlevel     as Mll
-import CGNS.cgnserrors   as E
-import CGNS.cgnskeywords as K
-import numpy             as Num
+import CGNS.errors        as Err
+import CGNS.WRA.midlevel  as Mll
+import numpy              as Num
 import posixpath
 import copy
 
@@ -21,45 +19,6 @@ librarries.
 """
 
 # ======================================================================
-CGNS_NoSuchFile           = 'pyCGNS[001] No such file'
-CGNS_OpenFileFailed       = 'pyCGNS[002] Open file failed'
-CGNS_FileAlreadyExists    = 'pyCGNS[003] File already exists'
-CGNS_NotConnected         = "pyCGNS[100] Not yet connected to a CGNS database"
-CGNS_NoSuchBase           = "pyCGNS[101] No such base name"
-CGNS_AbsolutePathRequired = "pyCGNS[102] Absolute path required"
-CGNS_NoSuchZone           = "pyCGNS[103] No such zone name"
-CGNS_NoSuchArray          = "pyCGNS[104] No such array name"
-CGNS_NoSuchUserData       = "pyCGNS[105] No such user data node name"
-CGNS_NoSuchFlowSolution   = "pyCGNS[106] No such flow solution node name"
-CGNS_NoSuchBoundary       = "pyCGNS[107] No such boundary condition node name"
-CGNS_FileShouldBeReadable = "pyCGNS[110] File should be readable"
-CGNS_GotoPathNotFound     = "pyCGNS[901] No such goto path in CGNS tree"
-CGNS_BadType              = "pyCGNS[200] Bad type"
-CGNS_BadOpenMode          = "pyCGNS[201] Bad OpenMode value"
-CGNS_BadErrorCode         = "pyCGNS[202] Bad ErrorCode type"
-CGNS_BadMassUnit          = "pyCGNS[203] Bad MassUnit type"
-CGNS_BadLengthUnit        = "pyCGNS[204] Bad LengthUnit type"
-CGNS_BadTimeUnit          = "pyCGNS[205] Bad TimeUnit type"
-CGNS_BadTemperatureUnit   = "pyCGNS[206] Bad TemperatureUnit type"
-CGNS_BadAngleUnit         = "pyCGNS[207] Bad AngleUnit type"
-CGNS_BadDataClass         = "pyCGNS[208] Bad DataClass type"
-CGNS_BadGridLocation      = "pyCGNS[209] Bad GridLocation type"
-CGNS_BadBCDataType        = "pyCGNS[210] Bad BC data type"
-CGNS_BadGridConnectivityType     = "pyCGNS[211] Bad GridConnectivityType type"
-CGNS_BadPointSetType      = "pyCGNS[212] Bad PointSetType type"
-CGNS_BadGoverningType     = "pyCGNS[213] Bad GoverningEquation type"
-CGNS_BadModelType         = "pyCGNS[214] Bad Model type"
-CGNS_BadBCType            = "pyCGNS[215] Bad BC type"
-CGNS_BadDataType          = "pyCGNS[216] Bad DataType type"
-CGNS_BadElementType       = "pyCGNS[217] Bad ElementType type"
-CGNS_BadZoneType          = "pyCGNS[218] Bad ZoneType type"
-CGNS_BadRigidGridMotionType      = "pyCGNS[219] Bad RigidGridMotionType type"
-CGNS_BadArbitraryGridMotionType  = "pyCGNS[220] Bad ArbitraryGridMotionType type"
-CGNS_BadSimulationType    = "pyCGNS[221] Bad SimulationType type"
-CGNS_BadWallFunctionType  = "pyCGNS[222] Bad WallFunctionType type"
-CGNS_BadAreaType          = "pyCGNS[223] Bad AreaType type"
-CGNS_BadAverageInterfaceType     = "pyCGNS[224] Bad AverageInterfaceType type"
-
 # ======================================================================
 class pyADF:
     """
@@ -101,11 +60,11 @@ class pyADF:
         self.__adf=Mll.adf.database_open(name)
         self.__state=self.OPEN
       elif not name:
-        raise E.cgnsException(802)
+        raise Err.CGNS_NoFileName
       elif (status not in Mll.adf.ADF_OPENSTATUS.values()):
-        raise E.cgnsException(800, status)
+        raise Err.CGNS_BadADFstatus
       elif (format not in Mll.adf.ADF_OPENFORMAT.values()):
-        raise E.cgnsException(801, format)
+        raise Err.CGNS_BadADFformat
       else:
         self.__adf=Mll.adf.database_open(name,status,format)
         if (self.__adf.error != -1):
@@ -351,7 +310,7 @@ class pyCGNS:
       """
       self.__alive=0
       self.__name=name
-      if (mode not in Mll.OpenMode_.keys()): raise CGNS_BadOpenMode, mode
+      if (mode not in Mll.OpenMode_.keys()): raise Err.CGNS_BadOpenMode, mode
       self.__mode=mode
       self.__modestring=Mll.OpenMode_[mode]
       self.__lastPath=[]
@@ -441,7 +400,7 @@ class pyCGNS:
          CGNS/ADF file has been open as write only.
       """
       if self.__modestring not in [Mll.MODE_READ,Mll.MODE_MODIFY]:
-          raise CGNS_FileShouldBeReadable
+          raise Err.CGNS_FileShouldBeReadable
       return self.__db.baseId(id)
     # --------------------------------------------------
     def linkread(self):
@@ -510,7 +469,7 @@ class pyCGNS:
          See 'baseid' remarks.
       """
       if self.__modestring not in [Mll.MODE_READ,Mll.MODE_MODIFY]:
-          raise CGNS_FileShouldBeReadable
+          raise Err.CGNS_FileShouldBeReadable
       return self.__db.zoneId(bid,zid)
     # --------------------------------------------------
     def zoneread(self,bid,zid):
@@ -542,7 +501,7 @@ class pyCGNS:
 
          See 'zonetype' remarks.
       """
-      if zonetype not in Mll.ZoneType: raise CGNS_BadZoneType, zonetype
+      if zonetype not in Mll.ZoneType: raise Err.CGNS_BadZoneType, zonetype
       # bsize=self.baseread(baseidx) # cannot be called if open for wrtie...
       bsize=3
       if (len(szlist)==6): szlist=szlist+(0,0,0)
@@ -595,7 +554,7 @@ class pyCGNS:
          No Comment
       """
       if d not in Mll.GoverningEquationsType.keys():
-        raise CGNS_BadGoverningType, d
+        raise Err.CGNS_BadGoverningType, d
       return self.__db.governingWrite(Mll.GoverningEquationsType[d])
     # --------------------------------------------------
     def diffusionread(self):
@@ -632,7 +591,7 @@ class pyCGNS:
 
          No Comment
       """
-      if mt not in Mll.ModelType.keys(): raise CGNS_BadModelType, mt
+      if mt not in Mll.ModelType.keys(): raise Err.CGNS_BadModelType, mt
       return self.__db.modelWrite(label,Mll.ModelType[mt])
     # --------------------------------------------------
     def stateread(self):
@@ -670,7 +629,7 @@ class pyCGNS:
          No Comment
       """
       if simtype not in Mll.SimulationType.keys():
-        CGNS_BadSimulationType, simtype
+        raise Err.CGNS_BadSimulationType, simtype
       return self.__db.simulationTypeWrite(bid,Mll.SimulationType[simtype])
     # --------------------------------------------------
     def rotatingread(self):
@@ -745,7 +704,7 @@ class pyCGNS:
          Under current node
       """
       if gloc not in Mll.GridLocation.keys():
-        raise CGNS_BadGridLocation, glocation
+        raise Err.CGNS_BadGridLocation, glocation
       return self.__db.gridlocationWrite(Mll.GridLocation[gloc])
     # --------------------------------------------------
     def nrigidmotions(self,bid,zid):
@@ -792,7 +751,7 @@ class pyCGNS:
          type:RigidGridMotionType
       """
       if type not in Mll.RigidGridMotionType.keys():
-        raise CGNS_BadRigidGridMotionType, type
+        raise Err.CGNS_BadRigidGridMotionType, type
       return self.__db.rigidMotionWrite(bid,zid,name,Mll.RigidGridMotionType[type])
     # --------------------------------------------------
     def arbitrarymotionwrite(self,bid,zid,name,type):
@@ -803,7 +762,7 @@ class pyCGNS:
          type:ArbitraryGridMotionType
       """
       if type not in Mll.ArbitraryGridMotionType.keys():
-        raise CGNS_BadArbitraryGridMotionType, type
+        raise Err.CGNS_BadArbitraryGridMotionType, type
       return self.__db.arbitraryMotionWrite(bid,zid,name,Mll.ArbitraryGridMotionType[type])
     # --------------------------------------------------
     def nsols(self,bid,zid):
@@ -826,7 +785,7 @@ class pyCGNS:
          s=db.solwrite(1,z,mySolutionName,CGNS.CellCenter_[myGridLocation])
       """
       if glocation not in Mll.GridLocation.keys():
-        raise CGNS_BadGridLocation, glocation
+        raise Err.CGNS_BadGridLocation, glocation
       return self.__db.solWrite(bid,zid,sname,Mll.GridLocation[glocation])
     # --------------------------------------------------
     def solinfo(self,bid,zid,sid):
@@ -846,7 +805,7 @@ class pyCGNS:
          See 'baseid' remarks.
       """
       if self.__modestring not in [Mll.MODE_READ,Mll.MODE_MODIFY]:
-          raise CGNS_FileShouldBeReadable
+          raise Err.CGNS_FileShouldBeReadable
       return self.__db.solId(bid,zid,sid)
     # --------------------------------------------------
     def ncoords(self,bid,zid):
@@ -879,7 +838,7 @@ class pyCGNS:
 
          data-type:DataType
       """
-      if dtype not in Mll.DataType.keys(): raise CGNS_BadDataType, dtype
+      if dtype not in Mll.DataType.keys(): raise Err.CGNS_BadDataType, dtype
       return self.__db.coordWrite(bid,zid,Mll.DataType[dtype],cname,darray)
     # --------------------------------------------------
     def coordinfo(self,bid,zid,cid):
@@ -899,7 +858,7 @@ class pyCGNS:
          See 'baseid' remarks.
       """
       if self.__modestring not in [Mll.MODE_READ,Mll.MODE_MODIFY]:
-          raise CGNS_FileShouldBeReadable
+          raise Err.CGNS_FileShouldBeReadable
       return self.__db.coordId(bid,zid,cid)
     # --------------------------------------------------
     def nsections(self,bid,zid):
@@ -930,7 +889,7 @@ class pyCGNS:
          the 'start:I' and 'end:I' indices, 'last-bnd-index:I'
          index and at last the 'elements:A' array itself (of type 'type).
       """
-      if type not in Mll.ElementType: raise CGNS_BadElementType, type
+      if type not in Mll.ElementType: raise Err.CGNS_BadElementType, type
       return self.__db.sectionWrite(bid,zid,name,Mll.ElementType[type],
                                     start,end,nb,ar)
     # --------------------------------------------------
@@ -990,7 +949,7 @@ class pyCGNS:
          values are used. Other values can be set to zero.
          Unfair-remark: field name is required.
       """
-      if dtype not in Mll.DataType.keys(): raise CGNS_BadDataType, dtype
+      if dtype not in Mll.DataType.keys(): raise Err.CGNS_BadDataType, dtype
       return self.__db.fieldRead(bid,zid,sid,fname,Mll.DataType[dtype],
                                  tuple(imin),tuple(imax))  
     # --------------------------------------------------
@@ -1003,7 +962,7 @@ class pyCGNS:
          array of data 'data-array:A'. See also 'coordwrite' remarks.
       """
       if dtype not in Mll.DataType.keys():
-        raise CGNS_BadDataType, dtype
+        raise Err.CGNS_BadDataType, dtype
       return self.__db.fieldWrite(bid,zid,sid,fname,Mll.DataType[dtype],darray)
     # --------------------------------------------------
     def fieldinfo(self,bid,zid,sid,fid):
@@ -1023,7 +982,7 @@ class pyCGNS:
          See 'baseid' remarks.
       """
       if self.__modestring not in [Mll.MODE_READ,Mll.MODE_MODIFY]:
-          raise CGNS_FileShouldBeReadable
+          raise Err.CGNS_FileShouldBeReadable
       return self.__db.fieldId(bid,zid,sid,fid)
     # --------------------------------------------------
     def convergencewrite(self,nit,name):
@@ -1076,9 +1035,9 @@ class pyCGNS:
          found using the cross dictionnary.
      """
      if gloc not in Mll.GridLocation.keys():
-       raise CGNS_BadGridLocation, glocation
+       raise Err.CGNS_BadGridLocation, glocation
      if psett not in Mll.PointSetType.keys():
-       raise CGNS_BadPointSetType, pttype
+       raise Err.CGNS_BadPointSetType, pttype
      return self.__db.holeWrite(bid,zid,hname,Mll.GridLocation[gloc],
                                 Mll.PointSetType[psett],ar)
     # --------------------------------------------------
@@ -1136,9 +1095,9 @@ class pyCGNS:
          PointRange. In that case, the number of points is forced to 2.
       """
       if bctype not in Mll.BCType.keys():
-        raise CGNS_BadBCType, bctype
+        raise Err.CGNS_BadBCType, bctype
       if pttype not in Mll.PointSetType.keys():
-        raise CGNS_BadPointSetType, pttype
+        raise Err.CGNS_BadPointSetType, pttype
       # split ptlist from array to list of tuples...
       tpl=[]
       for tp in ptlist:
@@ -1166,7 +1125,7 @@ class pyCGNS:
          Caution: normal-flag is forced to FALSE, normal-list is not taken
          into account.
       """
-      if dt not in Mll.DataType.keys(): raise CGNS_BadDataType, dt
+      if dt not in Mll.DataType.keys(): raise Err.CGNS_BadDataType, dt
       return self.__db.bocoNormalWrite(bid,zid,bcid,
                                        nindex,nflags,Mll.DataType[dt],nlist)
     # --------------------------------------------------
@@ -1177,7 +1136,7 @@ class pyCGNS:
 
          dset-type:BCType
       """
-      if dstype not in Mll.BCType.keys(): raise CGNS_BadBCType, dstype
+      if dstype not in Mll.BCType.keys(): raise Err.CGNS_BadBCType, dstype
       return self.__db.bocoDatasetWrite(bid,zid,bcid,dsname,Mll.BCType[dstype])
     # --------------------------------------------------
     def bcdatasetread(self,bid,zid,bcid,dsid):
@@ -1197,7 +1156,7 @@ class pyCGNS:
 
          bc-data-type:BCDataType
       """
-      if bctype not in Mll.BCDataType.keys(): raise CGNS_BadBCDataType, bctype
+      if bctype not in Mll.BCDataType.keys(): raise Err.CGNS_BadBCDataType, bctype
       return self.__db.bocoDataWrite(bid,zid,bcid,dsid,Mll.BCDataType[bctype])
     # --------------------------------------------------
     def ndiscrete(self,bid,zid):
@@ -1308,7 +1267,7 @@ class pyCGNS:
 #        if (x[1] == name): i=nu+1
 #      if (i == -1):
 #        print name
-#        raise CGNS_NoSuchUserData
+#        raise Err.CGNS_NoSuchUserData
       return n
     # --------------------------------------------------
     def userdataread(self,id):
@@ -1329,11 +1288,11 @@ class pyCGNS:
          defined strings, variables or their enumerates.
          *should be much more documented/checked here*
       """
-      if mass not in Mll.MassUnits.keys():       raise CGNS_BadMassUnit
-      if leng not in Mll.LengthUnits.keys():     raise CGNS_BadLengthUnit
-      if time not in Mll.TimeUnits.keys():       raise CGNS_BadTimeUnit
-      if temp not in Mll.TemperatureUnits.keys():raise CGNS_BadTemperatureUnit 
-      if angl not in Mll.AngleUnits.keys():      raise CGNS_BadAngleUnit      
+      if mass not in Mll.MassUnits.keys():       raise Err.CGNS_BadMassUnit
+      if leng not in Mll.LengthUnits.keys():     raise Err.CGNS_BadLengthUnit
+      if time not in Mll.TimeUnits.keys():       raise Err.CGNS_BadTimeUnit
+      if temp not in Mll.TemperatureUnits.keys():raise Err.CGNS_BadTemperatureUnit 
+      if angl not in Mll.AngleUnits.keys():      raise Err.CGNS_BadAngleUnit      
       return self.__db.unitsWrite(Mll.MassUnits[mass],
                                   Mll.LengthUnits[leng],
                                   Mll.TimeUnits[time],
@@ -1357,7 +1316,7 @@ class pyCGNS:
          The 'data-class' is a 'DataClass' enumerate.
       """
       if dt not in Mll.DataClass.keys():
-        raise CGNS_BadDataClass, dt
+        raise Err.CGNS_BadDataClass, dt
       return self.__db.dataclassWrite(Mll.DataClass[dt])
     # --------------------------------------------------
     def dataclassread(self):
@@ -1377,7 +1336,7 @@ class pyCGNS:
          Exponents values are: Mass, Length, Time, Temperature, Angle.
       """
       if dt not in Mll.DataType.keys():
-        raise CGNS_BadDataType, dt
+        raise Err.CGNS_BadDataType, dt
       return self.__db.exponentsWrite(Mll.DataType[dt],v)
     # --------------------------------------------------
     def exponentsread(self):
@@ -1407,7 +1366,7 @@ class pyCGNS:
          Conversion values are: scale, offset
       """
       if dt not in Mll.DataType.keys():
-        raise CGNS_BadDataType, dt
+        raise Err.CGNS_BadDataType, dt
       return self.__db.conversionWrite(Mll.DataType[dt],v)
     # --------------------------------------------------
     def conversionread(self):
@@ -1464,7 +1423,7 @@ class pyCGNS:
          Type is WallFunctionType
       """
       if type not in Mll.WallFunctionType.keys():
-        raise CGNS_BadWallFunctionType, type
+        raise Err.CGNS_BadWallFunctionType, type
       return self.__db.bcWallFunctionWrite(bid,zid,bcid,Mll.WallFunctionType[type])
     # --------------------------------------------------
     def bcarearead(self,bid,zid,bcid):
@@ -1484,7 +1443,7 @@ class pyCGNS:
          Type is AreaType
       """
       if type not in Mll.AreaType.keys():
-        raise CGNS_BadAreaType, type
+        raise Err.CGNS_BadAreaType, type
       return self.__db.bcAreaWrite(bid,zid,bcid,Mll.AreaType[type],surf,region)
     # --------------------------------------------------
     def rindwrite(self,rind):
@@ -1555,19 +1514,19 @@ class pyCGNS:
          Note the 'DataType' is force to 'Integer'.
       """
       if gl not in Mll.GridLocation.keys():
-        raise CGNS_BadGridLocation, gl
+        raise Err.CGNS_BadGridLocation, gl
       if ddt not in Mll.DataType.keys():
-        raise CGNS_BadDataType, ddt
+        raise Err.CGNS_BadDataType, ddt
       if pst not in Mll.PointSetType.keys():
-        raise CGNS_BadPointSetType, pst
+        raise Err.CGNS_BadPointSetType, pst
       if dpst not in [Mll.PointListDonor,
                       Mll.PointRangeDonor,
                       Mll.CellListDonor]:
-        raise CGNS_BadPointSetType, dpst
+        raise Err.CGNS_BadPointSetType, dpst
       if gt not in Mll.GridConnectivityType.keys():
-        raise CGNS_GridConnectivityType, gt
+        raise Err.CGNS_GridConnectivityType, gt
       if dzt not in Mll.ZoneType.keys():
-        raise CGNS_ZoneType, dzt
+        raise Err.CGNS_ZoneType, dzt
       return self.__db.ConnWrite(bid,zid,name,
                                  Mll.GridLocation[gl],
                                  Mll.GridConnectivityType[gt],
@@ -1593,7 +1552,7 @@ class pyCGNS:
          The type is 'AverageInterfaceType'.
       """
       if at not in Mll.AverageInterfaceType.keys():
-        raise CGNS_BadAverageInterfaceType, at
+        raise Err.CGNS_BadAverageInterfaceType, at
       return self.__db.ConnAverageWrite(bid,zid,cid,
                                         Mll.AverageInterfaceType[at])
     # --------------------------------------------------
@@ -1744,7 +1703,7 @@ class pyCGNS:
 
          No Comment
       """
-      if btype not in Mll.BCType.keys(): raise CGNS_BadBCType, btype
+      if btype not in Mll.BCType.keys(): raise Err.CGNS_BadBCType, btype
       return self.__db.familyBocoWrite(bid,fid,name,Mll.BCType[btype])
     # --------------------------------------------------
     def georead(self,bid,fid,gid):
@@ -1846,7 +1805,7 @@ class pyCGNS:
          All *type*, *dim* *vector* are refering to the *array* of data
          itself. See also 'arrayinfo' remarks.
       """
-      if dtype not in Mll.DataType.keys(): raise CGNS_BadDataType, dtype
+      if dtype not in Mll.DataType.keys(): raise Err.CGNS_BadDataType, dtype
       return self.__db.arrayWrite(name,Mll.DataType[dtype],dim,ddim,darray)
     # --------------------------------------------------
     def arrayinfo(self,aid):

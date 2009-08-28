@@ -4,9 +4,9 @@
 # See file COPYING in the root directory of this Python module source 
 # tree for license information. 
 #
-import CGNS
-import CGNS.midlevel as MLL
-import CGNS.wrap     as W
+import CGNS.WRA
+import CGNS.WRA.midlevel as MLL
+import CGNS.WRA.wrapper  as W
 import numpy         as N
 import os
 import string
