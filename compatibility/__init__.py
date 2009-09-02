@@ -6,9 +6,12 @@
 # =============================================================================
 
 # compatibility methods
-import CGNS.WRA as WRA
-import CGNS.WRA.utils as utils
-import CGNS.WRA.midlevel as midlevel
-import CGNS.WRA.wrapper as wrap
+try:
+  import CGNS.WRA as WRA
+  import CGNS.WRA.utils as utils
+  import CGNS.WRA.midlevel as midlevel
+  import CGNS.WRA.wrapper as wrap
+except ImportError:
+  pass
 #
 

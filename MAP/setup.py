@@ -3,35 +3,33 @@
 # $Rev: 56 $ $Date: 2008-06-10 09:44:23 +0200 (Tue, 10 Jun 2008) $         
 # See license file in the root directory of this Python module source      
 # -------------------------------------------------------------------------
-from  distutils.core import setup, Extension
-from  distutils.util import get_platform
 
 # --- pyCGNSconfig search
-import os
 import sys
-spath=sys.path[:]
-sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]
-try:
-  import pyCGNSconfig
-except ImportError:
-  print 'pyGCNS[ERROR]: PAT cannot find pyCGNSconfig.py file!'
-  sys.exit(1)
-sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]+spath
+sys.path+=['..']
 import setuputils
-setuputils.installConfigFiles([os.getcwd(),'%s/..'%(os.getcwd())])
-sys.prefix=sys.exec_prefix
+(pyCGNSconfig,installprocess)=setuputils.search('MAP')
 # ---
 
-try:
-  if (not pyCGNSconfig.HAS_HDF5):
-    print 'pyGCNS[ERROR]: MAP requires HDF5, please set pyCGNSconfig.py file!'
+from  distutils.core import setup, Extension
+from  distutils.util import get_platform
+sys.prefix=sys.exec_prefix
+
+cf_include_dirs=[]
+cf_library_dirs=[]
+cf_optional_libs=[]
+
+if (installprocess):
+  try:
+    if (not pyCGNSconfig.HAS_HDF5):
+      print 'pyGCNS[ERROR]: MAP requires HDF5, check pyCGNSconfig.py file!'
+      sys.exit(1)
+    cf_include_dirs=pyCGNSconfig.INCLUDE_DIRS
+    cf_library_dirs=pyCGNSconfig.LIBRARY_DIRS
+    cf_optional_libs=pyCGNSconfig.OPTIONAL_LIBS
+  except:
+    print 'pyGCNS[ERROR]: bad pyCGNSconfig.py file for MAP!'
     sys.exit(1)
-  cf_include_dirs=pyCGNSconfig.include_dirs
-  cf_library_dirs=pyCGNSconfig.library_dirs
-  cf_optional_libs=pyCGNSconfig.optional_libs
-except:
-  print 'pyGCNS[ERROR]: bad pyCGNSconfig.py file for MAP!'
-  sys.exit(1)
 
 setup (
   name         = "CGNS.MAP",

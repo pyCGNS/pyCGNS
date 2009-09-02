@@ -13,24 +13,14 @@ import distutils.sysconfig
 
 import getopt
 import re
-import sys
 import glob
 import string
 
 # --- pyCGNSconfig search
-import os
 import sys
-spath=sys.path[:]
-sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]
-try:
-  import pyCGNSconfig
-except ImportError:
-  print 'pyGCNS[ERROR]: WRA cannot find pyCGNSconfig.py file!'
-  sys.exit(1)
-sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]+spath
+sys.path+=['..']
 import setuputils
-setuputils.installConfigFiles([os.getcwd(),'%s/..'%(os.getcwd())])
-sys.prefix=sys.exec_prefix
+(pyCGNSconfig,installprocess)=setuputils.search('MAP')
 # ---
 
 setconfig=0
@@ -262,33 +252,25 @@ if setconfig:
   print summary,
   print 72*'='
 
-  configfile=open("../pyCGNSconfig.py","a")
-  configfile.write("# CFD General Notation System - CGNS lib wrapper\n")
-  configfile.write("# ONERA/DSNA/ELSA - poinot@onera.fr\n")
-  configfile.write("# See file COPYING in the root directory")
-  configfile.write("of this Python module source\n")
-  configfile.write("# tree for license information.\n")
-  configfile.write("\n# THIS FILE IS GENERATED DURING INSTALLATION\n\n")
-  configfile.write("VERSION='%s'\n"%lversion)
-  configfile.write("DATE='%s'\n"%proddate)
-  configfile.write("PLATFORM=%s\n"%str(prodhost))
-  configfile.write("HAS_MLL=%s\n"%mll)
-  configfile.write("PATH_MLL='%s'\n"%cgnslib)
-  configfile.write("PATH_HDF5='%s'\n"%hdflib)
-  configfile.write("PATH_CHLONE='%s'\n"%chlonelib)
-  configfile.write("NUM_LIBRARY='%s'\n"%num)
-  configfile.write("MLL_VERSION='%s'\n"%cgnsversion)
-  configfile.write("HAS_CHLONE=%s\n"%hdf)
-  configfile.write("HDF5_VERSION='%s'\n"%hdfversion)
-  configfile.write("CHLONE_VERSION='%s'\n"%chloneversion)
-  configfile.write("INCLUDE_PATH=%s\n"%include_dirs)
-  configfile.write("LIB_PATH=%s\n"%library_dirs)
-  configfile.write("EXTRA_ARGS=%s\n"%extraargs)
-  configfile.write("OPTIONAL_LIBS=%s\n"%optional_libs)
-  configfile.write("\n# --- last line\n\n")
-  configfile.close()
-
-  btarget='./build/lib.%s-%s'%(distutils.util.get_platform(),sys.version[0:3])
+  configdict={}
+  configdict["VERSION"]=lversion
+  configdict["DATE"]=proddate
+  configdict["PLATFORM"]=prodhost
+  configdict["HAS_MLL"]=mll
+  configdict["HAS_HDF5"]=mll
+  configdict["PATH_MLL"]=cgnslib
+  configdict["PATH_HDF5"]=hdflib
+  configdict["PATH_CHLONE"]=chlonelib
+  configdict["NUM_LIBRARY"]=num
+  configdict["MLL_VERSION"]=cgnsversion
+  configdict["HAS_CHLONE"]=hdf
+  configdict["HDF5_VERSION"]=hdfversion
+  configdict["CHLONE_VERSION"]=chloneversion
+  configdict["INCLUDE_PATH"]=include_dirs
+  configdict["LIB_PATH"]=library_dirs
+  configdict["EXTRA_ARGS"]=extraargs
+  configdict["OPTIONAL_LIBS"]=optional_libs
+  setuputils.updateConfig("..","../build/lib/CGNS",configdict)
 
 # --- add common stuff
 nincs='%s/lib/python%s/site-packages/numpy/core/include'%(xdir,sys.version[:3])

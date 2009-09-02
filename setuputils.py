@@ -12,25 +12,44 @@ from   distutils.dir_util import remove_tree
 from  distutils.core import setup
 from  distutils.util import get_platform
 from  distutils.command.clean import clean as _clean
-#from  distutils.command.install import install as _install
 
-rootfiles=['pyCGNSconfig.py','errors.py','version.py']
+rootfiles=['errors.py','version.py']
 compfiles=['__init__.py','midlevel.py','wrap.py']
-def installConfigFiles(searchpath):
-  bptarget='./build/lib/CGNS'
-  bxtarget='./build/lib.%s-%s/CGNS'%(get_platform(),sys.version[0:3])
-  for d in searchpath:
-    if (os.path.exists("%s/pyCGNSconfig.py"%d)):
-      try:
-        if (not os.path.exists(bptarget)): os.makedirs(bptarget)
-        if (not os.path.exists(bxtarget)): os.makedirs(bxtarget)
-      except os.error: pass
-      for ff in rootfiles:
-        shutil.copy("%s/%s"%(d,ff),"%s/%s"%(bptarget,ff))
-        shutil.copy("%s/%s"%(d,ff),"%s/%s"%(bxtarget,ff))
-      for ff in compfiles:
-        shutil.copy("%s/compatibility/%s"%(d,ff),"%s/%s"%(bptarget,ff))
-        shutil.copy("%s/compatibility/%s"%(d,ff),"%s/%s"%(bxtarget,ff))
+
+# --------------------------------------------------------------------
+def search(tag):
+  import sys
+  import os
+  state=1
+  for com in sys.argv:
+    if com in ['help','clean']: state=0
+  bptarget='../build/lib/CGNS'
+  pfile='../pyCGNSconfig.py.in'
+  try:
+    if (not os.path.exists(bptarget)): os.makedirs(bptarget)
+  except os.error: pass
+  cfgdict={}
+  if (state): cfgdict=findProductionContext()
+  updateConfig('..',bptarget,cfgdict)
+  sys.path+=[bptarget]
+  try:
+    import pyCGNSconfig
+  except ImportError:
+    print 'pyGCNS[ERROR]: %s setup cannot find pyCGNSconfig.py file!'%tag
+    sys.exit(1)
+  return (pyCGNSconfig, state)
+
+# --------------------------------------------------------------------
+def findProductionContext():
+  return {}
+
+# --------------------------------------------------------------------
+def installConfigFiles():
+  bptarget='../build/lib/CGNS'
+  for ff in rootfiles:
+    shutil.copy("%s/%s"%(d,ff),"%s/%s"%(bptarget,ff))
+  for ff in compfiles:
+    shutil.copy("%s/compatibility/%s"%(d,ff),"%s/%s"%(bptarget,ff))
 
 # --------------------------------------------------------------------
 # Clean target redefinition - force clean everything
@@ -52,11 +71,45 @@ def wselect(args,dirname,names):
 
 class clean(_clean):
   def walkAndClean(self):
-    os.path.walk(".",wselect,[])
+    os.path.walk("..",wselect,[])
   def run(self):
+    if os.path.exists("../build"):    remove_tree("../build")
     if os.path.exists("./build"):     remove_tree("./build")
     if os.path.exists("./Doc/_HTML"): remove_tree("./Doc/_HTML")
     if os.path.exists("./Doc/_PS"):   remove_tree("./Doc/_PS")
     if os.path.exists("./Doc/_PDF"):  remove_tree("./Doc/_PDF")
     self.walkAndClean()
+
+# --------------------------------------------------------------------
+def confValueAsStr(v):
+  if (type(v)==type((1,))): return str(v)
+  if (type(v)==type([])):   return str(v)
+  if (v in [True,False]):   return str(v)
+  else:                     return '"%s"'%str(v)
+  
+# --------------------------------------------------------------------
+def updateConfig(pfile,gfile,config):
+  if (not os.path.exists("%s/pyCGNSconfig.py"%(gfile))):
+    f=open("%s/pyCGNSconfig.py.in"%(pfile),'r')
+    cf=f.readlines()
+    f.close()
+  else:
+    f=open("%s/pyCGNSconfig.py"%(gfile),'r')
+    cf=f.readlines()
+    f.close()
+  rl=[]
+  ck=config.keys()
+  for l in cf:
+    found=0
+    for c in ck:
+      if (((len(c))<=len(l)) and (c==l[:len(c)]) and (l[-2]=='#')):
+        rl+=['%s=%s#\n'%(c,confValueAsStr(config[c]))]
+        found=1
+    if not found:
+        rl+=l
+  f=open("%s/pyCGNSconfig.py"%(gfile),'w+')
+  f.writelines(rl)
+  f.close()
+  
+# --- last line
 

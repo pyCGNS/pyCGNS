@@ -5,80 +5,45 @@
 # -------------------------------------------------------------------------
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
+import glob
 
 # --- pyCGNSconfig search
-import os
 import sys
-spath=sys.path[:]
-sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]
-try:
-  import pyCGNSconfig
-except ImportError:
-  print 'pyGCNS[ERROR]: NAV cannot find pyCGNSconfig.py file!'
-  sys.exit(1)
-sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]+spath
+sys.path+=['..']
 import setuputils
-if (not os.path.exists('./build')): os.mkdir('./build')
-setuputils.installConfigFiles([os.getcwd(),'%s/..'%(os.getcwd())])
-sys.prefix=sys.exec_prefix
+(pyCGNSconfig,installprocess)=setuputils.search('MAP')
 # ---
 
-from optparse import OptionParser
-from distutils.core import setup, Extension
-import glob
-import re
+if installprocess:
+  from optparse import OptionParser
+  from distutils.core import setup, Extension
+  import re
 
-sys.path.append('.')
-from pyCGNSconfig import version as __vid__
+  sys.path.append('.')
+  from pyCGNSconfig import version as __vid__
 
-from optparse import OptionParser
+  from optparse import OptionParser
 
-parser = OptionParser()
-parser.add_option("--prefix",dest="prefix")
-try:
-  (options, args) = parser.parse_args(sys.argv)
-except optparse.OptionError: pass
+  parser = OptionParser()
+  parser.add_option("--prefix",dest="prefix")
+  try:
+    (options, args) = parser.parse_args(sys.argv)
+  except optparse.OptionError: pass
 
-icondirprefix=sys.prefix
-try:
-  if (options.prefix != None): icondirprefix=options.prefix
-  fg=open("./CGNS/NAV/gui/s7globals_.py",'r')
-  llg=fg.readlines()
-  fg.close()
-  gg=open("./CGNS/NAV/gui/s7globals.py",'w+')
-  for lg in llg:
-    if (lg[:31]=='    self.s7icondirectoryprefix='):
-      gg.write('    self.s7icondirectoryprefix="%s"\n'%icondirprefix)
-    else:
-      gg.write(lg)
-  gg.close()
-except KeyError: pass
-
-# --------------------------------------------------------------------
-# Clean target redefinition - force clean everything
-from distutils.dir_util import remove_tree
-from distutils.command.clean import clean as _clean
-
-relist=['^.*~$','^#.*#$','^.*\.aux$','^.*\.pyc$','^.*\.bak$']
-reclean=[]
-
-for restring in relist:
-  reclean.append(re.compile(restring))
-
-def wselect(args,dirname,names):
-  for n in names:
-    for rev in reclean:
-      if (rev.match(n)):
-        #print "%s/%s"%(dirname,n)
-        os.remove("%s/%s"%(dirname,n))
-        break
-
-class clean(_clean):
-  def walkAndClean(self):
-    os.path.walk(".",wselect,[])
-  def run(self):
-    if os.path.exists("./build"): remove_tree("./build")
-    self.walkAndClean()
+  icondirprefix=sys.prefix
+  try:
+    if (options.prefix != None): icondirprefix=options.prefix
+    fg=open("./CGNS/NAV/gui/s7globals_.py",'r')
+    llg=fg.readlines()
+    fg.close()
+    gg=open("./CGNS/NAV/gui/s7globals.py",'w+')
+    for lg in llg:
+      if (lg[:31]=='    self.s7icondirectoryprefix='):
+        gg.write('    self.s7icondirectoryprefix="%s"\n'%icondirprefix)
+      else:
+        gg.write(lg)
+    gg.close()
+  except KeyError: pass
 
 setup (
 name         = "CGNS.NAV",
@@ -90,6 +55,6 @@ packages     = ['CGNS','CGNS.NAV','CGNS.NAV.gui','CGNS.NAV.supervisor'],
 scripts      = ['CGNS/CGNS.NAV'],
 data_files   = [('share/CGNS/NAV/icons',glob.glob('CGNS/NAV/gui/icons/*'))],
 
-cmdclass={'clean': clean}
+cmdclass={'clean': setuputils.clean}
 )
  

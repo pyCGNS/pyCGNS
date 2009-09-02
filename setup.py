@@ -20,14 +20,6 @@ modList=CGNSmodList[:]
 solist='m:'
 lolist=["without-mod=","single-mod="]
 
-sys.path.append('.')
-try:
-  import localconfig
-  if (localconfig.version in versionList):
-    pass      
-except ImportError,NameError:
-  pass
-
 try:
   opts, args = getopt.gnu_getopt(sys.argv[1:],solist,lolist)
 except getopt.GetoptError:
@@ -42,7 +34,7 @@ for o,a in opts:
   
 modArgs=[]
 for opt in sys.argv[1:]:
-  if (opt[:12] not in ['--without-mo','--single-mod']): modArgs.append(opt)
+  if (opt[:12] not in ['--without-mod','--single-mod']): modArgs.append(opt)
 modArgs=string.join(modArgs)
 
 for mod in modList:

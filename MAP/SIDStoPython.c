@@ -734,7 +734,7 @@ static int s2p_parseAndWriteHDF(hid_t     id,
       }
     } 
     S2P_TRACE(("}=%d\n",tsize));
-    node=L3_nodeSet(l3db,node,name,label,ddat,L3_typeAsEnum(tdat),vdat);
+    node=L3_nodeSet(l3db,node,name,label,ddat,L3_typeAsEnum(tdat),vdat,L3_H_NONE);
     L3_nodeCreate(l3db,id,node);
     if (PyList_Check(PyList_GetItem(tree,2)))
     {
@@ -861,7 +861,7 @@ int s2p_saveAsHDF(char      *filename,
 	  s2p_getData(PyList_GetItem(otree,1),&tdat,&ndat,ddat,&vdat,context);
 	  L3_initDims(dims,1,-1);
 	  node=L3_nodeSet(l3db,node,CGNSLibraryVersion_n,CGNSLibraryVersion_ts,
-			  dims,L3E_R4,vdat);
+			  dims,L3E_R4,vdat,L3_H_NONE);
 	  L3_nodeCreate(l3db,l3db->root_id,node);
 	}
 	else

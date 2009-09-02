@@ -9,19 +9,10 @@
 from distutils.core import setup, Extension
 
 # --- pyCGNSconfig search
-import os
 import sys
-spath=sys.path[:]
-sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]
-try:
-  import pyCGNSconfig
-except ImportError:
-  print 'pyGCNS[ERROR]: PAT cannot find pyCGNSconfig.py file!'
-  sys.exit(1)
-sys.path=[os.getcwd(),'%s/..'%(os.getcwd())]+spath
+sys.path+=['..']
 import setuputils
-setuputils.installConfigFiles([os.getcwd(),'%s/..'%(os.getcwd())])
-sys.prefix=sys.exec_prefix
+(pyCGNSconfig,installprocess)=setuputils.search('MAP')
 # ---
 
 setup(
