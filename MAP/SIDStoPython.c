@@ -543,6 +543,11 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   }
   L3M_SETFLAG(l3db,L3_F_WITHCHILDREN|L3_F_WITHDATA);
   rnode=L3_nodeRetrieve(l3db,actualid);
+  if (rnode == NULL)
+  {
+    S2P_TRACE(("### (%s) Retrieve returns NULL POINTER",curpath));
+    return NULL;
+  }
   S2P_TRACE(("### (%s) [%s]",curpath,rnode->label));
   if (    !strcmp(rnode->label,DataArray_ts) 
        || !strcmp(rnode->label,DimensionalExponents_ts) 
@@ -787,9 +792,18 @@ PyObject* s2p_loadAsHDF(char *filename,
   links=s2p_getlinktable(context);
   s2p_freelinktable(context);
 
-  tree=Py_BuildValue("([sOOs]O)",
-		     CGNSTree_n,Py_None,PyList_GetItem(ret,2),CGNSTree_ts,
-		     links);
+  if (ret==NULL)
+  {
+    ret=Py_None;
+    tree=Py_BuildValue("([sOOs]O)",
+		       CGNSTree_n,Py_None,ret,CGNSTree_ts,links);
+  }
+  else
+  {
+    tree=Py_BuildValue("([sOOs]O)",
+		       CGNSTree_n,Py_None,PyList_GetItem(ret,2),CGNSTree_ts,
+		       links);
+  }
   s2p_closeallHDF(context);
   Py_INCREF(Py_None);
   S2P_FREECONTEXTPTR(context);

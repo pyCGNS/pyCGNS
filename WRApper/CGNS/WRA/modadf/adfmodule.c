@@ -1380,12 +1380,12 @@ PyObject *adfmodule_init(void)
   DBADF_Type.ob_type = &PyType_Type;
   
   /* Create the module and add the functions */
-  m = Py_InitModule("adf", adf_methods);
+  m = Py_InitModule("_adf", adf_methods);
   import_array();
   
   /* Add some symbolic constants to the module */
   d = PyModule_GetDict(m);
-  ADFErrorObject = PyErr_NewException("adf.error", NULL, NULL);
+  ADFErrorObject = PyErr_NewException("_adf.error", NULL, NULL);
   PyDict_SetItemString(d, "error", ADFErrorObject);
 
 #define addConstInDict(xd,xxd,xs) \
@@ -1416,7 +1416,7 @@ Py_DECREF(s);
 }
 
 DL_EXPORT(void)
-initadf(void)
+init_adf(void)
 {
   adfmodule_init();
 }

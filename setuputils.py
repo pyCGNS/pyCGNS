@@ -19,15 +19,22 @@ compfiles=['__init__.py','midlevel.py','wrap.py']
 # --------------------------------------------------------------------
 def search(tag):
   import sys
+  import distutils.util
   import os
   state=1
   for com in sys.argv:
     if com in ['help','clean']: state=0
-  bptarget='../build/lib/CGNS'
+  bxtarget='../build/lib'
+  bptarget='../build/lib/CGNS'  
   pfile='../pyCGNSconfig.py.in'
-  try:
-    if (not os.path.exists(bptarget)): os.makedirs(bptarget)
-  except os.error: pass
+  if (not os.path.exists(bxtarget)):
+    os.makedirs(bxtarget)
+    pt=distutils.util.get_platform()
+    vv="%d.%d"%(sys.version_info[0],sys.version_info[1])
+    tg="%s/../build/lib.%s-%s/CGNS"%(os.getcwd(),pt,vv)
+    lg="%s/../build/lib/CGNS"%(os.getcwd())
+    os.makedirs(tg)
+    os.symlink(tg,lg)
   cfgdict={}
   if (state): cfgdict=findProductionContext()
   updateConfig('..',bptarget,cfgdict)
@@ -45,11 +52,14 @@ def findProductionContext():
 
 # --------------------------------------------------------------------
 def installConfigFiles():
-  bptarget='../build/lib/CGNS'
+  lptarget='..'
+  bptarget='./build/lib/CGNS'  
   for ff in rootfiles:
-    shutil.copy("%s/%s"%(d,ff),"%s/%s"%(bptarget,ff))
+    shutil.copy("%s/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
+    print "%s/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff)
   for ff in compfiles:
-    shutil.copy("%s/compatibility/%s"%(d,ff),"%s/%s"%(bptarget,ff))
+    shutil.copy("%s/compatibility/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
+    print "%s/compatibility/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff)    
 
 # --------------------------------------------------------------------
 # Clean target redefinition - force clean everything
@@ -73,8 +83,8 @@ class clean(_clean):
   def walkAndClean(self):
     os.path.walk("..",wselect,[])
   def run(self):
-    if os.path.exists("../build"):    remove_tree("../build")
     if os.path.exists("./build"):     remove_tree("./build")
+    if os.path.exists("./build"):     os.remove("./build")
     if os.path.exists("./Doc/_HTML"): remove_tree("./Doc/_HTML")
     if os.path.exists("./Doc/_PS"):   remove_tree("./Doc/_PS")
     if os.path.exists("./Doc/_PDF"):  remove_tree("./Doc/_PDF")

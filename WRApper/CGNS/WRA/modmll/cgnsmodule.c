@@ -5365,7 +5365,7 @@ static PyMethodDef midlevel_methods[] = {
 /* --------------------------------------------------------------------- */
 /* Initialization function for the module (*must* be called initmidlevel) */
 DL_EXPORT(void)
-initmidlevel(void)
+init_mll(void)
 {
   PyObject *m, *d, *a;
   
@@ -5374,7 +5374,7 @@ initmidlevel(void)
   DbMIDLEVEL_Type.ob_type = &PyType_Type;
   
   /* Create the module and add the functions */
-  m = Py_InitModule("midlevel", midlevel_methods);
+  m = Py_InitModule("_mll", midlevel_methods);
 
   /* is also done into adfmodule. Should work... */
   import_array();
@@ -5382,9 +5382,9 @@ initmidlevel(void)
   
   /* Add some symbolic constants to the module */
   d = PyModule_GetDict(m);
-  PyDict_SetItemString(d,"adf",a);
+  PyDict_SetItemString(d,"_adf",a);
 
-  MIDLEVELErrorObject = PyString_FromString("midlevel.error");
+  MIDLEVELErrorObject = PyString_FromString("_mll.error");
   PyDict_SetItemString(d, "error", MIDLEVELErrorObject);
 
   midleveldictionnary_init(d); /* set many constants into dicts */

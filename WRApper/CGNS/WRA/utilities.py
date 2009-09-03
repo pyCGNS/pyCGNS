@@ -5,8 +5,9 @@
 # tree for license information. 
 #
 import CGNS.WRA
-import CGNS.WRA.midlevel as MLL
+import CGNS.WRA.CGNS.midlevel as MLL
 import CGNS.WRA.wrapper  as W
+import CGNS.WRA.CGNS.midlevel.adf as ADF
 import numpy         as N
 import os
 import string
@@ -151,7 +152,7 @@ def __singleNodeFromADF(db,id,path,flink,maxread,dmax,ptarget):
   return None
   
 def getSingleNodeFromADF(file,path,flink,maxread,dmax,ptarget):
-  db=CGNS.pyADF(file,CGNS.adf.READ_ONLY,CGNS.adf.NATIVE)
+  db=CGNS.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
   nodeinfo=db.nodeAsDict(db.root())
   for child in nodeinfo['children']:
     info=__singleNodeFromADF(db,db.get_node_id(db.root(),child),
@@ -357,11 +358,6 @@ def __trustLink(file,path):
     if (not os.path.exists(tfile)):
       print 'lk error: no such file:',file
       return (0,file)
-#    db=CGNS.pyADF(tfile,CGNS.adf.READ_ONLY,CGNS.adf.NATIVE)
-#    if (db.error != -1):
-#      db.database_close()
-#      return (0,file)
-#    db.database_close()
     return (1,tfile)
   except:
     return (0,file)
@@ -405,7 +401,7 @@ def findLinkAsADF(file,level=0,path='',dbs={}):
   try:
     if (not dbs.has_key(rfile)):
       #print 'pyCGNS: findLinkAsADF',file
-      db=CGNS.pyADF(file,CGNS.adf.READ_ONLY,CGNS.adf.NATIVE)
+      db=CGNS.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
       dbs[rfile]=db
       dbs[lastfileentry]=db
       __links=__parseAndFindLinksADF(db,db.root(),level,path,dbs,file)
@@ -414,7 +410,7 @@ def findLinkAsADF(file,level=0,path='',dbs={}):
       for kdb in kdbs:
         dbs[kdb].database_close()
         del dbs[kdb]
-  except CGNS.adf.error,e:
+  except ADF.error,e:
       print 'findLinkAsADF :',e
   return __links
 
@@ -455,7 +451,7 @@ def loadAsADF(file,link=1,max=0,depth=999,path=None,dbs={},start=1):
   try:     
     if (not dbs.has_key(rfile)):
       #print 'pyCGNS: loadAsADF (open) ',file,path
-      db=CGNS.pyADF(file,CGNS.adf.READ_ONLY,CGNS.adf.NATIVE)
+      db=CGNS.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
       r=__parseAndReadADF(db,db.root(),link,max,depth,path,dbs)
       db.database_close()
       dbs[rfile]=r[2]
@@ -469,7 +465,7 @@ def loadAsADF(file,link=1,max=0,depth=999,path=None,dbs={},start=1):
       kdbs=dbs.keys()
       for kdb in kdbs:
         del dbs[kdb]
-  except CGNS.adf.error,e:
+  except ADF.error,e:
       print e
   return __tree
 
@@ -479,7 +475,7 @@ def saveAsADF(file,tree=None,links=[]):
   bExist = os.path.isfile(file)
   try:   
     # check tree types here
-    db=CGNS.pyADF(file,CGNS.adf.NEW,CGNS.adf.NATIVE)
+    db=CGNS.pyADF(file,ADF.NEW,ADF.NATIVE)
     path=[''] 
     for tc in tree[2]:
       __parseAndWriteADF(db,tc,db.root(),links,path) 

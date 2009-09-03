@@ -4,6 +4,7 @@
 # See file COPYING in the root directory of this Python module source 
 # tree for license information. 
 #
+print 'IMPORT CGNS.WRA.__init__'
 import CGNS.pyCGNSconfig
 
 config="# pyCGNS v%s - The Python CGNS API\n"%CGNS.pyCGNSconfig.version

@@ -14,7 +14,7 @@ numpy.set_printoptions(threshold=sys.maxint)
 print '# CGNS.MAP.load '
 flags=CGNS.MAP.S2P_FOLLOWLINKS|CGNS.MAP.S2P_TRACE
 start=time.clock()
-(tree,links)=CGNS.MAP.load("./5blocks.hdf",flags)
+(tree,links)=CGNS.MAP.load("./5blocks.cgns",flags)
 print 'from numpy import *'
 print 'data=',
 print tree

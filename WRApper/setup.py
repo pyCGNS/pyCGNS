@@ -20,21 +20,13 @@ import string
 import sys
 sys.path+=['..']
 import setuputils
-(pyCGNSconfig,installprocess)=setuputils.search('MAP')
+(pyCGNSconfig,installprocess)=setuputils.search('WRA')
 # ---
 
 setconfig=0
 for distcom in sys.argv:
   if distcom in ['build', 'install']:
     setconfig=1
-
-if setconfig:
-  largs='python '+string.join(sys.argv)
-  if (not os.path.exists('./build')): os.mkdir('./build')
-  ftrace=open('./pyCGNS.log.%s'%os.getpid(),'w+')
-  ftrace.write(largs)
-  ftrace.write('\n')
-  ftrace.close()
 
 # ---------------------------------------------------------------------------
 # pyCGNS build options:
@@ -47,11 +39,8 @@ alib='numpy'
 chlonelib=hdflib=cgnslib=""
 hdfversion=cgnsversion=chloneversion='unknown'
 
-sys.path.append('./CGNS')
-from version import __vid__
-
 lname         = "pyCGNS"
-lversion      = __vid__
+lversion      = pyCGNSconfig.__vid__
 
 pdir=os.path.normpath(sys.prefix)
 xdir=os.path.normpath(sys.exec_prefix)
@@ -271,10 +260,10 @@ if setconfig:
   configdict["EXTRA_ARGS"]=extraargs
   configdict["OPTIONAL_LIBS"]=optional_libs
   setuputils.updateConfig("..","../build/lib/CGNS",configdict)
-
+  
 # --- add common stuff
 nincs='%s/lib/python%s/site-packages/numpy/core/include'%(xdir,sys.version[:3])
-include_dirs+=cgnsincdir+[nincs,'modadf']
+include_dirs+=cgnsincdir+[nincs,'CGNS/WRA/modadf']
 if (mll):
   optional_libs+=['cgns','hdf5']
 if (hdf):
@@ -297,11 +286,7 @@ lverbose      = 1
 lpackages     = ['CGNS.WRA']
 lscripts      = []
 
-ldata_files   = [
-('share/CGNS/WRA/demo',glob.glob('CGNS/WRA/demo/*.py')),
-('share/CGNS/WRA/demo/UsersGuide',
-glob.glob('CGNS/WRA/demo/UsersGuide/*.py')),
-('share/CGNS/WRA/test',glob.glob('CGNS/test/*.py'))]
+ldata_files   = []
 
 # ---
 if mll:
@@ -312,22 +297,24 @@ if mll:
                 # Thus, adf module has to be duplicated and the calls to
                 # adf through midlevel should be clearly scoped in the
                 # python code
-                Extension('CGNS.WRA.midlevelmodule', 
-                sources=['modadf/adfmodule.c',
-                         'modmll/cgnsmodule.c',
-                         'modmll/cgnsdict.c'],
+                Extension('CGNS.WRA._mllmodule', 
+                sources=['CGNS/WRA/modadf/adfmodule.c',
+                         'CGNS/WRA/modmll/cgnsmodule.c',
+                         'CGNS/WRA/modmll/cgnsdict.c'],
                           include_dirs = include_dirs,
                           library_dirs = library_dirs,
                           libraries    = optional_libs,
                           extra_compile_args=extraargs,
                           extra_link_args=extraargslk),
-                Extension('CGNS.WRA.adfmodule', 
-                sources=['modadf/adfmodule.c'],
+                Extension('CGNS.WRA._adfmodule', 
+                sources=['CGNS/WRA/modadf/adfmodule.c'],
                           include_dirs = include_dirs,
                           library_dirs = library_dirs,
                           extra_link_args=extraargslk,
                           libraries    = optional_libs)
                 ] # close extension modules
+
+if (not os.path.exists("build")): os.system("ln -sf ../build build")
                 
 setup (
   name         = lname,
@@ -348,6 +335,7 @@ setup (
 ) # close setup
 
 if setconfig:
+  setuputils.installConfigFiles()
   print '### Leave the installation directory and test with:'
   print "python -c 'import CGNS.WRA;CGNS.WRA.test()'"
   

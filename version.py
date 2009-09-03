@@ -4,9 +4,10 @@
 # See file COPYING in the root directory of this Python module source 
 # tree for license information. 
 #
-__version__=4
-__release__=0
-__vid__="%d.%d"%(__version__,__release__)
-__doc__="""pyCGNS - v%d.%s - Python package for CFD General Notation System"""%(__version__,__release__)
+import pyCGNSconfig
+__version__=pyCGNSconfig.__version__
+__release__=pyCGNSconfig.__release__
+__vid__=pyCGNSconfig.__vid__
+__doc__=pyCGNSconfig.__doc__
 version=__vid__
-
+#
