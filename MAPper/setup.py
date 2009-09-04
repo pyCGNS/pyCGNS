@@ -6,7 +6,7 @@
 
 # --- pyCGNSconfig search
 import sys
-sys.path+=['..']
+sys.path+=['../lib']
 import setuputils
 (pyCGNSconfig,installprocess)=setuputils.search('MAP')
 # ---

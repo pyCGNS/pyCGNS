@@ -18,7 +18,7 @@ import string
 
 # --- pyCGNSconfig search
 import sys
-sys.path+=['..']
+sys.path+=['../lib']
 import setuputils
 (pyCGNSconfig,installprocess)=setuputils.search('WRA')
 # ---
@@ -315,6 +315,7 @@ if mll:
                 ] # close extension modules
 
 if (not os.path.exists("build")): os.system("ln -sf ../build build")
+setuputils.installConfigFiles()
                 
 setup (
   name         = lname,
@@ -335,7 +336,6 @@ setup (
 ) # close setup
 
 if setconfig:
-  setuputils.installConfigFiles()
   print '### Leave the installation directory and test with:'
   print "python -c 'import CGNS.WRA;CGNS.WRA.test()'"
   

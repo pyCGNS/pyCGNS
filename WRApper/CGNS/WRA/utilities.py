@@ -5,10 +5,10 @@
 # tree for license information. 
 #
 import CGNS.WRA
-import CGNS.WRA.CGNS.midlevel as MLL
-import CGNS.WRA.wrapper  as W
-import CGNS.WRA.CGNS.midlevel.adf as ADF
-import numpy         as N
+import CGNS.WRA._mll     as MLL
+import CGNS.WRA.wrapper  as WRP
+import CGNS.WRA._adf     as ADF
+import numpy             as NPY
 import os
 import string
 
@@ -24,7 +24,7 @@ def zoneByName(db, name, base=1):
       zn=db.zoneread(base,zi)[2]
       if (zn == name):
         return zi
-    raise W.CGNS_NoSuchZone, name
+    raise WRP.CGNS_NoSuchZone, name
 
 # ======================================================================
 def boundaryByName(db, zid, name, base=1):
@@ -32,7 +32,7 @@ def boundaryByName(db, zid, name, base=1):
       bn=db.bcinfo(base,zid,bi)[0]
       if (bn == name):
         return bi
-    raise W.CGNS_NoSuchBoundary, name
+    raise WRP.CGNS_NoSuchBoundary, name
 
 # ======================================================================
 def flowSolutionByName(db, zi,  name):
@@ -40,7 +40,7 @@ def flowSolutionByName(db, zi,  name):
       sn=db.solinfo(1,zi,si)
       if (sn[1] == name):
         return si
-    raise W.CGNS_NoSuchFlowSolution, name
+    raise WRP.CGNS_NoSuchFlowSolution, name
 
 # ======================================================================
 def arrayByName(db, name):
@@ -51,7 +51,7 @@ goto should have been performed before calling this function."""
       aname=db.arrayinfo(ai)[0]
       if (aname == name):
         return ai
-    raise W.CGNS_NoSuchArray, aname
+    raise WRP.CGNS_NoSuchArray, aname
 
 # ======================================================================
 def userDataByName(db, name):
@@ -62,7 +62,7 @@ goto should have been performed before calling this function."""
       aname=db.userdataread(ai)[1]
       if (aname == name):
         return ai
-    raise W.CGNS_NoSuchArray, aname
+    raise WRP.CGNS_NoSuchArray, aname
 
 # ======================================================================
 def setBaseIterativeTime(db,index,value,base=1,baseiterativedata=1):
@@ -101,7 +101,7 @@ def getUserDefinedNode(db,name):
 
 # ======================================================================
 def singleValue(db,name,value):
-   db.arraywrite(name,MLL.RealDouble,1,(1,),N.array([value],'d'))
+   db.arraywrite(name,MLL.RealDouble,1,(1,),NPY.array([value],'d'))
 
 # ======================================================================
 def reverse(dims):
@@ -152,7 +152,7 @@ def __singleNodeFromADF(db,id,path,flink,maxread,dmax,ptarget):
   return None
   
 def getSingleNodeFromADF(file,path,flink,maxread,dmax,ptarget):
-  db=CGNS.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
+  db=WRP.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
   nodeinfo=db.nodeAsDict(db.root())
   for child in nodeinfo['children']:
     info=__singleNodeFromADF(db,db.get_node_id(db.root(),child),
@@ -207,7 +207,7 @@ def searchValue(node,value,result):
 
 # -----------------------------------------------------------------------------
 def isArray(ar):
-  return (type(ar) == type(N.ones((1,))))
+  return (type(ar) == type(NPY.ones((1,))))
 
 def arraySize(ar,dt):
   if (dt != 'C1'):
@@ -223,11 +223,11 @@ def arrayValue(ar,dt):
   if (isArray(ar)):
     if (ar.dtype.char == ndt): return ar
     else :                     return ar.astype(ndt)
-  if (type(ar) == type("")):   return N.array([ar]).astype(ndt)
-  if (type(ar) == type(4)):    return N.array([ar]).astype(ndt)
-  if (type(ar) == type(4.2)):  return N.array([ar]).astype(ndt)
-  if (type(ar) == type((4,))): return N.array([ar]).astype(ndt)
-  if (type(ar) == type([4,])): return N.array([ar]).astype(ndt)
+  if (type(ar) == type("")):   return NPY.array([ar]).astype(ndt)
+  if (type(ar) == type(4)):    return NPY.array([ar]).astype(ndt)
+  if (type(ar) == type(4.2)):  return NPY.array([ar]).astype(ndt)
+  if (type(ar) == type((4,))): return NPY.array([ar]).astype(ndt)
+  if (type(ar) == type([4,])): return NPY.array([ar]).astype(ndt)
   else:
     return None
   
@@ -245,7 +245,7 @@ def nodeType(node):
     return 'R8'
   if ( (type(data) == type(1))):
     return 'I4'
-  if ( (type(data) == type(N.ones((1,)))) ):
+  if ( (type(data) == type(NPY.ones((1,)))) ):
     if (data.dtype.char in ['S','c']):        return 'C1'
     if (data.dtype.char in ['f','F']):        return 'R4'
     if (data.dtype.char in ['D','d']):        return 'R8'
@@ -401,7 +401,7 @@ def findLinkAsADF(file,level=0,path='',dbs={}):
   try:
     if (not dbs.has_key(rfile)):
       #print 'pyCGNS: findLinkAsADF',file
-      db=CGNS.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
+      db=WRP.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
       dbs[rfile]=db
       dbs[lastfileentry]=db
       __links=__parseAndFindLinksADF(db,db.root(),level,path,dbs,file)
@@ -451,7 +451,7 @@ def loadAsADF(file,link=1,max=0,depth=999,path=None,dbs={},start=1):
   try:     
     if (not dbs.has_key(rfile)):
       #print 'pyCGNS: loadAsADF (open) ',file,path
-      db=CGNS.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
+      db=WRP.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
       r=__parseAndReadADF(db,db.root(),link,max,depth,path,dbs)
       db.database_close()
       dbs[rfile]=r[2]
@@ -475,7 +475,7 @@ def saveAsADF(file,tree=None,links=[]):
   bExist = os.path.isfile(file)
   try:   
     # check tree types here
-    db=CGNS.pyADF(file,ADF.NEW,ADF.NATIVE)
+    db=WRP.pyADF(file,ADF.NEW,ADF.NATIVE)
     path=[''] 
     for tc in tree[2]:
       __parseAndWriteADF(db,tc,db.root(),links,path) 
@@ -526,10 +526,10 @@ def prettystringone(name,value,ntype,subtree,path,count):
   else:
       try:
           value.shape
-          if (value.typecode() == N.UInt8): # strings are UInt8
+          if (value.typecode() == NPY.UInt8): # strings are UInt8
             vp='"""%s"""'%value.tostring()
           else:    
-            vp="N.%s"%repr(value)
+            vp="NPY.%s"%repr(value)
       except AttributeError:
           vp=value
   sreturn+=count*" "+"['%s', %s,"%(name,vp)

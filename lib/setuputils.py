@@ -14,7 +14,7 @@ from  distutils.util import get_platform
 from  distutils.command.clean import clean as _clean
 
 rootfiles=['errors.py','version.py']
-compfiles=['__init__.py','midlevel.py','wrap.py']
+compfiles=['__init__.py','midlevel.py','wrap.py','cgnskeywords.py']
 
 # --------------------------------------------------------------------
 def search(tag):

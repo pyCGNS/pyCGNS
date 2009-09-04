@@ -6,12 +6,13 @@
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
 import glob
+import os
 
 # --- pyCGNSconfig search
 import sys
-sys.path+=['..']
+sys.path+=['../lib']
 import setuputils
-(pyCGNSconfig,installprocess)=setuputils.search('MAP')
+(pyCGNSconfig,installprocess)=setuputils.search('NAV')
 # ---
 
 if installprocess:
@@ -45,16 +46,20 @@ if installprocess:
     gg.close()
   except KeyError: pass
 
+if (not os.path.exists("build")): os.system("ln -sf ../build build")
+setuputils.installConfigFiles()
+
 setup (
 name         = "CGNS.NAV",
 version      = "0.1.1",
 description  = "pyCGNS NAVigator",
 author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
-packages     = ['CGNS','CGNS.NAV','CGNS.NAV.gui','CGNS.NAV.supervisor'],
-scripts      = ['CGNS/CGNS.NAV'],
+packages     = ['CGNS.NAV','CGNS.NAV.gui','CGNS.NAV.supervisor'],
+scripts      = ['CGNS/NAV/CGNS.NAV'],
 data_files   = [('share/CGNS/NAV/icons',glob.glob('CGNS/NAV/gui/icons/*'))],
 
 cmdclass={'clean': setuputils.clean}
 )
  
+# --- last line
