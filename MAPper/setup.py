@@ -3,6 +3,7 @@
 # $Rev: 56 $ $Date: 2008-06-10 09:44:23 +0200 (Tue, 10 Jun 2008) $         
 # See license file in the root directory of this Python module source      
 # -------------------------------------------------------------------------
+import os
 
 # --- pyCGNSconfig search
 import sys
@@ -31,14 +32,17 @@ if (installprocess):
     print 'pyGCNS[ERROR]: bad pyCGNSconfig.py file for MAP!'
     sys.exit(1)
 
+if (not os.path.exists("build")): os.system("ln -sf ../build build")
+setuputils.installConfigFiles()
+
 setup (
   name         = "CGNS.MAP",
   version      = "0.0.1",
   description  = "pyCGNS MAPping SIDS-to-Python",
   author       = "marc Poinot",
   author_email = "marc.poinot@onera.fr",
-  packages=['CGNS'],
-  ext_modules  = [Extension('CGNS.MAP',sources = ['MAPmodule.c'],
+  packages=['CGNS.MAP'],
+  ext_modules  = [Extension('CGNS.MAP',sources = ['CGNS/MAP/MAPmodule.c'],
                   include_dirs = cf_include_dirs,
                   library_dirs = cf_library_dirs,
                   libraries    = cf_optional_libs)],

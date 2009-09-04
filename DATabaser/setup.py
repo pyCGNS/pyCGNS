@@ -5,15 +5,18 @@
 # See file COPYING in the root directory of this Python module source 
 # tree for license information. 
 # 
-
+import os
 from distutils.core import setup, Extension
 
 # --- pyCGNSconfig search
 import sys
-sys.path+=['..']
+sys.path+=['../lib']
 import setuputils
-(pyCGNSconfig,installprocess)=setuputils.search('MAP')
+(pyCGNSconfig,installprocess)=setuputils.search('DAT')
 # ---
+
+if (not os.path.exists("build")): os.system("ln -sf ../build build")
+setuputils.installConfigFiles()
 
 setup(
 name         = "pyDAX",
@@ -25,13 +28,13 @@ url          = "-",
 license      = "-",
 verbose      = 1,
 
-packages     = ['DAX',
-                'DAX.db',
-                'DAX.db.dbdrivers',                
-                'DAX.demo'],
-scripts      = ['DAX/tools/daxDB',
-                'DAX/tools/daxQT',
-                'DAX/tools/daxET'],
+packages     = ['CGNS.DAT',
+                'CGNS.DAT.db',
+                'CGNS.DAT.db.dbdrivers',                
+                'CGNS.DAT.demo'],
+scripts      = ['CGNS/DAT/tools/daxDB',
+                'CGNS/DAT/tools/daxQT',
+                'CGNS/DAT/tools/daxET'],
   cmdclass={'clean':setuputils.clean}
 ) # close setup
 

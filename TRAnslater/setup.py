@@ -10,7 +10,7 @@ from  distutils.util import get_platform
 
 # --- pyCGNSconfig search
 import sys
-sys.path+=['..']
+sys.path+=['../lib']
 import setuputils
-(pyCGNSconfig,installprocess)=setuputils.search('MAP')
+(pyCGNSconfig,installprocess)=setuputils.search('TRA')
 # ---

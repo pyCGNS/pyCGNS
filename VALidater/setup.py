@@ -6,6 +6,7 @@
 # See file COPYING in the root directory of this Python module source 
 # tree for license information. 
 #
+import os
 
 # Setup script for the CGNS Python interface
 from distutils.core import setup, Extension
@@ -18,9 +19,9 @@ import getopt
 
 # --- pyCGNSconfig search
 import sys
-sys.path+=['..']
+sys.path+=['../lib']
 import setuputils
-(pyCGNSconfig,installprocess)=setuputils.search('MAP')
+(pyCGNSconfig,installprocess)=setuputils.search('VAL')
 # ---
 
 dsubdir="share/CGNS"
@@ -53,12 +54,6 @@ r3=re.compile(r"""
 file://TOBESETATINSTALLTIME
 """,re.VERBOSE) 
 
-import os
-try:
-  os.mkdir('build')
-except OSError:
-  pass
-
 def substituteAbsolutePath(path,file,pattern,replace):
   print "substitute",replace,"in",file
   nfile=file+".tmp"
@@ -73,12 +68,12 @@ def substituteAbsolutePath(path,file,pattern,replace):
 
 # files to translate before install
 fdatalist=[
-  'CCCCC/utils/filepaths.gen',
-  'CCCCC/schema/sch/cgns.xsl',
-  'CCCCC/schema/rng/sids.rng',
-  'CCCCC/schema/rnc/sids.rnc',
-  'CCCCC/schema/rng/cgns.rng',
-  'CCCCC/schema/rnc/cgns.rnc'
+  'CGNS/VAL/utils/filepaths.gen',
+  'CGNS/VAL/schema/sch/cgns.xsl',
+  'CGNS/VAL/schema/rng/sids.rng',
+  'CGNS/VAL/schema/rnc/sids.rnc',
+  'CGNS/VAL/schema/rng/cgns.rng',
+  'CGNS/VAL/schema/rnc/cgns.rnc'
   ]
 
 # files to install
@@ -90,14 +85,14 @@ gfiles=[
   'build/sids.rng',
   ]
 
-gfiles+=glob.glob('CCCCC/schema/rnc/sids-*.rnc')
-gfiles+=glob.glob('CCCCC/schema/rng/sids-*.rng')
+gfiles+=glob.glob('CGNS/VAL/schema/rnc/sids-*.rnc')
+gfiles+=glob.glob('CGNS/VAL/schema/rng/sids-*.rng')
 
 demorngfiles=[]
-demorngfiles+=glob.glob('CCCCC/demo/rng/*')
+demorngfiles+=glob.glob('CGNS/VAL/demo/rng/*')
 
 demorncfiles=[]
-demorncfiles+=glob.glob('CCCCC/demo/rnc/*')
+demorncfiles+=glob.glob('CGNS/VAL/demo/rnc/*')
 
 demousrfiles=[
   'build/c5semantic.sch',
@@ -111,28 +106,28 @@ fdatalist+=demorncfiles
 # non-SIDS (c5/xml system)
 xfiles=[
   'build/cgns.xsl',  
-  'CCCCC/schema/sch/skeleton1-6.xsl',
-  'CCCCC/schema/sch/RNG2Schtron.xsl',
-  'CCCCC/schema/sch/cgns.xsl',
-  'CCCCC/schema/sch/cgns.xslt',
-  'CCCCC/schema/pp/cgnsPP.xsl',
-  'CCCCC/schema/sch/cgns.sch',
+  'CGNS/VAL/schema/sch/skeleton1-6.xsl',
+  'CGNS/VAL/schema/sch/RNG2Schtron.xsl',
+  'CGNS/VAL/schema/sch/cgns.xsl',
+  'CGNS/VAL/schema/sch/cgns.xslt',
+  'CGNS/VAL/schema/pp/cgnsPP.xsl',
+  'CGNS/VAL/schema/sch/cgns.sch',
   ]
 
 # SIDS-examples
 explfiles=[]
 
-explfiles+=glob.glob('CCCCC/demo/sids/*.xml')
+explfiles+=glob.glob('CGNS/VAL/demo/sids/*.xml')
 
 # non-SIDS examples
 demofiles=[
-  'CCCCC/demo/README.txt',
+  'CGNS/VAL/demo/README.txt',
   ]
 
-demofiles+=glob.glob('CCCCC/demo/*.xml')
+demofiles+=glob.glob('CGNS/VAL/demo/*.xml')
 
 webfiles=[]
-webfiles+=glob.glob('CCCCC/demo/cgns/*.xml')
+webfiles+=glob.glob('CGNS/VAL/demo/cgns/*.xml')
 
 # change path
 if 0:
@@ -143,25 +138,25 @@ if 0:
 #print fdatalist[0][:-4]+".py"
 #os.rename("build/"+os.path.split(fdatalist[0])[-1],fdatalist[0][:-4]+".py")
 
-sys.path.append('./CCCCC')
-from __init__ import __vid__
+if (not os.path.exists("build")): os.system("ln -sf ../build build")
+setuputils.installConfigFiles()
 
 setup (
 name         = "CGNS.VAL",
-version      = __vid__,
+version      = "0.1",
 description  = "XML tools for CFD General Notation System",
 author       = "ONERA/DSNA Poinot, Henaux",
 author_email = "poinot@onera.fr,henaux@onera.fr",
 url          = "http://elsa.onera.fr/CGNS/releases",
 license      = "Python",
 verbose      = 1,
-packages     = ['CCCCC','CCCCC.demo',
-                'CCCCC.gui','CCCCC.gui.Icons','CCCCC.utils','CCCCC.tools',
-                'CCCCC.tools.rnc2rng',
-                'CCCCC.parser'],
-scripts      = ['CCCCC/tools/c5',
-                'CCCCC/tools/crnc2rng',
-                'CCCCC/tools/cgt',
+packages     = ['CGNS.VAL','CGNS.VAL.demo',
+                'CGNS.VAL.gui','CGNS.VAL.gui.Icons','CGNS.VAL.utils','CGNS.VAL.tools',
+                'CGNS.VAL.tools.rnc2rng',
+                'CGNS.VAL.parser'],
+scripts      = ['CGNS/VAL/tools/c5',
+                'CGNS/VAL/tools/crnc2rng',
+                'CGNS/VAL/tools/cgt',
                 ],
 data_files   = [ (dsubdir1,gfiles),       # SIDS grammar files
                  (dsubdir2,demofiles),    # non-SIDS examples files

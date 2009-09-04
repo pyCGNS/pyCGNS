@@ -13,8 +13,9 @@ from  distutils.core import setup
 from  distutils.util import get_platform
 from  distutils.command.clean import clean as _clean
 
-rootfiles=['errors.py','version.py']
-compfiles=['__init__.py','midlevel.py','wrap.py','cgnskeywords.py']
+rootfiles=['errors.py']
+compfiles=['__init__.py','midlevel.py','wrap.py'
+           ,'cgnskeywords.py','version.py']
 
 # --------------------------------------------------------------------
 def search(tag):
@@ -55,11 +56,11 @@ def installConfigFiles():
   lptarget='..'
   bptarget='./build/lib/CGNS'  
   for ff in rootfiles:
-    shutil.copy("%s/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
-    print "%s/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff)
+#    print "%s/lib/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff)
+    shutil.copy("%s/lib/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
   for ff in compfiles:
-    shutil.copy("%s/compatibility/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
-    print "%s/compatibility/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff)    
+#    print "%s/lib/compatibility/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff)    
+    shutil.copy("%s/lib/compatibility/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
 
 # --------------------------------------------------------------------
 # Clean target redefinition - force clean everything
