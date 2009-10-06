@@ -1,8 +1,8 @@
 # -------------------------------------------------------------------------
-# pyCGNS - CFD General Notation System - SIDS-to-Python MAPping            
-# $Rev: 56 $ $Date: 2008-06-10 09:44:23 +0200 (Tue, 10 Jun 2008) $         
-# See license file in the root directory of this Python module source      
+# pyCGNS.MAP - CFD General Notation System - SIDS-to-Python MAPping            
+# See license.txt file in the root directory of this Python module source  
 # -------------------------------------------------------------------------
+#
 import os
 
 # --- pyCGNSconfig search
@@ -37,12 +37,15 @@ setuputils.installConfigFiles()
 
 setup (
   name         = "CGNS.MAP",
-  version      = "0.0.1",
-  description  = "pyCGNS MAPping SIDS-to-Python",
+  version      = pyCGNSconfig.MAP_VERSION,
+  description  = "pyCGNS MAPper - SIDS/Python mapping with HDF5 load/save",
   author       = "marc Poinot",
   author_email = "marc.poinot@onera.fr",
   packages=['CGNS.MAP'],
-  ext_modules  = [Extension('CGNS.MAP',sources = ['CGNS/MAP/MAPmodule.c'],
+  ext_modules  = [Extension('CGNS.MAP',
+                  sources = ['CGNS/MAP/MAPmodule.c',
+                             'CGNS/MAP/CHLone_l3.c',
+                             'CGNS/MAP/CHLone_error.c'],
                   include_dirs = cf_include_dirs,
                   library_dirs = cf_library_dirs,
                   libraries    = cf_optional_libs)],

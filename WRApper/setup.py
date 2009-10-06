@@ -45,7 +45,7 @@ lversion      = pyCGNSconfig.__vid__
 pdir=os.path.normpath(sys.prefix)
 xdir=os.path.normpath(sys.exec_prefix)
 
-extraargs=['-U__CGNS_HEADER_INSTALLED__']
+extraargs=['-U__CGNS_HEADER_INSTALLED__','-DLEGACY_SUPPORT']
 include_dirs=[]
 library_dirs=[]
 optional_libs=[]

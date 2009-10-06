@@ -611,6 +611,18 @@ DBADF_readData(DBADFObject *self)
   return NULL;
 }
 
+int isDataArrayToTranspose(char* label)
+{
+  int isdataarray=0;
+  if (   !strcmp(label,"DataArray_t") 
+      || !strcmp(label,"DimensionalExponents_t")
+      || !strcmp(label,"DimensionalUnits_t"))
+  {
+    isdataarray=1;
+  }
+  return isdataarray;
+}
+
 /* ----------------------------------------------------------------------
  *ADF* ADF_read_all_data
        - we have to get a lot of information in order to actually get
@@ -663,12 +675,7 @@ DBADF_readAllData(DBADFObject *self, PyObject *args)
   }
 
   ADF__Get_Label(node_id,label,&(self->last_error));
-  isdataarray=0;
-  if (!strcmp(label,"DataArray_t") || !strcmp(label,"DimensionalUnits_t"))
-  {
-    isdataarray=1;
-  }
-
+  isdataarray=isDataArrayToTranspose(label);
   if (strcmp(data_type,"MT")==0)
   {
     strcpy(sterror,"no data in this node: ");
@@ -695,15 +702,30 @@ DBADF_readAllData(DBADFObject *self, PyObject *args)
     return NULL;
   }
 
-  /* Skipping data - ?? */
-  /* if (!data_flag) return 0; */
-
-  /* allocate data */
+  /* TRANSPOSE ALERT !*/
+  /* index is the C order for numpy. Even if array is FORTRAN, you should
+     pass an index with the C order, i.e. imax,ijmax,kmax...
+     Then you have to reverse the size if you detect a fortran */
   size=1;
-  for (n=0; n<ndim; n++)
+  if (1) //isdataarray)
   {
-    size*=dim_vals[n];
-    npy_dim_vals[n]=dim_vals[n];
+    for (n=0; n<ndim; n++)
+    {
+      size*=dim_vals[ndim-n-1];
+      npy_dim_vals[n]=dim_vals[ndim-n-1];
+      if (!strcmp(label,"IndexRange_t"))
+	{printf("F IndexRange [%d][%d]\n",n,npy_dim_vals[n]);}
+    } 
+  }
+  else
+  {
+    for (n=0; n<ndim; n++)
+    {
+      size*=dim_vals[n];
+      npy_dim_vals[n]=dim_vals[n];
+      if (!strcmp(label,"IndexRange_t"))
+	{printf("C IndexRange [%d][%d]\n",n,npy_dim_vals[n]);}
+    } 
   }
   if (size<=0)
   {
@@ -752,15 +774,15 @@ DBADF_readAllData(DBADFObject *self, PyObject *args)
 
   if (isdataarray)
   {
-  array=(PyArrayObject*)PyArray_New(&PyArray_Type, ndim, npy_dim_vals, 
-				    arraytype, NULL, (void*)data, 0, 
-				    NPY_OWNDATA | NPY_FORTRAN, NULL);
+    array=(PyArrayObject*)PyArray_New(&PyArray_Type, ndim, npy_dim_vals, 
+				      arraytype, NULL, (void*)data, 0, 
+				      NPY_OWNDATA | NPY_FARRAY, NULL);
   }
   else
   {
-  array=(PyArrayObject*)PyArray_New(&PyArray_Type, ndim, npy_dim_vals, 
-				    arraytype, NULL, (void*)data, 0, 
-				    NPY_OWNDATA, NULL);
+    array=(PyArrayObject*)PyArray_New(&PyArray_Type, ndim, npy_dim_vals, 
+				      arraytype, NULL, (void*)data, 0, 
+				      NPY_OWNDATA, NULL);
   }
   if (!array)
   {
@@ -813,11 +835,7 @@ DBADF_writeAllData(DBADFObject *self, PyObject *args)
     return NULL;
   }
   ADF__Get_Label(node_id,label,&(self->last_error));
-  isdataarray=0;
-  if (!strcmp(label,"DataArray_t") || !strcmp(label,"DimensionalUnits_t"))
-  {
-    isdataarray=1;
-  }
+  isdataarray=isDataArrayToTranspose(label);
   ADF__Get_Data_Type(node_id, data_type, &(self->last_error));
   if (self->last_error != -1)
   {
@@ -1025,7 +1043,7 @@ DBADF_setEState(DBADFObject *self, PyObject *args)
 static PyObject*
 DBADF_getEState(DBADFObject *self)
 {
-  int estate;
+  int estate=0;
   
   ADF__Get_Error_State(&estate,&(self->last_error));
 

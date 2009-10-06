@@ -146,7 +146,7 @@
     extern "C" {
 #endif
 
-#ifndef __CGNS_NO_HDF__
+#ifndef __CGNS__HAS_ADF__
 EXTERN	void	ADFH_Children_Names(
 			const double PID,
 			const int istart,

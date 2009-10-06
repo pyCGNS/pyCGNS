@@ -23,7 +23,7 @@ INCLUDE_DIRS+=['%s/lib/python2.6/site-packages/numpy/core/include'%mylocal]
 LIBRARY_DIRS =[]
 LIBRARY_DIRS+=['%s/lib'%mylocal]
 
-OPTIONAL_LIBS=['CHLone','hdf5']
+OPTIONAL_LIBS=['hdf5']
 
 #
 # -------------------------------------------------------------------------
@@ -31,6 +31,8 @@ OPTIONAL_LIBS=['CHLone','hdf5']
 #
 MAJORVERSION=4
 MINORVERSION=1
+#
+MAP_VERSION='1.1.1'
 #
 HAS_HDF5=True
 MLL_VERSION=None#

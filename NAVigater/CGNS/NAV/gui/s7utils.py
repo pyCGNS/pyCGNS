@@ -55,7 +55,7 @@ def toBeShown(data):
     if (     (type(data) == type(Num.ones((1,))))
          and (data.size<G___.maxDisplaySize) ):
       if (data.dtype.char in ['S','c']):
-        return data.tostring(order='F')
+        return data.tostring()
       if (data.size == 1):
         if (data.dtype == Num.dtype('float32')):
           return showOneFloat(data.flat[0])

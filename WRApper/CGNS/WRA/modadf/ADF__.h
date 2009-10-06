@@ -80,6 +80,9 @@ void *cgi_get_posit(int fn, int B, int n, int *index, char **label, int *ier);
 #define __CGNS__FORCE_FORTRAN_INDEX__  0x0001
 #define __CGNS__FORCE_PATH__SEARCH__   0x0002
 
+#define __CGNS__HAS__ADF__ 1
+
+#ifdef __CGNS__HAS__ADF__
 /* macro to easily switch on two storage types */
 /* we're lucky there is no return value...     */
 #define ADF__Children_Names(PID, istart, ilen, name_length, ilen_ret, names, error_return ) if (self->storagetype==STORAGE_ADF){ADF_Children_Names(PID, istart, ilen, name_length, ilen_ret, names, error_return ) ; } else {ADFH_Children_Names(PID, istart, ilen, name_length, ilen_ret, names, error_return ) ;}
@@ -122,5 +125,50 @@ void *cgi_get_posit(int fn, int B, int n, int *index, char **label, int *ier);
 #define ADF__Write_Block_Data(ID, b_start, b_end, data, error_return ) if (self->storagetype==STORAGE_ADF){ADF_Write_Block_Data(ID, b_start, b_end, data, error_return ) ; } else {ADFH_Write_Block_Data(ID, b_start, b_end, data, error_return ) ;}
 #define ADF__Write_Data(ID, s_start, s_end, s_stride, m_num_dims, m_dims, m_start, m_end, m_stride, data, error_return ) if (self->storagetype==STORAGE_ADF){ADF_Write_Data(ID, s_start, s_end, s_stride, m_num_dims, m_dims, m_start, m_end, m_stride, data, error_return ) ; } else {ADFH_Write_Data(ID, s_start, s_end, s_stride, m_num_dims, m_dims, m_start, m_end, m_stride, data, error_return ) ;}
 #define ADF__Release_ID (   ID )if (self->storagetype==STORAGE_ADF){ADF_Release_ID (   ID ); } else {ADFH_Release_ID (   ID );}
+
+#else
+
+#define ADF__Children_Names ADFH_Children_Names
+#define ADF__Children_IDs ADFH_Children_IDs
+#define ADF__Create ADFH_Create
+#define ADF__Database_Close ADFH_Database_Close
+#define ADF__Database_Delete ADFH_Database_Delete
+#define ADF__Database_Garbage_Collection ADFH_Database_Garbage_Collection
+#define ADF__Database_Get_Format ADFH_Database_Get_Format
+#define ADF__Database_Open ADFH_Database_Open
+#define ADF__Database_Valid ADFH_Database_Valid
+#define ADF__Database_Set_Format ADFH_Database_Set_Format
+#define ADF__Database_Version ADFH_Database_Version
+#define ADF__Delete ADFH_Delete
+#define ADF__Error_Message ADFH_Error_Message
+#define ADF__Flush_to_Disk ADFH_Flush_to_Disk
+#define ADF__Get_Data_Type ADFH_Get_Data_Type
+#define ADF__Get_Dimension_Values ADFH_Get_Dimension_Values
+#define ADF__Get_Error_State ADFH_Get_Error_State
+#define ADF__Get_Label ADFH_Get_Label
+#define ADF__Get_Link_Path ADFH_Get_Link_Path
+#define ADF__Get_Name ADFH_Get_Name
+#define ADF__Get_Node_ID ADFH_Get_Node_ID
+#define ADF__Get_Number_of_Dimensions ADFH_Get_Number_of_Dimensions
+#define ADF__Get_Root_ID ADFH_Get_Root_ID
+#define ADF__Is_Link ADFH_Is_Link
+#define ADF__Library_Version ADFH_Library_Version
+#define ADF__Link ADFH_Link
+#define ADF__Link_Size ADFH_Link_Size
+#define ADF__Move_Child ADFH_Move_Child
+#define ADF__Number_of_Children ADFH_Number_of_Children
+#define ADF__Put_Dimension_Information ADFH_Put_Dimension_Information
+#define ADF__Put_Name ADFH_Put_Name
+#define ADF__Read_All_Data ADFH_Read_All_Data
+#define ADF__Read_Block_Data ADFH_Read_Block_Data
+#define ADF__Read_Data ADFH_Read_Data
+#define ADF__Set_Error_State ADFH_Set_Error_State
+#define ADF__Set_Label ADFH_Set_Label
+#define ADF__Write_All_Data ADFH_Write_All_Data
+#define ADF__Write_Block_Data ADFH_Write_Block_Data
+#define ADF__Write_Data ADFH_Write_Data
+#define ADF__Release_ID ADFH_Release_ID
+
+#endif
 
 #endif

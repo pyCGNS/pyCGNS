@@ -211,6 +211,10 @@ def isArray(ar):
 
 def arraySize(ar,dt):
   if (dt != 'C1'):
+    if (NPY.isfortran(ar)):
+      sz=list(ar.shape)
+      sz.reverse()
+      return tuple(sz)
     return ar.shape
   else:
     return (len(ar.tostring()),)
