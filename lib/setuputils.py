@@ -84,7 +84,9 @@ class clean(_clean):
   def walkAndClean(self):
     os.path.walk("..",wselect,[])
   def run(self):
-    if os.path.exists("./build"):     remove_tree("./build")
+    import glob
+    rdirs=glob.glob("./build/*")
+    for d in rdirs: remove_tree(d)
     if os.path.exists("./build"):     os.remove("./build")
     if os.path.exists("./Doc/_HTML"): remove_tree("./Doc/_HTML")
     if os.path.exists("./Doc/_PS"):   remove_tree("./Doc/_PS")

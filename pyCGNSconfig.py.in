@@ -14,7 +14,8 @@
 # To change a value once the file is updated, change it in ./build/lib/CGNS
 # and remove the trailing #
 #
-mylocal='/home_local/eucass/tools'
+import sys
+mylocal=sys.exec_prefix
 
 INCLUDE_DIRS =[]
 INCLUDE_DIRS+=['%s/include'%mylocal]

@@ -6,8 +6,8 @@
 # =============================================================================
 
 # compatibility methods
-import CGNS.WRA.midlevel
+import CGNS.WRA._mll
 #
-import CGNS.WRA.adf as  CGNSWRAadf
+import CGNS.WRA._adf as  CGNSWRAadf
 adf=CGNSWRAadf
 #

@@ -139,7 +139,6 @@ def pnice(a):
 # ======================================================================
 def __singleNodeFromADF(db,id,path,flink,maxread,dmax,ptarget):
   nodeinfo=db.nodeAsDict(id)
-  #print path, nodeinfo['name']
   if (path and (len(path)==1) and (path[0] == nodeinfo['name'])):
     rinfo=__parseAndReadADF(db,id,flink,maxread,dmax,ptarget)
     return rinfo
@@ -321,6 +320,7 @@ def __parseAndReadADF(db,nodeid,__followlink=1,__maxreadalldata=0,
       ar=db.read_all_data(nodeinfo['id'])
     else:
       ar=None
+  if ((ar!=None) and (nodeinfo['label']=='IndexRange_t')): print ar
   #link
   if ((nodeinfo['datatype']=='LK') and (__depthmax>0)):      
       linkFile=nodeinfo['file']
