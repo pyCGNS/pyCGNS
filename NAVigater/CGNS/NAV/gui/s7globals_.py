@@ -81,6 +81,7 @@ class s7optionsStorage:
     self.showSIDS=0
     self.directoriesHistory=[]
     self.filesHistory=[]
+    self.directoriesHistorySize=20
     self.operateListSplit=0
 
     self.shiftstring='  '

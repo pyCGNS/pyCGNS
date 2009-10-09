@@ -60,7 +60,9 @@ def readHistory():
   (fh,dh)=(None,None)
   try:
     fh=s7historyData.filesHistory
-    dh=s7historyData.directoriesHistory    
+    dh=s7historyData.directoriesHistory
+    if (len(dh)>G___.directoriesHistorySize):
+      dh=dh[-G___.directoriesHistorySize:]
   except (NameError, ValueError):
     pass
   return (fh,dh)

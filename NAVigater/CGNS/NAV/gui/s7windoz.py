@@ -9,7 +9,6 @@
 import Tkinter
 Tkinter.wantobjects=0 #necessary for tk-8.5 and some buggy tkinter installs
 from Tkinter import *
-import tkMessageBox
 from TkTreectrl import *
 import os
 import sys
@@ -106,9 +105,10 @@ class wWindoz:
     wtop.title(t)
 
   def top(self,msg):
-    t=os.times()
-    print '## pyS7: %8.4f %8.4f'%(t[0],t[1]),
-    print '[%s]'%msg
+    if 0:
+      t=os.times()
+      print '## pyS7: %8.4f %8.4f'%(t[0],t[1]),
+      print '[%s]'%msg
 
   def lockMouse(self):
     for t in G___.treeStorage:

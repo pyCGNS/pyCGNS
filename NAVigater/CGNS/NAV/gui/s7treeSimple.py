@@ -9,7 +9,6 @@
 import Tkinter
 Tkinter.wantobjects=0 #necessary for tk-8.5 and some buggy tkinter installs
 from Tkinter import *
-import tkMessageBox
 from TkTreectrl import *
 import os
 import sys

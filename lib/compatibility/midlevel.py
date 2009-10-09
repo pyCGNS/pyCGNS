@@ -5,9 +5,4 @@
 # tree for license information. 
 # =============================================================================
 
-# compatibility methods
-import CGNS.WRA._mll
-#
-import CGNS.WRA._adf as  CGNSWRAadf
-adf=CGNSWRAadf
-#
+print 'pyCGNS ERROR: please import now CGNS.WRA'
