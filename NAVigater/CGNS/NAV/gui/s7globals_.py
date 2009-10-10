@@ -123,6 +123,7 @@ class s7optionsStorage:
     createFontDict(self.font,{
     'M' :['Helvetica',10,'normal','roman'], # All menus
     'E' :['Courier',  10,'normal','roman'], # Entries/Text
+    'F' :['Courier',  10,'bold','roman'],   # Entries/Text bold
     'X' :['Courier',   8,'normal','roman'], # not used
     'H' :['Courier',  10,'bold',  'italic'],# All tables headers
     'L' :['Helvetica',10,'bold',  'roman'], # Various labels

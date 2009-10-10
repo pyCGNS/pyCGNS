@@ -231,7 +231,7 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
       name='Name'
       comment='comment'
       query=self.query.getAsQuery()
-      q=s7Query.s7Query(qry,name,comment)
+      q=s7Query(qry,name,comment)
       q.save(file)
       date=strftime("%Y-%m-%d %H:%M:%S", gmtime())
       f=open(file,'w+')
@@ -248,12 +248,12 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
   def cbk_execute(self):
     tree=self._wtree.CGNStarget[2][1] # first base
     qry=self.query.getAsQuery()
-    q=s7Query.s7Query(qry)
+    q=s7Query(qry)
     for s in self.woperate.selectedlist:
-      node      =self._wtree.findNodeFromPath(s[0])
-      parentnode=self._wtree.findParentNodeFromPath(s[0])
-      r=q.evalQuery(tree,node,parentnode)
-      if (r): print s[0] 
+      node      =self._wtree.findNodeFromPath(s[1])
+      parentnode=self._wtree.findParentNodeFromPath(s[1])
+      s[0]=q.evalQuery(tree,node,parentnode)
+    self.woperate.updateSelection(None)
   def cbk_edit(self):
     pass
   def open_node(self,event):
@@ -572,10 +572,12 @@ class wOperateView(s7windoz.wWindoz,ScrolledMultiListbox):
       for sl in selectedlist:
         ll=list(sl[0].split('/')[1:-2])
         cl=len(ll)
-        sd=ll+[""]*(self.colmax-cl-1)+list(sl[1:])
+        sd=['0']+ll+[""]*(self.colmax-cl-1)+list(sl[1:])
         self.selectedlist.append(sd)
     else:
-      self.selectedlist=selectedlist
+      self.selectedlist=[]
+      for sl in selectedlist:
+        self.selectedlist+=[[0]+list(sl)]
     
     s7windoz.wWindoz.__init__(self,wcontrol,
                               'pyS7: Selection List on [%s] view [%.2d]'%\
@@ -598,7 +600,7 @@ class wOperateView(s7windoz.wWindoz,ScrolledMultiListbox):
       self._wcontrol=wcontrol
 
     self.createOperateList()
-    self.listbox.sort_allowed=range(self.colmax)
+    self.listbox.sort_allowed=range(1,self.colmax)
     self.listbox.sort_init=0
     self.listbox.configure(height=100,width=600)
     self.listbox.grid()
@@ -617,7 +619,7 @@ class wOperateView(s7windoz.wWindoz,ScrolledMultiListbox):
         print self._paths[str(item[0])]
 
   def createOperateList(self):
-    colnames=[]
+    colnames=['S']
     for n in range(self.colmax-2):
       colnames+=["Level %d"%n]
     colnames+=['Name','Type']
@@ -626,18 +628,24 @@ class wOperateView(s7windoz.wWindoz,ScrolledMultiListbox):
                         selectforeground='black',
                         selectmode='extended')
     colors = ('white',)
-    for n in range(self.colmax-2):
-      self.listbox.column_configure(self.listbox.column(n),
-                                    font=self.titlefont,borderwidth=1,
-                                    itembackground=colors,
-                                    arrow='down',arrowgravity='right')
-    self.listbox.column_configure(self.listbox.column(self.colmax-2),
+    self.listbox.column_configure(self.listbox.column(0),
                                   font=self.titlefont,
                                   borderwidth=1,
                                   itembackground=colors,
                                   arrow='down',
                                   arrowgravity='right')
+    for n in range(self.colmax-2):
+      self.listbox.column_configure(self.listbox.column(n+1),
+                                    font=self.titlefont,borderwidth=1,
+                                    itembackground=colors,
+                                    arrow='down',arrowgravity='right')
     self.listbox.column_configure(self.listbox.column(self.colmax-1),
+                                  font=self.titlefont,
+                                  borderwidth=1,
+                                  itembackground=colors,
+                                  arrow='down',
+                                  arrowgravity='right')
+    self.listbox.column_configure(self.listbox.column(self.colmax),
                                   font=self.titlefont,
                                   justify='center',
                                   borderwidth=1,
@@ -657,13 +665,16 @@ class wOperateView(s7windoz.wWindoz,ScrolledMultiListbox):
     self._wtree.expandAndFocusByPath(wt[0][0])
 
   def updateSelection(self,prof):
+    self.listbox.delete(0,END)
     for op in self.selectedlist:
       self.listbox.insert('end',*op)
       it=self.listbox.item('end')
-      for c in range(self.colmax):
+      for c in range(self.colmax+1):
         cld=self.listbox.column(c)
         elt=self.listbox.element('text')
         self.listbox.itemelement_configure(it,cld,elt,font=self.listfont)
+        if (op[0]):
+          self.listbox.itemelement_configure(it,cld,elt,font=G___.font['F'])
 
   def onexit(self):
     self._control.operateViewClose()

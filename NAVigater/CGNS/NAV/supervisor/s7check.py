@@ -60,6 +60,7 @@ class s7Query:
    
   def evalQuery(self,tree,node,parentnode):
     return self.evalSubQuery(self.Q,tree,node,parentnode)
+
   def evalSubQuery(self,qry,tree,node,parentnode):
     if (type(qry)==type([])):
       operator=qry[0]
