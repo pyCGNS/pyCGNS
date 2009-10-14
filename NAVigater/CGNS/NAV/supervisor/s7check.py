@@ -7,6 +7,7 @@
 # tree for license information.
 
 import s7parser
+import s7utils
 import re
 import imp
 import sys
@@ -37,8 +38,7 @@ class s7Query:
     self.Q=Q
     if (name!=None):    self.name=None
     if (comment!=None): self.comment=None
-  def save(self,filename):
-    date=strftime("%Y-%m-%d %H:%M:%S", gmtime())
+  def save(self,filename,date):
     f=open(filename,'w+')
     f.write("# pyS7 - Query definition - %s\n#\n"%date)
     f.write("name='%s'\ncomment=\"\"\"%s\"\"\"\n"%(self.name,self.comment))
@@ -55,12 +55,10 @@ class s7Query:
       self.Q=t.query
       self.name=t.name
       self.comment=t.comment
-    except: pass
+    except ValueError: pass
     sys.path=sprev
-   
   def evalQuery(self,tree,node,parentnode):
     return self.evalSubQuery(self.Q,tree,node,parentnode)
-
   def evalSubQuery(self,qry,tree,node,parentnode):
     if (type(qry)==type([])):
       operator=qry[0]
@@ -68,7 +66,8 @@ class s7Query:
       if (operator==s7Query.AND):
         r=1
         for q in querylst:
-          r=r*self.evalSubQuery(q,tree,node,parentnode)
+          rn=self.evalSubQuery(q,tree,node,parentnode)
+          r*=rn
           if (not r): return 0
         return 1
       if (operator==s7Query.OR):

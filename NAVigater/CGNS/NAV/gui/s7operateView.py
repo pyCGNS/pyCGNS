@@ -12,17 +12,16 @@ from Tkinter    import *
 from TkTreectrl import *
 import os
 import sys
-import s7fileDialog
-from time import gmtime, strftime
-
 import s7globals
 G___=s7globals.s7G
 
+import s7fileDialog
 import s7treeFingerPrint
 import s7viewControl
 import s7utils
 import s7windoz
 import s7operateView
+
 from CGNS.NAV.supervisor.s7check import s7Query
 
 # -----------------------------------------------------------------------------
@@ -114,11 +113,13 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
         if (type(wcq)==type((1,))):
           qry.append((wcq[1],wcq[2]))
         elif (type(wcq)==type([])):
-          qry.append(wcq[1])
-          qry+=self.getAsQueryAux(wcq[2:])
+          r=[wcq[1]]
+          r+=self.getAsQueryAux(wcq[2:])
+          qry.append(r)
       return qry
     def getAsQuery(self):
-      return self.getAsQueryAux([self.Q])
+      return self.getAsQueryAux([self.Q])[0]
+
   # --------------------------------------------------------------------
   class wEditBase(Frame):
     def __init__(self,item,master,qentry,ivar):
@@ -231,20 +232,17 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
       name='Name'
       comment='comment'
       query=self.query.getAsQuery()
-      q=s7Query(qry,name,comment)
-      q.save(file)
-      date=strftime("%Y-%m-%d %H:%M:%S", gmtime())
-      f=open(file,'w+')
-      f.write("# pyS7 - Query definition - %s\n#\n"%date)
-      f.write("name='%s'\ncomment=\"\"\"%s\"\"\"\n"%(name,comment))
-      f.write("query=%s\n#\n"%query)
-      f.close()
+      date=s7utils.timeTag()
+      q=s7Query(query,name,comment)
+      q.save(file,date)
   def cbk_load(self):
-    file=s7fileDialog.s7filedialog(self._wtop,save=0,pat='*.py')
-    if (not file): return
-    f=open(file,'r')
-    ql=f.readlines()
-    f.close()
+    filedir=s7fileDialog.s7filedialog(self._wtop,save=0,pat='*.py')
+    if (not filedir): return
+    (dir,file)=os.path.split(filedir)
+    mod=os.path.splitext(file)[0]
+    q=s7Query(None)
+    q.load(dir,mod)
+    self.updateQueryTree(q.Q)
   def cbk_execute(self):
     tree=self._wtree.CGNStarget[2][1] # first base
     qry=self.query.getAsQuery()
@@ -278,6 +276,14 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
     return enew
   def open_call(self,tktree,item):
     pass
+  def updateQueryTree(self,qry):
+    for wcq in qry:
+      if (type(wcq)==type((1,))):
+        print 'Add entry Variable/Value ',wcq
+      elif (type(wcq)==type([])):
+        print 'Add group ',wcq[0]
+        self.updateQueryTree(wcq[1:])
+    return wqry
   def __init__(self,woperate,wcontrol,wtree):
 
     self.vlist=s7Query.taglist

@@ -303,6 +303,10 @@ def dumpWindow(frame,file=None):
   snapShotWarning(file)
   
 # --------------------------------------------------
+def timeTag():
+  from time import gmtime, strftime
+  tag=strftime("%Y-%m-%d %H:%M:%S", gmtime())
+  return tag
 
 # -----------------------------------------------------------------------------
 def operate_sort_list(event):
