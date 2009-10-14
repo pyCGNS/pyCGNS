@@ -6,7 +6,12 @@
 # See file COPYING in the root directory of this Python module source
 # tree for license information.
 
+from CGNS.pyCGNSconfig import version as __vid__
+import CGNS.NAV.gui.s7globals
+G___=CGNS.NAV.gui.s7globals.s7G
+
 import s7parser
+import CGNS.NAV.gui.s7utils as s7u
 import re
 import imp
 import sys
@@ -37,8 +42,7 @@ class s7Query:
     self.Q=Q
     if (name!=None):    self.name=None
     if (comment!=None): self.comment=None
-  def save(self,filename):
-    date=strftime("%Y-%m-%d %H:%M:%S", gmtime())
+  def save(self,filename,date):
     f=open(filename,'w+')
     f.write("# pyS7 - Query definition - %s\n#\n"%date)
     f.write("name='%s'\ncomment=\"\"\"%s\"\"\"\n"%(self.name,self.comment))
@@ -49,15 +53,14 @@ class s7Query:
     sys.path.append(fd)
     try:
       m=imp.find_module(fn)
-      if (s7utils.getFileSize(m[1]) > G___.minFileSizeNoWarning):
-        if (not s7utils.bigFileWarning(G___.noData)): return None
+      if (s7u.getFileSize(m[1]) > G___.minFileSizeNoWarning):
+        if (not s7u.bigFileWarning(G___.noData)): return None
       t=imp.load_module(fn,m[0],m[1],m[2])
       self.Q=t.query
       self.name=t.name
       self.comment=t.comment
-    except: pass
+    except ValueError: pass
     sys.path=sprev
-   
   def evalQuery(self,tree,node,parentnode):
     return self.evalSubQuery(self.Q,tree,node,parentnode)
   def evalSubQuery(self,qry,tree,node,parentnode):
@@ -67,7 +70,8 @@ class s7Query:
       if (operator==s7Query.AND):
         r=1
         for q in querylst:
-          r=r*self.evalSubQuery(q,tree,node,parentnode)
+          rn=self.evalSubQuery(q,tree,node,parentnode)
+          r*=rn
           if (not r): return 0
         return 1
       if (operator==s7Query.OR):

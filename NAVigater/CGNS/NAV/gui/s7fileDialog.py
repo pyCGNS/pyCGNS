@@ -470,8 +470,11 @@ class wFileDialog(FileDialog):
     self.mpth.bind('<ButtonRelease-3>',self.popUpMenuOff)    
   def updateDirList(self):
     dir,pat=self.get_filter()
-    if dir not in G___.directoriesHistory:
-      G___.directoriesHistory+=[dir]
+    gdl=G___.directoriesHistory
+    if dir not in gdl:
+      gdl+=[dir]
+    if (len(gdl)>G___.directoriesHistorySize):
+        gdl=gdl[-G___.directoriesHistorySize:]
   def check_filter(self,dir,pat):
     if (os.path.exists(dir)): return 1
     elif s7utils.removeNotFoundDir(dir):

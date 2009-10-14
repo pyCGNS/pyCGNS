@@ -8,11 +8,10 @@
 import Tkinter
 Tkinter.wantobjects=0 #necessary for tk-8.5 and some buggy tkinter installs
 from Tkinter import *
-import tkMessageBox
 import os
 import string
 
-import CGNS.NAV.supervisor.s7error as E
+import CGNS.NAV.supervisor.s7error as ERR
 
 import s7globals
 G___=s7globals.s7G
@@ -24,7 +23,7 @@ def wIconFactory():
   if (G___.iconStorage != {}): return G___.iconStorage
   for iconKey in G___.iconKeys:
     if (not os.path.exists('%s/%s.gif'%(G___.iconDir,iconKey))):
-      raise E.S7Exception(10,'%s/%s.gif'%(G___.iconDir,iconKey))
+      raise ERR.S7Exception(10,'%s/%s.gif'%(G___.iconDir,iconKey))
     G___.iconStorage[iconKey]=PhotoImage(file='%s/%s.gif'%
                                          (G___.iconDir,iconKey))
   return G___.iconStorage
@@ -116,120 +115,158 @@ def generateName(noderoot,nodeappend):
     count+=1
 
 # --------------------------------------------------
+class msginfo:
+  def __init__(self,title,msg,other=None):
+    self._result = None
+    def wtopIsTrue():
+      self._result=1
+      wtop.destroy()
+    def wtopIsFalse():
+      self._result=0
+      wtop.destroy()
+    wtop=Toplevel()
+    wtop.title(title)
+    f=Frame(wtop)
+    b=Button(f,text=msg,relief=GROOVE,justify=LEFT,
+             font=G___.font['L'],command=wtopIsTrue,default=ACTIVE)
+    b.grid(sticky=N+E+W)
+    if (other):
+      c=Button(f,text=other,relief=FLAT,justify=CENTER,fg='gray',
+             font=G___.font['L'],command=wtopIsFalse)
+      c.grid(sticky=S+E+W)
+    f.grid()
+    f.bind("<Return>", wtopIsTrue)
+    f.bind("<Escape>", wtopIsFalse)
+    wtop.protocol("WM_DELETE_WINDOW", wtopIsFalse)
+    wtop.wait_visibility()
+    wtop.grab_set()
+    wtop.wait_window(wtop)
+  def result(self):
+    return self._result
+
+# --------------------------------------------------
 def onexit():
   closeWarning()
 
 def mainCloseWarning():
-  tkMessageBox.showwarning("pyS7: Warning",
-                           "Please use S7 Control Panel\nQuit icon to close S7.")
+  return msginfo("CGNS.NAV: Warning",
+  "Please use Quit icon (Control Panel) to close CGNS.NAV.").result()
 def closeWarning():
-  tkMessageBox.showwarning("pyS7: Warning",
-                           "Please use S7 Control Panel\nto close views.")
+  return msginfo("CGNS.NAV: Warning",
+                 "Please use Control Panel to close views.").result()
 def forceNoRecursionWarning():
-  tkMessageBox.showwarning("pyS7: Warning",
-                           "S7 forces [No Recursion] flag.")
+  return msginfo("CGNS.NAV: Warning",
+                 "CGNS.NAV forces [No Recursion] flag.").result()
 def operateWarning():
-  tkMessageBox.showwarning("pyS7: Warning",
-                           "Operate view is already open.\nClose operate view to perform actions on another view.")
+  return msginfo("CGNS.NAV: Warning",
+"""Operate view is already open.
+Close operate view to perform actions on another view.""").result()
 def fileWarning(ext):
-  tkMessageBox.showerror("pyS7: Error",
-                         "Don't know how to read [%s] files..."%ext)
+  return msginfo("CNS.NAV: Error",
+                 "Don't know how to read [%s] files..."%ext).result()
 def badFileError(name):
-  tkMessageBox.showerror("pyS7: Error",
-                         "Something wrong with file\n%s"%name)
+  return msginfo("CNS.NAV: Error",
+                 "Something wrong with file\n%s"%name).result()
 def renameError(name):
-  tkMessageBox.showerror("pyS7: Error",
-                         "Name [%s] already exists"%name)
+  return msginfo("CGNS.NAV: Error",
+                 "Name [%s] already exists"%name).result()
 def queryViewCloseError():
-  tkMessageBox.showerror("pyS7: Error",
-                         "Please close first Selection List View")
+  return msginfo("CGNS.NAV: Error",
+                 "Please close first Selection List View").result()
 def cutError():
-  tkMessageBox.showerror("pyS7: Error",
-                         "Cannot cut root node")
+  return msginfo("CGNS.NAV: Error",
+                 "Cannot cut root node").result()
 def pasteBrotherError():
-  tkMessageBox.showerror("pyS7: Error",
-                         "Cannot paste as root node brother")
+  return msginfo("CGNS.NAV: Error",
+                 "Cannot paste as root node brother").result()
 def importCGNSWarning(ext):
-  tkMessageBox.showerror("pyS7: Error",
-                         "Cannot import pyCGNS module\nThis is required for %s files"%ext)
+  return msginfo("CGNS.NAV: Error",
+  "Cannot import pyCGNS module\nThis is required for %s files"%ext).result()
 
 def importProfileWarning(mod,msg):
-  tkMessageBox.showerror("pyS7: Error",
-                         "Cannot import %s profile\nError message is:\n%s"\
-                         %(mod,msg))
+  return msginfo("CGNS.NAV: Error",
+  "Cannot import %s profile\nError message is:\n%s"%(mod,msg)).result()
 
 def spaceInFileName(fnm):
-  tkMessageBox.showerror("pyS7: Error",
-                         "Pattern name contains <space> char: '%s'"%fnm)
+  return msginfo("CGNS.NAV: Error",
+                 "Pattern name contains <space> char: '%s'"%fnm).result()
 
 def importCGNSFunction(ext):
-  tkMessageBox.showerror("pyS7: Error",
-                         "Cannot import pyCGNS module\nRequired for %s"%ext)
+  return msginfo("CGNS.NAV: Error",
+                 "Cannot import pyCGNS module\nRequired for %s"%ext).result()
 
 def copyNameCollision(name):
-  tkMessageBox.showerror("pyS7: Error",
-                         "Copy tree has same name as existing child [%s]"%name)
+  return msginfo("CGNS.NAV: Error",
+  "Inserted tree has same name as existing child\n[%s]"%name).result()
 
 def snapShotWarning(file):
-  tkMessageBox.showinfo("pyS7: Info",
-                        "Snapshot into file\n[%s]"%file)
+  return msginfo("CGNS.NAV: Info","Snapshot into file\n[%s]"%file).result()
 
 def saveFileWarning(file):
-  tkMessageBox.showinfo("pyS7: Info",
-                        "Tree saved into file\n[%s]"%file)
+  return msginfo("CGNS.NAV: Info",
+                 "Tree saved into file\n%s"%file).result()
 
 def profileDirNotFound(prf):
-  tkMessageBox.showerror("pyS7: Error",
-                         "Profile dir doesn't exist:\n%s"%prf)
+  return msginfo("CGNS.NAV: Error",
+                 "Profile dir doesn't exist:\n%s"%prf).result()
 
 def createProfileDirInit(prof):
-  return tkMessageBox.askokcancel("pyS7: Confirm",
-                                  "No __init__.py in profile dir '%s'.Do you want me to create it?"%prof)
+  return msginfo("CGNS.NAV: Confirm",
+                 "No __init__.py in profile dir '%s'.\nDo you want me to create it?"%prof).result()
 
 def removeNotFoundDir(dir):
-  return tkMessageBox.askokcancel("pyS7: Confirm",
-                                  "Directory '%s' not found. Do you want to remove it in history list?"%dir)
+  return msginfo("CNS.NAV: Confirm",
+                 "Directory '%s' not found.\nDo you want to remove it in history list?"%dir,"no, keep directory in history list").result()
 
 def cutRootWarning():
-  return tkMessageBox.askokcancel("pyS7: Confirm",
-                                  "You selected Root node to Cut! Delete all tree?")
+  return msginfo("CGNS.NAV: Confirm",
+                 "You selected Root node to Cut! Delete all tree?",
+                 "cancel").result()
 
 def bigFileWarning(flag):
-  msg="The file you want to load looks quite big! "
+  msg="The file you want to load looks quite big!\n"
   if (flag):
-    msg+="You have set the [No Data] options, but "
+    msg+="You have set the [No Data] options, but\n"
   else:
-    msg+="Maybe you could set the [No Data] options, "
+    msg+="Maybe you could set the [No Data] options,\n"
   msg+="do you really want to load the file?"
-  return tkMessageBox.askyesno("pyS7: Confirm",msg)
+  return msginfo("CGNS.NAV: Confirm",msg,"Don't load the file").result()
 
 def patternOverwrite(file):
-  return tkMessageBox.askokcancel("pyS7: Confirm",
-                                  "Pattern '%s' already exists! Do you really want to replace it ?"%file)
+  return msginfo("CGNS.NAV: Confirm",
+"""Pattern '%s' already exists! Do you really want to replace it ?"""%file,
+"cancel").result()
 
 def duplicatedPattern(pat):
-  return tkMessageBox.askokcancel("pyS7: Confirm",
-                                  "Pattern '%s' already imported! S7 skips this pattern, do you want to continue to import profile?"%pat)
+  return msginfo("CGNS.NAV: Confirm",
+"""Pattern '%s' already imported!
+CGNS.NAV skips this pattern,
+do you want to continue to import profile?"""%pat,"cancel").result()
 
 def leaveCheck():
-  return tkMessageBox.askokcancel("pyS7: Confirm",
-                                  "Close all S7 views and leave ?")
+  return msginfo("CGNS.NAV: Confirm","Close all CGNS.NAV views and leave",
+                 "cancel").result()
 
 def saveCheck():
-  return tkMessageBox.askokcancel("pyS7: Confirm",
-                                  "Tree is modified, close without save ?")
+  return msginfo("CGNS.NAV: Confirm",
+                 "Tree is modified, close without save ?","cancel").result()
 
 def overwriteCheck():
-  return tkMessageBox.askokcancel("pyS7: Confirm",
-                                  "Tree already exist, overwrite ?")
+  return msginfo("CGNS.NAV: Confirm",
+                 "Tree already exist, overwrite ?","cancel").result()
 
 def noDataSave():
-  return tkMessageBox.askokcancel("pyS7: Confirm",
-                                  "This CGNS tree has been read WITHOUT large DataArrays. Your save will store data with ZERO values. Select OK if you really want to overwrite with ZEROs.")
+  return msginfo("CGNS.NAV: Confirm",
+"""This CGNS tree has been read WITHOUT large DataArrays.
+Your save will store data with ZERO values.
+Click if you really want to overwrite with ZEROs.
+Select [cancel] if you do not want to save file""","cancel").result()
 
 def updateTreeLoad():
-  return tkMessageBox.askokcancel("pyS7: Confirm",
-                                  "You have already read this file, do you want to force load and replace all these tree views?")
+  return msginfo("CGNS.NAV: Confirm",
+"""You have already read this file,
+do you want to force load and replace all these tree views?""",
+                 "cancel").result()
 
 # --------------------------------------------------
 def printNode(node):
@@ -266,6 +303,10 @@ def dumpWindow(frame,file=None):
   snapShotWarning(file)
   
 # --------------------------------------------------
+def timeTag():
+  from time import gmtime, strftime
+  tag=strftime("%Y-%m-%d %H:%M:%S", gmtime())
+  return tag
 
 # -----------------------------------------------------------------------------
 def operate_sort_list(event):

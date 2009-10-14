@@ -5,6 +5,5 @@
 # tree for license information. 
 # =============================================================================
 
-# compatibility methods
-from CGNS.WRA.wrapper import *
-#
+print 'pyCGNS ERROR: please now import CGNS.WRA'
+
