@@ -16,7 +16,7 @@
 #define L3_S_LABEL   	   "label"
 #define L3_S_DTYPE   	   "type"
 #define L3_S_FLAGS   	   "flags"
-#define L3_S_VERSION 	   " version"
+#define L3_S_VERSION 	   " hdf5version"
 #define L3_S_FORMAT  	   " format"
 #define L3_S_DATA    	   " data"
 #define L3_S_FILE    	   " file"

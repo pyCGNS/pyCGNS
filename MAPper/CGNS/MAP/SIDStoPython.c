@@ -301,71 +301,6 @@ static int s2p_trustlink(char *file, char *name)
   return 1;
 }
 /* ------------------------------------------------------------------------- */
-#define TRANSP_LOOP( nnn ) level-=1; for (l[nnn]=0;l[nnn]<dims[nnn];l[nnn]++)
-#define TRANSP_LEV2( ttt ) \
-(( ttt *)tdata)[l[0]+l[1]*dims[0]]=(( ttt *)ddata)[l[1]+l[0]*dims[1]];
-#define TRANSP_LEV3( ttt ) \
-(( ttt *)tdata)[l[0]+l[1]*dims[0]+l[2]*dims[0]*dims[1]]=(( ttt *)ddata)[l[2]+l[1]*dims[2]+l[0]*dims[2]*dims[1]];
-#define TRANSP_LEV4( ttt ) \
-(( ttt *)tdata)[l[0]+l[1]*dims[0]+l[2]*dims[0]*dims[1]+l[3]*dims[0]*dims[1]*dims[2]]=(( ttt *)ddata)[l[3]+l[2]*dims[3]+l[1]*dims[2]*dims[3]+l[0]*dims[2]*dims[1]*dims[3]];
-#define TRANSP_LEV5( ttt ) \
-(( ttt *)tdata)[l[0]+l[1]*dims[0]+l[2]*dims[0]*dims[1]+l[3]*dims[0]*dims[1]*dims[2]+l[4]*dims[0]*dims[1]*dims[2]*dims[3]]=(( ttt *)ddata)[l[4]+l[3]*dims[4]+l[2]*dims[3]*dims[4]+l[1]*dims[2]*dims[3]*dims[4]+l[0]*dims[2]*dims[1]*dims[3]*dims[4]];
-#define TRANSP_BLOC( tttt ) \
-TRANSP_LOOP(0){TRANSP_LOOP(1){if (!level){TRANSP_LEV2( tttt );}\
-else{TRANSP_LOOP(2){if (!level){TRANSP_LEV3( tttt );}\
-else{TRANSP_LOOP(3){if (!level){TRANSP_LEV4( tttt );}\
-else{TRANSP_LOOP(4){TRANSP_LEV5( tttt );}\
-level+=1;}}level+=1;}}level+=1;}}level+=1;}
-/* ------------------------------------------------------------------------- */
-static char *s2p_transpose(PyObject *dobject, 
-			   int ptype, int ndims, int *dims, int total, 
-			   s2p_ctx_t  *context)
-{
-  char *ddata,*tdata=NULL;
-  int  l[MAXDIMENSIONVALUES],level;
-
-  ddata=(char*)PyArray_DATA(dobject);
-  level=ndims;
-
-  if (ndims==1)
-  {
-    return ddata;
-  }
-  if (ptype==NPY_STRING)
-  {
-    context->_c_char=(char*)malloc(total*sizeof(char));
-    tdata=(char*)context->_c_char;
-    TRANSP_BLOC( char );
-  }
-  if (ptype==NPY_DOUBLE)
-  {
-    context->_c_double=(double*)malloc(total*sizeof(double));
-    tdata=(char*)context->_c_double;
-    TRANSP_BLOC( double );
-  }
-  if (ptype==NPY_FLOAT)
-  {
-    context->_c_float=(float*)malloc(total*sizeof(float));
-    tdata=(char*)context->_c_float;
-    TRANSP_BLOC( float );
-  }
-  if (ptype==NPY_LONG)
-  {
-    context->_c_long=(long*)malloc(total*sizeof(long));
-    tdata=(char*)context->_c_long;
-    TRANSP_BLOC( long );
-  }
-  if (ptype==NPY_INT)
-  {
-    context->_c_int=(int*)malloc(total*sizeof(int));
-    tdata=(char*)context->_c_int;
-    TRANSP_BLOC( int );
-  }
-
-  if (tdata!=NULL){ return tdata;}
-  else            { return ddata;}
-}
-/* ------------------------------------------------------------------------- */
 static int s2p_getData(PyObject *dobject, 
 		       char **dtype, int *ddims, int *dshape, char **dvalue,
 		       s2p_ctx_t  *context)
@@ -396,7 +331,8 @@ static int s2p_getData(PyObject *dobject,
       ddims[0]=PyArray_NDIM(dobject);
       for (n=0; n<ddims[0]; n++)
       {
-        dshape[n]=(int)PyArray_DIM(dobject,n);
+        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[ddims[0]-n-1];
       } 
       *dvalue=(char*)PyArray_DATA(dobject);
     }
@@ -409,7 +345,8 @@ static int s2p_getData(PyObject *dobject,
     ddims[0]=PyArray_NDIM(dobject);
     for (n=0; n<ddims[0]; n++)
     {
-      dshape[n]=(int)PyArray_DIM(dobject,n);
+      dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+      total*=dshape[ddims[0]-n-1];
     } 
     *dvalue=(char*)PyArray_DATA(dobject);
     return 1;
@@ -433,20 +370,10 @@ static int s2p_getData(PyObject *dobject,
       total=1;
       for (n=0; n<ddims[0]; n++)
       {
-/*         dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n); */
-/*         total*=dshape[ddims[0]-n-1]; */
-        dshape[n]=(int)PyArray_DIM(dobject,n);
-        total*=dshape[n];
+        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[ddims[0]-n-1];
       } 
-      if (!PyArray_ISFORTRAN(dobject))
-      {
-        *dvalue=s2p_transpose(dobject,
-			      NPY_DOUBLE,ddims[0],dshape,total,context);
-      }
-      else
-      {
-        *dvalue=(char*)PyArray_DATA(dobject);
-      } 
+      *dvalue=(char*)PyArray_DATA(dobject);
     }
     return 1;
   }
@@ -455,9 +382,12 @@ static int s2p_getData(PyObject *dobject,
   {
     *dtype=DT_R4;
     ddims[0]=PyArray_NDIM(dobject);
+    /* index is the C order for numpy. Even if array is FORTRAN, you should
+       pass an index with the C order, i.e. imax,ijmax,kmax...
+       Then you have to reverse the size if you detect a fortran */
     for (n=0; n<ddims[0]; n++)
     {
-      dshape[n]=(int)PyArray_DIM(dobject,n);
+      dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
     } 
     *dvalue=(char*)PyArray_DATA(dobject);
     return 1;
@@ -479,18 +409,10 @@ static int s2p_getData(PyObject *dobject,
       total=1;
       for (n=0; n<ddims[0]; n++)
       {
-        dshape[n]=(int)PyArray_DIM(dobject,n);
-	total*=dshape[n];
+        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[ddims[0]-n-1];
       } 
-      if (PyArray_ISFORTRAN(dobject))
-      {
-	*dvalue=s2p_transpose(dobject,
-			      NPY_STRING,ddims[0],dshape,total,context);
-      }
-      else
-      {
-        *dvalue=(char*)PyArray_DATA(dobject);
-      }
+      *dvalue=(char*)PyArray_DATA(dobject);
     }
     return 1;
   }
@@ -507,7 +429,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   char      destnode[L3_MAX_NAME+1];
   char      destfile[MAXFILENAMESIZE];
   int       ndim,tsize,n,count,child;
-  int       error,isdataarray,arraytype,toknpath;
+  int       error,arraytype,toknpath;
   hid_t    actualid;
   PyObject *o_clist,*o_value,*o_child,*o_node;
   npy_intp  npy_dim_vals[MAXDIMENSIONVALUES];
@@ -548,22 +470,13 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     return NULL;
   }
   S2P_TRACE(("### (%s) [%s]",curpath,rnode->label));
-  if (    !strcmp(rnode->label,DataArray_ts) 
-       || !strcmp(rnode->label,DimensionalExponents_ts) 
-       || !strcmp(rnode->label,DimensionalUnits_ts))
-  {
-    isdataarray=1;
-  }
-  else
-  {
-    isdataarray=0;
-  }
   if (rnode->dtype!=L3E_VOID)
   {
     S2P_TRACE(("[%s]",L3_typeAsStr(rnode->dtype)));
     tsize=1;
     n=0;
     ndim=0;
+    npy_dim_vals[0]=0;
     while ((n<L3_MAX_DIMS)&&(rnode->dims[n]!=-1))
     {
       tsize*=rnode->dims[n];
@@ -573,20 +486,13 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     n=0;
     while ((n<L3_MAX_DIMS)&&(rnode->dims[n]!=-1))
     {
-      if (isdataarray)
-      {
-        npy_dim_vals[ndim-n-1]=rnode->dims[n];
-      }
-      else
-      {
-        npy_dim_vals[n]=rnode->dims[n];
-      }
+      npy_dim_vals[ndim-n-1]=rnode->dims[n];
       n++;
     } 
     S2P_TRACE(("{"));
     for (n=0;n<ndim;n++)
     {
-      S2P_TRACE(("%d",rnode->dims[n]));
+      S2P_TRACE(("%d",npy_dim_vals[n]));
       if (n<ndim+1)
       {
 	S2P_TRACE(("x"));
@@ -596,55 +502,38 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     if ((rnode->dtype==L3E_I4) || (rnode->dtype==L3E_I4ptr))
     {
       arraytype=NPY_INT;
-      data=(void *)malloc((tsize)*sizeof(int));
     }
     else if ((rnode->dtype==L3E_C1) || (rnode->dtype==L3E_C1ptr))
     {
       arraytype=NPY_CHAR;
-      data=(void *)malloc((tsize)*sizeof(char));
-      memset(data,0,tsize);
     }
     else if ((rnode->dtype==L3E_R8) || (rnode->dtype==L3E_R8ptr))
     {
       arraytype=NPY_DOUBLE;
-      data=(void *)malloc((tsize)*sizeof(double));
     }
     else if ((rnode->dtype==L3E_I8) || (rnode->dtype==L3E_I8ptr))
     {
       arraytype=NPY_LONG;
-      data=(void *)malloc((tsize)*sizeof(long));
     }
     else if ((rnode->dtype==L3E_R4) || (rnode->dtype==L3E_R4ptr))
     {
       arraytype=NPY_FLOAT;
-      data=(void *)malloc((tsize)*sizeof(float));
     }
     else
     {
-      data=NULL;
+      arraytype=-1;
     }
-    if (data!=NULL)
+    if (arraytype!=-1)
     {
-      /* TO FIX: duplicate memory zone */
-      data=rnode->data;
-      if (isdataarray)
-      {
-        o_value=(PyObject*)PyArray_New(&PyArray_Type,
-                                       ndim,npy_dim_vals, 
-                                       arraytype,(npy_intp*)NULL,
-                                       (void*)data,0, 
-                                       NPY_OWNDATA|NPY_FORTRAN,
-                                       (PyObject*)NULL);
-      }
-      else
-      {
-        o_value=(PyObject*)PyArray_New(&PyArray_Type,
-                                       ndim,npy_dim_vals, 
-                                       arraytype,(npy_intp *)NULL,
-                                       (void*)data,0, 
-                                       NPY_OWNDATA,
-                                       (PyObject*)NULL);
-      }
+      printf("[%d]\n",ndim);fflush(stdout);
+      printf("[%d]\n",npy_dim_vals[0]);fflush(stdout);
+      printf("[%p]\n",rnode->data);fflush(stdout);
+      o_value=(PyObject*)PyArray_New(&PyArray_Type,
+				     ndim,npy_dim_vals, 
+				     arraytype,(npy_intp *)NULL,
+				     (void*)rnode->data,0, 
+				     NPY_OWNDATA,
+				     (PyObject*)NULL);
     }
   }
   S2P_TRACE(("\n"));

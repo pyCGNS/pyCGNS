@@ -35,8 +35,8 @@
 
    special cases (be careful, these are using *datasets*):
 
-   root node                     format : string (group dataset)
-                                 version: string (group dataset)
+   root node                     format     : string (group dataset)
+                                 hdf5version: string (group dataset)
 
    link node                     file   : string (group dataset)
                                  path   : string (group dataset)
