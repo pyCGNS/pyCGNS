@@ -276,15 +276,19 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
     return enew
   def open_call(self,tktree,item):
     pass
-  def updateQueryTree(self,qry):
+  def updateQueryTree(self,qry,item=ROOT):
     for wcq in qry:
       if (type(wcq)==type((1,))):
-        print 'Add entry Variable/Value ',wcq
+        qe=(wcq[0],wcq[1])
+        inew=self.add_entry(item,qe)
+        self.query.add(item,inew,qe)
       elif (type(wcq)==type([])):
-        print 'Add group ',wcq[0]
-        self.updateQueryTree(wcq[1:])
-  def __init__(self,woperate,wcontrol,wtree):
+        if (wcq[0] in s7Query.conlist):
+          inew=self.add_group(item,wcq[0])    
+          self.query.add(item,inew,wcq[0])
+          self.updateQueryTree(wcq[1:],inew)
 
+  def __init__(self,woperate,wcontrol,wtree):
     self.vlist=s7Query.taglist
     self.defvalue='.*'
     self.active=None
@@ -514,9 +518,7 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
     if (item==None): return
     if (not self._qtree.itemstate_get(item,'leaf')): return
     qentry=self.query.getEntry(item[0])
-    print 'EDIT VAL ',qentry
     self.wEditEntry(item,self,qentry)    
-    print 'Val ',self.query.Q
     
   def SubCut(self):
     item=self.getItemSelection()
@@ -529,19 +531,16 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
     item=self.getItemSelection()
     enew=self.add_group(item[0],s7Query.AND)    
     self.query.add(item[0],enew,s7Query.AND)
-    print 'And ',self.query.Q
    
   def AddOr(self):
     item=self.getItemSelection()
     enew=self.add_group(item[0],s7Query.OR)    
     self.query.add(item[0],enew,s7Query.OR)
-    print 'Or ',self.query.Q
     
   def AddNot(self):
     item=self.getItemSelection()
     enew=self.add_group(item[0],s7Query.NOT)    
     self.query.add(item[0],enew,s7Query.NOT)
-    print 'Not ',self.query.Q
 
   def AddEntry(self):
     qe=(self.vlist[0],self.defvalue)
@@ -549,7 +548,6 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
     if (self._qtree.itemstate_get(item,'leaf')): return
     enew=self.add_entry(item[0],qe)
     self.query.add(item[0],enew,qe)
-    print 'Entry ',self.query.Q
 
 # -----------------------------------------------------------------------------
 class wOperateView(s7windoz.wWindoz,ScrolledMultiListbox):

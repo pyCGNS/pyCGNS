@@ -12,7 +12,8 @@ import CGNS.NAV.supervisor.s7cgnsTypes as CT
 import s7cgnskeywords
 import s7grammar
 import string
-import numpy as Num 
+import numpy as Num
+import re
 
 __checkready=1
 try:
@@ -95,6 +96,13 @@ def getNodeAllowedChildrenTypes(node):
   return tlist
 
 # --------------------------------------------------
+def hasChildNodeOfType(node,ntype):
+  if (node == None): return 0
+  for cn in node[2]:
+    if (cn[3]==ntype): return 1
+  return 0
+
+# --------------------------------------------------
 def getTypeDataTypes(node):
   tlist=[]
   try:
@@ -102,6 +110,18 @@ def getTypeDataTypes(node):
   except:
     pass
   return tlist
+
+# --------------------------------------------------
+def stringValueMatches(node,reval):
+  if (node == None):            return 0
+  if (node[1] == None):         return 0  
+  if (getNodeType(node)!='C1'): return 0
+  tn=type(node[1])
+  if   (tn==type('')): vn=node[1]
+  elif (tn == type(Num.ones((1,))) and (node[1].dtype.char in ['S','c'])):
+    vn=node[1].tostring()
+  else: return 0
+  return re.match(reval,vn)
 
 # --------------------------------------------------
 def shift(path):
@@ -117,11 +137,7 @@ def checkDataAndType(path,node,parent,log):
     clevel=2
     msg="%sBad data type [%s] for [%s] (expected one of %s)\n"%\
          (shift(path),dt,node[0],xt)
-  else:
-    tag=None
-    clevel=0
-    msg="%sData type [%s] ok for [%s]\n"%(shift(path),dt,node[0])
-  log.push(msg,tag)
+    log.push(msg,tag)
   pt=getNodeAllowedChildrenTypes(parent)
   if (pt==[]):
     pt=['CGNSBase_t','CGNSLibraryVersion_t']
@@ -130,11 +146,11 @@ def checkDataAndType(path,node,parent,log):
     clevel=max(clevel,2)
     msg="%sBad node type [%s] for [%s]\n"%\
          (shift(path),node[3],node[0])
-  else:
-    tag=None
-    clevel=max(clevel,0)
-    msg="%sData type [%s] ok for [%s]\n"%(shift(path),node[3],node[0])
-  log.push(msg,tag)
+    log.push(msg,tag)
+#  else:
+#    tag=None
+#    clevel=max(clevel,0)
+#    msg="%sData type [%s] ok for [%s]\n"%(shift(path),node[3],node[0])
     
 # --------------------------------------------------------------------
 def checkName(path,node,parent,log):
@@ -143,7 +159,6 @@ def checkName(path,node,parent,log):
   tag=None
   clevel=0
   shft=shift(path)
-  log.push("%sCheck: %s\n"%(shft,nm))
   if (nm==''):
     tag='#FAIL'
     clevel=2
@@ -173,9 +188,6 @@ def checkName(path,node,parent,log):
     clevel=1
     log.push("%sName has heading/trailing space chars\n"%shft,tag)
     
-  if (log and not tag):
-    log.push("%sName syntax ok\n"%shft)
-
   cnlist=childNames(parent)
   if (cnlist):
     cnlist.remove(node[0])
@@ -198,7 +210,7 @@ def checkLeaf(pth,node,parent,tree,check=1,log=None):
     ntype=node[3]
     if (ntype == 'int[1+...+IndexDimension]'):ntype="IndexRangeT1_t"
     if (ntype == 'int[IndexDimension]'):      ntype="IndexRangeT2_t"
-    return apply(s7grammar.__dict__[ntype],[pth,node,parent,tree,check])
+    return apply(s7grammar.__dict__[ntype],[pth,node,parent,tree,check,log])
   except KeyError:
     return clevel
   
