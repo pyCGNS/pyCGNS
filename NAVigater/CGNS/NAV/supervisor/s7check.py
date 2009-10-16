@@ -6,8 +6,12 @@
 # See file COPYING in the root directory of this Python module source
 # tree for license information.
 
+from CGNS.pyCGNSconfig import version as __vid__
+import CGNS.NAV.gui.s7globals
+G___=CGNS.NAV.gui.s7globals.s7G
+
 import s7parser
-import CGNS.NAV.gui.s7utils
+import CGNS.NAV.gui.s7utils as s7u
 import re
 import imp
 import sys
@@ -49,8 +53,8 @@ class s7Query:
     sys.path.append(fd)
     try:
       m=imp.find_module(fn)
-      if (s7utils.getFileSize(m[1]) > G___.minFileSizeNoWarning):
-        if (not s7utils.bigFileWarning(G___.noData)): return None
+      if (s7u.getFileSize(m[1]) > G___.minFileSizeNoWarning):
+        if (not s7u.bigFileWarning(G___.noData)): return None
       t=imp.load_module(fn,m[0],m[1],m[2])
       self.Q=t.query
       self.name=t.name
