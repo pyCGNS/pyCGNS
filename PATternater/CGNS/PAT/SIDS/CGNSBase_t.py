@@ -4,9 +4,9 @@
 # See file COPYING in the root directory of this Python module source 
 # tree for license information. 
 #
-import CGNS.cgnslib      as C
-import CGNS.cgnserrors   as E
-import CGNS.cgnskeywords as K
+import CGNS.PAT.cgnslib      as C
+import CGNS.PAT.cgnserrors   as E
+import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 
 data=C.newBase(None,'{Base}',3,3)

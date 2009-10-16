@@ -7,7 +7,7 @@
 # tree for license information.
 
 import s7parser
-import s7utils
+import CGNS.NAV.gui.s7utils
 import re
 import imp
 import sys
