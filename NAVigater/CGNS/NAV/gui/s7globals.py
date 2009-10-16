@@ -42,12 +42,13 @@ class s7optionsStorage:
      'pattern-save','tree-save','check-clear','check-save','check-all',
      'print-view','close-view','undo-last-modification','view-help',
      'flag-revert','flag-none','flag-all','operate-view','operate-list',
+     'flag-bwd','flag-fwd',
      'level-in','level-out','tree-new','tree-add','tree-del','tree-load',
      'snapshot','pattern-view','link-view','query-and','query-or','query-not'
      ]
     # Next line is replaced each time you run distutils...
     # then s7globals_.py becomes... s7globals.py (good job boy !) 
-    self.s7icondirectoryprefix="/home_local/eucass/tools"
+    self.s7icondirectoryprefix="/home/poinot/Tools-2"
     self.iconDir=self.s7icondirectoryprefix+'/share/CGNS/NAV/icons'
     self.firedox='firefox %s/share/CGNS/NAV/doc/CGNSNAV.html &'%\
                   self.s7icondirectoryprefix

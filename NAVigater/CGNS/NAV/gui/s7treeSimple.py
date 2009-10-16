@@ -212,6 +212,16 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     s7log.clearChecks(self._viewtree)
   def cbk_savecheck(self):
     if (self._control.logWindow): self._control.logWindow.save()
+  def cbk_prevslist(self):
+    it=self.getItemSelection()
+    nit=self.getFirstMarkedFrom()
+    self._tree.selection_modify(select=nit)
+    self._tree.see(nit)
+  def cbk_nextslist(self):
+    it=self.getItemSelection()
+    nit=self.getFirstMarkedFrom(1)
+    self._tree.selection_modify(select=nit)
+    self._tree.see(nit)
   def cbk_checkall(self):
     self._tree.selection_modify(deselect=ALL)
     self._tree.selection_modify(select=ROOT)
@@ -329,17 +339,19 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self._edit.grid(row=2,column=0,sticky=N+W+S,columnspan=3)
 
     self.menu([('save-done',    NW, 2,self.cbk_savedone,'Save current tree'),
+               ('tree-save',    NW,20,self.cbk_saveas,'Save tree as'),
+               ('pattern-save', NW, 2,self.cbk_savepattern,'Save as pattern'),
                ('level-in',     NW,20,self.cbk_zoomin,'Show one more level'),
                ('level-out',    NW, 2,self.cbk_zoomout,'Hide lowest level'), 
                ('flag-all',     NW,20,self.cbk_flagall,'Flag all'),
                ('flag-none',    NW, 2,self.cbk_unflagall,'Remove all flags'),
                ('flag-revert',  NW, 2,self.cbk_revertflags,'Revert flags'),
                ('operate-list', NW, 2,self.cbk_slist,'Selected list view'),
+               ('flag-bwd',     NW,20,self.cbk_prevslist,'Previous selected'),
+               ('flag-fwd',     NW, 2,self.cbk_nextslist,'Next selected'),
                ('check-all',    NW,20,self.cbk_checkall,'Check all levels'),
                ('check-save',   NW, 2,self.cbk_savecheck,'Save check log'),
                ('check-clear',  NW, 2,self.cbk_clearcheck,'Clear check flags'),
-               ('tree-save',    NW,20,self.cbk_saveas,'Save tree as'),
-               ('pattern-save', NW, 2,self.cbk_savepattern,'Save as pattern'),
                ('link-view',    NW,20,self.cbk_link,'Open link view'),
                ('operate-view', NW, 2,self.cbk_query,'Selection query view'),
                ('check-view',   NW, 2,self.cbk_check,'Check view'),
@@ -977,14 +989,32 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       node=s7parser.getNodeFromPath(currentpath.split('/')[1:],self.CGNStarget)
     self.addToParentNode(node,wTreeSimple._nodebuffer)
     self.modified()
-        
+  def getFirstMarkedFrom(self,back=0):
+    sitem=self.getItemSelection()[0]
+    self._tree.selection_modify(select=ALL)
+    r=[]
+    for n in self._tree.selection_get():
+      item=self._tree.item_id(n)
+      if (self._tree.itemstate_get(item[0],'marked')):r+=[n]
+    self._tree.selection_modify(deselect=ALL)
+    if (not r): pass
+    elif (sitem not in r): sitem=r[0]
+    else:
+      i=r.index(sitem)
+      if (back):
+        if (i>=(len(r)-1)): i=0
+        else: i+=1
+      else:
+        if (i==0): i=len(r)-1
+        else: i-=1
+      sitem=r[i]
+    return sitem
   def getItemSelection(self):
     tktree=self._tree
     selection=tktree.selection_get()
     if (selection == None): selection=ROOT
     item=tktree.item_id(selection)
     return item
-
   def getSinglePathSelection(self):
     item=self.getItemSelection()
     path=self._paths[str(item[0])]
