@@ -8,8 +8,8 @@
 # See file COPYING in the root directory of this Python module source 
 # tree for license information. 
 #
-import CGNS.cgnskeywords as K
-import CGNS.cgnserrors   as E
+import CGNS.PAT.cgnskeywords as K
+import CGNS.PAT.cgnserrors   as E
 import CGNS
 
 __CGNS_LIBRARY_VERSION__=2.4

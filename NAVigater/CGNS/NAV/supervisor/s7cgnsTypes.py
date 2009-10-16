@@ -6,7 +6,7 @@
 # See file COPYING in the root directory of this Python module source
 # tree for license information.
 
-import CGNS.cgnskeywords as CK
+import CGNS.PAT.cgnskeywords as CK
 
 tlistA=[
     'Descriptor_t',

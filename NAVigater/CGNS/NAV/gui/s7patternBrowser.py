@@ -272,6 +272,7 @@ class wPatternBrowser(s7windoz.wWindoz,ScrolledMultiListbox):
     self.listbox.notify_install('<Header-invoke>')
     self.listbox.notify_bind('<Header-invoke>',s7utils.operate_sort_list)
     for pdir in G___.profilePath:
+      print "%s/%s/__init__.py"%(pdir,G___.defaultProfile)
       if (os.path.exists("%s/%s/__init__.py"%(pdir,G___.defaultProfile))):
         self.updateProfile(pdir,G___.defaultProfile)
         break
@@ -288,7 +289,7 @@ class wPatternBrowser(s7windoz.wWindoz,ScrolledMultiListbox):
     try:
       m=imp.find_module(pattern)
       pdict=imp.load_module(pattern,m[0],m[1],m[2]).profile
-    except (ValueError, KeyError, ImportError, AttributeError), e:
+    except TypeError,e: #(ValueError,KeyError,ImportError,AttributeError), e:
       s7utils.importProfileWarning(profile,e)
       sys.path=sprev
       return None

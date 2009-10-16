@@ -6,7 +6,6 @@
 # tree for license information. 
 #
 import os
-
 from   distutils.core import setup, Extension
 import distutils.util
 import distutils.sysconfig

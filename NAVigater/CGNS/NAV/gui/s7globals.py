@@ -51,7 +51,9 @@ class s7optionsStorage:
     self.iconDir=self.s7icondirectoryprefix+'/share/CGNS/NAV/icons'
     self.firedox='firefox %s/share/CGNS/NAV/doc/CGNSNAV.html &'%\
                   self.s7icondirectoryprefix
-    self.profilePath=self.s7icondirectoryprefix+'/share/CGNS/Profiles'
+    self.profilePathSIDS=["%s/lib/python%d.%d/site-packages%s"%\
+                          (sys.prefix,sys.version_info[0],sys.version_info[1],\
+                           '/CGNS/PAT')]
 
     self.font={}
     self.iconStorage={}
@@ -73,7 +75,6 @@ class s7optionsStorage:
     self.viewListFrame=None
     self.patternViewOpen=0
     self.defaultProfile='SIDS'
-    self.profilePath=''
     self.printTag='S7:'
     self.followLinks=1
     self.saveLinks=1
@@ -83,6 +84,7 @@ class s7optionsStorage:
     self.filesHistory=[]
     self.directoriesHistorySize=20
     self.operateListSplit=0
+    self.profilePath=[]
 
     self.shiftstring='  '
     self.wminwidth=700
@@ -176,6 +178,8 @@ class s7optionsStorage:
       for v in self.allowedoptionslist:
         if (hasattr(s7options,v)):
           setattr(self,v,getattr(s7options,v))
+
+    self.profilePath+=self.profilePathSIDS
 
     #else:
     #  pass
