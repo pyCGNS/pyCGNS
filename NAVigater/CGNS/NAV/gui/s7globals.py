@@ -42,7 +42,7 @@ class s7optionsStorage:
      'pattern-save','tree-save','check-clear','check-save','check-all',
      'print-view','close-view','undo-last-modification','view-help',
      'flag-revert','flag-none','flag-all','operate-view','operate-list',
-     'flag-bwd','flag-fwd',
+     'flag-bwd','flag-fwd','select-update',
      'level-in','level-out','tree-new','tree-add','tree-del','tree-load',
      'snapshot','pattern-view','link-view','query-and','query-or','query-not'
      ]

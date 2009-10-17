@@ -557,8 +557,11 @@ class wOperateView(s7windoz.wWindoz,ScrolledMultiListbox):
   def cbk_save(self):
     pass
 
-  def cbk_load(self):
-    pass
+  def cbk_update(self):
+    r=[]
+    for s in self.selectedlist:
+      if (s[0]): r+=[s[1]]
+    self._wtree.updateMarkedFromList(r)
 
   def cbk_execute(self):
     self._wqueryview=s7operateView.wQueryView(self,self._wcontrol,self._wtree)
@@ -592,7 +595,7 @@ class wOperateView(s7windoz.wWindoz,ScrolledMultiListbox):
     self.listbox.configure(selectmode=MULTIPLE)
 
     self.menu([('select-save',  NW, 2,self.cbk_save,'Save selection'),
-               ('select-add',   NW, 2,self.cbk_load,'Load selection'),
+               ('select-update',NW, 2,self.cbk_update,'Update selection'),
                ('operate-view', NW,20,self.cbk_execute,'Query view')])
 
     if (wtree != None):

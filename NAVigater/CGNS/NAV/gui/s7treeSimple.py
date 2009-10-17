@@ -214,14 +214,16 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     if (self._control.logWindow): self._control.logWindow.save()
   def cbk_prevslist(self):
     it=self.getItemSelection()
-    nit=self.getFirstMarkedFrom()
-    self._tree.selection_modify(select=nit)
-    self._tree.see(nit)
-  def cbk_nextslist(self):
-    it=self.getItemSelection()
     nit=self.getFirstMarkedFrom(1)
     self._tree.selection_modify(select=nit)
     self._tree.see(nit)
+    self._edit.set(self._paths[str(nit)])
+  def cbk_nextslist(self):
+    it=self.getItemSelection()
+    nit=self.getFirstMarkedFrom()
+    self._tree.selection_modify(select=nit)
+    self._tree.see(nit)
+    self._edit.set(self._paths[str(nit)])
   def cbk_checkall(self):
     self._tree.selection_modify(deselect=ALL)
     self._tree.selection_modify(select=ROOT)
@@ -989,6 +991,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       node=s7parser.getNodeFromPath(currentpath.split('/')[1:],self.CGNStarget)
     self.addToParentNode(node,wTreeSimple._nodebuffer)
     self.modified()
+  def updateMarkedFromList(self,sl):
+    for k in self._paths:
+      if (self._paths[k] in sl): self._tree.itemstate_set(k,'marked')
+      else:                      self._tree.itemstate_set(k,'!marked')
   def getFirstMarkedFrom(self,back=0):
     sitem=self.getItemSelection()[0]
     self._tree.selection_modify(select=ALL)
@@ -997,17 +1003,22 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       item=self._tree.item_id(n)
       if (self._tree.itemstate_get(item[0],'marked')):r+=[n]
     self._tree.selection_modify(deselect=ALL)
+    ord=self.getOrderedListOfItem()
     if (not r): pass
     elif (sitem not in r): sitem=r[0]
     else:
-      i=r.index(sitem)
+      rc=[]
+      for rd in ord:
+        if (rd[1] in r): rc+=[rd[1]]
+      i=rc.index(sitem)
       if (back):
-        if (i>=(len(r)-1)): i=0
-        else: i+=1
+        i-=1
+        if (i<0): i=len(rc)-1
       else:
-        if (i==0): i=len(r)-1
-        else: i-=1
-      sitem=r[i]
+        i+=1
+        if (i==len(rc)): i=0
+      sitem=rc[i]
+      #print rc, i, rc[i], self._paths[str(rc[i])]
     return sitem
   def getItemSelection(self):
     tktree=self._tree
@@ -1020,6 +1031,14 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     path=self._paths[str(item[0])]
     return path
 
+  # --------------------------------------------------------------------
+  def getOrderedListOfItem(self):
+    r=[]
+    for k in self._paths:
+      if (k!='root'): r+=[(self._paths[k],int(k))]
+    r.sort()
+    return r
+  
   # --------------------------------------------------------------------
   def clearViewChecks(self):
     tktree=self._tree
