@@ -64,7 +64,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
 #    threading.Thread.__init__(self)
 #    self.lock = threading.Lock()
 
-    s7windoz.wWindoz.__init__(self,None,'pyS7: Control panel [v%s]'%__vid__)
+    s7windoz.wWindoz.__init__(self,None,'CGNS.NAV: Control panel [v%s]'%__vid__)
     self.wparent = wparent
 
     self.patternWindow=None
