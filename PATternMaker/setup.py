@@ -18,12 +18,13 @@ if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
 
 setup (
-  name         = "CGNS.PAT",
-  version      = "0.2.1",
-  description  = "pyCGNS SIDS PATterns",
-  author       = "marc Poinot",
-  author_email = "marc.poinot@onera.fr",
-  packages=['CGNS.PAT','CGNS.PAT.SIDS'],
-  cmdclass={'clean':setuputils.clean}
+name         = "CGNS.PAT",
+version      = pyCGNSconfig.PAT_VERSION,
+description  = "pyCGNS PATternMaker - CGNS/Python patterns for SIDS and other",
+author       = "marc Poinot",
+author_email = "marc.poinot@onera.fr",
+license      = "LGPL 2",
+packages=['CGNS.PAT','CGNS.PAT.SIDS'],
+cmdclass={'clean':setuputils.clean}
 )
 # --- last line

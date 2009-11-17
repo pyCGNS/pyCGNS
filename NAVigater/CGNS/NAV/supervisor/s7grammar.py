@@ -8,7 +8,7 @@
 import CGNS.NAV.gui.s7globals
 G___=CGNS.NAV.gui.s7globals.s7G
 
-
+import s7parser
 import s7cgnskeywords as K
 try:
   import CGNS.cgnskeywords as CK
@@ -101,17 +101,63 @@ def GridConnectivityType_t_enum():
   return CK.GridConnectivityType_l
 
 # --------------------------------------------------------------------
-def Zone_t(pth,node,parent,tree,check):
+def Zone_t(pth,node,parent,tree,check,log):
+  rs=1
+  r=0
+  msg='## No GridCoordinates in this Zone_t'
+  for cn in s7parser.childNames(node):
+    if (cn!='GridCoordinates'):
+      r=1
+      break
+  if (not r): log.push("\n%s\n"%(msg),'#FAIL')
+  rs*=r
+  r=0
+  msg='## No FlowSolution# found for output definition'
+  for cn in s7parser.childNames(node):
+    if (    (len(cn)>12)
+        and (cn[:13]=='FlowSolution#')
+        and (cn!='FlowSolution#Init')):
+      r=1
+      break
+  if (not r): log.push("\n%s\n"%(msg),'#WARNING')
+  rs*=r
+  r=0
+  msg='## No FlowSolution#Init found for field initialization'
+  for cn in s7parser.childNames(node):
+    if (cn=='FlowSolution#Init'):
+      r=1
+      break
+  if (not r): log.push("\n%s\n"%(msg),'#WARNING')
+  rs*=r
+  return rs
+
+# --------------------------------------------------------------------
+def CGNSBase_t(pth,node,parent,tree,check,log):
+  rs=1
+  r=0
+  msg='## No Zone_t found in this CGNSBase_t'
+  r=s7parser.hasChildNodeOfType(node,'Zone_t')
+  if (not r): log.push("\n%s\n"%(msg),'#FAIL')
+  rs*=r
+  r=0
+  msg='## No ReferenceState found in this CGNSBase_t'
+  for cn in s7parser.childNames(node):
+    if (cn!='ReferenceState'):
+      r=1
+      break
+  if (not r): log.push("\n%s\n"%(msg),'#WARNING')
+  rs*=r
+  return rs
+
+# --------------------------------------------------------------------
+def ZoneType_t(pth,node,parent,tree,check,log):
+  msg='## Only Structured ZoneType_t is allowed'
+  r=s7parser.stringValueMatches(node,'Structured')
+  if (not r): log.push("\n%s\n"%(msg),'#FAIL')
   return 1
 
 # --------------------------------------------------------------------
-def ZoneType_t(pth,node,parent,tree,check):
-  return 1
-  if (parent[3] == CK.Zone_ts): return G___.SIDSmandatory
-  else:                         return G___.SIDSoptional
-
-# --------------------------------------------------------------------
-def IndexRange_t(pth,node,parent,tree,check):
+def IndexRange_t(pth,node,parent,tree,check,log):
   if not ((node[0]==CK.PointRange_s) or (node[0]==CK.PointRangeDonor_s)):
     return 1
   if (node[2]):
@@ -121,7 +167,7 @@ def IndexRange_t(pth,node,parent,tree,check):
   return 1
 
 # --------------------------------------------------------------------
-def IndexRangeT2_t(pth,node,parent,tree,check):
+def IndexRangeT2_t(pth,node,parent,tree,check,log):
   if not (node[0]==CK.Transform_s):
     return 1
   if (node[2]):

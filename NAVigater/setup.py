@@ -51,8 +51,8 @@ setuputils.installConfigFiles()
 
 setup (
 name         = "CGNS.NAV",
-version      = "0.1.1",
-description  = "pyCGNS NAVigator",
+version      = pyCGNSconfig.NAV_VERSION,
+description  = "pyCGNS NAVigator - CGNS/Python trees navigator and editor",
 author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
 packages     = ['CGNS.NAV','CGNS.NAV.gui','CGNS.NAV.supervisor'],

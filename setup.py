@@ -14,7 +14,8 @@ version=4
 versionList=[4]
 
 # order IS significant
-CGNSmodList=['MAPper','WRApper','PATternater','NAVigater','DATabaser','VALidater','TRAnslater']
+CGNSmodList=['MAPper','WRApper','PATterMaker','NAVigater','DATaTracer',
+             'VALidater','TRAnslater']
 modList=CGNSmodList[:]
 
 solist='m:'

@@ -19,15 +19,12 @@ if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
 
 setup(
-name         = "pyDAX",
-version      = "1.0",
-description  = "Data eXchage and Archival for CGNS files",
-author       = "ONERA/DSNA/ELSA Marc Poinot",
-author_email = "poinot@onera.fr",
-url          = "-",
-license      = "-",
-verbose      = 1,
-
+name         = "CGNS.DAT",
+version      = pyCGNSconfig.DAT_VERSION,
+description  = "pyCGNS DATaTracer - DBMS archival and CGNS files tracability",
+author       = "marc Poinot",
+author_email = "marc.poinot@onera.fr",
+license      = "LGPL 2",
 packages     = ['CGNS.DAT',
                 'CGNS.DAT.db',
                 'CGNS.DAT.db.dbdrivers',                
@@ -35,6 +32,6 @@ packages     = ['CGNS.DAT',
 scripts      = ['CGNS/DAT/tools/daxDB',
                 'CGNS/DAT/tools/daxQT',
                 'CGNS/DAT/tools/daxET'],
-  cmdclass={'clean':setuputils.clean}
+cmdclass={'clean':setuputils.clean}
 ) # close setup
 

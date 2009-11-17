@@ -15,7 +15,7 @@ import os
 from CGNS.pyCGNSconfig import version as __vid__
 
 def usage():
-  print """pyS7 v%s
+  print """CGNS.NAV v%s
   -P <profiles-paths> : override S7PROFILEPATH variable for profile search
                         path variable. It is a ':' separated list of paths.
 
@@ -28,7 +28,7 @@ def usage():
 try:
   os.environ['DISPLAY']
 except KeyError:
-  print """pyS7: you should define a DISPLAY variable..."""
+  print """CGNS.NAV: you should define a DISPLAY variable..."""
   sys.exit(-1)
   
 try:

@@ -36,20 +36,21 @@ if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
 
 setup (
-  name         = "CGNS.MAP",
-  version      = pyCGNSconfig.MAP_VERSION,
-  description  = "pyCGNS MAPper - SIDS/Python mapping with HDF5 load/save",
-  author       = "marc Poinot",
-  author_email = "marc.poinot@onera.fr",
-  packages=['CGNS.MAP'],
-  ext_modules  = [Extension('CGNS.MAP',
-                  sources = ['CGNS/MAP/MAPmodule.c',
-                             'CGNS/MAP/CHLone_l3.c',
-                             'CGNS/MAP/CHLone_error.c'],
-                  include_dirs = cf_include_dirs,
-                  library_dirs = cf_library_dirs,
-                  libraries    = cf_optional_libs)],
-  cmdclass={'clean':setuputils.clean}
+name         = "CGNS.MAP",
+version      = pyCGNSconfig.MAP_VERSION,
+description  = "pyCGNS MAPper - SIDS/Python mapping with HDF5 load/save",
+author       = "marc Poinot",
+author_email = "marc.poinot@onera.fr",
+license      = "LGPL 2",
+packages=['CGNS.MAP'],
+ext_modules  = [Extension('CGNS.MAP',
+                sources = ['CGNS/MAP/MAPmodule.c',
+                           'CGNS/MAP/CHLone_l3.c',
+                           'CGNS/MAP/CHLone_error.c'],
+                include_dirs = cf_include_dirs,
+                library_dirs = cf_library_dirs,
+                libraries    = cf_optional_libs)],
+cmdclass={'clean':setuputils.clean}
 )
 
 # --- last line
