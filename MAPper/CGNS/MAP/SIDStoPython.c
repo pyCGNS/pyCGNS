@@ -371,6 +371,7 @@ static int s2p_getData(PyObject *dobject,
 		       s2p_ctx_t  *context)
 {
   int n,total;
+  PyObject *ostr;
 
   *dtype=DT_MT;
   ddims[0]=0;
@@ -468,30 +469,17 @@ static int s2p_getData(PyObject *dobject,
     *dtype=DT_C1;
     if (PyString_Check(dobject))
     {
-      ddims[0]=1;
-      dshape[0]=strlen((char*)PyString_AsString(dobject));
-      context->_c_char=(char*)PyString_AsString(dobject);
-      *dvalue=(char*)&context->_c_char;
+      ostr=dobject;
     }
     else
     {
-      ddims[0]=PyArray_NDIM(dobject);
-      total=1;
-      for (n=0; n<ddims[0]; n++)
-      {
-        dshape[n]=(int)PyArray_DIM(dobject,n);
-	total*=dshape[n];
-      } 
-      if (PyArray_ISFORTRAN(dobject))
-      {
-	*dvalue=s2p_transpose(dobject,
-			      NPY_STRING,ddims[0],dshape,total,context);
-      }
-      else
-      {
-        *dvalue=(char*)PyArray_DATA(dobject);
-      }
+      ostr=PyArray_ToString(dobject,NPY_ANYORDER);
     }
+    ddims[0]=1;
+    dshape[0]=strlen((char*)PyString_AsString(ostr));
+    context->_c_char=(char*)malloc(dshape[0]*sizeof(char)+1);
+    strcpy(context->_c_char,(char*)PyString_AsString(ostr));
+    *dvalue=(char*)context->_c_char;
     return 1;
   }
   return 1;

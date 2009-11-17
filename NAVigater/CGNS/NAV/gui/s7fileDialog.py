@@ -473,7 +473,8 @@ class wFileDialog(FileDialog):
     gdl=G___.directoriesHistory
     if dir not in gdl:
       gdl+=[dir]
-    if (len(gdl)>G___.directoriesHistorySize): gdl=gdl[-gdl:]
+    if (len(gdl)>G___.directoriesHistorySize):
+        gdl=gdl[-G___.directoriesHistorySize:]
   def check_filter(self,dir,pat):
     if (os.path.exists(dir)): return 1
     elif s7utils.removeNotFoundDir(dir):
