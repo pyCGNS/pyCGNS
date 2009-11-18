@@ -56,6 +56,10 @@
 #define L3E_R4ptr 9
 #define L3E_R8ptr 10
 #define L3E_VOID  11
+#define L3E_LK    12
+#define L3E_B1    13
+#define L3E_U4    14
+#define L3E_U8    15
 
 /* --- flags --------------------------------------------------------------- */
 #define L3_F_NONE          0x0000

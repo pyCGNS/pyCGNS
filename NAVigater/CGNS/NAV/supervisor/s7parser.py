@@ -9,7 +9,7 @@ import CGNS.NAV.gui.s7globals
 G___=CGNS.NAV.gui.s7globals.s7G
 
 import CGNS.NAV.supervisor.s7cgnsTypes as CT
-import s7cgnskeywords
+import CGNS.PAT.cgnskeywords
 import s7grammar
 import string
 import numpy as Num
@@ -17,11 +17,11 @@ import re
 
 __checkready=1
 try:
-  import CGNS.cgnskeywords as CK
+  import CGNS.PAT.cgnskeywords as CK
 except ImportError:
   __checkready=0
 
-__keywordlist=s7cgnskeywords.names
+__keywordlist=CGNS.PAT.cgnskeywords.names
 
 # --------------------------------------------------
 def getNodeType(node):

@@ -203,6 +203,11 @@ hid_t ADF_to_HDF_datatype(const char *tp)
 			      return tid;
 
                               }
+  if (!strcmp(tp, L3_T_LK))   return 0;
+  if (!strcmp(tp, L3_T_B1))   return 0;
+  if (!strcmp(tp, L3_T_U4))   return 0;
+  if (!strcmp(tp, L3_T_U8))   return 0;
+
   if (tp!=NULL) printf("TYPE NOT FOUND [%s]\n",tp);
   else          printf("TYPE NULL\n");
   return 0;
@@ -1518,6 +1523,10 @@ char *L3_typeAsStr(int dtype)
     case L3E_R4ptr: return L3_T_R4_s;
     case L3E_R8:
     case L3E_R8ptr: return L3_T_R8_s;
+    case L3E_LK:    return L3_T_LK_s;
+    case L3E_B1:    return L3_T_B1_s;
+    case L3E_U4:    return L3_T_U4_s;
+    case L3E_U8:    return L3_T_U8_s;
     case L3E_VOID:
     default:        return L3_T_MT_s;
   }
@@ -1530,6 +1539,10 @@ int L3_typeAsEnum(char *dtype)
   if(!strcmp(dtype,L3_T_I8_s)){return L3E_I8ptr;}
   if(!strcmp(dtype,L3_T_R4_s)){return L3E_R4ptr;}
   if(!strcmp(dtype,L3_T_R8_s)){return L3E_R8ptr;}
+  if(!strcmp(dtype,L3_T_LK_s)){return L3E_LK;}
+  if(!strcmp(dtype,L3_T_B1_s)){return L3E_B1;}
+  if(!strcmp(dtype,L3_T_U4_s)){return L3E_U4;}
+  if(!strcmp(dtype,L3_T_U8_s)){return L3E_U8;}
   return L3E_VOID;
 }
 /* ------------------------------------------------------------------------- */
