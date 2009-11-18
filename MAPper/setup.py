@@ -8,12 +8,12 @@
 # -------------------------------------------------------------------------
 import os
 
-# --- pyCGNSconfig search
+# --- pyCGNSconfig search 
 import sys
 sys.path+=['../lib']
 import setuputils
 (pyCGNSconfig,installprocess)=setuputils.search('MAP')
-# ---
+# --- 
 
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
