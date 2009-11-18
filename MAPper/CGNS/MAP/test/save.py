@@ -1,9 +1,12 @@
 #!/usr/bin/env python
-# -------------------------------------------------------------------------
-# pyCGNS.MAP - CFD General Notation System - SIDS-to-Python MAPping            
-# See license.txt file in the root directory of this Python module source  
-# -------------------------------------------------------------------------
-#
+#  -------------------------------------------------------------------------
+#  pyCGNS.MAP - Python package for CFD General Notation System - MAPper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $File$
+#  $Node$
+#  $Last$
+#  ------------------------------------------------------------------------- 
 import CGNS.MAP
 import time
 import os

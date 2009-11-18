@@ -1,9 +1,13 @@
-/* ======================================================================
- * CHLone - CFD General Notation System -                                
- * ONERA/DSNA/ELSA - poinot@onera.fr                                     
- * $Rev: 12 $ $Date: 2008-05-30 17:32:00 +0200 (Fri, 30 May 2008) $
- * See file license.txt in the root directory of this distribution 
- * ====================================================================== */
+/* 
+#  -------------------------------------------------------------------------
+#  pyCGNS.MAP - Python package for CFD General Notation System - MAPper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $File$
+#  $Node$
+#  $Last$
+#  ------------------------------------------------------------------------- 
+*/
 
 /* All messages including errors, all interface levels. */
 #include "CHLone_l3.h"
