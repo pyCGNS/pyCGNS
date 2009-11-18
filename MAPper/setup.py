@@ -8,7 +8,7 @@
 # -------------------------------------------------------------------------
 import os
 
-# --- pyCGNSconfig search 
+# --- pyCGNSconfig search
 import sys
 sys.path+=['../lib']
 import setuputils
