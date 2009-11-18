@@ -4,7 +4,7 @@
 # -------------------------------------------------------------------------
 # $File$
 # $Node$
-# $Last: tip $
+# $Last$
 # -------------------------------------------------------------------------
 import os
 
@@ -14,7 +14,7 @@ sys.path+=['../lib']
 import setuputils
 (pyCGNSconfig,installprocess)=setuputils.search('MAP')
 # ---
- 
+
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
 sys.prefix=sys.exec_prefix
