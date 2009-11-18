@@ -1,8 +1,8 @@
 # -------------------------------------------------------------------------
-# pyCGNS.MAP - CFD General Notation System - SIDS-to-Python MAPping            
+# pyCGNS.MAP - Python package for CFD General Notation System - 
 # See license.txt file in the root directory of this Python module source  
 # -------------------------------------------------------------------------
-# $pyCGNS$ $pyCGNS.MAP$ $Last$
+# $pyCGNS$ $pyCGNS.MAP$ $File$
 # -------------------------------------------------------------------------
 import os
 
