@@ -2,9 +2,7 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $File$
-#  $Node$
-#  $Last$
+#  $Release$
 #  -------------------------------------------------------------------------
 from CGNS.pyCGNSconfig import version as __vid__
 import CGNS.NAV.gui.s7globals
