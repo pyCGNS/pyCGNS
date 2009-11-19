@@ -1,10 +1,11 @@
-# CFD General Notation System - CGNS lib wrapper
-# ONERA/DSNA/ELSA - poinot@onera.fr
-# pyCGNS - $Rev: 69 $ $Date: 2009-01-27 14:21:57 +0100 (Tue, 27 Jan 2009) $
-# See file COPYING in the root directory of this Python module source 
-# tree for license information. 
-#
-
+#  -------------------------------------------------------------------------
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $File$
+#  $Node$
+#  $Last$
+#  -------------------------------------------------------------------------
 from CGNS import pyCGNSconfig
 
 try:

@@ -1,10 +1,11 @@
-# -----------------------------------------------------------------------------
-# pyS7 - CGNS/SIDS editor
-# ONERA/DSNA - marc.poinot@onera.fr
-# pyS7 - $Rev: 71 $ $Date: 2009-02-04 16:44:32 +0100 (Wed, 04 Feb 2009) $
-# -----------------------------------------------------------------------------
-# See file COPYING in the root directory of this Python module source
-# tree for license information.
+#  -------------------------------------------------------------------------
+#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $File$
+#  $Node$
+#  $Last$
+#  -------------------------------------------------------------------------
 
 import Tkinter
 Tkinter.wantobjects=0 #necessary for tk-8.5 and some buggy tkinter installs

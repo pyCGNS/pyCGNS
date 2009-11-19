@@ -1,11 +1,13 @@
-/* ====================================================================== */
-/* pyCGNS - CFD General Notation System - CGNS lib wrapper */
-/* ONERA/DSNA/ELSA - poinot@onera.fr */
-/* $Rev: 72 $ $Date: 2009-02-04 10:02:12 +0100 (Wed, 04 Feb 2009) $ */
-/* See file COPYING in the root directory of this Python module source */
-/* tree for license information. */
-/* ====================================================================== */
-
+/* 
+#  -------------------------------------------------------------------------
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $File$
+#  $Node$
+#  $Last$
+#  ------------------------------------------------------------------------- 
+*/
 #include "Python.h"
 #define  PY_ARRAY_UNIQUE_SYMBOL CGNS_PY_ARRAY_UNIQUE_SYMBOL
 #include "numpy/oldnumeric.h"

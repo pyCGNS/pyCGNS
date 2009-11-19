@@ -1,8 +1,11 @@
-# -------------------------------------------------------------------------
-# pyCGNS - CFD General Notation System - NAVigator
-# $Rev: 56 $ $Date: 2008-06-10 09:44:23 +0200 (Tue, 10 Jun 2008) $         
-# See license file in the root directory of this Python module source      
-# -------------------------------------------------------------------------
+#  -------------------------------------------------------------------------
+#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $File$
+#  $Node$
+#  $Last$
+#  -------------------------------------------------------------------------
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
 import glob

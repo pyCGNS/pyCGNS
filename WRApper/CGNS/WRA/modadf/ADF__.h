@@ -1,11 +1,13 @@
-/* ====================================================================== */
-/* CFD General Notation System - CGNS lib wrapper */
-/* ONERA/DSNA/ELSA - poinot@onera.fr */
-/* pyCGNS - $Rev: 67 $ $Date: 2009-01-26 16:57:43 +0100 (Mon, 26 Jan 2009) $ */
-/* See file COPYING in the root directory of this Python module source */
-/* tree for license information. */
-/* ====================================================================== */
-
+/* 
+#  -------------------------------------------------------------------------
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $File$
+#  $Node$
+#  $Last$
+#  ------------------------------------------------------------------------- 
+*/
 #ifdef __ADF_IN_SOURCES__
 #include "adfh/ADFH.h"
 #include "adf/ADF.h"
