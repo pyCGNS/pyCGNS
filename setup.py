@@ -16,7 +16,7 @@ versionList=[4]
 
 # order IS significant
 CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater','DATaTracer',
-             'VALidater','TRAnslater']
+             'VALidater','APPlicater']
 modList=CGNSmodList[:]
 
 solist='m:'

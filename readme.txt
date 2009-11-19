@@ -11,12 +11,12 @@
  The pyCGNS module now includes (former package names):
 
   VAL - Validater   (pyC5)   - XML grammar based validation of a CGNStree.py
-  TRA - Translater  (pyCRAB) - Set of translators from/to various formats
   MAP - Mapper               - Load/save function SIDS/HDF5 from/to CGNStree.py
   DAT - DataTracer  (pyDAX)  - DBMS services for SIDS/HDF5 files
   WRA - Wrapper     (pyCGNS) - CGNS/MLL and CGNS/ADF python wrapping
   PAT - PatterMaker          - Full CGNS/SIDS patterns with CGNStree.py
   NAV - Navigater   (pyS7)   - CGNStree.py graphical browser 
+  APP - APPlicater  (pyCRAB) - Set of applications, libs, demos...
 
  ------------------------------------------------------------------------------
  RELEASE NOTES:

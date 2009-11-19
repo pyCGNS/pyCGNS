@@ -671,17 +671,12 @@ class wOperateView(s7windoz.wWindoz,ScrolledMultiListbox):
 
   def updateSelection(self,prof):
     self.listbox.delete(0,END)
-    count=0
     for op in self.selectedlist:
       self.listbox.insert('end',*op)
       it=self.listbox.item('end')
       for c in range(self.colmax+1):
         cld=self.listbox.column(c)
         elt=self.listbox.element('text')
-        print 'Sous i (py %.3d)'%count
-        print 'Sous j (py %.3d)'%count
-        print 'Sous k (py %.3d)'%count
-        count+=1
         self.listbox.itemelement_configure(it,cld,elt,font=self.listfont)
         if (op[0]):
           self.listbox.itemelement_configure(it,cld,elt,font=G___.font['F'])

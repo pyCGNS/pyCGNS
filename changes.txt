@@ -1,0 +1,102 @@
+#
+# pyCGNS - Changes in this release
+# $Rev: 58 $ $Date: 2008-08-20 15:55:47 +0200 (Wed, 20 Aug 2008) $
+#
+
+# v3.2 -
+- Update to CGNS v3.x lib
+- Add CHLONE mapping HDF5 compliant without CGNS/MLL
+- Change tests
+- Fix some bugs
+
+# v3.1 -
+- Add patterns for pyS7
+
+# v3.0 -
+- Change Python arrays to Numpy. This is a *NOT* compatible change.
+  Sorry about the mess, I hope it's the last time Python changes its arrays...
+- Make MLL optional
+- Fix some bugs
+- Interface changes:
+  -- string arrays should pass len() as array size instead of shape
+  -- zone size tuple should be correctly set (i.e. 9 values for 3D structured)
+
+# v2.3 -
+- Add in-memory trees
+- Add in-memory trees test suite
+- Fix some bugs
+
+# v2.2 -
+- Update to CGNS v2.4 lib (See Doc, ADF still default)
+- Update to Numarray v1.4 (See Doc, Numarray is now default)
+- Docs
+- Fix some bugs
+
+# v2.1 -
+- Formalize Python binding tree
+- First proto Python-CGNS translator
+- Fix problems with ADF.h and cgns_headers.h
+- Switch to move to numeric array (default is Numeric) *compatible* switch
+- Fix preprocessing concat ## with gcc
+
+# v2.0 -
+- Change Python arrays to numarray. This is a *NOT* compatible change,
+  as the string management is different (uint instead of chars).
+- Update to CGNS v2.3 lib
+- Simple parsing tools are now into demo
+- Remove other tools (see now pyCGNSxml) 
+- Does not require anymore pyXML, no more dependancies to XML
+- Correct some bugs, more testing, update doc
+- Applied Bill Perkins patch for 1D/2D/3D data in cgnsmodule.c
+
+# v1.1 -
+- Add/change types to CGNS XML DTD
+- Correct bugs, update docs, add tests
+- Change svn fs, unfortunatly I loose the old repository (restart to rev 1)
+
+# v1.0 -
+- 100% MLL mapping (CGNS MLL v2.2)
+- Add types to CGNS XML DTD
+- ADF/CGNS allocated arrays are now owned by Numeric (reduce memory leaks)
+- New tool cgg: CGNS tree generation from valid XML description 
+
+# v0.6 -
+- Add an XML Validator for CGNS trees (sift)
+- Tools changed (names, options)
+- Usual QA stuff: tests, docs, bugs corrections
+
+# v0.5 -
+- Change imports, now use a single one: import CGNS
+- Stabilize path and node classes in SIDS (still experimental, see doc)
+- Continue to wrap MLL (not tested)
+- Update to new versions of CGNS/ADF and Python
+- Update + automatize doc
+- Correct some bugs, more testing
+- Now use subversion (http://subversion.tigris.org)
+
+# v0.4 -
+- Continue to wrap MLL
+- Add HTML docs
+- Extend tests/ docs/ demos
+- Correct some bugs
+- Change cg_goto to up to 10 elements in a path
+
+# v0.3 -
+- Change "cgns" module to "midlevel" module
+- Add some SIDS classes
+- Continue to wrap MLL
+- Make version count more consistant
+- Change some packages stuff (setup, inits, names...)
+
+# v0.2 - 
+- Add some internal calls and files (cgi_*)
+- Feed a lot of dictionnaries with constants (C enumerates and strings)
+- Make some more documentation
+- Add demos (User's Guide to CGNS examples in Python)
+- Add tools
+- Correct bug in CGNS/adf/adfmodule.c, else/if mismatch for I4 arrays
+- Move CGNS/demo/parseTree.py to CGNS/tools
+- Correct bug in CGNS/tools/parseTree.py, start parsing from root
+- Changes into CGNS/tools/parseTree.py to make it more functinonal and robust
+
+# v0.1 - First release
