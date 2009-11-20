@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #  -------------------------------------------------------------------------
-#  pyCGNS.MAP - Python package for CFD General Notation System - MAPper
+#  pyCGNS.APP - Python package for CFD General Notation System - APPlicater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #  $Release$

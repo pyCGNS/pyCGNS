@@ -1,8 +1,12 @@
 #!/usr/bin/env python
-# $Id: cg02.py 19 2003-06-18 12:29:31Z mpoinot $
+#  -------------------------------------------------------------------------
+#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 #
-# Basic required tree -
-#
+
 import CGNS
 import DAX.demo.cgutils as cgu
 #

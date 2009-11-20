@@ -1,7 +1,12 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 # ------------------------------------------------------------
 # pyDAX - DBMS schema - Manages connection (high level)
 # ------------------------------------------------------------
-# $Id: connect.py 25 2003-07-18 13:15:37Z mpoinot $
 #
 # DBMS connection and drivers
 # - The DB2 API actually does the job...
