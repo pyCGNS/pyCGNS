@@ -6,7 +6,8 @@
 #define __SIDSTOPYTHON__H__
 
 #include "Python.h"
-#include "CHLone_l3.h"
+#include "CHLone/l3.h"
+#include "CHLone/SIDS.h"
 
 /* ------------------------------------------------------------------------- */
 #define S2P_FNONE          0x0000

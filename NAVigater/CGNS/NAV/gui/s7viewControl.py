@@ -261,13 +261,22 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
        s7utils.forceNoRecursionWarning()
        G___.expandRecurse=0
     try:
-      if (not treefingerprint and (fileext in G___.cgnslibFiles)):
-        import CGNS.WRA.utilities
-        lk=CGNS.WRA.utilities.getLinksAsADF(filename)
-        if (G___.noData): vmax=G___.maxDisplaySize
-        else:             vmax=sys.maxint
-        tt=CGNS.WRA.utilities.loadAsADF(filename,G___.followLinks,vmax)
-        treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
+      if (not treefingerprint
+          and (fileext in G___.cgnslibFiles+G___.cgnssslFiles)):
+        if (not treefingerprint and (fileext in G___.cgnslibFiles)):
+          import CGNS.WRA.utilities
+          lk=CGNS.WRA.utilities.getLinksAsADF(filename)
+          if (G___.noData): vmax=G___.maxDisplaySize
+          else:             vmax=sys.maxint
+          tt=CGNS.WRA.utilities.loadAsADF(filename,G___.followLinks,vmax)
+          treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
+        elif (not treefingerprint and (fileext in G___.cgnssslFiles)):
+          import CGNS.MAP
+          flags=CGNS.MAP.S2P_NONE
+          if (G___.followLinks):flags|=CGNS.MAP.S2P_FOLLOWLINKS
+          if (G___.noData):     flags|=CGNS.MAP.S2P_NODATA
+          (tt,lk)=CGNS.MAP.load(filename,flags)
+          treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
         if (not treefingerprint.status):
           s7utils.badFileError(filename)
         else:

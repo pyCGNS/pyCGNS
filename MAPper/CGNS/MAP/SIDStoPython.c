@@ -492,7 +492,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     S2P_TRACE(("{"));
     for (n=0;n<ndim;n++)
     {
-      S2P_TRACE(("%d",npy_dim_vals[n]));
+      S2P_TRACE(("%d",(int)(npy_dim_vals[n])));
       if (n<ndim+1)
       {
 	S2P_TRACE(("x"));
@@ -526,7 +526,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     if (arraytype!=-1)
     {
       printf("[%d]\n",ndim);fflush(stdout);
-      printf("[%d]\n",npy_dim_vals[0]);fflush(stdout);
+      printf("[%d]\n",(int)(npy_dim_vals[0]));fflush(stdout);
       printf("[%p]\n",rnode->data);fflush(stdout);
       o_value=(PyObject*)PyArray_New(&PyArray_Type,
 				     ndim,npy_dim_vals, 

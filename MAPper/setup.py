@@ -32,6 +32,7 @@ if (installprocess):
     print 'pyGCNS[ERROR]: bad pyCGNSconfig.py file for MAP!'
     sys.exit(1)
 
+cf_optional_libs+=['CHLone']
 if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
 
@@ -44,9 +45,7 @@ author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",
 packages=['CGNS.MAP'],
 ext_modules  = [Extension('CGNS.MAP',
-                sources = ['CGNS/MAP/MAPmodule.c',
-                           'CGNS/MAP/CHLone_l3.c',
-                           'CGNS/MAP/CHLone_error.c'],
+                sources = ['CGNS/MAP/MAPmodule.c'],
                 include_dirs = cf_include_dirs,
                 library_dirs = cf_library_dirs,
                 libraries    = cf_optional_libs)],
