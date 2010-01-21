@@ -14,12 +14,12 @@ version=4
 versionList=[4]
 
 # order IS significant
-CGNSmodList=['MAPper','WRApper','PATterMaker','NAVigater','DATaTracer',
+CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater','DATaTracer',
              'VALidater','TRAnslater']
 modList=CGNSmodList[:]
 
 solist='m:'
-lolist=["without-mod=","single-mod="]
+lolist=["without-mod=","single-mod=","prefix="]
 
 try:
   opts, args = getopt.gnu_getopt(sys.argv[1:],solist,lolist)

@@ -80,7 +80,7 @@ static L3_Cursor_t *s2p_addoneHDF(char *filename,s2p_ctx_t *context)
   if (openfile)
   {
     /* L3_F_OWNDATA|L3_F_WITHCHILDREN */
-    nextdbs->l3db=L3_openFile(filename,L3_OPEN_OLD,L3_F_OPEN_DEFAULT);
+    nextdbs->l3db=L3_openFile(filename,L3_OPEN_OLD,L3_F_DEFAULT);
     nextdbs->filename=(char*)malloc(sizeof(char)*strlen(filename)+1);
     strcpy(nextdbs->filename,filename);
     nextdbs->dirname=NULL;
@@ -738,10 +738,10 @@ int s2p_saveAsHDF(char      *filename,
        && (PyString_Check(PyList_GetItem(tree,3))))
   {
     s2p_filllinktable(links,context);
-    l3db=L3_openFile(filename,L3_OPEN_NEW,L3_F_OPEN_DEFAULT);
+    l3db=L3_openFile(filename,L3_OPEN_NEW,L3_F_DEFAULT);
     if (!L3M_ECHECK(l3db))
     {
-      L3_printError(l3db);
+      CHL_printError(l3db);
       return -1;
     }
     rtree=PyList_GetItem(tree,2);

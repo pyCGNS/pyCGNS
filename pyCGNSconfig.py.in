@@ -18,11 +18,11 @@ import sys
 mylocal=sys.exec_prefix
 
 INCLUDE_DIRS =[]
-INCLUDE_DIRS+=['%s/include'%mylocal]
-INCLUDE_DIRS+=['%s/lib/python2.6/site-packages/numpy/core/include'%mylocal]
+INCLUDE_DIRS+=['/home/tools/local/x86_64t/include','%s/include'%mylocal]
+INCLUDE_DIRS+=['%s/lib/python2.5/site-packages/numpy/core/include'%mylocal]
 
 LIBRARY_DIRS =[]
-LIBRARY_DIRS+=['%s/lib'%mylocal]
+LIBRARY_DIRS+=['/home/tools/local/x86_64t/lib','%s/lib'%mylocal]
 
 OPTIONAL_LIBS=['hdf5']
 
@@ -31,12 +31,15 @@ OPTIONAL_LIBS=['hdf5']
 # You should not change values beyond this point
 #
 MAJORVERSION=4
-MINORVERSION=1
+MINORVERSION=0
 #
-MAP_VERSION='1.1.2'
-NAV_VERSION='4.1.2'
-PAT_VERSION='2.1.1'
-DAT_VERSION='2.1.1'
+WRA_VERSION='4.0.1'
+VAL_VERSION='4.0.1'
+MAP_VERSION='4.0.1'
+NAV_VERSION='4.0.1'
+PAT_VERSION='4.0.1'
+DAT_VERSION='4.0.1'
+APP_VERSION='4.0.1'
 #
 HAS_HDF5=True
 MLL_VERSION=None#

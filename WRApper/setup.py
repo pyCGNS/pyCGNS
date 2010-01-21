@@ -38,20 +38,20 @@ alib='numpy'
 chlonelib=hdflib=cgnslib=""
 hdfversion=cgnsversion=chloneversion='unknown'
 
-lname         = "pyCGNS"
-lversion      = pyCGNSconfig.__vid__
+lname         = "CGNS.WRA"
+lversion      = pyCGNSconfig.WRA_VERSION
 
 pdir=os.path.normpath(sys.prefix)
 xdir=os.path.normpath(sys.exec_prefix)
 
 extraargs=['-U__CGNS_HEADER_INSTALLED__','-DLEGACY_SUPPORT']
-include_dirs=[]
-library_dirs=[]
-optional_libs=[]
+include_dirs=pyCGNSconfig.INCLUDE_DIRS
+library_dirs=pyCGNSconfig.LIBRARY_DIRS
+optional_libs=pyCGNSconfig.OPTIONAL_LIBS
 
 rpathlib=[]
-cgnsincdir=[pdir+'/include']
-cgnslibdir=[xdir+'/lib']
+cgnsincdir=include_dirs
+cgnslibdir=library_dirs
 
 olist='h'
 
@@ -276,11 +276,10 @@ lext_modules=[]
 
 # ***************************************************************************
 # Setup script for the CGNS Python interface
-ldescription  = "Python CFD General Notation System Interfaces"
-lauthor       = "ONERA/DSNA/ELSA Marc Poinot"
-lauthor_email = "poinot@onera.fr"
-lurl          = "http://elsa.onera.fr/CGNS/releases"
-llicense      = "Python"
+ldescription  = "pyCGNS WRApper - CGNS/MLL python wrapping"
+lauthor       = "marc Poinot",
+lauthor_email = "marc.poinot@onera.fr",
+llicense      = "LGPL 2",
 lverbose      = 1
 lpackages     = ['CGNS.WRA']
 lscripts      = []
@@ -322,7 +321,6 @@ setup (
   description  = ldescription,
   author       = lauthor,
   author_email = lauthor_email,
-  url          = lurl,
   license      = llicense,
   verbose      = lverbose,
   ext_modules  = lext_modules,

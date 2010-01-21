@@ -143,12 +143,11 @@ setuputils.installConfigFiles()
 
 setup (
 name         = "CGNS.VAL",
-version      = "0.1",
-description  = "XML tools for CFD General Notation System",
-author       = "ONERA/DSNA Poinot, Henaux",
+version      = pyCGNSconfig.VAL_VERSION,
+description  = "pyCGNS VALidater - SIDS verification tools",
+author       = "marc Poinot, elise Henaux",
 author_email = "poinot@onera.fr,henaux@onera.fr",
-url          = "http://elsa.onera.fr/CGNS/releases",
-license      = "Python",
+license      = "LGPL 2",
 verbose      = 1,
 packages     = ['CGNS.VAL','CGNS.VAL.demo',
                 'CGNS.VAL.gui','CGNS.VAL.gui.Icons','CGNS.VAL.utils','CGNS.VAL.tools',

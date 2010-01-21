@@ -73,7 +73,6 @@ void *cgi_get_posit(int fn, int B, int n, int *index, char **label, int *ier);
 
 /* options flags */
 
-
 #define __CGNS__DEFAULT__FLAGS__       0x0001
 
 #define __CGNS__NO__FLAGS__            0x0000
