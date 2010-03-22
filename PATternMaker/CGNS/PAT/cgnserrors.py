@@ -39,8 +39,8 @@ errorTable={
     2 : "Node should be a list of <name, value, children, type>",
     3 : "Node name should be a string",
     4 : "Node [%s] children list should be a list",
-    5 : "More than one CGNSLibraryVersion node found",
-    6 : "Parent node for [%s] is node a CGNS node",
+    5 : "Node [%s] bad value: should be a numpy object",
+    6 : "Parent node for [%s] is not a CGNS node",
     7 : "Failed to add a badly formed child node into [%s]",
     8 : "Failed to add root node as child node into [%s]",
     9 : "Link chaser returns a badly formed node as place of [%s]",
@@ -56,6 +56,7 @@ errorTable={
    26 : "Bad name [%s] for this node",
    27 : "Bad type [%s] for this node",
    28 : "Node [%s] should have no child",            
+   99 : "More than one CGNSLibraryVersion node found",
   100 : "Absolute path implies a root node with CGNSLibraryVersion node",
   101 : "No child on CGNS tree first level",
   102 : "Duplicated child name [%s] in [%s]",
@@ -163,6 +164,8 @@ errorTable={
   293 : "GeometryReferenceType is missing sub-node",
   294 : "Parent node should be FamilyBC_t",
   295 : "FamilyBCType is missing sub-node",
+
+  710 : "Numpy array should have a 'Fortran' order",
 
   800 : "adf.database_open No such open status [%s]",
   801 : "adf.database_open No such open format [%s]",

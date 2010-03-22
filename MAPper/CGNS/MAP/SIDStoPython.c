@@ -281,8 +281,6 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
     name[c]='\0';
     strcat(curpath,"/");
     strcat(curpath,name);
-
-    /*    printf("linktrack [%s][%s]\n",curpath,name);fflush(stdout); */
     nid=L3_path2Node(l3db,curpath);
     if (L3_isLinkNode(l3db,nid,destfile,destnode))
     {
@@ -486,10 +484,11 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     n=0;
     while ((n<L3_MAX_DIMS)&&(rnode->dims[n]!=-1))
     {
-      npy_dim_vals[ndim-n-1]=rnode->dims[n];
+      //npy_dim_vals[ndim-n-1]=rnode->dims[n];
+      npy_dim_vals[n]=rnode->dims[n];
       n++;
     } 
-    S2P_TRACE(("{"));
+    S2P_TRACE(("{")); 
     for (n=0;n<ndim;n++)
     {
       S2P_TRACE(("%d",(int)(npy_dim_vals[n])));
@@ -525,14 +524,11 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     }
     if (arraytype!=-1)
     {
-      printf("[%d]\n",ndim);fflush(stdout);
-      printf("[%d]\n",(int)(npy_dim_vals[0]));fflush(stdout);
-      printf("[%p]\n",rnode->data);fflush(stdout);
       o_value=(PyObject*)PyArray_New(&PyArray_Type,
 				     ndim,npy_dim_vals, 
 				     arraytype,(npy_intp *)NULL,
 				     (void*)rnode->data,0, 
-				     NPY_OWNDATA,
+				     NPY_OWNDATA|NPY_FORTRAN,
 				     (PyObject*)NULL);
     }
   }
@@ -627,7 +623,7 @@ static int s2p_parseAndWriteHDF(hid_t     id,
       }
     } 
     S2P_TRACE(("}=%d\n",tsize));
-    node=L3_nodeSet(l3db,node,name,label,ddat,L3_typeAsEnum(tdat),vdat,L3_H_NONE);
+    node=L3_nodeSet(l3db,node,name,label,ddat,L3_typeAsEnum(tdat),vdat,L3_F_NONE);
     L3_nodeCreate(l3db,id,node);
     if (PyList_Check(PyList_GetItem(tree,2)))
     {
@@ -763,7 +759,7 @@ int s2p_saveAsHDF(char      *filename,
 	  s2p_getData(PyList_GetItem(otree,1),&tdat,&ndat,ddat,&vdat,context);
 	  L3_initDims(dims,1,-1);
 	  node=L3_nodeSet(l3db,node,CGNSLibraryVersion_n,CGNSLibraryVersion_ts,
-			  dims,L3E_R4,vdat,L3_H_NONE);
+			  dims,L3E_R4,vdat,L3_F_NONE);
 	  L3_nodeCreate(l3db,l3db->root_id,node);
 	}
 	else

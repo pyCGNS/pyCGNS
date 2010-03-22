@@ -36,3 +36,10 @@
   - PAT : MAP
   - WRA : PAT MAP
  ------------------------------------------------------------------------------
+ INSTALL NOTES:
+
+ - NAV:
+
+ The TkTreectrl module is required. You first need to install tktreectrl
+ (last version tested is tktreectrl-2.2.3) and TkinterTreectrl to map it
+ to Python (last version tested is TkinterTreectrl-0.8)
