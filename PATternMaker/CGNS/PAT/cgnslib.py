@@ -107,7 +107,9 @@ def setValue(node,value):
   t=getValueType(value)
   if (t == None): node[1]=None
   if (t in [CG_K.Integer_s,CG_K.RealDouble_s,CG_K.RealSimple_s,CG_K.Character_s]):
-    node[0]=value
+##    code correction: Name was modified (not value)
+##    node[0]=value
+    node[1]=value
   return node
   
 # -----------------------------------------------------------------------------
@@ -199,12 +201,12 @@ def checkNode(node,dienow=0):
     
 # -----------------------------------------------------------------------------
 def isRootNode(node,dienow=0):
-  """ isRootNode : Check wether a node is a CGNS root node (returns 1)
-or not a root node (returns 0).    
-A root node is a list of a single CGNSLibraryVersion_t node and zero or more
-CGNSBase_t nodes. We do not check first level type, no standard for it, even
-if we set it to CGNSTree.
-"""
+#   """isRootNode :
+#   Check wether a node is a CGNS root node (returns 1)
+#   or not a root node (returns 0).    
+#   A root node is a list of a single CGNSLibraryVersion_t node and zero or more
+#   CGNSBase_t nodes. We do not check first level type, no standard for it, even
+#   if we set it to CGNSTree."""
   if (node in [ [], None ]):         return 0
   versionfound=0
   if (not checkNode(node)):          return 0
@@ -493,7 +495,8 @@ def newCGNS():
   Returns a new <node> representing a CGNS tree root.
   This is not a SIDS type.
   """
-  node=[CG_K.CGNSLibraryVersion_s,__CGNS_LIBRARY_VERSION__,[],
+  ##code correction: Modify CGNS value type from float64 to float32.
+  node=[CG_K.CGNSLibraryVersion_s,NPY.array([__CGNS_LIBRARY_VERSION__],dtype='float32'),[],
         CG_K.CGNSLibraryVersion_ts]
   badnode=[CG_K.CGNSTree_s,None,[node],CG_K.CGNSTree_ts]
   return badnode
@@ -563,7 +566,7 @@ def updateBase(tree,name=None,ncell=None,nphys=None):
     raise CG_E.cgnsException(20,(CG_K.CGNSBase_ts,name))
   if(name!=None): tree[0]=name
   if(ncell!=None and nphys!=None and tree):
-    tree[1]=NPY.array([ncell,nphys],dtype='Int32',order='Fortran')
+    tree[1]=NPY.array([ncell,nphys],dtype=NPY.int32,order='Fortran')
   else: raise CG_E.cgnsException(12)  
   
  
@@ -595,7 +598,9 @@ def newZone(parent,name,size=(2,2,2),ztype=CG_K.Structured_s,family=''):
   asize=None
   if (ztype not in CG_K.ZoneType_l): raise CG_E.cgnsException(206,ztype)
   if ((len(size) == 3) and (ztype == CG_K.Structured_s)):
-    size=[[size[0],size[1],size[2]],[size[0]-1,size[1]-1,size[2]-1],[0,0,0]]
+    ##size=[[size[0],size[1],size[2]],[size[0]-1,size[1]-1,size[2]-1],[0,0,0]]
+    ## code correction: Modify array dimensions:
+    size=[[size[0],size[0]-1,0],[size[1],size[1]-1,0],[size[2],size[2]-1,0]]    
     asize=NPY.array(size,dtype=NPY.int32,order='Fortran')
   if ((len(size) == 2) and (ztype == CG_K.Structured_s)):
     size=[[size[0],size[1]],[size[0]-1,size[1]-1],[0,0]]
@@ -608,8 +613,11 @@ def newZone(parent,name,size=(2,2,2),ztype=CG_K.Structured_s,family=''):
   if (asize == None): raise CG_E.cgnsException(999) 
   checkDuplicatedName(parent,name)
   znode=newNode(name,asize,[],CG_K.Zone_ts,parent)
-  newNode(CG_K.ZoneType_s,ztype,[],CG_K.ZoneType_ts,znode)
-  if (family): newNode(CG_K.FamilyName_s,family,[],CG_K.FamilyName_ts,znode)
+  ## code correction: Modify ztype string into NPY string array
+  newNode(CG_K.ZoneType_s,setStringAsArray(ztype),[],CG_K.ZoneType_ts,znode)
+  if (family):
+    ## code correction: Modify family string into NPY string array
+    newNode(CG_K.FamilyName_s,setStringAsArray(family),[],CG_K.FamilyName_ts,znode)
   return znode
 
 def numberOfZones(tree,basename):
@@ -658,7 +666,8 @@ def newDataArray(parent,name,value=None):
   chapter 5.1
   """
   checkDuplicatedName(parent,name)
-  if (type(value) in [type(3), type(3.2), type("s")]): vv=NPY.array([value])
+  ## code correction:  Add value type and fortran order
+  if (type(value) in [type(3), type(3.2), type("s")]): vv=NPY.array([value],dtype=type(value),order='Fortran')
   else: vv=value
   if (vv != None): checkArray(vv)
   node=newNode(name,vv,[],CG_K.DataArray_ts,parent)
@@ -723,7 +732,7 @@ def newBC(parent,bname,brange=[0,0,0,0,0,0],
           family=CG_K.Null_s,pttype=CG_K.PointRange_s):
   return newBoundary(parent,bname,brange,btype,bcType,pttype) 
 
-def newBoundary(parent,bname,brange=[0,0,0,0,0,0],
+def newBoundary(parent,bname,brange,
                 btype=CG_K.Null_s,family=None,pttype=CG_K.PointRange_s): 
   """-BC node creation -BC
   
@@ -733,20 +742,25 @@ def newBoundary(parent,bname,brange=[0,0,0,0,0,0],
   If a parent is given, the new <node> is added to the parent children list.
   Parent should be Zone_t, returned node is parent.
   If the parent has already a child name ZoneBC then
-   only the BC_t,IndexRange_t are created.
+  only the BC_t,IndexRange_t are created.
   chapter 9.3 Add IndexRange_t required
   """
   checkDuplicatedName(parent,bname)
   zbnode=hasChildName(parent,CG_K.ZoneBC_s)
   if (zbnode == None): zbnode=newNode(CG_K.ZoneBC_s,None,[],CG_K.ZoneBC_ts,parent)
-  bnode=newNode(bname,btype,[],CG_K.BC_ts,zbnode)
+  ## code correction: Modify btype string into NPY string array
+  bnode=newNode(bname,setStringAsArray(btype),[],CG_K.BC_ts,zbnode)
   if (pttype==CG_K.PointRange_s):
-    arange=NPY.array(list(brange),dtype=NPY.int32).reshape(3,2)
+    ## code correction: modify reshape size and order. Result is unchange.
+    arange=NPY.array(brange,dtype=NPY.int32,order='Fortran')
     newNode(CG_K.PointRange_s,arange,[],CG_K.IndexRange_ts,bnode)
   else:
-    arange=NPY.array(list(brange),dtype=NPY.int32)
+    ## code correction: Add order.
+    arange=NPY.array(brange,dtype=NPY.int32,order='Fortran')
     newNode(CG_K.PointList_s,arange,[],CG_K.IndexArray_ts,bnode)
-  if (family): newNode(CG_K.FamilyName_s,family,[],CG_K.FamilyName_ts,bnode)
+  if (family):
+    ## code correction: Modify family string into NPY string array
+    newNode(CG_K.FamilyName_s,setStringAsArray(family),[],CG_K.FamilyName_ts,bnode)
   return bnode
   
 # -----------------------------------------------------------------------------
@@ -765,7 +779,9 @@ def newBCDataSet(parent,name,valueType=CG_K.Null_s):
   if (valueType not in CG_K.BCTypeSimple_l):
     raise CG_E.cgnsException(252,valueType)
   checkDuplicatedName(node,CG_K.BCTypeSimple_s)    
-  nodeType=newNode(CG_K.BCTypeSimple_s,valueType,[],CG_K.BCTypeSimple_ts,node)
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.BCTypeSimple_s,setStringAsArray(valueType),
+                   [],CG_K.BCTypeSimple_ts,node)
   return node
 
 # ---------------------------------------------------------------------------  
@@ -924,11 +940,13 @@ def newGridConnectivity1to1(parent,name,dname,window,dwindow,trans):
     cnode=newNode(CG_K.ZoneGridConnectivity_s,
                   None,[],CG_K.ZoneGridConnectivity_ts,parent)
   zcnode=newNode(name,dname,[],CG_K.GridConnectivity1to1_ts,cnode)
-  newNode("Transform",NPY.array(list(trans),'i'),[],
+  newNode("Transform",NPY.array(list(trans),dtype=NPY.int32),[],
           "int[IndexDimension]",zcnode)   
-  newNode(CG_K.PointRange_s,NPY.array(list(window),'i'),[],
+  ## code correction: Modify PointRange shape and order
+  newNode(CG_K.PointRange_s,NPY.array(window,dtype=NPY.int32,order='Fortran'),[],
           CG_K.IndexRange_ts,zcnode)   
-  newNode(CG_K.PointRangeDonor_s,NPY.array(list(dwindow),'i'),[],
+  ## code correction: Modify PointRange shape and order
+  newNode(CG_K.PointRangeDonor_s,NPY.array(dwindow,dtype=NPY.int32,order='Fortran'),[],
           CG_K.IndexRange_ts,zcnode)   
   return zcnode
 
@@ -996,7 +1014,8 @@ def newAverageInterface(parent,valueType=CG_K.Null_s):
   if (valueType not in CG_K.AverageInterfaceType_l):
     raise CG_E.cgnsException(253,valueType)
   checkDuplicatedName(node,CG_K.AverageInterfaceType_s) 
-  nodeType=newNode(CG_K.AverageInterfaceType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.AverageInterfaceType_s,setStringAsArray(valueType),[],
                    CG_K.AverageInterfaceType_ts,node)
   return node
   
@@ -1019,7 +1038,8 @@ def newOversetHoles(parent,name,hrange):
   #if(pname!=None and value!=None):
     #newPointList(node,pname,value)
   if hrange!=None:  
-   newPointRange(node,CG_K.PointRange_s,NPY.array(list(hrange),'i'))
+    ## code correction: Modify PointRange shape and order
+   newPointRange(node,CG_K.PointRange_s,NPY.array(hrange,dtype=NPY.int32,order='Fortran'))
    #newNode(CG_K.PointRange_s,NPY.array(list(hrange),'i'),[],CG_K.IndexRange_ts,node)
   return node
 
@@ -1056,7 +1076,8 @@ def newGoverningEquations(parent,valueType=CG_K.Euler_s):
   if (valueType not in CG_K.GoverningEquationsType_l):
       raise CG_E.cgnsException(221,valueType)
   checkDuplicatedName(parent,CG_K.GoverningEquationsType_s,)
-  nodeType=newNode(CG_K.GoverningEquationsType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.GoverningEquationsType_s,setStringAsArray(valueType),[],
                      CG_K.GoverningEquationsType_ts,node)
   return node
   
@@ -1077,7 +1098,8 @@ def newGasModel(parent,valueType=CG_K.Ideal_s):
     node=newNode(CG_K.GasModel_s,None,[],CG_K.GasModel_ts,parent)
   if (valueType not in CG_K.GasModelType_l): raise CG_E.cgnsException(224,valueType)
   checkDuplicatedName(node,CG_K.GasModelType_s)  
-  nodeType=newNode(CG_K.GasModelType_s,valueType,[],CG_K.GasModelType_ts,node)
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.GasModelType_s,setStringAsArray(valueType),[],CG_K.GasModelType_ts,node)
   return node
   
 def newThermalConductivityModel(parent,valueType=CG_K.SutherlandLaw_s):   
@@ -1098,7 +1120,8 @@ def newThermalConductivityModel(parent,valueType=CG_K.SutherlandLaw_s):
   if (valueType not in CG_K.ThermalConductivityModelType_l):
     raise CG_E.cgnsException(227,valueType)
   checkDuplicatedName(node,CG_K.ThermalConductivityModelType_s)
-  nodeType=newNode(CG_K.ThermalConductivityModelType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.ThermalConductivityModelType_s,setStringAsArray(valueType),[],
                      CG_K.ThermalConductivityModelType_ts,node)  
   return node
 
@@ -1119,7 +1142,8 @@ def newViscosityModel(parent,valueType=CG_K.SutherlandLaw_s):
   if (valueType not in CG_K.ViscosityModelType_l):
     raise CG_E.cgnsException(230,valueType) 
   checkDuplicatedName(node,CG_K.ViscosityModelType_s)  
-  nodeType=newNode(CG_K.ViscosityModelType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.ViscosityModelType_s,setStringAsArray(valueType),[],
                      CG_K.ViscosityModelType_ts,node)  
   return node
 
@@ -1139,7 +1163,8 @@ def newTurbulenceClosure(parent,valueType=CG_K.EddyViscosity_s):
   if (valueType not in CG_K.TurbulenceClosureType_l):
     raise CG_E.cgnsException(233,valueType)
   checkDuplicatedName(node,CG_K.TurbulenceClosureType_s)
-  nodeType=newNode(CG_K.TurbulenceClosureType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.TurbulenceClosureType_s,setStringAsArray(valueType),[],
                      CG_K.TurbulenceClosure_ts,node)  
   return node
 
@@ -1160,7 +1185,8 @@ def newTurbulenceModel(parent,valueType=CG_K.OneEquation_SpalartAllmaras_s):
   if (valueType not in CG_K.TurbulenceModelType_l):
     raise CG_E.cgnsException(236,valueType)  
   checkDuplicatedName(node,CG_K.TurbulenceModelType_s)
-  nodeType=newNode(CG_K.TurbulenceModelType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.TurbulenceModelType_s,setStringAsArray(valueType),[],
                      CG_K.TurbulenceModelType_ts,node)
   return node
 
@@ -1182,7 +1208,8 @@ def newThermalRelaxationModel(parent,valueType):
   if (valueType not in CG_K.ThermalRelaxationModelType_l):
     raise CG_E.cgnsException(239,valueType) 
   checkDuplicatedName(node,CG_K.ThermalRelaxationModelType_s)   
-  nodeType=newNode(CG_K.ThermalRelaxationModelType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.ThermalRelaxationModelType_s,setStringAsArray(valueType),[],
                    CG_K.ThermalRelaxationModelType_ts,node)
   return node
 
@@ -1204,7 +1231,8 @@ def newChemicalKineticsModel(parent,valueType=CG_K.Null_s):
   if (valueType not in CG_K.ChemicalKineticsModelType_l):
     raise CG_E.cgnsException(242,valueType)
   checkDuplicatedName(node,CG_K.ChemicalKineticsModelType_s)     
-  nodeType=newNode(CG_K.ChemicalKineticsModelType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.ChemicalKineticsModelType_s,setStringAsArray(valueType),[],
                      CG_K.ChemicalKineticsModelType_ts,node)
   return node
 
@@ -1226,7 +1254,8 @@ def newEMElectricFieldModel(parent,valueType=CG_K.UserDefined_s):
   if (valueType not in CG_K.EMElectricFieldModelType_l):
     raise CG_E.cgnsException(245,valueType)
   checkDuplicatedName(node,CG_K.EMElectricFieldModelType_s)  
-  nodeType=newNode(CG_K.EMElectricFieldModelType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.EMElectricFieldModelType_s,setStringAsArray(valueType),[],
                    CG_K.EMElectricFieldModelType_ts,node)
   return node
 
@@ -1248,7 +1277,8 @@ def newEMMagneticFieldModel(parent,valueType=CG_K.UserDefined_s):
   if (valueType not in CG_K.EMMagneticFieldModelType_l):
     raise CG_E.cgnsException(248,valueType)  
   checkDuplicatedName(node,CG_K.EMMagneticFieldModelType_s) 
-  nodeType=newNode(CG_K.EMMagneticFieldModelType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.EMMagneticFieldModelType_s,setStringAsArray(valueType),[],
                    CG_K.EMMagneticFieldModelType_ts,node)
   return node
 
@@ -1270,7 +1300,8 @@ def newEMConductivityModel(parent,valueType=CG_K.UserDefined_s):
   if (valueType not in CG_K.EMConductivityModelType_l):
     raise CG_E.cgnsException(218,stype)  
   checkDuplicatedName(node,CG_K.EMConductivityModelType_s)  
-  nodeType=newNode(CG_K.EMConductivityModelType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.EMConductivityModelType_s,setStringAsArray(valueType),[],
                    CG_K.EMConductivityModelType_ts,node)
   return node
 
@@ -1329,7 +1360,8 @@ def newRigidGridMotion(parent,name,valueType=CG_K.Null_s,vector=[0.0,0.0,0.0]):
   if (valueType not in CG_K.RigidGridMotionType_l):
       raise CG_E.cgnsException(254,valueType)
   checkDuplicatedName(parent,CG_K.RigidGridMotionType_s,)
-  nodeType=newNode(CG_K.RigidGridMotionType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.RigidGridMotionType_s,setStringAsArray(valueType),[],
                      CG_K.RigidGridMotionType_ts,node)
   n=hasChildName(parent,CG_K.OriginLocation_s)
   if (n == None): 
@@ -1405,7 +1437,8 @@ def newFamily(parent,name):
   return node
 
 def newFamilyName(parent,family=None): 
-  return newNode(CG_K.FamilyName_s,family,[],CG_K.FamilyName_ts,parent)
+  ## code correction: Modify family string into NPY string array
+  return newNode(CG_K.FamilyName_s,setStringAsArray(family),[],CG_K.FamilyName_ts,parent)
 
 # -----------------------------------------------------------------------------
 def newGeometryReference(parent,name='{GeometryReference}',
@@ -1426,7 +1459,8 @@ def newGeometryReference(parent,name='{GeometryReference}',
   if (valueType not in CG_K.GeometryFormat_l):
       raise CG_E.cgnsException(256,valueType)
   checkDuplicatedName(node,CG_K.GeometryFormat_s)
-  nodeType=newNode(CG_K.GeometryFormat_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.GeometryFormat_s,setStringAsArray(valueType),[],
                      CG_K.GeometryFormat_ts,node)
   return node
   
@@ -1449,22 +1483,28 @@ def newFamilyBC(parent,valueType=CG_K.UserDefined_s):
       and valueType not in CG_K.BCTypeCompound_l):
       raise CG_E.cgnsException(257,valueType)
   checkDuplicatedName(node,CG_K.BCType_s)
-  nodeType=newNode(CG_K.BCType_s,valueType,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.BCType_s,setStringAsArray(valueType),[],
                      CG_K.BCType_ts,node)
   return node
 
 # -----------------------------------------------------------------------------
 def newArbitraryGridMotion(parent,name,valuetype=CG_K.Null_s):
-  """-ArbitraryGridMotion node creation -ArbitraryGridMotion
-  
-  'newNode:N='*newArbitraryGridMotion*'(parent:N,name:S,valuetype:E)'
-  
-   If a parent is given, the new <node> is added to the parent children list.
-   If the parent has already a child name RigidGridMotion then
-   only the RigidGridMotionType is created.
-   The valuetype enumerate should be in the CG_K.ArbitraryGridMotionType list.
-   Returns a new <node> representing a ArbitraryGridMotionType_t sub-tree.  
-   chapter 11.3 Add Node ArbitraryGridMotionType is required
+  """
+  .. index:: ArbitraryGridMotion,ArbitraryGridMotionType
+  .. index:: RigidGridMotion,RigidGridMotionType
+  Returns a **new node** representing a ``ArbitraryGridMotionType_t``
+  sub-tree `(chapter 11.3) <http://www.grc.nasa.gov/WWW/cgns/sids/timedep.html#ArbitraryGridMotion>`_
+
+  :param parent: CGNS/Python node
+  :param name: String
+  :param valuetype: String (``CGNS.PAT.cgnskeywords.ArbitraryGridMotionType``)
+
+
+  If a *parent* is not ``None``, the **new node** is added to the parent
+  children list. If the *parent* has already a child with
+  name ``RigidGridMotion`` then only the ``RigidGridMotionType`` is created.
+
   """
   node=None
   if (parent): node=hasChildName(parent,name)
@@ -1473,7 +1513,8 @@ def newArbitraryGridMotion(parent,name,valuetype=CG_K.Null_s):
   if (valuetype not in CG_K.ArbitraryGridMotionType_l):
     raise CG_E.cgnsException(255,valueType) 
   checkDuplicatedName(node,CG_K.ArbitraryGridMotionType_s)     
-  nodeType=newNode(CG_K.ArbitraryGridMotionType_s,valuetype,[],
+  ## code correction: Modify valueType string into NPY string array
+  nodeType=newNode(CG_K.ArbitraryGridMotionType_s,setStringAsArray(valueType),[],
                    CG_K.ArbitraryGridMotionType_ts,node)
   return node
   

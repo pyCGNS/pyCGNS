@@ -1,3 +1,9 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
+
 Python module information
 =========================
 
@@ -11,12 +17,18 @@ CGNS standard.
 The pyCGNS module now includes (former package names)
 
  VAL - Validater   (pyC5)   - XML grammar based validation of a CGNStree.py
+
  TRA - Translater  (pyCRAB) - Set of translators from/to various formats
- MAP - Mapper               - Load/save function SIDS/HDF5 from/to CGNStree.py
+
+ `MAP <MAP/readme.html>`_ - Mapper               - Load/save function SIDS/HDF5 from/to CGNStree.py
+
  DAT - DataTracer  (pyDAX)  - DBMS services for SIDS/HDF5 files
- WRA - Wrapper     (pyCGNS) - CGNS/MLL and CGNS/ADF python wrapping
- PAT - PatterMaker          - Full CGNS/SIDS patterns with CGNStree.py
- NAV - Navigater   (pyS7)   - CGNStree.py graphical browser 
+
+ `WRA <WRA/readme.html>`_ - Wrapper     (pyCGNS) - CGNS/MLL and CGNS/ADF python wrapping
+
+ `PAT <PAT/readme.html>`_ - PatterMaker          - Full CGNS/SIDS patterns with CGNStree.py
+
+ `NAV <NAV/readme.html>`_ - Navigater   (pyS7)   - CGNStree.py graphical browser 
 
 Release notes
 -------------
@@ -42,16 +54,16 @@ gives you the required modules (or optional) for each of them.
 Install notes
 -------------
 
-NAV:
-~~~~
+NAV depends:
+~~~~~~~~~~~~
 The TkTreectrl module is required. You first need to install tktreectrl
 (last version tested is tktreectrl-2.2.3) and TkinterTreectrl to map it
 to Python (last version tested is TkinterTreectrl-0.8)
 
-MAP:
-~~~~
+MAP depends:
+~~~~~~~~~~~~
 The CHLone librarie is required
 
-WRA:
-~~~~
+WRA depends:
+~~~~~~~~~~~~
 CGNS/MLL and CGNS/ADF libraries are required

@@ -256,7 +256,7 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
   char destnode[L3_MAX_NAME+1];
   char destfile[MAXFILENAMESIZE];
   int parsepath,c;
-  hid_t id,nid;
+  hid_t nid;
   char *p;
   L3_Cursor_t *lkhdfdb;
 
@@ -267,7 +267,6 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
 
   while (parsepath)
   {
-    id=nid;
     while ((*p!='\0')&&(*p!='/')) { p++; }
     if (*p=='\0'){ break; }
     p++;
@@ -305,6 +304,15 @@ static int s2p_getData(PyObject *dobject,
 {
   int n,total;
 
+  // code modification: Return ERROR code if ARRAY is not FORTRAN
+
+  if (!PyArray_ISFORTRAN(dobject) && PyArray_NDIM(dobject)>1 && PyArray_NDIM(dobject)<MAXDATATYPESIZE)
+  {
+    S2P_TRACE(("\n ERROR: ARRAY SHOULD BE FORTRAN\n"));
+    // Launch error
+    //    return 1;
+  }
+
   *dtype=DT_MT;
   ddims[0]=0;
   *dvalue=NULL;
@@ -329,8 +337,20 @@ static int s2p_getData(PyObject *dobject,
       ddims[0]=PyArray_NDIM(dobject);
       for (n=0; n<ddims[0]; n++)
       {
+	// code modification: check array fortran order 
+	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+	{ 
+	  S2P_TRACE(("\n COMMENT PIJE: apply reverse L335\n"));
         dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
         total*=dshape[ddims[0]-n-1];
+      } 
+	else
+	{
+	  S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L348\n"));
+          return 1;
+	  dshape[n]=(int)PyArray_DIM(dobject,n);
+	  total*=dshape[n];
+	}
       } 
       *dvalue=(char*)PyArray_DATA(dobject);
     }
@@ -343,8 +363,19 @@ static int s2p_getData(PyObject *dobject,
     ddims[0]=PyArray_NDIM(dobject);
     for (n=0; n<ddims[0]; n++)
     {
+      // code modification: check array fortran order 
+      if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+      { 
+	S2P_TRACE(("\n COMMENT PIJE: apply reverse L361\n"));
       dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
       total*=dshape[ddims[0]-n-1];
+    } 
+      else
+      {
+	S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L367\n"));
+	dshape[n]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[n];
+      }
     } 
     *dvalue=(char*)PyArray_DATA(dobject);
     return 1;
@@ -368,9 +399,20 @@ static int s2p_getData(PyObject *dobject,
       total=1;
       for (n=0; n<ddims[0]; n++)
       {
+	// code modification: check array fortran order 
+	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+        { 
+	  S2P_TRACE(("\n COMMENT PIJE: apply reverse L398\n"));
         dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
         total*=dshape[ddims[0]-n-1];
       } 
+        else
+        {
+	  S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L404\n"));
+	  dshape[n]=(int)PyArray_DIM(dobject,n);
+          total*=dshape[n];
+        }
+      }
       *dvalue=(char*)PyArray_DATA(dobject);
     }
     return 1;
@@ -385,7 +427,19 @@ static int s2p_getData(PyObject *dobject,
        Then you have to reverse the size if you detect a fortran */
     for (n=0; n<ddims[0]; n++)
     {
+      // code modification: check array fortran order
+      if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+      { 
+	S2P_TRACE(("\n COMMENT PIJE: apply reverse L426\n"));
       dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[ddims[0]-n-1];
+      }
+      else
+      {
+	S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L432\n"));
+        dshape[n]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[n];
+      }
     } 
     *dvalue=(char*)PyArray_DATA(dobject);
     return 1;
@@ -407,8 +461,19 @@ static int s2p_getData(PyObject *dobject,
       total=1;
       for (n=0; n<ddims[0]; n++)
       {
+	// code modification: check array fortran order 
+	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+	{ 
+	  S2P_TRACE(("\n COMMENT PIJE: apply reverse L461\n"));
         dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
         total*=dshape[ddims[0]-n-1];
+      } 
+        else
+        {
+	  S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L467\n"));
+          dshape[n]=(int)PyArray_DIM(dobject,n);
+          total*=dshape[n];
+        }
       } 
       *dvalue=(char*)PyArray_DATA(dobject);
     }
@@ -426,12 +491,11 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
 {
   char      destnode[L3_MAX_NAME+1];
   char      destfile[MAXFILENAMESIZE];
-  int       ndim,tsize,n,count,child;
-  int       error,arraytype,toknpath;
+  int       ndim,tsize,n,child;
+  int       arraytype,toknpath;
   hid_t    actualid;
   PyObject *o_clist,*o_value,*o_child,*o_node;
   npy_intp  npy_dim_vals[MAXDIMENSIONVALUES];
-  void     *data;
   char     *nextpath;
   L3_Cursor_t *lkl3db;
   L3_Node_t *rnode,*cnode;
@@ -439,9 +503,6 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   context->dpt-=1;
 
   o_value=NULL;
-  data=NULL;
-  count=0;
-  error=-1;
   
   /* In case of path, we are in a link search or sub-tree retrieval. We
      skip the Python node creation but we keep track of links. */
@@ -484,8 +545,17 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     n=0;
     while ((n<L3_MAX_DIMS)&&(rnode->dims[n]!=-1))
     {
-      //npy_dim_vals[ndim-n-1]=rnode->dims[n];
+      // code modification:
+      if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+      {
+	S2P_TRACE(("\n COMMENT PIJE: READ apply reverse L546\n"));
+	npy_dim_vals[ndim-n-1]=rnode->dims[n];
+      }
+      else
+      {
+	S2P_TRACE(("\n COMMENT PIJE: F order, apply NO reverse L551\n"));
       npy_dim_vals[n]=rnode->dims[n];
+      }
       n++;
     } 
     S2P_TRACE(("{")); 
@@ -648,7 +718,6 @@ PyObject* s2p_loadAsHDF(char *filename,
                         int   depth,
                         char *path)
 {
-  char name[L3_MAX_NAME+1];
   char cpath[MAXPATHSIZE];
   PyObject *tree,*ret,*links;
   s2p_ctx_t *context;
@@ -665,7 +734,6 @@ PyObject* s2p_loadAsHDF(char *filename,
   context->_c_double=NULL;
   context->_c_int=NULL;
   context->_c_char=NULL;
-  name[0]='\0';
   cpath[0]='\0';
 
   /* We do NOT check file name or file access, it's up to the caller to make
