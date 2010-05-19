@@ -17,10 +17,10 @@ except KeyError:
     print "### pyCGNS: Cannot find pyCGNS config ?"
     sys.exit(1)
 
-import CGNS
-import CGNS.midlevel as Mll
-import CGNS.wrap     as W
-import numpy         as Num
+#import CGNS
+import CGNS.WRA._mll    as Mll 
+import CGNS.WRA.wrapper as W
+import numpy            as Num
 
 import time
 
