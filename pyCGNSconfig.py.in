@@ -5,26 +5,31 @@
 # -------------------------------------------------------------------------
 #
 # Change these values to fit your installation
-# - Lines starting with #<space>  are unchanged
-# - Lines starting with <KEYWORD> are unchanged
-# - Lines starting with <KEYWORD>
-#   and with a # as last char will be deduced and substituted
+# See notes at end of file about config values
 #
-# To add your own values, just set a variable and remove the trailing #
-# To change a value once the file is updated, change it in ./build/lib/CGNS
-# and remove the trailing #
-#
-import sys
-mylocal=sys.exec_prefix
+HDF5_VERSION          = '1.8.2'
+HDF5_PATH_INCLUDES    = ['/usr/local/include','/home/poinot/Tools-2/include']
+HDF5_PATH_LIBRARIES   = ['/usr/local/lib','/home/poinot/Tools-2/lib']
+HDF5_LINK_LIBRARIES   = ['hdf5']
+HDF5_EXTRA_ARGS       = []
 
-INCLUDE_DIRS =[]
-INCLUDE_DIRS+=['%s/include'%mylocal]
-INCLUDE_DIRS+=['%s/lib/python2.6/site-packages/numpy/core/include'%mylocal]
+CHLONE_VERSION        = '0.2'
+CHLONE_PATH_INCLUDES  = ['/usr/local/include','/home/poinot/Tools-2/include']
+CHLONE_PATH_LIBRARIES = ['/usr/local/lib','/home/poinot/Tools-2/lib']
+CHLONE_LINK_LIBRARIES = ['CHLone']
+CHLONE_EXTRA_ARGS     = []
 
-LIBRARY_DIRS =[]
-LIBRARY_DIRS+=['%s/lib'%mylocal]
+MLL_VERSION           = '3.0.7'
+MLL_PATH_INCLUDES     = ['/usr/local/include','/home/poinot/Tools-2/include']
+MLL_PATH_LIBRARIES    = ['/usr/local/lib','/home/poinot/Tools-2/lib']
+MLL_LINK_LIBRARIES    = ['cgns']
+MLL_EXTRA_ARGS        = []
 
-OPTIONAL_LIBS=['hdf5']
+NUMPY_VERSION         = '1.4'
+NUMPY_PATH_INCLUDES   = None
+NUMPY_PATH_LIBRARIES  = None
+NUMPY_LINK_LIBRARIES  = None
+NUMPY_EXTRA_ARGS      = []
 
 #
 # -------------------------------------------------------------------------
@@ -38,24 +43,6 @@ NAV_VERSION='4.1.2'
 PAT_VERSION='2.1.1'
 DAT_VERSION='2.1.1'
 #
-HAS_HDF5=True
-MLL_VERSION=None#
-VERSION=None#
-DATE=None#
-PLATFORM=None#
-HAS_MLL=None#
-PATH_MLL=None#
-PATH_HDF5=None#
-PATH_CHLONE=None#
-NUM_LIBRARY=None#
-MLL_VERSION=None#
-HAS_CHLONE=None#
-HDF5_VERSION=None#
-CHLONE_VERSION=None#
-INCLUDE_PATH=None#
-LIB_PATH=None#
-EXTRA_ARGS=None#
-#
 #
 __version__=MAJORVERSION
 __release__=MINORVERSION
@@ -63,6 +50,23 @@ __vid__="%d.%d"%(__version__,__release__)
 __doc__="""pyCGNS - v%d.%s - Python package for CFD General Notation System"""%(__version__,__release__)
 version=__vid__
 #
-# --- last line
+# How config values are set:
+# - First this file is imported, a config dictionnary of values is built.
+# - Second, depending on module you build, the config file values are
+#   used to find required depends. If the values you set cannot solve
+#   these depends, we try some hints of our own. If it fails, an error
+#   breaks the process. If it succeed, the resulting value overrides
+#   your value in the config dictionnary. This latter is stored in the build
+#   directory as the second config dictionnary.
+# - Any subsequent module build/install first loads the First config dict and
+#   then the second config dict.
+# - Actually, but dictonnaries are in the same file, but you don't have to
+#   care about that:
+#   1 pyCGNSconfig.p.in is copied into build/lib/CGNS/pyCGNSconfig.py
+#   2 modified values are added at the end of build/lib/CGNS/pyCGNSconfig.py
+#
+# --- last line of original file
+#     lines below are generated
+#
 
 

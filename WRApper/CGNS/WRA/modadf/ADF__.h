@@ -14,9 +14,6 @@
 #include "ADF.h"
 #endif
 
-#ifdef __CGNS_HEADER_INSTALLED__
-#include "cgns_header.h"
-#else
 /* risk here, the struct may be wrong... */
 
 /* from cgns_header.h */
@@ -168,7 +165,5 @@ void *cgi_get_posit(int fn, int B, int n, int *index, char **label, int *ier);
 #define ADF__Write_Block_Data ADFH_Write_Block_Data
 #define ADF__Write_Data ADFH_Write_Data
 #define ADF__Release_ID ADFH_Release_ID
-
-#endif
 
 #endif

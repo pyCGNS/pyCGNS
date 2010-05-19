@@ -779,10 +779,10 @@ DBADF_writeAllData(DBADFObject *self, PyObject *args)
   char           name[ADF_NAME_LENGTH+1];
   char           label[ADF_LABEL_LENGTH+1];
   char           sterror[256];
-  int            ndim,localptr;
-  PyObject      *oarray,*trsp;
-  int            i,j,k,imax,jmax,kmax,fx,cx,n;
-  void          *ptrs,*ptrd=NULL;
+  int            ndim;
+  PyObject      *oarray;
+  int            n;
+  void          *ptrd=NULL;
   npy_intp       npy_dim_vals[MAXDIMENSIONVALUES];
   int            dim_vals_int[MAXDIMENSIONVALUES];
   npy_intp      *dim_vals;

@@ -528,6 +528,11 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
       printf("[%d]\n",ndim);fflush(stdout);
       printf("[%d]\n",(int)(npy_dim_vals[0]));fflush(stdout);
       printf("[%p]\n",rnode->data);fflush(stdout);
+      /* Creation of numpy object
+         - Fortran indexing is set, memory layout is fortran
+           i.e. the HDF5 data SHOULD have a fortran memory layout
+         - npy_dim_vals are C ordering
+         - object owns the data, delete releases the data */
       o_value=(PyObject*)PyArray_New(&PyArray_Type,
 				     ndim,npy_dim_vals, 
 				     arraytype,(npy_intp *)NULL,
