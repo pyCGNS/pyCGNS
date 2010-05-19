@@ -1,7 +1,12 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 # ------------------------------------------------------------
 # pyDAX - DBMS schema - foreign keys ids
 # ------------------------------------------------------------
-# $Id: foreignKeys.py 32 2003-08-06 14:13:20Z mpoinot $
 #
 # This file can be configured for your own existing DBMS
 #

@@ -1,11 +1,9 @@
-# -----------------------------------------------------------------------------
-# pyS7 - CGNS/SIDS editor
-# ONERA/DSNA - marc.poinot@onera.fr
-# pyS7 - $Rev: 72 $ $Date: 2009-02-10 15:58:15 +0100 (Tue, 10 Feb 2009) $
-# -----------------------------------------------------------------------------
-# See file COPYING in the root directory of this Python module source
-# tree for license information.
-
+#  -------------------------------------------------------------------------
+#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 
 # this file needs to be re-organized
 # it was first using FileDialog, then add to much modifs

@@ -1,11 +1,9 @@
-# -------------------------------------------------------------------------
-# pyCGNS.MAP - Python package for CFD General Notation System - MAPper
-# See license.txt file in the root directory of this Python module source  
-# -------------------------------------------------------------------------
-# $File$
-# $Node$
-# $Last$
-# -------------------------------------------------------------------------
+#  -------------------------------------------------------------------------
+#  pyCGNS.MAP - Python package for CFD General Notation System - MAPper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 import os
 
 # --- pyCGNSconfig search 
@@ -13,7 +11,7 @@ import sys
 sys.path+=['../lib']
 import setuputils
 (pyCGNSconfig,installprocess)=setuputils.search('MAP')
-# ---
+# --- 
 
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform

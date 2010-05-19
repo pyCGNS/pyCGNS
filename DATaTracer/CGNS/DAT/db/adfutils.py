@@ -1,6 +1,11 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 #
 # Set of pyADF utilities for DAX
-# $Id: cgutils.py 0 2003-06-18 12:29:31Z mpoinot $
 #
 import CGNS
 import sys

@@ -1,7 +1,9 @@
-# ------------------------------------------------------------
-# pyDAX - Utilities
-# ------------------------------------------------------------
-# $Id: utils.py 108 2003-11-13 15:29:58Z mpoinot $
+#  -------------------------------------------------------------------------
+#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 #
 import DAX.exceptions as ex
 #
