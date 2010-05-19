@@ -1,10 +1,9 @@
-# -----------------------------------------------------------------------------
-# pyS7 - CGNS/SIDS editor
-# ONERA/DSNA - marc.poinot@onera.fr
-# pyS7 - $Rev: 70 $ $Date: 2009-01-30 11:49:10 +0100 (Fri, 30 Jan 2009) $
-# -----------------------------------------------------------------------------
-# See file COPYING in the root directory of this Python module source
-# tree for license information.
+#  -------------------------------------------------------------------------
+#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 
 import shutil
 import os
@@ -48,7 +47,7 @@ class s7optionsStorage:
      ]
     # Next line is replaced each time you run distutils...
     # then s7globals_.py becomes... s7globals.py (good job boy !) 
-    self.s7icondirectoryprefix="/home/poinot/Tools-2"
+    self.s7icondirectoryprefix="/home_local/eucass/tools"
     self.iconDir=self.s7icondirectoryprefix+'/share/CGNS/NAV/icons'
     self.firedox='firefox %s/share/CGNS/NAV/doc/CGNSNAV.html &'%\
                   self.s7icondirectoryprefix

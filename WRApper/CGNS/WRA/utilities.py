@@ -1,9 +1,9 @@
-# CFD General Notation System - CGNS lib wrapper
-# ONERA/DSNA/ELSA - poinot@onera.fr
-# pyCGNS - $Rev: 79 $ $Date: 2009-03-13 10:19:54 +0100 (Fri, 13 Mar 2009) $
-# See file COPYING in the root directory of this Python module source 
-# tree for license information. 
-#
+#  -------------------------------------------------------------------------
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 import CGNS.WRA
 import CGNS.WRA._mll     as MLL
 import CGNS.WRA.wrapper  as WRP
@@ -226,7 +226,7 @@ def arrayValue(ar,dt):
   if (isArray(ar)):
     if (ar.dtype.char == ndt): return ar
     else :                     return ar.astype(ndt)
-  if (type(ar) == type("")):   return NPY.array([ar]).astype(ndt)
+  if (type(ar) == type("")):   return NPY.array( ar , ndt)
   if (type(ar) == type(4)):    return NPY.array([ar]).astype(ndt)
   if (type(ar) == type(4.2)):  return NPY.array([ar]).astype(ndt)
   if (type(ar) == type((4,))): return NPY.array([ar]).astype(ndt)
@@ -279,7 +279,7 @@ def __parseAndWriteADF(db,tree,parent_id,links,path):
       tvalue=arrayValue(value,ntype)
       sz=arraySize(tvalue,ntype)
       ar=tvalue
-      db.put_dimension_information(id,ntype,sz)        
+      db.put_dimension_information(id,ntype,sz)
       db.write_all_data(id,ar) 
     if (tree[2]):
       for tchild in tree[2]:
@@ -476,10 +476,11 @@ def loadAsADF(file,link=1,max=0,depth=999,path=None,dbs={},start=1):
 # -----------------------------------------------------------------------------
 def saveAsADF(file,tree=None,links=[]): 
   import os
-  bExist = os.path.isfile(file)
+  bExist = 0 #os.path.isfile(file)
   try:   
     # check tree types here
-    db=WRP.pyADF(file,ADF.NEW,ADF.NATIVE)
+    if (bExist): db=WRP.pyADF(file,ADF.OLD,ADF.NATIVE)
+    else:        db=WRP.pyADF(file,ADF.NEW,ADF.NATIVE)    
     path=[''] 
     for tc in tree[2]:
       __parseAndWriteADF(db,tc,db.root(),links,path) 

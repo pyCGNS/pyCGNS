@@ -1,7 +1,11 @@
-/* ------------------------------------------------------------------------- */
-/* pyCGNS.MAP - CFD General Notation System - SIDS-to-Python MAPping         */
-/* See license.txt file in the root directory of this Python module source   */
-/* ------------------------------------------------------------------------- */
+/* 
+#  -------------------------------------------------------------------------
+#  pyCGNS.MAP - Python package for CFD General Notation System - MAPper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  ------------------------------------------------------------------------- 
+*/
 #ifndef __SIDSTOPYTHON__H__
 #define __SIDSTOPYTHON__H__
 
@@ -17,7 +21,7 @@
 #define S2P_FNODATA        0x0004
 #define S2P_FMERGELINKS    0x0008
 #define S2P_FCOMPRESS      0x0010
-#define S2P_FNOTRANSPOSE   0x0020
+#define S2P_FREVERSEDIMS   0x0020
 #define S2P_FOWNDATA       0x0040
 #define S2P_FUPDATE        0x0080
 #define S2P_FDELETEMISSING 0x0100

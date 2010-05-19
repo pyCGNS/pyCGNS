@@ -1,11 +1,18 @@
-#!/usr/bin/env python
-# CFD General Notation System - CGNS XML tools
-# ONERA/DSNA - poinot@onera.fr - henaux@onera.fr
-# pyC5 - $Id: setup.py 34 2005-02-16 14:38:32Z  $
+#  -------------------------------------------------------------------------
+#  pyCGNS.VAL - Python package for CFD General Notation System - VALidater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 #
-# See file COPYING in the root directory of this Python module source 
-# tree for license information. 
-#
+
+# --- FORCE QUIT THIS MODULE IS NOT READY
+import sys
+print "### pyCGNS: WARNING you cannot use VAL now - wait next release"
+print "### pyCGNS: WARNING skip VAL install"
+sys.exit(1)
+# ---
+
 import os
 
 # Setup script for the CGNS Python interface
@@ -94,11 +101,11 @@ demorngfiles+=glob.glob('CGNS/VAL/demo/rng/*')
 demorncfiles=[]
 demorncfiles+=glob.glob('CGNS/VAL/demo/rnc/*')
 
-demousrfiles=[
-  'build/c5semantic.sch',
-  'build/c5syntax.rnc',
-  'build/c5syntax.rng'
-]
+demousrfiles=[]
+#  'build/c5semantic.sch',
+#  'build/c5syntax.rnc',
+#  'build/c5syntax.rng'
+#]
 
 fdatalist+=demorngfiles
 fdatalist+=demorncfiles
@@ -130,25 +137,24 @@ webfiles=[]
 webfiles+=glob.glob('CGNS/VAL/demo/cgns/*.xml')
 
 # change path
-if 0:
+if 1:
   import os
   for fdata in fdatalist:
     substituteAbsolutePath(ddir,fdata,r3,'%s'%(ddir))
 
-#print fdatalist[0][:-4]+".py"
-#os.rename("build/"+os.path.split(fdatalist[0])[-1],fdatalist[0][:-4]+".py")
+print fdatalist[0][:-4]+".py"
+os.rename("build/"+os.path.split(fdatalist[0])[-1],fdatalist[0][:-4]+".py")
 
 if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
 
 setup (
 name         = "CGNS.VAL",
-version      = "0.1",
-description  = "XML tools for CFD General Notation System",
-author       = "ONERA/DSNA Poinot, Henaux",
+version      = pyCGNSconfig.VAL_VERSION,
+description  = "pyCGNS VALidater - SIDS verification tools",
+author       = "marc Poinot, elise Henaux",
 author_email = "poinot@onera.fr,henaux@onera.fr",
-url          = "http://elsa.onera.fr/CGNS/releases",
-license      = "Python",
+license      = "LGPL 2",
 verbose      = 1,
 packages     = ['CGNS.VAL','CGNS.VAL.demo',
                 'CGNS.VAL.gui','CGNS.VAL.gui.Icons','CGNS.VAL.utils','CGNS.VAL.tools',

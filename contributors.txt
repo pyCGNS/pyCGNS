@@ -1,0 +1,19 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS - Python package for CFD General Notation System
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
+#
+# Informal list of people that gave some contributions in patches, demos,
+# remarks, testing, etc...
+#
+Benoit Rodriguez   - ONERA (DAAP/H2T)
+Loic Hauchard      - ONERA (Student INSA Rouen, France)
+Elise Hénaux       - ONERA (Student FIIFO Orsay, France)
+Bill Perkins       - Pacific Northwest National Laboratory, U.S.A.
+Florent Cayré      - SNECMA, France
+Ching-Yang Wang    - U.S.A.
+Alexandre Fayolle  - LOGILAB, France
+Francois Thirifays - CENAERO, Belgique
+#

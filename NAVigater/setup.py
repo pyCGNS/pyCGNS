@@ -1,8 +1,10 @@
-# -------------------------------------------------------------------------
-# pyCGNS - CFD General Notation System - NAVigator
-# $Rev: 56 $ $Date: 2008-06-10 09:44:23 +0200 (Tue, 10 Jun 2008) $         
-# See license file in the root directory of this Python module source      
-# -------------------------------------------------------------------------
+#  -------------------------------------------------------------------------
+#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $KeyFile$
+#  $Release$
+#  -------------------------------------------------------------------------
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
 import glob
@@ -55,6 +57,7 @@ version      = pyCGNSconfig.NAV_VERSION,
 description  = "pyCGNS NAVigator - CGNS/Python trees navigator and editor",
 author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
+license      = "LGPL 2",
 packages     = ['CGNS.NAV','CGNS.NAV.gui','CGNS.NAV.supervisor'],
 scripts      = ['CGNS/NAV/CGNS.NAV'],
 data_files   = [('share/CGNS/NAV/icons',glob.glob('CGNS/NAV/gui/icons/*'))],

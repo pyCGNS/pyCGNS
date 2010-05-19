@@ -1,10 +1,9 @@
-# CFD General Notation System - CGNS lib wrapper
-# ONERA/DSNA/ELSA - poinot@onera.fr
-# pyCGNS - $Rev: 69 $ $Date: 2009-01-27 14:21:57 +0100 (Tue, 27 Jan 2009) $
-# See file COPYING in the root directory of this Python module source 
-# tree for license information. 
-#
-
+#  -------------------------------------------------------------------------
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 from CGNS import pyCGNSconfig
 
 try:
@@ -17,10 +16,10 @@ except KeyError:
     print "### pyCGNS: Cannot find pyCGNS config ?"
     sys.exit(1)
 
-import CGNS
-import CGNS.midlevel as Mll
-import CGNS.wrap     as W
-import numpy         as Num
+#import CGNS
+import CGNS.WRA._mll    as Mll 
+import CGNS.WRA.wrapper as W
+import numpy            as Num
 
 import time
 

@@ -1,10 +1,9 @@
-#!/usr/bin/env python
-# CFD General Notation System - CGNS lib wrapper
-# ONERA/DSNA/ELSA - poinot@onera.fr
-# pyCGNS - $Rev: 79 $ $Date: 2009-03-13 10:19:54 +0100 (Fri, 13 Mar 2009) $
-# See file COPYING in the root directory of this Python module source 
-# tree for license information. 
-#
+#  -------------------------------------------------------------------------
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 import os
 from   distutils.core import setup, Extension
 import distutils.util
@@ -33,7 +32,15 @@ mllpinc=pyCGNSconfig.MLL_PATH_INCLUDES
 mllversion=pyCGNSconfig.MLL_VERSION
 numpinc=pyCGNSconfig.NUMPY_PATH_INCLUDES
 
-lversion      = pyCGNSconfig.__vid__
+# --- default values
+mll=True
+hdf=False
+alib='numpy'
+chlonelib=hdflib=cgnslib=""
+hdfversion=cgnsversion=chloneversion='unknown'
+
+lname         = "CGNS.WRA"
+lversion      = pyCGNSconfig.WRA_VERSION
 
 extraargs=pyCGNSconfig.MLL_EXTRA_ARGS
 include_dirs=mllpinc+hdfpinc
@@ -49,11 +56,10 @@ include_dirs+=['CGNS/WRA/modadf']
 
 # ***************************************************************************
 # Setup script for the CGNS Python interface
-ldescription  = "Python CFD General Notation System Interfaces"
-lauthor       = "ONERA/DSNA/ELSA Marc Poinot"
-lauthor_email = "poinot@onera.fr"
-lurl          = "http://elsa.onera.fr/CGNS/releases"
-llicense      = "Python"
+ldescription  = "pyCGNS WRApper - CGNS/MLL python wrapping"
+lauthor       = "marc Poinot",
+lauthor_email = "marc.poinot@onera.fr",
+llicense      = "LGPL 2",
 lverbose      = 1
 lpackages     = ['CGNS.WRA']
 lscripts      = []
@@ -89,7 +95,6 @@ setup (
   description  = ldescription,
   author       = lauthor,
   author_email = lauthor_email,
-  url          = lurl,
   license      = llicense,
   verbose      = lverbose,
   ext_modules  = lext_modules,
@@ -101,8 +106,5 @@ setup (
 
 ) # close setup
 
-#print '### Leave the installation directory and test with:'
-#print "python -c 'import CGNS.WRA;CGNS.WRA.test()'"
-  
 # --- last line
   

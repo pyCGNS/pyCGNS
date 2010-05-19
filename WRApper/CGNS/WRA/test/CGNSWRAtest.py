@@ -1,10 +1,9 @@
-# CFD General Notation System - CGNS lib wrapper
-# ONERA/DSNA/ELSA - poinot@onera.fr
-# pyCGNS - $Rev: 61 $ $Date: 2008-09-09 08:58:45 +0200 (Tue, 09 Sep 2008) $
-# See file COPYING in the root directory of this Python module source 
-# tree for license information. 
-#
-
+#  -------------------------------------------------------------------------
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 # test all the stuff we have there
 
 from CGNS import pyCGNSconfig

@@ -1,15 +1,13 @@
-# -----------------------------------------------------------------------------
-# pyS7 - CGNS/SIDS editor
-# ONERA/DSNA - marc.poinot@onera.fr
-# pyS7 - $Rev: 70 $ $Date: 2009-01-30 11:49:10 +0100 (Fri, 30 Jan 2009) $
-# -----------------------------------------------------------------------------
-# See file COPYING in the root directory of this Python module source
-# tree for license information.
+#  -------------------------------------------------------------------------
+#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 import CGNS.NAV.gui.s7globals
 G___=CGNS.NAV.gui.s7globals.s7G
 
 import CGNS.NAV.supervisor.s7cgnsTypes as CT
-import s7cgnskeywords
 import s7grammar
 import string
 import numpy as Num
@@ -17,11 +15,11 @@ import re
 
 __checkready=1
 try:
-  import CGNS.cgnskeywords as CK
+  import CGNS.PAT.cgnskeywords as CK
 except ImportError:
   __checkready=0
 
-__keywordlist=s7cgnskeywords.names
+__keywordlist=CGNS.PAT.cgnskeywords.names
 
 # --------------------------------------------------
 def getNodeType(node):
