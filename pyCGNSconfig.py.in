@@ -18,11 +18,11 @@ import sys
 mylocal=sys.exec_prefix
 
 INCLUDE_DIRS =[]
-INCLUDE_DIRS+=['/home_local/eucass/tools/include','%s/include'%mylocal]
+INCLUDE_DIRS+=['%s/include'%mylocal]
 INCLUDE_DIRS+=['%s/lib/python2.6/site-packages/numpy/core/include'%mylocal]
 
 LIBRARY_DIRS =[]
-LIBRARY_DIRS+=['/home_local/eucass/tools/lib','%s/lib'%mylocal]
+LIBRARY_DIRS+=['%s/lib'%mylocal]
 
 OPTIONAL_LIBS=['hdf5']
 

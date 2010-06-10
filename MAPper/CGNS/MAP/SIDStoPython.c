@@ -28,8 +28,10 @@ ctxt->_c_char  =NULL;
 #define S2P_SETFLAG( flag ) ( context->flg |=  flag)
 #define S2P_CLRFLAG( flag ) ( context->flg &= ~flag)
 
+//#define S2P_TRACE( txt ) \
+//if (S2P_HASFLAG(S2P_FTRACE)){printf txt ;fflush(stdout);}
 #define S2P_TRACE( txt ) \
-if (S2P_HASFLAG(S2P_FTRACE)){printf txt ;fflush(stdout);}
+if (S2P_HASFLAG(S2P_FTRACE)){;}
 
 #define S2P_TRACE__( txt ) \
 if (S2P_HASFLAG(S2P_FTRACE)){ txt ;}
@@ -251,12 +253,12 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
 			    char        *nodename,
 			    s2p_ctx_t   *context)
 {
-  char curpath[MAXPATHSIZE];
-  char name[L3_MAX_NAME+1];
-  char destnode[L3_MAX_NAME+1];
-  char destfile[MAXFILENAMESIZE];
-  int parsepath,c;
-  hid_t id,nid;
+  char  curpath[MAXPATHSIZE];
+  char  name[L3_MAX_NAME+1];
+  char  destnode[L3_MAX_NAME+1];
+  char  destfile[MAXFILENAMESIZE];
+  int   parsepath,c;
+  hid_t nid;
   char *p;
   L3_Cursor_t *lkhdfdb;
 
@@ -267,7 +269,6 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
 
   while (parsepath)
   {
-    id=nid;
     while ((*p!='\0')&&(*p!='/')) { p++; }
     if (*p=='\0'){ break; }
     p++;
@@ -305,6 +306,15 @@ static int s2p_getData(PyObject *dobject,
 {
   int n,total;
 
+  // code modification: Return ERROR code if ARRAY is not FORTRAN
+
+  if (!PyArray_ISFORTRAN(dobject) && PyArray_NDIM(dobject)>1 && PyArray_NDIM(dobject)<MAXDATATYPESIZE)
+  {
+    S2P_TRACE(("\n ERROR: ARRAY SHOULD BE FORTRAN\n"));
+    // Launch error
+    //    return 1;
+  }
+
   *dtype=DT_MT;
   ddims[0]=0;
   *dvalue=NULL;
@@ -329,8 +339,18 @@ static int s2p_getData(PyObject *dobject,
       ddims[0]=PyArray_NDIM(dobject);
       for (n=0; n<ddims[0]; n++)
       {
-        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-        total*=dshape[ddims[0]-n-1];
+	// code modification: check array fortran order 
+	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+	{ 
+	  dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+	  total*=dshape[ddims[0]-n-1];
+	}
+	else
+	{
+          return 1;
+	  dshape[n]=(int)PyArray_DIM(dobject,n);
+	  total*=dshape[n];
+	}
       } 
       *dvalue=(char*)PyArray_DATA(dobject);
     }
@@ -343,8 +363,17 @@ static int s2p_getData(PyObject *dobject,
     ddims[0]=PyArray_NDIM(dobject);
     for (n=0; n<ddims[0]; n++)
     {
-      dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-      total*=dshape[ddims[0]-n-1];
+      // code modification: check array fortran order 
+      if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+      { 
+        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[ddims[0]-n-1];
+      }
+      else
+      {
+	dshape[n]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[n];
+      }
     } 
     *dvalue=(char*)PyArray_DATA(dobject);
     return 1;
@@ -368,11 +397,20 @@ static int s2p_getData(PyObject *dobject,
       total=1;
       for (n=0; n<ddims[0]; n++)
       {
-        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-        total*=dshape[ddims[0]-n-1];
-      } 
+	// code modification: check array fortran order 
+	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+        { 
+          dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+          total*=dshape[ddims[0]-n-1];
+        }
+        else
+        {
+	  dshape[n]=(int)PyArray_DIM(dobject,n);
+          total*=dshape[n];
+        }
+      }
       *dvalue=(char*)PyArray_DATA(dobject);
-    }
+    } 
     return 1;
   }
   /* --- Float */
@@ -385,7 +423,17 @@ static int s2p_getData(PyObject *dobject,
        Then you have to reverse the size if you detect a fortran */
     for (n=0; n<ddims[0]; n++)
     {
-      dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+      // code modification: check array fortran order
+      if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+      { 
+        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[ddims[0]-n-1];
+      }
+      else
+      {
+        dshape[n]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[n];
+      }
     } 
     *dvalue=(char*)PyArray_DATA(dobject);
     return 1;
@@ -407,8 +455,17 @@ static int s2p_getData(PyObject *dobject,
       total=1;
       for (n=0; n<ddims[0]; n++)
       {
-        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-        total*=dshape[ddims[0]-n-1];
+	// code modification: check array fortran order 
+	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+	{ 
+          dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+          total*=dshape[ddims[0]-n-1];
+        }
+        else
+        {
+          dshape[n]=(int)PyArray_DIM(dobject,n);
+          total*=dshape[n];
+        }
       } 
       *dvalue=(char*)PyArray_DATA(dobject);
     }
@@ -426,12 +483,11 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
 {
   char      destnode[L3_MAX_NAME+1];
   char      destfile[MAXFILENAMESIZE];
-  int       ndim,tsize,n,count,child;
-  int       error,arraytype,toknpath;
-  hid_t    actualid;
+  int       ndim,tsize,n,child;
+  int       arraytype,toknpath;
+  hid_t     actualid;
   PyObject *o_clist,*o_value,*o_child,*o_node;
   npy_intp  npy_dim_vals[MAXDIMENSIONVALUES];
-  void     *data;
   char     *nextpath;
   L3_Cursor_t *lkl3db;
   L3_Node_t *rnode,*cnode;
@@ -439,9 +495,6 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   context->dpt-=1;
 
   o_value=NULL;
-  data=NULL;
-  count=0;
-  error=-1;
   
   /* In case of path, we are in a link search or sub-tree retrieval. We
      skip the Python node creation but we keep track of links. */
@@ -484,8 +537,15 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     n=0;
     while ((n<L3_MAX_DIMS)&&(rnode->dims[n]!=-1))
     {
-      //npy_dim_vals[ndim-n-1]=rnode->dims[n];
-      npy_dim_vals[n]=rnode->dims[n];
+      // code modification:
+      if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+      {
+	npy_dim_vals[ndim-n-1]=rnode->dims[n];
+      }
+      else
+      {
+	npy_dim_vals[n]=rnode->dims[n];
+      }
       n++;
     } 
     S2P_TRACE(("{")); 
@@ -648,7 +708,6 @@ PyObject* s2p_loadAsHDF(char *filename,
                         int   depth,
                         char *path)
 {
-  char name[L3_MAX_NAME+1];
   char cpath[MAXPATHSIZE];
   PyObject *tree,*ret,*links;
   s2p_ctx_t *context;
@@ -665,7 +724,6 @@ PyObject* s2p_loadAsHDF(char *filename,
   context->_c_double=NULL;
   context->_c_int=NULL;
   context->_c_char=NULL;
-  name[0]='\0';
   cpath[0]='\0';
 
   /* We do NOT check file name or file access, it's up to the caller to make

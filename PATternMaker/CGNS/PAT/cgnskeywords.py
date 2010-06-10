@@ -255,7 +255,8 @@ BCWallInviscid_s = "BCWallInviscid"
 BCWallViscous_s = "BCWallViscous"
 BCWallViscousHeatFlux_s = "BCWallViscousHeatFlux"
 BCWallViscousIsothermal_s = "BCWallViscousIsothermal"
-FamilySpecified_s = "FamilySpecified_s"
+## code correction: Correct typo FamilySpecified_s
+FamilySpecified_s = "FamilySpecified"
 NofValidDataTypes = 6
 Integer_s = "Integer"
 RealSingle_s = "RealSingle"
