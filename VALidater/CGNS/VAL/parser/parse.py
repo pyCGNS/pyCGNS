@@ -1,12 +1,9 @@
-#!/usr/bin/env python
-# CFD General Notation System - CGNS XML tools
-# ONERA/DSNA - poinot@onera.fr - henaux@onera.fr
-# pyCCCCC - $Id: parse.py 40 2005-11-21 13:51:14Z  $ 
-# 
-# See file COPYING in the root directory of this Python module source 
-# tree for license information.
-# 
-# ******************************************** IMPORTANT NOTE
+#  -------------------------------------------------------------------------
+#  pyCGNS.VAL - Python package for CFD General Notation System - VALidater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 #
 import CGNS
 from CGNS.midlevel import *

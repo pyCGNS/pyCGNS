@@ -1,15 +1,12 @@
-# CFD General Notation System - CGNS lib wrapper
-# ONERA/DSNA/ELSA - poinot@onera.fr
-# pyCGNS - $Rev: 67 $ $Date: 2009-01-26 16:57:43 +0100 (Mon, 26 Jan 2009) $
-# See file COPYING in the root directory of this Python module source 
-# tree for license information. 
-#
-# ----------------------------------------------------------------------------
-# See file COPYING in the root directory of this Python module source 
-# tree for license information. 
-#
-import CGNS.PAT.cgnskeywords as CG_K
-import CGNS.PAT.cgnserrors   as CG_E
+#  ---------------------------------------------------------------------------
+#  pyCGNS.PAT - Python package for CFD General Notation System - PATternMaker
+#  See license.txt file in the root directory of this Python module source  
+#  ---------------------------------------------------------------------------
+#  $Release$
+#  ---------------------------------------------------------------------------
+
+import CGNS.PAT.cgnskeywords as K
+import CGNS.PAT.cgnserrors   as E
 import CGNS
 
 __CGNS_LIBRARY_VERSION__=2.4
@@ -201,12 +198,12 @@ def checkNode(node,dienow=0):
     
 # -----------------------------------------------------------------------------
 def isRootNode(node,dienow=0):
-  """ isRootNode : Check wether a node is a CGNS root node (returns 1)
-or not a root node (returns 0).    
-A root node is a list of a single CGNSLibraryVersion_t node and zero or more
-CGNSBase_t nodes. We do not check first level type, no standard for it, even
-if we set it to CGNSTree.
-"""
+#   """isRootNode :
+#   Check wether a node is a CGNS root node (returns 1)
+#   or not a root node (returns 0).    
+#   A root node is a list of a single CGNSLibraryVersion_t node and zero or more
+#   CGNSBase_t nodes. We do not check first level type, no standard for it, even
+#   if we set it to CGNSTree."""
   if (node in [ [], None ]):         return 0
   versionfound=0
   if (not checkNode(node)):          return 0
@@ -756,7 +753,7 @@ def newBoundary(parent,bname,brange,
   If a parent is given, the new <node> is added to the parent children list.
   Parent should be Zone_t, returned node is parent.
   If the parent has already a child name ZoneBC then
-   only the BC_t,IndexRange_t are created.
+  only the BC_t,IndexRange_t are created.
   chapter 9.3 Add IndexRange_t required
   """
   checkDuplicatedName(parent,bname)
@@ -1027,7 +1024,7 @@ def newAverageInterface(parent,valueType=CG_K.Null_s):
                  CG_K.AverageInterface_ts,parent)
   if (valueType not in CG_K.AverageInterfaceType_l):
     raise CG_E.cgnsException(253,valueType)
-  checkDuplicatedName(node,CG_K.AverageInterfaceType_s)
+  checkDuplicatedName(node,CG_K.AverageInterfaceType_s) 
   ## code correction: Modify valueType string into NPY string array
   nodeType=newNode(CG_K.AverageInterfaceType_s,setStringAsArray(valueType),[],
                    CG_K.AverageInterfaceType_ts,node)
@@ -1051,7 +1048,7 @@ def newOversetHoles(parent,name,hrange):
   node=newNode(name,None,[],CG_K.OversetHoles_ts,cnode)
   #if(pname!=None and value!=None):
     #newPointList(node,pname,value)
-  if hrange!=None:
+  if hrange!=None:  
     ## code correction: Modify PointRange shape and order
    newPointRange(node,CG_K.PointRange_s,NPY.array(hrange,dtype=NPY.int32,order='Fortran'))
    #newNode(CG_K.PointRange_s,NPY.array(list(hrange),'i'),[],CG_K.IndexRange_ts,node)
@@ -1179,7 +1176,7 @@ def newTurbulenceClosure(parent,valueType=CG_K.EddyViscosity_s):
   checkDuplicatedName(node,CG_K.TurbulenceClosureType_s)
   ## code correction: Modify valueType string into NPY string array
   nodeType=newNode(CG_K.TurbulenceClosureType_s,setStringAsArray(valueType),[],
-                   CG_K.TurbulenceClosure_ts,node)  
+                     CG_K.TurbulenceClosure_ts,node)  
   return node
 
 def newTurbulenceModel(parent,valueType=CG_K.OneEquation_SpalartAllmaras_s): 
@@ -1504,16 +1501,21 @@ def newFamilyBC(parent,valueType=CG_K.UserDefined_s):
 
 # -----------------------------------------------------------------------------
 def newArbitraryGridMotion(parent,name,valuetype=CG_K.Null_s):
-  """-ArbitraryGridMotion node creation -ArbitraryGridMotion
-  
-  'newNode:N='*newArbitraryGridMotion*'(parent:N,name:S,valuetype:E)'
-  
-   If a parent is given, the new <node> is added to the parent children list.
-   If the parent has already a child name RigidGridMotion then
-   only the RigidGridMotionType is created.
-   The valuetype enumerate should be in the CG_K.ArbitraryGridMotionType list.
-   Returns a new <node> representing a ArbitraryGridMotionType_t sub-tree.  
-   chapter 11.3 Add Node ArbitraryGridMotionType is required
+  """
+  .. index:: ArbitraryGridMotion,ArbitraryGridMotionType
+  .. index:: RigidGridMotion,RigidGridMotionType
+  Returns a **new node** representing a ``ArbitraryGridMotionType_t``
+  sub-tree `(chapter 11.3) <http://www.grc.nasa.gov/WWW/cgns/sids/timedep.html#ArbitraryGridMotion>`_
+
+  :param parent: CGNS/Python node
+  :param name: String
+  :param valuetype: String (``CGNS.PAT.cgnskeywords.ArbitraryGridMotionType``)
+
+
+  If a *parent* is not ``None``, the **new node** is added to the parent
+  children list. If the *parent* has already a child with
+  name ``RigidGridMotion`` then only the ``RigidGridMotionType`` is created.
+
   """
   node=None
   if (parent): node=hasChildName(parent,name)

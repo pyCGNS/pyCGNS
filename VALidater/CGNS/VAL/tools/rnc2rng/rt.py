@@ -1,12 +1,11 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS.VAL - Python package for CFD General Notation System - VALidater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 #
-# CFD General Notation System - CGNS XML tools
-# ONERA/DSNA - poinot@onera.fr - henaux@onera.fr
-# pyCCCCC - $Id: rt.py 22 2005-02-02 09:57:08Z  $
-#
-# See file COPYING in the root directory of this Python module source 
-# tree for license information. 
-#
-#
+
 javadir="/home/poinot/W/Xpy/RelaxNG/jar"
 cpstr  ="%s/trang.jar:"%javadir
 cpstr +="%s/jing.jar:"  %javadir

@@ -1,16 +1,15 @@
 # -------------------------------------------------------------------------
-# pyCGNS.MAP - CFD General Notation System - SIDS-to-Python MAPping            
+# pyCGNS.MAP - Python package for CFD General Notation System - MAPper
 # See license.txt file in the root directory of this Python module source  
 # -------------------------------------------------------------------------
-#
 import os
 
-# --- pyCGNSconfig search
+# --- pyCGNSconfig search 
 import sys
 sys.path+=['../lib']
 import setuputils
 (pyCGNSconfig,installprocess)=setuputils.search('MAP')
-# ---
+# --- 
 
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
@@ -19,6 +18,7 @@ sys.prefix=sys.exec_prefix
 cf_include_dirs=[]
 cf_library_dirs=[]
 cf_optional_libs=[]
+cf_depends=['readme.txt','CGNS/MAP/SIDStoPython.c']
 
 if (installprocess):
   try:

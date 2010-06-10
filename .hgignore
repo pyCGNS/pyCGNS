@@ -3,5 +3,12 @@
 syntax: glob
 *.pyc
 build/*
+DATaTracer/build
+MAPper/build
+NAVigater/build
+PATternMaker/build
+VALidater/build
+WRApper/build
+APPlicater/build
 *~
 log

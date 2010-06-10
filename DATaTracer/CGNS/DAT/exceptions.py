@@ -1,8 +1,9 @@
-# ------------------------------------------------------------
-# pyDAX - Exceptions
-# ------------------------------------------------------------
-# $Id: exceptions.py 35 2003-08-22 15:21:06Z mpoinot $
-#
+#  -------------------------------------------------------------------------
+#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 class DAXException(Exception):
   def __init__(self,message):
     self._message=message

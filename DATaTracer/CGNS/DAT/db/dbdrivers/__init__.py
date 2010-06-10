@@ -1,7 +1,12 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 # ------------------------------------------------------------
 # pyDAX - DBMS drivers
 # ------------------------------------------------------------
-# $Id: __init__.py 12 2003-06-17 13:40:17Z mpoinot $
 #
 from DAX.db.dbdrivers.default import *
 #

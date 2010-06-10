@@ -1,8 +1,10 @@
 #!/usr/bin/env python
-# ------------------------------------------------------------
-# pyDAX - Utilities - cksum
-# ------------------------------------------------------------
-# $Id: cksum.py 19 2003-06-18 12:29:31Z mpoinot $
+#  -------------------------------------------------------------------------
+#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 #
 # from:
 # ONERA/DSNA/ELSA - poinot@onera.fr

@@ -1,7 +1,11 @@
-/* ------------------------------------------------------------------------- */
-/* pyCGNS.MAP - CFD General Notation System - SIDS-to-Python MAPping         */
-/* See license.txt file in the root directory of this Python module source   */
-/* ------------------------------------------------------------------------- */
+/* 
+#  -------------------------------------------------------------------------
+#  pyCGNS.MAP - Python package for CFD General Notation System - MAPper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  ------------------------------------------------------------------------- 
+*/
 #include "SIDStoPython.h"
 #include "numpy/arrayobject.h"
 /* ------------------------------------------------------------------------- */
@@ -253,11 +257,11 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
 			    char        *nodename,
 			    s2p_ctx_t   *context)
 {
-  char  curpath[MAXPATHSIZE];
-  char  name[L3_MAX_NAME+1];
-  char  destnode[L3_MAX_NAME+1];
-  char  destfile[MAXFILENAMESIZE];
-  int   parsepath,c;
+  char curpath[MAXPATHSIZE];
+  char name[L3_MAX_NAME+1];
+  char destnode[L3_MAX_NAME+1];
+  char destfile[MAXFILENAMESIZE];
+  int parsepath,c;
   hid_t nid;
   char *p;
   L3_Cursor_t *lkhdfdb;
@@ -305,6 +309,16 @@ static int s2p_getData(PyObject *dobject,
 		       s2p_ctx_t  *context)
 {
   int n,total;
+  PyObject *ostr;
+
+  // code modification: Return ERROR code if ARRAY is not FORTRAN
+
+  if (!PyArray_ISFORTRAN(dobject) && PyArray_NDIM(dobject)>1 && PyArray_NDIM(dobject)<MAXDATATYPESIZE)
+  {
+    S2P_TRACE(("\n ERROR: ARRAY SHOULD BE FORTRAN\n"));
+    // Launch error
+    //    return 1;
+  }
 
   // code modification: Return ERROR code if ARRAY is not FORTRAN
 
@@ -352,6 +366,14 @@ static int s2p_getData(PyObject *dobject,
 	  total*=dshape[n];
 	}
       } 
+	else
+	{
+	  S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L348\n"));
+          return 1;
+	  dshape[n]=(int)PyArray_DIM(dobject,n);
+	  total*=dshape[n];
+	}
+      } 
       *dvalue=(char*)PyArray_DATA(dobject);
     }
     return 1;
@@ -371,6 +393,13 @@ static int s2p_getData(PyObject *dobject,
       }
       else
       {
+	dshape[n]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[n];
+      }
+    } 
+      else
+      {
+	S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L367\n"));
 	dshape[n]=(int)PyArray_DIM(dobject,n);
         total*=dshape[n];
       }
@@ -403,6 +432,7 @@ static int s2p_getData(PyObject *dobject,
           dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
           total*=dshape[ddims[0]-n-1];
         }
+      } 
         else
         {
 	  dshape[n]=(int)PyArray_DIM(dobject,n);
@@ -444,10 +474,7 @@ static int s2p_getData(PyObject *dobject,
     *dtype=DT_C1;
     if (PyString_Check(dobject))
     {
-      ddims[0]=1;
-      dshape[0]=strlen((char*)PyString_AsString(dobject));
-      context->_c_char=(char*)PyString_AsString(dobject);
-      *dvalue=(char*)&context->_c_char;
+      ostr=dobject;
     }
     else
     {
@@ -467,8 +494,21 @@ static int s2p_getData(PyObject *dobject,
           total*=dshape[n];
         }
       } 
+        else
+        {
+	  S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L467\n"));
+          dshape[n]=(int)PyArray_DIM(dobject,n);
+          total*=dshape[n];
+        }
+      } 
       *dvalue=(char*)PyArray_DATA(dobject);
+      ostr=PyArray_ToString((PyArrayObject*)dobject,NPY_ANYORDER);
     }
+    ddims[0]=1;
+    dshape[0]=strlen((char*)PyString_AsString(ostr));
+    context->_c_char=(char*)malloc(dshape[0]*sizeof(char)+1);
+    strcpy(context->_c_char,(char*)PyString_AsString(ostr));
+    *dvalue=(char*)context->_c_char;
     return 1;
   }
   return 1;
@@ -552,7 +592,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     for (n=0;n<ndim;n++)
     {
       S2P_TRACE(("%d",(int)(npy_dim_vals[n])));
-      if (n<ndim+1)
+      if (n<ndim-1)
       {
 	S2P_TRACE(("x"));
       }
