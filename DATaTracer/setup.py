@@ -1,10 +1,18 @@
-#!/usr/bin/env python
-# pyDAX - CGNS files management package
-# ONERA/DSNA/ELSA - poinot@onera.fr
-# pyDAX - $Id: setup.py 108 2003-11-13 15:29:58Z elsa $
-# See file COPYING in the root directory of this Python module source 
-# tree for license information. 
+#  -------------------------------------------------------------------------
+#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 # 
+
+# --- FORCE QUIT THIS MODULE IS NOT READY
+import sys
+print "### pyCGNS: WARNING you cannot use DAT now - wait next release"
+print "### pyCGNS: WARNING skip DAT install"
+sys.exit(1)
+# ---
+
 import os
 from distutils.core import setup, Extension
 

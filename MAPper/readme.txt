@@ -5,6 +5,8 @@
 
 MAP
 ===
+ The MAP module is part of pyCGNS Python package
+ MAP loads and saves  CGNS/HDF5 files as Python trees.
 
 Quick start
 -----------
