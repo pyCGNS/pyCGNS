@@ -332,8 +332,8 @@ The **links** list is an unsorted list of *link-entries* with only one
 entry per link. A *link-entry* is an ordered list of Python string values:
 
  * `target directory name` 
-    linked-to directory name, as it would be used to open it, 
-    its absolute/relative path.
+    linked-to directory name as found in the `link search path` during the
+    `load`. The value is **ignored** during the `save`.
 
  * `target file name` 
     linked-to file name, as it would be used to open it, 
@@ -352,10 +352,19 @@ are parsing after following a first link, are **always** referred as if you
 where in the *target filename*. Then, a list of links can be reused from one
 parse to another, because the ``links`` list is relative to the target file.
 
-The example hereafter can be an `input` links list as well as an `output`,
-you set it for a ``save`` or get it from a ``save``::
+The example hereafter is a *link-entry*, as an `output` of the `load`
+it means the the node ``/Disk/Zone#001/GridCoordinates`` in the file you
+were loading is a link the the node ``/Disk#001/Zone#001/Grid#001`` found
+in the file ``001disk.cgns``. The file was found in the directory
+``/tmp/CGNS-files`` which was in the link search path during the load::
 
-  [  ['/usr/local','foo.cgns','/Base','Base/Foo'],
+ ['/tmp/CGNS-files','001disk.cgns','/Disk#001/Zone#001/Grid#001','/Disk/Zone#001/GridCoordinates'],
+
+A similar example for the `save`, the *link-entry* would force the node
+``/Disk/Zone#001/GridCoordinates`` in the file you are saving to be a link
+to the node ``/Disk#001/Zone#001/Grid#001`` of the file ``001disk.cgns``.
+There is no check on this target file, the first argument of the entry,
+the directory, is ignored.
 
 The directory information is distinct to the filename, because you can
 have different actual target files depending on the search paths you set.

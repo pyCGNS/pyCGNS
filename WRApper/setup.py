@@ -332,9 +332,9 @@ setup (
 
 ) # close setup
 
-if setconfig:
-  print '### Leave the installation directory and test with:'
-  print "python -c 'import CGNS.WRA;CGNS.WRA.test()'"
+#if setconfig:
+#  print '### Leave the installation directory and test with:'
+#  print "python -c 'import CGNS.WRA;CGNS.WRA.test()'"
   
 # --- last line
   

@@ -2,7 +2,8 @@
 # pyCGNS.MAP - CFD General Notation System - SIDS-to-Python MAPping            
 # See license.txt file in the root directory of this Python module source  
 # -------------------------------------------------------------------------
-#
+# $pyCGNS$ $pyCGNS.MAP$ $Last$
+# -------------------------------------------------------------------------
 import os
 
 # --- pyCGNSconfig search
@@ -19,6 +20,7 @@ sys.prefix=sys.exec_prefix
 cf_include_dirs=[]
 cf_library_dirs=[]
 cf_optional_libs=[]
+cf_depends=['readme.txt','CGNS/MAP/SIDStoPython.c']
 
 if (installprocess):
   try:

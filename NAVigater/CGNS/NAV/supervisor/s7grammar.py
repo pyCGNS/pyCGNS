@@ -9,7 +9,10 @@ import CGNS.NAV.gui.s7globals
 G___=CGNS.NAV.gui.s7globals.s7G
 
 import s7parser
-import CGNS.PAT.cgnskeywords as CK
+try:
+  import CGNS.PAT.cgnskeywords as CK
+except ImportError:
+  pass
 
 # --------------------------------------------------------------------
 # Enumerates
