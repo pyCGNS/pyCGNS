@@ -5,8 +5,8 @@
 #  $Release$
 #  ---------------------------------------------------------------------------
 
-import CGNS.PAT.cgnskeywords as K
-import CGNS.PAT.cgnserrors   as E
+import CGNS.PAT.cgnskeywords as CG_K
+import CGNS.PAT.cgnserrors   as CG_E
 import CGNS
 
 __CGNS_LIBRARY_VERSION__=2.4

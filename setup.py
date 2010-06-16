@@ -15,8 +15,8 @@ version=4
 versionList=[4]
 
 # order IS significant
-CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater','DATaTracer',
-             'VALidater','APPlicater']
+CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater',
+             'DATaTracer','VALidater','APPlicater']
 modList=CGNSmodList[:]
 
 solist='m:'
@@ -31,8 +31,13 @@ except getopt.GetoptError:
   sys.exit(2)
 
 for o,a in opts:
-  if ((o == "--without-mod") and (a in CGNSmodList)): modList.remove(a)
-  if ((o == "--single-mod")  and (a in CGNSmodList)): modList=[a]
+  m=a
+  for mm in CGNSmodList:
+    if (mm[:3] == a):
+      m=mm
+      break
+  if ((o == "--without-mod") and (m in CGNSmodList)): modList.remove(m)
+  if ((o == "--single-mod")  and (m in CGNSmodList)): modList=[m]
   
 modArgs=[]
 for opt in sys.argv[1:]:
