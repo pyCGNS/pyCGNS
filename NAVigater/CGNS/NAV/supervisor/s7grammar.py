@@ -12,7 +12,6 @@ try:
   import CGNS.PAT.cgnskeywords as CK
 except ImportError:
   pass
-#  s7utils.importCGNSWarning('SIDS pattern')
 
 # --------------------------------------------------------------------
 # Enumerates

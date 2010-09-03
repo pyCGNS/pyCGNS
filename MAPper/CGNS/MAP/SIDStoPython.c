@@ -35,9 +35,6 @@ ctxt->_c_char  =NULL;
 #define S2P_TRACE( txt ) \
 if (S2P_HASFLAG(S2P_FTRACE)){printf txt ;fflush(stdout);}
 
-#define S2P_TRACE__( txt ) \
-if (S2P_HASFLAG(S2P_FTRACE)){ txt ;}
-
 static char *DT_MT="MT";
 static char *DT_I4="I4";
 static char *DT_I8="I8";
@@ -309,13 +306,12 @@ static int s2p_getData(PyObject *dobject,
   int n,total;
   PyObject *ostr;
 
-  // code modification: Return ERROR code if ARRAY is not FORTRAN
-
-  if (!PyArray_ISFORTRAN(dobject) && PyArray_NDIM(dobject)>1 && PyArray_NDIM(dobject)<MAXDATATYPESIZE)
+  if (   (!PyArray_ISFORTRAN(dobject))
+      && (PyArray_NDIM(dobject)>1)
+      && (PyArray_NDIM(dobject)<MAXDIMENSIONVALUES))
   {
     S2P_TRACE(("\n ERROR: ARRAY SHOULD BE FORTRAN\n"));
-    // Launch error
-    //    return 1;
+    return 0;
   }
 
   *dtype=DT_MT;
@@ -325,40 +321,25 @@ static int s2p_getData(PyObject *dobject,
   L3M_CLEARDIMS(dshape);
 
   /* --- Integer */
-  if (   (PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_INT))
-      || (PyLong_Check(dobject)))
+  if (PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_INT))
   {
     *dtype=DT_I4;
-    if (PyLong_Check(dobject))
-    {
-      ddims[0]=1;
-      dshape[0]=1;
-      context->_c_int=(int*)malloc(sizeof(int));
-      *context->_c_int=(int)PyLong_AsLong(dobject);
-      *dvalue=(char*)&context->_c_int;
-    }
-    else
-    {
-      ddims[0]=PyArray_NDIM(dobject);
-      for (n=0; n<ddims[0]; n++)
-      {
-	// code modification: check array fortran order 
-	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
-	{ 
-	  S2P_TRACE(("\n COMMENT PIJE: apply reverse L335\n"));
-        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-        total*=dshape[ddims[0]-n-1];
-      } 
-	else
-	{
-	  S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L348\n"));
-          return 1;
-	  dshape[n]=(int)PyArray_DIM(dobject,n);
-	  total*=dshape[n];
-	}
-      } 
-      *dvalue=(char*)PyArray_DATA(dobject);
-    }
+     ddims[0]=PyArray_NDIM(dobject);
+     for (n=0; n<ddims[0]; n++)
+     {
+     	// code modification: check array fortran order 
+     	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+     	{ 
+     	  dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+     	  total*=dshape[ddims[0]-n-1];
+     	}
+     	else
+     	{
+     	  dshape[n]=(int)PyArray_DIM(dobject,n);
+     	  total*=dshape[n];
+     	}
+     } 
+     *dvalue=(char*)PyArray_DATA(dobject);
     return 1;
   }
   /* --- Long */
@@ -371,13 +352,11 @@ static int s2p_getData(PyObject *dobject,
       // code modification: check array fortran order 
       if (S2P_HASFLAG(S2P_FREVERSEDIMS))
       { 
-	S2P_TRACE(("\n COMMENT PIJE: apply reverse L361\n"));
-      dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-      total*=dshape[ddims[0]-n-1];
-    } 
+        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+        total*=dshape[ddims[0]-n-1];
+      }
       else
       {
-	S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L367\n"));
 	dshape[n]=(int)PyArray_DIM(dobject,n);
         total*=dshape[n];
       }
@@ -386,19 +365,8 @@ static int s2p_getData(PyObject *dobject,
     return 1;
   }
   /* --- Double */
-  if (   (PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_DOUBLE))
-      || (PyFloat_Check(dobject)))
+  if ((PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_DOUBLE)))
   {
-    if (PyFloat_Check(dobject))
-    {
-      ddims[0]=1;
-      dshape[0]=1;
-      context->_c_double=(double*)malloc(sizeof(double));
-      *context->_c_double=(double)PyFloat_AsDouble(dobject);
-      *dvalue=(char*)&context->_c_double;
-    }
-    else
-    {
       *dtype=DT_R8;
       ddims[0]=PyArray_NDIM(dobject);
       total=1;
@@ -407,19 +375,16 @@ static int s2p_getData(PyObject *dobject,
 	// code modification: check array fortran order 
 	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
         { 
-	  S2P_TRACE(("\n COMMENT PIJE: apply reverse L398\n"));
-        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-        total*=dshape[ddims[0]-n-1];
-      } 
+          dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+          total*=dshape[ddims[0]-n-1];
+        }
         else
         {
-	  S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L404\n"));
 	  dshape[n]=(int)PyArray_DIM(dobject,n);
           total*=dshape[n];
         }
       }
       *dvalue=(char*)PyArray_DATA(dobject);
-    }
     return 1;
   }
   /* --- Float */
@@ -435,13 +400,11 @@ static int s2p_getData(PyObject *dobject,
       // code modification: check array fortran order
       if (S2P_HASFLAG(S2P_FREVERSEDIMS))
       { 
-	S2P_TRACE(("\n COMMENT PIJE: apply reverse L426\n"));
-      dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
         total*=dshape[ddims[0]-n-1];
       }
       else
       {
-	S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L432\n"));
         dshape[n]=(int)PyArray_DIM(dobject,n);
         total*=dshape[n];
       }
@@ -453,38 +416,30 @@ static int s2p_getData(PyObject *dobject,
   if ((PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_STRING)))
   {
     *dtype=DT_C1;
-    if (PyString_Check(dobject))
-    {
-      ostr=dobject;
-    }
-    else
-    {
-      ddims[0]=PyArray_NDIM(dobject);
-      total=1;
-      for (n=0; n<ddims[0]; n++)
-      {
-	// code modification: check array fortran order 
-	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
-	{ 
-	  S2P_TRACE(("\n COMMENT PIJE: apply reverse L461\n"));
-        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-        total*=dshape[ddims[0]-n-1];
-      } 
-        else
-        {
-	  S2P_TRACE(("\n COMMENT PIJE: apply NO reverse L467\n"));
-          dshape[n]=(int)PyArray_DIM(dobject,n);
-          total*=dshape[n];
-        }
-      } 
-      ostr=PyArray_ToString((PyArrayObject*)dobject,NPY_ANYORDER);
-    }
-    ddims[0]=1;
-    dshape[0]=strlen((char*)PyString_AsString(ostr));
-    context->_c_char=(char*)malloc(dshape[0]*sizeof(char)+1);
-    strcpy(context->_c_char,(char*)PyString_AsString(ostr));
-    *dvalue=(char*)context->_c_char;
-    return 1;
+     ddims[0]=PyArray_NDIM(dobject);
+     total=1;
+     for (n=0; n<ddims[0]; n++)
+     {
+     	// code modification: check array fortran order 
+     	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+     	{ 
+         dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+         total*=dshape[ddims[0]-n-1];
+       }
+       else
+       {
+         dshape[n]=(int)PyArray_DIM(dobject,n);
+         total*=dshape[n];
+       }
+     } 
+     *dvalue=(char*)PyArray_DATA(dobject);
+     ostr=PyArray_ToString((PyArrayObject*)dobject,NPY_ANYORDER);
+     ddims[0]=1;
+     dshape[0]=strlen((char*)PyString_AsString(ostr));
+     context->_c_char=(char*)malloc(dshape[0]*sizeof(char)+1);
+     strcpy(context->_c_char,(char*)PyString_AsString(ostr));
+     *dvalue=(char*)context->_c_char;
+     return 1;
   }
   return 1;
 }
@@ -500,7 +455,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   char      destfile[MAXFILENAMESIZE];
   int       ndim,tsize,n,child;
   int       arraytype,toknpath;
-  hid_t    actualid;
+  hid_t     actualid;
   PyObject *o_clist,*o_value,*o_child,*o_node;
   npy_intp  npy_dim_vals[MAXDIMENSIONVALUES];
   char     *nextpath;
@@ -555,13 +510,11 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
       // code modification:
       if (S2P_HASFLAG(S2P_FREVERSEDIMS))
       {
-	S2P_TRACE(("\n COMMENT PIJE: READ apply reverse L546\n"));
 	npy_dim_vals[ndim-n-1]=rnode->dims[n];
       }
       else
       {
-	S2P_TRACE(("\n COMMENT PIJE: F order, apply NO reverse L551\n"));
-      npy_dim_vals[n]=rnode->dims[n];
+	npy_dim_vals[n]=rnode->dims[n];
       }
       n++;
     } 
@@ -685,7 +638,9 @@ static int s2p_parseAndWriteHDF(hid_t     id,
       S2P_TRACE(("### linked to [%s][%s]\n",curpath,label));
     }
     S2P_FREECONTEXTPTR(context);
-    s2p_getData(PyList_GetItem(tree,1),&tdat,&ndat,ddat,&vdat,context);
+    if (s2p_getData(PyList_GetItem(tree,1),&tdat,&ndat,ddat,&vdat,context))
+    {
+    }
     n=0;
     tsize=1;
     S2P_TRACE(("{"));

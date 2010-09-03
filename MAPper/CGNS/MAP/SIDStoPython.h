@@ -25,6 +25,7 @@
 #define S2P_FOWNDATA       0x0040
 #define S2P_FUPDATE        0x0080
 #define S2P_FDELETEMISSING 0x0100
+#define S2P_FALTERNATESIDS 0x0200
 
 /* ------------------------------------------------------------------------- */
 typedef struct s2p_ent_t

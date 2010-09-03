@@ -19,7 +19,7 @@ try:
 except ImportError:
   __checkready=0
 
-__keywordlist=CGNS.PAT.cgnskeywords.names
+__keywordlist=CK.names
 
 # --------------------------------------------------
 def getNodeType(node):

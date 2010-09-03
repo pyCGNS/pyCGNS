@@ -26,11 +26,11 @@ MLL_PATH_INCLUDES     = []
 MLL_VERSION           = '2.5'
 
 INCLUDE_DIRS =[] 
-INCLUDE_DIRS+=['/home/tools/include','%s/include'%mylocal]
+INCLUDE_DIRS+=['%s/include'%mylocal]
 INCLUDE_DIRS+=['%s/lib/python2.6/site-packages/numpy/core/include'%mylocal]
 
 LIBRARY_DIRS =[]
-LIBRARY_DIRS+=['/home/tools/lib','%s/lib'%mylocal]
+LIBRARY_DIRS+=['%s/lib'%mylocal]
 
 NUMPY_VERSION         = '1.4'
 NUMPY_PATH_INCLUDES   = None

@@ -5,8 +5,8 @@
 #  $Release$
 #  ---------------------------------------------------------------------------
 
-import CGNS.PAT.cgnskeywords as K
-import CGNS.PAT.cgnserrors   as E
+import CGNS.PAT.cgnskeywords as CG_K
+import CGNS.PAT.cgnserrors   as CG_E
 import CGNS
 
 __CGNS_LIBRARY_VERSION__=2.4
@@ -93,7 +93,7 @@ def getValueType(v):
   if (v == None): return None
   if (type(v) == type(NPY.array((1,)))):
     if (v.dtype.kind in ['S','a']): return CG_K.Character_s
-    if (v.dtype.char in ['f']):     return CG_K.RealSimple_s
+    if (v.dtype.char in ['f']):     return CG_K.RealSingle_s
     if (v.dtype.char in ['d']):     return CG_K.RealDouble_s
     if (v.dtype.char in ['i']):     return CG_K.Integer_s
     if (v.dtype.char in ['l']):     return CG_K.Integer_s
@@ -103,7 +103,7 @@ def getValueType(v):
 def setValue(node,value):
   t=getValueType(value)
   if (t == None): node[1]=None
-  if (t in [CG_K.Integer_s,CG_K.RealDouble_s,CG_K.RealSimple_s,CG_K.Character_s]):
+  if (t in [CG_K.Integer_s,CG_K.RealDouble_s,CG_K.RealSingle_s,CG_K.Character_s]):
 ##    code correction: Name was modified (not value)
 ##    node[0]=value
     node[1]=value
@@ -415,7 +415,8 @@ def newGridLocation(parent,value=CG_K.CellCenter_s):
   """
   checkDuplicatedName(parent,CG_K.GridLocation_s)
   if (value not in CG_K.GridLocation_l): raise CG_E.cgnsException(200,value)
-  node=newNode(CG_K.GridLocation_s,value,[],CG_K.GridLocation_ts,parent)
+  ## code correction: Modify value string into NPY string array
+  node=newNode(CG_K.GridLocation_s,setStringAsArray(value),[],CG_K.GridLocation_ts,parent)
   return node
   
 # -----------------------------------------------------------------------------
@@ -664,9 +665,21 @@ def newDataArray(parent,name,value=None):
   """
   checkDuplicatedName(parent,name)
   ## code correction:  Add value type and fortran order
-  if (type(value) in [type(3), type(3.2), type("s")]): vv=NPY.array([value],dtype=type(value),order='Fortran')
-  else: vv=value
-  if (vv != None): checkArray(vv)
+  ## code correction:  Add a specific array for string type
+  ## code correction:  Modify array check
+  if (type(value)==type(3)):
+    vv=NPY.array([value],dtype=NPY.int32,order='Fortran')
+    checkArray(vv)
+  elif(type(value)==type(3.2)):
+    vv=NPY.array([value],dtype=NPY.float32,order='Fortran')
+    checkArray(vv)
+  elif(type(value)==type("s")):
+    vv=setStringAsArray(value)
+    checkArrayChar(vv)
+  else:
+    vv=value
+    if (vv != None): checkArray(vv)
+    
   node=newNode(name,vv,[],CG_K.DataArray_ts,parent)
   return node
 
@@ -727,6 +740,7 @@ def newZoneBC(parent):
 def newBC(parent,bname,brange=[0,0,0,0,0,0],
           btype=CG_K.Null_s,bcType=CG_K.Null_s,
           family=CG_K.Null_s,pttype=CG_K.PointRange_s):
+  print "COMMENT PIJE, create newBC"
   return newBoundary(parent,bname,brange,btype,bcType,pttype) 
 
 def newBoundary(parent,bname,brange,
@@ -853,10 +867,10 @@ def newAxisymmetry(parent,refpoint=[0.0,0.0,0.0],axisvector=[0.0,0.0,0.0]):
   checkArrayReal(axisvector)
   node=newNode(CG_K.Axisymmetry_s,None,[],CG_K.Axisymmetry_ts,parent)
   n=hasChildName(parent,CG_K.AxisymmetryReferencePoint_s)
-  if (n == None): 
+  if (n == None):
     n=newDataArray(node,CG_K.AxisymmetryReferencePoint_s,NPY.array(refpoint))
   n=hasChildName(parent,CG_K.AxisymmetryAxisVector_s)
-  if (n == None): 
+  if (n == None):
     n=newDataArray(node,CG_K.AxisymmetryAxisVector_s,NPY.array(axisvector))
   return node
 
@@ -938,7 +952,7 @@ def newGridConnectivity1to1(parent,name,dname,window,dwindow,trans):
                   None,[],CG_K.ZoneGridConnectivity_ts,parent)
   zcnode=newNode(name,dname,[],CG_K.GridConnectivity1to1_ts,cnode)
   newNode("Transform",NPY.array(list(trans),dtype=NPY.int32),[],
-          "int[IndexDimension]",zcnode)   
+          "int[IndexDimension]",zcnode)
   ## code correction: Modify PointRange shape and order
   newNode(CG_K.PointRange_s,NPY.array(window,dtype=NPY.int32,order='Fortran'),[],
           CG_K.IndexRange_ts,zcnode)   
@@ -1119,7 +1133,7 @@ def newThermalConductivityModel(parent,valueType=CG_K.SutherlandLaw_s):
   checkDuplicatedName(node,CG_K.ThermalConductivityModelType_s)
   ## code correction: Modify valueType string into NPY string array
   nodeType=newNode(CG_K.ThermalConductivityModelType_s,setStringAsArray(valueType),[],
-                     CG_K.ThermalConductivityModelType_ts,node)  
+                   CG_K.ThermalConductivityModelType_ts,node)  
   return node
 
 def newViscosityModel(parent,valueType=CG_K.SutherlandLaw_s): 
@@ -1359,7 +1373,7 @@ def newRigidGridMotion(parent,name,valueType=CG_K.Null_s,vector=[0.0,0.0,0.0]):
   checkDuplicatedName(parent,CG_K.RigidGridMotionType_s,)
   ## code correction: Modify valueType string into NPY string array
   nodeType=newNode(CG_K.RigidGridMotionType_s,setStringAsArray(valueType),[],
-                     CG_K.RigidGridMotionType_ts,node)
+                   CG_K.RigidGridMotionType_ts,node)
   n=hasChildName(parent,CG_K.OriginLocation_s)
   if (n == None): 
     n=newDataArray(node,CG_K.OriginLocation_s,NPY.array(vector))
@@ -1433,7 +1447,7 @@ def newFamily(parent,name):
   node=newNode(name,None,[],CG_K.Family_ts,parent)
   return node
 
-def newFamilyName(parent,family=None): 
+def newFamilyName(parent,family=None):
   ## code correction: Modify family string into NPY string array
   return newNode(CG_K.FamilyName_s,setStringAsArray(family),[],CG_K.FamilyName_ts,parent)
 
@@ -1458,7 +1472,7 @@ def newGeometryReference(parent,name='{GeometryReference}',
   checkDuplicatedName(node,CG_K.GeometryFormat_s)
   ## code correction: Modify valueType string into NPY string array
   nodeType=newNode(CG_K.GeometryFormat_s,setStringAsArray(valueType),[],
-                     CG_K.GeometryFormat_ts,node)
+                   CG_K.GeometryFormat_ts,node)
   return node
   
 # -----------------------------------------------------------------------------
