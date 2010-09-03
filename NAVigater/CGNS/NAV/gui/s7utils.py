@@ -29,43 +29,31 @@ def wIconFactory():
   return G___.iconStorage
 
 def canBeShown(data):
-    if ( data == None ):
-        return 1
-    if ( (type(data) == type("")) and (len(data)<G___.maxDisplaySize) ):
-        return 1
-    if ( (type(data) == type(1.2))):
-        return 1
-    if ( (type(data) == type(1))):
-        return 1
-    if ( (type(data) == type(Num.ones((1,)))) ):
-        if (data.size < G___.maxDisplaySize): return 1
-    if ((type(data) == type([])) and (len(data))): # oups !
-      if (type(data[0]) == type("")):   return 1
-      if (type(data[0]) == type(0)):    return 1
-      if (type(data[0]) == type(0.0)):  return 1
-    return 0
+  if (data == None ): return 1
+  if (type(data) in [type(""),type(1.2),type(1)]): return 0
+  if (     (type(data) == type(Num.ones((1,))))
+       and (data.size < G___.maxDisplaySize)): return 1
+  return 0
 
 def toBeShown(data):
-    if (data == None ): return ""
-    if ((type(data) == type("")) and (len(data)<G___.maxDisplaySize) ):
-      return str(data)
-    if ((type(data) == type(1.2))): return str(data)
-    if ((type(data) == type(1))):   return str(data)
-    if (     (type(data) == type(Num.ones((1,))))
-         and (data.size<G___.maxDisplaySize) ):
-      if (data.dtype.char in ['S','c']):
-        return data.tostring()
-      if (data.size == 1):
-        if (data.dtype == Num.dtype('float32')):
-          return showOneFloat(data.flat[0])
-        return str(data.flat[0])
-      return showFloatArrayAsList(data.tolist())
-    if ((type(data) == type([])) and (len(data))): # oups !
-      return str(Num.asarray(data))
-    return str(data)
+  if (not canBeShown(data)): return "???1"
+  if (data == None ):        return ""
+  else:                      return showOneArray(data)
+
+def showOneArray(data):
+  return str(data)
 
 def showOneFloat(f):
   return string.rstrip('%8.6f'%f,'0')
+  
+def showOneDouble(f):
+  return string.rstrip('%8.6f'%f,'0')
+  
+def showOneInteger(f):
+  return string.rstrip('%d'%f,'0')
+  
+def showOneLong(f):
+  return string.rstrip('%d'%f,'0')
   
 def showFloatArrayAsList(data):
   return __showFloatArrayAsList(data).replace("'","")[:-1]

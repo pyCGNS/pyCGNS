@@ -27,10 +27,10 @@ if (installprocess):
     if (not pyCGNSconfig.HAS_HDF5):
       print 'pyGCNS[ERROR]: MAP requires HDF5, check pyCGNSconfig.py file!'
       sys.exit(1)
-    cf_include_dirs=pyCGNSconfig.INCLUDE_DIRS
-    cf_library_dirs=pyCGNSconfig.LIBRARY_DIRS
-    cf_optional_libs=pyCGNSconfig.OPTIONAL_LIBS
-  except:
+    cf_include_dirs=pyCGNSconfig.HDF5_PATH_INCLUDES+pyCGNSconfig.INCLUDE_DIRS
+    cf_library_dirs=pyCGNSconfig.HDF5_PATH_LIBRARIES+pyCGNSconfig.LIBRARY_DIRS
+    cf_optional_libs=pyCGNSconfig.HDF5_LINK_LIBRARIES
+  except ValueError:
     print 'pyGCNS[ERROR]: bad pyCGNSconfig.py file for MAP!'
     sys.exit(1)
 

@@ -24,7 +24,7 @@ def prodtag():
   return (proddate,prodhost)
   
 # --------------------------------------------------------------------
-def search(tag,deps=None):
+def search(tag,deps=[]):
   import sys
   import distutils.util
   import os
@@ -62,8 +62,8 @@ def search(tag,deps=None):
        C.MLL_PATH_LIBRARIES,
        C.MLL_LINK_LIBRARIES,
        C.MLL_EXTRA_ARGS)=find_MLL(C.MLL_PATH_INCLUDES,
-                                   C.MLL_PATH_LIBRARIES,
-                                   C.MLL_LINK_LIBRARIES)
+                                  C.MLL_PATH_LIBRARIES,
+                                  C.MLL_LINK_LIBRARIES)
     if ('CHLone' in deps):
       (C.CHLONE_VERSION,
        C.CHLONE_PATH_INCLUDES,
@@ -145,10 +145,18 @@ def updateConfig(pfile,gfile,config):
     cf=f.readlines()
     f.close()
   else:
-    print "### pyCGNS: use existing pyCGNSconfig.py file"
-    f=open("%s/pyCGNSconfig.py"%(gfile),'r')
-    cf=f.readlines()
-    f.close()
+    f1=os.stat("%s/pyCGNSconfig.py"%(gfile))
+    f2=os.stat("%s/pyCGNSconfig.py.in"%(pfile))
+    if (f1.st_mtime < f2.st_mtime):
+      print "### pyCGNS: use modified pyCGNSconfig.py.in file"
+      f=open("%s/pyCGNSconfig.py.in"%(pfile),'r')
+      cf=f.readlines()
+      f.close()
+    else:  
+      print "### pyCGNS: use existing pyCGNSconfig.py file"
+      f=open("%s/pyCGNSconfig.py"%(gfile),'r')
+      cf=f.readlines()
+      f.close()
   rl=[]
   ck=config.keys()
   for l in cf:
@@ -177,14 +185,14 @@ def find_HDF5(pincs,plibs,libs):
   if notfound:
     print "### pyCGNS: ERROR: libhdf5 not found, please check paths:"
     print "### pyCGNS: ",plibs
-    return None
+    return ([],)*5
   notfound=1
   for pth in pincs:
     if (os.path.exists(pth+'/hdf5.h')): notfound=0
   if notfound:
     print "### pyCGNS: ERROR: hdf5.h not found, please check paths"
     print "### pyCGNS: ",pincs
-    return None
+    return ([],)*5
   ifh='HDF5 library version: unknown'
   for pth in pincs:
     if (os.path.exists(pth+'/H5public.h')):
@@ -199,7 +207,7 @@ def find_HDF5(pincs,plibs,libs):
       if found: break
       print "### pyCGNS: ERROR: cannot find hdf5 version, please check paths"
       print "### pyCGNS: ",pincs
-      return None
+      return ([],)*5
   return (vers,pincs,plibs,libs,extraargs)
 
 def find_MLL(pincs,plibs,libs):
@@ -218,12 +226,12 @@ def find_MLL(pincs,plibs,libs):
           cgnsversion=ll.split()[2]
           if (cgnsversion<'3000'):
             print "### pyCGNS: ERROR: version should be v3.x for MLL"
-            return None
+            return ([],)*5
       break
   if notfound:
     print "### pyCGNS: ERROR: cgnslib.h not found, please check paths"
     print "### pyCGNS: ",pincs
-    return None
+    return ([],)*5
 
   notfound=1
   for pth in plibs:
@@ -236,7 +244,7 @@ def find_MLL(pincs,plibs,libs):
   if notfound:
     print "### pyCGNS: ERROR: libcgns not found, please check paths:"
     print "### pyCGNS: ",plibs
-    return None
+    return ([],)*5
     
   notfound=1
   for pth in pincs:
@@ -266,14 +274,14 @@ def find_CHLone(pincs,plibs,libs):
   if notfound:
     print "### pyCGNS: ERROR: libCHlone not found, please check paths:"
     print "### pyCGNS: ",plibs
-    return None
+    return ([],)*5
   notfound=1      
   for pth in pincs:
     if (os.path.exists(pth+'/CHLone/CHlone.h')): notfound=0
   if notfound:
     print "### pyCGNS: ERROR: CHLone/CHlone.h not found, please check paths"
     print "### pyCGNS: ",pincs
-    return None
+    return ([],)*5
   
   return (vers,pincs,plibs,libs,extraargs)
 

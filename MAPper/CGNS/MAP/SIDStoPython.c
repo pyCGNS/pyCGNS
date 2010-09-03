@@ -84,7 +84,7 @@ static L3_Cursor_t *s2p_addoneHDF(char *filename,s2p_ctx_t *context)
   if (openfile)
   {
     /* L3_F_OWNDATA|L3_F_WITHCHILDREN */
-    nextdbs->l3db=L3_openFile(filename,L3_OPEN_OLD,L3_F_DEFAULT);
+    nextdbs->l3db=L3_openFile(filename,L3E_OPEN_OLD,L3F_DEFAULT);
     nextdbs->filename=(char*)malloc(sizeof(char)*strlen(filename)+1);
     strcpy(nextdbs->filename,filename);
     nextdbs->dirname=NULL;
@@ -256,8 +256,8 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
 			    s2p_ctx_t   *context)
 {
   char curpath[MAXPATHSIZE];
-  char name[L3_MAX_NAME+1];
-  char destnode[L3_MAX_NAME+1];
+  char name[L3C_MAX_NAME+1];
+  char destnode[L3C_MAX_NAME+1];
   char destfile[MAXFILENAMESIZE];
   int parsepath,c;
   hid_t nid;
@@ -459,7 +459,6 @@ static int s2p_getData(PyObject *dobject,
     }
     else
     {
-<<<<<<< local
       ddims[0]=PyArray_NDIM(dobject);
       total=1;
       for (n=0; n<ddims[0]; n++)
@@ -497,7 +496,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
                                      s2p_ctx_t   *context,
 				     L3_Cursor_t *l3db)
 {
-  char      destnode[L3_MAX_NAME+1];
+  char      destnode[L3C_MAX_NAME+1];
   char      destfile[MAXFILENAMESIZE];
   int       ndim,tsize,n,child;
   int       arraytype,toknpath;
@@ -529,7 +528,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
       actualid=s2p_linktrack(lkl3db,destnode,context);
     }
   }
-  L3M_SETFLAG(l3db,L3_F_WITHCHILDREN|L3_F_WITHDATA);
+  L3M_SETFLAG(l3db,L3F_WITHCHILDREN|L3F_WITHDATA);
   rnode=L3_nodeRetrieve(l3db,actualid);
   if (rnode == NULL)
   {
@@ -544,14 +543,14 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     n=0;
     ndim=0;
     npy_dim_vals[0]=0;
-    while ((n<L3_MAX_DIMS)&&(rnode->dims[n]!=-1))
+    while ((n<L3C_MAX_DIMS)&&(rnode->dims[n]!=-1))
     {
       tsize*=rnode->dims[n];
       ndim++;
       n++;
     }
     n=0;
-    while ((n<L3_MAX_DIMS)&&(rnode->dims[n]!=-1))
+    while ((n<L3C_MAX_DIMS)&&(rnode->dims[n]!=-1))
     {
       // code modification:
       if (S2P_HASFLAG(S2P_FREVERSEDIMS))
@@ -690,18 +689,18 @@ static int s2p_parseAndWriteHDF(hid_t     id,
     n=0;
     tsize=1;
     S2P_TRACE(("{"));
-    while ((n<L3_MAX_DIMS)&&(ddat[n]!=-1))
+    while ((n<L3C_MAX_DIMS)&&(ddat[n]!=-1))
     {
       tsize*=ddat[n];
       S2P_TRACE(("%d",ddat[n]));
       n++;
-      if ((n<L3_MAX_DIMS)&&(ddat[n]!=-1))
+      if ((n<L3C_MAX_DIMS)&&(ddat[n]!=-1))
       {
 	S2P_TRACE(("x"));
       }
     } 
     S2P_TRACE(("}=%d\n",tsize));
-    node=L3_nodeSet(l3db,node,name,label,ddat,L3_typeAsEnum(tdat),vdat,L3_F_NONE);
+    node=L3_nodeSet(l3db,node,name,label,ddat,L3_typeAsEnum(tdat),vdat,L3F_NONE);
     L3_nodeCreate(l3db,id,node);
     if (PyList_Check(PyList_GetItem(tree,2)))
     {
@@ -784,7 +783,7 @@ int s2p_saveAsHDF(char      *filename,
   char cpath[MAXPATHSIZE],*tdat=NULL;
   s2p_ctx_t *context=NULL;
   PyObject *rtree,*otree=NULL;
-  int dims[L3_MAX_DIMS];
+  int dims[L3C_MAX_DIMS];
   int ndat=0,ddat[NPY_MAXDIMS],n=0;
   char *vdat=NULL;
   L3_Cursor_t *l3db=NULL;
@@ -810,7 +809,7 @@ int s2p_saveAsHDF(char      *filename,
        && (PyString_Check(PyList_GetItem(tree,3))))
   {
     s2p_filllinktable(links,context);
-    l3db=L3_openFile(filename,L3_OPEN_NEW,L3_F_DEFAULT);
+    l3db=L3_openFile(filename,L3E_OPEN_NEW,L3F_DEFAULT);
     if (!L3M_ECHECK(l3db))
     {
       CHL_printError(l3db);
@@ -835,7 +834,7 @@ int s2p_saveAsHDF(char      *filename,
 	  s2p_getData(PyList_GetItem(otree,1),&tdat,&ndat,ddat,&vdat,context);
 	  L3_initDims(dims,1,-1);
 	  node=L3_nodeSet(l3db,node,CGNSLibraryVersion_n,CGNSLibraryVersion_ts,
-			  dims,L3E_R4,vdat,L3_F_NONE);
+			  dims,L3E_R4,vdat,L3F_NONE);
 	  L3_nodeCreate(l3db,l3db->root_id,node);
 	}
 	else

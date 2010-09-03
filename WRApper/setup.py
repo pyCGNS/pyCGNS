@@ -36,15 +36,15 @@ numpinc=pyCGNSconfig.NUMPY_PATH_INCLUDES
 mll=True
 hdf=False
 alib='numpy'
-chlonelib=hdflib=cgnslib=""
+chlonelib=cgnslib=""
 hdfversion=cgnsversion=chloneversion='unknown'
 
 lname         = "CGNS.WRA"
 lversion      = pyCGNSconfig.WRA_VERSION
 
 extraargs=pyCGNSconfig.MLL_EXTRA_ARGS
-include_dirs=mllpinc+hdfpinc
-library_dirs=mllplib+hdfplib
+include_dirs=mllpinc+hdfpinc+pyCGNSconfig.INCLUDE_DIRS
+library_dirs=mllplib+hdfplib+pyCGNSconfig.LIBRARY_DIRS
 optional_libs=mlllib+hdflib
 
 configdict={}

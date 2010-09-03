@@ -34,7 +34,7 @@
 import CGNS.pyCGNSconfig
 
 try:
-  CGNS_VERSION = int(CGNS.pyCGNSconfig.MLL_VERSION)
+  CGNS_VERSION = int(float(CGNS.pyCGNSconfig.MLL_VERSION))
   CGNS_DOTVERS = CGNS_VERSION/1000.
 except TypeError:
   CGNS_VERSION = 2520
