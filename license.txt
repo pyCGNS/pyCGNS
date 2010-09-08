@@ -1,8 +1,8 @@
 ### ---
-
- The distribution and use of the pyCGNS is covered by the LGPL v2.1 license.
- The following text is copy of this LGPL v2.1 license:
-
+#
+# The distribution and use of the pyCGNS is covered by the LGPL v2.1 license.
+# The following text is copy of this LGPL v2.1 license:
+#
 ### ---
 		  GNU LESSER GENERAL PUBLIC LICENSE
 		       Version 2.1, February 1999

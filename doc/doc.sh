@@ -35,3 +35,10 @@ export PYCGNSDOC='readme'
 sphinx-build -b html -c doc WRApper build/doc/html/WRA
 sphinx-build -b latex -c doc WRApper build/doc/latex/WRA
 (cd build/doc/latex/WRA; pdflatex pyCGNS_WRA.tex; mv *.pdf ../../pdf)
+
+# --- ALL
+cp build/doc/pdf/* ./doc
+mkdir build/doc/html/_images
+cp doc/images/* build/doc/html/_images
+
+

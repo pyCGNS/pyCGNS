@@ -5,6 +5,28 @@ The module gathers various tools and libraries for end-users and
 Python application developpers.
 The module uses `numpy <http://numpy.scipy.org>`_ for all node values.
 
+.. raw:: html
+
+  Click below for a quick access to modules.
+
+  <table border=0 width="100%"><tr border=0 >
+  <td border=0 ><a href="MAP/readme.html">
+      <img src="_images/MAP-logo.jpg" height="48" alt="MAP"/></a></td>
+  <td border=0 ><a href="PAT/readme.html">
+      <img src="_images/PAT-logo.jpg" height="48" alt="PAT"/></a></td>
+  <td border=0 ><a href="NAV/readme.html">
+      <img src="_images/NAV-logo.jpg" height="48" alt="NAV"/></a></td>
+  <td border=0 ><a href="WRA/readme.html">
+      <img src="_images/WRA-logo.jpg" height="48" alt="WRA"/></a></td>
+  <td border=0 ><img src="_images/VAL-logo.jpg" height="48" alt="VAL"/></td>
+  <td border=0 ><img src="_images/TRA-logo.jpg" height="48" alt="TRA"/></td>
+  <td border=0 ><img src="_images/DAT-logo.jpg" height="48" alt="DAT"/></td>
+  </tr></table>
+
+  You also have PDF version of the documentation you can download from
+  the <a href="http://www.python-science.org/project/pyCGNS">
+  pyCGNS web site</a>.
+
 In-memory CGNS trees
 --------------------
 The main idea of this module is to have a CGNS tree in the process memory.
@@ -21,6 +43,7 @@ Contents
 .. toctree::
    
    introduction
+   modules
    install
 
 Tables

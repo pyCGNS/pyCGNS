@@ -53,32 +53,33 @@ def search(tag,deps=[]):
        C.HDF5_PATH_INCLUDES,
        C.HDF5_PATH_LIBRARIES,
        C.HDF5_LINK_LIBRARIES,
-       C.HDF5_EXTRA_ARGS)=find_HDF5(C.HDF5_PATH_INCLUDES,
-                                    C.HDF5_PATH_LIBRARIES,
+       C.HDF5_EXTRA_ARGS)=find_HDF5(C.HDF5_PATH_INCLUDES+C.INCLUDE_DIRS,
+                                    C.HDF5_PATH_LIBRARIES+C.LIBRARY_DIRS,
                                     C.HDF5_LINK_LIBRARIES)
     if ('MLL' in deps):
       (C.MLL_VERSION,
        C.MLL_PATH_INCLUDES,
        C.MLL_PATH_LIBRARIES,
        C.MLL_LINK_LIBRARIES,
-       C.MLL_EXTRA_ARGS)=find_MLL(C.MLL_PATH_INCLUDES,
-                                  C.MLL_PATH_LIBRARIES,
-                                  C.MLL_LINK_LIBRARIES)
+       C.MLL_EXTRA_ARGS)=find_MLL(C.MLL_PATH_INCLUDES+C.INCLUDE_DIRS,
+                                  C.MLL_PATH_LIBRARIES+C.LIBRARY_DIRS,
+                                  C.MLL_LINK_LIBRARIES,
+                                  C.MLL_EXTRA_ARGS)
     if ('CHLone' in deps):
       (C.CHLONE_VERSION,
        C.CHLONE_PATH_INCLUDES,
        C.CHLONE_PATH_LIBRARIES,
        C.CHLONE_LINK_LIBRARIES,
-       C.CHLONE_EXTRA_ARGS)=find_CHLone(C.CHLONE_PATH_INCLUDES,
-                                        C.CHLONE_PATH_LIBRARIES,
+       C.CHLONE_EXTRA_ARGS)=find_CHLone(C.CHLONE_PATH_INCLUDES+C.INCLUDE_DIRS,
+                                        C.CHLONE_PATH_LIBRARIES+C.LIBRARY_DIRS,
                                         C.CHLONE_LINK_LIBRARIES)
     if ('numpy' in deps):
       (C.NUMPY_VERSION,
        C.NUMPY_PATH_INCLUDES,
        C.NUMPY_PATH_LIBRARIES,
        C.NUMPY_LINK_LIBRARIES,
-       C.NUMPY_EXTRA_ARGS)=find_numpy(C.NUMPY_PATH_INCLUDES,
-                                      C.NUMPY_PATH_LIBRARIES)
+       C.NUMPY_EXTRA_ARGS)=find_numpy(C.NUMPY_PATH_INCLUDES+C.INCLUDE_DIRS,
+                                      C.NUMPY_PATH_LIBRARIES+C.LIBRARY_DIRS)
   except ImportError:
     print 'pyGCNS[ERROR]: %s setup cannot find pyCGNSconfig.py file!'%tag
     sys.exit(1)
@@ -172,6 +173,7 @@ def updateConfig(pfile,gfile,config):
   f.writelines(rl)
   f.close()
 
+# --------------------------------------------------------------------
 def find_HDF5(pincs,plibs,libs):
   notfound=1
   extraargs=[]
@@ -210,9 +212,9 @@ def find_HDF5(pincs,plibs,libs):
       return ([],)*5
   return (vers,pincs,plibs,libs,extraargs)
 
-def find_MLL(pincs,plibs,libs):
+# --------------------------------------------------------------------
+def find_MLL(pincs,plibs,libs,extraargs):
   notfound=1
-  extraargs=[]
   vers=''
   libs=['cgns']
   for pth in pincs:
@@ -259,6 +261,7 @@ def find_MLL(pincs,plibs,libs):
     extraargs+=['-U__ADF_IN_SOURCES__']
   return (vers,pincs,plibs,libs,extraargs)
 
+# --------------------------------------------------------------------
 def find_CHLone(pincs,plibs,libs):
   extraargs=[]
   vers=''
@@ -285,6 +288,7 @@ def find_CHLone(pincs,plibs,libs):
   
   return (vers,pincs,plibs,libs,extraargs)
 
+# --------------------------------------------------------------------
 def find_numpy(pincs,plibs):
   vers='1.4'
   extraargs=[]

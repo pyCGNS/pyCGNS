@@ -1,0 +1,71 @@
+Modules
+=======
+
+The pyCGNS python package module now includes:
+
+MAPper
+------
+
+ `MAP <MAP/readme.html>`_  (new in v4) 
+  
+ The implementation of the SIDS-to-Python mapping. 
+ Provides functions for load/save SIDS/HDF5 from/to CGNStree.py
+
+WRApper
+-------
+
+ `WRA <WRA/readme.html>`_ (formerly was pyCGNS) 
+
+  The Python wrapper for ADF and MLL libraries.
+
+PATternMaker
+------------
+
+ `PAT <PAT/readme.html>`_ (formerly was pyCGNS/cgnslib)
+
+  A set of functions to create/read/write/modify CGNS/SIDS patterns 
+  compilants with SIDS-to-Python.
+
+NAVigater
+---------
+
+ `NAV <NAV/readme.html>`_ (formerly was pyS7) 
+
+  A graphical browser for CGNS trees (ADF/HDF5/Python). Allows tree 
+  construction by means of copy/paste and patterns.
+
+DATatracer
+----------
+
+ DAT (formerly was pyDAX) 
+
+ A set of command-line tools that use DBMS services for SIDS/HDF5 files.
+
+.. warning::
+
+   This module is experimental and should NOT be used for your applications.
+
+
+VALidater
+---------
+
+ VAL (formerly was pyC5)
+
+ It is a comand-line tool for CGNS tree verification. 
+ It uses an XML grammar.
+
+.. warning::
+
+   This module is experimental and should NOT be used for your applications.
+
+TRAnslater
+----------
+
+ TRA (formerly was pyCRAB) 
+
+ It is a set translators from/to various formats, these can be used as 
+ functions in your own application or as command-line tools.
+
+.. warning::
+
+   This module is experimental and should NOT be used for your applications.
