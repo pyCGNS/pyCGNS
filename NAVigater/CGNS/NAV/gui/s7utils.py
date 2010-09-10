@@ -36,12 +36,12 @@ def canBeShown(data):
   return 0
 
 def toBeShown(data):
-  if (not canBeShown(data)): return "???1"
+  if (not canBeShown(data)): return "???"
   if (data == None ):        return ""
   else:                      return showOneArray(data)
 
 def showOneArray(data):
-  return str(data)
+  return str(data.tolist())
 
 def showOneFloat(f):
   return string.rstrip('%8.6f'%f,'0')

@@ -111,7 +111,10 @@ def setValue(node,value):
   
 # -----------------------------------------------------------------------------
 def setStringAsArray(a):
-  if (type(a)==type("")): return NPY.array(tuple(a),dtype='|S',order='Fortran')
+  if (type(a)==type("")):
+    return NPY.array(tuple(a),dtype='|S',order='Fortran')
+  if (type(a)==type(NPY.array((1)))):
+    return a
   return None
 
 # -----------------------------------------------------------------------------
@@ -140,7 +143,7 @@ def checkArrayChar(a):
 # -----------------------------------------------------------------------------
 def checkArrayReal(a):
   checkArray(a)
-  if (a.dtype.char not in ['f']):  raise CG_E.cgnsException(106)
+  if (a.dtype.char not in ['d','f']):  raise CG_E.cgnsException(106)
   return a
 
 # -----------------------------------------------------------------------------
@@ -248,7 +251,7 @@ def newNode(name,value,children,type,parent=None):
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-def newDataClass(parent,value=CG_K.UserDefined_s):
+def newDataClass(parent,value=NPY.array(CG_K.UserDefined_s)):
   """-DataClass node creation -DataClass
   
   'newNode:N='*newDataClass*'(parent:N,value:A)'
@@ -294,7 +297,7 @@ def checkDataClass(node,parent=None):
   return node
   
 # -----------------------------------------------------------------------------
-def newDescriptor(parent,name,value=''):
+def newDescriptor(parent,name,value=NPY.array([''])):
   """-Descriptor node creation -Descriptor
   
   'newNode:N='*newDescriptor*'(parent:N,name:S,text:A)'
@@ -302,16 +305,17 @@ def newDescriptor(parent,name,value=''):
   No child allowed.
   Returns a new <node> representing a Descriptor_t sub-tree."""
   checkDuplicatedName(parent,name)
-  node=newNode(name,checkArrayChar(value),[],CG_K.Descriptor_ts,parent)
+  node=newNode(name,setStringAsArray(value),[],CG_K.Descriptor_ts,parent)
   return checkDescriptor(node)
   
 def checkDescriptor(node,parent=None):
   checkNode(node)
   checkName(node[0])
   if (node[3] != CG_K.Descriptor_ts): raise CG_E.cgnsException(27,node[3])
-  if (len(node[2]) != 0):          raise CG_E.cgnsException(28,node[0])
+  if (len(node[2]) != 0):             raise CG_E.cgnsException(28,node[0])
   value=getValue(node)
-  if (getValueType(value) != CG_K.Character_s): raise CG_E.cgnsException(110,node[0])
+  if (getValueType(value) != CG_K.Character_s):
+                                      raise CG_E.cgnsException(110,node[0])
   if (parent != None):
      checkTypeList(parent,[CG_K.DataArray_ts,CG_K.CGNSBase_ts,CG_K.Zone_ts,
                            CG_K.GridCoordinates_ts,CG_K.Elements_ts,CG_K.Axisymmetry_ts,
@@ -500,7 +504,7 @@ def newCGNS():
   return badnode
 
 # ----------------------------------------------------------------------------
-def newSimulationType(parent,stype=CG_K.NonTimeAccurate_s):
+def newSimulationType(parent,stype=NPY.array(CG_K.NonTimeAccurate_s)):
   """-SimulationType node creation -SimulationType
   
   'newNode:N='*newSimulationType*'(parent:N,stype=CG_K.SimulationType)'
@@ -583,7 +587,9 @@ def newOrdinal(parent,value=0):
   return node
 
 # -----------------------------------------------------------------------------
-def newZone(parent,name,size=(2,2,2),ztype=CG_K.Structured_s,family=''):
+def newZone(parent,name,size=(2,2,2),
+            ztype=CG_K.Structured_s,
+            family=''):
   """-Zone node creation -Zone
   
   'newNode:N='*newZone*'(parent:N,name:S,size:(I*),ztype:CG_K.ZoneType)'
@@ -708,7 +714,9 @@ def newDiscreteData(parent,name):
   return node 
   
 # -----------------------------------------------------------------------------
-def newElements(parent,elementstype=CG_K.UserDefined_s,elementsconnectivity=None,
+def newElements(parent,
+                elementstype=NPY.array(CG_K.UserDefined_s),
+                elementsconnectivity=None,
                 elementsrange=None):
   """-Elements node creation -Elements
   
@@ -740,11 +748,12 @@ def newZoneBC(parent):
 def newBC(parent,bname,brange=[0,0,0,0,0,0],
           btype=CG_K.Null_s,bcType=CG_K.Null_s,
           family=CG_K.Null_s,pttype=CG_K.PointRange_s):
-  print "COMMENT PIJE, create newBC"
   return newBoundary(parent,bname,brange,btype,bcType,pttype) 
 
 def newBoundary(parent,bname,brange,
-                btype=CG_K.Null_s,family=None,pttype=CG_K.PointRange_s): 
+                btype=NPY.array(CG_K.Null_s),
+                family=None,
+                pttype=NPY.array(CG_K.PointRange_s)): 
   """-BC node creation -BC
   
   'newNode:N='*newBoundary*'(parent:N,bname:S,brange:[*i],btype:S)'
@@ -775,7 +784,7 @@ def newBoundary(parent,bname,brange,
   return bnode
   
 # -----------------------------------------------------------------------------
-def newBCDataSet(parent,name,valueType=CG_K.Null_s):
+def newBCDataSet(parent,name,valueType=NPY.array(CG_K.Null_s)):
   """-BCDataSet node creation -BCDataSet
   
   'newNode:N='*newBCDataSet*'(parent:N,name:S,valueType:CG_K.BCTypeSimple)'
@@ -809,7 +818,9 @@ def newBCData(parent,name):
   return node 
   
 # -----------------------------------------------------------------------------
-def newBCProperty(parent,wallfunction=CG_K.Null_s,area=CG_K.Null_s):
+def newBCProperty(parent,
+                  wallfunction=NPY.array(CG_K.Null_s),
+                  area=NPY.array(CG_K.Null_s)):
   """-BCProperty node creation -BCProperty
   
   'newNode:N='*newBCProperty*'(parent:N)'
@@ -851,7 +862,9 @@ def newCoordinates(parent,name=CG_K.GridCoordinates_s,value=None):
   return node
   
 # -----------------------------------------------------------------------------
-def newAxisymmetry(parent,refpoint=[0.0,0.0,0.0],axisvector=[0.0,0.0,0.0]):
+def newAxisymmetry(parent,
+                   refpoint=NPY.array([0.0,0.0,0.0]),
+                   axisvector=NPY.array([0.0,0.0,0.0])):
   """-Axisymmetry node creation -Axisymmetry
   
   'newNode:N='*newAxisymmetry*'(parent:N,refpoint:A,axisvector:A)'
@@ -875,7 +888,9 @@ def newAxisymmetry(parent,refpoint=[0.0,0.0,0.0],axisvector=[0.0,0.0,0.0]):
   return node
 
 # -----------------------------------------------------------------------------
-def newRotatingCoordinates(parent,rotcenter=[0.0,0.0,0.0],ratev=[0.0,0.0,0.0]):
+def newRotatingCoordinates(parent,
+                           rotcenter=NPY.array([0.0,0.0,0.0]),
+                           ratev=NPY.array([0.0,0.0,0.0])):
   """-RotatingCoordinates node creation -RotatingCoordinates
   
   'newNode:N='*newRotatingCoordinates*'(parent:N,rotcenter=A,ratev=A)'
@@ -914,7 +929,7 @@ def newFlowSolution(parent,name='{FlowSolution}',gridlocation=None):
   return node  
   
 # -----------------------------------------------------------------------------
-def newZoneGridConnectivity(parent,name,ctype=CG_K.Null_s,donor=''):
+def newZoneGridConnectivity(parent,name,ctype=NPY.array(CG_K.Null_s),donor=''):
   """-GridConnectivity node creation -Grid
   
   'newNode:N='*newZoneGridConnectivity*'(parent:N,name:S,ctype:S)'
@@ -976,7 +991,10 @@ def newGridConnectivityProperty(parent):
                    CG_K.GridConnectivityProperty_ts,parent)
   return nodeType
 
-def  newPeriodic(parent,rotcenter=[0.0,0.0,0.0],ratev=[0.0,0.0,0.0],trans=[0.0,0.0,0.0]):
+def  newPeriodic(parent,
+                 rotcenter=NPY.array([0.0,0.0,0.0]),
+                 ratev=NPY.array([0.0,0.0,0.0]),
+                 trans=NPY.array([0.0,0.0,0.0])):
   """-Periodic node creation -Periodic
   
   'newNode:N='*newPeriodic*'(parent:N,rotcenter=A,ratev=A,trans=A)'
@@ -1007,7 +1025,7 @@ def  newPeriodic(parent,rotcenter=[0.0,0.0,0.0],ratev=[0.0,0.0,0.0],trans=[0.0,0
   return cnode
   
 # -----------------------------------------------------------------------------
-def newAverageInterface(parent,valueType=CG_K.Null_s):
+def newAverageInterface(parent,valueType=NPY.array(CG_K.Null_s)):
   """-AverageInterface node creation -AverageInterface
   
   'newNode:N='*newAverageInterface*'(parent:N,valueType:CG_K.AverageInterfaceType)'
@@ -1070,7 +1088,7 @@ def newFlowEquationSet(parent):
   node=newNode(CG_K.FlowEquationSet_s,None,[],CG_K.FlowEquationSet_ts,parent)  
   return node   
     
-def newGoverningEquations(parent,valueType=CG_K.Euler_s):
+def newGoverningEquations(parent,valueType=NPY.array(CG_K.Euler_s)):
   """-GoverningEquations node creation -GoverningEquations
   
   'newNode:N='*newGoverningEquations*'(parent:N,valueType:CG_K.GoverningEquationsType)'
@@ -1093,7 +1111,7 @@ def newGoverningEquations(parent,valueType=CG_K.Euler_s):
   return node
   
 # -----------------------------------------------------------------------------
-def newGasModel(parent,valueType=CG_K.Ideal_s):
+def newGasModel(parent,valueType=NPY.array(CG_K.Ideal_s)):
   """-GasModel node creation -GasModel
   
   'newNode:N='*newGasModel*'(parent:N,valueType:CG_K.GasModelType)'
@@ -1113,7 +1131,8 @@ def newGasModel(parent,valueType=CG_K.Ideal_s):
   nodeType=newNode(CG_K.GasModelType_s,setStringAsArray(valueType),[],CG_K.GasModelType_ts,node)
   return node
   
-def newThermalConductivityModel(parent,valueType=CG_K.SutherlandLaw_s):   
+def newThermalConductivityModel(parent,
+                                valueType=NPY.array(CG_K.SutherlandLaw_s)):   
   """-ThermalConductivityModel node creation -ThermalConductivityModel
   
   'newNode:N='*newThermalConductivityModel*'(parent:N,valueType:CG_K.ThermalConductivityModelType)'
@@ -1136,7 +1155,7 @@ def newThermalConductivityModel(parent,valueType=CG_K.SutherlandLaw_s):
                    CG_K.ThermalConductivityModelType_ts,node)  
   return node
 
-def newViscosityModel(parent,valueType=CG_K.SutherlandLaw_s): 
+def newViscosityModel(parent,valueType=NPY.array(CG_K.SutherlandLaw_s)): 
   """-ViscosityModel node creation -ViscosityModel
   
   'newNode:N='*newViscosityModel*'(parent:N,valueType:CG_K.ViscosityModelType)'
@@ -1158,7 +1177,7 @@ def newViscosityModel(parent,valueType=CG_K.SutherlandLaw_s):
                      CG_K.ViscosityModelType_ts,node)  
   return node
 
-def newTurbulenceClosure(parent,valueType=CG_K.EddyViscosity_s):   
+def newTurbulenceClosure(parent,valueType=NPY.array(CG_K.EddyViscosity_s)):   
   """-TurbulenceClosure node creation -TurbulenceClosure
   
   'newNode:N='*newTurbulenceClosure*'(parent:N,valueType:CG_K.TurbulenceClosureType)'  
@@ -1179,7 +1198,8 @@ def newTurbulenceClosure(parent,valueType=CG_K.EddyViscosity_s):
                      CG_K.TurbulenceClosure_ts,node)  
   return node
 
-def newTurbulenceModel(parent,valueType=CG_K.OneEquation_SpalartAllmaras_s): 
+def newTurbulenceModel(parent,
+                       valueType=NPY.array(CG_K.OneEquation_SpalartAllmaras_s)): 
   """-TurbulenceModel node creation -TurbulenceModel
   
   'newNode:N='*newTurbulenceModel*'(parent:N,valueType:CG_K.TurbulenceModelType)'
@@ -1224,7 +1244,7 @@ def newThermalRelaxationModel(parent,valueType):
                    CG_K.ThermalRelaxationModelType_ts,node)
   return node
 
-def newChemicalKineticsModel(parent,valueType=CG_K.Null_s):
+def newChemicalKineticsModel(parent,valueType=NPY.array(CG_K.Null_s)):
   """-ChemicalKineticsModel node creation -ChemicalKineticsModel
   
   'newNode:N='*newChemicalKineticsModel*'(parent:N,valueType:CG_K.ChemicalKineticsModelType)'
@@ -1247,7 +1267,7 @@ def newChemicalKineticsModel(parent,valueType=CG_K.Null_s):
                      CG_K.ChemicalKineticsModelType_ts,node)
   return node
 
-def newEMElectricFieldModel(parent,valueType=CG_K.UserDefined_s):
+def newEMElectricFieldModel(parent,valueType=NPY.array(CG_K.UserDefined_s)):
   """-EMElectricFieldModel node creation -EMElectricFieldModel
   
   'newNode:N='*newEMElectricFieldModel*'(parent:N,valueType:CG_K.EMElectricFieldModelType)'
@@ -1270,7 +1290,7 @@ def newEMElectricFieldModel(parent,valueType=CG_K.UserDefined_s):
                    CG_K.EMElectricFieldModelType_ts,node)
   return node
 
-def newEMMagneticFieldModel(parent,valueType=CG_K.UserDefined_s):
+def newEMMagneticFieldModel(parent,valueType=NPY.array(CG_K.UserDefined_s)):
   """-EMMagneticFieldModel node creation -EMMagneticFieldModel
   
   'newNode:N='*newEMMagneticFieldModel*'(parent:N,valueType:CG_K.EMMagneticFieldModelType)'
@@ -1293,7 +1313,7 @@ def newEMMagneticFieldModel(parent,valueType=CG_K.UserDefined_s):
                    CG_K.EMMagneticFieldModelType_ts,node)
   return node
 
-def newEMConductivityModel(parent,valueType=CG_K.UserDefined_s):
+def newEMConductivityModel(parent,valueType=NPY.array(CG_K.UserDefined_s)):
   """-EMConductivityModel node creation -EMConductivityModel
   
   'newNode:N='*newEMConductivityModel*'(parent:N,valueType:CG_K.EMConductivityModelType)'
@@ -1317,7 +1337,8 @@ def newEMConductivityModel(parent,valueType=CG_K.UserDefined_s):
   return node
 
 # -----------------------------------------------------------------------------
-def newBaseIterativeData(parent,nsteps=0,itype=CG_K.IterationValues_s):
+def newBaseIterativeData(parent,nsteps=0,
+                         itype=NPY.array(CG_K.IterationValues_s)):
   """-BaseIterativeData node creation -BaseIterativeData
   
    'newNode:N='*newBaseIterativeData*'(parent:N,nsteps:I,itype:E)'
@@ -1353,7 +1374,8 @@ def newZoneIterativeData(parent,name):
   return node
 
 # ---------------------------------------------------------------------------  
-def newRigidGridMotion(parent,name,valueType=CG_K.Null_s,vector=[0.0,0.0,0.0]):
+def newRigidGridMotion(parent,name,valueType=NPY.array(CG_K.Null_s),
+                       vector=NPY.array([0.0,0.0,0.0])):
   """-RigidGridMotion node creation -RigidGridMotion
   
   'newNode:N='*newRigidGridMotion*'(parent:N,name:S,valueType:CG_K.RigidGridMotionType,vector:A)'
@@ -1453,7 +1475,7 @@ def newFamilyName(parent,family=None):
 
 # -----------------------------------------------------------------------------
 def newGeometryReference(parent,name='{GeometryReference}',
-                         valueType=CG_K.UserDefined_s):
+                         valueType=NPY.array(CG_K.UserDefined_s)):
   """-GeometryReference node creation -GeometryReference
   
   'newNode:N='*newGeometryReference*'(parent:N,name:S,valueType:CG_K.GeometryFormat)'
@@ -1476,7 +1498,7 @@ def newGeometryReference(parent,name='{GeometryReference}',
   return node
   
 # -----------------------------------------------------------------------------
-def newFamilyBC(parent,valueType=CG_K.UserDefined_s): 
+def newFamilyBC(parent,valueType=NPY.array(CG_K.UserDefined_s)): 
   """-FamilyBC node creation -FamilyBC
   
   'newNode:N='*newFamilyBC*'(parent:N,valueType:CG_K.BCTypeSimple/CG_K.BCTypeCompound)'
@@ -1522,10 +1544,11 @@ def newArbitraryGridMotion(parent,name,valuetype=CG_K.Null_s):
   if (node == None):
     node=newNode(name,None,[],CG_K.ArbitraryGridMotion_ts,parent)      
   if (valuetype not in CG_K.ArbitraryGridMotionType_l):
-    raise CG_E.cgnsException(255,valueType) 
+    raise CG_E.cgnsException(255,valuetype) 
   checkDuplicatedName(node,CG_K.ArbitraryGridMotionType_s)     
   ## code correction: Modify valueType string into NPY string array
-  nodeType=newNode(CG_K.ArbitraryGridMotionType_s,setStringAsArray(valueType),[],
+  nodeType=newNode(CG_K.ArbitraryGridMotionType_s,
+                   setStringAsArray(valuetype),[],
                    CG_K.ArbitraryGridMotionType_ts,node)
   return node
   
@@ -1544,7 +1567,7 @@ def newUserDefinedData(parent,name):
   return node
  
 # -----------------------------------------------------------------------------
-def newGravity(parent,gvector=[0.0,0.0,0.0]):
+def newGravity(parent,gvector=NPY.array([0.0,0.0,0.0])):
   """-Gravity node creation -Gravity
   
   'newNode:N='*newGravity*'(parent:N,gvector:A)'
