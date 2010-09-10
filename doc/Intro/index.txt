@@ -1,15 +1,17 @@
 The pyCGNS documentation
 ========================
-pyCGNS is a Python module for the `CGNS <http://www.cgns.org>`_ standard.
-The module gathers various tools and libraries for end-users and
+pyCGNS is a Python package for the `CGNS <http://www.cgns.org>`_ standard.
+The package gathers various tools and libraries for end-users and
 Python application developpers.
-The module uses `numpy <http://numpy.scipy.org>`_ for all node values.
+
+The package also uses `numpy <http://numpy.scipy.org>`_ and 
+:ref:`HDF5 <reference_hdf5>` you should install before pyCGNS.
 
 .. raw:: html
 
-  Click below for a quick access to modules.
+  Click below for a quick access to modules.<br>
 
-  <table border=0 width="100%"><tr border=0 >
+  <table border=0 width="100%"><tr >
   <td border=0 ><a href="MAP/readme.html">
       <img src="_images/MAP-logo.jpg" height="48" alt="MAP"/></a></td>
   <td border=0 ><a href="PAT/readme.html">
@@ -19,24 +21,13 @@ The module uses `numpy <http://numpy.scipy.org>`_ for all node values.
   <td border=0 ><a href="WRA/readme.html">
       <img src="_images/WRA-logo.jpg" height="48" alt="WRA"/></a></td>
   <td border=0 ><img src="_images/VAL-logo.jpg" height="48" alt="VAL"/></td>
-  <td border=0 ><img src="_images/TRA-logo.jpg" height="48" alt="TRA"/></td>
   <td border=0 ><img src="_images/DAT-logo.jpg" height="48" alt="DAT"/></td>
-  </tr></table>
+  <td border=0 ><img src="_images/TRA-logo.jpg" height="48" alt="TRA"/></td>
+  </tr></table><br>
 
   You also have PDF version of the documentation you can download from
   the <a href="http://www.python-science.org/project/pyCGNS">
   pyCGNS web site</a>.
-
-In-memory CGNS trees
---------------------
-The main idea of this module is to have a CGNS tree in the process memory.
-Large computations have hundreeds of thousands of 3D points and most
-applications do not want to duplicate this in memory: the *numpy* arrays
-have internal references to appication memory zones.
-The CGNS/Python trees are lists of lists and follows the 
-:ref:`SIDS-to-Python <reference_sids_to_python>`.
-
-The HDF5 format (see :ref:`HDF5 <reference_hdf5>`) is the preferred low level storage.
 
 Contents
 ========

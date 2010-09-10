@@ -213,7 +213,8 @@ tt {
 }
 
 tt.descname, tt.descclassname, tt.xref {
-    border: 0;
+    font-family: 'Consolas', 'Deja Vu Sans Mono',
+                 'Bitstream Vera Sans Mono', monospace;
 }
 
 hr {

@@ -1,2 +1,72 @@
 Build and Install
 =================
+
+The first step of the installation is to make sure you have the required
+libraries. The mandatory libs are *Python*, *numpy*, *HDF5* and *CHLone*. 
+Then, depending on what you want to build and istall in *pyCGNS*, you may 
+need *libcgns*.
+
+.. warning::
+
+  **OUPS !** you mean I don't need *libcgns* for the *CGNS/Python* mapping ?
+
+  **NO** you don't, *CGNS* is a data model (so-called *CGNS/SIDS*) and some
+  mapping definitions of this model (such as *CGNS/HDF* for example).
+  *pyCGNS* uses *CHLone* which is another *CGNS/HDF5* compliant implementation.
+
+Required libraries
+------------------
+
+ * `Python <http://www.python.org>`_ (starting from v2.4)
+ * `numpy <http://numpy.scipy.org>`_ (starting v1.1)
+ * `hdf5 <http://www.hdfgroup.org>`_ (starting v1.8.5)
+ * `CHLone <http://chlone.sourceforge.net>`_ (starting v0.4)
+
+Optional libraries
+------------------
+
+ * `CGNS/MLL (libcgns) <http://www.cgns.org>`_ (starting v3.0)
+
+Installation process
+--------------------
+
+Once you have these installed you can proceed with pyCGNS.
+You go into the top directory and you edit the ``pyCGNSconfig.py.in``
+(see :ref:`pycgnsconfigpyin`).
+You have to set the correct paths and various values such as directory search
+libs or flags.
+
+Then you run::
+
+  python setup.py build
+
+and then::
+
+  python setup.py install
+
+or::
+
+  python setup.py install --prefix=/local/tools/installation
+
+All the modules of the pyCGNS package are installed and you can now
+proceed with tutorial examples.
+
+Single module installation
+--------------------------
+
+You can ask for a single module installation::
+
+  python setup.py build --single-module=MAP
+  python setup.py install
+
+You have to check that this installation doesn't overwrite an existing
+installation with the other pyCGNS modules.
+
+.. _pycgnsconfigpyin:
+
+Configuration file contents
+---------------------------
+
+The ``pyCGNSconfig.py.in`` should work with no modification if you have
+a standard installation. All you have to declare is the directory in which
+we can find *Python/numpy/hdf5/CHLone/cgns* libraries.

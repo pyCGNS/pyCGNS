@@ -26,8 +26,13 @@ try:
   opts, args = getopt.gnu_getopt(sys.argv[1:],solist,lolist)
 except getopt.GetoptError:
   print 72*'='
-  print "### pyCGNS: see README file for details on installation options"
+  print "### pyCGNS: ERROR"
+  print "### pyCGNS: see documentation for details on installation options"
   print "### pyCGNS: in particular for default values."
+  print "### pyCGNS: known options are: "
+  print "### pyCGNS:   --without-mod='MMM' to install without this module"
+  print "### pyCGNS:   --single-mod='MMM'  to install only this module"
+  print "### pyCGNS:   --prefix='/path'    to install in the specified path"
   sys.exit(2)
 
 for o,a in opts:

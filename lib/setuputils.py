@@ -33,7 +33,6 @@ def search(tag,deps=[]):
     if com in ['help','clean']: state=0
   bxtarget='../build/lib'
   bptarget='../build/lib/CGNS'  
-  pfile='../pyCGNSconfig.py.in'
   if (not os.path.exists(bxtarget)):
     os.makedirs(bxtarget)
     pt=distutils.util.get_platform()
@@ -42,10 +41,16 @@ def search(tag,deps=[]):
     lg="%s/../build/lib/CGNS"%(os.getcwd())
     os.makedirs(tg)
     os.symlink(tg,lg)
+  sys.path+=['./lib']
   cfgdict={}
-  if (state): cfgdict=findProductionContext()
+  import pyCGNSconfig_default as C_D
+  for ck in dir(C_D):
+    if (ck[0]!='_'): cfgdict[ck]=C_D.__dict__[ck]
+  pg=prodtag()
+  cfgdict['DATE']=pg[0]
+  cfgdict['PLATFORM']="%s %s %s"%(pg[1][0],pg[1][1],pg[1][-1])
   updateConfig('..',bptarget,cfgdict)
-  sys.path+=[bptarget]
+  sys.path=[bptarget]+sys.path
   try:
     import pyCGNSconfig as C
     if ('HDF5' in deps):
@@ -86,18 +91,12 @@ def search(tag,deps=[]):
   return (C, state)
 
 # --------------------------------------------------------------------
-def findProductionContext():
-  return {}
-
-# --------------------------------------------------------------------
 def installConfigFiles():
   lptarget='..'
   bptarget='./build/lib/CGNS'  
   for ff in rootfiles:
-#    print "%s/lib/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff)
     shutil.copy("%s/lib/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
   for ff in compfiles:
-#    print "%s/lib/compatibility/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff)    
     shutil.copy("%s/lib/compatibility/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
 
 # --------------------------------------------------------------------
@@ -139,39 +138,27 @@ def confValueAsStr(v):
   else:                     return '"%s"'%str(v)
 
 # --------------------------------------------------------------------
-def updateConfig(pfile,gfile,config):
+def updateConfig(pfile,gfile,config_default):
   if (not os.path.exists("%s/pyCGNSconfig.py"%(gfile))):
     print "### pyCGNS: create new pyCGNSconfig.py file"
-    f=open("%s/pyCGNSconfig.py.in"%(pfile),'r')
-    cf=f.readlines()
-    f.close()
+    newconf=1
   else:
     f1=os.stat("%s/pyCGNSconfig.py"%(gfile))
-    f2=os.stat("%s/pyCGNSconfig.py.in"%(pfile))
+    f2=os.stat("%s/pyCGNSconfig_user.py"%(pfile))
     if (f1.st_mtime < f2.st_mtime):
-      print "### pyCGNS: use modified pyCGNSconfig.py.in file"
-      f=open("%s/pyCGNSconfig.py.in"%(pfile),'r')
-      cf=f.readlines()
-      f.close()
-    else:  
+      newconf=1
+      print "### pyCGNS: use modified pyCGNSconfig_user.py file"
+    else:
+      newconf=0
       print "### pyCGNS: use existing pyCGNSconfig.py file"
-      f=open("%s/pyCGNSconfig.py"%(gfile),'r')
-      cf=f.readlines()
-      f.close()
-  rl=[]
-  ck=config.keys()
-  for l in cf:
-    found=0
-    for c in ck:
-      if (((len(c))<=len(l)) and (c==l[:len(c)]) and (l[-2]=='#')):
-        print "### pyCGNS: upate %s"%c
-        rl+=['%s=%s#\n'%(c,confValueAsStr(config[c]))]
-        found=1
-    if not found:
-        rl+=l
-  f=open("%s/pyCGNSconfig.py"%(gfile),'w+')
-  f.writelines(rl)
-  f.close()
+  if newconf:
+    sys.path=['..']+sys.path
+    import pyCGNSconfig_user
+    for ck in dir(pyCGNSconfig_user):
+      if (ck[0]!='_'): config_default[ck]=pyCGNSconfig_user.__dict__[ck]
+    f=open("%s/pyCGNSconfig.py"%(gfile),'w+')
+    f.writelines(config_default['file_pattern']%config_default)
+    f.close()
 
 # --------------------------------------------------------------------
 def find_HDF5(pincs,plibs,libs):
@@ -216,7 +203,7 @@ def find_HDF5(pincs,plibs,libs):
 def find_MLL(pincs,plibs,libs,extraargs):
   notfound=1
   vers=''
-  libs=['cgns']
+  libs=['cgns','hdf5']
   for pth in pincs:
     if (os.path.exists(pth+'/cgnslib.h')):
       notfound=0
@@ -259,7 +246,9 @@ def find_MLL(pincs,plibs,libs,extraargs):
   if notfound:
     print "### pyCGNS: Warning: ADFH.h not found, using pyCGNS own headers"
     extraargs+=['-U__ADF_IN_SOURCES__']
-  return (vers,pincs,plibs,libs,extraargs)
+  extraargs+=['-DLEGACY_SUPPORT']
+
+  return (cgnsversion,pincs,plibs,libs,extraargs)
 
 # --------------------------------------------------------------------
 def find_CHLone(pincs,plibs,libs):

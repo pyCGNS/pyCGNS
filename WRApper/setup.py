@@ -5,14 +5,9 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 import os
-from   distutils.core import setup, Extension
-import distutils.util
-import distutils.sysconfig
-
-import getopt
-import re
-import glob
 import string
+from   distutils.core import setup, Extension
+
 
 # --- pyCGNSconfig search
 import sys
@@ -35,9 +30,8 @@ numpinc=pyCGNSconfig.NUMPY_PATH_INCLUDES
 # --- default values
 mll=True
 hdf=False
-alib='numpy'
-chlonelib=cgnslib=""
-hdfversion=cgnsversion=chloneversion='unknown'
+cgnslib=""
+hdfversion=cgnsversion='unknown'
 
 lname         = "CGNS.WRA"
 lversion      = pyCGNSconfig.WRA_VERSION

@@ -15,20 +15,21 @@ def wpdbg(msg):
 
 __doc__="""
 The pyCGNS wrap classes are simple wrappers on top of the ADF and the MLL
-librarries.
+libraries.
 """
 
 # ======================================================================
-# ======================================================================
 class pyADF:
     """
-    *pyADF*: wrapper to ADF calls
-    
-    - pyADF creation opens a database
+    pyADF: wrapper to ADF calls
+    ---------------------------
 
-    - Each method or attribute use actually runs the ADF library functions
+    The *pyADF* class holds a connection to a *CGNS* file provides the user
+    with a *Python*-like interface to *ADF* calls. 
+
+    Each method or attribute use actually runs the ADF library functions
     
-    - ADF calls to DB have the same name without the ADF_ prefix and with
+    ADF calls to DB have the same name without the ```ADF``` prefix and with
     a lowercase name. Argument list always try to be as close as possible
     to the ADF original argument list
     """

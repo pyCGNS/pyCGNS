@@ -122,6 +122,14 @@ with another flag.
       would be performed and the array and its dimensions would be stored 
       without modification even if the NY_FORTRAN flag is not there.
 
+The MAP API
+-----------
+
+The MAP module is designed so that you can re-use the lead/save function and
+put them into your own application. This allows you to create a *CGNS/HDF*
+tree from a *CGNS/Python* tree into your C code. The two function
+are very close the to Python level interface functions.
+
 .. _reference_sids_to_python:
 
 .. -------------------------------------------------------------------------
