@@ -302,7 +302,7 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
       self.popupmenu.entryconfigure(0,label='')
       popUpMenuOn(event)
 
-    s7windoz.wWindoz.__init__(self,wcontrol,'pyS7: Query view')
+    s7windoz.wWindoz.__init__(self,wcontrol,'CGNS.NAV: Query view')
     ScrolledTreectrl.__init__(self,self._wtop,relief=GROOVE,border=3,
                               height=G___.wminheight,
                               width=G___.wminwidth/2)
@@ -585,7 +585,7 @@ class wOperateView(s7windoz.wWindoz,ScrolledMultiListbox):
         self.selectedlist+=[[0]+list(sl)]
     
     s7windoz.wWindoz.__init__(self,wcontrol,
-                              'pyS7: Selection List on [%s] view [%.2d]'%\
+                              'CGNS.NAV: Selection List on [%s] view [%.2d]'%\
                               (wtree._viewtree.filename,wtree._viewid))
     ScrolledMultiListbox.__init__(self,self._wtop,relief=GROOVE,border=3,
                                   height=G___.wminheight,

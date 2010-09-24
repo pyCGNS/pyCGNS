@@ -75,7 +75,7 @@ DiffusionModel_s  = 'DiffusionModel'
 # SIDS
 #
 Null_s = "Null"
-UserDefined_s = "Userdefined"
+UserDefined_s = "UserDefined"
 
 # --------------------------------------------------
 Kilogram_s = "Kilogram"

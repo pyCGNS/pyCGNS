@@ -106,7 +106,7 @@ class wWindoz:
   def top(self,msg):
     if 0:
       t=os.times()
-      print '## pyS7: %8.4f %8.4f'%(t[0],t[1]),
+      print '## CGNS.NAV: %8.4f %8.4f'%(t[0],t[1]),
       print '[%s]'%msg
 
   def lockMouse(self):

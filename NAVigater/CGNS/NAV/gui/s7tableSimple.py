@@ -67,8 +67,8 @@ class SlidingWindowView(Frame):
     self.lastselected=None
     self.selectedhpos=None
     self.selectedvpos=None      
-    self.selectedcol =None
-    self.selectedrow =None      
+    self.selectedcol =0
+    self.selectedrow =0
 
     self.vdata=1
     self.hdata=1
@@ -114,12 +114,12 @@ class SlidingWindowView(Frame):
         lv.insert(END,self.jfmt%idxv)
       self.vlabels=lv
 
-    #il=Label(self,text="i",font=self.lfont)
-    #il.grid(row=1,column=0,sticky=NW,columnspan=1)
-    #jl=Label(self,text="j",font=self.lfont)
-    #jl.grid(row=0,column=1,sticky=NW,columnspan=1)
-    #kl=Label(self,text="k",font=self.lfont)
-    #kl.grid(row=0,column=0,sticky=NW,columnspan=1)
+    il=Label(self,text="i",font=self.lfont)
+    il.grid(row=1,column=0,sticky=NW,columnspan=1)
+    jl=Label(self,text="j",font=self.lfont)
+    jl.grid(row=0,column=1,sticky=NW,columnspan=1)
+    kl=Label(self,text="k",font=self.lfont)
+    kl.grid(row=0,column=0,sticky=NW,columnspan=1)
 
     cols=[]
     for idxh in range(self.hsize):
@@ -144,25 +144,25 @@ class SlidingWindowView(Frame):
       ls.bind('<Enter>',    lambda e: 'break')
       ls.bind('<Leave>',    lambda e: 'break')
 
-#     # bind_all breaks treectrl keys, fix it later
-#     self.bind('<Shift-KeyPress-Up>',       self.upI)
-#     self.bind('<Shift-KeyPress-Down>',     self.downI)
-#     self.bind('<Shift-KeyPress-Right>',    self.upJ)
-#     self.bind('<Shift-KeyPress-Left>',     self.downJ)
-#     self.bind('<Shift-KeyPress-Next>',     self.upK)
-#     self.bind('<Shift-KeyPress-Prior>',    self.downK)
+    # bind_all breaks treectrl keys, fix it later
+    self.bind_all('<Shift-KeyPress-Up>',       self.upI)
+    self.bind_all('<Shift-KeyPress-Down>',     self.downI)
+    self.bind_all('<Shift-KeyPress-Right>',    self.upJ)
+    self.bind_all('<Shift-KeyPress-Left>',     self.downJ)
+    self.bind_all('<Shift-KeyPress-Next>',     self.upK)
+    self.bind_all('<Shift-KeyPress-Prior>',    self.downK)
 
-#     self.bind('<Shift-KeyPress-KP_Up>',    self.upI)
-#     self.bind('<Shift-KeyPress-KP_Down>',  self.downI)
-#     self.bind('<Shift-KeyPress-KP_Right>', self.upJ)
-#     self.bind('<Shift-KeyPress-KP_Left>',  self.downJ)
-#     self.bind('<Shift-KeyPress-KP_Next>',  self.upK)
-#     self.bind('<Shift-KeyPress-KP_Prior>', self.downK)
+#    self.bind_all('<Shift-KeyPress-KP_Up>',    self.upI)
+#    self.bind_all('<Shift-KeyPress-KP_Down>',  self.downI)
+#    self.bind_all('<Shift-KeyPress-KP_Right>', self.upJ)
+#    self.bind_all('<Shift-KeyPress-KP_Left>',  self.downJ)
+#    self.bind_all('<Shift-KeyPress-KP_Next>',  self.upK)
+#    self.bind_all('<Shift-KeyPress-KP_Prior>', self.downK)
 
-#     self.bind('<KeyPress-Up>',       self.upTargetI)
-#     self.bind('<KeyPress-Down>',     self.downTargetI)
-#     self.bind('<KeyPress-Right>',    self.upTargetJ)
-#     self.bind('<KeyPress-Left>',     self.downTargetJ)
+    self.bind_all('<KeyPress-Up>',       self.upTargetI)
+    self.bind_all('<KeyPress-Down>',     self.downTargetI)
+    self.bind_all('<KeyPress-Right>',    self.upTargetJ)
+    self.bind_all('<KeyPress-Left>',     self.downTargetJ)
 
 #     self.bind('<KeyPress-KP_Up>',    self.upTargetI)
 #     self.bind('<KeyPress-KP_Down>',  self.downTargetI)
@@ -217,12 +217,14 @@ class SlidingWindowView(Frame):
     self.scx.set(self.hpos)    
 
   def upK(self,e):
+    print 'up K:',self.ppos
     self.pposprev=self.ppos
     self.ppos=min(self.ppos+1,self.pdata-1)
     self.pbutton.configure(text=self.kfmt%self.ppos)
     self.updateWindow()
 
   def downK(self,e):
+    print 'down K:',self.ppos
     self.pposprev=self.ppos
     self.ppos=max(self.ppos-1,0)
     self.pbutton.configure(text=self.kfmt%self.ppos)
@@ -262,8 +264,8 @@ class SlidingWindowView(Frame):
     hmin=min(self.hpos,self.hdata-self.hsize)
     hmax=min(self.hpos+self.hsize,self.hdata)
     w=[]
-    self.selectedcol=None
-    self.selectedrow=None
+    self.selectedcol=0
+    self.selectedrow=0
     srow=0
     if (self.dims>1): self.vlabels.delete(0,END)
     for vdx in range(vmin,vmax):
@@ -369,7 +371,7 @@ class wSlidingWindowView(s7windoz.wWindoz,SlidingWindowView):
 
     SlidingWindowView.__init__(self,self._wtop,node[1])
     self._viewid=treefingerprint.addView(self,path,'D')
-    self._wtop.title('pyS7: [%s] View [%.2d]'%(treefingerprint.filename,
+    self._wtop.title('CGNS.NAV: [%s] View [%.2d]'%(treefingerprint.filename,
                                                self._viewid))
     self.grid(row=1,sticky=N+E+W+S)
     t=self.winfo_toplevel() 

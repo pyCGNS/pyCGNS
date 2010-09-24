@@ -16,6 +16,7 @@ from TkTreectrl import *
 import os
 import sys
 import numpy as Num
+import s7utils
 
 # ------------------------------------------------------------
 """File selection dialog classes. (MODIFIED COPY FROM PYTHON TkINTER LIB)
@@ -263,13 +264,8 @@ class SaveFileDialog(FileDialog):
             if os.path.isdir(file):
                 self.master.bell()
                 return
-            d = Dialog(self.top,
-                       title="Overwrite Existing File Question",
-                       text="Overwrite existing file %r?" % (file,),
-                       bitmap='questhead',
-                       default=1,
-                       strings=("Yes", "Cancel"))
-            if d.num != 0:
+            d = s7utils.fileOverwrite(file)
+            if d != 0:
                 return
         else:
             head, tail = os.path.split(file)
@@ -495,13 +491,8 @@ class wFileDialog(FileDialog):
       if os.path.isdir(file):
           self.wparent.bell()
           return
-      d = Dialog(self.top,
-                 title="Overwrite Existing File Question",
-                 text="Overwrite existing file %r?" % (file,),
-                 bitmap='questhead',
-                 default=1,
-                 strings=("Yes", "Cancel"))
-      if d.num != 0:
+      d = s7utils.fileOverwrite(file)
+      if d != 0:
         # no overwrite
         return
       else:
@@ -519,7 +510,7 @@ def s7profiledialog(master,save=0):
   if (save):
     return None
   else:
-    fd=wProfileDialog(master,'pyS7: Profile Load Selection')
+    fd=wProfileDialog(master,'CGNS.NAV: Profile Load Selection')
     (dir,profile)=fd.get()
     fd._wtop.destroy()
   return (dir,profile)
@@ -528,12 +519,12 @@ def s7profiledialog(master,save=0):
 def s7filedialog(master,save=0,lock=None,pat=None):
   lck=0
   if (save):
-    fd=wFileDialog(master,'pyS7: Save File Selection',save,lock,'S7save')
+    fd=wFileDialog(master,'CGNS.NAV: Save File Selection',save,lock,'S7save')
     if (pat==None): pat=fd.filetype.get()
     else:           lck=1
     file=fd.go(key='S7save',pattern=pat,lock=lck)
   else:
-    fd=wFileDialog(master,'pyS7: Load File Selection',save,lock,'S7load')
+    fd=wFileDialog(master,'CGNS.NAV: Load File Selection',save,lock,'S7load')
     if (pat==None): pat=fd.filetype.get()
     else:           lck=1
     file=fd.go(key='S7load',pattern=pat,lock=lck)

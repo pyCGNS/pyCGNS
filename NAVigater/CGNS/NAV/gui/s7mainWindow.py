@@ -28,7 +28,7 @@ def run(filelist,recurse,ppath,verbose):
   G___.wControl=s7viewControl.wTopControl(wtop)
   for f in filelist:
     if (os.path.exists(f)): G___.wControl.loadFile(f)
-    else: print "## pyS7: No such file [%s]"%f
+    else: print "## CGNS.NAV: No such file [%s]"%f
 
   try:
     wtop.mainloop()

@@ -33,7 +33,7 @@ def sortLinkList(a,b):
 class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
   def __init__(self,wcontrol,treefingerprint):
     s7windoz.wWindoz.__init__(self,wcontrol,
-                              'pyS7: Link view [%s]'%treefingerprint.filename)
+                              'CGNS.NAV: Link view [%s]'%treefingerprint.filename)
     ScrolledTreectrl.__init__(self,self._wtop,relief=GROOVE,border=3)
 
     self._tree=self.treectrl

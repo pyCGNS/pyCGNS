@@ -24,7 +24,7 @@ import s7fileDialog
 
 class wPatternEdit(s7windoz.wWindoz):
   def __init__(self,wcontrol,tree,fingerprint):
-    s7windoz.wWindoz.__init__(self,wcontrol,'pyS7: Pattern Save form')
+    s7windoz.wWindoz.__init__(self,wcontrol,'CGNS.NAV: Pattern Save form')
 
     self.fingerprint=fingerprint
     self.tree=fingerprint.tree
@@ -117,7 +117,7 @@ class wPatternEdit(s7windoz.wWindoz):
     self.leave()
 
   def generatePatternDir(self,path,prof):
-    s ='# pyS7 generated CGNS profile dir - see http://www.cgns.org\n'
+    s ='# CGNS.NAV generated CGNS profile dir - see http://www.cgns.org\n'
     s+='# profile: %s\n'%prof
     from time import localtime, strftime
     t=strftime("%Y-%m-%d.%H:%M:%S", localtime())
@@ -148,7 +148,7 @@ class wPatternEdit(s7windoz.wWindoz):
     data=s7utils.printNode(self.tree)[:-1]
     from time import localtime, strftime
     t=strftime("%Y-%m-%d.%H:%M:%S", localtime())
-    s ='# pyS7 generated CGNS pattern file - see http://www.cgns.org\n'
+    s ='# CGNS.NAV generated CGNS pattern file - see http://www.cgns.org\n'
     s+='# profile: %s\n'%prof
     s+='# pattern: %s\n'%name
     s+='# date   : %s\n'%t
@@ -194,7 +194,7 @@ class wPatternBrowser(s7windoz.wWindoz,ScrolledMultiListbox):
     self.patternDict={}
     self.patternSet=[]
     
-    s7windoz.wWindoz.__init__(self,wcontrol,'pyS7: Pattern Browser')
+    s7windoz.wWindoz.__init__(self,wcontrol,'CGNS.NAV: Pattern Browser')
     ScrolledMultiListbox.__init__(self,self._wtop,relief=GROOVE,border=3,
                                   height=2*G___.wminheight,
                                   width=1.5*G___.wminwidth)

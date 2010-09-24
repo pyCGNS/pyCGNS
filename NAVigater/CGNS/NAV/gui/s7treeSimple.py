@@ -311,7 +311,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       rootnodename='/'
 
     self._viewid=treefingerprint.addView(self,self._parent,'T')
-    self._wtop.title('pyS7: [%s] View [%.2d]'%(treefingerprint.filename,
+    self._wtop.title('CGNS.NAV: [%s] View [%.2d]'%(treefingerprint.filename,
                                                self._viewid))
     ScrolledTreectrl.__init__(self,self._wtop,relief=GROOVE,border=3,
                               height=2*G___.wminheight,

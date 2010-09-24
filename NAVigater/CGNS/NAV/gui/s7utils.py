@@ -37,7 +37,7 @@ def checkShownType(data,datatype):
   if ((data.dtype.char in ['d']) and (datatype==CK.R8)): return 1
   if ((data.dtype.char in ['i']) and (datatype==CK.I4)): return 1
   if ((data.dtype.char in ['l']) and (datatype==CK.I8)): return 1
-  if ((data.dtype.char in ['c']) and (datatype==CK.C1)): return 1
+  if ((data.dtype.char in ['S','c','s']) and (datatype==CK.C1)): return 1
   return 0
 
 # --------------------------------------------------------------------
@@ -53,15 +53,22 @@ def toBeShown(data):
   if (data == None ):        return ""
   else:                      return showOneArray(data)
 
-def showOneArray(data):
+def showOneArray(fdata):
+#  print fdata, fdata.shape
+  if (G___.transposeOnViewEdit):
+    data=fdata.T
+  else:
+    data=fdata
   if ((G___.compactedValue) and (len(data.shape)==1) and (data.shape[0]==1)):
     if (checkShownType(data,CK.R4)): return showOneFloat(data[0])
     if (checkShownType(data,CK.R8)): return showOneDouble(data[0])
     if (checkShownType(data,CK.I4)): return showOneInteger(data[0])
     if (checkShownType(data,CK.I8)): return showOneLong(data[0])
-  if (checkShownType(data,CK.C1)):
-    if ((G___.compactedValue) and (len(data.shape)==1)):
-      return showOneString(data.tostring())
+  if (checkShownType(data,CK.C1) and G___.compactedValue):
+    sdata=""
+    for ndata in data:
+      sdata+=showOneString(ndata)
+    return sdata
   return str(data.tolist())
 
 def showOneFloat(f):
@@ -77,7 +84,7 @@ def showOneLong(f):
   return string.rstrip('%d'%f,'0')
   
 def showOneString(f):
-  return '%s'%f
+  return '%s'%f.tostring()
 
 def showFloatArrayAsList(data):
   return __showFloatArrayAsList(data).replace("'","")[:-1]
@@ -249,6 +256,11 @@ def patternOverwrite(file):
 """Pattern '%s' already exists! Do you really want to replace it ?"""%file,
 "cancel").result()
 
+def fileOverwrite(file):
+  return msginfo("CGNS.NAV: Confirm",
+"""File '%s' already exists! Do you really want to overwrite it ?"""%file,
+"cancel").result()
+
 def duplicatedPattern(pat):
   return msginfo("CGNS.NAV: Confirm",
 """Pattern '%s' already imported!
@@ -296,7 +308,7 @@ def asFileString(tree):
   Num.set_printoptions(threshold=sys.maxint)
   from time import localtime, strftime
   t=strftime("%H%M%S", localtime())
-  s ='# Saved by pyS7\n'
+  s ='# Saved by CGNS.NAV\n'
   s+='# Date: %s\n'%t
   s+='from numpy import *\n'
   s+='data='
@@ -310,7 +322,7 @@ def dumpWindow(frame,file=None):
   if (not file):
     from time import localtime, strftime
     t=strftime("%H%M%S", localtime())
-    file='/tmp/s7-%s-%s.pnm'%(os.getpid(),t)
+    file='/tmp/CGNSNAV-%s-%s.pnm'%(os.getpid(),t)
   os.system('xwd -id %s -nobdrs -silent >%s'%(frame.winfo_id(),file))
   snapShotWarning(file)
   

@@ -67,7 +67,8 @@ class s7optionsStorage:
     self.maxDisplaySize=37
     self.minFileSizeNoWarning=1000000000
     self.noData=0
-    self.forceFortranFlag=0    
+    self.forceFortranFlag=0
+    self.transposeOnViewEdit=0        
     self.compactedValue=0
     self.showIndex=0
     self.showColumnTitle=1
@@ -77,10 +78,10 @@ class s7optionsStorage:
     self.viewListFrame=None
     self.patternViewOpen=0
     self.defaultProfile='SIDS'
-    self.printTag='S7:'
+    self.printTag='CGNS.NAV:'
     self.followLinks=1
     self.saveLinks=1
-    self.historyFile='.s7history.py'    
+    self.historyFile='.cgnsnavhistory.py'    
     self.showSIDS=0
     self.directoriesHistory=[]
     self.filesHistory=[]
@@ -134,9 +135,9 @@ class s7optionsStorage:
     'B' :['Helvetica',10,'normal','italic'],# Ok/Save... buttons
 
     'Ta':['Helvetica',12,'normal','roman'], # Tree- SIDS node name
-    'Tb':['Helvetica',14,'bold',  'roman'], # Tree- user node name
-    'Tc':['Helvetica',12,'normal','roman'], # Tree- Node type
-    'Td':['Courier',  12,'normal','roman'], # Tree- Data
+    'Tb':['Helvetica',12,'bold',  'roman'], # Tree- user node name
+    'Tc':['Helvetica',10,'normal','roman'], # Tree- Node type
+    'Td':['Courier',  10,'normal','roman'], # Tree- Data
     'Te':['Courier',  10,'bold',  'roman'], # Tree- Status (path)
     'Tf':['Courier',  10,'normal','roman'], # Tree- Data type
      })
@@ -168,6 +169,7 @@ class s7optionsStorage:
     self.allowedoptionslist+=['saveLinks']
     self.allowedoptionslist+=['noData']
     self.allowedoptionslist+=['forceFortranFlag']
+    self.allowedoptionslist+=['transposeOnViewEdit']    
     self.allowedoptionslist+=['compactedValue']
     self.allowedoptionslist+=['showSIDS']        
     self.allowedoptionslist+=['helpBallooons']        

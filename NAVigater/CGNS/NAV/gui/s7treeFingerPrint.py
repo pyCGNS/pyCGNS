@@ -24,8 +24,8 @@ def encapsulateTreeOrSubTree(tree):
   #    pattern is ['CGNSTree',None,[<children-list>],'CGNSTree_t']
   #    -> take [<children-list>]
   if ( not treetype
-       and (len(tree) == 4)
        and (type(tree) == type([]))
+       and (len(tree) == 4)
        and (tree[0] == 'CGNSTree')
        and (tree[3] == 'CGNSTree_t')): treetype=1
 
@@ -37,6 +37,7 @@ def encapsulateTreeOrSubTree(tree):
 
     for nt in tree:
       if (     (nt != None)
+           and (type(nt) == type([]))
            and (len(nt) == 4)
            and (nt[3] == 'CGNSLibraryVersion_t')): treetype=4
 
@@ -44,16 +45,16 @@ def encapsulateTreeOrSubTree(tree):
   #    pattern is [<base-name>,<base-dims>,[<children-list>],'CGNSBase_t']
   #    -> put into list to make [<children-list>] pattern
   if ( not treetype
+       and (type(nt) == type([]))
        and (len(tree) == 4)
-       and (type(tree) == type([]))
        and (tree[3] == 'CGNSBase_t')): treetype=3
   
   # -- A sub-tree which gives its children list to parse
   #    the pattern is [None, None, [<children-list>], None]
   #    -> take [<children-list>]
   if ( not treetype
-       and (len(tree) == 4)
        and (type(tree) == type([]))
+       and (len(tree) == 4)
        and (tree[0] == None)
        and (type(tree[2]) == type([]))): treetype=2
 
@@ -61,8 +62,8 @@ def encapsulateTreeOrSubTree(tree):
   #    the pattern is [<name>, <data>, [<children-list>], <type>]
   #    -> put into list to make [<children-list>] pattern
   if ( not treetype
-       and (len(tree) == 4)
        and (type(tree) == type([]))
+       and (len(tree) == 4)
        and (type(tree[0]) == type(""))
        and (type(tree[3]) == type(""))
        and (tree[3][-2:]  == "_t")

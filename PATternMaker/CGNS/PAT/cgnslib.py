@@ -85,7 +85,7 @@ def concatenateForArrayChar(nlist):
     else:
       checkArrayChar(n)
       nl+=[setStringAsArray(("%-32s"%n.tostring())[:32])]
-  r=NPY.array(nl,order='Fortran')
+  r=NPY.array(nl,order='Fortran').T
   return r
 
 # -----------------------------------------------------------------------------
@@ -103,10 +103,8 @@ def getValueType(v):
 def setValue(node,value):
   t=getValueType(value)
   if (t == None): node[1]=None
-  if (t in [CG_K.Integer_s,CG_K.RealDouble_s,CG_K.RealSingle_s,CG_K.Character_s]):
-##    code correction: Name was modified (not value)
-##    node[0]=value
-    node[1]=value
+  if (t in [CG_K.Integer_s,CG_K.RealDouble_s,
+            CG_K.RealSingle_s,CG_K.Character_s]): node[1]=value
   return node
   
 # -----------------------------------------------------------------------------
@@ -251,7 +249,7 @@ def newNode(name,value,children,type,parent=None):
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-def newDataClass(parent,value=NPY.array(CG_K.UserDefined_s)):
+def newDataClass(parent,value=CG_K.UserDefined_s):
   """-DataClass node creation -DataClass
   
   'newNode:N='*newDataClass*'(parent:N,value:A)'
@@ -260,7 +258,8 @@ def newDataClass(parent,value=NPY.array(CG_K.UserDefined_s)):
   The value argument is a DataClass enumerate. No child allowed.
   Returns a new <node> representing a DataClass_t sub-tree."""
   checkDuplicatedName(parent,CG_K.DataClass_s)
-  node=newNode(CG_K.DataClass_s,checkArrayChar(value),[],CG_K.DataClass_ts,parent)
+  node=newNode(CG_K.DataClass_s,setStringAsArray(value),[],
+               CG_K.DataClass_ts,parent)
   return checkDataClass(node)
 
 def updateDataClass(node,value):
@@ -280,14 +279,19 @@ def checkDataClass(node,parent=None):
      checkTypeList(parent,[CG_K.DataArray_ts,CG_K.CGNSBase_ts,CG_K.Zone_ts,
                            CG_K.GridCoordinates_ts,CG_K.Axisymmetry_ts,
                            CG_K.RotatingCoordinates_ts,CG_K.FlowSolution_ts,
-                           CG_K.Periodic_ts,CG_K.ZoneBC_ts,CG_K.BC_ts,CG_K.BCDataSet_ts,
-                           CG_K.BCData_ts,CG_K.FlowEquationSet_ts,CG_K.GasModel_ts,
-                           CG_K.ViscosityModel_ts,CG_K.ThermalConductivityModel_ts,
+                           CG_K.Periodic_ts,CG_K.ZoneBC_ts,CG_K.BC_ts,
+                           CG_K.BCDataSet_ts,
+                           CG_K.BCData_ts,CG_K.FlowEquationSet_ts,
+                           CG_K.GasModel_ts,
+                           CG_K.ViscosityModel_ts,
+                           CG_K.ThermalConductivityModel_ts,
                            CG_K.TurbulenceClosure_ts,CG_K.TurbulenceModel_ts,
                            CG_K.ThermalRelaxationModel_ts,
                            CG_K.ChemicalKineticsModel_ts,
-                           CG_K.EMElectricFieldModel_ts,CG_K.EMMagneticFieldModel_ts,
-                           CG_K.EMConductivityModel_ts,CG_K.BaseIterativeData_ts,
+                           CG_K.EMElectricFieldModel_ts,
+                           CG_K.EMMagneticFieldModel_ts,
+                           CG_K.EMConductivityModel_ts,
+                           CG_K.BaseIterativeData_ts,
                            CG_K.ZoneIterativeData_ts,CG_K.RigidGridMotion_ts,
                            CG_K.ArbitraryGridMotion_ts,CG_K.ReferenceState_ts,
                            CG_K.ConvergenceHistory_ts,
@@ -318,21 +322,30 @@ def checkDescriptor(node,parent=None):
                                       raise CG_E.cgnsException(110,node[0])
   if (parent != None):
      checkTypeList(parent,[CG_K.DataArray_ts,CG_K.CGNSBase_ts,CG_K.Zone_ts,
-                           CG_K.GridCoordinates_ts,CG_K.Elements_ts,CG_K.Axisymmetry_ts,
+                           CG_K.GridCoordinates_ts,CG_K.Elements_ts,
+                           CG_K.Axisymmetry_ts,
                            CG_K.RotatingCoordinates_ts,CG_K.FlowSolution_ts,
-                           CG_K.ZoneGridConnectivity_ts,CG_K.GridConnectivity1to1_ts,
-                           CG_K.GridConnectivity_ts,CG_K.GridConnectivityProperty_ts,
+                           CG_K.ZoneGridConnectivity_ts,
+                           CG_K.GridConnectivity1to1_ts,
+                           CG_K.GridConnectivity_ts,
+                           CG_K.GridConnectivityProperty_ts,
                            CG_K.AverageInterface_ts,CG_K.OversetHoles_ts,
-                           CG_K.Periodic_ts,CG_K.ZoneBC_ts,CG_K.BC_ts,CG_K.BCDataSet_ts,
-                           CG_K.BCData_ts,CG_K.FlowEquationSet_ts,CG_K.GasModel_ts,
-                           CG_K.BCProperty_ts,CG_K.WallFunction_ts,CG_K.Area_ts,
+                           CG_K.Periodic_ts,CG_K.ZoneBC_ts,CG_K.BC_ts,
+                           CG_K.BCDataSet_ts,
+                           CG_K.BCData_ts,CG_K.FlowEquationSet_ts,
+                           CG_K.GasModel_ts,
+                           CG_K.BCProperty_ts,CG_K.WallFunction_ts,
+                           CG_K.Area_ts,
                            CG_K.GoverningEquations_ts,
-                           CG_K.ViscosityModel_ts,CG_K.ThermalConductivityModel_ts,
+                           CG_K.ViscosityModel_ts,
+                           CG_K.ThermalConductivityModel_ts,
                            CG_K.TurbulenceClosure_ts,CG_K.TurbulenceModel_ts,
                            CG_K.ThermalRelaxationModel_ts,
                            CG_K.ChemicalKineticsModel_ts,
-                           CG_K.EMElectricFieldModel_ts,CG_K.EMMagneticFieldModel_ts,
-                           CG_K.EMConductivityModel_ts,CG_K.BaseIterativeData_ts,
+                           CG_K.EMElectricFieldModel_ts,
+                           CG_K.EMMagneticFieldModel_ts,
+                           CG_K.EMConductivityModel_ts,
+                           CG_K.BaseIterativeData_ts,
                            CG_K.ZoneIterativeData_ts,CG_K.RigidGridMotion_ts,
                            CG_K.ArbitraryGridMotion_ts,CG_K.ReferenceState_ts,
                            CG_K.ConvergenceHistory_ts,
@@ -344,7 +357,8 @@ def checkDescriptor(node,parent=None):
 
 # -----------------------------------------------------------------------------
 def newDimensionalUnits(parent,value=[CG_K.Meter_s,CG_K.Kelvin_s,
-                                      CG_K.Second_s,CG_K.Radian_s,CG_K.Kilogram_s]):
+                                      CG_K.Second_s,CG_K.Radian_s,
+                                      CG_K.Kilogram_s]):
   """-DimensionalUnits node creation -DimensionalUnits
   
   'newNode:N='*newDimensionalUnits*'(parent:N,value=[CG_K.MassUnits,CG_K.LengthUnits,
@@ -363,25 +377,31 @@ def newDimensionalUnits(parent,value=[CG_K.Meter_s,CG_K.Kelvin_s,
   vunit=[CG_K.Null_s,CG_K.Null_s,CG_K.Null_s,CG_K.Null_s,CG_K.Null_s]
   for v in value:
     if (v not in CG_K.AllUnits_l): raise CG_E.cgnsException(203,v)
-    if ((v in CG_K.MassUnits_l) and (v not in [CG_K.Null_s,CG_K.UserDefined_s])):
+    if ((v in CG_K.MassUnits_l)
+        and (v not in [CG_K.Null_s,CG_K.UserDefined_s])):
       if (v in vunit): raise CG_E.cgnsException(204,v)
       else:            vunit[0]=v
-    if ((v in CG_K.LengthUnits_l) and (v not in [CG_K.Null_s,CG_K.UserDefined_s])):
+    if ((v in CG_K.LengthUnits_l)
+        and (v not in [CG_K.Null_s,CG_K.UserDefined_s])):
       if (v in vunit): raise CG_E.cgnsException(204,v)
       else:            vunit[1]=v
-    if ((v in CG_K.TimeUnits_l) and (v not in [CG_K.Null_s,CG_K.UserDefined_s])):
+    if ((v in CG_K.TimeUnits_l)
+        and (v not in [CG_K.Null_s,CG_K.UserDefined_s])):
       if (v in vunit): raise CG_E.cgnsException(204,v)
       else:            vunit[2]=v
-    if ((v in CG_K.TemperatureUnits_l) and (v not in [CG_K.Null_s,CG_K.UserDefined_s])):
+    if ((v in CG_K.TemperatureUnits_l)
+        and (v not in [CG_K.Null_s,CG_K.UserDefined_s])):
       if (v in vunit): raise CG_E.cgnsException(204,v)
       else:            vunit[3]=v
-    if ((v in CG_K.AngleUnits_l) and (v not in [CG_K.Null_s,CG_K.UserDefined_s])):
+    if ((v in CG_K.AngleUnits_l)
+        and (v not in [CG_K.Null_s,CG_K.UserDefined_s])):
       if (v in vunit): raise CG_E.cgnsException(204,v)
       else:            vunit[4]=v
   node=newNode(CG_K.DimensionalUnits_s,concatenateForArrayChar(vunit),[],
                CG_K.DimensionalUnits_ts,parent)
   snode=newNode(CG_K.AdditionalUnits_s,
-                concatenateForArrayChar([CG_K.Null_s,CG_K.Null_s,CG_K.Null_s]),[],
+                concatenateForArrayChar([CG_K.Null_s,CG_K.Null_s,CG_K.Null_s]),
+                [],
                 CG_K.AdditionalUnits_ts,node)
   return node
 
@@ -715,7 +735,7 @@ def newDiscreteData(parent,name):
   
 # -----------------------------------------------------------------------------
 def newElements(parent,
-                elementstype=NPY.array(CG_K.UserDefined_s),
+                elementstype=CG_K.UserDefined_s,
                 elementsconnectivity=None,
                 elementsrange=None):
   """-Elements node creation -Elements
@@ -735,7 +755,8 @@ def newElements(parent,
   if (elementstype not in CG_K.ElementType_l):
     raise CG_E.cgnsException(250,elementstype)
   checkDuplicatedName(enode,CG_K.ElementType_s)   
-  ccnode=newNode(CG_K.ElementType_s,elementstype,[],CG_K.ElementType_ts,enode)
+  ccnode=newNode(CG_K.ElementType_s,setStringAsArray(elementstype),[],
+                 CG_K.ElementType_ts,enode)
   newDataArray(enode,CG_K.ElementConnectivity_s,elementsconnectivity)
   checkDuplicatedName(enode,CG_K.ElementRange_s) 
   cnode=newNode(CG_K.ElementRange_s,elementsrange,[],CG_K.IndexRange_ts,enode)  
@@ -1267,7 +1288,7 @@ def newChemicalKineticsModel(parent,valueType=NPY.array(CG_K.Null_s)):
                      CG_K.ChemicalKineticsModelType_ts,node)
   return node
 
-def newEMElectricFieldModel(parent,valueType=NPY.array(CG_K.UserDefined_s)):
+def newEMElectricFieldModel(parent,valueType=CG_K.UserDefined_s):
   """-EMElectricFieldModel node creation -EMElectricFieldModel
   
   'newNode:N='*newEMElectricFieldModel*'(parent:N,valueType:CG_K.EMElectricFieldModelType)'
@@ -1290,7 +1311,7 @@ def newEMElectricFieldModel(parent,valueType=NPY.array(CG_K.UserDefined_s)):
                    CG_K.EMElectricFieldModelType_ts,node)
   return node
 
-def newEMMagneticFieldModel(parent,valueType=NPY.array(CG_K.UserDefined_s)):
+def newEMMagneticFieldModel(parent,valueType=CG_K.UserDefined_s):
   """-EMMagneticFieldModel node creation -EMMagneticFieldModel
   
   'newNode:N='*newEMMagneticFieldModel*'(parent:N,valueType:CG_K.EMMagneticFieldModelType)'
@@ -1313,7 +1334,7 @@ def newEMMagneticFieldModel(parent,valueType=NPY.array(CG_K.UserDefined_s)):
                    CG_K.EMMagneticFieldModelType_ts,node)
   return node
 
-def newEMConductivityModel(parent,valueType=NPY.array(CG_K.UserDefined_s)):
+def newEMConductivityModel(parent,valueType=CG_K.UserDefined_s):
   """-EMConductivityModel node creation -EMConductivityModel
   
   'newNode:N='*newEMConductivityModel*'(parent:N,valueType:CG_K.EMConductivityModelType)'
@@ -1338,7 +1359,7 @@ def newEMConductivityModel(parent,valueType=NPY.array(CG_K.UserDefined_s)):
 
 # -----------------------------------------------------------------------------
 def newBaseIterativeData(parent,nsteps=0,
-                         itype=NPY.array(CG_K.IterationValues_s)):
+                         itype=CG_K.IterationValues_s):
   """-BaseIterativeData node creation -BaseIterativeData
   
    'newNode:N='*newBaseIterativeData*'(parent:N,nsteps:I,itype:E)'
@@ -1374,7 +1395,8 @@ def newZoneIterativeData(parent,name):
   return node
 
 # ---------------------------------------------------------------------------  
-def newRigidGridMotion(parent,name,valueType=NPY.array(CG_K.Null_s),
+def newRigidGridMotion(parent,name,
+                       valueType=CG_K.Null_s,
                        vector=NPY.array([0.0,0.0,0.0])):
   """-RigidGridMotion node creation -RigidGridMotion
   
@@ -1475,7 +1497,7 @@ def newFamilyName(parent,family=None):
 
 # -----------------------------------------------------------------------------
 def newGeometryReference(parent,name='{GeometryReference}',
-                         valueType=NPY.array(CG_K.UserDefined_s)):
+                         valueType=CG_K.UserDefined_s):
   """-GeometryReference node creation -GeometryReference
   
   'newNode:N='*newGeometryReference*'(parent:N,name:S,valueType:CG_K.GeometryFormat)'
@@ -1498,7 +1520,7 @@ def newGeometryReference(parent,name='{GeometryReference}',
   return node
   
 # -----------------------------------------------------------------------------
-def newFamilyBC(parent,valueType=NPY.array(CG_K.UserDefined_s)): 
+def newFamilyBC(parent,valueType=CG_K.UserDefined_s): 
   """-FamilyBC node creation -FamilyBC
   
   'newNode:N='*newFamilyBC*'(parent:N,valueType:CG_K.BCTypeSimple/CG_K.BCTypeCompound)'

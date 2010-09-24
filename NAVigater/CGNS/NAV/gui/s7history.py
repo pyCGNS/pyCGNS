@@ -16,7 +16,7 @@ G___=s7globals.s7G
 
 # ---
 def printHistory(filelist,dirlist):
-  s="""# S7 - File history file - Generated %s
+  s="""# CGNS.NAV - File history file - Generated %s
 filesHistory={
 # unused 
 %s
@@ -43,22 +43,22 @@ def saveHistory():
 def readHistory():
   fn=G___.historyFile
   opath=os.environ['HOME']
-  dpath='/tmp/s7history:%d.%s'%(os.getpid(),time.time())
+  dpath='/tmp/cgnsnavhistory:%d.%s'%(os.getpid(),time.time())
   os.mkdir(dpath)
   try:
-    shutil.copyfile(opath+'/'+fn,dpath+'/s7historyData.py')
+    shutil.copyfile(opath+'/'+fn,dpath+'/cgnsnavhistorydata.py')
   except IOError:
     shutil.rmtree(dpath)    
     return ([],[])
   sprev=sys.path
   sys.path=[dpath]+sys.path
-  import s7historyData
+  import cgnsnavhistorydata
   shutil.rmtree(dpath)
   sys.path=sprev
   (fh,dh)=(None,None)
   try:
-    fh=s7historyData.filesHistory
-    dh=s7historyData.directoriesHistory
+    fh=cgnsnavhistorydata.filesHistory
+    dh=cgnsnavhistorydata.directoriesHistory
     if (len(dh)>G___.directoriesHistorySize):
       dh=dh[-G___.directoriesHistorySize:]
   except (NameError, ValueError):

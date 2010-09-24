@@ -32,7 +32,7 @@ class wLog(s7windoz.wWindoz):
     self.isclear=1
     self.viewtree=wtree._viewtree
 
-    s7windoz.wWindoz.__init__(self,self.wcontrol,'pyS7: Log view')
+    s7windoz.wWindoz.__init__(self,self.wcontrol,'CGNS.NAV: Log view')
 
     mcols=self.menu([('check-bwd',W,2,self.prevtag, 'Previous message'),
                      ('check-fwd',W,2,self.nexttag, 'Next message'),

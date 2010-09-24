@@ -29,7 +29,7 @@ import s7fileDialog
 import s7windoz
 
 
-optionfiletemplate="""# pyS7 - options file
+optionfiletemplate="""# CGNS.NAV - options file
 expandRecurse=%(expandRecurse)d
 maxRecurse=%(maxRecurse)d
 sidsRecurse=%(sidsRecurse)d
@@ -46,6 +46,7 @@ saveLinks=%(saveLinks)d
 historyFile='%(historyFile)s'
 noData=%(noData)d
 forceFortranFlag=%(forceFortranFlag)d
+transposeOnViewEdit=%(transposeOnViewEdit)d
 compactedValue=%(compactedValue)d
 showSIDS=%(showSIDS)d
 helpBallooons=%(helpBallooons)d
@@ -136,6 +137,9 @@ class wOptionView(s7windoz.wWindoz):
   def _forceFortranFlag(self):
     G___.forceFortranFlag=not G___.forceFortranFlag
     
+  def _transposeOnViewEdit(self):
+    G___.transposeOnViewEdit=not G___.transposeOnViewEdit
+    
   def _compactedValue(self):
     G___.compactedValue=not G___.compactedValue
     
@@ -222,6 +226,9 @@ class wOptionView(s7windoz.wWindoz):
     self.v_forceFortranFlag=IntVar()
     self.v_forceFortranFlag.set(G___.forceFortranFlag)
     self.d_forceFortranFlag='Force Fortran flag in numpy arrays (no check)'
+    self.v_transposeOnViewEdit=IntVar()
+    self.v_transposeOnViewEdit.set(G___.transposeOnViewEdit)
+    self.d_transposeOnViewEdit='Transpose array for view/edit'
     self.v_compactedValue=IntVar()
     self.v_compactedValue.set(G___.compactedValue)
     self.d_compactedValue='Show 1D values as Python plain types'
@@ -242,11 +249,11 @@ class wOptionView(s7windoz.wWindoz):
     self.d_historyFile='History file name:'
   
   def __init__(self,wcontrol):
-    s7windoz.wWindoz.__init__(self,wcontrol,'pyS7: Options view')
+    s7windoz.wWindoz.__init__(self,wcontrol,'CGNS.NAV: Options view')
     self.setVars()
 
     self.options = self._wtop
-    self.options.title('pyS7: Options')
+    self.options.title('CGNS.NAV: Options')
     self.options.fleft=Frame(self.options,relief=GROOVE,borderwidth=3)
     self.options.fright=Frame(self.options,relief=GROOVE,borderwidth=3)
     self.options.fleft.row=1
@@ -278,6 +285,7 @@ class wOptionView(s7windoz.wWindoz):
     self.optValue(_right,'defaultProfile')
     self.optValue(_right,'profilePath',large=1)
     self.optCheck(_right,'forceFortranFlag')
+    self.optCheck(_right,'transposeOnViewEdit')    
 
     self.options.fleft.grid(row=1,column=0,sticky=NW)
     self.options.fright.grid(row=1,column=1,sticky=NE,columnspan=3)
@@ -296,7 +304,7 @@ class wOptionView(s7windoz.wWindoz):
   def save(self):
     self.updateVars()
     import os
-    path=os.environ['HOME']+'/.s7options.py'
+    path=os.environ['HOME']+'/.cgnsnavoptions.py'
     f=open(path,'w+')
     f.write(optionfiletemplate%G___.__dict__)
     f.close()
