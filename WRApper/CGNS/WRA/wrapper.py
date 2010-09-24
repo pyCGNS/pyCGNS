@@ -21,9 +21,6 @@ libraries.
 # ======================================================================
 class pyADF:
     """
-    pyADF: wrapper to ADF calls
-    ---------------------------
-
     The *pyADF* class holds a connection to a *CGNS* file provides the user
     with a *Python*-like interface to *ADF* calls. 
 
@@ -37,8 +34,6 @@ class pyADF:
     # --------------------------------------------------
     def __init__(self,name,status,format):
       """
-      Purpose:
-      
       Opens a CGNS database, returns the instance required for subsequent
       calls on this database. To close the database, use the Python del
       statement or the 'database_close' method.
@@ -72,21 +67,17 @@ class pyADF:
           self.__state=self.OPEN
       self.__name=name
     # --------------------------------------------------
+    def database_close(self):
       """
-      Purpose:
-      
       Closes a CGNS database. It does `not' delete the object, so we suggest
       you use the Python del statement instead of this method.
       """
-    def database_close(self):
       return self.__adf.database_close()
     # --------------------------------------------------
+    def database_delete(self,filename):
       """
-      Purpose:
-      
       Not implemented at ADF library level.
       """
-    def database_delete(self,filename):
       wpdbg("database_delete")
       return self.__adf.database_delete(filename)
     # --------------------------------------------------

@@ -221,6 +221,7 @@ def arraySize(ar,dt):
 def arrayValue(ar,dt):
   if (dt == 'C1'): ndt='c'
   if (dt == 'I4'): ndt='i'
+  if (dt == 'I8'): ndt='l'
   if (dt == 'R4'): ndt='f'
   if (dt == 'R8'): ndt='d'  
   if (isArray(ar)):

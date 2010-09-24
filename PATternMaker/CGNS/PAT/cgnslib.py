@@ -14,13 +14,13 @@ __CGNS_LIBRARY_VERSION__=2.4
 import types
 import numpy as NPY
 
-C1='C1'
-MT='MT'
-I4='I4'
-I8='I8'
-R4='R4'
-R8='R8'
-LK='LK'
+C1=CG_K.C1
+MT=CG_K.MT
+I4=CG_K.I4
+I8=CG_K.I8
+R4=CG_K.R4
+R8=CG_K.R8
+LK=CG_K.LK
 DT=[C1,MT,I4,I8,R4,R8,LK] # LK declared as data type
 
 zero_N=(0,-1)

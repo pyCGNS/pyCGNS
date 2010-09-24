@@ -1,4 +1,8 @@
 
+.. index:
+   pair: HDF5; CHLone
+   pair: HDF5; File formats
+
 .. _v3multifileformat:
 
 Handling ADF and HDF5 file formats

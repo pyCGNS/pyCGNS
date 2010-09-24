@@ -1,3 +1,5 @@
+.. _wraintro:
+
 WRA
 ===
 
@@ -14,7 +16,7 @@ replaced by the class itself which holds the required connection information.
 
    The so-called *ADF* calls of the **v3** version of *CGNS* libraries 
    can read/write *ADF* as well as *HDF5* 
-   files (see :ref:`v3multifileformat`).
+   files (see :ref:`File formats <wrainter:v3multifileformat>`).
 
 Examples
 --------

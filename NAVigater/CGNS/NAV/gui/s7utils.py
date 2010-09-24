@@ -28,6 +28,19 @@ def wIconFactory():
                                          (G___.iconDir,iconKey))
   return G___.iconStorage
 
+
+import CGNS.PAT.cgnskeywords as CK
+
+# --------------------------------------------------------------------
+def checkShownType(data,datatype):
+  if ((data.dtype.char in ['f']) and (datatype==CK.R4)): return 1
+  if ((data.dtype.char in ['d']) and (datatype==CK.R8)): return 1
+  if ((data.dtype.char in ['i']) and (datatype==CK.I4)): return 1
+  if ((data.dtype.char in ['l']) and (datatype==CK.I8)): return 1
+  if ((data.dtype.char in ['c']) and (datatype==CK.C1)): return 1
+  return 0
+
+# --------------------------------------------------------------------
 def canBeShown(data):
   if (data == None ): return 1
   if (type(data) in [type(""),type(1.2),type(1)]): return 0
@@ -41,6 +54,14 @@ def toBeShown(data):
   else:                      return showOneArray(data)
 
 def showOneArray(data):
+  if ((G___.compactedValue) and (len(data.shape)==1) and (data.shape[0]==1)):
+    if (checkShownType(data,CK.R4)): return showOneFloat(data[0])
+    if (checkShownType(data,CK.R8)): return showOneDouble(data[0])
+    if (checkShownType(data,CK.I4)): return showOneInteger(data[0])
+    if (checkShownType(data,CK.I8)): return showOneLong(data[0])
+  if (checkShownType(data,CK.C1)):
+    if ((G___.compactedValue) and (len(data.shape)==1)):
+      return showOneString(data.tostring())
   return str(data.tolist())
 
 def showOneFloat(f):
@@ -55,6 +76,9 @@ def showOneInteger(f):
 def showOneLong(f):
   return string.rstrip('%d'%f,'0')
   
+def showOneString(f):
+  return '%s'%f
+
 def showFloatArrayAsList(data):
   return __showFloatArrayAsList(data).replace("'","")[:-1]
 
@@ -312,5 +336,17 @@ def operate_sort_list(event):
   else:
     listbox.column_configure(listbox.column(event.column),arrow='down')
     listbox.sortorder_flags[event.column] = 'increasing'
+
+# -----------------------------------------------------------------------------
+def forceNumpyAndFortranFlags(tree,path=''):
+  path+='/'+tree[0]
+  for child in tree[2]:
+    print "parse ",path,"  :",
+    if ((child[1] != None) and (not Num.isfortran(child[1]))):
+      print "force Fortran on "
+      child[1]=Num.array(child[1],order='F')
+    else:
+      print
+    forceNumpyAndFortranFlags(child,path)
 
 # --------------------------------------------------

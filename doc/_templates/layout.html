@@ -1,0 +1,18 @@
+{% extends "!layout.html" %}
+{% set toppycgnspage1 = pathto('../index') %}
+{% set toppycgnspage2 = pathto('index') %}
+{% block rootrellink %}
+  {% if master_doc != "index" %}
+    <li><a href={{ toppycgnspage1 }}>pyCGNS</a> &raquo;</li>
+  {% else %}
+    <li><a href={{ toppycgnspage2 }}>pyCGNS</a> &raquo;</li>
+  {% endif %}
+    {{ super() }}
+{% endblock %}
+{% block sidebarlogo %}
+{% if logo %}
+   <h1 align=center><a href="{{ pathto(master_doc) }}">
+      <img class="logo" src="{{ pathto('_static/' + logo, 1) }}" alt="pyCGNS"/>
+   </a></h1>
+{% endif %}
+{% endblock %}

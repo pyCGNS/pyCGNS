@@ -490,6 +490,17 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     S2P_TRACE(("### (%s) Retrieve returns NULL POINTER",curpath));
     return NULL;
   }
+  if (S2P_HASFLAG(S2P_FALTERNATESIDS))
+  {
+    if (!strcmp(rnode->label,"\"int[1+...+IndexDimension]\""))
+    {
+      strcpy(rnode->label,"DiffusionModel_t");
+    }
+    if (!strcmp(rnode->label,"\"int[IndexDimension]\""))
+    {
+      strcpy(rnode->label,"Transform_t");
+    }
+  }
   S2P_TRACE(("### (%s) [%s]",curpath,rnode->label));
   if (rnode->dtype!=L3E_VOID)
   {
@@ -617,7 +628,7 @@ static int s2p_parseAndWriteHDF(hid_t     id,
                                 s2p_ctx_t *context,
 				L3_Cursor_t *l3db)
 {
-  char *name=NULL,*label=NULL,*tdat=NULL;
+  char *name=NULL,*label=NULL,*tdat=NULL,altlabel[L3C_MAX_NAME+1];
   int sz=0,n=0,ret=0,tsize=1;
   int ndat=0,ddat[NPY_MAXDIMS];
   char *vdat=NULL;
@@ -630,12 +641,21 @@ static int s2p_parseAndWriteHDF(hid_t     id,
   {
     name=PyString_AsString(PyList_GetItem(tree,0));
     label=PyString_AsString(PyList_GetItem(tree,3));
+    strcpy(altlabel,label);
+    if (!strcmp(altlabel,"DiffusionModel_t"))
+    {
+      strcpy(altlabel,"\"int[1+...+IndexDimension]\"");
+    }
+    if (!strcmp(altlabel,"Transform_t"))
+    {
+      strcpy(altlabel,"\"int[IndexDimension]\"");
+    }
     strcat(curpath,"/");
     strcat(curpath,name);
-    S2P_TRACE(("### create [%s][%s]",curpath,label));
+    S2P_TRACE(("### create [%s][%s]",curpath,altlabel));
     if (s2p_checklinktable(context,curpath))
     {
-      S2P_TRACE(("### linked to [%s][%s]\n",curpath,label));
+      S2P_TRACE(("### linked to [%s][%s]\n",curpath,altlabel));
     }
     S2P_FREECONTEXTPTR(context);
     if (s2p_getData(PyList_GetItem(tree,1),&tdat,&ndat,ddat,&vdat,context))
@@ -655,7 +675,8 @@ static int s2p_parseAndWriteHDF(hid_t     id,
       }
     } 
     S2P_TRACE(("}=%d\n",tsize));
-    node=L3_nodeSet(l3db,node,name,label,ddat,L3_typeAsEnum(tdat),vdat,L3F_NONE);
+    node=L3_nodeSet(l3db,node,name,altlabel,ddat,
+		    L3_typeAsEnum(tdat),vdat,L3F_NONE);
     L3_nodeCreate(l3db,id,node);
     if (PyList_Check(PyList_GetItem(tree,2)))
     {

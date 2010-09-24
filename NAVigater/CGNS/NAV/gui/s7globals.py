@@ -67,6 +67,8 @@ class s7optionsStorage:
     self.maxDisplaySize=37
     self.minFileSizeNoWarning=1000000000
     self.noData=0
+    self.forceFortranFlag=0    
+    self.compactedValue=0
     self.showIndex=0
     self.showColumnTitle=1
     self.helpBallooons=1
@@ -165,6 +167,8 @@ class s7optionsStorage:
     self.allowedoptionslist+=['followLinks']
     self.allowedoptionslist+=['saveLinks']
     self.allowedoptionslist+=['noData']
+    self.allowedoptionslist+=['forceFortranFlag']
+    self.allowedoptionslist+=['compactedValue']
     self.allowedoptionslist+=['showSIDS']        
     self.allowedoptionslist+=['helpBallooons']        
 

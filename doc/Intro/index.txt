@@ -1,8 +1,23 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
 The pyCGNS documentation
-========================
+++++++++++++++++++++++++
 pyCGNS is a Python package for the `CGNS <http://www.cgns.org>`_ standard.
 The package gathers various tools and libraries for end-users and
-Python application developpers.
+Python application developpers. The main object of pyCGNS is to provide the
+application developpers with a Python interface to *CGNS/SIDS*, the data
+model. The *MAP* and *PAT* modules are dedicated to this goal: map the 
+*CGNS/SIDS* data model to a Python implementation. The *WRA* module is a
+wrapper on *CGNS/MLL* and is not the important module of pyCGNS. One could 
+achieve such a wrapper using SWIG for example. This is the reason why the
+use of *CGNS/MLL* is optional.
+
+The *CGNS/SIDS* data model has a mapping the *HDF5* for file storage. The
+*MAP* module uses *CHLone* instead of *CGNS/MLL* to map its *CGNS/Python*
+trees to *HDF5*.
 
 The package also uses `numpy <http://numpy.scipy.org>`_ and 
 :ref:`HDF5 <reference_hdf5>` you should install before pyCGNS.
@@ -10,36 +25,39 @@ The package also uses `numpy <http://numpy.scipy.org>`_ and
 .. raw:: html
 
   Click below for a quick access to modules.<br>
-
-  <table border=0 width="100%"><tr >
-  <td border=0 ><a href="MAP/readme.html">
+  
+  <div>
+  <table width="100%">
+  <tr align="center" valign="middle">
+  <td align="center" valign="middle"><a href="MAP/readme.html">
       <img src="_images/MAP-logo.jpg" height="48" alt="MAP"/></a></td>
-  <td border=0 ><a href="PAT/readme.html">
+  <td align="center" valign="middle"><a href="PAT/readme.html">
       <img src="_images/PAT-logo.jpg" height="48" alt="PAT"/></a></td>
-  <td border=0 ><a href="NAV/readme.html">
+  <td align="center" valign="middle"><a href="NAV/readme.html">
       <img src="_images/NAV-logo.jpg" height="48" alt="NAV"/></a></td>
-  <td border=0 ><a href="WRA/readme.html">
+  <td align="center" valign="middle"><a href="WRA/readme.html">
       <img src="_images/WRA-logo.jpg" height="48" alt="WRA"/></a></td>
-  <td border=0 ><img src="_images/VAL-logo.jpg" height="48" alt="VAL"/></td>
-  <td border=0 ><img src="_images/DAT-logo.jpg" height="48" alt="DAT"/></td>
-  <td border=0 ><img src="_images/TRA-logo.jpg" height="48" alt="TRA"/></td>
-  </tr></table><br>
+  <td align="center" valign="middle">
+    <img src="_images/VAL-logo.jpg" height="48" alt="VAL"/></td>
+  <td align="center" valign="middle">
+    <img src="_images/DAT-logo.jpg" height="48" alt="DAT"/></td>
+  <td align="center" valign="middle">
+    <img src="_images/TRA-logo.jpg" height="48" alt="TRA"/></td>
+  </tr></table><br></div>
 
   You also have PDF version of the documentation you can download from
   the <a href="http://www.python-science.org/project/pyCGNS">
   pyCGNS web site</a>.
 
 Contents
-========
+++++++++
 .. toctree::
+   :maxdepth: 2
    
-   introduction
-   modules
-   install
+   About pyCGNS <introduction>
+   Modules & Tools <modules>
+   Package information <install>
 
-Tables
-======
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
 

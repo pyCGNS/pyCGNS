@@ -6,15 +6,10 @@
 #
 
 # --- overall directories and libs
-
-mylocal='/home/tools/local/x86_64p' 
-
-INCLUDE_DIRS =['/home/tools/local/x86_64t/include'] 
-INCLUDE_DIRS+=['%s/include'%mylocal]
-INCLUDE_DIRS+=['%s/lib/python2.5/site-packages/numpy/core/include'%mylocal]
-
-LIBRARY_DIRS =['/home/tools/local/x86_64t/lib']
-LIBRARY_DIRS+=['%s/lib'%mylocal] 
+#
+#mylocal='home/myself/tools'
+#INCLUDE_DIRS+=['%s/include'%mylocal]
+#LIBRARY_DIRS+=['%s/lib'%mylocal] 
 
 # --- If you leave empty the variables below the build process would
 #     try to guess for you, using the PATH you gave above.
@@ -45,6 +40,14 @@ LIBRARY_DIRS+=['%s/lib'%mylocal]
 #MLL_PATH_INCLUDES     = [] 
 #MLL_VERSION           = '' 
 #MLL_EXTRA_ARGS        = []
+
+# --- stuff to add for Python
+
+#PYTHON_VERSION          = ''
+#PYTHON_PATH_INCLUDES    = []
+#PYTHON_PATH_LIBRARIES   = []
+#PYTHON_LINK_LIBRARIES   = [] 
+#PYTHON_EXTRA_ARGS       = []
 
 #
 # -------------------------------------------------------------------------

@@ -1339,6 +1339,16 @@ ZoneType_s,
 auCurrent_s
 ]
 
+# --- other stuff
+
+C1='C1'
+MT='MT'
+I4='I4'
+I8='I8'
+R4='R4'
+R8='R8'
+LK='LK'
+
 #
 # --- last line
 

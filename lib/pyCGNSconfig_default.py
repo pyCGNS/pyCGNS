@@ -10,9 +10,24 @@
 # Change these values to fit your installation
 # See notes at end of file about config values
 #
-mylocal='/home/tools/local/x86_64p'
+import sys
 
-HAS_HDF5              = True
+mylocal='/usr/local'
+
+INCLUDE_DIRS =['%s/include'%mylocal]
+LIBRARY_DIRS =['%s/include'%mylocal]
+
+HAS_MLL=True
+HAS_NUMPY=True
+HAS_CHLONE=True
+HAS_HDF5=True
+
+# useless with distutils but maybe required for other external libs
+PYTHON_VERSION          = "%d.%d"%(sys.version_info[0],sys.version_info[1])
+PYTHON_PATH_INCLUDES    = [sys.prefix+'/include']
+PYTHON_PATH_LIBRARIES   = [sys.prefix+'/lib']
+PYTHON_LINK_LIBRARIES   = [] 
+PYTHON_EXTRA_ARGS       = []
 
 HDF5_VERSION          = '1.8.2'
 HDF5_PATH_INCLUDES    = []
@@ -26,24 +41,24 @@ MLL_PATH_INCLUDES     = []
 MLL_VERSION           = '2.5'
 MLL_EXTRA_ARGS        = ['-DLEGACY_SUPPORT']
 
-INCLUDE_DIRS =['/home/tools/local/x86_64t/include'] 
-INCLUDE_DIRS+=['%s/include'%mylocal]
-INCLUDE_DIRS+=['%s/lib/python2.5/site-packages/numpy/core/include'%mylocal]
-
-LIBRARY_DIRS =['/home/tools/local/x86_64t/lib']
-LIBRARY_DIRS+=['%s/lib'%mylocal]
-
 NUMPY_VERSION         = '1.4'
-NUMPY_PATH_INCLUDES   = []
+NUMPY_PATH_INCLUDES   = ['%s/lib/python%s/site-packages/numpy/core/include'\
+                         %(sys.prefix,PYTHON_VERSION)]
 NUMPY_PATH_LIBRARIES  = []
 NUMPY_LINK_LIBRARIES  = []
 NUMPY_EXTRA_ARGS      = []
 
-CHLONE_VERSION         = '1.4'
+CHLONE_VERSION         = '0.4'
 CHLONE_PATH_INCLUDES   = []
 CHLONE_PATH_LIBRARIES  = []
 CHLONE_LINK_LIBRARIES  = []
 CHLONE_EXTRA_ARGS      = []
+
+# cannot manage include orders here...
+INCLUDE_DIRS=INCLUDE_DIRS+PYTHON_PATH_INCLUDES+HDF5_PATH_INCLUDES\
+             +MLL_PATH_INCLUDES+NUMPY_PATH_INCLUDES+CHLONE_PATH_INCLUDES
+LIBRARY_DIRS+=LIBRARY_DIRS+PYTHON_PATH_LIBRARIES+HDF5_PATH_LIBRARIES\
+             +MLL_PATH_LIBRARIES+NUMPY_PATH_LIBRARIES+CHLONE_PATH_LIBRARIES
 #
 # -------------------------------------------------------------------------
 # You should not change values beyond this point
@@ -51,10 +66,6 @@ CHLONE_EXTRA_ARGS      = []
 MAJORVERSION=4
 MINORVERSION=0
 #
-HAS_MLL=True
-HAS_NUMPY=True
-HAS_CHLONE=True
-HAS_HDF5=True
 #
 WRA_VERSION='4.0.1'
 VAL_VERSION='4.0.1'
@@ -99,6 +110,12 @@ HAS_MLL=%(HAS_MLL)s
 
 INCLUDE_DIRS=%(INCLUDE_DIRS)s
 LIBRARY_DIRS=%(LIBRARY_DIRS)s
+
+PYTHON_VERSION='%(PYTHON_VERSION)s'
+PYTHON_PATH_LIBRARIES=%(PYTHON_PATH_LIBRARIES)s
+PYTHON_LINK_LIBRARIES=%(PYTHON_LINK_LIBRARIES)s
+PYTHON_PATH_INCLUDES=%(PYTHON_PATH_INCLUDES)s
+PYTHON_EXTRA_ARGS=%(PYTHON_EXTRA_ARGS)s
 
 MLL_VERSION='%(MLL_VERSION)s'
 MLL_PATH_LIBRARIES=%(MLL_PATH_LIBRARIES)s

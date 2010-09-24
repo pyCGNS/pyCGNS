@@ -16,6 +16,8 @@ import numpy as Num
 import time
 
 from CGNS.pyCGNSconfig import version as __vid__
+import CGNS.WRA.utilities
+import CGNS.MAP
 
 import s7globals
 G___=s7globals.s7G
@@ -190,17 +192,32 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
         f=open(file,'w+')
         f.write(s7utils.asFileString(tree))
         f.close()
-      elif (fileext in G___.cgnsbinFiles):
-        import CGNS
+      elif (fileext in G___.cgnslibFiles):
         tlinks=[]
         lfile="%s/%s%s"%(treefingerprint.filedir,
-                       treefingerprint.filename,
-                       treefingerprint.fileext)
+                         treefingerprint.filename,
+                         treefingerprint.fileext)
         for lk in treefingerprint.links:
           if (lfile==lk[0]):
             tlinks.append(lk)
         if (not G___.saveLinks): tlinks=[]
         CGNS.WRA.utilities.saveAsADF(file,tree,tlinks)
+      elif (fileext in G___.cgnssslFiles):
+          flags=CGNS.MAP.S2P_NONE
+          tlinks=[]
+          lfile="%s/%s%s"%(treefingerprint.filedir,
+                           treefingerprint.filename,
+                           treefingerprint.fileext)
+          for lk in treefingerprint.links:
+            if (lfile==lk[0]):
+              tlinks.append(lk)
+          if (not G___.saveLinks): tlinks=[]
+          if (G___.noData):    flags|=CGNS.MAP.S2P_NODATA
+          flags|=CGNS.MAP.S2P_TRACE
+          tree[0]='CGNSTree'
+          tree[3]='CGNSTree_t'
+          s7utils.forceNumpyAndFortranFlags(tree)
+          CGNS.MAP.save(file,tree,tlinks,flags)
       else:
         s7utils.fileWarning(fileext)
         return 0
@@ -263,14 +280,12 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
       if (not treefingerprint
           and (fileext in G___.cgnslibFiles+G___.cgnssslFiles)):
         if (not treefingerprint and (fileext in G___.cgnslibFiles)):
-          import CGNS.WRA.utilities
           lk=CGNS.WRA.utilities.getLinksAsADF(filename)
           if (G___.noData): vmax=G___.maxDisplaySize
           else:             vmax=sys.maxint
           tt=CGNS.WRA.utilities.loadAsADF(filename,G___.followLinks,vmax)
           treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
         elif (not treefingerprint and (fileext in G___.cgnssslFiles)):
-          import CGNS.MAP
           flags=CGNS.MAP.S2P_NONE
           if (G___.followLinks):flags|=CGNS.MAP.S2P_FOLLOWLINKS
           if (G___.noData):     flags|=CGNS.MAP.S2P_NODATA

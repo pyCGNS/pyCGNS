@@ -22,7 +22,14 @@ import sys, os
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc']
+extensions = ['sphinx.ext.autodoc','sphinx.ext.intersphinx']
+
+mapdir='%s/../build/doc/html'%os.path.abspath('.')
+intersphinx_mapping={'wrainter': (mapdir+'/WRA',None),
+                     'mapinter': (mapdir+'/MAP',None),
+                     'patinter': (mapdir+'/PAT',None),
+                     'navinter': (mapdir+'/NAV',None)                     
+                     }
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -110,19 +117,19 @@ html_theme_options = {
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = "pyCGNS Documentation"
+html_title = "%s"%os.environ['PYCGNSMOD']
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = 'pyCGNS-logo-small.jpg'
+html_logo = 'images/%s-logo-small.jpg'%os.environ['PYCGNSMOD']
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon =  'pyCGNS-logo-tiny.ico'
+html_favicon =  'images/pyCGNS-logo-tiny.ico'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -148,7 +155,7 @@ html_static_path = ['_static']
 #html_use_modindex = True
 
 # If false, no index is generated.
-#html_use_index = True
+html_use_index = True
 
 # If true, the index is split into individual pages for each letter.
 #html_split_index = False

@@ -45,6 +45,8 @@ followLinks=%(followLinks)d
 saveLinks=%(saveLinks)d
 historyFile='%(historyFile)s'
 noData=%(noData)d
+forceFortranFlag=%(forceFortranFlag)d
+compactedValue=%(compactedValue)d
 showSIDS=%(showSIDS)d
 helpBallooons=%(helpBallooons)d
 # last line
@@ -131,6 +133,12 @@ class wOptionView(s7windoz.wWindoz):
   def _noData(self):
     G___.noData=not G___.noData
     
+  def _forceFortranFlag(self):
+    G___.forceFortranFlag=not G___.forceFortranFlag
+    
+  def _compactedValue(self):
+    G___.compactedValue=not G___.compactedValue
+    
   def _sidsRecurse(self):
     G___.sidsRecurse=not G___.sidsRecurse
     
@@ -211,6 +219,12 @@ class wOptionView(s7windoz.wWindoz):
     self.v_noData=IntVar()
     self.v_noData.set(G___.noData)
     self.d_noData='Do not load large DataArrays'
+    self.v_forceFortranFlag=IntVar()
+    self.v_forceFortranFlag.set(G___.forceFortranFlag)
+    self.d_forceFortranFlag='Force Fortran flag in numpy arrays (no check)'
+    self.v_compactedValue=IntVar()
+    self.v_compactedValue.set(G___.compactedValue)
+    self.d_compactedValue='Show 1D values as Python plain types'
     self.v_maxRecurse=IntVar()
     self.v_maxRecurse.set(G___.maxRecurse)
     self.d_maxRecurse='Max tree parse recursion level'
@@ -253,6 +267,7 @@ class wOptionView(s7windoz.wWindoz):
     self.optCheck(_left,'followLinks')
     self.optCheck(_left,'saveLinks')    
     self.optCheck(_left,'noData')
+    self.optCheck(_left,'compactedValue')
     self.optCheck(_left,'showSIDS')    
 #    self.optVlist(_right,'Follow file links :',
 #                  ['Always','Never','Only first level'],
@@ -262,6 +277,7 @@ class wOptionView(s7windoz.wWindoz):
     self.optValue(_right,'historyFile')
     self.optValue(_right,'defaultProfile')
     self.optValue(_right,'profilePath',large=1)
+    self.optCheck(_right,'forceFortranFlag')
 
     self.options.fleft.grid(row=1,column=0,sticky=NW)
     self.options.fright.grid(row=1,column=1,sticky=NE,columnspan=3)

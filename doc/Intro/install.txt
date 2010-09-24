@@ -1,10 +1,15 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
 Build and Install
-=================
+-----------------
 
 The first step of the installation is to make sure you have the required
 libraries. The mandatory libs are *Python*, *numpy*, *HDF5* and *CHLone*. 
 Then, depending on what you want to build and istall in *pyCGNS*, you may 
-need *libcgns*.
+need *libcgns*. 
 
 .. warning::
 
@@ -14,27 +19,49 @@ need *libcgns*.
   mapping definitions of this model (such as *CGNS/HDF* for example).
   *pyCGNS* uses *CHLone* which is another *CGNS/HDF5* compliant implementation.
 
+.. index::
+   single: CHLone
+   pair: Installation; Python
+   pair: Installation; numpy
+   pair: Installation; hdf5
+   pair: Installation; CHLone
+
 Required libraries
-------------------
+~~~~~~~~~~~~~~~~~~
 
  * `Python <http://www.python.org>`_ (starting from v2.4)
  * `numpy <http://numpy.scipy.org>`_ (starting v1.1)
  * `hdf5 <http://www.hdfgroup.org>`_ (starting v1.8.5)
  * `CHLone <http://chlone.sourceforge.net>`_ (starting v0.4)
 
-Optional libraries
-------------------
+.. index::
+   single: CGNS/MLL
+   single: CGNS/ADF
+   pair: Installation; CGNS/MLL
 
- * `CGNS/MLL (libcgns) <http://www.cgns.org>`_ (starting v3.0)
+Optional libraries
+~~~~~~~~~~~~~~~~~~
+
+The so-called `mid-level` library is not mandatory, 
+the :ref:`WRA module <wrainter:wraintro>`
+is the only one to have dependancies on.
+The :ref:`NAV module <navinter:navintro>` also uses *CGNS/MLL* as optional
+if you want to be able to read *CGNS/ADF* files
+(see :ref:`File formats <wrainter:v3multifileformat>`)
+
+ * `CGNS/MLL (libcgns) <http://www.cgns.org>`_ (starting v3.0) 
 
 Installation process
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 Once you have these installed you can proceed with pyCGNS.
 You go into the top directory and you edit the ``pyCGNSconfig.py.in``
 (see :ref:`pycgnsconfigpyin`).
 You have to set the correct paths and various values such as directory search
 libs or flags.
+
+.. index::
+   single: Installation
 
 Then you run::
 
@@ -52,7 +79,7 @@ All the modules of the pyCGNS package are installed and you can now
 proceed with tutorial examples.
 
 Single module installation
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can ask for a single module installation::
 
@@ -65,8 +92,80 @@ installation with the other pyCGNS modules.
 .. _pycgnsconfigpyin:
 
 Configuration file contents
----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``pyCGNSconfig.py.in`` should work with no modification if you have
+.. index::
+   pair: Installation; pyCGNSconfig_user.py
+
+The ``pyCGNSconfig_user.py`` should work with no modification if you have
 a standard installation. All you have to declare is the directory in which
 we can find *Python/numpy/hdf5/CHLone/cgns* libraries.
+
+If you have specific installations you can change some paths/flags for each
+external library: *hdf5*, *numpy*, *CGNS/MLL* and *CHLone*. The configuration
+file is a Python file, it is imported after the default configuration. The
+changes you make in the configuration file will overwrite the defaults::
+
+  # --- stuff to add for HDF5 
+
+  #HDF5_VERSION          = ''
+  HDF5_PATH_INCLUDES    = ['/home/myself/hdf5/include']
+  HDF5_PATH_LIBRARIES   = ['/home/myself/hdf5/lib']
+  #HDF5_LINK_LIBRARIES   = []
+  #HDF5_EXTRA_ARGS       = []
+
+To avoid overwriting, use Python to update the config::
+
+  # --- stuff to add for HDF5 
+
+  #HDF5_VERSION          = ''
+  HDF5_PATH_INCLUDES    = ['/home/myself/hdf5/include']
+  HDF5_PATH_LIBRARIES   = ['/home/myself/hdf5/lib']
+  #HDF5_LINK_LIBRARIES   = []
+  HDF5_EXTRA_ARGS       = HDF5_EXTRA_ARGS + ['-DMYFLAG']
+  
+Release Notes
+-------------
+
+ Many changes in this v4 release, you can only use MAP, WRA, PAT and NAV.
+ The other modules, VAL, TRA and DAT are present for archival/development
+ purpose but you should NOT use them.
+
+Changes
+~~~~~~~
+ - cgnserrors changed to full exceptions at pyCGNS global level
+
+Bug fixes
+~~~~~~~~~
+Todo
+~~~~
+
+Module dependancies
+-------------------
+
+The pyCGNS modules have dependancies with their brothers. The list below
+gives you the required modules (or optional) for each of them.
+
+ - MAP : None
+ - PAT : MAP
+ - WRA : PAT MAP
+ - NAV : PAT MAP (WRA)
+
+NAV depends
+~~~~~~~~~~~
+
+The TkTreectrl module is required. You first need to install tktreectrl
+(last version tested is tktreectrl-2.2.3) and TkinterTreectrl to map it
+to Python (last version tested is TkinterTreectrl-0.8)
+
+MAP depends
+~~~~~~~~~~~
+
+The CHLone librarie is required
+
+WRA depends
+~~~~~~~~~~~
+
+CGNS/MLL and CGNS/ADF libraries are required
+
+
