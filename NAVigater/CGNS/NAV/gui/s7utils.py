@@ -54,7 +54,7 @@ def toBeShown(data):
   else:                      return showOneArray(data)
 
 def showOneArray(fdata):
-#  print fdata, fdata.shape
+  print fdata, fdata.shape
   if (G___.transposeOnViewEdit):
     data=fdata.T
   else:
@@ -64,7 +64,12 @@ def showOneArray(fdata):
     if (checkShownType(data,CK.R8)): return showOneDouble(data[0])
     if (checkShownType(data,CK.I4)): return showOneInteger(data[0])
     if (checkShownType(data,CK.I8)): return showOneLong(data[0])
-  if (checkShownType(data,CK.C1) and G___.compactedValue):
+    if (checkShownType(data,CK.C1)): return showOneString(data[0])
+  if ((G___.compactedValue) and (len(data.shape)==1) and (data.shape[0]>1)):
+    if (checkShownType(data,CK.C1)): return showOneString(data)
+  if (checkShownType(data,CK.C1)
+      and G___.compactedValue
+      and (len(data.shape)>1)):
     sdata=""
     for ndata in data:
       sdata+=showOneString(ndata)
@@ -198,6 +203,9 @@ def cutError():
 def pasteBrotherError():
   return msginfo("CGNS.NAV: Error",
                  "Cannot paste as root node brother").result()
+def shapeChangeError(shape):
+  return msginfo("CGNS.NAV: Error",
+                 "Value rejected: you change the previous shape %s"%shape).result()
 def importCGNSWarning(ext):
   return msginfo("CGNS.NAV: Error",
   "Cannot import pyCGNS module\nThis is required for %s files"%ext).result()

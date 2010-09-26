@@ -327,7 +327,6 @@ static int s2p_getData(PyObject *dobject,
      ddims[0]=PyArray_NDIM(dobject);
      for (n=0; n<ddims[0]; n++)
      {
-     	// code modification: check array fortran order 
      	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
      	{ 
      	  dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
@@ -349,7 +348,6 @@ static int s2p_getData(PyObject *dobject,
     ddims[0]=PyArray_NDIM(dobject);
     for (n=0; n<ddims[0]; n++)
     {
-      // code modification: check array fortran order 
       if (S2P_HASFLAG(S2P_FREVERSEDIMS))
       { 
         dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
@@ -372,7 +370,6 @@ static int s2p_getData(PyObject *dobject,
       total=1;
       for (n=0; n<ddims[0]; n++)
       {
-	// code modification: check array fortran order 
 	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
         { 
           dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
@@ -392,12 +389,8 @@ static int s2p_getData(PyObject *dobject,
   {
     *dtype=DT_R4;
     ddims[0]=PyArray_NDIM(dobject);
-    /* index is the C order for numpy. Even if array is FORTRAN, you should
-       pass an index with the C order, i.e. imax,ijmax,kmax...
-       Then you have to reverse the size if you detect a fortran */
     for (n=0; n<ddims[0]; n++)
     {
-      // code modification: check array fortran order
       if (S2P_HASFLAG(S2P_FREVERSEDIMS))
       { 
         dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
@@ -420,7 +413,6 @@ static int s2p_getData(PyObject *dobject,
      total=1;
      for (n=0; n<ddims[0]; n++)
      {
-     	// code modification: check array fortran order 
      	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
      	{ 
          dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
@@ -433,12 +425,14 @@ static int s2p_getData(PyObject *dobject,
        }
      } 
      *dvalue=(char*)PyArray_DATA(dobject);
+     /*
      ostr=PyArray_ToString((PyArrayObject*)dobject,NPY_ANYORDER);
      ddims[0]=1;
      dshape[0]=strlen((char*)PyString_AsString(ostr));
      context->_c_char=(char*)malloc(dshape[0]*sizeof(char)+1);
      strcpy(context->_c_char,(char*)PyString_AsString(ostr));
      *dvalue=(char*)context->_c_char;
+     */
      return 1;
   }
   return 1;

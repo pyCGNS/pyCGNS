@@ -1414,23 +1414,34 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       # Starts with [ or ( it is a tuple of values
       #        with 0-9 it is a number
       #        with something else it is a string
+      oldshape=self.node[1].shape
+      newarray=self.node[1]
       if (self.newvalue):
         if (self.newvalue[0] in ['[','(']):
-          self.node[1]=NY.array(list(eval(self.newvalue)))
+          newarray=NY.array(list(eval(self.newvalue)))
         elif (self.newvalue[0] in list('0123456789')):
           try:
-            self.node[1]=NY.array([int(self.newvalue)],dtype='i')
+            newarray=NY.array([int(self.newvalue)],dtype='i')
           except ValueError:
             try:
               if (self.node[0]!='CGNSLibraryVersion'):
-                self.node[1]=NY.array([float(self.newvalue)],dtype='d')
+                newarray=NY.array([float(self.newvalue)],
+                                  dtype=NY.Float64,order='F')
               else:
-                self.node[1]=NY.array([float(self.newvalue)],dtype='f4')
+                newarray=NY.array([float(self.newvalue)],
+                                  dtype=NY.Float32,order='F')
             except ValueError:
-              self.node[1]=NY.array(self.newvalue,dtype='c')
+              newarray=NY.array(tuple(self.newvalue),dtype='S1',order='F')
         else:    
-            self.node[1]=NY.array(self.newvalue,dtype='c')
-      self.wtree._edit.hide()
+            newarray=NY.array(tuple(self.newvalue),dtype='S1',order='F')
+        if (newarray.shape==oldshape):
+          if (G___.transposeOnViewEdit):
+            self.node[1]=NY.array(newarray.T,order='F').reshape(oldshape)
+          else:
+            self.node[1]=NY.array(newarray,order='F').reshape(oldshape)
+        else:
+          s7utils.shapeChangeError(oldshape)
+      self.wtree._sedit.hide()
       self.wtree._tree.itemstyle_set(self.item,
                                      self.wtree.col_tdata,
                                      self.wtree.st_dataentry)

@@ -264,9 +264,7 @@ class SaveFileDialog(FileDialog):
             if os.path.isdir(file):
                 self.master.bell()
                 return
-            d = s7utils.fileOverwrite(file)
-            if d != 0:
-                return
+            if (not s7utils.fileOverwrite(file)): return
         else:
             head, tail = os.path.split(file)
             if not os.path.isdir(head):
@@ -491,12 +489,8 @@ class wFileDialog(FileDialog):
       if os.path.isdir(file):
           self.wparent.bell()
           return
-      d = s7utils.fileOverwrite(file)
-      if d != 0:
-        # no overwrite
-        return
-      else:
-        os.unlink(file)
+      if (not s7utils.fileOverwrite(file)): return
+      else: os.unlink(file)
     else:
       head, tail = os.path.split(file)
       if not os.path.isdir(head):

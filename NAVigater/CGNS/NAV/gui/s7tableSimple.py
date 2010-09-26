@@ -189,25 +189,25 @@ class SlidingWindowView(Frame):
       self.insert(END,l)
 
   def upI(self,e):
-    print 'up I:',self.vpos, self.hpos
     self.vposprev=self.vpos
     self.vpos=min(self.vpos+1,self.vdata-1)
     self.scy.set(self.vpos)
     self.updateWindow()
+    print 'up I:',self.vpos, self.hpos
 
   def downI(self,e):
-    print 'down I:',self.vpos, self.hpos
     self.vposprev=self.vpos
     self.vpos=max(self.vpos-1,0)
     self.scy.set(self.vpos)
     self.updateWindow()
+    print 'down I:',self.vpos, self.hpos
 
   def upJ(self,e):
-    print 'up J:',self.vpos,self.hpos    
     self.hposprev=self.hpos
     self.hpos=min(self.hpos+1,self.hdata-1)
     self.updateWindow()
     self.scx.set(self.hpos)
+    print 'up J:',self.vpos,self.hpos    
 
   def downJ(self,e):
     print 'down J:',self.vpos,self.hpos
@@ -217,40 +217,40 @@ class SlidingWindowView(Frame):
     self.scx.set(self.hpos)    
 
   def upK(self,e):
-    print 'up K:',self.ppos
     self.pposprev=self.ppos
     self.ppos=min(self.ppos+1,self.pdata-1)
     self.pbutton.configure(text=self.kfmt%self.ppos)
     self.updateWindow()
+    print 'up K:',self.ppos
 
   def downK(self,e):
-    print 'down K:',self.ppos
     self.pposprev=self.ppos
     self.ppos=max(self.ppos-1,0)
     self.pbutton.configure(text=self.kfmt%self.ppos)
     self.updateWindow()
+    print 'down K:',self.ppos
     
   def upTargetI(self,e):
-    print 'up t I:',self.selectedcol,self.selectedrow
     self.selectedrow=max(self.selectedrow-1,0)
     self.updateWindow()
+    print 'up t I:',self.selectedcol,self.selectedrow
 
   def downTargetI(self,e):
-    print 'down t I:',self.selectedcol,self.selectedrow
     self.selectedrow=min(self.selectedrow+1,self.vdata-1)
     self.updateWindow()
+    print 'down t I:',self.selectedcol,self.selectedrow
 
   def upTargetJ(self,e):
-    print 'up t J:',self.selectedcol,self.selectedrow
     if (self.selectedcol!=None):
       self.selectedcol=min(self.selectedcol+1,self.hdata-1)
       self.updateWindow()
+    print 'up t J:',self.selectedcol,self.selectedrow,self.hdata-1
 
   def downTargetJ(self,e):
-    print 'down t J:',self.selectedcol,self.selectedrow
     if (self.selectedcol and self.selectedcol<self.hdata):
       self.selectedcol=max(self.selectedcol-1,0)
       self.updateWindow()
+    print 'down t J:',self.selectedcol,self.selectedrow
 
   def upTargetK(self,e):
     pass

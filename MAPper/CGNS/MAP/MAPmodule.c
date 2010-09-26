@@ -66,7 +66,7 @@ static PyMethodDef MAP_methods[] = {
 DL_EXPORT(void)
 initMAP(void)
 {
-  PyObject *s2p_m,*s2p_d,*s2p_s,*s2p_v,*s2p_l;
+  PyObject *s2p_m,*s2p_d,*s2p_s,*s2p_v,*s2p_l; 
 
   s2p_m=Py_InitModule("MAP", MAP_methods);
   import_array();

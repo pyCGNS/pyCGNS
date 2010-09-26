@@ -9,12 +9,14 @@ import shutil
 import os
 import sys
 
+OPTIONSFILENAME='.cgnsnavoptions.py'
+
 flag=0
 opath=os.environ['HOME']
-if (os.path.exists(opath+'/.s7options.py')):
-  dpath='/tmp/s7option%d'%(os.getpid())
+if (os.path.exists(opath+'/'+OPTIONSFILENAME)):
+  dpath='/tmp/%s%d'%(OPTIONSFILENAME,os.getpid())
   os.mkdir(dpath)
-  shutil.copyfile(opath+'/.s7options.py',dpath+'/s7options.py')
+  shutil.copyfile(opath+'/'+OPTIONSFILENAME,dpath+'/s7options.py')
   sprev=sys.path
   sys.path=[dpath]+sys.path
   try:
@@ -47,7 +49,7 @@ class s7optionsStorage:
      ]
     # Next line is replaced each time you run distutils...
     # then s7globals_.py becomes... s7globals.py (good job boy !) 
-    self.s7icondirectoryprefix="/home_local/eucass/tools"
+    self.s7icondirectoryprefix="/home/poinot/Tools-2"
     self.iconDir=self.s7icondirectoryprefix+'/share/CGNS/NAV/icons'
     self.firedox='firefox %s/share/CGNS/NAV/doc/CGNSNAV.html &'%\
                   self.s7icondirectoryprefix
