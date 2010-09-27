@@ -54,7 +54,7 @@ def toBeShown(data):
   else:                      return showOneArray(data)
 
 def showOneArray(fdata):
-  print fdata, fdata.shape
+  #print fdata, fdata.shape
   if (G___.transposeOnViewEdit):
     data=fdata.T
   else:

@@ -30,9 +30,10 @@ Required libraries
 ~~~~~~~~~~~~~~~~~~
 
  * `Python <http://www.python.org>`_ (starting from v2.4)
- * `numpy <http://numpy.scipy.org>`_ (starting v1.1)
- * `hdf5 <http://www.hdfgroup.org>`_ (starting v1.8.5)
- * `CHLone <http://chlone.sourceforge.net>`_ (starting v0.4)
+ * `numpy <http://numpy.scipy.org>`_ (v1.1 +)
+ * `hdf5 <http://www.hdfgroup.org>`_ (v1.8.5 +)
+ * `CHLone <http://chlone.sourceforge.net>`_ (v0.4 +)
+ * `tktreectrl <http://sourceforge.net/projects/tktreectrl>`_ (v2.2 +)
 
 .. index::
    single: CGNS/MLL
@@ -131,10 +132,6 @@ Release Notes
  The other modules, VAL, TRA and DAT are present for archival/development
  purpose but you should NOT use them.
 
-Changes
-~~~~~~~
- - cgnserrors changed to full exceptions at pyCGNS global level
-
 Bug fixes
 ~~~~~~~~~
 Todo
@@ -161,11 +158,11 @@ to Python (last version tested is TkinterTreectrl-0.8)
 MAP depends
 ~~~~~~~~~~~
 
-The CHLone librarie is required
+The *CHLone* librarie is required and thus *HDF5* is required.
 
 WRA depends
 ~~~~~~~~~~~
 
-CGNS/MLL and CGNS/ADF libraries are required
+*CGNS/MLL* and *CGNS/ADF* libraries are required.
 
 
