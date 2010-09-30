@@ -16,11 +16,11 @@ achieve such a wrapper using SWIG for example. This is the reason why the
 use of *CGNS/MLL* is optional.
 
 The *CGNS/SIDS* data model has a mapping the *HDF5* for file storage. The
-*MAP* module uses *CHLone* instead of *CGNS/MLL* to map its *CGNS/Python*
-trees to *HDF5*.
+*MAP* module uses `CHLone <http://chlone.sourceforge.net>`_ 
+instead of *CGNS/MLL* to map its *CGNS/Python* trees to *HDF5*.
 
 The package also uses `numpy <http://numpy.scipy.org>`_ and 
-:ref:`HDF5 <reference_hdf5>` you should install before pyCGNS.
+`hdf5 <http://www.hdfgroup.org>`_ you should install before pyCGNS.
 
 .. raw:: html
 
@@ -54,10 +54,16 @@ Contents
 .. toctree::
    :maxdepth: 2
    
-   About pyCGNS <introduction>
-   Modules & Tools <modules>
-   Package information <install>
+   introduction
+   install
 
-* :ref:`genindex`
+----
+
+* :ref:`MAP Index <map_index>`
+* :ref:`PAT Index <pat_index>`
+* :ref:`NAV Index <nav_index>`
+* :ref:`WRA Index <wra_index>`
+
 * :ref:`search`
 
+.. -------------------------------------------------------------------------

@@ -1,10 +1,11 @@
 .. -------------------------------------------------------------------------
-.. pyCGNS.MAP - CFD General Notation System - SIDS-to-Python MAPping           
+.. pyCGNS - CFD General Notation System - 
 .. See license.txt file in the root directory of this Python module source  
 .. -------------------------------------------------------------------------
 
-MAP
-===
+CGNS.MAP
+========
+
  The MAP module is part of pyCGNS Python package
  MAP loads and saves  CGNS/HDF5 files as Python trees.
 
@@ -130,7 +131,11 @@ put them into your own application. This allows you to create a *CGNS/HDF*
 tree from a *CGNS/Python* tree into your C code. The two function
 are very close the to Python level interface functions.
 
-.. _reference_sids_to_python:
+-----
+
+.. _map_index:
+
+* :ref:`genindex`
 
 .. -------------------------------------------------------------------------
 

@@ -4,7 +4,17 @@
 .. -------------------------------------------------------------------------
 
 Build and Install
------------------
++++++++++++++++++
+
+.. index::
+   single: CHLone
+   pair: Installation; Python
+   pair: Installation; numpy
+   pair: Installation; hdf5
+   pair: Installation; CHLone
+
+Required libraries
+~~~~~~~~~~~~~~~~~~
 
 The first step of the installation is to make sure you have the required
 libraries. The mandatory libs are *Python*, *numpy*, *HDF5* and *CHLone*. 
@@ -17,23 +27,14 @@ need *libcgns*.
 
   **NO** you don't, *CGNS* is a data model (so-called *CGNS/SIDS*) and some
   mapping definitions of this model (such as *CGNS/HDF* for example).
-  *pyCGNS* uses *CHLone* which is another *CGNS/HDF5* compliant implementation.
+  *pyCGNS* uses *`CHLone <http://chlone.sourceforge.net>`_*
+  which is another *CGNS/HDF5* compliant implementation.
 
-.. index::
-   single: CHLone
-   pair: Installation; Python
-   pair: Installation; numpy
-   pair: Installation; hdf5
-   pair: Installation; CHLone
-
-Required libraries
-~~~~~~~~~~~~~~~~~~
-
- * `Python <http://www.python.org>`_ (starting from v2.4)
- * `numpy <http://numpy.scipy.org>`_ (v1.1 +)
- * `hdf5 <http://www.hdfgroup.org>`_ (v1.8.5 +)
- * `CHLone <http://chlone.sourceforge.net>`_ (v0.4 +)
- * `tktreectrl <http://sourceforge.net/projects/tktreectrl>`_ (v2.2 +)
+* `Python <http://www.python.org>`_ (starting from v2.4)
+* `numpy <http://numpy.scipy.org>`_ (v1.1 +)
+* `hdf5 <http://www.hdfgroup.org>`_ (v1.8.5 +)
+* `CHLone <http://chlone.sourceforge.net>`_ (v0.4 +)
+* `tktreectrl <http://sourceforge.net/projects/tktreectrl>`_ (v2.2 +)
 
 .. index::
    single: CGNS/MLL
@@ -165,4 +166,4 @@ WRA depends
 
 *CGNS/MLL* and *CGNS/ADF* libraries are required.
 
-
+.. -------------------------------------------------------------------------

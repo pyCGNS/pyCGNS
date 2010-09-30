@@ -1,7 +1,10 @@
-.. _wraintro:
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
 
-WRA
-===
+CGNS.WRA
+========
 
 The *CGNS/MLL* and *CGNS/ADF* wrapper. Provides the user with a *Python*-like
 interface to the *CGNS/MLL* and *CGNS/ADF* functions. There are two classes
@@ -54,3 +57,11 @@ Contents
    
    API
    fileformats
+
+-----
+
+.. _wra_index:
+
+* :ref:`genindex`
+
+.. -------------------------------------------------------------------------

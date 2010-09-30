@@ -1,3 +1,8 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS.PAT - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
 CGNS.PAT
 ========
 
@@ -28,4 +33,10 @@ CGNS.PAT.cgnserrors
 ---------------------
 .. autodata:: CGNS.PAT.cgnserrors
 
+-----
 
+.. _pat_index:
+
+* :ref:`genindex`
+
+.. -------------------------------------------------------------------------

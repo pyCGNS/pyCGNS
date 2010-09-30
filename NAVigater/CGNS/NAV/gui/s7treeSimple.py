@@ -320,6 +320,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     
     self._tree=self.treectrl
     self._tree.state_define('marked')
+    self._tree.state_define('fortran')
     self._tree.state_define('checkgood')
     self._tree.state_define('checkfail')    
     self._tree.state_define('checkwarn')    
@@ -496,6 +497,8 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
                                                  text="L",expand=0,width=20)
     self.col_check=self._tree.column_create(font=self.titlefont,
                                             text="C",expand=0,width=20)
+    self.col_ddata=self._tree.column_create(font=self.titlefont,
+                                            text="Shape",expand=1,width=90)
     self.col_tdata=self._tree.column_create(font=self.titlefont,
                                             text="Data",expand=1)
     self.col_xdata=self._tree.column_create(font=self.titlefont,
@@ -518,35 +521,40 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self.el_option={}
     self.el_option[G___.SIDSmandatory]=\
          it.element_create(type=IMAGE,image=ik['mandatory-sids-node'])
-    self.el_option[G___.SIDSoptional]=\
-         it.element_create(type=IMAGE,image=ik['optional-sids-node'])    
-    self.el_option[G___.USERmandatory]=\
-         it.element_create(type=IMAGE,image=ik['mandatory-profile-node'])    
+#    self.el_option[G___.SIDSoptional]=\
+#         it.element_create(type=IMAGE,image=ik['optional-sids-node'])    
+#    self.el_option[G___.USERmandatory]=\
+#         it.element_create(type=IMAGE,image=ik['mandatory-profile-node'])    
 
-    self._tree.column_move(self.col_xdata,self.col_tdata)
     self._tree.column_move(self.col_linkstatus,self.col_tdata)
     self._tree.column_move(self.col_optionsids,self.col_tdata)
     self._tree.column_move(self.col_type,self.col_tdata)
+    self._tree.column_move(self.col_ddata,self.col_tdata)
+    self._tree.column_move(self.col_xdata,self.col_tdata)
     self._tree.column_move(self.col_check,self.col_tdata)
     self._tree.column_move(self.col_status,self.col_tdata)
 
-    self._tree.column_move(self.col_linkstatus,self.col_check)
-    self._tree.column_move(self.col_optionsids,self.col_check)
-    self._tree.column_move(self.col_type,self.col_check)
-    self._tree.column_move(self.col_xdata,self.col_check)
-    self._tree.column_move(self.col_status,self.col_check)
+#    self._tree.column_move(self.col_ddata,self.col_check)
+#    self._tree.column_move(self.col_linkstatus,self.col_check)
+#    self._tree.column_move(self.col_optionsids,self.col_check)
+#    self._tree.column_move(self.col_type,self.col_check)
+#    self._tree.column_move(self.col_xdata,self.col_check)
+#    self._tree.column_move(self.col_status,self.col_check)
 
-    self._tree.column_move(self.col_linkstatus,self.col_status)
-    self._tree.column_move(self.col_optionsids,self.col_status)
-    self._tree.column_move(self.col_type,self.col_status)
-    self._tree.column_move(self.col_xdata,self.col_status)
+#    self._tree.column_move(self.col_ddata,self.col_status)
+#    self._tree.column_move(self.col_linkstatus,self.col_status)
+#    self._tree.column_move(self.col_optionsids,self.col_status)
+#    self._tree.column_move(self.col_type,self.col_status)
+#    self._tree.column_move(self.col_xdata,self.col_status)
 
-    self._tree.column_move(self.col_linkstatus,self.col_xdata)
-    self._tree.column_move(self.col_optionsids,self.col_xdata)
-    self._tree.column_move(self.col_type,self.col_xdata)
+#    self._tree.column_move(self.col_ddata,self.col_xdata)
+#    self._tree.column_move(self.col_linkstatus,self.col_xdata)
+#    self._tree.column_move(self.col_optionsids,self.col_xdata)
+#    self._tree.column_move(self.col_type,self.col_xdata)
 
-    self._tree.column_move(self.col_linkstatus,self.col_type)
-    self._tree.column_move(self.col_optionsids,self.col_type)
+#    self._tree.column_move(self.col_ddata,self.col_type)
+#    self._tree.column_move(self.col_linkstatus,self.col_type)
+#    self._tree.column_move(self.col_optionsids,self.col_type)
 
     self._tree.column_configure(self.col_graph,lock=LEFT)
 
@@ -580,15 +588,18 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self._tree.element_configure(self.el_text3,font=self.el_font3)
 
     self.el_font5=G___.font['Tf']
-    self.el_text5=self._tree.element_create(type=TEXT)    
+    self.el_text5=self._tree.element_create(type=TEXT)  
     self._tree.element_configure(self.el_text5,font=self.el_font5)
+
+    self.el_text6=self._tree.element_create(type=TEXT,
+                                            fill=(G___.color_Tm, "!fortran"))  
+    self._tree.element_configure(self.el_text6,font=self.el_font5)
 
     self.el_w1=self._tree.element_create(type=WINDOW)
 
     self.el_select1=self._tree.element_create(type=RECT,
-                                               fill=(G___.color_Tc, SELECTED),
-                                               width=400)
-
+                                              fill=(G___.color_Tc, SELECTED),
+                                              width=400)
     # Styles
     self.st_folder=self._tree.style_create()
     self._tree.style_elements(self.st_folder, self.el_t1,
@@ -633,19 +644,19 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self.st_optionsids=self._tree.style_create()
     self._tree.style_elements(self.st_optionsids,
                                self.el_select1,
-                               self.el_option[G___.SIDSmandatory],
-                               self.el_option[G___.SIDSoptional],
-                               self.el_option[G___.USERmandatory])
+                               self.el_option[G___.SIDSmandatory])
+#                               self.el_option[G___.USERmandatory],
+#                               self.el_option[G___.SIDSoptional])
     self._tree.style_layout(self.st_optionsids,
                              self.el_option[G___.SIDSmandatory], pady=2)
-    self._tree.style_layout(self.st_optionsids,
-                             self.el_option[G___.SIDSoptional], pady=2)
-    self._tree.style_layout(self.st_optionsids,
-                             self.el_option[G___.USERmandatory], pady=2)
+#    self._tree.style_layout(self.st_optionsids,
+#                             self.el_option[G___.SIDSoptional], pady=2)
+#    self._tree.style_layout(self.st_optionsids,
+#                             self.el_option[G___.USERmandatory], pady=2)
     self._tree.style_layout(self.st_optionsids, self.el_select1,
-                             union=(self.el_option[G___.SIDSmandatory],
-                                    self.el_option[G___.SIDSoptional],
-                                    self.el_option[G___.USERmandatory]),
+                             union=(self.el_option[G___.SIDSmandatory]),
+#                                    self.el_option[G___.USERmandatory],
+#                                    self.el_option[G___.SIDSoptional]),
                              ipadx=2, iexpand=NS)
 
     self.st_dataentry=self._tree.style_create()
@@ -665,6 +676,12 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self._tree.style_layout(self.st_datatype,self.el_text5,pady=2)
     self._tree.style_layout(self.st_datatype,self.el_select1,
                              union=(self.el_text5,),ipadx=2,iexpand=NS)
+
+    self.st_datadims=self._tree.style_create()
+    self._tree.style_elements(self.st_datadims,self.el_select1,self.el_text6)
+    self._tree.style_layout(self.st_datadims,self.el_text6,pady=2)
+    self._tree.style_layout(self.st_datadims,self.el_select1,
+                             union=(self.el_text6,),ipadx=2,iexpand=NS)
 
     self._tree.set_sensitive( (self.col_graph,self.st_folder,
                                 self.el_text1,self.el_text4,self.el_t1),
@@ -1332,7 +1349,15 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
 
     tktree.itemstyle_set(enew, self.col_xdata, self.st_datatype)
     tktree.itemelement_config(enew, self.col_xdata, self.el_text5,
-                              text=s7parser.getNodeType(node), datatype=STRING)
+                              text=s7parser.getNodeType(node),datatype=STRING)
+
+    tktree.itemstyle_set(enew, self.col_ddata, self.st_datadims)
+    tktree.itemelement_config(enew, self.col_ddata, self.el_text6,
+                              text=s7parser.getNodeShape(node),datatype=STRING)
+    if (s7parser.hasFortranFlag(node)):
+      tktree.itemstate_set(enew,'fortran')
+    else:
+      tktree.itemstate_set(enew,'!fortran')
 
     tktree.itemstyle_set(enew, self.col_tdata, self.st_dataentry)
     if (s7utils.canBeShown(node[1])) :

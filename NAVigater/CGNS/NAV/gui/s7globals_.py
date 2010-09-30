@@ -154,6 +154,7 @@ class s7optionsStorage:
     self.color_Ta='SeaGreen' # Tree view - Node name font - SIDS name
     self.color_Tb='SeaGreen' # Tree view - Node name font - user name
     self.color_Tc='#c9ffb6'  # Tree view - End of line rectangle
+    self.color_Tm='Red'      # Tree view - Mandatory node
 
     self.allowedoptionslist=[]
     self.allowedoptionslist+=['expandRecurse']

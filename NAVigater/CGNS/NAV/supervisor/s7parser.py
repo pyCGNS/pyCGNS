@@ -22,6 +22,18 @@ except ImportError:
 __keywordlist=CK.names
 
 # --------------------------------------------------
+def hasFortranFlag(node):
+  if (node[1]==None): return 1
+  if (not node[1].shape): return 1
+  if (len(node[1].shape)==1): return 1  
+  return Num.isfortran(node[1])
+
+# --------------------------------------------------
+def getNodeShape(node):
+  if (node[1]==None): return "()"
+  else: return str(node[1].shape)
+
+# --------------------------------------------------
 def getNodeType(node):
   data=node[1]
   if (node[0] == 'CGNSLibraryVersion_t'):
@@ -196,7 +208,6 @@ def checkName(path,node,parent,log):
 
   return clevel
   
-  
 # --------------------------------------------------------------------
 def checkLeaf(pth,node,parent,tree,check=1,log=None):
   if (log == None):      return 0
@@ -206,8 +217,6 @@ def checkLeaf(pth,node,parent,tree,check=1,log=None):
   clevel=max(checkDataAndType(pth,node,parent,log),clevel)
   try:
     ntype=node[3]
-    if (ntype == 'int[1+...+IndexDimension]'):ntype="IndexRangeT1_t"
-    if (ntype == 'int[IndexDimension]'):      ntype="IndexRangeT2_t"
     return apply(s7grammar.__dict__[ntype],[pth,node,parent,tree,check,log])
   except KeyError:
     return clevel
@@ -232,8 +241,8 @@ def getEnumerateList(node):
 
 # --------------------------------------------------------------------
 def statusLeaf(pth,node,parent,tree):
-  if (not __checkready): return 0
-  return checkLeaf(pth,node,parent,tree,0)
+  if (CT.types[node[3]][1][1] in ['1/1','1']): return G___.SIDSmandatory
+  return G___.SIDSoptional
   
 # --------------------------------------------------------------------
 def getStatusForThisNode(pth,node,parent,tree):

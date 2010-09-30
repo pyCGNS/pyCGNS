@@ -1,7 +1,10 @@
 mkdir build/doc 2>/dev/null
 mkdir build/doc/pdf 2>/dev/null
+mkdir build/doc/html 2>/dev/null
+mkdir build/doc/html/_pdf 2>/dev/null
 
 #WITHPDFFILES="YES BOY YOU GO"
+#WEBSITEUPDATE="OH OH OH... HERE WE GO"
 
 # --- intro
 export PYCGNSMOD='intro'
@@ -60,12 +63,13 @@ fi
 
 # --- ALL
 cp build/doc/pdf/* ./doc
-mkdir build/doc/html/_images
-cp doc/images/* build/doc/html/_images
+cp build/doc/pdf/* ./build/doc/html/_pdf
+mkdir build/doc/html/images
+cp doc/images/* build/doc/html/images
 
 # --- web site update
 #
 if test "x$WEBSITEUPDATE" != "x"
 then
-  scp -r 
+  (cd build/doc/html;  scp -r . pycgns@pycgnsdoc2:/home/pycgns/public_html)
 fi
