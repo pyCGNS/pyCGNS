@@ -759,7 +759,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     def open_menu(event):
       tktree=event.widget
       id=tktree.identify(event.x,event.y)
-      if (id==None): return
+      if ((id==None)or (len(id)<1)): return
       item=tktree.item_id(id[1])
       self._tree.selection_clear()
       self._tree.selection_add(item)

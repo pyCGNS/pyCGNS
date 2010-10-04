@@ -30,19 +30,19 @@ The package also uses `numpy <http://numpy.scipy.org>`_ and
   <table width="100%">
   <tr align="center" valign="middle">
   <td align="center" valign="middle"><a href="MAP/readme.html">
-      <img src="_images/MAP-logo.jpg" height="48" alt="MAP"/></a></td>
+      <img src="images/MAP-logo.jpg" height="48" alt="MAP"/></a></td>
   <td align="center" valign="middle"><a href="PAT/readme.html">
-      <img src="_images/PAT-logo.jpg" height="48" alt="PAT"/></a></td>
+      <img src="images/PAT-logo.jpg" height="48" alt="PAT"/></a></td>
   <td align="center" valign="middle"><a href="NAV/readme.html">
-      <img src="_images/NAV-logo.jpg" height="48" alt="NAV"/></a></td>
+      <img src="images/NAV-logo.jpg" height="48" alt="NAV"/></a></td>
   <td align="center" valign="middle"><a href="WRA/readme.html">
-      <img src="_images/WRA-logo.jpg" height="48" alt="WRA"/></a></td>
+      <img src="images/WRA-logo.jpg" height="48" alt="WRA"/></a></td>
   <td align="center" valign="middle">
-    <img src="_images/VAL-logo.jpg" height="48" alt="VAL"/></td>
+    <img src="images/VAL-logo.jpg" height="48" alt="VAL"/></td>
   <td align="center" valign="middle">
-    <img src="_images/DAT-logo.jpg" height="48" alt="DAT"/></td>
+    <img src="images/DAT-logo.jpg" height="48" alt="DAT"/></td>
   <td align="center" valign="middle">
-    <img src="_images/TRA-logo.jpg" height="48" alt="TRA"/></td>
+    <img src="images/TRA-logo.jpg" height="48" alt="TRA"/></td>
   </tr></table><br></div>
 
   You also have PDF version of the documentation you can download from

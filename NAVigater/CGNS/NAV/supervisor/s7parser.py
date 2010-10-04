@@ -7,18 +7,14 @@
 import CGNS.NAV.gui.s7globals
 G___=CGNS.NAV.gui.s7globals.s7G
 
-import CGNS.NAV.supervisor.s7cgnsTypes as CT
+import CGNS.PAT.cgnstypes as CT
+import CGNS.PAT.cgnskeywords as CK
 import s7grammar
 import string
 import numpy as Num
 import re
 
 __checkready=1
-try:
-  import CGNS.PAT.cgnskeywords as CK
-except ImportError:
-  __checkready=0
-
 __keywordlist=CK.names
 
 # --------------------------------------------------
@@ -37,25 +33,25 @@ def getNodeShape(node):
 def getNodeType(node):
   data=node[1]
   if (node[0] == 'CGNSLibraryVersion_t'):
-    return 'R4' # ONLY ONE R4 IN ALL SIDS !
+    return CK.R4 # ONLY ONE R4 IN ALL SIDS !
   if ( data in [None, []] ):
-    return 'MT'
+    return CK.MT
   if ( (type(data) == type("")) and (len(data)<G___.maxDisplaySize) ):
-    return 'C1'
+    return CK.C1
   if ( (type(data) == type(1.2))):
-    return 'R8'
+    return CK.R8
   if ( (type(data) == type(1))):
-    return 'I4'
+    return CK.I4
   if ( (type(data) == type(Num.ones((1,)))) ):
-    if (data.dtype.char in ['S','c']):        return 'C1'
-    if (data.dtype.char in ['f','F']):        return 'R4'
-    if (data.dtype.char in ['D','d']):        return 'R8'
-    if (data.dtype.char in ['l','i','I']):    return 'I4'
+    if (data.dtype.char in ['S','c','s']):    return CK.C1
+    if (data.dtype.char in ['f','F']):        return CK.R4
+    if (data.dtype.char in ['D','d']):        return CK.R8
+    if (data.dtype.char in ['l','i','I']):    return CK.I4
   if ((type(data) == type([])) and (len(data))): # oups !
-    if (type(data[0]) == type("")):           return 'C1' 
-    if (type(data[0]) == type(0)):            return 'I4' 
-    if (type(data[0]) == type(0.0)):          return 'R8'
-  print 'pyS7 debug: s7parser.getNodeType cannot find type of:', data
+    if (type(data[0]) == type("")):           return CK.C1 
+    if (type(data[0]) == type(0)):            return CK.I4 
+    if (type(data[0]) == type(0.0)):          return CK.R8
+  print 'CGNS.NAV debug: s7parser.getNodeType cannot find type of:', data
   return '??'
 
 # --------------------------------------------------
@@ -123,12 +119,12 @@ def getTypeDataTypes(node):
 
 # --------------------------------------------------
 def stringValueMatches(node,reval):
-  if (node == None):            return 0
-  if (node[1] == None):         return 0  
-  if (getNodeType(node)!='C1'): return 0
+  if (node == None):             return 0
+  if (node[1] == None):          return 0  
+  if (getNodeType(node)!=CK.C1): return 0
   tn=type(node[1])
   if   (tn==type('')): vn=node[1]
-  elif (tn == type(Num.ones((1,))) and (node[1].dtype.char in ['S','c'])):
+  elif (tn == type(Num.ones((1,))) and (node[1].dtype.char in ['S','c','s'])):
     vn=node[1].tostring()
   else: return 0
   return re.match(reval,vn)
@@ -241,7 +237,7 @@ def getEnumerateList(node):
 
 # --------------------------------------------------------------------
 def statusLeaf(pth,node,parent,tree):
-  if (CT.types[node[3]][1][1] in ['1/1','1']): return G___.SIDSmandatory
+  if (CT.types[node[3]][1][1] in [CT.C_11,CT.C_1N]): return G___.SIDSmandatory
   return G___.SIDSoptional
   
 # --------------------------------------------------------------------

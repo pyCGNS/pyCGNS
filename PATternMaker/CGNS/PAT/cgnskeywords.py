@@ -68,8 +68,10 @@ CG_FILE_XML =3
 #
 CGNSTree_ts       = 'CGNSTree_t'
 CGNSTree_s        = 'CGNSTree'
-DiffusionModel_ts = '"int[1+...+IndexDimension]"'
-DiffusionModel_s  = 'DiffusionModel'
+Transform_ts      = 'Transform_t"'
+DiffusionModel_ts = 'DiffusionModel_t'
+Transform_ts2     = '"int[IndexDimension]"'
+DiffusionModel_ts2= '"int[1+...+IndexDimension]"'
 
 # --------------------------------------------------
 # SIDS
@@ -134,6 +136,7 @@ LuminousIntensityUnits_l=[Candela_s,Candle_s,Carcel_s,Hefner_s,
 
 DimensionalUnits_s="DimensionalUnits"
 AdditionalUnits_s="AdditionalUnits"
+AdditionalExponents_s="AdditionalExponents"
 AllUnits_l=TimeUnits_l+MassUnits_l+LengthUnits_l+TemperatureUnits_l+AngleUnits_l
 
 # --------------------------------------------------
@@ -619,6 +622,7 @@ DimensionalExponents_ts = "DimensionalExponents_t"
 DimensionalExponents_s = "DimensionalExponents"
 DimensionalUnits_ts = "DimensionalUnits_t"
 AdditionalUnits_ts = "AdditionalUnits_t"
+AdditionalExponents_ts = "AdditionalExponents_t"
 
 DiscreteData_ts = "DiscreteData_t"
 DiscreteData_s= "DiscreteData"
@@ -752,6 +756,8 @@ TurbulenceModelType_l=[Null_s,Algebraic_BaldwinLomax_s,Algebraic_CebeciSmith_s,
 TurbulenceModelType_s="TurbulenceModelType"
 TurbulenceModelType_ts="TurbulenceModelType_t"
 
+DiffusionModel_s  = 'DiffusionModel'
+
 ViscosityModel_ts = "ViscosityModel_t"
 # chapter 10.4
 ViscosityModel_s = "ViscosityModel"
@@ -872,6 +878,7 @@ Abutting1to1_s,
 Abutting_s,
 Acoustic_s,
 AdditionalUnits_s,
+AdditionalExponents_s,
 Algebraic_BaldwinLomax_s,
 Algebraic_CebeciSmith_s,
 Algebraic_s,

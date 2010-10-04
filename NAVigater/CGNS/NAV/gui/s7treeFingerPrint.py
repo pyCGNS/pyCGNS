@@ -45,7 +45,7 @@ def encapsulateTreeOrSubTree(tree):
   #    pattern is [<base-name>,<base-dims>,[<children-list>],'CGNSBase_t']
   #    -> put into list to make [<children-list>] pattern
   if ( not treetype
-       and (type(nt) == type([]))
+       and (type(tree) == type([]))
        and (len(tree) == 4)
        and (tree[3] == 'CGNSBase_t')): treetype=3
   

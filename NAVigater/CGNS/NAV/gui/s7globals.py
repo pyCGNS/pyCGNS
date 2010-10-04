@@ -188,7 +188,8 @@ class s7optionsStorage:
         if (hasattr(s7options,v)):
           setattr(self,v,getattr(s7options,v))
 
-    self.profilePath+=self.profilePathSIDS
+    if (self.profilePathSIDS[0] not in self.profilePath):
+      self.profilePath+=self.profilePathSIDS
 
     #else:
     #  pass

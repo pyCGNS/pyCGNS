@@ -54,8 +54,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
   def cbk_options(self):
     s7optionView.wOptionView(self)
   def cbk_help(self):
-    import os
-    os.system(G___.firedox)
+    s7utils.aboutInfo()
   def cbk_pattern(self): 
     self.patternView()
   def cbk_operate(self):
@@ -80,7 +79,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
                      ('tree-load',W,20,self.cbk_loadtree,'Load tree from file'),
                      ('pattern',W,2,self.cbk_pattern,'Pattern window'),
                      ('options-view',W,20,self.cbk_options,'Options window'),
-                     ('help-view',W,2,self.cbk_help,'Help in browser')])
+                     ('help-view',W,2,self.cbk_help,'About CGNS.NAV')])
     self.coldim=6
     self.listbox.config(columns=('S','T','View','File','Dir','Node'),
                         selectbackground=G___.color_Ca,
@@ -189,6 +188,8 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
     if (file):
       (filename,fileext)=os.path.splitext(os.path.basename(file))
       if (fileext in G___.cgnspyFiles):
+        tree[0]='CGNSTree'
+        tree[3]='CGNSTree_t'
         f=open(file,'w+')
         f.write(s7utils.asFileString(tree))
         f.close()

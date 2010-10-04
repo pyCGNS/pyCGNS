@@ -271,7 +271,7 @@ class wPatternBrowser(s7windoz.wWindoz,ScrolledMultiListbox):
     self.listbox.notify_install('<Header-invoke>')
     self.listbox.notify_bind('<Header-invoke>',s7utils.operate_sort_list)
     for pdir in G___.profilePath:
-      print "%s/%s/__init__.py"%(pdir,G___.defaultProfile)
+#      print "%s/%s/__init__.py"%(pdir,G___.defaultProfile)
       if (os.path.exists("%s/%s/__init__.py"%(pdir,G___.defaultProfile))):
         self.updateProfile(pdir,G___.defaultProfile)
         break

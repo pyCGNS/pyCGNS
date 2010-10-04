@@ -85,7 +85,7 @@ def concatenateForArrayChar(nlist):
     else:
       checkArrayChar(n)
       nl+=[setStringAsArray(("%-32s"%n.tostring())[:32])]
-  r=NPY.array(nl,order='Fortran').T
+  r=NPY.array(NPY.array(nl,order='Fortran').T,order='Fortran')
   return r
 
 # -----------------------------------------------------------------------------
@@ -1374,7 +1374,7 @@ def newBaseIterativeData(parent,nsteps=0,
   checkDuplicatedName(parent,CG_K.BaseIterativeData_s)
   checkType(parent,CG_K.CGNSBase_ts,CG_K.BaseIterativeData_ts)
   if ((type(nsteps) != type(1)) or (nsteps < 0)): raise CG_E.cgnsException(209)
-  node=newNode(CG_K.BaseIterativeData_s,nsteps,[],CG_K.BaseIterativeData_ts,parent)
+  node=newNode(CG_K.BaseIterativeData_s,NPY.array(nsteps,dtype='i'),[],CG_K.BaseIterativeData_ts,parent)
   if (itype not in [CG_K.IterationValues_s, CG_K.TimeValues_s]):
     raise CG_E.cgnsException(210,(CG_K.IterationValues_s, CG_K.TimeValues_s))
   newNode(itype,None,[],CG_K.DataArray_ts,node)  
@@ -1458,7 +1458,7 @@ def newConvergenceHistory(parent,name=CG_K.GlobalConvergenceHistory_s,
   if (name == CG_K.ZoneConvergenceHistory_s):
     checkType(parent,CG_K.Zone_ts,name)
   checkDuplicatedName(parent,name)
-  node=newNode(name,iterations,[],CG_K.ConvergenceHistory_ts,parent)
+  node=newNode(name,NPY.array(iterations,dtype='i'),[],CG_K.ConvergenceHistory_ts,parent)
   return node
 
 #-----------------------------------------------------------------------------

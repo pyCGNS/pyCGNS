@@ -1,5 +1,5 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #  $Release$
@@ -12,6 +12,8 @@ import os
 import string
 
 import CGNS.NAV.supervisor.s7error as ERR
+import CGNS.APP.parse.print_utils
+import CGNS.pyCGNSconfig as Cfg
 
 import s7globals
 G___=s7globals.s7G
@@ -226,6 +228,25 @@ def copyNameCollision(name):
   return msginfo("CGNS.NAV: Error",
   "Inserted tree has same name as existing child\n[%s]"%name).result()
 
+def aboutInfo():
+  msg="""
+
+ %s
+ (built %s on %s)
+
+ CGNS.MAP [v%s]
+ CGNS.PAT [v%s]
+ CGNS.WRA [v%s]
+ CGNS.APP [v%s]
+ CGNS.NAV [v%s]
+
+pyCGNS web site is http://www.python-science.org/projets/pyCGNS
+ 
+  """%(Cfg.__doc__,Cfg.DATE,Cfg.PLATFORM,
+  Cfg.MAP_VERSION,Cfg.PAT_VERSION,Cfg.WRA_VERSION,
+  Cfg.APP_VERSION,Cfg.NAV_VERSION)
+  return msginfo("CGNS.NAV: About",msg).result()
+
 def snapShotWarning(file):
   return msginfo("CGNS.NAV: Info","Snapshot into file\n[%s]"%file).result()
 
@@ -301,28 +322,8 @@ do you want to force load and replace all these tree views?""",
                  "cancel").result()
 
 # --------------------------------------------------
-def printNode(node):
-  if (node[0]==None):  s='[%s,%s,['%(node[0],repr(node[1]))
-  else:                s='["%s",%s,['%(node[0],repr(node[1]))
-  for cnode in node[2]:
-    s+=printNode(cnode)
-  if (node[2]): s=s[:-1]
-  if (node[3]==None):  s+='],%s],'%(node[3])
-  else:                s+='],"%s"],'%(node[3])
-  return s
-
-# --------------------------------------------------
 def asFileString(tree):
-  Num.set_printoptions(threshold=sys.maxint)
-  from time import localtime, strftime
-  t=strftime("%H%M%S", localtime())
-  s ='# Saved by CGNS.NAV\n'
-  s+='# Date: %s\n'%t
-  s+='from numpy import *\n'
-  s+='data='
-  s+=printNode(tree)
-  s=s[:-1]
-  return s
+  return CGNS.APP.parse.print_utils.asString(tree)
 
 # --------------------------------------------------
 def dumpWindow(frame,file=None):
