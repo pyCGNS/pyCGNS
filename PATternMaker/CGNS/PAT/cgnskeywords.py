@@ -63,15 +63,23 @@ CG_FILE_ADF =1
 CG_FILE_HDF5=2
 CG_FILE_XML =3
 
+(C1,I4,I8,R4,R8,MT,LK)=('C1','I4','I8','R4','R8','MT','LK')
+
 # --------------------------------------------------
 # NOT SIDS
 #
-CGNSTree_ts       = 'CGNSTree_t'
-CGNSTree_s        = 'CGNSTree'
-Transform_ts      = 'Transform_t"'
-DiffusionModel_ts = 'DiffusionModel_t'
-Transform_ts2     = '"int[IndexDimension]"'
-DiffusionModel_ts2= '"int[1+...+IndexDimension]"'
+CGNSTree_ts          = 'CGNSTree_t'
+CGNSTree_s           = 'CGNSTree'
+
+Transform_ts         = 'Transform_t"'
+DiffusionModel_ts    = 'DiffusionModel_t'
+EquationDimension_ts = 'EquationDimension_t'
+InwardNormalIndex_ts = 'InwardNormalIndex_t'
+
+Transform_ts2         = '"int[IndexDimension]"'
+DiffusionModel_ts2    = '"int[1+...+IndexDimension]"'
+EquationDimension_ts2 = '"int"'
+InwardNormalIndex_ts2 = '"int[IndexDimension]"'
 
 # --------------------------------------------------
 # SIDS
@@ -118,13 +126,15 @@ Abampere_s = "Abampere"
 Statampere_s = "Statampere"
 Edison_s = "Edison"
 auCurrent_s = "auCurrent"
+ElectricCurrentUnits_l=[Ampere_s,Abampere_s,Statampere_s,Edison_s,auCurrent_s,Null_s,UserDefined_s]
 
 # --------------------------------------------------
 Mole_s = "Mole"
 Entities_s = "Entities"
 StandardCubicFoot_s = "StandardCubicFoot"
 StandardCubicMeter_s = "StandardCubicMeter"
-  
+SubstanceAmountUnits_l=[Mole_s,Entities_s,StandardCubicFoot_s,StandardCubicMeter_s,Null_s,UserDefined_s]
+
 # --------------------------------------------------
 Candela_s = "Candela"
 Candle_s = "Candle"
@@ -137,7 +147,11 @@ LuminousIntensityUnits_l=[Candela_s,Candle_s,Carcel_s,Hefner_s,
 DimensionalUnits_s="DimensionalUnits"
 AdditionalUnits_s="AdditionalUnits"
 AdditionalExponents_s="AdditionalExponents"
-AllUnits_l=TimeUnits_l+MassUnits_l+LengthUnits_l+TemperatureUnits_l+AngleUnits_l
+AllDimensionalUnits_l=TimeUnits_l+MassUnits_l+LengthUnits_l\
+                      +TemperatureUnits_l+AngleUnits_l
+AllAdditionalUnits_l=LuminousIntensityUnits_l+SubstanceAmountUnits_l\
+                      +ElectricCurrentUnits_l
+AllUnits_l=AllDimensionalUnits_l+AllAdditionalUnits_l
 
 # --------------------------------------------------
 Dimensional_s = "Dimensional"
@@ -643,6 +657,7 @@ GasModel_s = "GasModel"
 #
 GeometryEntity_ts = "GeometryEntity_t"
 GeometryFile_ts = "GeometryFile_t"
+GeometryFile_s = "GeometryFile"
 
 #chapter 12.7
 GeometryFormat_s = "GeometryFormat"
@@ -725,6 +740,7 @@ BCTypeSimple_s="BCTypeSimple"
 BCTypeSimple_ts="BCTypeSimple_t"
 
 BCTypeCompound_l=[Null_s, BCInflow_s, BCOutflow_s, BCFarfield_s, UserDefined_s]
+BCType_l=BCTypeSimple_l+BCTypeCompound_l
 
 ThermalConductivityModel_ts = "ThermalConductivityModel_t"
 # chapter 10.4
@@ -757,6 +773,7 @@ TurbulenceModelType_s="TurbulenceModelType"
 TurbulenceModelType_ts="TurbulenceModelType_t"
 
 DiffusionModel_s  = 'DiffusionModel'
+EquationDimension_s = 'EquationDimension'
 
 ViscosityModel_ts = "ViscosityModel_t"
 # chapter 10.4
@@ -1345,16 +1362,6 @@ ZonePointers_s,
 ZoneType_s,
 auCurrent_s
 ]
-
-# --- other stuff
-
-C1='C1'
-MT='MT'
-I4='I4'
-I8='I8'
-R4='R4'
-R8='R8'
-LK='LK'
 
 #
 # --- last line

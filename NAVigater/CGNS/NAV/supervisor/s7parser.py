@@ -96,7 +96,17 @@ def childNames(node):
 def getNodeAllowedChildrenTypes(node):
   tlist=[]
   try:
-    tlist+=CT.types[node[3]][0]
+    for cn in CT.types[node[3]].children:
+      if (cn[0] not in tlist): tlist+=[cn[0]]
+  except:
+    pass
+  return tlist
+
+# --------------------------------------------------
+def getNodeAllowedDataTypes(node):
+  tlist=[]
+  try:
+    tlist=CT.types[node[3]].datatype
   except:
     pass
   return tlist
@@ -237,7 +247,8 @@ def getEnumerateList(node):
 
 # --------------------------------------------------------------------
 def statusLeaf(pth,node,parent,tree):
-  if (CT.types[node[3]][1][1] in [CT.C_11,CT.C_1N]): return G___.SIDSmandatory
+  if (CT.types[node[3]].cardinality in [CT.C_11,CT.C_1N]):
+    return G___.SIDSmandatory
   return G___.SIDSoptional
   
 # --------------------------------------------------------------------

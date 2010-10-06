@@ -17,6 +17,16 @@ A set of function to manipulate CGNS/Python nodes.
 .. automodule:: CGNS.PAT.cgnslib
    :members:
 
+CGNS.PAT.cgnstypes
+------------------
+
+.. USE THIS COMMAND FOR FILE UPDATE
+.. python -c 'import CGNS.APP.sids.checktypes as C;C.generateSphinx("PATternMaker/cgnstypes.txt")'
+
+.. toctree::
+   
+   cgnstypes
+
 CGNS.PAT.SIDS
 ----------------
 All the CGNS/SIDS structures using CGNS.PAT as API.

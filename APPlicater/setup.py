@@ -28,6 +28,7 @@ packages=['CGNS.APP',
           'CGNS.APP.embedded',
           'CGNS.APP.parse',
           'CGNS.APP.demos',
+          'CGNS.APP.sids',          
           'CGNS.APP.tests'],
 cmdclass={'clean':setuputils.clean}
 )

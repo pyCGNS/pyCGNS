@@ -415,6 +415,11 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       updateViews(self._viewtree,[(pth,pth)])
       self.modified()
 
+    def tdCom(ntype,node,pth):
+      print 'Change data type to :',ntype
+      updateViews(self._viewtree,[(pth,pth)])
+      self.modified()
+
     def updateRetypeCascade(node,path):
       if (self.RetypeCascade.maxIndex):
         self.RetypeCascade.delete(0,self.RetypeCascade.maxIndex)
@@ -426,8 +431,22 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
                                        command=lambda n=node,t=t,p=path:\
                                        tcCom(t,n,p))
 
+    def updateDataRetypeCascade(node,path):
+      if (self.DataRetypeCascade.maxIndex):
+        self.DataRetypeCascade.delete(0,self.DataRetypeCascade.maxIndex)
+      pnode=self.findParentNodeFromPath(path)
+      tlist=s7parser.getNodeAllowedDataTypes(node)
+      self.DataRetypeCascade.maxIndex=len(tlist)
+      for t in tlist:
+        self.DataRetypeCascade.add_command(label=t,font=G___.font['E'],
+                                           command=lambda n=node,t=t,p=path:\
+                                           tdCom(t,n,p))
+
     self.RetypeCascade=Menu(self._wtop,tearoff=0)
     self.RetypeCascade.maxIndex=0
+
+    self.DataRetypeCascade=Menu(self._wtop,tearoff=0)
+    self.DataRetypeCascade.maxIndex=0
 
     self.popupmenu = Menu(self._wtop,tearoff=0)
     self.popupmenu.add_command(font=self.menufont,
@@ -443,6 +462,9 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self.popupmenu.add_command(font=self.menufont,
                                label="Change CGNS type (C-s)",
                                command=self.SubRetype)
+    self.popupmenu.add_cascade(font=self.menufont,
+                               label="Change data type",
+                               menu=self.DataRetypeCascade)
     self.popupmenu.add_command(font=self.menufont,
                                label="Change value (C-e)",
                                command=self.SubEdit)
@@ -769,6 +791,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
         pth=string.join(self._parent.split('/')[:-1],'/')+'/'+pth
       last=os.path.basename(pth)
       updateRetypeCascade(node,pth)
+      updateDataRetypeCascade(node,pth)
       self.popupmenu.entryconfigure(0,label=last)
       popUpMenuOn(event,self._viewtree,pth)
 
