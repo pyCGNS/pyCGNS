@@ -348,6 +348,8 @@ The alternate types are:
 +===================================+===========================+
 | ``"int[1+...+IndexDimension]"``   |   ``DiffusionModel_t``    |
 | ``"int[IndexDimension]"``         |   ``Transform_t``         |
+| ``"int[IndexDimension]"``         |   ``InwardNormalIndex_t`` |
+| ``"int"``                         |   ``EquationDimension_t`` |
 +-----------------------------------+---------------------------+
 
 Please note the ``["]`` character which is part of the CGNS legacy type.
@@ -370,6 +372,13 @@ A CGNS/Python tree cannot have embedded links, as this tree is a list of
 lists making a link to another list is non-sense in Python [#n2]_.
 The **links** list is an extra information, not embedded into the CGNS/Python
 tree, and only used as disk-related operations.
+
+.. warning::
+
+  In the case a CGNS/Python application would not like to follow a
+  link and then to have some *missing* data in its CGNS tree, the
+  so-called *linked-from* node has to be removed from its parent
+  children list.
 
 This **links** list is an unsorted list of *link-entries* with only one 
 entry per link. A *link-entry* is an ordered list of Python string values:
