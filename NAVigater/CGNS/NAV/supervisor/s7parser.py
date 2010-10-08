@@ -20,13 +20,15 @@ __keywordlist=CK.names
 # --------------------------------------------------
 def hasFortranFlag(node):
   if (node[1]==None): return 1
+  if (type(node[1])==type('')): return 1 # link
   if (not node[1].shape): return 1
   if (len(node[1].shape)==1): return 1  
   return Num.isfortran(node[1])
 
 # --------------------------------------------------
 def getNodeShape(node):
-  if (node[1]==None): return "()"
+  if (node[1]==None): return "-"
+  if (node[3]==''):   return "-"
   else: return str(node[1].shape)
 
 # --------------------------------------------------
@@ -74,15 +76,13 @@ def getNodeFromPath(path,node):
   return -1
 
 # --------------------------------------------------
-def getPathFromNode(node,rootnode,path="/"):
+def getPathFromNode(node,rootnode,path=''):
   if (node == rootnode):
     return path
   for c in rootnode[2]:
-    if (path != '/'): path="%s/%s"%(path,c[0])
-    else:             path="/%s"%(c[0])
-    if (c == node):   return path
-    else:             return getPathFromNode(tnode,c,path)
-  return ''
+    p=getPathFromNode(node,c,path+'/'+c[0])
+    if (p): return p
+  return None
 
 # --------------------------------------------------
 def childNames(node):
@@ -93,10 +93,12 @@ def childNames(node):
   return r
 
 # --------------------------------------------------
-def getNodeAllowedChildrenTypes(node):
+def getNodeAllowedChildrenTypes(pnode,node):
   tlist=[]
+  if (node[3] == CK.CGNSTree_ts): return tlist
+  if (node[3] == None): return [CK.CGNSBase_ts,CK.CGNSLibraryVersion_ts]
   try:
-    for cn in CT.types[node[3]].children:
+    for cn in CT.types[pnode[3]].children:
       if (cn[0] not in tlist): tlist+=[cn[0]]
   except:
     pass
@@ -247,6 +249,8 @@ def getEnumerateList(node):
 
 # --------------------------------------------------------------------
 def statusLeaf(pth,node,parent,tree):
+  if (node[3]==''): # link
+    return G___.SIDSoptional
   if (CT.types[node[3]].cardinality in [CT.C_11,CT.C_1N]):
     return G___.SIDSmandatory
   return G___.SIDSoptional

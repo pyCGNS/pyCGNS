@@ -67,20 +67,20 @@ MAJORVERSION=4
 MINORVERSION=0
 #
 #
-WRA_VERSION='4.0.1'
-VAL_VERSION='4.0.1'
-MAP_VERSION='4.0.1'
-NAV_VERSION='4.0.1'
-PAT_VERSION='4.0.1'
-DAT_VERSION='4.0.1'
-APP_VERSION='4.0.1'
-#
 #
 __version__=MAJORVERSION
 __release__=MINORVERSION
 __vid__="%d.%d"%(__version__,__release__)
 __doc__="""pyCGNS - v%d.%s - Python package for CFD General Notation System"""%(__version__,__release__)
 version=__vid__
+#
+WRA_VERSION=__vid__+'.2'
+VAL_VERSION=__vid__+'.0'
+MAP_VERSION=__vid__+'.2'
+NAV_VERSION=__vid__+'.2'
+PAT_VERSION=__vid__+'.2'
+DAT_VERSION=__vid__+'.0'
+APP_VERSION=__vid__+'.2'
 #
 file_pattern="""#  -------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System

@@ -746,7 +746,7 @@ DBADF_readAllData(DBADFObject *self, PyObject *args)
 
   array=(PyArrayObject*)PyArray_New(&PyArray_Type, ndim, npy_dim_vals, 
 				    arraytype, NULL, (void*)data, 0, 
-				    NPY_OWNDATA, NULL);
+				    NPY_FORTRAN|NPY_OWNDATA, NULL);
   if (!array)
   {
     return NULL;

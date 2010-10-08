@@ -18,16 +18,133 @@ G___=s7globals.s7G
 
 import s7treeFingerPrint
 import s7viewControl
+import s7treeSimple
 import s7utils
 import s7windoz
 
 def sortLinkList(a,b):
   (acurfile,acurnode,atargetfile,atargetnode,alklevel,alkstatus)=a
   (bcurfile,bcurnode,btargetfile,btargetnode,blklevel,blkstatus)=b
-  print acurnode, bcurnode
+  #print acurnode, bcurnode
   if (acurnode<bcurnode): return -1
   if (acurnode>bcurnode): return  1
   return 0
+
+# -----------------------------------------------------------------------------
+class wLinkEdit(s7windoz.wWindoz):
+  def __init__(self,wcontrol,tree,fingerprint,node,ppath):
+
+    self.control=wcontrol
+
+    if (self.control.addLinkWindow): return
+    self.control.addLinkWindow=True
+    
+    s7windoz.wWindoz.__init__(self,wcontrol,'CGNS.NAV: Link form')
+
+    self.fingerprint=fingerprint
+    self.tree=fingerprint.tree
+
+    fname=fingerprint.filename+fingerprint.fileext
+    self.l_width=min(max(len(fingerprint.filedir),len(fname),
+                         len(ppath),len(node[0]))+5,80)
+    self.targetNode=node
+    self.targetPath=ppath
+    
+    self.v_ldir=StringVar()
+    self.v_ldir.set(fingerprint.filedir)
+    self.v_lfile=StringVar()
+    self.v_lfile.set(fname)
+    self.v_lpath=StringVar()
+    self.v_lpath.set(ppath)
+    self.v_lnode=StringVar()
+    self.v_lnode.set(node[0])
+    self.v_ddir=StringVar()
+    self.v_ddir.set(fingerprint.filedir)
+    self.v_dfile=StringVar()
+    self.v_dfile.set(fingerprint.keyword)
+    self.v_dpath=StringVar()
+    self.v_dpath.set(ppath)
+    self.v_dnode=StringVar()
+    self.v_dnode.set(node[0])
+    self.xdir=Label(self._wtop,text='Dir',font=G___.font['L'])
+    self.xfile=Label(self._wtop,text='File',font=G___.font['L'])
+    self.xpath=Label(self._wtop,text='Path',font=G___.font['L'])
+    self.xnode=Label(self._wtop,text='Node',font=G___.font['L'])
+    self.labl=Label(self._wtop,text='Local',font=G___.font['L'])
+    self.ldir=Entry(self._wtop,textvariable=self.v_ldir,width=self.l_width,
+                    font=G___.font['E'],state=DISABLED)
+    self.lfile=Entry(self._wtop,textvariable=self.v_lfile,width=self.l_width,
+                     font=G___.font['E'],state=DISABLED)
+    self.lpath=Entry(self._wtop,textvariable=self.v_lpath,width=self.l_width,
+                    font=G___.font['E'],state=DISABLED)
+    self.lnode=Entry(self._wtop,textvariable=self.v_lnode,width=self.l_width,
+                     font=G___.font['E'],state=DISABLED)
+    self.labd=Label(self._wtop,text='Destination',font=G___.font['L'])
+    self.ddir=Entry(self._wtop,textvariable=self.v_ddir,width=self.l_width,
+                     font=G___.font['E'])
+    self.dfile=Entry(self._wtop,textvariable=self.v_dfile,width=self.l_width,
+                     font=G___.font['E'])
+    self.dpath=Entry(self._wtop,textvariable=self.v_dpath,width=self.l_width,
+                     font=G___.font['E'])
+    self.dnode=Entry(self._wtop,textvariable=self.v_dnode,width=self.l_width,
+                     font=G___.font['E'])
+
+    self.xdir.grid( row=2,column=0,sticky=W)
+    self.xfile.grid(row=3,column=0,sticky=W)
+    self.xpath.grid(row=4,column=0,sticky=W)
+    self.xnode.grid(row=5,column=0,sticky=W)
+    self.labl.grid( row=1,column=1,sticky=W)
+    self.ldir.grid( row=2,column=1,sticky=W)
+    self.lfile.grid(row=3,column=1,sticky=W)
+    self.lpath.grid(row=4,column=1,sticky=W)
+    self.lnode.grid(row=5,column=1,sticky=W)
+    self.labd.grid( row=1,column=2,sticky=W)
+    self.ddir.grid( row=2,column=2,sticky=W)
+    self.dfile.grid(row=3,column=2,sticky=W)
+    self.dpath.grid(row=4,column=2,sticky=W)
+    self.dnode.grid(row=5,column=2,sticky=W)
+    
+    self.b=Button(self._wtop,text="Ok",command=self.checkandsave,
+                  font=G___.font['B'])
+    self.b.grid(row=6,column=0,sticky=E)
+    self.c=Button(self._wtop,text="Cancel",command=self.leave,
+                  font=G___.font['B'])
+    self.c.grid(row=6,column=1,sticky=W)
+    self._wtop.grid()
+    t=self._wtop.winfo_toplevel() 
+    t.rowconfigure(3,weight=0)
+    t.columnconfigure(1,weight=0)
+
+  def checkandsave(self):
+    dfile=self.v_dfile.get()
+    dnode=self.v_dnode.get()
+    dpath=self.v_dpath.get()
+    ddir=self.v_ddir.get()
+    lnk="[%s/%s]->%s/%s:[%s/%s]"%(self.targetPath,self.targetNode[0],
+                                  ddir,dfile,dpath,dnode)
+    r=s7utils.addLinkWarning(lnk)
+    if (r):
+      fg=self.fingerprint
+      self.control.normalizeLinkList(fg)
+      nnames=os.path.normpath(fg.filedir+'/'+fg.filename+fg.fileext)
+      npaths=os.path.normpath(self.targetPath+'/'+self.targetNode[0])
+      nnamed=os.path.normpath(ddir+'/'+dfile)
+      npathd=os.path.normpath(dpath+'/'+dnode)
+      nlink=(nnames,npaths,nnamed,npathd,0,0)
+      if (nlink not in fg.links):
+        fg.links.append(nlink)
+      self.targetNode[1]=None
+      self.targetNode[2]=[]
+      self.targetNode[3]=''
+      s7treeSimple.updateViews(fg,links=True)
+    self.leave()
+    
+  def leave(self):
+    self._wtop.destroy()
+    self.control.addLinkWindow=None
+    
+  def onexit(self):
+    self.leave()
 
 # -----------------------------------------------------------------------------
 class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):

@@ -110,14 +110,23 @@ types[t].shape=(0,)
 t=CK.DiffusionModel_ts
 types[t]=CGNStype(t,dtype=[CK.I4],names=[CK.DiffusionModel_s])
 types[t].shape=(0,)
+t=CK.DiffusionModel_ts2
+types[t]=CGNStype(t,dtype=[CK.I4],names=[CK.DiffusionModel_s])
+types[t].shape=(0,)
 
 # --------------------------------------------------------
 t=CK.InwardNormalIndex_ts
 types[t]=CGNStype(t,dtype=[CK.I4],names=[CK.InwardNormalIndex_s])
 types[t].shape=(0,)
+t=CK.InwardNormalIndex_ts2
+types[t]=CGNStype(t,dtype=[CK.I4],names=[CK.InwardNormalIndex_s])
+types[t].shape=(0,)
 
 # --------------------------------------------------------
 t=CK.EquationDimension_ts
+types[t]=CGNStype(t,dtype=[CK.I4],names=[CK.EquationDimension_s])
+types[t].shape=(1,)
+t=CK.EquationDimension_ts2
 types[t]=CGNStype(t,dtype=[CK.I4],names=[CK.EquationDimension_s])
 types[t].shape=(1,)
 

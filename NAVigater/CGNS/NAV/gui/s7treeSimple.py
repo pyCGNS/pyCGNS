@@ -424,7 +424,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       if (self.RetypeCascade.maxIndex):
         self.RetypeCascade.delete(0,self.RetypeCascade.maxIndex)
       pnode=self.findParentNodeFromPath(path)
-      tlist=s7parser.getNodeAllowedChildrenTypes(pnode)
+      tlist=s7parser.getNodeAllowedChildrenTypes(pnode,node)
       self.RetypeCascade.maxIndex=len(tlist)
       for t in tlist:
         self.RetypeCascade.add_command(label=t,font=G___.font['E'],
@@ -457,7 +457,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
                                label="Change name (C-a)",
                                command=self.SubRename)
     self.popupmenu.add_cascade(font=self.menufont,
-                               label="Change CGNS type",
+                               label="Change CGNS type ",
                                menu=self.RetypeCascade)
     self.popupmenu.add_command(font=self.menufont,
                                label="Change CGNS type (C-s)",
@@ -468,6 +468,13 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self.popupmenu.add_command(font=self.menufont,
                                label="Change value (C-e)",
                                command=self.SubEdit)
+    self.popupmenu.add_separator()
+    self.popupmenu.add_command(font=self.menufont,
+                               label="Add link (C-l)",
+                               command=self.SubAddLink)
+    self.popupmenu.add_command(font=self.menufont,
+                               label="Remove link",
+                               command=self.SubDelLink)
     self.popupmenu.add_separator()
     self.popupmenu.add_command(font=self.menufont,
                                label="Copy (C-c)",
@@ -543,10 +550,6 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self.el_option={}
     self.el_option[G___.SIDSmandatory]=\
          it.element_create(type=IMAGE,image=ik['mandatory-sids-node'])
-#    self.el_option[G___.SIDSoptional]=\
-#         it.element_create(type=IMAGE,image=ik['optional-sids-node'])    
-#    self.el_option[G___.USERmandatory]=\
-#         it.element_create(type=IMAGE,image=ik['mandatory-profile-node'])    
 
     self._tree.column_move(self.col_linkstatus,self.col_tdata)
     self._tree.column_move(self.col_optionsids,self.col_tdata)
@@ -555,28 +558,6 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self._tree.column_move(self.col_xdata,self.col_tdata)
     self._tree.column_move(self.col_check,self.col_tdata)
     self._tree.column_move(self.col_status,self.col_tdata)
-
-#    self._tree.column_move(self.col_ddata,self.col_check)
-#    self._tree.column_move(self.col_linkstatus,self.col_check)
-#    self._tree.column_move(self.col_optionsids,self.col_check)
-#    self._tree.column_move(self.col_type,self.col_check)
-#    self._tree.column_move(self.col_xdata,self.col_check)
-#    self._tree.column_move(self.col_status,self.col_check)
-
-#    self._tree.column_move(self.col_ddata,self.col_status)
-#    self._tree.column_move(self.col_linkstatus,self.col_status)
-#    self._tree.column_move(self.col_optionsids,self.col_status)
-#    self._tree.column_move(self.col_type,self.col_status)
-#    self._tree.column_move(self.col_xdata,self.col_status)
-
-#    self._tree.column_move(self.col_ddata,self.col_xdata)
-#    self._tree.column_move(self.col_linkstatus,self.col_xdata)
-#    self._tree.column_move(self.col_optionsids,self.col_xdata)
-#    self._tree.column_move(self.col_type,self.col_xdata)
-
-#    self._tree.column_move(self.col_ddata,self.col_type)
-#    self._tree.column_move(self.col_linkstatus,self.col_type)
-#    self._tree.column_move(self.col_optionsids,self.col_type)
 
     self._tree.column_configure(self.col_graph,lock=LEFT)
 
@@ -850,8 +831,12 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       node=s7parser.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
     return node    
     
+  def findParentPathFromPath(self,path,absolute=0):
+    pnode=self.findParentNodeFromPath(path,absolute)
+    return s7parser.getPathFromNode(pnode,self.CGNStarget)
+  
   def findParentNodeFromNode(self,node):
-    path=getPathFromNode(node,self.CGNStarget)
+    path=s7parser.getPathFromNode(node,self.CGNStarget)
     return self.findParentNodeFromPath(path)
   
   def findParentNodeFromPath(self,path,absolute=0):
@@ -942,6 +927,23 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
                                    self.CGNStarget)
     wTreeSimple._nodebuffer=node    
         
+  def SubAddLink(self):
+    return # to fix
+    if (not self.getItemSelection()[0]): return
+    currentpath=self.getSinglePathSelection()
+    node=self.findNodeFromPath(currentpath)
+    ppath=self.findParentPathFromPath(currentpath,absolute=1)
+    s7linkView.wLinkEdit(self._control,self._tree,self._viewtree,node,ppath)
+    
+  def SubDelLink(self):
+    if (not self.getItemSelection()[0]): return
+    currentpath=self.getSinglePathSelection()
+    node=self.findNodeFromPath(currentpath)
+    if (self._parent):
+      currentpath=string.join(self._parent.split('/')[:-1],'/')+'/'+currentpath
+    s7linkView.wLinkEdit(self._control,self._tree,self._viewtree,
+                         node,currentpath)
+
   def SubRename(self):
     if (not self.getItemSelection()[0]): return
     currentpath=self.getSinglePathSelection()
@@ -1065,6 +1067,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     if (selection == None): selection=ROOT
     item=tktree.item_id(selection)
     return item
+  def getSinglePathSelection(self):
+    item=self.getItemSelection()
+    path=self._paths[str(item[0])]
+    return path
   def getSinglePathSelection(self):
     item=self.getItemSelection()
     path=self._paths[str(item[0])]
@@ -1207,6 +1213,27 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
         if (pdict[path] == 2): tktree.itemstate_set(it,'checkfail')
       except KeyError:
         pass
+  
+  # --------------------------------------------------------------------
+  def updateViewLinks(self):
+    tktree=self._tree
+    for it in tktree.item_id(ALL):
+      path=self._paths[str(it)]
+      if (path == '/'):
+        node=self.CGNStarget
+      elif self._parent:
+        node=s7parser.getNodeFromPath(path.split('/'),
+                                     [None,None,[self.CGNStarget],None])
+      else:            
+        node=s7parser.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
+      if (node == -1):
+          lmode=s7linkView.getLinkStatusForThisNode(path,node,
+                                                    self._parent,
+                                                    self.CGNStarget,
+                                                    self._viewtree)
+          if (lmode==1): tktree.itemstate_set(it,'islink')
+          if (lmode==2): tktree.itemstate_set(it,'islinkignored')
+          if (lmode==3): tktree.itemstate_set(it,'islinkbroken')
   
   # --------------------------------------------------------------------
   def updateViewAfterCutOrAdd(self):
@@ -1528,10 +1555,11 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
 # --------------------------------------------------------------------
 # Propagates to all relevant views
 #
-def updateViews(viewtree,namelist=[],checklist=[]):
+def updateViews(viewtree,namelist=[],checklist=[],links=False):
   for v in viewtree.viewlist:
     if   (checklist): v.view.updateViewAfterCheck(checklist)
     elif (namelist) : v.view.updateViewAfterRenameOrChangeValue(namelist)
     else:             v.view.updateViewAfterCutOrAdd()
+    if (links):       v.view.updateViewLinks()
     
 # --------------------------------------------------------------------

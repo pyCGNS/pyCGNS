@@ -271,6 +271,11 @@ def cutRootWarning():
                  "You selected Root node to Cut! Delete all tree?",
                  "cancel").result()
 
+def addLinkWarning(lnk):
+  return msginfo("CGNS.NAV: Confirm",
+                 "You remove existing subtree and replace it by the link:\n%s"%lnk,
+                 "cancel").result()
+
 def bigFileWarning(flag):
   msg="The file you want to load looks quite big!\n"
   if (flag):

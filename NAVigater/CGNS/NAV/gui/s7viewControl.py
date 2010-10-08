@@ -71,6 +71,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
     self.operateWindow=None
     self.logWindow=None
     self.linkWindow=None
+    self.addLinkWindow=None
     self.newcount=1
 
     ScrolledMultiListbox.__init__(self,self._wtop,relief=GROOVE,border=3,
@@ -350,6 +351,15 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
     if (not self.patternWindow): return
     self.patternWindow._wtop.destroy()
     self.patternWindow=None
+
+  def normalizeLinkList(self,fg):
+    nl=[]
+    for l in fg.links:
+      nl+=[(os.path.normpath(l[0]),
+            os.path.normpath(l[1]),
+            os.path.normpath(l[2]),
+            os.path.normpath(l[3]),l[4],l[5])]
+    fg.links=nl
 
   def operateView(self,treesimple,selectedlist):
     if (not selectedlist): return
