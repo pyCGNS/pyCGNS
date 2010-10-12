@@ -541,10 +541,12 @@ def newSimulationType(parent,stype=NPY.array(CG_K.NonTimeAccurate_s)):
   return node
   
 # ----------------------------------------------------------------------------
-  
 def newBase(tree,name,ncell,nphys):
-  """-Base node creation -Base
+  """
+  .. index::
   
+  -Base node creation -Base
+
   'newNode:N='*newBase*'(parent:N,name:S,ncell:[1,2,3],nphys:[1,2,3])'
   
   Returns a new <node> representing a CGNSBase_t sub-tree.
@@ -1549,7 +1551,6 @@ def newArbitraryGridMotion(parent,name,valuetype=CG_K.Null_s):
   .. index:: ArbitraryGridMotion,ArbitraryGridMotionType
   .. index:: RigidGridMotion,RigidGridMotionType
   Returns a **new node** representing a ``ArbitraryGridMotionType_t``
-  sub-tree `(chapter 11.3) <http://www.grc.nasa.gov/WWW/cgns/sids/timedep.html#ArbitraryGridMotion>`_
 
   :param parent: CGNS/Python node
   :param name: String

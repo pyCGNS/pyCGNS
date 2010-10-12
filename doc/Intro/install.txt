@@ -18,8 +18,8 @@ Required libraries
 
 The first step of the installation is to make sure you have the required
 libraries. The mandatory libs are *Python*, *numpy*, *HDF5* and *CHLone*. 
-Then, depending on what you want to build and istall in *pyCGNS*, you may 
-need *libcgns*. 
+Then, if you wan to build *CGNS.WRA* (we recommend to do so), you 
+need *libcgns*.
 
 .. warning::
 
@@ -43,7 +43,6 @@ need *libcgns*.
 
 Optional libraries
 ~~~~~~~~~~~~~~~~~~
-
 The so-called `mid-level` library is not mandatory, 
 the :ref:`WRA module <wrainter:wraintro>`
 is the only one to have dependancies on.
@@ -133,10 +132,8 @@ Release Notes
  The other modules, VAL, TRA and DAT are present for archival/development
  purpose but you should NOT use them.
 
-Bug fixes
-~~~~~~~~~
-Todo
-~~~~
+ Please go to `http://www.python-science.org/projects/pyCGNS` to have the
+ version/tickets list.
 
 Module dependancies
 -------------------
@@ -147,14 +144,15 @@ gives you the required modules (or optional) for each of them.
  - MAP : None
  - PAT : MAP
  - WRA : PAT MAP
- - NAV : PAT MAP (WRA)
+ - APP : PAT MAP
+ - NAV : PAT MAP APP (WRA)
 
 NAV depends
 ~~~~~~~~~~~
 
-The TkTreectrl module is required. You first need to install tktreectrl
-(last version tested is tktreectrl-2.2.3) and TkinterTreectrl to map it
-to Python (last version tested is TkinterTreectrl-0.8)
+The *TkTreectrl* module is required. You first need to install *tktreectrl*
+(last version tested is *tktreectrl-2.2.3*) and *TkinterTreectrl* to map it
+to Python (last version tested is *TkinterTreectrl-0.8*)
 
 MAP depends
 ~~~~~~~~~~~

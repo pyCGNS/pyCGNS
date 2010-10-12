@@ -156,7 +156,7 @@ def checkDataAndType(path,node,parent,log):
     msg="%sBad data type [%s] for [%s] (expected one of %s)\n"%\
          (shift(path),dt,node[0],xt)
     log.push(msg,tag)
-  pt=getNodeAllowedChildrenTypes(parent)
+  pt=getNodeAllowedChildrenTypes(parent,node)
   if (pt==[]):
     pt=['CGNSBase_t','CGNSLibraryVersion_t']
   if (node[3] not in pt):

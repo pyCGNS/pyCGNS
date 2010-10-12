@@ -804,6 +804,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self._tree.bind('<Control-w>',open_view)    
     #self._tree.bind('l',self.linkView)
 
+    self._tree.bind('<BackSpace>',self._control.do_focus_back)    
     self._tree.notify_bind('<Expand-before>',open_node)
 
     # set up the root item (base)

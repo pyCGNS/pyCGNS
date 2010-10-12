@@ -151,6 +151,13 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
         it=self.listbox.item(wtn)
         self.listbox.itemelement_configure(it,clf,elt,text=tf.state)
     
+  def do_focus_back(self,e):
+    g=self._wtop.geometry()
+    self._wtop.withdraw()
+    self._wtop.deiconify()
+    self._wtop.geometry(g)
+#   self.listbox.focus_force()
+
   def do_focus(self,e):
     t=e.widget.get(e.widget.nearest(e.y))
     if (t):

@@ -1,0 +1,75 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
+Option View
++++++++++++
+
+The *Option view* is the place where you set your own parameters 
+for *CGNS.NAV*. You should be sure the right options are set because some
+of these are very important and could change the actual contents of a 
+file you want to store.
+
+.. image:: ../doc/images/options_view_1.png
+   :width: 16cm
+   :align: center
+
+
+Options
+~~~~~~~
+The check-box options are active when the box is *checked* (wouahahah !).
+Some are only related to the display of the data, some other are driving
+the way *CGNS.NAV* reads or writes the data on disk and have a strong
+impact on the  actual CGNS file you will obtain.
+
+  * `Recursive tree display` forces the *Tree view* to open all the children
+     recursively. We strongly suggest you *un-check* this box on large files.
+
+  * `One view per tree/node` (Not available) when active you cannot open
+    more than one view per tree/node.
+
+  * `Show columns titles` is used to show/hide the top titles of tables
+
+  * `Show menu help balloons` activates ugly yelllow balloons giving a hint
+    on the purpose of the icons in the views menus.
+
+  * `Recurse SIDS patterns load/copy` indicates that you want to load or
+    copy the SIDS CGNS sub-trees in a recursive way. For example, if you
+    load the `CGNSBase_t` pattern you will obtain the whole SIDS pattern,
+    all pattern children of `CGNSBase_t` will be loaded as well.
+
+  * `Load node on display required` (Not available) to save memory and time,
+    CGNS node is read from the file only when *CGNS.NAV* needs to display it.
+
+  * `Check on the fly` (Not available) forces a check each time you modify 
+    a tree.
+
+  * `Follow links during file load` indicates that the links *CGNS.NAV*
+    encounters into a CGNS file have to be followed or not.
+
+  * `Do NOT follow links during file save` means that the links will be
+    ignored during save which has the effect to *merge* all the tree nodes
+    into the same root file.
+
+  * `Do not load large DataArrays`
+
+  * `Show 1D values as plain Python types`
+
+  * `Show SIDS status column`
+ 
+  * `Max tree parse recursion level`
+
+  * `Max length of data displayed in table`
+
+  * `History file name`
+
+  * `Default profile`
+
+  * `Profile path list`
+
+  * `Force fortran flag in numpy arrays`
+
+  * `Transpose array for edit/view`
+
+.. -------------------------------------------------------------------------
