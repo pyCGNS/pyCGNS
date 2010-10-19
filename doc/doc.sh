@@ -4,7 +4,7 @@ mkdir build/doc/html 2>/dev/null
 mkdir build/doc/html/_pdf 2>/dev/null
 
 WITHPDFFILES="YES BOY YOU GO"
-#WEBSITEUPDATE="OH OH OH... HERE WE GO"
+WEBSITEUPDATE="OH OH OH... HERE WE GO"
 
 # --- intro
 export PYCGNSMOD='intro'
