@@ -3,8 +3,6 @@
 .. See license.txt file in the root directory of this Python module source  
 .. -------------------------------------------------------------------------
 
-SIDS-to-Python Mapping
-======================
 
 .. _reference_sids_to_python:
 
@@ -21,7 +19,7 @@ based CGNS application interoperability.
 its objects, this representation can be used for CGNS/Python trees as well.
 
 CGNS/Python Tree
-----------------
+++++++++++++++++
 
 Commitment with CGNS standard
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -315,7 +313,7 @@ see the remark (5) about the strings used in `numpy` arrays.
     is ``(18,)``. 
 
 Specific CGNS/Python topics
----------------------------
++++++++++++++++++++++++++++
 
 .. _reference_CGNSTree_t:
 
@@ -347,8 +345,11 @@ The alternate types are:
 | CGNS/SIDS type                    | CGNS/Python optional type |
 +===================================+===========================+
 | ``"int[1+...+IndexDimension]"``   |   ``DiffusionModel_t``    |
++-----------------------------------+---------------------------+
 | ``"int[IndexDimension]"``         |   ``Transform_t``         |
++-----------------------------------+---------------------------+
 | ``"int[IndexDimension]"``         |   ``InwardNormalIndex_t`` |
++-----------------------------------+---------------------------+
 | ``"int"``                         |   ``EquationDimension_t`` |
 +-----------------------------------+---------------------------+
 
@@ -462,7 +463,7 @@ can handle this, you can also set the ``NPY_OWNDATA`` flag to indicate to
 array object is garbaged.
 
 Examples and tips
------------------
++++++++++++++++++
 
 Python comes from the C world, as well as the numpy library. This means
 that many behavior are assuming C-order in dimensions. The

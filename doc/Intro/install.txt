@@ -152,7 +152,10 @@ NAV depends
 
 The *TkTreectrl* module is required. You first need to install *tktreectrl*
 (last version tested is *tktreectrl-2.2.3*) and *TkinterTreectrl* to map it
-to Python (last version tested is *TkinterTreectrl-0.8*)
+to Python (last version tested is *TkinterTreectrl-1.0*).
+You may have to add the *tktreectrl* path into a `TCLLIBPATH` shell
+variable (maybe you should add a `LD_LIBRARY_PATH` as well).
+
 
 MAP depends
 ~~~~~~~~~~~

@@ -6,6 +6,11 @@ mkdir build/doc/html/_pdf 2>/dev/null
 WITHPDFFILES="YES BOY YOU GO"
 WEBSITEUPDATE="OH OH OH... HERE WE GO"
 
+# gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER \
+#    -dFirstPage=9 -dLastPage=17 \
+#    -sOutputFile=SIDS-to-Python.pdf pyCGNS_MAP.pdf 
+
+
 # --- intro
 export PYCGNSMOD='intro'
 export PYCGNSDOC='index'

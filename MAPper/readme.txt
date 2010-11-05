@@ -110,7 +110,7 @@ with another flag.
 
   (2) Only when you are *saving* a tree.
 
-  (3) Which means all ``DataArray_t` actual memory zones will **NOT** be
+  (3) Which means all ``DataArray_t`` actual memory zones will **NOT** be
       released by Python.
 
   (4) The term `large` has to be defined. The *save* will **NOT** check if
@@ -123,6 +123,15 @@ with another flag.
       would be performed and the array and its dimensions would be stored 
       without modification even if the NY_FORTRAN flag is not there.
 
+-----
+
+SIDS-to-Python Mapping
+----------------------
+
+.. toctree::
+
+   sids-to-python
+   
 The MAP API
 -----------
 
@@ -130,8 +139,6 @@ The MAP module is designed so that you can re-use the lead/save function and
 put them into your own application. This allows you to create a *CGNS/HDF*
 tree from a *CGNS/Python* tree into your C code. The two function
 are very close the to Python level interface functions.
-
------
 
 .. _map_index:
 
