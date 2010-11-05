@@ -39,3 +39,7 @@ def test():
   CGNSWRAtest.run(sys.path)
   sys.path=syspathold
 #
+
+# compat for enums
+from CGNS.PAT.cgnskeywords import *
+

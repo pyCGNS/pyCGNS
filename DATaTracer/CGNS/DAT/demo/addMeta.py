@@ -9,11 +9,11 @@
 # $Id: cgutils.py 0 2003-06-18 12:29:31Z mpoinot $
 #
 import CGNS
-import NumArray
+import numpy
 import os
 import sys
-import DAX.db.parseCGNS as px
-import DAX.utils as ut
+import CGNS.DAT.db.parseCGNS as px
+import CGNS.DAT.utils as ut
 #
 #
 def addMeta(f,dct):
@@ -29,20 +29,20 @@ if (__name__ == "__main__"):
     print "FILE: ",f
     dt=ut.getStat(f)[4]
     dct={id:{
-     '.MetaData/CheckSum':         NumArray.array(ut.checksum(f),'c'),
-     '.MetaData/GlobalCheckSum':   NumArray.array('000','c'),
-     '.MetaData/CreationDate':     NumArray.array(dt,'c'),
-     '.MetaData/ModificationDate': NumArray.array(dt,'c'),
-     '.MetaData/Platform':         NumArray.array(os.uname()[1],'c'),
-     '.MetaData/Owner':            NumArray.array('BS','c'),
-     '.MetaData/Policy':           NumArray.array('PUBLIC','c'),
-     '.MetaData/Version':          NumArray.array(0,'i'),
-     '.MetaData/Release':          NumArray.array(0,'i'),
-     '.MetaData/Change':           NumArray.array(1,'i'),
-     '.MetaData/Title':            NumArray.array('No title set','c'),
-     '.CHANCE/CaseNumber':         NumArray.array('XX-0','c'),
-     '.CHANCE/Family':             NumArray.array('???','c'),
-     '.CHANCE/Measurements':       NumArray.array('???','c'),
+     '.MetaData/CheckSum':         numpy.array(ut.checksum(f),'c'),
+     '.MetaData/GlobalCheckSum':   numpy.array('000','c'),
+     '.MetaData/CreationDate':     numpy.array(dt,'c'),
+     '.MetaData/ModificationDate': numpy.array(dt,'c'),
+     '.MetaData/Platform':         numpy.array(os.uname()[1],'c'),
+     '.MetaData/Owner':            numpy.array('BS','c'),
+     '.MetaData/Policy':           numpy.array('PUBLIC','c'),
+     '.MetaData/Version':          numpy.array(0,'i'),
+     '.MetaData/Release':          numpy.array(0,'i'),
+     '.MetaData/Change':           numpy.array(1,'i'),
+     '.MetaData/Title':            numpy.array('No title set','c'),
+     '.CHANCE/CaseNumber':         numpy.array('XX-0','c'),
+     '.CHANCE/Family':             numpy.array('???','c'),
+     '.CHANCE/Measurements':       numpy.array('???','c'),
     },
     }   
     addMeta(f,dct[id])

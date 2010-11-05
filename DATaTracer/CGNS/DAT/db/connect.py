@@ -10,14 +10,14 @@
 # DBMS connection and drivers
 # - The DB2 API actually does the job...
 #
-from   DAX.utils           import *
-from   DAX.exceptions      import *
-import DAX.db.dbdrivers    as dxDD
-import DAX.preparedQueries as dxPQ
-import DAX.db.parseCGNS    as dxPS
-import DAX.db.foreignKeys  as dxFK
-import DAX.db.db_owner     as ow
-import numarray            as N
+from   CGNS.DAT.utils           import *
+from   CGNS.DAT.exceptions      import *
+import CGNS.DAT.db.dbdrivers    as dxDD
+import CGNS.DAT.preparedQueries as dxPQ
+import CGNS.DAT.db.parseCGNS    as dxPS
+import CGNS.DAT.db.foreignKeys  as dxFK
+import CGNS.DAT.db.db_owner     as ow
+import numpy            as N
 import string
 import os
 import tarfile

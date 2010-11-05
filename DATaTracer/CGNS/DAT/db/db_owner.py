@@ -8,7 +8,7 @@
 # pyDAX - DBMS schema - values
 # ------------------------------------------------------------
 #
-from   DAX.exceptions      import *
+from CGNS.DAT.exceptions      import *
 #
 defaultOwners=[
   """INSERT \

@@ -9,7 +9,7 @@
 # Basic required tree -
 #
 import CGNS
-import DAX.demo.cgutils as cgu
+import CGNS.DAT.demo.cgutils as cgu
 #
 dbid1=cgu.getLocalId("D01")
 db=CGNS.pyCGNS('%s.cgns'%dbid1,CGNS.MODE_WRITE)

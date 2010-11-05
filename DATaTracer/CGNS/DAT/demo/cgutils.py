@@ -7,7 +7,7 @@
 #  -------------------------------------------------------------------------
 
 import CGNS
-import NumArray
+import numpy
 #
 # db : a valid and open pyCGNS instance
 #
@@ -20,7 +20,7 @@ def addConservatives(db,bid,zid,solnames):
               CGNS.MomentumZ,
               CGNS.Density,
               CGNS.EnergyStagnationDensity]:
-      data=NumArray.ones((zinfo[3][0],zinfo[3][1],zinfo[3][2]),NumArray.Float)
+      data=numpy.ones((zinfo[3][0],zinfo[3][1],zinfo[3][2]),NumArray.Float)
       db.fieldwrite(bid,zid,sid,CGNS.RealDouble,f,data)
 #
 #

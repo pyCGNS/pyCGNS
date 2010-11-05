@@ -9,7 +9,7 @@
 # pyDAX - DBMS schema - Manages connection (high level)
 # ------------------------------------------------------------
 #
-from DAX.utils import *
+from CGNS.DAT.utils import *
 import string
 #
 # ------------------------------------------------------------

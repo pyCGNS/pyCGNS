@@ -5,10 +5,12 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 import CGNS.errors    as ERR
-import CGNS.WRA._mll  as MLL
+import CGNS.WRA._mll  
 import CGNS.WRA._adf  as ADF
 import posixpath
 import copy
+
+import CGNS.PAT.cgnskeywords as MLL
 
 def wpdbg(msg):
   if 0: print "#wrap# %s"%msg
@@ -312,11 +314,11 @@ class pyCGNS:
         self.__modestring=mode
       self.__lastPath=[]
       try:
-        self.__db=MLL.connect(self.__name,self.__mode)
+        self.__db=CGNS.WRA._mll.connect(self.__name,self.__mode)
       except MLL.error:
         if (self.__mode==3): # v2/v3 issu with MODE_MODIFY enum
           self.__mode=2
-          self.__db=MLL.connect(self.__name,self.__mode)
+          self.__db=CGNS.WRA._mll.connect(self.__name,self.__mode)
       self.__alive=1      
     # --------------------------------------------------
     def close(self):
