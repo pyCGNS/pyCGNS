@@ -8,15 +8,15 @@
 # pyDAX - DBMS schema
 # ------------------------------------------------------------
 #
-import DAX.db.db01
-import DAX.db.db02
-import DAX.db.db03
-import DAX.db.db_owner
-import DAX.db.db_test
-import DAX.db.connect
-import DAX.db.dbdrivers
-from   DAX.exceptions  import *
-from   DAX.utils       import *
+import CGNS.DAT.db.db01
+import CGNS.DAT.db.db02
+import CGNS.DAT.db.db03
+import CGNS.DAT.db.db_owner
+import CGNS.DAT.db.db_test
+import CGNS.DAT.db.connect
+import CGNS.DAT.db.dbdrivers
+from   CGNS.DAT.exceptions  import *
+from   CGNS.DAT.utils       import *
 #
 # --- create (drop) tables
 #
@@ -48,18 +48,18 @@ def getOwner(name,db):
 #
 def overWrite(dbname):
   name,u,p=dbname.split(':')
-  db=DAX.db.dbdrivers.daxDriverDefault(name,user=u,passwd=p)
+  db=CGNS.DAT.db.dbdrivers.daxDriverDefault(name,user=u,passwd=p)
   #
-  dropTableList(DAX.db.db01.tableList,db)
-  dropTableList(DAX.db.db02.tableList,db)
-  dropTableList(DAX.db.db03.tableList,db)  
+  dropTableList(CGNS.DAT.db.db01.tableList,db)
+  dropTableList(CGNS.DAT.db.db02.tableList,db)
+  dropTableList(CGNS.DAT.db.db03.tableList,db)  
   #
-  createTableList(DAX.db.db01.tableList,db)
-  createTableList(DAX.db.db02.tableList,db)
-  createTableList(DAX.db.db03.tableList,db)
+  createTableList(CGNS.DAT.db.db01.tableList,db)
+  createTableList(CGNS.DAT.db.db02.tableList,db)
+  createTableList(CGNS.DAT.db.db03.tableList,db)
   #
-  addValues(DAX.db.db_owner.valuesList,db)
-  addValues(DAX.db.db_test.valuesList,db)  
+  addValues(CGNS.DAT.db.db_owner.valuesList,db)
+  addValues(CGNS.DAT.db.db_test.valuesList,db)  
   #
   del db
   #

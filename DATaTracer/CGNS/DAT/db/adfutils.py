@@ -10,7 +10,7 @@
 import CGNS
 import sys
 import string
-import numarray
+import numpy
 #
 # --- ar: Numeric array
 def getType(ar):

@@ -5,7 +5,7 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 #
-import DAX.exceptions as ex
+import CGNS.DAT.exceptions as ex
 #
 DAXtraceFlag=None
 # ----------------------------------------------------------------------

@@ -8,6 +8,6 @@
 # pyDAX - DBMS drivers
 # ------------------------------------------------------------
 #
-from DAX.db.dbdrivers.default import *
+from CGNS.DAT.db.dbdrivers.default import *
 #
 

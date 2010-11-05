@@ -10,18 +10,18 @@
 
 #
 from   string              import *
-from   DAX.utils           import *
-from   DAX.exceptions      import *
-import DAX.db.foreignKeys  as dxFK
-import DAX.db.adfutils     as dxUT
-import DAX.utils           as ut
+from   CGNS.DAT.utils           import *
+from   CGNS.DAT.exceptions      import *
+import CGNS.DAT.db.foreignKeys  as dxFK
+import CGNS.DAT.db.adfutils     as dxUT
+import CGNS.DAT.utils           as ut
 import CGNS
-import numarray            as N
+import numpy            as N
 # ----------------------------------------------------------------------
-ddefault=N.array("00/00/0000 00:00:00",N.UInt8)
-sdefault=N.array("<NO VALUE>",N.UInt8)
-idefault=N.array(-1,N.Int32)
-fdefault=N.array(-1.,N.Float64)
+ddefault=N.array(tuple("00/00/0000 00:00:00"),dtype='S1')
+sdefault=N.array(tuple("<NO VALUE>"),dtype='S1')
+idefault=N.array(-1,N.int32)
+fdefault=N.array(-1.,N.float64)
 #
 # --- what should be found as Meta data, default values if it has to be created
 basetitle       = '.MetaData/Title'
@@ -58,9 +58,9 @@ modificationdate            : ddefault,
 '.MetaData/Platform':         sdefault,
 '.MetaData/Memory':           sdefault,
 '.MetaData/Time':             sdefault,
-owner:                        N.array('X',type=N.UInt8),
-policy:                       N.array('NONE',type=N.UInt8),
-status:                       N.array('DRAFT',type=N.UInt8),
+owner:                        N.array(tuple('X'),dtype='S1'),
+policy:                       N.array(tuple('NONE'),dtype='S1'),
+status:                       N.array(tuple('DRAFT'),dtype='S1'),
 version:                      idefault,
 release:                      idefault,
 change:                       idefault,
@@ -95,6 +95,7 @@ defaultDict={
  simulation:'<NOVALUE>',
 }
 # ----------------------------------------------------------------------
+# USE APP instead 2010
 class fileCGNS:
   def __init__(self,filename=None):
     if (filename):

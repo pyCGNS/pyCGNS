@@ -123,3 +123,9 @@ class DAXSystemError(DAXException):
   def __str__(self):
     return self.p(3,"System Error: %s"%self._s)
 #
+class DAXDBOptionError(DAXException):
+  def __init__(self,s=""):
+    self._s=s
+  def __str__(self):
+    return self.p(3,"Bad Option: %s"%self._s)
+#

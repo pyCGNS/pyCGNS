@@ -140,6 +140,7 @@ def shift(path):
 
 # --------------------------------------------------------------------
 def checkDataAndType(path,node,parent,log):
+  clevel=0
   dt=getNodeType(node)
   xt=getTypeDataTypes(node)
   if (dt not in xt):

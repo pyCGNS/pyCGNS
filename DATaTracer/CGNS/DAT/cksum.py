@@ -34,10 +34,10 @@
 # - Number of children, IDs, ADF versions, etc... are not taken into account
 # - Links are not followed because checksum is per-file-basis
 # - Data is completely read as a binary string
-# - Uses pyCGNS, Numeric python, may lead to not portable fingerprint result
+# - Uses pyCGNS, numpy, may lead to not portable fingerprint result
 #
 import CGNS
-import Numeric
+import numpy
 import md5
 
 # ----------------------------------------------------------------------

@@ -643,7 +643,7 @@ static PyObject *
 DbMIDLEVEL_simTypeRead(DbMIDLEVELObject *self, PyObject *args)
 {
   int b;
-  SimulationType_t st;
+  CG_SimulationType_t st;
 
   if (!PyArg_ParseTuple(args, "i",&b)) return NULL;
   self->last_error=cg_simulation_type_read(self->db_fn,b,&st);
@@ -661,10 +661,10 @@ static PyObject *
 DbMIDLEVEL_simTypeWrite(DbMIDLEVELObject *self, PyObject *args)
 {
   int b;
-  SimulationType_t st;
+  CG_SimulationType_t st;
   
   if (!PyArg_ParseTuple(args, "ii",&b,&st)) return NULL;
-  self->last_error=cg_simulation_type_write(self->db_fn,b,(SimulationType_t)st);
+  self->last_error=cg_simulation_type_write(self->db_fn,b,(CG_SimulationType_t)st);
   strcpy(self->last_error_message,cg_get_error());
   return PyInt_FromLong(st);
 }
@@ -676,7 +676,7 @@ DbMIDLEVEL_simTypeWrite(DbMIDLEVELObject *self, PyObject *args)
 static PyObject *
 DbMIDLEVEL_governingRead(DbMIDLEVELObject *self, PyObject *args)
 {
-  GoverningEquationsType_t g;
+  CG_GoverningEquationsType_t g;
 
   self->last_error=cg_governing_read(&g);
   strcpy(self->last_error_message,cg_get_error());
@@ -694,7 +694,7 @@ DbMIDLEVEL_governingWrite(DbMIDLEVELObject *self, PyObject *args)
   int g;
 
   if (!PyArg_ParseTuple(args, "i",&g)) return NULL;
-  self->last_error=cg_governing_write((GoverningEquationsType_t)g);
+  self->last_error=cg_governing_write((CG_GoverningEquationsType_t)g);
   strcpy(self->last_error_message,cg_get_error());
   return PyInt_FromLong(g);
 }
@@ -707,7 +707,7 @@ DbMIDLEVEL_governingWrite(DbMIDLEVELObject *self, PyObject *args)
 static PyObject *
 DbMIDLEVEL_modelRead(DbMIDLEVELObject *self, PyObject *args)
 {
-  ModelType_t   g;
+  CG_ModelType_t   g;
   char *name;
   PyObject *xr;
   
@@ -732,7 +732,7 @@ DbMIDLEVEL_modelWrite(DbMIDLEVELObject *self, PyObject *args)
   char *name;
 
   if (!PyArg_ParseTuple(args, "si",&name,&g)) return NULL;
-  self->last_error=cg_model_write(name,(ModelType_t)g);
+  self->last_error=cg_model_write(name,(CG_ModelType_t)g);
   strcpy(self->last_error_message,cg_get_error());
 
   Py_INCREF(Py_None);
@@ -781,7 +781,7 @@ DbMIDLEVEL_diffusionWrite(DbMIDLEVELObject *self, PyObject *args)
 static PyObject *
 DbMIDLEVEL_gridlocationRead(DbMIDLEVELObject *self, PyObject *args)
 {
-  GridLocation_t gt;
+  CG_GridLocation_t gt;
 
   self->last_error=cg_gridlocation_read(&gt);
   strcpy(self->last_error_message,cg_get_error());
@@ -799,7 +799,7 @@ DbMIDLEVEL_gridlocationWrite(DbMIDLEVELObject *self, PyObject *args)
   int gt;
 
   if (!PyArg_ParseTuple(args, "i",&gt)) return NULL;
-  self->last_error=cg_gridlocation_write((GridLocation_t)gt);
+  self->last_error=cg_gridlocation_write((CG_GridLocation_t)gt);
   strcpy(self->last_error_message,cg_get_error());
   return PyInt_FromLong(gt);
 }
@@ -1097,7 +1097,7 @@ DbMIDLEVEL_zoneWrite(DbMIDLEVELObject *self, PyObject *args)
     return NULL;
   }
 
-  self->last_error=cg_zone_write(self->db_fn,bs_fn,name,zsz,(ZoneType_t)zt,&zn_fn);
+  self->last_error=cg_zone_write(self->db_fn,bs_fn,name,zsz,(CG_ZoneType_t)zt,&zn_fn);
   strcpy(self->last_error_message,cg_get_error());
   return PyInt_FromLong(zn_fn);
 }
@@ -1176,7 +1176,7 @@ static PyObject *
 DbMIDLEVEL_zoneType(DbMIDLEVELObject *self, PyObject *args)
 {
   int b, z;
-  ZoneType_t nz;
+  CG_ZoneType_t nz;
 
   if (!PyArg_ParseTuple(args, "ii",&b,&z)) return NULL;
   self->last_error=cg_zone_type(self->db_fn,b,z,&nz);
@@ -1205,12 +1205,12 @@ static PyObject *
 DbMIDLEVEL_ConnInfo(DbMIDLEVELObject *self, PyObject *args)
 {
   int b,z,c,np=0,ndd=0;
-  GridLocation_t gl=0;
-  GridConnectivityType_t gt=0;
-  PointSetType_t pt=0,dpt=0;
+  CG_GridLocation_t gl=0;
+  CG_GridConnectivityType_t gt=0;
+  CG_PointSetType_t pt=0,dpt=0;
   char *nm,*dnm;
-  ZoneType_t dzt=0;
-  DataType_t ddt=0;
+  CG_ZoneType_t dzt=0;
+  CG_DataType_t ddt=0;
   PyObject *tp;
   
   if (!PyArg_ParseTuple(args, "iii",&b,&z,&c)) return NULL;
@@ -1240,12 +1240,12 @@ static PyObject *
 DbMIDLEVEL_ConnRead(DbMIDLEVELObject *self, PyObject *args)
 {
   int b,z,c,np=0,ndd=0,dim=0;
-  GridLocation_t gl=0;
-  GridConnectivityType_t gt=0;
-  PointSetType_t pt=0,dpt=0;
+  CG_GridLocation_t gl=0;
+  CG_GridConnectivityType_t gt=0;
+  CG_PointSetType_t pt=0,dpt=0;
   char *nm,*dnm;
-  ZoneType_t dzt=0;
-  DataType_t ddt=0;
+  CG_ZoneType_t dzt=0;
+  CG_DataType_t ddt=0;
   PyObject *tp;
   void *ddata;
   int  *pnts;
@@ -1294,12 +1294,12 @@ static PyObject *
 DbMIDLEVEL_ConnWrite(DbMIDLEVELObject *self, PyObject *args)
 {
   int b,z,c,np,ndd;
-  GridLocation_t gl;
-  GridConnectivityType_t gt;
-  PointSetType_t pt,dpt;
+  CG_GridLocation_t gl;
+  CG_GridConnectivityType_t gt;
+  CG_PointSetType_t pt,dpt;
   char *nm,*dnm;
-  ZoneType_t dzt;
-  DataType_t ddt;
+  CG_ZoneType_t dzt;
+  CG_DataType_t ddt;
   PyObject *oard,*oarc;
   PyArrayObject *ardt,*arct;
   PyArrayObject *ard,*arc;
@@ -1321,15 +1321,15 @@ DbMIDLEVEL_ConnWrite(DbMIDLEVELObject *self, PyObject *args)
                                              ardt->nd,
                                              ardt->nd);
   self->last_error=cg_conn_write(self->db_fn,b,z,nm,
-                                 (GridLocation_t)gl,
-                                 (GridConnectivityType_t)gt,
-                                 (PointSetType_t)pt,
+                                 (CG_GridLocation_t)gl,
+                                 (CG_GridConnectivityType_t)gt,
+                                 (CG_PointSetType_t)pt,
                                  np,
                                  (void*)(arc->data),
                                  dnm,
-                                 (ZoneType_t)dzt,
-                                 (PointSetType_t)dpt,
-                                 (DataType_t)ddt,
+                                 (CG_ZoneType_t)dzt,
+                                 (CG_PointSetType_t)dpt,
+                                 (CG_DataType_t)ddt,
                                  ndd,
                                  (void*)(ard->data),
                                  &c);
@@ -1360,7 +1360,7 @@ static PyObject *
 DbMIDLEVEL_ConnAverageRead(DbMIDLEVELObject *self, PyObject *args)
 {
   int b,z,c;
-  AverageInterfaceType_t at=0;
+  CG_AverageInterfaceType_t at=0;
 
   if (!PyArg_ParseTuple(args,"iii",&b,&z,&c)) return NULL;
   
@@ -1381,7 +1381,7 @@ DbMIDLEVEL_ConnAverageWrite(DbMIDLEVELObject *self, PyObject *args)
   if (!PyArg_ParseTuple(args,"iiii",&b,&z,&c,&at)) return NULL;
   
   self->last_error=cg_conn_average_write(self->db_fn,b,z,c,
-                                         (AverageInterfaceType_t)at);
+                                         (CG_AverageInterfaceType_t)at);
   strcpy(self->last_error_message,cg_get_error());
   
   Py_INCREF(Py_None);
@@ -1535,8 +1535,8 @@ DbMIDLEVEL_holeInfo(DbMIDLEVELObject *self, PyObject *args)
   int b,z,h,npts=0,nptss=0;
   char *name;
   PyObject *tp,*xt,*xs,*xpst,*xnptss,*xnpts;
-  GridLocation_t gl=0;
-  PointSetType_t pst=0;
+  CG_GridLocation_t gl=0;
+  CG_PointSetType_t pst=0;
   
   if (!PyArg_ParseTuple(args, "iii",&b,&z,&h))
   {
@@ -1578,8 +1578,8 @@ DbMIDLEVEL_holeRead(DbMIDLEVELObject *self, PyObject *args)
 {
   int b,z,h,npts,nptss,dim;
   npy_intp tsize;
-  PointSetType_t pst;
-  GridLocation_t gl;
+  CG_PointSetType_t pst;
+  CG_GridLocation_t gl;
   int  *pts;
   char *name;
   PyArrayObject *pta;  /* array->data SHOULD be allocated, cgns COPIES */
@@ -1653,7 +1653,7 @@ DbMIDLEVEL_holeWrite(DbMIDLEVELObject *self, PyObject *args)
      Thanks to Numeric Python, we have functions...
   */
   dim=getBaseDim(self,b);
-  if (pst == PointRange)
+  if (pst == CG_PointRange)
   {
     nptsets=PyArray_Size(ptlist)/dim;
     npnts=2;
@@ -1670,8 +1670,8 @@ DbMIDLEVEL_holeWrite(DbMIDLEVELObject *self, PyObject *args)
                     "Bad data: should be an array of ints");
     return NULL;
   }
-  self->last_error=cg_hole_write(self->db_fn,b,z,name,(GridLocation_t)gl,
-                                 (PointSetType_t)pst,
+  self->last_error=cg_hole_write(self->db_fn,b,z,name,(CG_GridLocation_t)gl,
+                                 (CG_PointSetType_t)pst,
                                  nptsets,npnts,(void*)(aa->data),&hid);
   strcpy(self->last_error_message,cg_get_error());
 
@@ -1710,9 +1710,9 @@ DbMIDLEVEL_bocoInfo(DbMIDLEVELObject *self, PyObject *args)
   char *name;
   int  nidx[3]={0,0,0};
   PyObject *tp,*xt,*xs,*xpst,*xnpt,*xndst,*xdt,*xnlf,*xidx;
-  BCType_t bct=0;
-  PointSetType_t pst=0;
-  DataType_t dt=0;
+  CG_BCType_t bct=0;
+  CG_PointSetType_t pst=0;
+  CG_DataType_t dt=0;
   
   if (!PyArg_ParseTuple(args, "iii",&b,&z,&bc))
   {
@@ -1763,9 +1763,9 @@ DbMIDLEVEL_bocoRead(DbMIDLEVELObject *self, PyObject *args)
   int b,z,bc,npt=0,ndst=0,nlf=0,at=0;
   npy_intp dnl[2]={0,0};
   PyObject *tp;
-  BCType_t bct=0;
-  PointSetType_t pst=0;
-  DataType_t dt=0;
+  CG_BCType_t bct=0;
+  CG_PointSetType_t pst=0;
+  CG_DataType_t dt=0;
   void *nml;
   int  *pts;
   char *name;
@@ -1809,11 +1809,11 @@ DbMIDLEVEL_bocoRead(DbMIDLEVELObject *self, PyObject *args)
   {
     switch(dt)
     {
-      case RealDouble:
+      case CG_RealDouble:
         at=PyArray_DOUBLE;
         nml=(double*) malloc(sizeof(double)*nlf);
         break;
-      case RealSingle:
+      case CG_RealSingle:
         at=PyArray_FLOAT;
         nml=(float*) malloc(sizeof(float)*nlf);
         break;
@@ -1890,7 +1890,7 @@ DbMIDLEVEL_bocoWrite(DbMIDLEVELObject *self, PyObject *args)
   }
   if (PyList_Check(ptlist))
   {
-    if (pst == PointRange) 
+    if (pst == CG_PointRange) 
     {
       ptsz=2;
       if ( ptsz!= PyList_Size(ptlist))
@@ -1928,7 +1928,7 @@ DbMIDLEVEL_bocoWrite(DbMIDLEVELObject *self, PyObject *args)
     /* printf("[%d,%d,%d]",apts[i*3+0],apts[i*3+1],apts[i*3+2]);  */
   }
   self->last_error=cg_boco_write(self->db_fn,b,z,bcname,
-                                 (BCType_t)bct,(PointSetType_t)pst,
+                                 (CG_BCType_t)bct,(CG_PointSetType_t)pst,
                                  ptsz,apts,&bcid);
   strcpy(self->last_error_message,cg_get_error());
 
@@ -1993,7 +1993,7 @@ DbMIDLEVEL_bocoNormalWrite(DbMIDLEVELObject *self, PyObject *args)
   self->last_error=cg_boco_normal_write(self->db_fn,b,z,bc,
                                         nix,
                                         flg,
-                                        (DataType_t)dt,
+                                        (CG_DataType_t)dt,
                                         (void*)(array->data));
   strcpy(self->last_error_message,cg_get_error());
 
@@ -2020,7 +2020,7 @@ DbMIDLEVEL_bocoDatasetWrite(DbMIDLEVELObject *self, PyObject *args)
   {
     return NULL;
   }
-  self->last_error=cg_dataset_write(self->db_fn,b,z,bc,dname,(BCType_t)dt,&ix);
+  self->last_error=cg_dataset_write(self->db_fn,b,z,bc,dname,(CG_BCType_t)dt,&ix);
   strcpy(self->last_error_message,cg_get_error());
   
   return PyInt_FromLong(ix);
@@ -2036,7 +2036,7 @@ DbMIDLEVEL_bocoDatasetRead(DbMIDLEVELObject *self, PyObject *args)
 {
   int b,z,bc,dst,df,nf;
   char *name;
-  BCType_t dt;
+  CG_BCType_t dt;
   PyObject *tp;
   
   if (!PyArg_ParseTuple(args, "iiii",&b,&z,&bc,&dst))
@@ -2069,7 +2069,7 @@ DbMIDLEVEL_bocoDataWrite(DbMIDLEVELObject *self, PyObject *args)
   {
     return NULL;
   }
-  self->last_error=cg_bcdata_write(self->db_fn,b,z,bc,dst,(BCDataType_t)dt);
+  self->last_error=cg_bcdata_write(self->db_fn,b,z,bc,dst,(CG_BCDataType_t)dt);
   strcpy(self->last_error_message,cg_get_error());
   
   Py_INCREF(Py_None);
@@ -2183,7 +2183,7 @@ static PyObject *
 DbMIDLEVEL_familyBocoRead(DbMIDLEVELObject *self, PyObject *args)
 {
   int b,f,bc;
-  BCType_t ft;
+  CG_BCType_t ft;
   char *name;
   PyObject *tp;
   
@@ -2215,7 +2215,7 @@ DbMIDLEVEL_familyBocoWrite(DbMIDLEVELObject *self, PyObject *args)
   int b,f,bct,ix;
   
   if (!PyArg_ParseTuple(args, "iisi",&b,&f,&name,&bct)) return NULL;
-  self->last_error=cg_fambc_write(self->db_fn,b,f,name,(BCType_t)bct,&ix);
+  self->last_error=cg_fambc_write(self->db_fn,b,f,name,(CG_BCType_t)bct,&ix);
   strcpy(self->last_error_message,cg_get_error());
 
   return PyInt_FromLong(ix);
@@ -2687,7 +2687,7 @@ DbMIDLEVEL_rigidMotionRead(DbMIDLEVELObject *self, PyObject *args)
 {
   int b,z,r;
   char *name;
-  RigidGridMotionType_t rt=0;
+  CG_RigidGridMotionType_t rt=0;
   PyObject *tp;
   
   if (!PyArg_ParseTuple(args, "iii",&b,&z,&r))
@@ -2713,7 +2713,7 @@ DbMIDLEVEL_arbitraryMotionRead(DbMIDLEVELObject *self, PyObject *args)
 {
   int b,z,r;
   char *name;
-  ArbitraryGridMotionType_t rt=0;
+  CG_ArbitraryGridMotionType_t rt=0;
   PyObject *tp;
   
   if (!PyArg_ParseTuple(args, "iii",&b,&z,&r))
@@ -2745,7 +2745,7 @@ DbMIDLEVEL_rigidMotionWrite(DbMIDLEVELObject *self, PyObject *args)
     return NULL;
   }
   self->last_error=cg_rigid_motion_write(self->db_fn,b,z,name,
-                                         (RigidGridMotionType_t)dt,&ix);
+                                         (CG_RigidGridMotionType_t)dt,&ix);
   strcpy(self->last_error_message,cg_get_error());
   
   return PyInt_FromLong(ix);
@@ -2765,7 +2765,7 @@ DbMIDLEVEL_arbitraryMotionWrite(DbMIDLEVELObject *self, PyObject *args)
     return NULL;
   }
   self->last_error=cg_arbitrary_motion_write(self->db_fn,b,z,name,
-                                             (ArbitraryGridMotionType_t)dt,
+                                             (CG_ArbitraryGridMotionType_t)dt,
                                              &ix);
   strcpy(self->last_error_message,cg_get_error());
   
@@ -2932,7 +2932,7 @@ DbMIDLEVEL_solWrite(DbMIDLEVELObject *self, PyObject *args)
     PyErr_SetString(MIDLEVELErrorObject,"bad argument");
     return NULL;
   }
-  self->last_error=cg_sol_write(self->db_fn,b,z,name,(GridLocation_t)sloc,&s);
+  self->last_error=cg_sol_write(self->db_fn,b,z,name,(CG_GridLocation_t)sloc,&s);
 
   strcpy(self->last_error_message,cg_get_error());
   return PyInt_FromLong(s);
@@ -2951,7 +2951,7 @@ DbMIDLEVEL_solInfo(DbMIDLEVELObject *self, PyObject *args)
   int b,z,s;
   char *name;
   PyObject *tp, *xd, *xs;
-  GridLocation_t sloc=0;
+  CG_GridLocation_t sloc=0;
   
 
   if (!PyArg_ParseTuple(args, "iii",&b,&z,&s)) return NULL;
@@ -3023,7 +3023,7 @@ DbMIDLEVEL_coordInfo(DbMIDLEVELObject *self, PyObject *args)
   int b,z,c;
   char *name;
   PyObject *tp, *xd, *xs;
-  DataType_t dt;
+  CG_DataType_t dt;
   
 
 
@@ -3086,7 +3086,7 @@ DbMIDLEVEL_coordWrite(DbMIDLEVELObject *self, PyObject *args)
   }
 
   self->last_error=cg_coord_write(self->db_fn,b,z,
-                                  (DataType_t)dt,name,fdata,&c);
+                                  (CG_DataType_t)dt,name,fdata,&c);
 
   /* Free new data zone if created by SwapAxes */
   if (swparray)
@@ -3121,7 +3121,7 @@ DbMIDLEVEL_coordRead(DbMIDLEVELObject *self, PyObject *args)
   int   imax[3];
   npy_intp   imax_[3];
   int   b,z,at,sizetot,maxnc,nc,readmode;
-  DataType_t dt;
+  CG_DataType_t dt;
   void *mzone;
 #ifdef CGNS_TRACE
   int i;
@@ -3190,18 +3190,18 @@ DbMIDLEVEL_coordRead(DbMIDLEVELObject *self, PyObject *args)
     PyErr_SetString(MIDLEVELErrorObject,"coordinate name not found in zone");
     return NULL;
   }
-  /*  dt=RealDouble; TODO: should use coord_info there, force double */
+  /*  dt=CG_RealDouble; TODO: should use coord_info there, force double */
   switch(dt)
   {
-    case RealDouble: at=PyArray_DOUBLE; break;
-    case RealSingle: at=PyArray_FLOAT;  break;
-    case Integer:    at=PyArray_INT;    break;
+    case CG_RealDouble: at=PyArray_DOUBLE; break;
+    case CG_RealSingle: at=PyArray_FLOAT;  break;
+    case CG_Integer:    at=PyArray_INT;    break;
     default:
       PyErr_SetString(MIDLEVELErrorObject,"bad data type in CGNS zone");
     return NULL;
   }
   self->last_error=cg_coord_read(self->db_fn,b,z,coordname,
-                                 (DataType_t)dt,imin,imax,mzone);
+                                 (CG_DataType_t)dt,imin,imax,mzone);
   if (self->last_error)
   {
     strcpy(self->last_error_message,cg_get_error());
@@ -3255,7 +3255,7 @@ DbMIDLEVEL_npe(DbMIDLEVELObject *self, PyObject *args)
   int np=0;
   
   if (!PyArg_ParseTuple(args, "i",&et)) return NULL;
-  self->last_error=cg_npe((ElementType_t)et,&np);
+  self->last_error=cg_npe((CG_ElementType_t)et,&np);
   strcpy(self->last_error_message,cg_get_error());
   
   return PyInt_FromLong(np);
@@ -3286,7 +3286,7 @@ DbMIDLEVEL_sectionRead(DbMIDLEVELObject *self, PyObject *args)
   int   b,z,s;
   int   start,end,nbndry,pflag;
   char *name;
-  ElementType_t type;
+  CG_ElementType_t type;
   PyObject *xr;
 
   start=end=nbndry=pflag=0;
@@ -3323,7 +3323,7 @@ DbMIDLEVEL_sectionWrite(DbMIDLEVELObject *self, PyObject *args)
   }
   array=(PyArrayObject*)ar;
   self->last_error=cg_section_write(self->db_fn,b,z,
-                                    name,(ElementType_t)type,start,end,nbndry,
+                                    name,(CG_ElementType_t)type,start,end,nbndry,
                                     (void*)(array->data),&s);
   return PyInt_FromLong(s);
 }
@@ -3362,7 +3362,7 @@ DbMIDLEVEL_elementsRead(DbMIDLEVELObject *self, PyObject *args)
   int *eart, *part;
   int   start,end,nbndry,pflag;
   char *name;
-  ElementType_t type;
+  CG_ElementType_t type;
   
   if (!PyArg_ParseTuple(args, "iii",&b,&z,&s))
   {
@@ -3534,7 +3534,7 @@ DbMIDLEVEL_fieldInfo(DbMIDLEVELObject *self, PyObject *args)
   int b,z,s,f;
   char *name;
   PyObject *tp, *xd, *xs;
-  DataType_t dt=0;
+  CG_DataType_t dt=0;
   
 
   if (!PyArg_ParseTuple(args, "iiii",&b,&z,&s,&f)) return NULL;
@@ -3590,7 +3590,7 @@ DbMIDLEVEL_fieldWrite(DbMIDLEVELObject *self, PyObject *args)
   */
 
   self->last_error=cg_field_write(self->db_fn,b,z,s,
-                                  (DataType_t)dt,name,fdata,&f);
+                                  (CG_DataType_t)dt,name,fdata,&f);
 
   /* Free new data zone if created by numpy_2_fortran */
   if (fdata != array->data) free(fdata);
@@ -3649,15 +3649,15 @@ DbMIDLEVEL_fieldRead(DbMIDLEVELObject *self, PyObject *args)
   switch(dt)
   {
     /* do NOT de-allocate, this is shared by PyArray (not a copy in there) */
-    case RealDouble:
+    case CG_RealDouble:
       at=PyArray_DOUBLE;
       mzone=(void*)malloc(sizeof(double)*sizetot);
      break;
-    case RealSingle:
+    case CG_RealSingle:
       at=PyArray_FLOAT;
       mzone=(void*)malloc(sizeof(float)*sizetot);
       break;
-    case Integer:
+    case CG_Integer:
       at=PyArray_INT;
       mzone=(void*)malloc(sizeof(int)*sizetot);
       break;
@@ -3666,7 +3666,7 @@ DbMIDLEVEL_fieldRead(DbMIDLEVELObject *self, PyObject *args)
     return NULL;
   }
   self->last_error=cg_field_read(self->db_fn,b,z,s,fieldname,
-                                 (DataType_t)dt,imin,imax,mzone);
+                                 (CG_DataType_t)dt,imin,imax,mzone);
   strcpy(self->last_error_message,cg_get_error());
   if (self->last_error)
   {
@@ -3911,7 +3911,7 @@ DbMIDLEVEL_bcWallFunctionWrite(DbMIDLEVELObject *self, PyObject *args)
   int b,z,bc,t;
   
   if (!PyArg_ParseTuple(args, "iiii",&b,&z,&bc,&t)) return NULL;
-  self->last_error=cg_bc_wallfunction_write(self->db_fn,b,z,bc,(WallFunctionType_t)t);
+  self->last_error=cg_bc_wallfunction_write(self->db_fn,b,z,bc,(CG_WallFunctionType_t)t);
   strcpy(self->last_error_message,cg_get_error());
 
   Py_INCREF(Py_None);
@@ -3924,7 +3924,7 @@ DbMIDLEVEL_bcWallFunctionWrite(DbMIDLEVELObject *self, PyObject *args)
 static PyObject *
 DbMIDLEVEL_bcWallFunctionRead(DbMIDLEVELObject *self, PyObject *args)
 {
-  WallFunctionType_t t=0;
+  CG_WallFunctionType_t t=0;
   int b,z,bc;
   
   if (!PyArg_ParseTuple(args, "iii",&b,&z,&bc)) return NULL;
@@ -3945,7 +3945,7 @@ DbMIDLEVEL_bcAreaWrite(DbMIDLEVELObject *self, PyObject *args)
   int b,z,a,t;
   
   if (!PyArg_ParseTuple(args, "iiiifs",&b,&z,&a,&t,&s,&name)) return NULL;
-  self->last_error=cg_bc_area_write(self->db_fn,b,z,a,(AreaType_t)t,s,name);
+  self->last_error=cg_bc_area_write(self->db_fn,b,z,a,(CG_AreaType_t)t,s,name);
   strcpy(self->last_error_message,cg_get_error());
   
   Py_INCREF(Py_None);
@@ -3962,7 +3962,7 @@ DbMIDLEVEL_bcAreaRead(DbMIDLEVELObject *self, PyObject *args)
   char *name;
   float s;
   int b,z,a;
-  AreaType_t t;
+  CG_AreaType_t t;
   PyObject *xr;
   
   if (!PyArg_ParseTuple(args, "iii",&b,&z,&a)) return NULL;
@@ -4043,7 +4043,7 @@ DbMIDLEVEL_dataclassWrite(DbMIDLEVELObject *self, PyObject *args)
   int r;
   
   if (!PyArg_ParseTuple(args, "i",&r)) return NULL;
-  self->last_error=cg_dataclass_write((DataClass_t)r);
+  self->last_error=cg_dataclass_write((CG_DataClass_t)r);
   strcpy(self->last_error_message,cg_get_error());
 
   Py_INCREF(Py_None);
@@ -4057,7 +4057,7 @@ DbMIDLEVEL_dataclassWrite(DbMIDLEVELObject *self, PyObject *args)
 static PyObject *
 DbMIDLEVEL_dataclassRead(DbMIDLEVELObject *self, PyObject *args)
 {
-  DataClass_t r;
+  CG_DataClass_t r;
   
   self->last_error=cg_dataclass_read(&r);
   strcpy(self->last_error_message,cg_get_error());
@@ -4175,7 +4175,7 @@ DbMIDLEVEL_equationsetElecRead(DbMIDLEVELObject *self, PyObject *args)
 
 /* ---------------------------------------------------------------------- */
 /* exponentsWrite: cg_exponents_write
-     dataclass:         RealSingle or RealDouble
+     dataclass:         CG_RealSingle or CG_RealDouble
      exponents:         float/double depending on dataclass *5
    returns nothing
 */
@@ -4198,25 +4198,25 @@ DbMIDLEVEL_exponentsWrite(DbMIDLEVELObject *self, PyObject *args)
     PyErr_SetString(MIDLEVELErrorObject,"Bad 2nd arg size: should be 5");
     return NULL;
   }
-  if (dt == RealDouble)
+  if (dt == CG_RealDouble)
   {
     if (!PyArg_ParseTuple(args, "i(ddddd)",
                           &dt,&ds[0],&ds[1],&ds[2],&ds[3],&ds[4])) return NULL;
     
-    self->last_error=cg_exponents_write((DataType_t)dt,(void*)ds);
+    self->last_error=cg_exponents_write((CG_DataType_t)dt,(void*)ds);
     strcpy(self->last_error_message,cg_get_error());
   }
-  else if (dt == RealSingle)
+  else if (dt == CG_RealSingle)
   {
     if (!PyArg_ParseTuple(args, "i(fffff)",
                           &dt,&fs[0],&fs[1],&fs[2],&fs[3],&fs[4])) return NULL;
-    self->last_error=cg_exponents_write((DataType_t)dt,(void*)&fs);
+    self->last_error=cg_exponents_write((CG_DataType_t)dt,(void*)&fs);
     strcpy(self->last_error_message,cg_get_error());
   }
   else
   {
     PyErr_SetString(MIDLEVELErrorObject,
-                    "First arg should be RealDouble or RealSingle");
+                    "First arg should be CG_RealDouble or CG_RealSingle");
     return NULL;
   }
 
@@ -4232,7 +4232,7 @@ static PyObject *
 DbMIDLEVEL_exponentsInfo(DbMIDLEVELObject *self, PyObject *args)
 {
   PyObject *xr;
-  DataType_t dt;
+  CG_DataType_t dt;
 
   self->last_error=cg_exponents_info(&dt);
   strcpy(self->last_error_message,cg_get_error());
@@ -4251,11 +4251,11 @@ DbMIDLEVEL_exponentsRead(DbMIDLEVELObject *self, PyObject *args)
   PyObject *xr;
   double cd[5]={0.0,0.0,0.0,0.0,0.0};
   float  cf[5]={0.0,0.0,0.0,0.0,0.0};
-  DataType_t dt;
+  CG_DataType_t dt;
   
   self->last_error=cg_exponents_info(&dt);
   strcpy(self->last_error_message,cg_get_error());
-  if (dt == RealDouble)
+  if (dt == CG_RealDouble)
   {
     self->last_error=cg_exponents_read(cd);
     strcpy(self->last_error_message,cg_get_error());
@@ -4273,7 +4273,7 @@ DbMIDLEVEL_exponentsRead(DbMIDLEVELObject *self, PyObject *args)
 
 /* ---------------------------------------------------------------------- */
 /* conversionWrite: cg_conversion_write
-     dataclass:         RealSingle or RealDouble
+     dataclass:         CG_RealSingle or CG_RealDouble
      conversionscale:   float/double depending on dataclass
      conversionoffset:  "
    returns nothing
@@ -4287,22 +4287,22 @@ DbMIDLEVEL_conversionWrite(DbMIDLEVELObject *self, PyObject *args)
   float  fs[2]={0.0,0.0};
   
   if (!PyArg_ParseTuple(args, "iO",&dt,&ocs)) return NULL;
-  if (dt == RealDouble)
+  if (dt == CG_RealDouble)
   {
     if (!PyArg_ParseTuple(args, "i(dd)",&dt,&ds[0],&ds[1])) return NULL;
-    self->last_error=cg_conversion_write((DataType_t)dt,(void*)ds);
+    self->last_error=cg_conversion_write((CG_DataType_t)dt,(void*)ds);
     strcpy(self->last_error_message,cg_get_error());
   }
-  else if (dt == RealSingle)
+  else if (dt == CG_RealSingle)
   {
     if (!PyArg_ParseTuple(args, "i(ff)",&dt,&fs[0],&fs[1])) return NULL;
-    self->last_error=cg_conversion_write((DataType_t)dt,(void*)&fs);
+    self->last_error=cg_conversion_write((CG_DataType_t)dt,(void*)&fs);
     strcpy(self->last_error_message,cg_get_error());
   }
   else
   {
     PyErr_SetString(MIDLEVELErrorObject,
-                    "First arg should be RealDouble or RealSingle");
+                    "First arg should be CG_RealDouble or CG_RealSingle");
     return NULL;
   }
 
@@ -4318,7 +4318,7 @@ static PyObject *
 DbMIDLEVEL_conversionInfo(DbMIDLEVELObject *self, PyObject *args)
 {
   PyObject *xr;
-  DataType_t dt;
+  CG_DataType_t dt;
 
   self->last_error=cg_conversion_info(&dt);
   strcpy(self->last_error_message,cg_get_error());
@@ -4337,11 +4337,11 @@ DbMIDLEVEL_conversionRead(DbMIDLEVELObject *self, PyObject *args)
   PyObject *xr;
   double cd[2]={0.0,0.0};
   float  cf[2]={0.0,0.0};
-  DataType_t dt;
+  CG_DataType_t dt;
   
   self->last_error=cg_conversion_info(&dt);
   strcpy(self->last_error_message,cg_get_error());
-  if (dt == RealDouble)
+  if (dt == CG_RealDouble)
   {
     self->last_error=cg_conversion_read(cd);
     strcpy(self->last_error_message,cg_get_error());
@@ -4367,11 +4367,11 @@ DbMIDLEVEL_unitsWrite(DbMIDLEVELObject *self, PyObject *args)
   int m,l,t,k,a;
   
   if (!PyArg_ParseTuple(args, "iiiii",&m,&l,&t,&k,&a)) return NULL;
-  self->last_error=cg_units_write((MassUnits_t)m,
-                                  (LengthUnits_t)l,
-                                  (TimeUnits_t)t,
-                                  (TemperatureUnits_t)k,
-                                  (AngleUnits_t)a);
+  self->last_error=cg_units_write((CG_MassUnits_t)m,
+                                  (CG_LengthUnits_t)l,
+                                  (CG_TimeUnits_t)t,
+                                  (CG_TemperatureUnits_t)k,
+                                  (CG_AngleUnits_t)a);
   strcpy(self->last_error_message,cg_get_error());
 
   Py_INCREF(Py_None);
@@ -4386,11 +4386,11 @@ static PyObject *
 DbMIDLEVEL_unitsRead(DbMIDLEVELObject *self, PyObject *args)
 {
   PyObject *xr;
-  TimeUnits_t t;
-  LengthUnits_t l;
-  MassUnits_t m;
-  TemperatureUnits_t k;
-  AngleUnits_t a;
+  CG_TimeUnits_t t;
+  CG_LengthUnits_t l;
+  CG_MassUnits_t m;
+  CG_TemperatureUnits_t k;
+  CG_AngleUnits_t a;
   
   self->last_error=cg_units_read(&m,&l,&t,&k,&a);
   strcpy(self->last_error_message,cg_get_error());
@@ -4401,7 +4401,7 @@ DbMIDLEVEL_unitsRead(DbMIDLEVELObject *self, PyObject *args)
 
 /* ---------------------------------------------------------------------- */
 /* nuserdata: cg_nuser_data
-   returns number of UserDefinedData_t children under the current node
+   returns number of CG_UserDefinedData_t children under the current node
 */
 static PyObject *
 DbMIDLEVEL_nuserdata(DbMIDLEVELObject *self, PyObject *args)
@@ -4465,7 +4465,7 @@ DbMIDLEVEL_userdataWrite(DbMIDLEVELObject *self, PyObject *args)
 
 /* ---------------------------------------------------------------------- */
 /* narrays: cg_narrays
-   returns number of DataArray_t children under the current node
+   returns number of CG_DataArray_t children under the current node
 */
 static PyObject *
 DbMIDLEVEL_narrays(DbMIDLEVELObject *self, PyObject *args)
@@ -4488,7 +4488,7 @@ DbMIDLEVEL_arrayRead(DbMIDLEVELObject *self, PyObject *args)
   PyArrayObject *array;  /* array->data SHOULD be allocated, cgns COPIES */
   void *mzone;
   int   c,dd,sizetot,at;
-  DataType_t dt;
+  CG_DataType_t dt;
   npy_intp   dv[3]={0,0,0};
   int  dv_[3]={0,0,0}; 
   char  name[CGNSMAXNAMESIZE];
@@ -4530,19 +4530,19 @@ DbMIDLEVEL_arrayRead(DbMIDLEVELObject *self, PyObject *args)
   /* do NOT de-allocate, this is shared by PyArray (not a copy in there) */
   switch(dt)
   {
-    case RealDouble:
+    case CG_RealDouble:
       at=PyArray_DOUBLE;
       mzone=(void*)malloc(sizeof(double)*sizetot);
       break;
-    case RealSingle:
+    case CG_RealSingle:
       at=PyArray_FLOAT;
       mzone=(void*)malloc(sizeof(float)*sizetot);
       break;
-    case Integer:
+    case CG_Integer:
       at=PyArray_INT;
       mzone=(void*)malloc(sizeof(int)*sizetot);
       break;
-    case Character:
+    case CG_Character:
       at=PyArray_UBYTE;
       mzone=(void*)malloc(sizeof(char)*sizetot);
       break;      
@@ -4553,7 +4553,7 @@ DbMIDLEVEL_arrayRead(DbMIDLEVELObject *self, PyObject *args)
   
 #ifdef CGNS_TRACE
   printf("## array read [%s] type[%d] dim[%d](%dx%dx%d)=%d\n",
-         name,(DataType_t)dt,dd,dv[0],dv[1],dv[2],sizetot);fflush(stdout);
+         name,(CG_DataType_t)dt,dd,dv[0],dv[1],dv[2],sizetot);fflush(stdout);
   printf("## last error: %s\n",cg_get_error());
 #endif  
   self->last_error=cg_array_read(c,mzone);
@@ -4616,13 +4616,13 @@ DbMIDLEVEL_arrayWrite(DbMIDLEVELObject *self, PyObject *args)
 
 #ifdef CGNS_TRACE
   printf("## array write [%s] type[%d] dim[%d](%dx%dx%d)=%d\n",
-         name,(DataType_t)dt,dd,ddim[0],ddim[1],ddim[2],sizetot);
+         name,(CG_DataType_t)dt,dd,ddim[0],ddim[1],ddim[2],sizetot);
   fflush(stdout);
   printf("## last error: %s\n",cg_get_error());
 #endif  
 
   array=(PyArrayObject*)ar;
-  self->last_error=cg_array_write(name,(DataType_t)dt,dd,ddim
+  self->last_error=cg_array_write(name,(CG_DataType_t)dt,dd,ddim
                                   ,(void*)(array->data));
 
   if (self->last_error)
@@ -4645,7 +4645,7 @@ static PyObject *
 DbMIDLEVEL_arrayInfo(DbMIDLEVELObject *self, PyObject *args)
 {
   int   c,dd;
-  DataType_t  dt;
+  CG_DataType_t  dt;
   int   dv[3]={0,0,0};
   char  name[CGNSMAXNAMESIZE];
   PyObject *tpl;

@@ -6,9 +6,9 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 #
-import DAX.db.connect as dx
-import DAX.exceptions as ex
-import DAX.utils      as ut
+import CGNS.DAT.db.connect as dx
+import CGNS.DAT.exceptions as ex
+import CGNS.DAT.utils      as ut
 #
 import getopt
 daxQToptionError="daxQToptionError"

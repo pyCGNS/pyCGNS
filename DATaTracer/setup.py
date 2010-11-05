@@ -5,14 +5,6 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 # 
-
-# --- FORCE QUIT THIS MODULE IS NOT READY
-import sys
-print "### pyCGNS: WARNING you cannot use DAT now - wait next release"
-print "### pyCGNS: WARNING skip DAT install"
-sys.exit(1)
-# ---
-
 import os
 from distutils.core import setup, Extension
 
@@ -37,9 +29,9 @@ packages     = ['CGNS.DAT',
                 'CGNS.DAT.db',
                 'CGNS.DAT.db.dbdrivers',                
                 'CGNS.DAT.demo'],
-scripts      = ['CGNS/DAT/tools/daxDB',
+scripts      = ['CGNS/DAT/tools/CGNS.DAT',
                 'CGNS/DAT/tools/daxQT',
-                'CGNS/DAT/tools/daxET'],
+                'CGNS/DAT/tools/CGNS.DAT.create'],
 cmdclass={'clean':setuputils.clean}
 ) # close setup
 
