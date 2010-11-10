@@ -1,20 +1,10 @@
-
+#  -------------------------------------------------------------------------
+#  pyCGNS.APP - Python package for CFD General Notation System - NAVigater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 import string
-
-def checkPath(path):
-  return 1
-
-def getValueByPath(path,tree): # not bulletproof
-  n=getNodeFromPath(path.split('/'),tree)
-  if (n==-1): return None
-  return n[1]
-
-def getNodeByPath(path,tree):
-  if (not checkPath(path)): return None
-  if (path[0]=='/'): path=path[1:]
-  n=getNodeFromPath(path.split('/'),tree)
-  if (n==-1): return None
-  return n
 
 def getAllNodesByTypeList(typelist,tree):
   if (tree[3] != typelist[0]): return None
@@ -31,9 +21,3 @@ def getAllNodesFromTypeList(typelist,node,path,result):
         getAllNodesFromTypeList(typelist[1:],c[2],"%s/%s"%(path,c[0]),result)
   return result
 
-def getNodeFromPath(path,node):
-  for c in node[2]:
-    if (c[0] == path[0]):
-      if (len(path) == 1): return c
-      return getNodeFromPath(path[1:],c)
-  return -1

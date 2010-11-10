@@ -21,7 +21,6 @@ G___=s7globals.s7G
 import s7viewControl
 import s7utils
 import s7treeFingerPrint
-import CGNS.NAV.supervisor.s7parser as s7parser
 
 # --------------------------------------------------------------------
 class wWindoz:

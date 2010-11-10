@@ -5,9 +5,4 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 #
-__version__=1
-__release__=1
-__vid__="%d.%d"%(__version__,__release__)
-__doc__="""pyCCCCC (pyC5) - v%d.%s - CGNS Compliant and Customizable Checker and Code-generator"""%(__version__,__release__)
-
 pass

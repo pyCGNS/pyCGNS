@@ -8,7 +8,7 @@ from CGNS.pyCGNSconfig import version as __vid__
 import CGNS.NAV.gui.s7globals
 G___=CGNS.NAV.gui.s7globals.s7G
 
-import s7parser
+import CGNS.VAL.parse.PYparse as parser
 import CGNS.NAV.gui.s7utils as s7u
 import re
 import imp
@@ -102,6 +102,23 @@ class s7Query:
         pass
       return (not (match == None))
 
+import CGNS.VAL.grammars.SIDSbase
+# --------------------------------------------------
+def checkTree(path,node,parent,tree,check,log):
+  parser=CGNS.VAL.grammars.SIDSbase.SIDSpython()
+  return parser.checkTree(path,node,parent,tree,check,log)
+
+# --------------------------------------------------
+def getStatusForThisNode(pth,node,parent,tree):
+  parser=CGNS.VAL.grammars.SIDSbase.SIDSpython()
+  return parser.getStatusForThisNode(pth,node,parent,tree)
+
+# --------------------------------------------------
+def getEnumerateList(node):
+  parser=CGNS.VAL.grammars.SIDSbase.SIDSpython()
+  return parser.getEnumerateList(node)
+
+# --------------------------------------------------  
 def run(args):
   filename=sys.argv[1]
   import CGNS
@@ -110,6 +127,6 @@ def run(args):
   parent=None
   strlog=s7DefaultLog()
   for node in tree[2]:
-    s7parser.checkTree('/'+node[0],node,parent,tree,check=1,log=strlog)
+    parser.checkTree('/'+node[0],node,parent,tree,1,strlog)
 
 # --------------------------------------------------------------------

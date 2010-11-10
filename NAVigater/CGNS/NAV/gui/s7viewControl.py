@@ -23,7 +23,7 @@ import s7globals
 G___=s7globals.s7G
 
 import s7treeFingerPrint
-import CGNS.NAV.supervisor.s7parser as s7parser
+import CGNS.VAL.parse.PYparse as s7parser
 import s7treeSimple
 import s7tableSimple
 import s7patternBrowser

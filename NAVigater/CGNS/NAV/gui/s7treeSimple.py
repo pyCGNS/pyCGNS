@@ -18,10 +18,12 @@ import numpy as NY
 import s7globals
 G___=s7globals.s7G
 
+import CGNS.PAT.cgnsutils  as s7parser
+from   CGNS.NAV.supervisor import s7check
+
 import s7viewControl
 import s7utils
 import s7treeFingerPrint
-import CGNS.NAV.supervisor.s7parser as s7parser
 import s7windoz
 import s7linkView
 import s7operateView
@@ -903,9 +905,9 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       ptlist=self.findNodeFromPath(currentpath)[2]
       cpath='/'
     for nn in ptlist:
-      rcheck+=s7parser.checkTree(cpath+nn[0],nn,
-                                 self._parent,self.CGNStarget,
-                                 log=self._control.logWindow)
+      rcheck+=s7check.checkTree(cpath+nn[0],nn,
+                                self._parent,self.CGNStarget,
+                                1,self._control.logWindow)
     if (self._parent=='/'):
       for c in rcheck:
         c[0]='/%s'%(c[0])
@@ -979,7 +981,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     if (not s7utils.canBeShown(node[1])): return
     if (self._parent):
       currentpath=string.join(self._parent.split('/')[:-1],'/')+'/'+currentpath
-    vlist=s7parser.getEnumerateList(node)
+    vlist=s7check.getEnumerateList(node)
     if (vlist):
       wnew=self.wEditEnumerate(item,node,self,currentpath,vlist)
     else:
@@ -1131,9 +1133,9 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
             else:            
               pnode=s7parser.getNodeFromPath(ppath.split('/')[1:],
                                             self.CGNStarget)
-            imode=s7parser.getStatusForThisNode(ppath,pnode,self._parent,
+            imode=s7check.getStatusForThisNode(ppath,pnode,self._parent,
                                                 self.CGNStarget)
-            if (imode[0] in ['keyword']):
+            if (imode[0]):
               tktree.itemelement_config(it,self.col_graph,self.el_text1,
                                         text=pnode[0],
                                         datatype=STRING, draw=True)
@@ -1354,7 +1356,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
   def getSIDSelement(self,tktree,pth,node,item):
     enew = tktree.create_item(parent=item, button=1, open=0)[0]
 
-    imode=s7parser.getStatusForThisNode(pth,node,self._parent,self.CGNStarget)
+    imode=s7check.getStatusForThisNode(pth,node,self._parent,self.CGNStarget)
     self._paths[str(enew)]=pth
     
     tktree.itemstate_set(enew,'!leaf')
@@ -1383,7 +1385,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     else:   
       tktree.itemstyle_set(enew, self.col_graph, self.st_folder)
 
-    if (imode[0] in ['keyword']):
+    if (imode[0]):
       tktree.itemelement_config(enew, self.col_graph, self.el_text1,
                                 text=node[0], datatype=STRING, draw=True)
       tktree.itemelement_config(enew, self.col_graph, self.el_text4,
