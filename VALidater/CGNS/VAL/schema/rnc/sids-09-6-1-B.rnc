@@ -1,4 +1,0 @@
-WallFunctionType_t =
- "Null"        |
- "Generic"     |
- "UserDefined"

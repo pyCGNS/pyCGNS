@@ -1,8 +1,0 @@
-DataClass_t = 
- "Null"                          |
- "Dimensional"                   |
- "NormalizedByDimensional"       |
- "NormalizedByUnknownDimensional"|
- "NondimensionalParameter"       |
- "DimensionlessConstant"         |       
- "UserDefined"           

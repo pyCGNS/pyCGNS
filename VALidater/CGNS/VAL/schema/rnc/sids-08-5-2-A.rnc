@@ -1,8 +1,0 @@
-AverageInterface_t = element AverageInterface_t
-{
- attribute Name {Name_t},
- ( Descriptor_t *
- & AverageInterfaceType_t 
- & UserDefinedData_t *                     
-)                    
-}

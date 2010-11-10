@@ -1,9 +1,0 @@
- <BC_t Name="BC1"  
-       IndexDimension="3"  
-       PhysicalDimension="3"  
-       BCType="BCSymmetryPlane"  >
-   <PointRange_t Name="PointRange"  
-		 IndexDimension="3"  
-		 Begin="[1, 1, 1]"  
-		 End="[1, 9, 17]" />
- </BC_t>

@@ -1,9 +1,0 @@
-GridConnectivityProperty_t = element GridConnectivityProperty_t
-{
- attribute Name {Name_t},
- ( Descriptor_t *
- & Periodic_t ?
- & AverageInterface_t ?
- & UserDefinedData_t *                     
- )
-}

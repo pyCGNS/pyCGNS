@@ -1,5 +1,0 @@
-DataConversion_t = element DataConversion_t{
- attribute Name             {Name_t},
- attribute ConversionScale  {xsd:float},
- attribute ConversionOffset {xsd:float}
-}

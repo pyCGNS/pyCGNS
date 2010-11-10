@@ -1,7 +1,0 @@
-<CGNSTree CGNSLibraryVersion="1.0" >
-  <CGNSBase_t Name="Base" PhysicalDimension="3" CellDimension="2" SimulationType="UserDefined" >
-    <Zone_t Name="Zone-001" PhysicalDimension="3" CellDimension="2" ZoneType="Unstructured" VertexSize="[3,5,7]"
-  	CellSize="[2,4,6]"
-  	VertexSizeBoundary="[0,0,0]">    </Zone_t>
-  </CGNSBase_t>
-</CGNSTree>

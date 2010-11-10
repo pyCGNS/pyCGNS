@@ -1,8 +1,0 @@
-GeometryFormat_t =
- "Null"          |
- "NASA-IGES"     |
- "SDRC"          |
- "Unigraphics"   |
- "ProEngineer"   |
- "ICEM-CFD"      |
- "UserDefined"

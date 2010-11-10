@@ -1,6 +1,0 @@
-Rind_t = element Rind_t 
-{
- attribute Name           {xsd:string "RindPlanes"},
- attribute IndexDimension {DimensionInteger3D_t},
- attribute Dimension      {xsd:integer}
-}

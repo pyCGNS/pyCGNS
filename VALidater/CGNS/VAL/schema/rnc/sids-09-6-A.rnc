@@ -1,9 +1,0 @@
-BCProperty_t = element BCProperty_t
-{
- attribute Name {Name_t},
- ( Descriptor_t *
- & WallFunction_t ?
- & Area_t ?
- & UserDefinedData_t  *
- )
-} 
