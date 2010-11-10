@@ -9,19 +9,19 @@
 # ------------------------------------------------------------
 
 #
-from   string              import *
+from   string                   import *
+import CGNS.DAT.db.adfutils     as dxUT
+import CGNS.DAT.db.foreignKeys  as dxFK
 from   CGNS.DAT.utils           import *
 from   CGNS.DAT.exceptions      import *
-import CGNS.DAT.db.foreignKeys  as dxFK
-import CGNS.DAT.db.adfutils     as dxUT
 import CGNS.DAT.utils           as ut
 import CGNS
-import numpy            as N
+import numpy                    as NPY
 # ----------------------------------------------------------------------
-ddefault=N.array(tuple("00/00/0000 00:00:00"),dtype='S1')
-sdefault=N.array(tuple("<NO VALUE>"),dtype='S1')
-idefault=N.array(-1,N.int32)
-fdefault=N.array(-1.,N.float64)
+ddefault=NPY.array(tuple("00/00/0000 00:00:00"),dtype='S1')
+sdefault=NPY.array(tuple("<NO VALUE>"),dtype='S1')
+idefault=NPY.array(-1,NPY.int32)
+fdefault=NPY.array(-1.,NPY.float64)
 #
 # --- what should be found as Meta data, default values if it has to be created
 basetitle       = '.MetaData/Title'
@@ -58,9 +58,9 @@ modificationdate            : ddefault,
 '.MetaData/Platform':         sdefault,
 '.MetaData/Memory':           sdefault,
 '.MetaData/Time':             sdefault,
-owner:                        N.array(tuple('X'),dtype='S1'),
-policy:                       N.array(tuple('NONE'),dtype='S1'),
-status:                       N.array(tuple('DRAFT'),dtype='S1'),
+owner:                        NPY.array(tuple('X'),dtype='S1'),
+policy:                       NPY.array(tuple('NONE'),dtype='S1'),
+status:                       NPY.array(tuple('DRAFT'),dtype='S1'),
 version:                      idefault,
 release:                      idefault,
 change:                       idefault,

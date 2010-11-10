@@ -15,7 +15,7 @@ import numpy as Num
 import re
 
 __checkready=1
-__keywordlist=CK.names
+__keywordlist=CK.cgnsnames
 
 # --------------------------------------------------
 def hasFortranFlag(node):

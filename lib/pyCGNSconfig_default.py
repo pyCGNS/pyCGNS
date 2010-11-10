@@ -38,8 +38,8 @@ HDF5_EXTRA_ARGS       = []
 MLL_PATH_LIBRARIES    = []
 MLL_LINK_LIBRARIES    = ['cgns']
 MLL_PATH_INCLUDES     = []
-MLL_VERSION           = '2.5'
-MLL_EXTRA_ARGS        = ['-DLEGACY_SUPPORT']
+MLL_VERSION           = '3.0'
+MLL_EXTRA_ARGS        = ['-DCGNS_SCOPE_ENUMS']#['-DLEGACY_SUPPORT']
 
 NUMPY_VERSION         = '1.4'
 NUMPY_PATH_INCLUDES   = ['%s/lib/python%s/site-packages/numpy/core/include'\

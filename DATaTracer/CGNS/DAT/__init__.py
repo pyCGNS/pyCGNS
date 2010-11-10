@@ -11,5 +11,5 @@ __vid__="%d.%d"%(__version__,__release__)
 __doc__="""CGNS.DAT - v%d.%s - Data eXchange and Archival for CCGNS"""\
          %(__version__,__release__)
 #
-import CGNS.DAT.db
+pass
 #

@@ -4,9 +4,6 @@
 #  -------------------------------------------------------------------------
 #  $Release$
 #  -------------------------------------------------------------------------
-# ------------------------------------------------------------
-# pyDAX - DBMS schema - Meta data
-# ------------------------------------------------------------
 #
 # This file can be configured for your own existing DBMS
 # Some attribute names can be changed (foreign keys)
@@ -19,12 +16,11 @@ cgnsPlatformTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsPlatform (
   -- ---------------------------------------------------------
-  id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id          INT UNSIGNED,
   nickname    varchar(32),              
   description text DEFAULT '' NOT NULL,
   -- ---------------------------------------------------------
-     PRIMARY KEY (id),
-     INDEX cgnsPlatformIX (id)
+     PRIMARY KEY (id)
   -- ---------------------------------------------------------
   )
 """
@@ -33,12 +29,11 @@ cgnsPerfMeasureTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsPerfMeasure (
   -- ---------------------------------------------------------
-  id      INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id      INT UNSIGNED,
   time    varchar(32),
   memory  varchar(32),
   -- ---------------------------------------------------------
-     PRIMARY KEY(id),
-     INDEX cgnsPerfMeasureIX (id)
+     PRIMARY KEY(id)
   -- ---------------------------------------------------------
   )
 """
@@ -47,7 +42,7 @@ cgnsPDMDataTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsPDMData (
   -- ---------------------------------------------------------
-  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id            INT UNSIGNED,
   entry_id      INT UNSIGNED NULL,
   fileversion   INT UNSIGNED,
   filerelease   INT UNSIGNED,
@@ -60,11 +55,9 @@ cgnsPDMDataTable="""
   modified      BOOL,
   -- ---------------------------------------------------------
      PRIMARY KEY(id),
-     INDEX cgnsPDMDataIX    (id),
-     INDEX cgnsPDMDataIXfke (entry_id),
      CONSTRAINT daxctrl_c11 FOREIGN KEY (entry_id)
                             REFERENCES cgnsEntry(id)
-                            ON DELETE CASCADE,
+                            ON DELETE CASCADE
   -- ---------------------------------------------------------
   )
 """
@@ -73,7 +66,7 @@ cgnsSystemTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsSystem (
   -- ---------------------------------------------------------
-  id               INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id               INT UNSIGNED,
   entry_id         INT UNSIGNED NULL,
   creationdate     DATE,
   modificationdate DATE,
@@ -82,11 +75,6 @@ cgnsSystemTable="""
   pdm_id           INT UNSIGNED NULL,
   -- ---------------------------------------------------------
      PRIMARY KEY(id),
-     INDEX cgnsSystemIX     (id),
-     INDEX cgnsSystemIXfke  (entry_id),
-     INDEX cgnsSystemIXfkp  (platform_id),
-     INDEX cgnsSystemIXfkm  (perfmeasure_id),
-     INDEX cgnsSystemIXfkv  (pdm_id),
      CONSTRAINT daxctrl_c12 FOREIGN KEY (entry_id)
                             REFERENCES cgnsEntry(id)
                             ON DELETE CASCADE,
@@ -108,7 +96,7 @@ cgnsTestTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsTest (
   -- ---------------------------------------------------------
-  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id            INT UNSIGNED,
   entry_id      INT UNSIGNED NULL,
   number        varchar(32) NOT NULL,
   geometry      varchar(32) NOT NULL,
@@ -116,35 +104,21 @@ cgnsTestTable="""
   remarks       text DEFAULT '' NOT NULL,
   -- ---------------------------------------------------------
      PRIMARY KEY(id),
-     INDEX cgnsTestIX       (id),
-     INDEX cgnsTestIXfke    (entry_id),
-     INDEX cgnsTestIXfkf    (family_id)
-  -- ---------------------------------------------------------
-  )
-"""
-cgnsTestForeignKey1="""
-  -- ---------------------------------------------------------
-     ALTER TABLE cgnsTest ADD
      CONSTRAINT daxctrl_c16 FOREIGN KEY (entry_id)
                             REFERENCES cgnsEntry(id)
-                            ON DELETE CASCADE
-  -- ---------------------------------------------------------
-"""
-cgnsTestForeignKey2="""
-  -- ---------------------------------------------------------
-     ALTER TABLE cgnsTest ADD
+                            ON DELETE CASCADE,
      CONSTRAINT daxctrl_c17 FOREIGN KEY (family_id)
                             REFERENCES cgnsTestFamily(id)
                             ON DELETE RESTRICT
   -- ---------------------------------------------------------
+  )
 """
-# ------------------------------------------------------------
 cgnsTestFamilyTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsTestFamily (
   -- ---------------------------------------------------------
-  id           INT UNSIGNED NOT NULL
-               AUTO_INCREMENT PRIMARY KEY,
+  id           INT UNSIGNED
+               PRIMARY KEY,
   name         varchar(32) NOT NULL,
   description  text DEFAULT '' NOT NULL
   -- ---------------------------------------------------------
@@ -155,14 +129,27 @@ cgnsLogTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsLog (
   -- ---------------------------------------------------------
-  id           INT UNSIGNED NOT NULL
-               AUTO_INCREMENT PRIMARY KEY,
+  id           INT UNSIGNED
+               PRIMARY KEY,
   connection   varchar(32) NOT NULL,
   stamp        DATETIME,
   log          text
   -- ---------------------------------------------------------
   )
 """
+# ------------------------------------------------------------
+cgnsPTx="CREATE UNIQUE INDEX cgnsPlatformIX on cgnsPlatform (id)"
+cgnsPMx="CREATE UNIQUE INDEX cgnsPerfMeasureIX on cgnsPerfMeasure(id)"
+cgnsPDx="CREATE UNIQUE INDEX cgnsPDMDataIX on cgnsPDMData (id)"
+cgnsPDxfke="CREATE UNIQUE INDEX cgnsPDMDataIXfke on cgnsPDMData(entry_id)"
+cgnsSx="CREATE UNIQUE INDEX cgnsSystemIX on cgnsSystem (id)"
+cgnsSxfke="CREATE UNIQUE INDEX cgnsSystemIXfke on cgnsSystem (entry_id)"
+cgnsSxfkp="CREATE UNIQUE INDEX cgnsSystemIXfkp on cgnsSystem (platform_id)"
+cgnsSxfkm="CREATE UNIQUE INDEX cgnsSystemIXfkm on cgnsSystem (perfmeasure_id)"
+cgnsSxfkv="CREATE UNIQUE INDEX cgnsSystemIXfkv on cgnsSystem (pdm_id)"
+cgnsTx="CREATE UNIQUE INDEX cgnsTestIX on cgnsTest (id)"
+cgnsTxfke="CREATE UNIQUE INDEX cgnsTestIXfke on cgnsTest (entry_id)"
+cgnsTxfkf="CREATE UNIQUE INDEX cgnsTestIXfkf on cgnsTest (family_id)"
 # ------------------------------------------------------------
 # Table list is a dictionnary ;)
 tableList=[
@@ -173,8 +160,20 @@ tableList=[
   ['cgnsPDMData',          cgnsPDMDataTable],    
   ['cgnsSystem',           cgnsSystemTable],
   ['cgnsLog',              cgnsLogTable],      
-  ['cgnsTestForeignKey1',  cgnsTestForeignKey1],    
-  ['cgnsTestForeignKey2',  cgnsTestForeignKey2],    
+]
+indexList=[
+  ['cgnsPTx',              cgnsPTx],
+  ['cgnsPMx',              cgnsPMx],
+  ['cgnsPDx',              cgnsPDx],
+  ['cgnsPDxfke',           cgnsPDxfke],
+  ['cgnsSx',               cgnsSx],
+  ['cgnsSxfke',            cgnsSxfke],
+  ['cgnsSxfkp',            cgnsSxfkp],
+  ['cgnsSxfkm',            cgnsSxfkm],
+  ['cgnsSxfkv',            cgnsSxfkv],
+  ['cgnsTx',               cgnsTx],
+  ['cgnsTxfke',            cgnsTxfke],
+  ['cgnsTxfkf',            cgnsTxfkf],
 ]
 #
 # ------------------------------------------------------------

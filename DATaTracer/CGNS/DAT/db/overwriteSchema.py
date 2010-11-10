@@ -26,6 +26,12 @@ def dropTableList(tablelist,db):
     stmt = "DROP TABLE IF EXISTS %s"%tb[0]
     db.runSQL(stmt)
 #
+def dropIndexList(indexlist,db):
+  for tb in indexlist:
+    pdebug("Drop %s"%tb[0])
+    stmt = "DROP INDEX IF EXISTS %s"%tb[0]
+    db.runSQL(stmt)
+#
 def createTableList(tablelist,db):
   for tb in tablelist:
     pdebug("Create %s"%tb[0])
@@ -53,6 +59,9 @@ def overWrite(dbname):
   dropTableList(CGNS.DAT.db.db01.tableList,db)
   dropTableList(CGNS.DAT.db.db02.tableList,db)
   dropTableList(CGNS.DAT.db.db03.tableList,db)  
+  dropIndexList(CGNS.DAT.db.db01.indexList,db)
+  dropIndexList(CGNS.DAT.db.db02.indexList,db)
+  dropIndexList(CGNS.DAT.db.db03.indexList,db)  
   #
   createTableList(CGNS.DAT.db.db01.tableList,db)
   createTableList(CGNS.DAT.db.db02.tableList,db)

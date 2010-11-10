@@ -13,15 +13,15 @@ from CGNS.DAT.exceptions      import *
 defaultOwners=[
   """INSERT \
      INTO cgnsOwner (organisation,name,site,description) \
-     VALUES (%s,%s,%s,%s)""",
+     VALUES (?,?,?,?)""",
   (
     ("UNKNOWN",    "UNKNOWN",    "X",   "<Value has not been set>"),
-    ("ONERA",      "DSNA/ELSA",  "E",   "Code Validation"),    
-    ("ONERA",      "DSNA/MNEI",  "E",   "Numerical Methods"),
-    ("ONERA",      "DAAP/H2T" ,  "E",   "CHANCE project"),
-    ("DLR",        "AS",         "BS",  "CHANCE project"),
-    ("Eurocopter", "-",          "F",   "CHANCE project"),
-    ("Eurocopter", "-",          "D",   "CHANCE project"),
+    ("ONERA",      "DSNA/CS2A",  "E",   "Code Validation"),    
+    ("ONERA",      "DSNA/ACOU",  "E",   "Acoustics"),
+    ("ONERA",      "DAAP/H2T" ,  "E",   "Applied Dept."),
+    ("DLR",        "AS",         "BS",  "German Dept."),
+    ("Eurocopter", "-",          "F",   "Customer"),
+    ("Eurocopter", "-",          "D",   "Customer"),
   )
 ]    
 #

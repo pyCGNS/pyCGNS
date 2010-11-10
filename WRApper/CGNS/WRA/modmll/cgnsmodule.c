@@ -5264,7 +5264,7 @@ midlevel_new(PyObject *self, PyObject *args)
 {
   DbMIDLEVELObject *rv;
   char	       *name;            
-  int           mode = MODE_READ; /* cgnslib.h value */
+  int           mode = CG_MODE_READ; /* cgnslib.h value */
 
   if (!PyArg_ParseTuple(args, "si",&name,&mode)) return NULL;
   rv = newDbMIDLEVELObject(name,mode);

@@ -5,7 +5,7 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 #
-import CGNS.DAT.exceptions as ex
+import CGNS.DAT.exceptions as dxEX
 #
 DAXtraceFlag=None
 # ----------------------------------------------------------------------
@@ -83,9 +83,9 @@ def checkDAXID(id):
   and  (id[3] == '=' ) ):
     for cid in id[4:]:
       if (cid not in DAXID_IDBODY):
-        raise ex.DAXBadIDString(id)
+        raise dxEX.DAXBadIDString(id)
   else:
-    raise ex.DAXBadIDString(id)
+    raise dxEX.DAXBadIDString(id)
 # ----------------------------------------------------------------------
 def xn(filename):
   id=filename.split('/')[-1][:-5]
@@ -105,17 +105,17 @@ def tn(pth,id,cp):
 def checkPath(path):
   import os.path
   if (not os.path.isdir(path)):
-    raise ex.DAXNoSuchPath(path)
+    raise dxEX.DAXNoSuchPath(path)
 # ----------------------------------------------------------------------
 def checkExport(path,id,cp):
   import os.path
   if (not os.path.isfile(tn(path,id,cp))):
-    raise ex.DAXNoSuchCGNSFile(tn(path,id,cp))
+    raise dxEX.DAXNoSuchCGNSFile(tn(path,id,cp))
 # ----------------------------------------------------------------------
 def checkFile(id,path):
   import os.path
   if (not os.path.isfile(dn(path,id))):
-    raise ex.DAXNoSuchCGNSFile(dn(path,id))
+    raise dxEX.DAXNoSuchCGNSFile(dn(path,id))
 # ----------------------------------------------------------------------
 def transAsPossible(s):
   import string

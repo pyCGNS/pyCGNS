@@ -15,7 +15,7 @@ cgnsBaseInfoTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsBaseInfo (
   -- ---------------------------------------------------------
-  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id             INT UNSIGNED,
   entry_id       INT UNSIGNED NULL,
   name           varchar(32) NOT NULL,
   title          varchar(64) NOT NULL,
@@ -29,10 +29,6 @@ cgnsBaseInfoTable="""
   floweq_id      INT UNSIGNED NULL,
   -- ---------------------------------------------------------
      PRIMARY KEY (id),
-     INDEX cgnsBaseInfoIX    (id),
-     INDEX cgnsBaseInfoIXfke (entry_id),
-     INDEX cgnsBaseInfoIXfkr (reference_id),
-     INDEX cgnsBaseInfoIXfkf (floweq_id),     
      CONSTRAINT daxctrl_c21  FOREIGN KEY (entry_id)
                              REFERENCES cgnsEntry(id)
                              ON DELETE CASCADE,
@@ -49,80 +45,51 @@ cgnsReferenceInfoTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsReferenceInfo (
   -- ---------------------------------------------------------
-  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id             INT UNSIGNED,
   base_id        INT UNSIGNED NULL,
   attlist_id     INT UNSIGNED NULL,
   ReferenceStateDescription   varchar(32) NOT NULL,
   -- ---------------------------------------------------------
      PRIMARY KEY (id),
-     INDEX cgnsReferenceInfoIX    (id),
-     INDEX cgnsReferenceInfoIXb   (base_id),
-     INDEX cgnsReferenceInfoIXa   (attlist_id)          
-  -- ---------------------------------------------------------
-  )
-"""
-cgnsReferenceInfoForeignKey1="""
-  -- ---------------------------------------------------------
-     ALTER TABLE cgnsReferenceInfo ADD
      CONSTRAINT daxctrl_c26  FOREIGN KEY (attlist_id)
                              REFERENCES cgnsAttributeList(id)
                              ON DELETE NO ACTION
-  -- ---------------------------------------------------------
-"""
-cgnsReferenceInfoForeignKey2="""
-  -- ---------------------------------------------------------
-     ALTER TABLE cgnsReferenceInfo ADD
      CONSTRAINT daxctrl_c25  FOREIGN KEY (base_id)
                              REFERENCES cgnsBaseInfo(id)
                              ON DELETE CASCADE
   -- ---------------------------------------------------------
+  )
 """
 # ------------------------------------------------------------
 cgnsFlowEquationSetInfoTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsFlowEquationSetInfo (
   -- ---------------------------------------------------------
-  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id             INT UNSIGNED,
   base_id        INT UNSIGNED NULL,
   attlist_id     INT UNSIGNED NULL,
   -- ---------------------------------------------------------
      PRIMARY KEY (id),
-     INDEX cgnsFlowEquationSetInfoIX   (id),
-     INDEX cgnsFlowEquationSetInfoIXb  (base_id),
-     INDEX cgnsFlowEquationSetInfoIXa  (attlist_id)          
-  -- ---------------------------------------------------------
-  )
-"""
-cgnsFlowEquationSetInfoForeignKey1="""
-  -- ---------------------------------------------------------
-     ALTER TABLE cgnsFlowEquationSetInfo ADD
      CONSTRAINT daxctrl_c27  FOREIGN KEY (attlist_id)
                              REFERENCES cgnsAttributeList(id)
                              ON DELETE NO ACTION
-  -- ---------------------------------------------------------
-"""
-cgnsFlowEquationSetInfoForeignKey2="""
-  -- ---------------------------------------------------------
-     ALTER TABLE cgnsFlowEquationSetInfo ADD
      CONSTRAINT daxctrl_c28  FOREIGN KEY (base_id)
                              REFERENCES cgnsBaseInfo(id)
                              ON DELETE CASCADE
   -- ---------------------------------------------------------
+  )
 """
 # ------------------------------------------------------------
 cgnsAttributeListTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsAttributeList (
   -- ---------------------------------------------------------
-  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id             INT UNSIGNED,
   path           varchar(64),
   modified       BOOL,
   entry_id       INT UNSIGNED NULL,
   -- ---------------------------------------------------------
      PRIMARY KEY (id),
-     INDEX cgnsAttributeListIX    (id),
-     UNIQUE INDEX cgnsAttributeListIXp   (path),
-     INDEX cgnsAttributeListIXfke (entry_id),
      CONSTRAINT daxctrl_c30       FOREIGN KEY (entry_id)
                                   REFERENCES cgnsEntry(id)
                                   ON DELETE CASCADE
@@ -134,14 +101,12 @@ cgnsAttributeTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsAttribute (
   -- ---------------------------------------------------------
-  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id             INT UNSIGNED,
   alist_id       INT UNSIGNED NULL,
   path           varchar(64),
   a_value        varchar(64),
   -- ---------------------------------------------------------
      PRIMARY KEY (id),
-     INDEX cgnsAttributeIX   (id),
-     INDEX cgnsAttributeIXfk (alist_id),
      CONSTRAINT daxctrl_c29  FOREIGN KEY (alist_id)
                              REFERENCES cgnsAttributeList(id)
                              ON DELETE CASCADE
@@ -153,8 +118,7 @@ cgnsZoneInfoTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsZoneInfo (
   -- ---------------------------------------------------------
-  id             INT UNSIGNED NOT NULL
-                 AUTO_INCREMENT PRIMARY KEY,
+  id             INT UNSIGNED PRIMARY KEY,
   entry_id       INT UNSIGNED NOT NULL
                  REFERENCES cgnsEntry(entry_id),
   name           varchar(32) NOT NULL,
@@ -165,11 +129,6 @@ cgnsZoneInfoTable="""
   -- ---------------------------------------------------------
   )
 """%mapping.defaultMapping
-#
-cgnsZoneInfoIndex="""
-  CREATE INDEX cgnsZoneInfoIndex
-  ON cgnsZoneInfo (id,entry_id,name)
-"""
 # ------------------------------------------------------------
 cgnsExperimentalDataTable="""
   -- ---------------------------------------------------------
@@ -177,73 +136,57 @@ cgnsExperimentalDataTable="""
   -- ---------------------------------------------------------  
   CREATE TABLE cgnsExperimentalData (
   -- ---------------------------------------------------------
-  id             INT UNSIGNED NOT NULL
-                 AUTO_INCREMENT PRIMARY KEY,
+  id             INT UNSIGNED PRIMARY KEY,
   test_id        INT UNSIGNED NOT NULL
                  REFERENCES %(FK_TEST)s
   -- ---------------------------------------------------------
   )
 """%mapping.defaultMapping
 #
-cgnsExperimentalDataIndex="""
-  CREATE INDEX cgnsExperimentalData
-  ON cgnsExperimentalData (id,test_id)
-"""
 # ------------------------------------------------------------
 cgnsSolverInfoTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsSolverInfo (
   -- ---------------------------------------------------------
-  id               INT UNSIGNED NOT NULL
-                   AUTO_INCREMENT PRIMARY KEY,
+  id               INT UNSIGNED PRIMARY KEY,
   entry_id         INT UNSIGNED NOT NULL
                    REFERENCES cgnsEntry(id),
   solverversion    varchar(32) NOT NULL,
   solvername       varchar(32) NOT NULL,
-  nbparallel       INT UNSIGNED DEFAULT 1,
-  multigrid        BOOL DEFAULT 0,
-  dissipation      ENUM ('scalar','matrix'),
-  timeresolution   ENUM ('RungeKutta','BackwardEuler','DTS'),
-  spaceresolution  ENUM ('IRS','LU'),
-  schema           ENUM ('Jameson','Van Leer','Roe'),
-  multigridcycle   varchar(32)
+--  multigrid        BOOL DEFAULT 0,
+--  dissipation      ENUM ('scalar','matrix'),
+--  timeresolution   ENUM ('RungeKutta','BackwardEuler','DTS'),
+--  spaceresolution  ENUM ('IRS','LU'),
+--  schema           ENUM ('Jameson','Van Leer','Roe'),
+--  multigridcycle   varchar(32)
+  nbparallel       INT UNSIGNED DEFAULT 1
   -- ---------------------------------------------------------
   )
 """%mapping.defaultMapping
 #
-cgnsSolverInfoIndex="""
-  CREATE INDEX cgnsSolverInfoIndex
-  ON cgnsSolverInfo (id,entry_id,solvername)
-"""
 # ------------------------------------------------------------
 cgnsFlowSolutionInfoTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsFlowSolutionInfo (
   -- ---------------------------------------------------------
-  id             INT UNSIGNED NOT NULL
-                 AUTO_INCREMENT PRIMARY KEY,
+  id             INT UNSIGNED PRIMARY KEY,
   entry_id       INT UNSIGNED NOT NULL
                  REFERENCES cgnsEntry(id),
   zone_id        INT UNSIGNED NOT NULL
                  REFERENCES cgnsZoneInfoTable(id),
-  gridlocation   ENUM ('CellCenter','Vertex')
-                 NOT NULL DEFAULT 'CellCenter',
+--  gridlocation   ENUM ('CellCenter','Vertex')
+--                 NOT NULL DEFAULT 'CellCenter',
   name           varchar(32) NOT NULL
   -- ---------------------------------------------------------
   )
 """%mapping.defaultMapping
 #
-cgnsFlowSolutionInfoIndex="""
-  CREATE INDEX cgnsFlowSolutionInfoIndex
-  ON cgnsFlowSolutionInfo (id,entry_id,zone_id,name)
-"""
 # ------------------------------------------------------------
 cgnsFlowSolutionFieldInfoTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsFlowSolutionFieldInfo (
   -- ---------------------------------------------------------
-  id             INT UNSIGNED NOT NULL
-                 AUTO_INCREMENT PRIMARY KEY,
+  id             INT UNSIGNED PRIMARY KEY,
   solution_id    INT UNSIGNED NOT NULL
                  REFERENCES cgnsFlowSolutionInfo(id),
   name           varchar(32) NOT NULL,
@@ -253,10 +196,27 @@ cgnsFlowSolutionFieldInfoTable="""
   )
 """%mapping.defaultMapping
 #
-cgnsFlowSolutionFieldInfoIndex="""
-  CREATE INDEX cgnsFlowSolutionFieldInfoIndex
-  ON cgnsFlowSolutionFieldInfo (id,solution_id,name)
-"""
+# ------------------------------------------------------------
+cgnsBx="CREATE UNIQUE INDEX cgnsBaseInfoIX on cgnsBaseInfo(id)"
+cgnsBxfke="CREATE UNIQUE INDEX cgnsBaseInfoIXfke on cgnsBaseInfo(entry_id)"
+cgnsBxfkr="CREATE UNIQUE INDEX cgnsBaseInfoIXfkr on cgnsBaseInfo(reference_id)"
+cgnsBxfkf="CREATE UNIQUE INDEX cgnsBaseInfoIXfkf on cgnsBaseInfo(floweq_id)"
+cgnsRx="CREATE UNIQUE INDEX cgnsReferenceInfoIX on cgnsReferenceInfo (id)"
+cgnsRxb="CREATE UNIQUE INDEX cgnsReferenceInfoIXb on cgnsReferenceInfo(base_id)"
+cgnsRxa="CREATE UNIQUE INDEX cgnsReferenceInfoIXa on cgnsReferenceInfo(attlist_id)"
+cgnsFx="CREATE UNIQUE INDEX cgnsFlowEquationSetInfoIX on cgnsFlowEquationSetInfo (id)"
+cgnsFxb="CREATE UNIQUE INDEX cgnsFlowEquationSetInfoIXb on cgnsFlowEquationSetInfo (base_id)"
+cgnsFxa="CREATE UNIQUE INDEX cgnsFlowEquationSetInfoIXa on cgnsFlowEquationSetInfo (attlist_id)"
+cgnsALx="CREATE UNIQUE INDEX cgnsAttributeListIX on cgnsAttributeList(id)"
+cgnsALxp="CREATE UNIQUE INDEX cgnsAttributeListIXp on cgnsAttributeList (path)"
+cgnsALxfke="CREATE UNIQUE INDEX cgnsAttributeListIXfke on cgnsAttributeList(entry_id)"
+cgnsAx="CREATE UNIQUE INDEX cgnsAttributeIX on cgnsAttribute (id)"
+cgnsAxfk="CREATE UNIQUE INDEX cgnsAttributeIXfk on cgnsAttribute(alist_id)"
+cgnsZx="CREATE UNIQUE INDEX cgnsZoneInfoIX on cgnsZoneInfo (id,entry_id,name)"
+cgnsEx="CREATE UNIQUE INDEX cgnsExperimentalDataIX on cgnsExperimentalData (id,test_id)"
+cgnsSx="CREATE UNIQUE INDEX cgnsSolverInfoIX on cgnsSolverInfo (id,entry_id,solvername)"
+cgnsFSx="CREATE UNIQUE INDEX cgnsFlowSolutionInfoIX on cgnsFlowSolutionInfo (id,entry_id,zone_id,name)"
+cgnsFFx="CREATE UNIQUE INDEX cgnsFlowSolutionFieldInfoIX on cgnsFlowSolutionFieldInfo (id,solution_id,name)"
 # ------------------------------------------------------------
 tableList=[
   ['cgnsExperimentalData',           cgnsExperimentalDataTable],
@@ -269,8 +229,28 @@ tableList=[
   ['cgnsAttribute',                  cgnsAttributeTable],      
   ['cgnsReferenceInfo',              cgnsReferenceInfoTable],  
   ['cgnsBaseInfo',                   cgnsBaseInfoTable],
-  ['cgnsReferenceInfoForeignKey1',   cgnsReferenceInfoForeignKey1],
-  ['cgnsReferenceInfoForeignKey2',   cgnsReferenceInfoForeignKey2],
+]
+indexList=[
+  ['cgnsBx', cgnsBx],
+  ['cgnsBxfke', cgnsBxfke],
+  ['cgnsBxfkr', cgnsBxfkr],
+  ['cgnsBxfkf', cgnsBxfkf],
+  ['cgnsRx', cgnsRx],
+  ['cgnsRxa', cgnsRxa],
+  ['cgnsRxb', cgnsRxb],
+  ['cgnsFx', cgnsFx],
+  ['cgnsFxb', cgnsFxb],
+  ['cgnsFxa', cgnsFxa],
+  ['cgnsALx', cgnsALx],
+  ['cgnsALxp', cgnsALxp],
+  ['cgnsALxfke', cgnsALxfke],
+  ['cgnsAx', cgnsAx],
+  ['cgnsAxfk', cgnsAxfk],
+  ['cgnsZx', cgnsZx],
+  ['cgnsEx', cgnsEx],
+  ['cgnsSx', cgnsSx],
+  ['cgnsFSx', cgnsFSx],
+  ['cgnsFFx', cgnsFFx],
 ]
 #
 # ------------------------------------------------------------

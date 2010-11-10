@@ -4,9 +4,6 @@
 #  -------------------------------------------------------------------------
 #  $Release$
 #  -------------------------------------------------------------------------
-# ------------------------------------------------------------
-# pyDAX - DBMS schema - Basic data
-# ------------------------------------------------------------
 #
 # This file can be configured for your own existing DBMS
 # Some attribute names can be changed (foreign keys)
@@ -14,17 +11,17 @@
 #
 import foreignKeys as mapping
 #
-# AUTO_INCREMENT 
+# --- SYNTAX *IS* SQLITE3
 #
 # ------------------------------------------------------------
 cgnsEntryTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsEntry (
   -- ---------------------------------------------------------
-  id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id           INT UNSIGNED,
   owner_id     INT UNSIGNED NOT NULL,
-  policy       ENUM (%(EN_FILEPOLICY)s) NOT NULL,
-  status       ENUM (%(EN_FILESTATUS)s) NOT NULL,
+  policy       varchar(32) NOT NULL,
+  status       varchar(32) NOT NULL,
   fileid       varchar(32) NOT NULL,   -- same as base id 
   filedata_id  INT UNSIGNED NULL,
   filesize     INT UNSIGNED NULL,
@@ -33,10 +30,6 @@ cgnsEntryTable="""
   filedate     DATE,
   -- ---------------------------------------------------------
      PRIMARY KEY (id),
-     UNIQUE INDEX cgnsEntryIX    (id),
-     UNIQUE INDEX cgnsEntryIXf   (fileid),     
-     UNIQUE INDEX cgnsEntryIXfk  (filedata_id),
-     INDEX cgnsEntryIXfko (owner_id),
      CONSTRAINT daxctrl_c01    FOREIGN KEY (owner_id)
                                REFERENCES cgnsOwner(id)
                                ON DELETE NO ACTION,
@@ -51,37 +44,29 @@ cgnsBlobEntryTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsBlobEntry (
   -- ---------------------------------------------------------
-  id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id           INT UNSIGNED,
   filedata     LONGBLOB NOT NULL,
   entry_id     INT UNSIGNED NOT NULL,
   -- ---------------------------------------------------------
      PRIMARY KEY (id),
-     UNIQUE INDEX cgnsBlobEntryIX   (id),
-     UNIQUE INDEX cgnsBlobEntryIXfke(entry_id)
-  -- ---------------------------------------------------------
-  )
-"""
-cgnsBlobEntryForeignKey="""
-  -- ---------------------------------------------------------
-     ALTER TABLE cgnsBlobEntry ADD
      CONSTRAINT daxctrl_c03    FOREIGN KEY (entry_id)
                                REFERENCES cgnsEntry(id)
                                ON DELETE CASCADE
   -- ---------------------------------------------------------
-"""  
+  )
+"""
 # ------------------------------------------------------------
 cgnsOwnerTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsOwner (
   -- ---------------------------------------------------------
-  id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id           INT UNSIGNED,
   name         varchar(32) DEFAULT '' NOT NULL,
   organisation varchar(32) DEFAULT '' NOT NULL,
   site         varchar(32) DEFAULT '' NOT NULL,
   description  text DEFAULT '' NOT NULL,
   -- ---------------------------------------------------------
-     PRIMARY KEY (id),
-     INDEX cgnsOwnerIX (id)
+     PRIMARY KEY (id)
   -- ---------------------------------------------------------
   )
 """%mapping.defaultMapping
@@ -91,7 +76,7 @@ cgnsLinkTable="""
   -- ---------------------------------------------------------
   CREATE TABLE cgnsLink (
   -- ---------------------------------------------------------
-  id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id           INT UNSIGNED,
   entry_id     INT UNSIGNED NOT NULL,
   linked_id    INT UNSIGNED NULL,
   localpath    varchar(255) DEFAULT '' NOT NULL,
@@ -100,9 +85,6 @@ cgnsLinkTable="""
   linknode     varchar(255) DEFAULT '' NOT NULL,
   -- ---------------------------------------------------------
      PRIMARY KEY (id),
-     INDEX cgnsLinkIX    (id),
-     INDEX cgnsLinkIXfke (entry_id),
-     INDEX cgnsLinkIXfkl (linked_id),
      CONSTRAINT daxctrl_c04  FOREIGN KEY (entry_id)
                              REFERENCES cgnsEntry(id)
                              ON DELETE CASCADE,
@@ -114,14 +96,36 @@ cgnsLinkTable="""
 """%mapping.defaultMapping
 #
 # ------------------------------------------------------------
+cgnsEx   ="CREATE UNIQUE INDEX cgnsEntryIX on cgnsEntry(id)"
+cgnsExf  ="CREATE UNIQUE INDEX cgnsEntryIXf on cgnsEntry(fileid)"
+cgnsExfk ="CREATE UNIQUE INDEX cgnsEntryIXfk on cgnsEntry(filedata_id)"
+cgnsExfko="CREATE UNIQUE INDEX cgnsEntryIXfko on cgnsEntry(owner_id)"
+cgnsBx   ="CREATE UNIQUE INDEX cgnsBlobEntryIX on cgnsBlobEntry(id)"
+cgnsBxfke="CREATE UNIQUE INDEX cgnsBlobEntryIXfke on cgnsBlobEntry(entry_id)"
+cgnsOx   ="CREATE UNIQUE INDEX cgnsOwnerIX on cgnsOwner(id)"
+cgnsLx   ="CREATE UNIQUE INDEX cgnsLinkIX on cgnsLink(id)"
+cgnsLxfke="CREATE UNIQUE INDEX cgnsLinkIXfke on cgnsLink(entry_id)"
+cgnsLxfkl="CREATE UNIQUE INDEX cgnsLinkIXfkl on cgnsLink(linked_id)"
+# ------------------------------------------------------------
 # order is significant...
 #
 tableList=[
-  ['cgnsOwner',               cgnsOwnerTable],
-  ['cgnsBlobEntry',           cgnsBlobEntryTable],  
-  ['cgnsEntry',               cgnsEntryTable],
-  ['cgnsLink' ,               cgnsLinkTable],
-  ['cgnsBlobEntryForeignKey', cgnsBlobEntryForeignKey],    
+  ['cgnsOwner',      cgnsOwnerTable],
+  ['cgnsBlobEntry',  cgnsBlobEntryTable],  
+  ['cgnsEntry',      cgnsEntryTable],
+  ['cgnsLink' ,      cgnsLinkTable],
+]
+indexList=[
+  ['cgnsEntryIX',    cgnsEx],
+  ['cgnsEntryIXf',   cgnsExf],
+  ['cgnsEntryIXfk',  cgnsExfk],
+  ['cgnsEntryIXfko', cgnsExfko],
+  ['cgnsBx',         cgnsBx],
+  ['cgnsBxfke',      cgnsBxfke],
+  ['cgnsOx',         cgnsOx],
+  ['cgnsLx',         cgnsLx],
+  ['cgnsLxfke',      cgnsLxfke],
+  ['cgnsLxfkl',      cgnsLxfkl],
 ]
 #
 # ------------------------------------------------------------

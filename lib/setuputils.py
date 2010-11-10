@@ -41,9 +41,11 @@ def search(tag,deps=[]):
     lg="%s/../build/lib/CGNS"%(os.getcwd())
     os.makedirs(tg)
     os.symlink(tg,lg)
-  sys.path+=['./lib']
+  oldsyspath=sys.path
+  sys.path=['../lib']
   cfgdict={}
   import pyCGNSconfig_default as C_D
+  sys.path=oldsyspath
   for ck in dir(C_D):
     if (ck[0]!='_'): cfgdict[ck]=C_D.__dict__[ck]
   pg=prodtag()
@@ -246,7 +248,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
   if notfound:
     print "### pyCGNS: Warning: ADFH.h not found, using pyCGNS own headers"
     extraargs+=['-U__ADF_IN_SOURCES__']
-  extraargs+=['-DLEGACY_SUPPORT']
+  #extraargs+=['-DLEGACY_SUPPORT']
 
   return (cgnsversion,pincs,plibs,libs,extraargs)
 

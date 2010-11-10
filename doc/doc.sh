@@ -55,6 +55,17 @@ sphinx-build -b latex -c doc MAPper build/doc/latex/MAP
 (cd build/doc/latex/MAP; pdflatex pyCGNS_MAP.tex; mv *.pdf ../../pdf)
 fi
 
+# --- DAT
+export PYCGNSMOD='DAT'
+export PYCGNSDOC='readme'
+sphinx-build -b html -c doc DATaTracer build/doc/html/DAT
+
+if test "x${WITHPDFFILES}" != "x"
+then
+sphinx-build -b latex -c doc DATaTracer build/doc/latex/DAT
+(cd build/doc/latex/DAT; pdflatex pyCGNS_DAT.tex; mv *.pdf ../../pdf)
+fi
+
 # --- WRA
 export PYCGNSMOD='WRA'
 export PYCGNSDOC='readme'
@@ -64,6 +75,17 @@ if test "x${WITHPDFFILES}" != "x"
 then
 sphinx-build -b latex -c doc WRApper build/doc/latex/WRA
 (cd build/doc/latex/WRA; pdflatex pyCGNS_WRA.tex; mv *.pdf ../../pdf)
+fi
+
+# --- APP
+export PYCGNSMOD='APP'
+export PYCGNSDOC='readme'
+sphinx-build -b html -c doc APPlicater build/doc/html/APP
+
+if test "x${WITHPDFFILES}" != "x"
+then
+sphinx-build -b latex -c doc APPlicater build/doc/latex/APP
+(cd build/doc/latex/APP; pdflatex pyCGNS_APP.tex; mv *.pdf ../../pdf)
 fi
 
 # --- ALL

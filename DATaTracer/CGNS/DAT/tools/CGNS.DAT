@@ -22,7 +22,7 @@ def sqlprint(r):
     
 # ------------------------------------------------------------
 def parseAndRun(args):
-  opt,arg=getopt.getopt(args,"tnTx:c:r:u:p:a:v:o:i:E:I:")
+  opt,arg=getopt.getopt(args,"ltnTx:c:r:u:p:a:v:o:i:E:I:")
   connection   = None
   command      = None
   baseid       = None
@@ -34,56 +34,56 @@ def parseAndRun(args):
     if (o == "-x"):
       connection=tuple(v.split(":"))
     if (o == "-n"):
-      if (not command):    raise ex.DAXDBOptionError()
-      if (command != "-c"):raise ex.DAXDBOptionError()
+      if (not command):    raise ex.DAXDBOptionError([connection,o])
+      if (command != "-c"):raise ex.DAXDBOptionError([connection,o])
       empty=1
     if (o == "-T"):
       ut.DAXtraceFlag=2
     if (o == "-t"):
       ut.DAXtraceFlag=1
     if (o in ["-c","-r","-u","-o","-i","-E","-I"]):
-      if (not connection): raise ex.DAXDBOptionError()
-      if (command):        raise ex.DAXDBOptionError()
+      if (not connection): raise ex.DAXDBOptionError([connection,o])
+      if (command):        raise ex.DAXDBOptionError([connection,o])
       command=o
       baseid =v
     if (o == "-p"):
-      if (not command):    raise ex.DAXDBOptionError()
-      if (command == "-r"):raise ex.DAXDBOptionError()
-      if (path):           raise ex.DAXDBOptionError()
-      if (empty):          raise ex.DAXDBOptionError()            
+      if (not command):    raise ex.DAXDBOptionError([connection,o])
+      if (command == "-r"):raise ex.DAXDBOptionError([connection,o])
+      if (path):           raise ex.DAXDBOptionError([connection,o])
+      if (empty):          raise ex.DAXDBOptionError([connection,o])            
       path=v
     if (o == "-a"):
-      if (not command):    raise ex.DAXDBOptionError()
-      if (command != "-u"):raise ex.DAXDBOptionError()
+      if (not command):    raise ex.DAXDBOptionError([connection,o])
+      if (command != "-u"):raise ex.DAXDBOptionError([connection,o])
       attribute+=[v]
     if (o == "-v"):
-      if (not command):    raise ex.DAXDBOptionError()
-      if (command != "-u"):raise ex.DAXDBOptionError()
-      if (not attribute):  raise ex.DAXDBOptionError()
+      if (not command):    raise ex.DAXDBOptionError([connection,o])
+      if (command != "-u"):raise ex.DAXDBOptionError([connection,o])
+      if (not attribute):  raise ex.DAXDBOptionError([connection,o])
       value+=[v]
     if (o == "-l"):
-      if (not connection): raise ex.DAXDBOptionError()
-      if (command):        raise ex.DAXDBOptionError()
+      if (not connection): raise ex.DAXDBOptionError([connection,o])
+      if (command):        raise ex.DAXDBOptionError([connection,o])
       command=o
     if (o == "-q"):
-      if (not connection): raise ex.DAXDBOptionError()
-      if (command):        raise ex.DAXDBOptionError()
-      if (query):          raise ex.DAXDBOptionError()
-      if (pquery):         raise ex.DAXDBOptionError()
+      if (not connection): raise ex.DAXDBOptionError([connection,o])
+      if (command):        raise ex.DAXDBOptionError([connection,o])
+      if (query):          raise ex.DAXDBOptionError([connection,o])
+      if (pquery):         raise ex.DAXDBOptionError([connection,o])
       query=v
       command=o
     if (o == "-Q"):
-      if (not connection): raise ex.DAXDBOptionError()
-      if (command):        raise ex.DAXDBOptionError()
-      if (query):          raise ex.DAXDBOptionError()
-      if (pquery):         raise ex.DAXDBOptionError()
+      if (not connection): raise ex.DAXDBOptionError([connection,o])
+      if (command):        raise ex.DAXDBOptionError([connection,o])
+      if (query):          raise ex.DAXDBOptionError([connection,o])
+      if (pquery):         raise ex.DAXDBOptionError([connection,o])
       pquery=v
       command=o
   if (   (not command)
       or (not connection)
-      or (not baseid)
+#      or (not baseid)
       or (attribute and not value)
-      or (value and not attribute)): raise ex.DAXDBOptionError()
+      or (value and not attribute)): raise ex.DAXDBOptionError([connection,'?'])
   # ----------    
   if (command == "-c"):
     ut.ptrace("Connection")
@@ -106,7 +106,7 @@ def parseAndRun(args):
     del d
   # ----------    
   if (command == "-u"):
-    if (len(attribute) != len(value)): raise ex.DAXDBOptionError()
+    if (len(attribute) != len(value)): raise ex.DAXDBOptionError([connection,'-u'])
     d=dx.daxDB(connection)
     d.update(baseid,[attribute,value])
     del d
@@ -129,7 +129,7 @@ def parseAndRun(args):
 # ------------------------------------------------------------
 # -T (trace) option is not documented
 # 
-def usage():
+def usage(e=''):
     print """\
 CGNS.DAT : CGNS Database interface class
 usage    : CGNS.DAT -x <database-connection> [command and option]
@@ -153,13 +153,15 @@ commands:
  -E export   = [-t|-T] -E <file-identifier> -p <unix-file-path> [-u]
  -I import   = [-t|-T] -I <file-identifier> -p <unix-file-path> 
 """
+    print e
+    
 if (__name__ == "__main__"):
   import sys
   try:
     parseAndRun(sys.argv[1:]) 
-  except ex.DAXDBOptionError:usage()
-  except IndexError:         usage()
-  except getopt.GetoptError: usage()
+  except ex.DAXDBOptionError, e: usage(e)
+  except IndexError:             usage()
+  except getopt.GetoptError:     usage()
 
   # DAX exceptions
   except ex.DAXException, e: print e

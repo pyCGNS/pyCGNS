@@ -11,7 +11,7 @@
 defaultTestFamily=[
   """INSERT \
      INTO cgnsTestFamily(name,description)\
-     values (%s,%s)""",
+     values (?,?)""",
   (
     ("Fuselage","Isolated Fuselage"),
     ("Hover",   "Isolated Rotor in Hover"),
@@ -24,9 +24,9 @@ defaultTestFamily=[
 defaultTest=[
   """INSERT \
      INTO cgnsTest(number,geometry,family_id,remarks)\
-     select %s,%s,id,%s\
+     select ?,?,id,?\
      from cgnsTestFamily\
-     where name=%s""",
+     where name=?""",
   (
     ("1.1-F1", "HELIFUSE TC1","Geometry C1","Fuselage"),
     ("1.1-F2", "HELIFUSE TC3","Geometry C1","Fuselage"),
