@@ -16,12 +16,4 @@ C.newDescriptor(data,'{Descriptor}')
 C.newDiffusionModel(data)
 status='-'
 comment='SIDS GoverningEquations_t'
-childrentypes=[
-    K.DiffusionModel_ts, # '"int[1+...+IndexDimension]"',
-    K.Descriptor_ts,
-    K.UserDefinedData_ts,
-    ]
-datatypes=[C.C1]
-cardinality=[C.zero_N]
-names=[]
-pattern=[data,status,comment,childrentypes,datatypes,names]
+pattern=[data,status,comment]

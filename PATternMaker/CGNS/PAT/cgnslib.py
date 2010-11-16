@@ -8,7 +8,7 @@
 import CGNS.PAT.cgnskeywords as CG_K
 import CGNS.PAT.cgnserrors   as CG_E
 import CGNS
-
+from   CGNS.PAT.cgnsutils import *
 import numpy as NPY
 
 __CGNS_LIBRARY_VERSION__=2.4
@@ -382,7 +382,7 @@ def newOrdinal(parent,value=0):
   chapter 6.3
   """
   checkDuplicatedName(parent,CG_K.Ordinal_s)
-  node=newNode(CG_K.Ordinal_s,value,[],CG_K.Ordinal_ts,parent)
+  node=newNode(CG_K.Ordinal_s,NPY.array(value,dtype=NPY.int32),[],CG_K.Ordinal_ts,parent)
   return node
 
 # -----------------------------------------------------------------------------
@@ -729,13 +729,12 @@ def newFlowSolution(parent,name='{FlowSolution}',gridlocation=None):
   return node  
   
 # -----------------------------------------------------------------------------
-def newZoneGridConnectivity(parent,name,ctype=NPY.array(CG_K.Null_s),donor=''):
+def newZoneGridConnectivity(parent,name=CG_K.ZoneGridConnectivity_s):
   """-GridConnectivity node creation -Grid
   
-  'newNode:N='*newZoneGridConnectivity*'(parent:N,name:S,ctype:S)'
+  'newNode:N='*newZoneGridConnectivity*'(parent:N,name:S)'
 
-  Creates a ZoneGridConnectivity_t sub-tree with
-  a sub-node depending on the type of connectivity.
+  Creates a ZoneGridConnectivity_t sub-tree
   This sub-node is returned.
   If a parent is given, the new <node> is added to the parent children list,
   the parent should be a Zone_t.
@@ -746,8 +745,7 @@ def newZoneGridConnectivity(parent,name,ctype=NPY.array(CG_K.Null_s),donor=''):
   if (cnode == None):   
     cnode=newNode(CG_K.ZoneGridConnectivity_s,
                   None,[],CG_K.ZoneGridConnectivity_ts,parent)
-  node=newNode(name,donor,[],ctype,cnode)
-  return node
+  return cnode
   
 # -----------------------------------------------------------------------------
 def newGridConnectivity1to1(parent,name,dname,window,dwindow,trans):

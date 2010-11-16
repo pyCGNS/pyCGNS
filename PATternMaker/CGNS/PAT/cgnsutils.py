@@ -198,9 +198,13 @@ def hasFortranFlag(node):
 
 # --------------------------------------------------
 def getNodeShape(node):
-  if (node[1]==None): return "-"
-  if (node[3]==''):   return "-"
-  else: return str(node[1].shape)
+  r="-"
+  try:
+    if   (node[1]==None): r="-"
+    elif (node[3]==''):   r="-"
+    else: r=(node[1].shape)
+  except AttributeError: print node[0],node[1]
+  return r
 
 # --------------------------------------------------
 def getNodeType(node):

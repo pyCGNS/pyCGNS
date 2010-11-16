@@ -595,6 +595,17 @@ types[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
 types[t].addChild(CK.BCProperty_ts,CK.BCProperty_s)
 
 # --------------------------------------------------------
+t=CK.ArbitraryGridMotionType_ts
+types[t]=CGNStype(t,dtype=[CK.C1],card=C_11,
+                  names=[CK.ArbitraryGridMotionType_s])
+types[t].shape=(0,)
+
+# --------------------------------------------------------
+t=CK.RigidGridMotionType_ts
+types[t]=CGNStype(t,dtype=[CK.C1],card=C_11,names=[CK.RigidGridMotionType_s])
+types[t].shape=(0,)
+
+# --------------------------------------------------------
 t=CK.WallFunctionType_ts
 types[t]=CGNStype(t,dtype=[CK.C1],card=C_11,names=[CK.WallFunctionType_s])
 types[t].shape=(0,)

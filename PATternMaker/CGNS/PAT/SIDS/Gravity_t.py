@@ -13,10 +13,5 @@ import numpy             as N
 data=C.newGravity(None)
 status='-'
 comment=''
-childrentypes=[
-    [K.DataArray_ts]+C.typeListA
-    ]
-datatypes=[C.MT]
-cardinality=[C.one_N]
-names=[]
-pattern=[data,status,comment,childrentypes,datatypes,names]
+
+pattern=[data,status,comment]

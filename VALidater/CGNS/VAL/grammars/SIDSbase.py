@@ -49,9 +49,11 @@ class SIDSbase:
       return None
   # --------------------------------------------------------------------
   def isMandatory(self,pth,node,parent,tree):
-    if (node[3]==''): return 0 # link
-    if (CT.types[node[3]].cardinality in [CT.C_11,CT.C_1N]): return 1
-    return 0
+    try:
+      if (node[3]==''): return 0 # link
+      if (CT.types[node[3]].cardinality in [CT.C_11,CT.C_1N]): return 1
+      return 0
+    except TypeError: print node[0],node[1],node[3]
     
   # --------------------------------------------------------------------
   def getStatusForThisNode(self,pth,node,parent,tree):
