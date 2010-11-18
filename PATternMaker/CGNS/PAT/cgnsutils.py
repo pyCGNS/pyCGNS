@@ -61,10 +61,11 @@ def setValue(node,value):
   
 # -----------------------------------------------------------------------------
 def setStringAsArray(a):
-  if (type(a)==type("")):
-    return NPY.array(tuple(a),dtype='|S',order='Fortran')
-  if (type(a)==type(NPY.array((1)))):
+  if ((type(a)==type(NPY.array((1))))
+      and (a.shape != ()) and (a.dtype.char=='S')):
     return a
+  if ((type(a)==type("")) or (type(a)==type(NPY.array((1))))):
+    return NPY.array(tuple(a),dtype='|S',order='Fortran')
   return None
 
 # -----------------------------------------------------------------------------
@@ -199,11 +200,10 @@ def hasFortranFlag(node):
 # --------------------------------------------------
 def getNodeShape(node):
   r="-"
-  try:
-    if   (node[1]==None): r="-"
-    elif (node[3]==''):   r="-"
-    else: r=(node[1].shape)
-  except AttributeError: print node[0],node[1]
+  if   (node[1]==None): r="-"
+  elif (node[3]==''):   r="-"
+  elif (node[1].shape in ['',(0,),()]): r="[0]"
+  else: r=str(list(node[1].shape))
   return r
 
 # --------------------------------------------------

@@ -78,7 +78,7 @@ def checkDataClass(node,parent=None):
   return node
   
 # -----------------------------------------------------------------------------
-def newDescriptor(parent,name,value=NPY.array([''])):
+def newDescriptor(parent,name,value=''):
   """-Descriptor node creation -Descriptor
   
   'newNode:N='*newDescriptor*'(parent:N,name:S,text:A)'
@@ -301,7 +301,7 @@ def newCGNS():
   return badnode
 
 # ----------------------------------------------------------------------------
-def newSimulationType(parent,stype=NPY.array(CG_K.NonTimeAccurate_s)):
+def newSimulationType(parent,stype=CG_K.NonTimeAccurate_s):
   """-SimulationType node creation -SimulationType
   
   'newNode:N='*newSimulationType*'(parent:N,stype=CG_K.SimulationType)'
@@ -314,7 +314,7 @@ def newSimulationType(parent,stype=NPY.array(CG_K.NonTimeAccurate_s)):
   checkDuplicatedName(parent,CG_K.SimulationType_s)
   checkType(parent,CG_K.CGNSBase_ts,CG_K.SimulationType_s)
   if (stype not in CG_K.SimulationType_l): raise CG_E.cgnsException(205,stype)
-  node=newNode(CG_K.SimulationType_s,stype,[],CG_K.SimulationType_ts,parent)
+  node=newNode(CG_K.SimulationType_s,setStringAsArray(stype),[],CG_K.SimulationType_ts,parent)
   return node
   
 # ----------------------------------------------------------------------------
@@ -551,9 +551,9 @@ def newBC(parent,bname,brange=[0,0,0,0,0,0],
   return newBoundary(parent,bname,brange,btype,bcType,pttype) 
 
 def newBoundary(parent,bname,brange,
-                btype=NPY.array(CG_K.Null_s),
+                btype=CG_K.Null_s,
                 family=None,
-                pttype=NPY.array(CG_K.PointRange_s)): 
+                pttype=CG_K.PointRange_s): 
   """-BC node creation -BC
   
   'newNode:N='*newBoundary*'(parent:N,bname:S,brange:[*i],btype:S)'
@@ -567,24 +567,22 @@ def newBoundary(parent,bname,brange,
   """
   checkDuplicatedName(parent,bname)
   zbnode=hasChildName(parent,CG_K.ZoneBC_s)
-  if (zbnode == None): zbnode=newNode(CG_K.ZoneBC_s,None,[],CG_K.ZoneBC_ts,parent)
-  ## code correction: Modify btype string into NPY string array
+  if (zbnode == None):
+    zbnode=newNode(CG_K.ZoneBC_s,None,[],CG_K.ZoneBC_ts,parent)
   bnode=newNode(bname,setStringAsArray(btype),[],CG_K.BC_ts,zbnode)
   if (pttype==CG_K.PointRange_s):
-    ## code correction: modify reshape size and order. Result is unchange.
     arange=NPY.array(brange,dtype=NPY.int32,order='Fortran')
     newNode(CG_K.PointRange_s,arange,[],CG_K.IndexRange_ts,bnode)
   else:
-    ## code correction: Add order.
     arange=NPY.array(brange,dtype=NPY.int32,order='Fortran')
     newNode(CG_K.PointList_s,arange,[],CG_K.IndexArray_ts,bnode)
   if (family):
-    ## code correction: Modify family string into NPY string array
-    newNode(CG_K.FamilyName_s,setStringAsArray(family),[],CG_K.FamilyName_ts,bnode)
+    newNode(CG_K.FamilyName_s,setStringAsArray(family),[],
+            CG_K.FamilyName_ts,bnode)
   return bnode
   
 # -----------------------------------------------------------------------------
-def newBCDataSet(parent,name,valueType=NPY.array(CG_K.Null_s)):
+def newBCDataSet(parent,name,valueType=CG_K.Null_s):
   """-BCDataSet node creation -BCDataSet
   
   'newNode:N='*newBCDataSet*'(parent:N,name:S,valueType:CG_K.BCTypeSimple)'
@@ -599,7 +597,6 @@ def newBCDataSet(parent,name,valueType=NPY.array(CG_K.Null_s)):
   if (valueType not in CG_K.BCTypeSimple_l):
     raise CG_E.cgnsException(252,valueType)
   checkDuplicatedName(node,CG_K.BCTypeSimple_s)    
-  ## code correction: Modify valueType string into NPY string array
   nodeType=newNode(CG_K.BCTypeSimple_s,setStringAsArray(valueType),
                    [],CG_K.BCTypeSimple_ts,node)
   return node
@@ -618,9 +615,7 @@ def newBCData(parent,name):
   return node 
   
 # -----------------------------------------------------------------------------
-def newBCProperty(parent,
-                  wallfunction=NPY.array(CG_K.Null_s),
-                  area=NPY.array(CG_K.Null_s)):
+def newBCProperty(parent,wallfunction=CG_K.Null_s,area=CG_K.Null_s):
   """-BCProperty node creation -BCProperty
   
   'newNode:N='*newBCProperty*'(parent:N)'
@@ -632,9 +627,9 @@ def newBCProperty(parent,
   checkDuplicatedName(parent,CG_K.BCProperty_s)    
   node=newNode(CG_K.BCProperty_s,None,[],CG_K.BCProperty_ts,parent)
   wf=newNode(CG_K.WallFunction_s,None,[],CG_K.WallFunction_ts,node)
-  newNode(CG_K.WallFunctionType_s,wallfunction,[],CG_K.WallFunctionType_ts,wf)
+  newNode(CG_K.WallFunctionType_s,setStringAsArray(wallfunction),[],CG_K.WallFunctionType_ts,wf)
   ar=newNode(CG_K.Area_s,None,[],CG_K.Area_ts,node)
-  newNode(CG_K.AreaType_s,area,[],CG_K.AreaType_ts,ar)
+  newNode(CG_K.AreaType_s,setStringAsArray(area),[],CG_K.AreaType_ts,ar)
   return node 
 
 # -----------------------------------------------------------------------------
@@ -764,7 +759,7 @@ def newGridConnectivity1to1(parent,name,dname,window,dwindow,trans):
     cnode=newNode(CG_K.ZoneGridConnectivity_s,
                   None,[],CG_K.ZoneGridConnectivity_ts,parent)
   zcnode=newNode(name,dname,[],CG_K.GridConnectivity1to1_ts,cnode)
-  newNode("Transform",NPY.array(list(trans),dtype=NPY.int32),[],
+  newNode(CG_K.Transform_s,NPY.array(list(trans),dtype=NPY.int32),[],
           "int[IndexDimension]",zcnode)
   ## code correction: Modify PointRange shape and order
   newNode(CG_K.PointRange_s,NPY.array(window,dtype=NPY.int32,order='Fortran'),[],
@@ -823,7 +818,7 @@ def  newPeriodic(parent,
   return cnode
   
 # -----------------------------------------------------------------------------
-def newAverageInterface(parent,valueType=NPY.array(CG_K.Null_s)):
+def newAverageInterface(parent,valueType=CG_K.Null_s):
   """-AverageInterface node creation -AverageInterface
   
   'newNode:N='*newAverageInterface*'(parent:N,valueType:CG_K.AverageInterfaceType)'
@@ -886,7 +881,7 @@ def newFlowEquationSet(parent):
   node=newNode(CG_K.FlowEquationSet_s,None,[],CG_K.FlowEquationSet_ts,parent)  
   return node   
     
-def newGoverningEquations(parent,valueType=NPY.array(CG_K.Euler_s)):
+def newGoverningEquations(parent,valueType=CG_K.Euler_s):
   """-GoverningEquations node creation -GoverningEquations
   
   'newNode:N='*newGoverningEquations*'(parent:N,valueType:CG_K.GoverningEquationsType)'
@@ -909,7 +904,7 @@ def newGoverningEquations(parent,valueType=NPY.array(CG_K.Euler_s)):
   return node
   
 # -----------------------------------------------------------------------------
-def newGasModel(parent,valueType=NPY.array(CG_K.Ideal_s)):
+def newGasModel(parent,valueType=CG_K.Ideal_s):
   """-GasModel node creation -GasModel
   
   'newNode:N='*newGasModel*'(parent:N,valueType:CG_K.GasModelType)'
@@ -929,8 +924,7 @@ def newGasModel(parent,valueType=NPY.array(CG_K.Ideal_s)):
   nodeType=newNode(CG_K.GasModelType_s,setStringAsArray(valueType),[],CG_K.GasModelType_ts,node)
   return node
   
-def newThermalConductivityModel(parent,
-                                valueType=NPY.array(CG_K.SutherlandLaw_s)):   
+def newThermalConductivityModel(parent,valueType=CG_K.SutherlandLaw_s):   
   """-ThermalConductivityModel node creation -ThermalConductivityModel
   
   'newNode:N='*newThermalConductivityModel*'(parent:N,valueType:CG_K.ThermalConductivityModelType)'
@@ -953,7 +947,7 @@ def newThermalConductivityModel(parent,
                    CG_K.ThermalConductivityModelType_ts,node)  
   return node
 
-def newViscosityModel(parent,valueType=NPY.array(CG_K.SutherlandLaw_s)): 
+def newViscosityModel(parent,valueType=CG_K.SutherlandLaw_s): 
   """-ViscosityModel node creation -ViscosityModel
   
   'newNode:N='*newViscosityModel*'(parent:N,valueType:CG_K.ViscosityModelType)'
@@ -975,7 +969,7 @@ def newViscosityModel(parent,valueType=NPY.array(CG_K.SutherlandLaw_s)):
                      CG_K.ViscosityModelType_ts,node)  
   return node
 
-def newTurbulenceClosure(parent,valueType=NPY.array(CG_K.EddyViscosity_s)):   
+def newTurbulenceClosure(parent,valueType=CG_K.EddyViscosity_s):   
   """-TurbulenceClosure node creation -TurbulenceClosure
   
   'newNode:N='*newTurbulenceClosure*'(parent:N,valueType:CG_K.TurbulenceClosureType)'  
@@ -996,8 +990,7 @@ def newTurbulenceClosure(parent,valueType=NPY.array(CG_K.EddyViscosity_s)):
                      CG_K.TurbulenceClosure_ts,node)  
   return node
 
-def newTurbulenceModel(parent,
-                       valueType=NPY.array(CG_K.OneEquation_SpalartAllmaras_s)): 
+def newTurbulenceModel(parent,valueType=CG_K.OneEquation_SpalartAllmaras_s): 
   """-TurbulenceModel node creation -TurbulenceModel
   
   'newNode:N='*newTurbulenceModel*'(parent:N,valueType:CG_K.TurbulenceModelType)'
@@ -1042,7 +1035,7 @@ def newThermalRelaxationModel(parent,valueType):
                    CG_K.ThermalRelaxationModelType_ts,node)
   return node
 
-def newChemicalKineticsModel(parent,valueType=NPY.array(CG_K.Null_s)):
+def newChemicalKineticsModel(parent,valueType=CG_K.Null_s):
   """-ChemicalKineticsModel node creation -ChemicalKineticsModel
   
   'newNode:N='*newChemicalKineticsModel*'(parent:N,valueType:CG_K.ChemicalKineticsModelType)'
