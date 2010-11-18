@@ -17,6 +17,7 @@ import setuputils
 if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
 
+# -------------------------------------------------------------------------
 setup (
 name         = "CGNS.APP",
 version      = pyCGNSconfig.PAT_VERSION,

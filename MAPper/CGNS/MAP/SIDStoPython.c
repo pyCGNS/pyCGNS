@@ -304,7 +304,6 @@ static int s2p_getData(PyObject *dobject,
 		       s2p_ctx_t  *context)
 {
   int n,total;
-  PyObject *ostr;
 
   if (   (!PyArray_ISFORTRAN(dobject))
       && (PyArray_NDIM(dobject)>1)
@@ -425,14 +424,6 @@ static int s2p_getData(PyObject *dobject,
        }
      } 
      *dvalue=(char*)PyArray_DATA(dobject);
-     /*
-     ostr=PyArray_ToString((PyArrayObject*)dobject,NPY_ANYORDER);
-     ddims[0]=1;
-     dshape[0]=strlen((char*)PyString_AsString(ostr));
-     context->_c_char=(char*)malloc(dshape[0]*sizeof(char)+1);
-     strcpy(context->_c_char,(char*)PyString_AsString(ostr));
-     *dvalue=(char*)context->_c_char;
-     */
      return 1;
   }
   return 1;

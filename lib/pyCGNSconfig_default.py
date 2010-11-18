@@ -17,10 +17,10 @@ mylocal='/usr/local'
 INCLUDE_DIRS =['%s/include'%mylocal]
 LIBRARY_DIRS =['%s/include'%mylocal]
 
-HAS_MLL=True
-HAS_NUMPY=True
-HAS_CHLONE=True
-HAS_HDF5=True
+HAS_MLL=False
+HAS_NUMPY=False
+HAS_CHLONE=False
+HAS_HDF5=False
 
 # useless with distutils but maybe required for other external libs
 PYTHON_VERSION          = "%d.%d"%(sys.version_info[0],sys.version_info[1])
@@ -29,26 +29,25 @@ PYTHON_PATH_LIBRARIES   = [sys.prefix+'/lib']
 PYTHON_LINK_LIBRARIES   = [] 
 PYTHON_EXTRA_ARGS       = []
 
-HDF5_VERSION          = '1.8.2'
+HDF5_VERSION          = ''
 HDF5_PATH_INCLUDES    = []
 HDF5_PATH_LIBRARIES   = []
-HDF5_LINK_LIBRARIES   = ['hdf5'] 
+HDF5_LINK_LIBRARIES   = [] 
 HDF5_EXTRA_ARGS       = []
 
 MLL_PATH_LIBRARIES    = []
-MLL_LINK_LIBRARIES    = ['cgns']
+MLL_LINK_LIBRARIES    = []
 MLL_PATH_INCLUDES     = []
-MLL_VERSION           = '3.0'
-MLL_EXTRA_ARGS        = ['-DCGNS_SCOPE_ENUMS']#['-DLEGACY_SUPPORT']
+MLL_VERSION           = ''
+MLL_EXTRA_ARGS        = []
 
-NUMPY_VERSION         = '1.4'
-NUMPY_PATH_INCLUDES   = ['%s/lib/python%s/site-packages/numpy/core/include'\
-                         %(sys.prefix,PYTHON_VERSION)]
+NUMPY_VERSION         = ''
+NUMPY_PATH_INCLUDES   = []
 NUMPY_PATH_LIBRARIES  = []
 NUMPY_LINK_LIBRARIES  = []
 NUMPY_EXTRA_ARGS      = []
 
-CHLONE_VERSION         = '0.4'
+CHLONE_VERSION         = ''
 CHLONE_PATH_INCLUDES   = []
 CHLONE_PATH_LIBRARIES  = []
 CHLONE_LINK_LIBRARIES  = []
@@ -66,6 +65,7 @@ LIBRARY_DIRS+=LIBRARY_DIRS+PYTHON_PATH_LIBRARIES+HDF5_PATH_LIBRARIES\
 MAJORVERSION=4
 MINORVERSION=0
 #
+PFX='### pyCGNS:'
 #
 #
 __version__=MAJORVERSION
@@ -94,6 +94,7 @@ MINORVERSION='%(MINORVERSION)s'
 
 DATE='%(DATE)s'
 PLATFORM='%(PLATFORM)s'
+PFX='%(PFX)s'
 
 WRA_VERSION='%(WRA_VERSION)s'
 VAL_VERSION='%(VAL_VERSION)s'

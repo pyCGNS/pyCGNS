@@ -809,6 +809,8 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self._tree.bind('<BackSpace>',self._control.do_focus_back)    
     self._tree.notify_bind('<Expand-before>',open_node)
 
+#    print self._tree.bind()
+    
     # set up the root item (base)
     self._tree.itemstyle_set(ROOT, self.col_graph, self.st_folder)
     self._paths[str(ROOT)]=rootnodename

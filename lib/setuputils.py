@@ -16,6 +16,8 @@ from  distutils.command.clean import clean as _clean
 rootfiles=['errors.py']
 compfiles=['__init__.py','midlevel.py','wrap.py','version.py']
 
+pfx='### pyCGNS: '
+
 # --------------------------------------------------------------------
 def prodtag():
   from time import gmtime, strftime
@@ -49,12 +51,15 @@ def search(tag,deps=[]):
   for ck in dir(C_D):
     if (ck[0]!='_'): cfgdict[ck]=C_D.__dict__[ck]
   pg=prodtag()
+  cfgdict['PFX']=pfx
   cfgdict['DATE']=pg[0]
   cfgdict['PLATFORM']="%s %s %s"%(pg[1][0],pg[1][1],pg[1][-1])
   updateConfig('..',bptarget,cfgdict)
   sys.path=[bptarget]+sys.path
   try:
     import pyCGNSconfig as C
+
+    # -----------------------------------------------------------------------
     if ('HDF5' in deps):
       (C.HDF5_VERSION,
        C.HDF5_PATH_INCLUDES,
@@ -63,6 +68,15 @@ def search(tag,deps=[]):
        C.HDF5_EXTRA_ARGS)=find_HDF5(C.HDF5_PATH_INCLUDES+C.INCLUDE_DIRS,
                                     C.HDF5_PATH_LIBRARIES+C.LIBRARY_DIRS,
                                     C.HDF5_LINK_LIBRARIES)
+      if (C.HDF5_VERSION == ''):
+        print pfx+'ERROR: %s setup cannot find HDF5!'%tag
+        sys.exit(1)
+      print pfx+'using HDF5 %s for %s'%(C.HDF5_VERSION,tag)
+      print pfx+'using HDF5 headers from %s'%(C.HDF5_PATH_INCLUDES[0])
+      print pfx+'using HDF5 libs from %s'%(C.HDF5_PATH_LIBRARIES[0])
+      C.HAS_HDF5=True
+
+    # -----------------------------------------------------------------------
     if ('MLL' in deps):
       (C.MLL_VERSION,
        C.MLL_PATH_INCLUDES,
@@ -72,6 +86,15 @@ def search(tag,deps=[]):
                                   C.MLL_PATH_LIBRARIES+C.LIBRARY_DIRS,
                                   C.MLL_LINK_LIBRARIES,
                                   C.MLL_EXTRA_ARGS)
+      if (C.MLL_VERSION == ''):
+        print pfx+'ERROR: %s setup cannot find cgns.org library (MLL)!'%tag
+        sys.exit(1)
+      print pfx+'using MLL %s for %s'%(C.MLL_VERSION,tag)
+      print pfx+'using MLL headers from %s'%(C.MLL_PATH_INCLUDES[0])
+      print pfx+'using MLL libs from %s'%(C.MLL_PATH_LIBRARIES[0])
+      C.HAS_MLL=True
+        
+    # -----------------------------------------------------------------------
     if ('CHLone' in deps):
       (C.CHLONE_VERSION,
        C.CHLONE_PATH_INCLUDES,
@@ -80,16 +103,36 @@ def search(tag,deps=[]):
        C.CHLONE_EXTRA_ARGS)=find_CHLone(C.CHLONE_PATH_INCLUDES+C.INCLUDE_DIRS,
                                         C.CHLONE_PATH_LIBRARIES+C.LIBRARY_DIRS,
                                         C.CHLONE_LINK_LIBRARIES)
+
+      if (C.CHLONE_VERSION == ''):
+        print pfx+'ERROR: %s setup cannot find CHLone!'%tag
+        sys.exit(1)
+      print pfx+'using CHLone %s for %s'%(C.CHLONE_VERSION,tag)
+      print pfx+'using CHLone headers from %s'%(C.CHLONE_PATH_INCLUDES[0])
+      print pfx+'using CHLone libs from %s'%(C.CHLONE_PATH_LIBRARIES[0])
+      C.HAS_CHLONE=True
+        
+    # -----------------------------------------------------------------------
     if ('numpy' in deps):
       (C.NUMPY_VERSION,
        C.NUMPY_PATH_INCLUDES,
        C.NUMPY_PATH_LIBRARIES,
        C.NUMPY_LINK_LIBRARIES,
-       C.NUMPY_EXTRA_ARGS)=find_numpy(C.NUMPY_PATH_INCLUDES+C.INCLUDE_DIRS,
-                                      C.NUMPY_PATH_LIBRARIES+C.LIBRARY_DIRS)
+       C.NUMPY_EXTRA_ARGS)=find_numpy(C.NUMPY_PATH_INCLUDES)
+
+      if (C.NUMPY_VERSION == ''):
+        print pfx+'ERROR: %s setup cannot find Numpy!'%tag
+        sys.exit(1)
+      print pfx+'using Numpy API version %s for %s'%(C.NUMPY_VERSION,tag)
+      print pfx+'using Numpy headers from %s'%(C.NUMPY_PATH_INCLUDES[0])
+      C.HAS_NUMPY=True
+
+    # -----------------------------------------------------------------------
+
   except ImportError:
-    print 'pyGCNS[ERROR]: %s setup cannot find pyCGNSconfig.py file!'%tag
+    print pfx+'ERROR: %s setup cannot find pyCGNSconfig.py file!'%tag
     sys.exit(1)
+  updateConfig('..',bptarget,C.__dict__,cfgdict)
   return (C, state)
 
 # --------------------------------------------------------------------
@@ -140,8 +183,17 @@ def confValueAsStr(v):
   else:                     return '"%s"'%str(v)
 
 # --------------------------------------------------------------------
-def updateConfig(pfile,gfile,config_default):
-  if (not os.path.exists("%s/pyCGNSconfig.py"%(gfile))):
+def updateConfig(pfile,gfile,config_default,config_previous=None):
+  if (config_previous):
+    from pyCGNSconfig_default import file_pattern as fpat
+    cfg=config_default
+    for ck in config_previous:
+      if (not cfg.has_key(ck)): cfg[ck]=config_previous[ck]
+    f=open("%s/pyCGNSconfig.py"%(gfile),'w+')
+    f.writelines(fpat%cfg)
+    f.close()
+    return
+  elif (not os.path.exists("%s/pyCGNSconfig.py"%(gfile))):
     print "### pyCGNS: create new pyCGNSconfig.py file"
     newconf=1
   else:
@@ -172,19 +224,19 @@ def find_HDF5(pincs,plibs,libs):
          or (os.path.exists(pth+'/libhdf5.so'))
          or (os.path.exists(pth+'/libhdf5.sl'))):
       notfound=0
+      plibs=[pth]
       break
   if notfound:
-    print "### pyCGNS: ERROR: libhdf5 not found, please check paths:"
-    print "### pyCGNS: ",plibs
-    return ([],)*5
+    print pfx+"ERROR: libhdf5 not found, please check paths:"
+    print pfx,plibs
   notfound=1
   for pth in pincs:
     if (os.path.exists(pth+'/hdf5.h')): notfound=0
   if notfound:
-    print "### pyCGNS: ERROR: hdf5.h not found, please check paths"
-    print "### pyCGNS: ",pincs
-    return ([],)*5
+    print pfx,"ERROR: hdf5.h not found, please check paths"
+    print pfx,pincs
   ifh='HDF5 library version: unknown'
+  notfound=1
   for pth in pincs:
     if (os.path.exists(pth+'/H5public.h')):
       fh=open(pth+'/H5public.h','r')
@@ -193,12 +245,15 @@ def find_HDF5(pincs,plibs,libs):
       found=0
       for ifh in fl:
         if (ifh[:21] == "#define H5_VERS_INFO "):
-          vers=ifh.split('"')[1]
+          vers=ifh.split('"')[1].split()[-1]
           found=1
-      if found: break
-      print "### pyCGNS: ERROR: cannot find hdf5 version, please check paths"
-      print "### pyCGNS: ",pincs
-      return ([],)*5
+      if found:
+        pincs=[pth]
+        notfound=0
+        break
+  if notfound:
+      print pfx,"ERROR: cannot find hdf5 version, please check paths"
+      print pfx,pincs
   return (vers,pincs,plibs,libs,extraargs)
 
 # --------------------------------------------------------------------
@@ -206,6 +261,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
   notfound=1
   vers=''
   libs=['cgns','hdf5']
+  extraargs=['-DCGNS_SCOPE_ENUMS']
   for pth in pincs:
     if (os.path.exists(pth+'/cgnslib.h')):
       notfound=0
@@ -216,13 +272,11 @@ def find_MLL(pincs,plibs,libs,extraargs):
         if (ll[:20]=="#define CGNS_VERSION"):
           cgnsversion=ll.split()[2]
           if (cgnsversion<'3000'):
-            print "### pyCGNS: ERROR: version should be v3.x for MLL"
-            return ([],)*5
+            print pfx,"ERROR: version should be v3.x for MLL"
       break
   if notfound:
-    print "### pyCGNS: ERROR: cgnslib.h not found, please check paths"
-    print "### pyCGNS: ",pincs
-    return ([],)*5
+    print pfx,"ERROR: cgnslib.h not found, please check paths"
+    print pfx,pincs
 
   notfound=1
   for pth in plibs:
@@ -233,9 +287,8 @@ def find_MLL(pincs,plibs,libs,extraargs):
       notfound=0
       break
   if notfound:
-    print "### pyCGNS: ERROR: libcgns not found, please check paths:"
-    print "### pyCGNS: ",plibs
-    return ([],)*5
+    print pfx,"ERROR: libcgns not found, please check paths:"
+    print pfx,plibs
     
   notfound=1
   for pth in pincs:
@@ -246,9 +299,8 @@ def find_MLL(pincs,plibs,libs,extraargs):
       notfound=0
 
   if notfound:
-    print "### pyCGNS: Warning: ADFH.h not found, using pyCGNS own headers"
+    print pfx,"Warning: ADFH.h not found, using pyCGNS own headers"
     extraargs+=['-U__ADF_IN_SOURCES__']
-  #extraargs+=['-DLEGACY_SUPPORT']
 
   return (cgnsversion,pincs,plibs,libs,extraargs)
 
@@ -259,35 +311,84 @@ def find_CHLone(pincs,plibs,libs):
   notfound=1
   libs=['CHLone']
   for pth in plibs:
-    if (    (os.path.exists(pth+'/libCHlone.a'))
-         or (os.path.exists(pth+'/libCHlone.so'))
-         or (os.path.exists(pth+'/libCHlone.sl'))):
-      libs=['CHlone']
+    if (    (os.path.exists(pth+'/libCHLone.a'))
+         or (os.path.exists(pth+'/libCHLone.so'))
+         or (os.path.exists(pth+'/libCHLone.sl'))):
       notfound=0
+      plibs=[pth]
       break
   if notfound:
-    print "### pyCGNS: ERROR: libCHlone not found, please check paths:"
-    print "### pyCGNS: ",plibs
-    return ([],)*5
+    print pfx,"ERROR: libCHlone not found, please check paths:"
+    print pfx,plibs
   notfound=1      
   for pth in pincs:
-    if (os.path.exists(pth+'/CHLone/CHlone.h')): notfound=0
+    if (os.path.exists(pth+'/CHLone/CHLone.h')):
+      fh=open(pth+'/CHLone/config.h','r')
+      fl=fh.readlines()
+      fh.close()
+      found=0
+      vma=0
+      vmi=0
+      for ifh in fl:
+        if (ifh[:21] == "#define CHLONE_MAJOR "):
+          vma=ifh.split()[-1]
+        if (ifh[:21] == "#define CHLONE_MINOR "):          
+          vmi=ifh.split()[-1]
+          found=1
+      if found:
+        vers="%s.%s"%(vma,vmi)
+        pincs=[pth]
+        notfound=0
+        break
   if notfound:
-    print "### pyCGNS: ERROR: CHLone/CHlone.h not found, please check paths"
-    print "### pyCGNS: ",pincs
-    return ([],)*5
-  
+    print pfx,"ERROR: CHLone/CHLone.h not found, please check paths"
+    print pfx,pincs
   return (vers,pincs,plibs,libs,extraargs)
 
 # --------------------------------------------------------------------
-def find_numpy(pincs,plibs):
-  vers='1.4'
+def find_numpy(pincs):
+  vers=''
   extraargs=[]
   libs=[]
+  plibs=[]
   pdir=os.path.normpath(sys.prefix)
   xdir=os.path.normpath(sys.exec_prefix)
-  pincs=['%s/lib/python%s/site-packages/numpy/core/include'\
+  pincs+=['%s/lib/python%s/site-packages/numpy/core/include'\
          %(xdir,sys.version[:3])]
+  pincs+=['%s/lib/python%s/site-packages/numpy/core/include'\
+         %(pdir,sys.version[:3])]
+  notfound=1      
+  for pth in pincs:
+    if (os.path.exists(pth+'/numpy/ndarrayobject.h')):
+      fh=open(pth+'/numpy/ndarrayobject.h','r')
+      fl=fh.readlines()
+      fh.close()
+      found=0
+      for ifh in fl:
+        if (ifh[:20] == "#define NPY_VERSION "):
+          vers=ifh.split()[-1]
+          found=1
+      if found:
+        pincs=[pth]
+        notfound=0
+        break
+    if (os.path.exists(pth+'/numpy/_numpyconfig.h')):
+      fh=open(pth+'/numpy/_numpyconfig.h','r')
+      fl=fh.readlines()
+      fh.close()
+      found=0
+      for ifh in fl:
+        if (ifh[:24] == "#define NPY_ABI_VERSION "):
+          vers=ifh.split()[-1]
+          found=1
+      if found:
+        pincs=[pth]
+        notfound=0
+        break
+  if notfound:
+    print pfx,"ERROR: numpy headers not found, please check your paths"
+    print pfx,pincs
+  
   return (vers,pincs,plibs,libs,extraargs)
 
 # --- last line
