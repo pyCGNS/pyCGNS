@@ -427,6 +427,11 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
         self.RetypeCascade.delete(0,self.RetypeCascade.maxIndex)
       pnode=self.findParentNodeFromPath(path)
       tlist=s7parser.getNodeAllowedChildrenTypes(pnode,node)
+      try:
+        tlist.remove(node[3])
+        tlist=[node[3]]+tlist
+      except ValueError:
+        pass
       self.RetypeCascade.maxIndex=len(tlist)
       for t in tlist:
         self.RetypeCascade.add_command(label=t,font=G___.font['E'],
@@ -721,6 +726,29 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     def cut_node(event):
       self.SubCut()
 
+    def local_menu(event):
+      tktree=event.widget
+      id=tktree.identify(event.x,event.y)
+      if (len(id) < 4): return
+      item=tktree.item_id(id[1])
+      self._tree.selection_clear()
+      self._tree.selection_add(item)
+      path=self._paths[str(item[0])]
+      node=self.findNodeFromPath(path)
+      self._edit.set(path)
+      col=int(id[3])
+      if (col==self.col_graph): self.SubRename()
+      if (col==self.col_type):
+        updateRetypeCascade(node,path)
+        self.RetypeCascade.tk_popup(event.x_root,event.y_root,0)
+        self.RetypeCascade.grab_release()
+      if (col==self.col_xdata):
+        updateDataRetypeCascade(node,path)
+        self.DataRetypeCascade.tk_popup(event.x_root,event.y_root,0)
+        self.DataRetypeCascade.grab_release()
+      if (col==self.col_linkstatus):
+        print 'Remove/Add link'
+          
     def mark_or_edit_node(event):
       tktree=event.widget
       id=tktree.identify(event.x,event.y)
@@ -788,6 +816,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
 
     # bind the callback to <Expand-before> events
     self._tree.bind('<Button-2>', open_table)
+    self._tree.bind('<Shift-Button-1>', local_menu)
     self._tree.bind('<Double-Button-1>', mark_or_edit_node)
     self._tree.bind('<Delete>', cut_node)
     self._tree.bind('<space>', mark_node)
@@ -933,7 +962,6 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     wTreeSimple._nodebuffer=node    
         
   def SubAddLink(self):
-    return # to fix
     if (not self.getItemSelection()[0]): return
     currentpath=self.getSinglePathSelection()
     node=self.findNodeFromPath(currentpath)
