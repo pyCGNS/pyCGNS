@@ -30,6 +30,7 @@ def sortLinkList(a,b):
   if (acurnode>bcurnode): return  1
   return 0
 
+
 # -----------------------------------------------------------------------------
 class wLinkEdit(s7windoz.wWindoz):
   def __init__(self,wcontrol,tree,fingerprint,node,ppath):
@@ -300,6 +301,15 @@ def getLinkStatusForThisNode(pth,node,parent,CGNStarget,treefinger):
     if (lk[1]==pth):             rt=1
     if ((rt==1) and (lk[5]==0)): rt=3
     if ((rt==1) and (not G___.followLinks)): rt=2
+  return rt
+
+def getLinkInfoForThisNode(pth,node,parent,CGNStarget,treefinger):
+  rt=(treefinger.filename,'','','',0,0)
+  if (getLinkStatusForThisNode(pth,node,parent,CGNStarget,treefinger)):
+    for lk in treefinger.links:
+      if (lk[1]==pth):
+        rt=lk
+        break
   return rt
 
 # --- last line

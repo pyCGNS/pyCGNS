@@ -11,6 +11,8 @@ import sys
 import string
 import getopt
 
+pcom=sys.executable
+
 version=4
 versionList=[4]
 
@@ -53,7 +55,7 @@ for mod in modList:
   print '\n',mod, 65*'-'
   if os.path.exists('./%s/setup.py'%mod):
     os.chdir(mod)
-    com='python setup.py %s'%modArgs
+    com='%s setup.py %s'%(pcom,modArgs)
     print com
     os.system(com)
     os.chdir('..')
