@@ -63,7 +63,9 @@ ext_modules  = [Extension('CGNS.MAP',
                 sources = ['CGNS/MAP/MAPmodule.c'],
                 include_dirs = cf_include_dirs,
                 library_dirs = cf_library_dirs,
-                libraries    = cf_optional_libs)],
+                libraries    = cf_optional_libs,
+                depends      = ['CGNS/MAP/SIDStoPython.h',
+                                'CGNS/MAP/SIDStoPython.c'])],
 cmdclass={'clean':setuputils.clean}
 )
 

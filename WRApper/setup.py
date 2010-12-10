@@ -6,8 +6,9 @@
 #  -------------------------------------------------------------------------
 import os
 import string
-from   distutils.core import setup, Extension
-
+from distutils.core import setup
+from distutils.extension import Extension
+from Cython.Distutils import build_ext
 
 # --- pyCGNSconfig search
 import sys
@@ -77,7 +78,11 @@ lext_modules  = [
               sources=['CGNS/WRA/modadf/adfmodule.c'],
                         include_dirs = include_dirs,
                         library_dirs = library_dirs,
-                        libraries    = optional_libs)
+                        libraries    = optional_libs),
+#              Extension('CGNS.WRA.mll',['CGNS/WRA/mll.pyx'],
+#                        include_dirs = include_dirs,
+#                        library_dirs = library_dirs,
+#                        libraries    = optional_libs)
               ] # close extension modules
 
 if (not os.path.exists("build")): os.system("ln -sf ../build build")
@@ -96,7 +101,7 @@ setup (
   scripts      = lscripts,
   data_files   = ldata_files,
 
-  cmdclass={'clean':setuputils.clean}
+  cmdclass={'clean':setuputils.clean,'build_ext': build_ext}
 
 ) # close setup
 

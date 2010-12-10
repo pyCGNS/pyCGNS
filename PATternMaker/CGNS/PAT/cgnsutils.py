@@ -11,6 +11,7 @@ import CGNS.PAT.cgnserrors   as CE
 import CGNS
 
 import numpy as NPY
+import string
 
 # -----------------------------------------------------------------------------
 # support functions
@@ -225,6 +226,10 @@ def getNodeType(node):
   return '??'
 
 # --------------------------------------------------
+def checkPath(path):
+  return True
+
+# --------------------------------------------------
 def getValueByPath(path,tree): # not bulletproof
   n=getNodeFromPath(path.split('/'),tree)
   if (n==-1): return None
@@ -234,7 +239,21 @@ def getValueByPath(path,tree): # not bulletproof
 def getNodeByPath(path,tree):
   if (not checkPath(path)): return None
   if (path[0]=='/'): path=path[1:]
+  if (tree[3]==CK.CGNSTree_ts):
+    path=string.join(path.split('/')[1:],'/')
   n=getNodeFromPath(path.split('/'),tree)
+  if (n==-1): return None
+  return n
+
+# --------------------------------------------------
+def nodeByPath(path,tree):
+  if (not checkPath(path)): return None
+  if (path[0]=='/'): path=path[1:]
+  if (tree[3]==CK.CGNSTree_ts):
+    path=string.join(path.split('/')[1:],'/')
+    n=getNodeFromPath(path.split('/'),tree)
+  else:
+    n=getNodeFromPath(path.split('/'),[None,None,[tree],None])
   if (n==-1): return None
   return n
 
@@ -281,6 +300,21 @@ def childNames(node):
   for c in node[2]:
     r.append(c[0])
   return r
+
+# --------------------------------------------------
+def getAllNodesByTypeList(typelist,tree):
+  if (tree[3]==CK.CGNSTree_ts): start="/%s"%tree[0]
+  else:                         start="%s"%tree[0]
+  n=getAllNodesFromTypeList(typelist,tree[2],start,[])
+  return n
+
+# --------------------------------------------------
+def getAllNodesFromTypeList(typelist,node,path,result):
+  for c in node:
+    if (c[3] in typelist):
+      result.append("%s/%s"%(path,c[0]))
+    getAllNodesFromTypeList(typelist,c[2],"%s/%s"%(path,c[0]),result)
+  return result
 
 # --------------------------------------------------
 def getNodeAllowedChildrenTypes(pnode,node):

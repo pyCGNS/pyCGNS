@@ -28,6 +28,7 @@ import s7windoz
 import s7linkView
 import s7operateView
 import s7log
+import s7vtkView
     
 # --------------------------------------------------------------------
 class wEditBarStore:
@@ -261,6 +262,8 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       self.unmodified()
   def cbk_link(self):
     self.linkView()
+  def cbk_vtk(self):
+    self.vtkView()
   def cbk_query(self):
     pass
   def cbk_check(self):
@@ -332,6 +335,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self._tree.state_define('islinkbroken')            
 
     self._haslinkWindow=None
+    self._hasvtkWindow=None
 
     self.updateMaxLevel()
     
@@ -359,7 +363,8 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
                ('link-view',    NW,20,self.cbk_link,'Open link view'),
                ('operate-view', NW, 2,self.cbk_query,'Selection query view'),
                ('check-view',   NW, 2,self.cbk_check,'Check view'),
-               ('snapshot',     NW,20,self.cbk_print,'Snapshot current view')])
+               ('snapshot',     NW,20,self.cbk_print,'Snapshot current view'),
+               ('snapshot',     NW,20,self.cbk_vtk,'VTK view')])
 
     def popUpMenuOn(event,treefingerprint,node):
       try:
@@ -1382,6 +1387,11 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     if (not self._haslinkWindow):
       self._haslinkWindow=s7linkView.wLinkView(self,self._viewtree)
     return self._haslinkWindow
+    
+  def vtkView(self):
+    if (not self._hasvtkWindow):
+      self._hasvtkWindow=s7vtkView.wVTKView(self,self._viewtree)
+    return self._hasvtkWindow
     
   def getSIDSelement(self,tktree,pth,node,item):
     enew = tktree.create_item(parent=item, button=1, open=0)[0]

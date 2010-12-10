@@ -14,6 +14,10 @@
 #include "CHLone/SIDS.h"
 
 /* ------------------------------------------------------------------------- */
+#define SIDSTOPYTHON_MAJOR 0
+#define SIDSTOPYTHON_MINOR 2
+
+/* ------------------------------------------------------------------------- */
 #define S2P_FNONE          0x0000
 #define S2P_FALL           0xFFFF
 #define S2P_FTRACE         0x0001  
@@ -26,6 +30,8 @@
 #define S2P_FUPDATE        0x0080
 #define S2P_FDELETEMISSING 0x0100
 #define S2P_FALTERNATESIDS 0x0200
+
+#define S2P_FDEFAULT  ((S2P_FNONE|S2P_FFOLLOWLINKS)& ~S2P_FREVERSEDIMS)
 
 /* ------------------------------------------------------------------------- */
 typedef struct s2p_ent_t

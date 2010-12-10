@@ -313,22 +313,21 @@ static int s2p_getData(PyObject *dobject,
     return 0;
   }
 
-  *dtype=DT_MT;
   ddims[0]=0;
+  *dtype=DT_MT;
   *dvalue=NULL;
 
   L3M_CLEARDIMS(dshape);
 
-  /* --- Integer */
-  if (PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_INT))
+  if (PyArray_Check(dobject))
   {
-    *dtype=DT_I4;
      ddims[0]=PyArray_NDIM(dobject);
+     total=1;
      for (n=0; n<ddims[0]; n++)
      {
      	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
      	{ 
-     	  dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
+     	  dshape[n]=(int)PyArray_DIM(dobject,ddims[0]-n-1);
      	  total*=dshape[ddims[0]-n-1];
      	}
      	else
@@ -338,95 +337,39 @@ static int s2p_getData(PyObject *dobject,
      	}
      } 
      *dvalue=(char*)PyArray_DATA(dobject);
+  }
+
+  /* --- Integer */
+  if (PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_INT))
+  {
+    *dtype=DT_I4;
     return 1;
   }
   /* --- Long */
   if (PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_LONG))
   {
     *dtype=DT_I8;
-    ddims[0]=PyArray_NDIM(dobject);
-    for (n=0; n<ddims[0]; n++)
-    {
-      if (S2P_HASFLAG(S2P_FREVERSEDIMS))
-      { 
-        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-        total*=dshape[ddims[0]-n-1];
-      }
-      else
-      {
-	dshape[n]=(int)PyArray_DIM(dobject,n);
-        total*=dshape[n];
-      }
-    } 
-    *dvalue=(char*)PyArray_DATA(dobject);
     return 1;
   }
   /* --- Double */
   if ((PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_DOUBLE)))
   {
-      *dtype=DT_R8;
-      ddims[0]=PyArray_NDIM(dobject);
-      total=1;
-      for (n=0; n<ddims[0]; n++)
-      {
-	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
-        { 
-          dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-          total*=dshape[ddims[0]-n-1];
-        }
-        else
-        {
-	  dshape[n]=(int)PyArray_DIM(dobject,n);
-          total*=dshape[n];
-        }
-      }
-      *dvalue=(char*)PyArray_DATA(dobject);
+    *dtype=DT_R8;
     return 1;
   }
   /* --- Float */
   if ((PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_FLOAT)))
   {
     *dtype=DT_R4;
-    ddims[0]=PyArray_NDIM(dobject);
-    for (n=0; n<ddims[0]; n++)
-    {
-      if (S2P_HASFLAG(S2P_FREVERSEDIMS))
-      { 
-        dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-        total*=dshape[ddims[0]-n-1];
-      }
-      else
-      {
-        dshape[n]=(int)PyArray_DIM(dobject,n);
-        total*=dshape[n];
-      }
-    } 
-    *dvalue=(char*)PyArray_DATA(dobject);
     return 1;
   }
   /* --- String */
   if ((PyArray_Check(dobject) && (PyArray_TYPE(dobject)==NPY_STRING)))
   {
     *dtype=DT_C1;
-     ddims[0]=PyArray_NDIM(dobject);
-     total=1;
-     for (n=0; n<ddims[0]; n++)
-     {
-     	if (S2P_HASFLAG(S2P_FREVERSEDIMS))
-     	{ 
-         dshape[ddims[0]-n-1]=(int)PyArray_DIM(dobject,n);
-         total*=dshape[ddims[0]-n-1];
-       }
-       else
-       {
-         dshape[n]=(int)PyArray_DIM(dobject,n);
-         total*=dshape[n];
-       }
-     } 
-     *dvalue=(char*)PyArray_DATA(dobject);
      return 1;
   }
-  return 1;
+  return 0;
 }
 /* ------------------------------------------------------------------------- */
 static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
@@ -503,10 +446,10 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     n=0;
     while ((n<L3C_MAX_DIMS)&&(rnode->dims[n]!=-1))
     {
-      // code modification:
       if (S2P_HASFLAG(S2P_FREVERSEDIMS))
       {
 	npy_dim_vals[ndim-n-1]=rnode->dims[n];
+	S2P_TRACE(("### Reverse dimensions\n"));
       }
       else
       {
@@ -564,10 +507,12 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   o_clist=PyList_New(0);
   nextpath=path;
   child=0;
+  /*
   if (rnode->children == NULL)
   {
     S2P_TRACE(("### No child \n"));
   }
+  */
   while ((rnode->children != NULL) && (rnode->children[child] != -1))
   {
     cnode=L3_nodeRetrieve(l3db,rnode->children[child]);
@@ -637,7 +582,14 @@ static int s2p_parseAndWriteHDF(hid_t     id,
     }
     strcat(curpath,"/");
     strcat(curpath,name);
-    S2P_TRACE(("### create [%s][%s]",curpath,altlabel));
+    if (S2P_HASFLAG(S2P_FREVERSEDIMS))
+    { 
+      S2P_TRACE(("### create (swap dims) [%s][%s]",curpath,altlabel));
+    }
+    else
+    { 
+      S2P_TRACE(("### create [%s][%s]",curpath,altlabel));
+    }
     if (s2p_checklinktable(context,curpath))
     {
       S2P_TRACE(("### linked to [%s][%s]\n",curpath,altlabel));
@@ -706,6 +658,9 @@ PyObject* s2p_loadAsHDF(char *filename,
 
   /* We do NOT check file name or file access, it's up to the caller to make
      such checks. Anyway, HDF will check. */
+  S2P_TRACE(("### SIDS-to-python v%d.%d\n",
+	     SIDSTOPYTHON_MAJOR,SIDSTOPYTHON_MINOR));
+  S2P_TRACE(("### load file [%s]\n",filename));
   l3db=s2p_addoneHDF(filename,context);
   rnode=L3_nodeRetrieve(l3db,l3db->root_id);
   ret=s2p_parseAndReadHDF(l3db->root_id,rnode->name,cpath,path,context,l3db);
@@ -762,6 +717,8 @@ int s2p_saveAsHDF(char      *filename,
   context->_c_char=NULL;
   cpath[0]='\0';
 
+  S2P_TRACE(("### SIDS-to-python v%d.%d\n",
+	     SIDSTOPYTHON_MAJOR,SIDSTOPYTHON_MINOR));
   S2P_TRACE(("### save in file [%s]\n",filename));
   if (    (PyList_Check(tree))
        && (PyList_Size(tree) == 4)

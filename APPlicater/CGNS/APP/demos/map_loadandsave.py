@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import CGNS.MAP
+import CGNS.PAT.cgnsutils as PU
 import numpy
 import time
 import sys
@@ -10,9 +11,7 @@ flags=CGNS.MAP.S2P_FOLLOWLINKS|CGNS.MAP.S2P_TRACE
 start=time.clock()
 (tree,links)=CGNS.MAP.load("./001Disk.hdf",flags)
 
-import path_utils
-
-node=path_utils.getNodeByPath("/Disk/zone1/ZoneBC/ext1/PointRange",tree)
+node=PU.getNodeByPath("/Disk/zone1/ZoneBC/ext1/PointRange",tree)
 
 print "PointRange is fortran:",numpy.isfortran(node[1]),node[1],node[1].shape
 
@@ -24,6 +23,8 @@ f.write('\nlinks=')
 f.write(str(links))
 f.write('\n')
 f.close()
+
+CGNS.MAP.save("./002Disk.hdf",tree,links,flags)
 
 end=time.clock()
 print '# time =',end-start

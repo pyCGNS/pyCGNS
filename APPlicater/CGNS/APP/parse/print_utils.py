@@ -10,17 +10,7 @@ from time import localtime, strftime
 
 # --------------------------------------------------
 def printNodeArray(node):
-  s="["
-  if (node[1].dtype.char  in ['i','l']):
-    for n in node[1].flat:
-      s+="%d,"%n
-  if (node[1].dtype.char  in ['f','d']):
-    for n in node[1].flat:
-      s+="%e,"%n
-  if (node[1].dtype.char  in ['s','c']):
-    for n in node[1].flat:
-      s+="'%s',"%n
-  return s[:-1]+']'
+  return node[1].T.flat[:].tolist()
     
 # --------------------------------------------------
 def printNodeValue(node):
