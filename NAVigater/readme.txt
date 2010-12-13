@@ -22,6 +22,7 @@ patterns...
    treeView
    optionView
    patternView
+   vtkView
    queryView
    linkView
    tableView

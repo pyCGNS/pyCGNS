@@ -1,0 +1,36 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
+VTK View
+++++++++
+
+Camera
+======
+
+The camera is your eye, when you move around the object you are looking at
+the camera is moving, not the object.
+The object has a position in the 3D space, its coordinates are relative 
+to an origin.
+
+
+Key bindings
+============
+
+The bindings are the default VTK behaviour, see below how you can
+interact with the scene depending on the mode you have. The default
+mode is the *Trackball Camera* mode (note that all other modes are unactivated
+in this CGNS.NAV version).
+
+ t Trackball Camera mode. 
+
+   mouse left Rotation
+   mouse right Zoom
+   mouse middle Panning
+   ctrl - left Spinning
+
+
+
+
+.. -------------------------------------------------------------------------
