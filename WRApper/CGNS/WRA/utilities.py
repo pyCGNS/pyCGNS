@@ -8,6 +8,8 @@ import CGNS.WRA
 import CGNS.WRA._mll     as MLL
 import CGNS.WRA.wrapper  as WRP
 import CGNS.WRA._adf     as ADF
+import CGNS.PAT.cgnsutils
+
 import numpy             as NPY
 import os
 import string
@@ -137,32 +139,32 @@ def pnice(a):
      return __pnice(a,0)  
 
 # ======================================================================
-def __singleNodeFromADF(db,id,path,flink,maxread,dmax,ptarget):
+def __singleNodeFromADF(db,id,path,flink,maxread,dmax,ptarget,lksearch):
   nodeinfo=db.nodeAsDict(id)
   if (path and (len(path)==1) and (path[0] == nodeinfo['name'])):
-    rinfo=__parseAndReadADF(db,id,flink,maxread,dmax,ptarget)
+    rinfo=__parseAndReadADF(db,id,flink,maxread,dmax,ptarget,lksearch)
     return rinfo
   if (path and (path[0] == nodeinfo['name'])):
     clist=list(nodeinfo['children'])
     for child in clist:
       rinfo=__singleNodeFromADF(db,db.get_node_id(id,child),
-                                path[1:],flink,maxread,dmax,ptarget)
+                                path[1:],flink,maxread,dmax,ptarget,lksearch)
       if (rinfo!=None): return rinfo
   return None
   
-def getSingleNodeFromADF(file,path,flink,maxread,dmax,ptarget):
+def getSingleNodeFromADF(file,path,flink,maxread,dmax,ptarget,psearch=[]):
   db=WRP.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
   nodeinfo=db.nodeAsDict(db.root())
   for child in nodeinfo['children']:
     info=__singleNodeFromADF(db,db.get_node_id(db.root(),child),
                              string.split(path,'/')[1:],
-                             flink,maxread,dmax,ptarget)
+                             flink,maxread,dmax,ptarget,psearch)
     if (info!=None): return info
   db.database_close()
   return info
 
 # ======================================================================
-def search(node,path):
+def nsearch(node,path):
   lpath=path.split('/')
   if (len(path) and (path[0]=='/')):
     lpath=lpath[1:]
@@ -173,6 +175,7 @@ def searchNode(node,lpath):
   if (len(node)!=4):  return None
   if (node[2]==None): return None  
   for n in node[2]:
+#    print n[0], lpath[0]
     if (n[0]==lpath[0]):
       if (len(lpath)>1):         
         return searchNode(n,lpath[1:])
@@ -291,7 +294,7 @@ def __parseAndWriteADF(db,tree,parent_id,links,path):
       
 # -----------------------------------------------------------------------------
 def __parseAndReadADF(db,nodeid,__followlink=1,__maxreadalldata=0,
-                      __depthmax=999,__pathtarget=None,dbs={}):
+                      __depthmax=999,__pathtarget=None,dbs={},lksearch=[]):
   __depthmax-=1
   nodeinfo=db.nodeAsDict(nodeid)
   clist=list(nodeinfo['children'])
@@ -329,19 +332,22 @@ def __parseAndReadADF(db,nodeid,__followlink=1,__maxreadalldata=0,
       if (__trustLink(linkFile,linkNode) and __followlink):
         actualinfo=getSingleNodeFromADF(linkFile,linkNode,
                                         __followlink,__maxreadalldata,
-                                        __depthmax,__pathtarget)
+                                        __depthmax,__pathtarget,lksearch)
         if (actualinfo==None):
           result=loadAsADF(linkFile,
                            __followlink,__maxreadalldata,
-                           __depthmax,__pathtarget,dbs,0)
-          info=search([None, None, result, None], linkNode)
+                           __depthmax,__pathtarget,dbs,0,lksearch)
+          info=nsearch([None, None, result, None], linkNode)
           if (info==None):
             info=[nodeinfo['name'],
-                  '%s:%s'%(linkFile,linkNode),[],nodeinfo['label']]
-        info=[nodeinfo['name'],actualinfo[1],actualinfo[2],actualinfo[3]]
+                  CGNS.PAT.cgnsutils.setStringAsArray('%s:%s'%(linkFile,linkNode)),
+                  [],nodeinfo['label']]
+          else:
+            info=[nodeinfo['name'],actualinfo[1],actualinfo[2],actualinfo[3]]
       else:
         info=[nodeinfo['name'],
-              '%s:%s'%(linkFile,linkNode),[],nodeinfo['label']]
+              CGNS.PAT.cgnsutils.setStringAsArray('%s:%s'%(linkFile,linkNode)),
+              [],nodeinfo['label']]
   #no link  
   elif (__depthmax>0): 
     info=[nodeinfo['name'],ar]     
@@ -349,7 +355,7 @@ def __parseAndReadADF(db,nodeid,__followlink=1,__maxreadalldata=0,
     for n in clist:
       lc.append(__parseAndReadADF(db,db.get_node_id(nodeid,n),
                                   __followlink,__maxreadalldata,
-                                  __depthmax,__pathtarget,dbs))
+                                  __depthmax,__pathtarget,dbs,lksearch))
     info+=[lc,nodeinfo['label']]
   else:
     info=[nodeinfo['name'],ar]     
@@ -367,32 +373,47 @@ def __trustLink(file,path):
   except:
     return (0,file)
 
-def __parseAndFindLinksADF(db,nodeid,level,path,dbs,file):
+def __parseAndFindLinksADF(db,nodeid,level,path,dbs,file,search):
   nodeinfo=db.nodeAsDict(nodeid)
   clist=list(nodeinfo['children'])
   if (nodeinfo['name']not in ['ADF MotherNode','HDF5 MotherNode']):
     path+='/%s'%nodeinfo['name']
-  #link
+  # link status (tlk) is
+  # 0 not a link (should not happen here)
+  # 1 link ok
+  # 2 link but ignored
+  # 3 link but file not found
+  # 4 link file ok but path not found
   if (nodeinfo['datatype']=='LK'):
     linkFile=nodeinfo['file']
     linkNode=nodeinfo['path']
-    (tlk,tfile)=__trustLink(linkFile,linkNode)
-    result=[(file,path,tfile,linkNode,level,tlk)]
+    # 1,2,3
+    (tdir,tfile)=CGNS.PAT.cgnsutils.checkLinkFile(linkFile,search)
     r=None
-    if (tlk):
+    if (tfile):
+      actualfile=os.path.normpath(tdir+'/'+tfile)
       #print '__parseAndFindLinksADF',level,tfile,linkNode
-      r=findLinkAsADF(tfile,level+1,'',dbs)
+      r=findLinkAsADF(actualfile,search,level+1,'',dbs)
+      actualinfo=getSingleNodeFromADF(actualfile,linkNode,1,0,999,None,search)
+      if (actualinfo!=None):
+        tlk=1
+      else:
+        tlk=4
+    else:
+      tlk=3
+      tfile=linkFile
+    result=[(file,path,tfile,linkNode,level,tlk)]
     if (r): result+=r
-  #no link  
   else:
     result=[]
     for n in clist:
-      r=__parseAndFindLinksADF(db,db.get_node_id(nodeid,n),level,path,dbs,file)
+      r=__parseAndFindLinksADF(db,db.get_node_id(nodeid,n),level,
+                               path,dbs,file,search)
       if (r): result+=r
   return result
 
 # -----------------------------------------------------------------------------
-def findLinkAsADF(file,level=0,path='',dbs={}):
+def findLinkAsADF(file,lksearch,level=0,path='',dbs={}):
 #  print 'findLinkAsADF',file, level
 #  print 'findLinkAsADF',dbs
   lastfileentry='  last  '
@@ -409,7 +430,7 @@ def findLinkAsADF(file,level=0,path='',dbs={}):
       db=WRP.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
       dbs[rfile]=db
       dbs[lastfileentry]=db
-      __links=__parseAndFindLinksADF(db,db.root(),level,path,dbs,file)
+      __links=__parseAndFindLinksADF(db,db.root(),level,path,dbs,file,lksearch)
     if (level==0):
       kdbs=dbs.keys()
       for kdb in kdbs:
@@ -417,11 +438,12 @@ def findLinkAsADF(file,level=0,path='',dbs={}):
         del dbs[kdb]
   except ADF.error,e:
       print 'findLinkAsADF :',e
+  print __links
   return __links
 
 # remove duplicates
-def getLinksAsADF(file):
-  r=findLinkAsADF(file,dbs={})
+def getLinksAsADF(file,searchpath=[]):
+  r=findLinkAsADF(file,searchpath,dbs={})
   if (not r): return []
   r.sort()
   s={}
@@ -444,7 +466,8 @@ def getLinksAsADF(file):
 # if path != None: go straight to given path, other children are ignored
 # if path == None: parse children regardless of their name
 #
-def loadAsADF(file,link=1,max=0,depth=999,path=None,dbs={},start=1):
+def loadAsADF(file,link=1,max=0,depth=999,path=None,dbs={},
+              start=1,lksearch=[]):
   __tree = None
   lastfileentry='  last  '
   rfile=os.path.split(file)[-1]
@@ -457,7 +480,7 @@ def loadAsADF(file,link=1,max=0,depth=999,path=None,dbs={},start=1):
     if (not dbs.has_key(rfile)):
       #print 'pyCGNS: loadAsADF (open) ',file,path
       db=WRP.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
-      r=__parseAndReadADF(db,db.root(),link,max,depth,path,dbs)
+      r=__parseAndReadADF(db,db.root(),link,max,depth,path,dbs,lksearch)
       db.database_close()
       dbs[rfile]=r[2]
       dbs[lastfileentry]=r[2]

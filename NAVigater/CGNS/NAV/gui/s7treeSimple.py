@@ -1189,9 +1189,12 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
                                         datatype=STRING, draw=True)
             if (it):
               tktree.itemelement_config(it, self.col_type, self.el_text2,
-                                        text=pnode[3], datatype=STRING)      
+                                        text=pnode[3], datatype=STRING)
+              ndtype=s7parser.getNodeType(pnode)
+              if s7linkView.isLinkNode(self._paths[str(it)],self._viewtree):
+                ndtype='LK'
               tktree.itemelement_config(it, self.col_xdata, self.el_text5,
-                                        text=s7parser.getNodeType(pnode),
+                                        text=ndtype,
                                         datatype=STRING)
             # update all children paths
             # subviews paths are relatives... more difficult
@@ -1229,9 +1232,12 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
               tktree.itemelement_config(it,self.col_tdata,self.el_t3,draw=True)
             
             tktree.itemelement_config(it, self.col_type, self.el_text2,
-                                      text=node[3], datatype=STRING)      
+                                      text=node[3], datatype=STRING)
+            ndtype=s7parser.getNodeType(node)
+            if s7linkView.isLinkNode(self._paths[str(it)],self._viewtree):
+              ndtype='LK'
             tktree.itemelement_config(it, self.col_xdata, self.el_text5,
-                                      text=s7parser.getNodeType(node),
+                                      text=ndtype,
                                       datatype=STRING)
             tktree.itemelement_config(it, self.col_ddata, self.el_text6,
                                       text=s7parser.getNodeShape(node),
@@ -1447,8 +1453,11 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
                               text=node[3], datatype=STRING)      
 
     tktree.itemstyle_set(enew, self.col_xdata, self.st_datatype)
+    ndtype=s7parser.getNodeType(node)
+    if s7linkView.isLinkNode(self._paths[str(enew)],self._viewtree):
+      ndtype='LK'
     tktree.itemelement_config(enew, self.col_xdata, self.el_text5,
-                              text=s7parser.getNodeType(node),datatype=STRING)
+                              text=ndtype,datatype=STRING)
 
     tktree.itemstyle_set(enew, self.col_ddata, self.st_datadims)
     tktree.itemelement_config(enew, self.col_ddata, self.el_text6,

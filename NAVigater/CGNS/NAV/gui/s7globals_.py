@@ -43,7 +43,7 @@ class s7optionsStorage:
      'pattern-save','tree-save','check-clear','check-save','check-all',
      'print-view','close-view','undo-last-modification','view-help',
      'flag-revert','flag-none','flag-all','operate-view','operate-list',
-     'flag-bwd','flag-fwd','select-update','vtk',
+     'flag-bwd','flag-fwd','select-update','link-nofile','link-nopath','vtk',
      'level-in','level-out','tree-new','tree-add','tree-del','tree-load',
      'snapshot','pattern-view','link-view','query-and','query-or','query-not'
      ]
@@ -61,11 +61,12 @@ class s7optionsStorage:
     self.iconStorage={}
     self.treeStorage=[]
     self.expandRecurse=0
-    self.lateLoading=1    
+    self.lateLoading=0    
     self.maxRecurse=30
     self.sidsRecurse=0
+    self.forceLegacyMapping=0    
     self.singleView=0
-    self.flyCheck=1
+    self.flyCheck=0
     self.maxDisplaySize=37
     self.minFileSizeNoWarning=1000000000
     self.noData=0
@@ -90,6 +91,7 @@ class s7optionsStorage:
     self.directoriesHistorySize=20
     self.operateListSplit=0
     self.profilePath=[]
+    self.linkSearchPath=[]    
 
     self.shiftstring='  '
     self.wminwidth=700
@@ -160,6 +162,7 @@ class s7optionsStorage:
     self.allowedoptionslist+=['expandRecurse']
     self.allowedoptionslist+=['maxRecurse']
     self.allowedoptionslist+=['sidsRecurse']
+    self.allowedoptionslist+=['forceLegacyMapping']    
     self.allowedoptionslist+=['lateLoading']    
     self.allowedoptionslist+=['singleView']
     self.allowedoptionslist+=['flyCheck']
@@ -168,6 +171,7 @@ class s7optionsStorage:
     self.allowedoptionslist+=['showColumnTitle']
     self.allowedoptionslist+=['defaultProfile']
     self.allowedoptionslist+=['profilePath']
+    self.allowedoptionslist+=['linkSearchPath']    
     self.allowedoptionslist+=['followLinks']
     self.allowedoptionslist+=['saveLinks']
     self.allowedoptionslist+=['noData']

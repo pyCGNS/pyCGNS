@@ -41,6 +41,8 @@ showIndex=%(showIndex)d
 showColumnTitle=%(showColumnTitle)d
 defaultProfile='%(defaultProfile)s'
 profilePath=%(profilePath)s
+linkSearchPath=%(linkSearchPath)s
+forceLegacyMapping=%(forceLegacyMapping)s
 followLinks=%(followLinks)d
 saveLinks=%(saveLinks)d
 historyFile='%(historyFile)s'
@@ -77,7 +79,7 @@ class wOptionView(s7windoz.wWindoz):
       e=Entry(fr,textvariable=vr,justify=RIGHT,width=16,font=G___.font['E'],
               background='white')
     else:
-      e=Text(fr,height=5,width=60,font=G___.font['E'],background='white')
+      e=Text(fr,height=5,width=70,font=G___.font['E'],background='white')
       e.insert('1.0',vr.get())
     if (not large):
       l.grid(row=fr.row,column=fr.col,sticky=NW)
@@ -155,10 +157,16 @@ class wOptionView(s7windoz.wWindoz):
   def _singleView(self):
     G___.singleView=not G___.singleView
 
+  def _forceLegacyMapping(self):
+    G___.forceLegacyMapping=not G___.forceLegacyMapping
+
   def _flyCheck(self):
     G___.flyCheck=not G___.flyCheck
 
   def _profilePath(self):
+    pass
+  
+  def _linkSearchPath(self):
     pass
   
   def _defaultProfile(self):
@@ -174,7 +182,14 @@ class wOptionView(s7windoz.wWindoz):
     for l in lp:
       if (l!=''):
         rlp.append(l)
+    tx=self.olist['linkSearchPath'].get('1.0',END)
+    lp=tx.replace('\n',':').split(':')
+    rll=[]
+    for l in lp:
+      if (l!=''):
+        rll.append(l)
     G___.profilePath=rlp
+    G___.linkSearchPath=rll    
     G___.maxRecurse=getattr(self,'v_maxRecurse').get()
     G___.maxDisplaySize=getattr(self,'v_maxDisplaySize').get()
     G___.defaultProfile=getattr(self,'v_defaultProfile').get()
@@ -199,6 +214,9 @@ class wOptionView(s7windoz.wWindoz):
     self.v_sidsRecurse=IntVar()
     self.v_sidsRecurse.set(G___.sidsRecurse)
     self.d_sidsRecurse='Recurse SIDS patterns load/copy'
+    self.v_forceLegacyMapping=IntVar()
+    self.v_forceLegacyMapping.set(G___.forceLegacyMapping)
+    self.d_forceLegacyMapping='Force SIDS legacy mapping'
     self.v_lateLoading=IntVar()
     self.v_lateLoading.set(G___.lateLoading)
     self.d_lateLoading='Load node on display required'
@@ -244,6 +262,9 @@ class wOptionView(s7windoz.wWindoz):
     self.v_profilePath=StringVar()
     self.v_profilePath.set(string.join(G___.profilePath,':').replace(':','\n'))
     self.d_profilePath='Profiles path list:'
+    self.v_linkSearchPath=StringVar()
+    self.v_linkSearchPath.set(string.join(G___.linkSearchPath,':').replace(':','\n'))
+    self.d_linkSearchPath='Link search path list:'
     self.v_historyFile=StringVar()
     self.v_historyFile.set(G___.historyFile)
     self.d_historyFile='History file name:'
@@ -275,7 +296,8 @@ class wOptionView(s7windoz.wWindoz):
     self.optCheck(_left,'saveLinks')    
     self.optCheck(_left,'noData')
     self.optCheck(_left,'compactedValue')
-    self.optCheck(_left,'showSIDS')    
+    self.optCheck(_left,'showSIDS')
+    self.optCheck(_left,'forceLegacyMapping',DISABLED)        
 #    self.optVlist(_right,'Follow file links :',
 #                  ['Always','Never','Only first level'],
 #                  self.opt_sidsrecurse,self.s7_sids_recurse)
@@ -284,6 +306,7 @@ class wOptionView(s7windoz.wWindoz):
     self.optValue(_right,'historyFile')
     self.optValue(_right,'defaultProfile')
     self.optValue(_right,'profilePath',large=1)
+    self.optValue(_right,'linkSearchPath',large=1)    
     self.optCheck(_right,'forceFortranFlag')
     self.optCheck(_right,'transposeOnViewEdit')    
 

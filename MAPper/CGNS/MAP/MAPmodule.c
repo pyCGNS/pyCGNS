@@ -13,14 +13,15 @@ MAP_load(PyObject *self, PyObject *args)
 {
   char *filename, *path;
   int flags,threshold,depth;
+  PyObject *lksearch;
 
   threshold=0;
   depth=999;
   path=NULL;
 
-  if (!PyArg_ParseTuple(args,"si|iiz",
+  if (!PyArg_ParseTuple(args,"si|iizO",
 			&filename,&flags,
-			&threshold,&depth,&path))
+			&threshold,&depth,&path,&lksearch))
   {
     return NULL;
   }

@@ -162,9 +162,10 @@ class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
     self._tree.configure(yscrollincrement=40)
     self._tree.state_define('marked')
     self._tree.state_define('leaf')
-    self._tree.state_define('islink')
-    self._tree.state_define('islinkignored')
-    self._tree.state_define('islinkbroken')            
+    self._tree.state_define('islink')        # link exists and is ok
+    self._tree.state_define('islinkignored') # link exists but ignored
+    self._tree.state_define('islinknofile')  # link file not found
+    self._tree.state_define('islinknopath')  # link file ok but no node
 
     self._viewtree=treefingerprint
     self._viewtree.links.sort(sortLinkList)
@@ -199,10 +200,12 @@ class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
     self.el_t1=it.element_create(type=IMAGE,image=(ik['node-sids-closed'],OPEN,
                                                    ik['node-sids-opened'],''))
     self.el_t5=it.element_create(type=IMAGE,image=ik['node-sids-leaf'])
-    self.el_t7=it.element_create(type=IMAGE,image=(\
-      ik['link-node'],  'islink',\
-      ik['link-ignore'],'islinkignored',\
-      ik['link-error'], 'islinkbroken'))
+    self.el_t7=it.element_create(type=IMAGE,image=(
+      ik['link-node'],  'islink',
+      ik['link-ignore'],'islinkignored',
+      ik['link-ignore'],'islinkignored',
+      ik['link-nopath'],'islinknopath',
+      ik['link-nofile'],'islinknofile'))
     self.el_font1=G___.font['Tb']
     self.el_font2=G___.font['Ta']
     self.el_text1=self._tree.element_create(type=TEXT,
@@ -268,7 +271,8 @@ class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
         self._files[lklevel]={}
       if (not self._files[lklevel].has_key(targetfile)):
         self._files[lklevel][targetfile]=self.addEntryL1(ROOT,targetfile)
-      self.addEntryL2(self._files[lklevel][targetfile],currentnode,targetnode,lkstatus)
+      self.addEntryL2(self._files[lklevel][targetfile],
+                      currentnode,targetnode,lkstatus)
         
   def addEntryL1(self,item,filename):
     t=self._tree
@@ -279,7 +283,8 @@ class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
     t.itemstate_set(enew,'!leaf')
     t.itemstate_set(enew,'!islink')
     t.itemstate_set(enew,'!islinkignored')
-    t.itemstate_set(enew,'!islinkbroken')    
+    t.itemstate_set(enew,'!islinknofile')
+    t.itemstate_set(enew,'!islinknopath')        
     t.itemstyle_set(enew,self.col_graph,self.st_folder)
     t.itemelement_config(enew,self.col_graph,self.el_text1,
                          text=filename,datatype=STRING,draw=True)
@@ -290,9 +295,21 @@ class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
     enew=t.create_item(parent=item,button=False,open=0)[0]
     t.itemstate_set(enew,'leaf')
     t.itemstyle_set(enew, self.col_status,self.st_link)
-    t.itemstate_set(enew,'!islink')
-    t.itemstate_set(enew,'!islinkignored')
-    t.itemstate_set(enew,'!islinkbroken')    
+    if   (lkstatus==1):
+      print 'lk state ',1
+      t.itemstate_set(enew,'islink')
+    elif (lkstatus==2):
+      print 'lk state ',2
+      t.itemstate_set(enew,'!islinkignored')
+    elif (lkstatus==3):
+      print 'lk state ',3
+      t.itemstate_set(enew,'!islinknofile')
+    elif (lkstatus==4):
+      print 'lk state ',4
+      t.itemstate_set(enew,'!islinknopath')
+    else:
+      print 'lk state (def)',lkstatus
+      pass
     t.itemstyle_set(enew,self.col_graph,self.st_leaf)
     t.itemelement_config(enew,self.col_graph,self.el_text2,
                          text=currentnode,datatype=STRING,draw=True)
@@ -301,12 +318,23 @@ class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
                          text=targetnode,datatype=STRING)
     return enew
                
+def isLinkNode(pth,treefinger):
+  for lk in treefinger.links:
+    if (lk[1]==pth): return 1
+  return 0
+
 def getLinkStatusForThisNode(pth,node,parent,CGNStarget,treefinger):
+  # 0 not a link
+  # 1 link ok
+  # 2 link but ignored
+  # 3 link but file not found
+  # 4 link file ok but path not found
   rt=0
   for lk in treefinger.links:
     if (lk[1]==pth):             rt=1
     if ((rt==1) and (lk[5]==0)): rt=3
     if ((rt==1) and (not G___.followLinks)): rt=2
+  print 'status ',rt
   return rt
 
 def getLinkInfoForThisNode(pth,node,parent,CGNStarget,treefinger):

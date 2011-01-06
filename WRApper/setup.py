@@ -8,7 +8,13 @@ import os
 import string
 from distutils.core import setup
 from distutils.extension import Extension
-from Cython.Distutils import build_ext
+
+HAS_CYTHON=True
+
+try:
+  from Cython.Distutils import build_ext
+except ImportError:
+  HAS_CYTHON=False
 
 # --- pyCGNSconfig search
 import sys

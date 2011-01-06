@@ -6,3 +6,6 @@
 #
 # Textual version for installation can be found in  ./doc/Intro/install.txt
 #
+# hg2.6 push https://hg.python-science.org/pycgns/
+#
+#

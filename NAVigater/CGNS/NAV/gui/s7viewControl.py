@@ -278,6 +278,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
   def readFile(self,fd,fn,fileext):
     filename='%s/%s%s'%(fd,fn,fileext)
     treefingerprint=self.getIfAlreadyImported(fd,fn)
+    searchpath=G___.profilePath
     if (treefingerprint and s7utils.updateTreeLoad()):
       self.closeTree(fd,fn)
       treefingerprint=None
@@ -289,7 +290,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
       if (not treefingerprint
           and (fileext in G___.cgnslibFiles+G___.cgnssslFiles)):
         if (not treefingerprint and (fileext in G___.cgnslibFiles)):
-          lk=CGNS.WRA.utilities.getLinksAsADF(filename)
+          lk=CGNS.WRA.utilities.getLinksAsADF(filename,searchpath)
           if (G___.noData): vmax=G___.maxDisplaySize
           else:             vmax=sys.maxint
           tt=CGNS.WRA.utilities.loadAsADF(filename,G___.followLinks,vmax)
@@ -298,7 +299,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
           flags=CGNS.MAP.S2P_NONE
           if (G___.followLinks):flags|=CGNS.MAP.S2P_FOLLOWLINKS
           if (G___.noData):     flags|=CGNS.MAP.S2P_NODATA
-          (tt,lk)=CGNS.MAP.load(filename,flags)
+          (tt,lk)=CGNS.MAP.load(filename,flags,searchpath)
           treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
         if (not treefingerprint.status):
           s7utils.badFileError(filename)

@@ -103,6 +103,7 @@ class s7Query:
       return (not (match == None))
 
 import CGNS.VAL.grammars.SIDSbase
+
 # --------------------------------------------------
 def checkTree(path,node,parent,tree,check,log):
   parser=CGNS.VAL.grammars.SIDSbase.SIDSpython()

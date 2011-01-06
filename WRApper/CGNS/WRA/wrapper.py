@@ -5,22 +5,11 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 import CGNS.errors    as ERR
+import CGNS.WRA._mll  as __MLL
+import CGNS.WRA._adf  as __ADF
+
 import posixpath
 import copy
-
-try:
-    import CGNS.pyCGNSconfig
-    import CGNS
-    import CGNS.WRA._adf
-    import CGNS.WRA._mll
-    _ADF_=CGNS.WRA._adf
-    _MLL_=CGNS.WRA._mll
-except ImportError:
-    import CGNS
-    import CGNS.adf
-    _CGNS_=CGNS
-    _ADF_=CGNS.adf
-    _MLL_=CGNS
 
 def wpdbg(msg):
   if 0: print "#wrap# %s"%msg
@@ -62,6 +51,7 @@ class pyADF:
 
         - a pyADF instance
       """
+      import CGNS.WRA._adf  as __ADF
       self.__state=self.UNKNOWN
       if (type(name) != type("")) and not status and not format:
         # open here from a root-id
@@ -312,6 +302,7 @@ class pyCGNS:
          The file mode is an enumerate. It can have the values:
          MODE_READ, MODE_WRITE, MODE_MODIFY
       """
+      import CGNS.WRA._mll  as __MLL
       self.__alive=0
       self.__name=name
       if (mode==-9): mode=_MLL_.MODE_READ
@@ -325,11 +316,11 @@ class pyCGNS:
         self.__modestring=mode
       self.__lastPath=[]
       try:
-        self.__db=CGNS.WRA._mll.connect(self.__name,self.__mode)
-      except _MLL_.error:
-        if (self.__mode==3): # v2/v3 issu with MODE_MODIFY enum
+        self.__db=__MLL.connect(self.__name,self.__mode)
+      except:
+        if (self.__mode==3): # v2/v3 issue with MODE_MODIFY enum
           self.__mode=2
-          self.__db=CGNS.WRA._mll.connect(self.__name,self.__mode)
+          self.__db=__MLL.connect(self.__name,self.__mode)
       self.__alive=1      
     # --------------------------------------------------
     def close(self):

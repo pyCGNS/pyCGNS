@@ -11,6 +11,7 @@ import CGNS.PAT.cgnserrors   as CE
 import CGNS
 
 import numpy as NPY
+import os.path
 import string
 
 # -----------------------------------------------------------------------------
@@ -382,4 +383,15 @@ def stringValueMatches(node,reval):
   else: return 0
   return re.match(reval,vn)
 
+# --------------------------------------------------
+def checkLinkFile(lkfile,lksearch=['']):
+  found=(None,None)
+  if (lksearch==[]): lksearch=['']
+  for spath in lksearch:
+    sfile=os.path.normpath(spath+'/'+lkfile)
+    if (os.path.exists(sfile)):
+      found=(os.path.normpath(spath),os.path.normpath(lkfile))
+      break
+  return found
+    
 # ----
