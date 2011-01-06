@@ -55,16 +55,16 @@ class pyADF:
       self.__state=self.UNKNOWN
       if (type(name) != type("")) and not status and not format:
         # open here from a root-id
-        self.__adf=_ADF_.database_open(name)
+        self.__adf=__ADF.database_open(name)
         self.__state=self.OPEN
       elif not name:
         raise ERR.CGNS_NoFileName
-      elif (status not in _ADF_.ADF_OPENSTATUS.values()):
+      elif (status not in __ADF.ADF_OPENSTATUS.values()):
         raise ERR.CGNS_BadADFstatus
-      elif (format not in _ADF_.ADF_OPENFORMAT.values()):
+      elif (format not in __ADF.ADF_OPENFORMAT.values()):
         raise ERR.CGNS_BadADFformat
       else:
-        self.__adf=_ADF_.database_open(name,status,format)
+        self.__adf=__ADF.database_open(name,status,format)
         if (self.__adf.error != -1):
           self.__state=self.OPEN
       self.__name=name
@@ -95,7 +95,7 @@ class pyADF:
     # if rootid is 0, take connection root id
     def database_set_format(self,rootid,format):
       wpdbg("database_set_format")
-      if (format not in _ADF_.ADF_OPENFORMAT.values()):
+      if (format not in __ADF.ADF_OPENFORMAT.values()):
         raise ADF_X_NOSUCHOPENFORMAT
       if not rootid:
         r=self.__adf.root()
