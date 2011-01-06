@@ -334,8 +334,8 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self._tree.state_define('islinkignored')
     self._tree.state_define('islinkbroken')            
 
-    self._haslinkWindow=None
-    self._hasvtkWindow=None
+    self._viewtree.hasWindow['L']=None
+    self._viewtree.hasWindow['G']=None
 
     self.updateMaxLevel()
     
@@ -364,7 +364,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
                ('operate-view', NW, 2,self.cbk_query,'Selection query view'),
                ('check-view',   NW, 2,self.cbk_check,'Check view'),
                ('snapshot',     NW,20,self.cbk_print,'Snapshot current view'),
-               ('snapshot',     NW,20,self.cbk_vtk,'VTK view')])
+               ('vtk',          NW,20,self.cbk_vtk,'VTK view')])
 
     def popUpMenuOn(event,treefingerprint,node):
       try:
@@ -758,8 +758,9 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       tktree=event.widget
       id=tktree.identify(event.x,event.y)
       if (len(id) < 4): return
-      if (id[3]=='6'):  edit_node(event) # ### WATCH OUT ! HARD CODED COL ID
-      else:             mark_node(event)
+      edit_node(event)
+#      if (id[3]=='6'):  edit_node(event) # ### WATCH OUT ! HARD CODED COL ID
+#      else:             mark_node(event)
       
     def open_table(event):
       self.SubTable()
@@ -1070,6 +1071,8 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       node=s7parser.getNodeFromPath(currentpath.split('/')[1:],self.CGNStarget)
     self.addToParentNode(node,wTreeSimple._nodebuffer)
     self.modified()
+  def clearAllMarks(self):
+    self.cbk_unflagall()
   def updateMarkedFromList(self,sl):
     for k in self._paths:
       if (self._paths[k] in sl): self._tree.itemstate_set(k,'marked')
@@ -1230,6 +1233,9 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
             tktree.itemelement_config(it, self.col_xdata, self.el_text5,
                                       text=s7parser.getNodeType(node),
                                       datatype=STRING)
+            tktree.itemelement_config(it, self.col_ddata, self.el_text6,
+                                      text=s7parser.getNodeShape(node),
+                                      datatype=STRING)
     
   # --------------------------------------------------------------------
   def updateViewAfterCheck(self,checklist):
@@ -1384,14 +1390,14 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       self._tree.item_collapse(itemdesc)
 
   def linkView(self):
-    if (not self._haslinkWindow):
-      self._haslinkWindow=s7linkView.wLinkView(self,self._viewtree)
-    return self._haslinkWindow
+    if (not self._viewtree.hasWindow['L']):
+      self._viewtree.hasWindow['L']=s7linkView.wLinkView(self,self._viewtree)
+    return self._viewtree.hasWindow['L']
     
   def vtkView(self):
-    if (not self._hasvtkWindow):
-      self._hasvtkWindow=s7vtkView.wVTKView(self,self._viewtree)
-    return self._hasvtkWindow
+    if (not self._viewtree.hasWindow['G']):
+      self._viewtree.hasWindow['G']=s7vtkView.wVTKView(self,self._viewtree)
+    return self._viewtree.hasWindow['G']
     
   def getSIDSelement(self,tktree,pth,node,item):
     enew = tktree.create_item(parent=item, button=1, open=0)[0]
@@ -1534,6 +1540,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       #        with something else it is a string
       oldshape=self.node[1].shape
       newarray=self.node[1]
+      reshapeallowed=0
       if (self.newvalue):
         if (self.newvalue[0] in ['[','(']):
           newarray=NY.array(list(eval(self.newvalue)))
@@ -1552,14 +1559,20 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
               newarray=NY.array(tuple(self.newvalue),dtype='S1',order='F')
         else:    
             newarray=NY.array(tuple(self.newvalue),dtype='S1',order='F')
+            reshapeallowed=1
         if (newarray.shape==oldshape):
           if (G___.transposeOnViewEdit):
             self.node[1]=NY.array(newarray.T,order='F').reshape(oldshape)
           else:
             self.node[1]=NY.array(newarray,order='F').reshape(oldshape)
+        elif (reshapeallowed):
+          if (G___.transposeOnViewEdit):
+            self.node[1]=NY.array(newarray.T,order='F')
+          else:
+            self.node[1]=NY.array(newarray,order='F')
         else:
           s7utils.shapeChangeError(oldshape)
-      self.wtree._sedit.hide()
+      self.wtree._edit.hide()
       self.wtree._tree.itemstyle_set(self.item,
                                      self.wtree.col_tdata,
                                      self.wtree.st_dataentry)
@@ -1600,9 +1613,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
 #
 def updateViews(viewtree,namelist=[],checklist=[],links=False):
   for v in viewtree.viewlist:
-    if   (checklist): v.view.updateViewAfterCheck(checklist)
-    elif (namelist) : v.view.updateViewAfterRenameOrChangeValue(namelist)
-    else:             v.view.updateViewAfterCutOrAdd()
-    if (links):       v.view.updateViewLinks()
+    if (v.type in ['T']):
+      if   (checklist): v.view.updateViewAfterCheck(checklist)
+      elif (namelist) : v.view.updateViewAfterRenameOrChangeValue(namelist)
+      else:             v.view.updateViewAfterCutOrAdd()
+      if (links):       v.view.updateViewLinks()
     
 # --------------------------------------------------------------------

@@ -43,7 +43,7 @@ class s7optionsStorage:
      'pattern-save','tree-save','check-clear','check-save','check-all',
      'print-view','close-view','undo-last-modification','view-help',
      'flag-revert','flag-none','flag-all','operate-view','operate-list',
-     'flag-bwd','flag-fwd','select-update',
+     'flag-bwd','flag-fwd','select-update','vtk',
      'level-in','level-out','tree-new','tree-add','tree-del','tree-load',
      'snapshot','pattern-view','link-view','query-and','query-or','query-not'
      ]
@@ -196,39 +196,7 @@ class s7optionsStorage:
     #  # reload(s7options)
 
   colors={\
-       #  Whites
-     'antique_white': (0.9804, 0.9216, 0.8431),
-     'azure': (0.9412, 1.0000, 1.0000),
-     'bisque': (1.0000, 0.8941, 0.7686),
-     'blanched_almond': (1.0000, 0.9216, 0.8039),
-     'cornsilk': (1.0000, 0.9725, 0.8627),
-     'eggshell': (0.9900, 0.9000, 0.7900),
-     'floral_white': (1.0000, 0.9804, 0.9412),
-     'gainsboro': (0.8627, 0.8627, 0.8627),
-     'ghost_white': (0.9725, 0.9725, 1.0000),
-     'honeydew': (0.9412, 1.0000, 0.9412),
-     'ivory': (1.0000, 1.0000, 0.9412),
-     'lavender': (0.9020, 0.9020, 0.9804),
-     'lavender_blush': (1.0000, 0.9412, 0.9608),
-     'lemon_chiffon': (1.0000, 0.9804, 0.8039),
-     'linen': (0.9804, 0.9412, 0.9020),
-     'mint_cream': (0.9608, 1.0000, 0.9804),
-     'misty_rose': (1.0000, 0.8941, 0.8824),
-     'moccasin': (1.0000, 0.8941, 0.7098),
-     'navajo_white': (1.0000, 0.8706, 0.6784),
-     'old_lace': (0.9922, 0.9608, 0.9020),
-     'papaya_whip': (1.0000, 0.9373, 0.8353),
-     'peach_puff': (1.0000, 0.8549, 0.7255),
-     'seashell': (1.0000, 0.9608, 0.9333),
-     'snow': (1.0000, 0.9804, 0.9804),
-     'thistle': (0.8471, 0.7490, 0.8471),
-     'titanium_white': (0.9900, 1.0000, 0.9400),
-     'wheat': (0.9608, 0.8706, 0.7020),
-     'white': (1.0000, 1.0000, 1.0000),
-     'white_smoke': (0.9608, 0.9608, 0.9608),
-     'zinc_white': (0.9900, 0.9700, 1.0000),
-
-       #  Greys
+     #  Greys
      'cold_grey': (0.5000, 0.5400, 0.5300),
      'dim_grey': (0.4118, 0.4118, 0.4118),
      'grey': (0.7529, 0.7529, 0.7529),
@@ -237,13 +205,11 @@ class s7optionsStorage:
      'slate_grey_dark': (0.1843, 0.3098, 0.3098),
      'slate_grey_light': (0.4667, 0.5333, 0.6000),
      'warm_grey': (0.5000, 0.5000, 0.4100),
-
-       #  Blacks
+     #  Blacks
      'black': (0.0000, 0.0000, 0.0000),
      'ivory_black': (0.1600, 0.1400, 0.1300),
      'lamp_black': (0.1800, 0.2800, 0.2300),
-
-       #  Reds
+     #  Reds
      'alizarin_crimson': (0.8900, 0.1500, 0.2100),
      'brick': (0.6100, 0.4000, 0.1200),
      'cadmium_red_deep': (0.8900, 0.0900, 0.0500),
@@ -266,8 +232,7 @@ class s7optionsStorage:
      'salmon': (0.9804, 0.5020, 0.4471),
      'tomato': (1.0000, 0.3882, 0.2784),
      'venetian_red': (0.8300, 0.1000, 0.1200),
-
-       #  Browns
+     #  Browns
      'beige': (0.6400, 0.5800, 0.5000),
      'brown': (0.5000, 0.1647, 0.1647),
      'brown_madder': (0.8600, 0.1600, 0.1600),
@@ -294,8 +259,7 @@ class s7optionsStorage:
      'sandy_brown': (0.9569, 0.6431, 0.3765),
      'tan': (0.8235, 0.7059, 0.5490),
      'van_dyke_brown': (0.3700, 0.1500, 0.0200),
-
-       #  Oranges
+     #  Oranges
      'cadmium_orange': (1.0000, 0.3800, 0.0100),
      'cadmium_red_light': (1.0000, 0.0100, 0.0500),
      'carrot': (0.9300, 0.5700, 0.1300),
@@ -305,8 +269,7 @@ class s7optionsStorage:
      'orange': (1.0000, 0.5000, 0.0000),
      'orange_red': (1.0000, 0.2706, 0.0000),
      'yellow_ochre': (0.8900, 0.5100, 0.0900),
-
-       #  Yellows
+     #  Yellows
      'aureoline_yellow': (1.0000, 0.6600, 0.1400),
      'banana': (0.8900, 0.8100, 0.3400),
      'cadmium_lemon': (1.0000, 0.8900, 0.0100),
@@ -322,8 +285,7 @@ class s7optionsStorage:
      'naples_yellow_deep': (1.0000, 0.6600, 0.0700),
      'yellow': (1.0000, 1.0000, 0.0000),
      'yellow_light': (1.0000, 1.0000, 0.8784),
-
-       #  Greens
+     #  Greens
      'chartreuse': (0.4980, 1.0000, 0.0000),
      'chrome_oxide_green': (0.4000, 0.5000, 0.0800),
      'cinnabar_green': (0.3800, 0.7000, 0.1600),
@@ -351,8 +313,7 @@ class s7optionsStorage:
      'terre_verte': (0.2200, 0.3700, 0.0600),
      'viridian_light': (0.4300, 1.0000, 0.4400),
      'yellow_green': (0.6039, 0.8039, 0.1961),
-
-       #  Cyans
+     #  Cyans
      'aquamarine': (0.4980, 1.0000, 0.8314),
      'aquamarine_medium': (0.4000, 0.8039, 0.6667),
      'cyan': (0.0000, 1.0000, 1.0000),
@@ -361,8 +322,7 @@ class s7optionsStorage:
      'turquoise_dark': (0.0000, 0.8078, 0.8196),
      'turquoise_medium': (0.2824, 0.8196, 0.8000),
      'turquoise_pale': (0.6863, 0.9333, 0.9333),
-
-       #  Blues
+     #  Blues
      'alice_blue': (0.9412, 0.9725, 1.0000),
      'blue': (0.0000, 0.0000, 1.0000),
      'blue_light': (0.6784, 0.8471, 0.9020),
@@ -390,8 +350,7 @@ class s7optionsStorage:
      'steel_blue_light': (0.6902, 0.7686, 0.8706),
      'turquoise_blue': (0.0000, 0.7800, 0.5500),
      'ultramarine': (0.0700, 0.0400, 0.5600),
-
-       #  Magentas
+     #  Magentas
      'blue_violet': (0.5412, 0.1686, 0.8863),
      'cobalt_violet_deep': (0.5700, 0.1300, 0.6200),
      'magenta': (1.0000, 0.0000, 1.0000),

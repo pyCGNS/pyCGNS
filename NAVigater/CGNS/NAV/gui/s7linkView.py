@@ -150,8 +150,12 @@ class wLinkEdit(s7windoz.wWindoz):
 # -----------------------------------------------------------------------------
 class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
   def __init__(self,wcontrol,treefingerprint):
-    s7windoz.wWindoz.__init__(self,wcontrol,
-                              'CGNS.NAV: Link view [%s]'%treefingerprint.filename)
+    s7windoz.wWindoz.__init__(self,wcontrol,'CGNS.NAV: Link view')
+    self._viewid=treefingerprint.addView(self,self._parent,'L')
+    self._wtop.title('CGNS.NAV: [%s] Link View [%.2d]'%\
+                     (treefingerprint.filename,self._viewid))
+    s7viewControl.updateWindowList(wcontrol._control,treefingerprint)
+
     ScrolledTreectrl.__init__(self,self._wtop,relief=GROOVE,border=3)
 
     self._tree=self.treectrl
@@ -252,8 +256,10 @@ class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
     self.pack(fill=BOTH, expand=1)
 
   def onexit(self):
-    self.closeWindow()
-    self._viewWindow._haslinkWindow=None
+    self._control._control.delTreeView(self._viewid,
+                                       self._viewtree.filedir,
+                                       self._viewtree.filename)
+    self._viewtree.hasWindow['L']=None
 
   def addLinkEntries(self):
     for f in self._viewtree.links:

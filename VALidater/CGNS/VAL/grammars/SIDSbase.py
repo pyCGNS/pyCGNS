@@ -44,7 +44,8 @@ class SIDSbase:
   def getEnumerateList(self,node):
     try:
       ntype=node[3]+'_enum'
-      return apply(self.__dict__[ntype],[self])
+      if (ntype in self.methods):
+        return getattr(self,ntype)()
     except KeyError:
       return None
   # --------------------------------------------------------------------
@@ -143,6 +144,10 @@ class SIDSbase:
 class SIDSpython(SIDSbase):
   def __init__(self,shiftstring=' '):
     SIDSbase.__init__(self,shiftstring)
+    self.methods=[]
+    for m in dir(self):
+      if (m[-5:]=='_enum'): self.methods+=[m]
+      
   # --------------------------------------------------------------------
   # Enumerates
   def ZoneType_t_enum(self):

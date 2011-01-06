@@ -64,7 +64,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
 #    threading.Thread.__init__(self)
 #    self.lock = threading.Lock()
 
-    s7windoz.wWindoz.__init__(self,None,'CGNS.NAV: Control panel [v%s]'%__vid__)
+    s7windoz.wWindoz.__init__(self,None,'CGNS.NAV [v%s]'%__vid__)
     self.wparent = wparent
 
     self.patternWindow=None
@@ -452,14 +452,32 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
       return None
     for t in G___.treeStorage:
       if ((t.filedir==fd) and (t.filename==fn)):
+        vdel=None
         for v in t.viewlist:
           if (v.id==nv):
             vw=self.getTreeView(int(nv),fd,fn)
-            if (vw): vw.view.closeWindow()
-            t.viewlist.remove(v)
+            if (vw):
+              t.hasWindow[vw.type]=None
+              vw.view.closeWindow()
+              pdel=str(vw.view)
+            vdel=v
             self.listbox.delete(ix)
             break
-        if (not t.viewlist): G___.treeStorage.remove(t)
+        if (vdel): t.viewlist.remove(vdel)
+        if (pdel):
+         for v in t.viewlist:
+          vw=self.getTreeView(v.id,fd,fn)
+          if (pdel==str(vw.view._control)):
+             self.delTreeView(v.id,fd,fn)
+        found=0
+        for v in t.viewlist:
+          vw=self.getTreeView(v.id,fd,fn)
+          if (vw.type=='T'): found=1
+        if (not found):
+          for v in t.viewlist:
+            self.delTreeView(v.id,fd,fn)
+        if ((not t.viewlist) and (t in G___.treeStorage)):
+          G___.treeStorage.remove(t)
     self.lock_release('delTreeView')
     return None
 
@@ -543,6 +561,17 @@ def createDataTreeWindow(wcontrol,cgnstree,recurse,startnode=None,parent=None):
                           cgnstree.filename,cgnstree.filedir,t.node)
   wcontrol.grid()
   return wt
+
+# -----------------------------------------------------------------------------
+# general function for single window per tree
+def updateWindowList(wcontrol,treefingerprint):
+  t=treefingerprint.viewlist[-1]
+  wcontrol.listbox.insert('end',treefingerprint.state,t.type,t.id,
+                          treefingerprint.filename,
+                          treefingerprint.filedir,
+                          t.node)
+  wcontrol.grid()
+  return None
 
 # -----------------------------------------------------------------------------
 # --- last line

@@ -230,6 +230,16 @@ def checkPath(path):
   return True
 
 # --------------------------------------------------
+def removeFirstPathItem(path):
+  p=path.split('/')
+  if ((p[0]=='') and (p>2)):
+    return string.join(['']+p[2:],'/')
+  elif (p>1):
+    return string.join(p[1:],'/')
+  else:
+    return '/'
+
+# --------------------------------------------------
 def getValueByPath(path,tree): # not bulletproof
   n=getNodeFromPath(path.split('/'),tree)
   if (n==-1): return None

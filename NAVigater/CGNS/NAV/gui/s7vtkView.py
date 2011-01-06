@@ -18,11 +18,66 @@ import s7globals
 G___=s7globals.s7G
 
 import s7windoz
+import s7viewControl
+
+#----------------------------------------------------------------------------
+class CGNSparser:
+  def __init__(self):
+    pass
+  def getActorList(self,T):
+    ml=[]
+    for m in self.parseZones(T):
+      m.do_vtk()
+      ml+=[m]
+    return ml
+  def parseZones(self,T):
+    m=[]
+    sl=[]
+    ml=[]
+    path=[]
+    paths=[]
+    ncolors=0
+    cl=G___.colors
+    if (T[0]==None):
+     T[0]=CGK.CGNSTree_s
+     T[3]=CGK.CGNSTree_ts   
+    for z in CGU.getAllNodesByTypeList([CGK.Zone_ts],T):
+      zT=CGU.nodeByPath(z,T)
+      path.append(CGU.removeFirstPathItem(z))
+      ncolors+=1
+      for g in CGU.getAllNodesByTypeList([CGK.GridCoordinates_ts],zT):
+        gT=CGU.nodeByPath(g,zT)
+        cx=CGU.nodeByPath("%s/CoordinateX"%gT[0],gT)
+        cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
+        cz=CGU.nodeByPath("%s/CoordinateZ"%gT[0],gT)
+        shx=cx[1].shape
+        scx=cz[1].T.reshape(shx)
+        scy=cy[1].T.reshape(shx)
+        scz=cx[1].T.reshape(shx)
+        simin=[scx[0,:,:], scy[0,:,:], scz[0,:,:]]
+        simax=[scx[-1,:,:],scy[-1,:,:],scz[-1,:,:]]
+        sjmin=[scx[:,0,:], scy[:,0,:], scz[:,0,:]]
+        sjmax=[scx[:,-1,:],scy[:,-1:], scz[:,-1,:]]
+        skmin=[scx[:,:,0], scy[:,:,0], scz[:,:,0]]
+        skmax=[scx[:,:,-1],scy[:,:,-1],scz[:,:,-1]]
+        m+=[[cx,cy,cz]]
+        sl+=[[simin,simax,sjmin,sjmax,skmin,skmax]]
+        zp=CGU.removeFirstPathItem(z)
+        paths+=[[zp+'/[imin]',zp+'/[imax]',
+                 zp+'/[jmin]',zp+'/[jmax]',
+                 zp+'/[kmin]',zp+'/[kmax]']]
+      col=cl[cl.keys()[random.randrange(len(cl.keys()))]]
+      mc=Mesh(m[-1],path[-1],sl[-1],paths[-1])
+      mc.setColor(col)
+      ml+=[mc]
+    return ml
 
 #----------------------------------------------------------------------------
 class Mesh:
-  def __init__(self,gcoordinates,path):
+  def __init__(self,gcoordinates,gpath,surfaces,spaths):
     self.__data=gcoordinates
+    self.__surfs=surfaces
+    self.__bnds=[]
     self.dx=self.__data[0][1]
     self.dy=self.__data[1][1]
     self.dz=self.__data[2][1]
@@ -30,32 +85,78 @@ class Mesh:
     self.jmax=self.dx.shape[1]
     self.kmax=self.dx.shape[2]
     self.color=(130,130,130)
-    self.actor=None
-    self.path=path
-    self.olist=[]
+    self.actors=[]
+    self.path=gpath
+    self.paths=spaths
+    self.odict={}
   def setColor(self,color):
     self.color=color
-  def do_vtk(self):
+  def do_volume(self):
     pts=vtk.vtkPoints()
     pts.SetNumberOfPoints(self.imax*self.jmax*self.kmax)
     for i in range(len(self.dx.flat)):
       pts.InsertPoint(i,self.dz.T.flat[i],self.dy.T.flat[i],self.dx.T.flat[i])
     g=vtk.vtkStructuredGrid()
-    self.olist.append(g)
+    self.odict[self.path]=g
     g.SetPoints(pts)
     g.SetExtent(0,self.kmax-1,0,self.jmax-1,0,self.imax-1)
     d=vtk.vtkDataSetMapper()
     d.SetInput(g)
     a=vtk.vtkActor()
-    self.actor=a
+    self.actors.append(a)
     a.SetMapper(d)
     a.GetProperty().SetRepresentationToWireframe()
     a.GetProperty().SetColor(*self.color)
     self._bounds=a.GetBounds()
     return self
-
-
-    
+  def do_surface(self,n):
+    imax=self.__surfs[n][0].shape[0]
+    jmax=self.__surfs[n][0].shape[1]
+    tx=self.__surfs[n][0].flat
+    ty=self.__surfs[n][1].flat
+    tz=self.__surfs[n][2].flat
+    sg=vtk.vtkUnstructuredGrid()
+    self.odict[self.paths[n]]=sg
+    sg.Allocate(1, 1)
+    n=0
+    #print 'max ',imax,jmax
+    qp = vtk.vtkPoints()
+    for j in range(jmax-1):
+     for i in range(imax-1):
+      #print 'idx ',i,j
+      p1=j+      i*jmax +0
+      p2=j+      i*jmax +1
+      p3=j+jmax+ i*jmax +1
+      p4=j+jmax+ i*jmax +0
+      # print 'pts ',p1,p2,p3,p4
+      qp.InsertPoint(n*4+0,tx[p1],ty[p1],tz[p1])
+      qp.InsertPoint(n*4+1,tx[p2],ty[p2],tz[p2])
+      qp.InsertPoint(n*4+2,tx[p3],ty[p3],tz[p3])
+      qp.InsertPoint(n*4+3,tx[p4],ty[p4],tz[p4])
+      aq = vtk.vtkQuad()
+      aq.GetPointIds().SetId(0, n*4+0)
+      aq.GetPointIds().SetId(1, n*4+1)
+      aq.GetPointIds().SetId(2, n*4+2)
+      aq.GetPointIds().SetId(3, n*4+3)
+      sg.InsertNextCell(aq.GetCellType(), aq.GetPointIds())
+      n+=1
+    sg.SetPoints(qp)
+    am = vtk.vtkDataSetMapper()
+    am.SetInput(sg)
+    a = vtk.vtkActor()
+    self.actors.append(a)
+    a.SetMapper(am)
+    #a.GetProperty().SetRepresentationToWireframe()
+    #a.GetProperty().SetColor(*self.color)
+    return self
+  def do_boundaries(self,n):
+    pass
+  def do_vtk(self):
+    self.do_volume()
+    for n in range(len(self.__surfs)):
+      self.do_surface(n)
+    for n in range(len(self.__bnds)):
+      self.do_boundaries(n)
 
 #----------------------------------------------------------------------------
 class wVTKContext():
@@ -83,14 +184,13 @@ class wVTKContext():
         (self.px,self.py,self.pz),
         (self.sx,self.sy,self.sz),
         (self.ox,self.oy,self.oz))
-
-
      
 class wVTKView(s7windoz.wWindoz):
 
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
     self.camAxes.SetViewUp(cam.GetViewUp())
+    self.camAxes.OrthogonalizeViewUp()
     proj = cam.GetDirectionOfProjection()
     x, y, z = cam.GetDirectionOfProjection()
 
@@ -113,51 +213,77 @@ class wVTKView(s7windoz.wWindoz):
     self.renAxes.ResetCameraClippingRange()
 
   def findObjectPath(self,object):
+    pth=''
     for m in self._meshes:
-      if (object in m.olist):
-        return m.path
-    return "???"
+      for k in m.odict:
+        if (m.odict[k]==object): pth+='%s'%k
+    return pth
   
-  def __init__(self,wcontrol,treefingerprint):
+  def __init__(self,wparent,treefingerprint):
 
     self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
 
-    self._control=wcontrol
-    s7windoz.wWindoz.__init__(self,wcontrol,'CGNS.NAV: VTK view')
+    self._control=wparent
+    s7windoz.wWindoz.__init__(self,wparent,'CGNS.NAV: VTK view')
+    self._viewid=treefingerprint.addView(self,self._parent,'G')
+    self._wtop.title('CGNS.NAV: [%s] VTK View [%.2d]'%\
+                     (treefingerprint.filename,self._viewid))
+    s7viewControl.updateWindowList(self._control._control,treefingerprint)
 
     self._vtktree=self.wCGNSTree(treefingerprint.tree)
-
+    self._selected=[]
+    self._currentactor=None
+    self._viewtree=treefingerprint
     
   def leave(self):
     self._wtop.destroy()
     self._control._hasvtkWindow=None
   
   def onexit(self):
+    self._control._control.delTreeView(self._viewid,
+                                       self._viewtree.filedir,
+                                       self._viewtree.filename)
+    self._viewtree.hasWindow['G']=None
     self.leave()
 
   def annotatePick(self, object, event):
-    if self.picker.GetPointId() < 0:
+    self._selected=[]
+    if self.picker.GetCellId() < 0:
         self.textActor.VisibilityOff()
     else:
-        selPt = self.picker.GetSelectionPoint()
+        #selPt = self.picker.GetSelectionPoint()
         pickAct = self.picker.GetActors()
-        t=self.findObjectPath(self.picker.GetDataSet())
+        pickAct.InitTraversal()
+        a=pickAct.GetNextItem()
+        t=''
+        sl=[]
+        while a:
+          x=a.GetMapper().GetInput()
+          s=self.findObjectPath(x)
+          sl.append(s)
+          t+=s+'\n'
+          self._selected+=[(s,x)]
+          a=pickAct.GetNextItem()
+        self._control.clearAllMarks()
+        self._control.updateMarkedFromList(sl)
         self.textMapper.SetInput(t)
-        self.textActor.SetPosition(selPt[:2])
+        yd=self.rwin.GetSize()[1]-self.textMapper.GetHeight(self.wren)-10.
+        self.textActor.SetPosition((10.,yd))
         self.textActor.VisibilityOn()
-     
+
   def addPicker(self):
     self.textMapper = vtk.vtkTextMapper()
     tprop = self.textMapper.GetTextProperty()
     tprop.SetFontFamilyToArial()
     tprop.SetFontSize(10)
-    tprop.BoldOn()
+    tprop.BoldOff()
     tprop.ShadowOn()
-    tprop.SetColor(1, 0, 0)
+    tprop.SetColor(0, 0, 1)
     self.textActor = vtk.vtkActor2D()
     self.textActor.VisibilityOff()
     self.textActor.SetMapper(self.textMapper)
-    self.picker = vtk.vtkPointPicker()
+    self.picker = vtk.vtkCellPicker()
+    self.picker.SetTolerance(0.005)
     self.picker.AddObserver("EndPickEvent", self.annotatePick)
     
   def addAxis(self):
@@ -240,6 +366,10 @@ class wVTKView(s7windoz.wWindoz):
 
   def wCGNSTree(self,T):
 
+      o=vtk.vtkObject()
+      o.SetGlobalWarningDisplay(0)
+      del o
+      
       renWin = vtk.vtkRenderWindow()
       renWin.SetNumberOfLayers(2)
       wren = vtk.vtkRenderer()
@@ -252,11 +382,13 @@ class wVTKView(s7windoz.wWindoz):
       waxs.SetLayer(1)
 
       self._meshes=[]
+      self._parser=CGNSparser()
       
-      for m in self.getActorList(T):
-        a=m.actor
+      for m in self._parser.getActorList(T):
+        a=m.actors
         self._meshes.append(m)
-        wren.AddActor(a)
+        for aa in a:
+          wren.AddActor(aa)
         if (self._xmin>m._bounds[0]):self._xmin=m._bounds[0]
         if (self._ymin>m._bounds[2]):self._ymin=m._bounds[2]
         if (self._zmin>m._bounds[4]):self._zmin=m._bounds[4]
@@ -269,6 +401,7 @@ class wVTKView(s7windoz.wWindoz):
       wren.GetActiveCamera().Elevation(0.0)
       wren.GetActiveCamera().Azimuth(90.0)
       wren.GetActiveCamera().Zoom(1.0)
+      wren.GetActiveCamera().OrthogonalizeViewUp()
 
       (self.vx,self.vy,self.vz)=wren.GetActiveCamera().GetViewUp()
       (self.cx,self.cy,self.cz)=wren.GetActiveCamera().GetFocalPoint()
@@ -280,7 +413,7 @@ class wVTKView(s7windoz.wWindoz):
       self._ctxt.setFocalPoint(self.cx,self.cy,self.cz)
       self._ctxt.setPosition(self.px,self.py,self.pz)
 
-      iwin = vtkTkRenderWindowInteractor(self._wtop,width=400,height=400,
+      iwin = vtkTkRenderWindowInteractor(self._wtop,width=500,height=500,
                                          rw=renWin)
       iwin.pack(expand="t", fill="both")
 
@@ -302,14 +435,15 @@ class wVTKView(s7windoz.wWindoz):
       self.isty=istyle
       self.iwin=iwin
 
-      self._bindings={ ' ':self.b_refresh,
-                       'c':self.b_shufflecolors,
-                       'x':self.b_xaxis,
-                       'y':self.b_yaxis,
-                       'z':self.b_zaxis,
-                       'X':self.b_xaxis_flip,
-                       's':self.b_surf,
-                       'w':self.b_wire }
+      self._bindings={ 'space' :self.b_refresh,
+                       'c'     :self.b_shufflecolors,
+                       'Tab'   :self.b_nexttarget,
+                       'x'     :self.b_xaxis,
+                       'y'     :self.b_yaxis,
+                       'z'     :self.b_zaxis,
+                       'X'     :self.b_xaxis_flip,
+                       's'     :self.b_surf,
+                       'w'     :self.b_wire }
 
       self._p_wire=True
 
@@ -325,6 +459,13 @@ class wVTKView(s7windoz.wWindoz):
       actor.GetProperty().SetColor(col)
       actor = actors.GetNextItem()
     self.rwin.Render() 
+      
+  def b_nexttarget(self,pos):
+    if (len(self._selected)>1):
+      self._selected=self._selected[1:]+[self._selected[0]]
+    if (self._currentactor==None):
+      self._currentactor=self._selected[0]      
+    self.rwin.Render()
       
   def b_refresh(self,pos):
     self.rwin.Render()
@@ -362,14 +503,14 @@ class wVTKView(s7windoz.wWindoz):
       (vx,vy,vz)=(0.,1.,0.)
       (px,py,pz)=(cx,cy,rat*cz)
     elif iaxis == -1:
-      (vx,vy,vz)=(0.,0.,1.)
-      (px,py,pz)=(self.cx,self.cy,self.cz)
+      (vx,vy,vz)=(0.,0.,-1.)
+      (px,py,pz)=(rat*cx,cy,cz)
     elif iaxis == -2:
-      (vx,vy,vz)=(0.,1.,0.)
-      (cx,cy,cz)=(self.cx,self.cy,self.cz)
+      (vx,vy,vz)=(-0.5,0.,0.)
+      (px,py,pz)=(cx,rat*cy,cz)
     elif iaxis == -3:
-      (vx,vy,vz)=(1.,0.,0.)
-      (cx,cy,cz)=(self.cx,self.cy,self.cz)
+      (vx,vy,vz)=(0.,-1.,0.)
+      (px,py,pz)=(cx,cy,rat*cz)
 
     camera = self.wren.GetActiveCamera()
     camera.SetViewUp(vx, vy, vz)
@@ -413,39 +554,6 @@ class wVTKView(s7windoz.wWindoz):
         actor = actors.GetNextItem()
     self.rwin.Render() 
       
-  def getActorList(self,T):
-    ml=[]
-    for m in self.getMeshes(T):
-      m.do_vtk()
-      ml+=[m]
-    return ml
-
-  def getMeshes(self,T):
-    m=[]
-    ml=[]
-    path=[]
-    ncolors=0
-    if (T[0]==None):
-     T[0]=CGK.CGNSTree_s
-     T[3]=CGK.CGNSTree_ts   
-    for z in CGU.getAllNodesByTypeList([CGK.Zone_ts],T):
-      zT=CGU.nodeByPath(z,T)
-      path.append(z)
-      ncolors+=1
-      for g in CGU.getAllNodesByTypeList([CGK.GridCoordinates_ts],zT):
-        gT=CGU.nodeByPath(g,zT)
-        cx=CGU.nodeByPath("%s/CoordinateX"%gT[0],gT)
-        cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
-        cz=CGU.nodeByPath("%s/CoordinateZ"%gT[0],gT)
-        m+=[[cx,cy,cz]]
-    cl=G___.colors
-    for ix in range(len(m)):
-      col=cl[cl.keys()[random.randrange(len(cl.keys()))]]
-      mc=Mesh(m[ix],path[ix])
-      mc.setColor(col)
-      ml+=[mc]
-    return ml
-
   def MotionCallback(self,obj,event):
       pos = self.iren.GetEventPosition()
       print 'MOTION AT ',pos
@@ -453,10 +561,9 @@ class wVTKView(s7windoz.wWindoz):
 
   def CharCallback(self,obj,event):
       iren = self.rwin.GetInteractor()
-      keycode = iren.GetKeyCode()
-#      print '[%s]'%keycode
+      keysym  = iren.GetKeySym()
       pos = self.iren.GetEventPosition()
-      if (self._bindings.has_key(keycode)): self._bindings[keycode](pos)
+      if (self._bindings.has_key(keysym)): self._bindings[keysym](pos)
       return 
 
 # -----------------------------------------------------------------------------

@@ -9,6 +9,14 @@ G___=s7globals.s7G
 
 import CGNS.NAV.supervisor.s7error   as E
 
+windowTypes={
+  'T':'Tree',
+  'G':'Graphical (VTK)',
+  'L':'Links',
+  'D':'Data table',
+  '?':'Unknown'
+}
+
 # ----------------------------------------------------------------------
 def encapsulateTreeOrSubTree(tree):
   #
@@ -128,6 +136,7 @@ class wTreeFingerPrint:
     self.profdir=None
     self.fileext='.py'
     self.nosave=0
+    self.hasWindow={}
   def saveFileName(self):
     return "%s/%s%s"%(self.filedir,self.filename,self.fileext)
   def isModified(self):
