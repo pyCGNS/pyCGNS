@@ -89,6 +89,10 @@ lext_modules  = [
 #                        include_dirs = include_dirs,
 #                        library_dirs = library_dirs,
 #                        libraries    = optional_libs)
+              Extension('CGNS.WRA._libmodule',['CGNS/WRA/maplib.pyx'],
+                        include_dirs = include_dirs,
+                        library_dirs = library_dirs,
+                        libraries    = optional_libs)
               ] # close extension modules
 
 if (not os.path.exists("build")): os.system("ln -sf ../build build")

@@ -132,6 +132,14 @@ def search(tag,deps=[]):
   except ImportError:
     print pfx+'ERROR: %s setup cannot find pyCGNSconfig.py file!'%tag
     sys.exit(1)
+  C.MLL_PATH_INCLUDES=list(set(C.MLL_PATH_INCLUDES))
+  C.MLL_PATH_LIBRARIES=list(set(C.MLL_PATH_LIBRARIES))
+  C.HDF5_PATH_INCLUDES=list(set(C.HDF5_PATH_INCLUDES))
+  C.HDF5_PATH_LIBRARIES=list(set(C.HDF5_PATH_LIBRARIES))
+  C.CHLONE_PATH_INCLUDES=list(set(C.CHLONE_PATH_INCLUDES))
+  C.CHLONE_PATH_LIBRARIES=list(set(C.CHLONE_PATH_LIBRARIES))
+  C.NUMPY_PATH_INCLUDES=list(set(C.NUMPY_PATH_INCLUDES))
+  C.NUMPY_PATH_LIBRARIES=list(set(C.NUMPY_PATH_LIBRARIES))
   updateConfig('..',bptarget,C.__dict__,cfgdict)
   return (C, state)
 

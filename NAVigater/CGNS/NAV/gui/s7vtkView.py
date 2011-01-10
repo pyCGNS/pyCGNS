@@ -146,7 +146,7 @@ class Mesh:
     a = vtk.vtkActor()
     self.actors.append(a)
     a.SetMapper(am)
-    #a.GetProperty().SetRepresentationToWireframe()
+    a.GetProperty().SetRepresentationToWireframe()
     #a.GetProperty().SetColor(*self.color)
     return self
   def do_boundaries(self,n):

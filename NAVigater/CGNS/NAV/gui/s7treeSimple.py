@@ -18,7 +18,7 @@ import numpy as NY
 import s7globals
 G___=s7globals.s7G
 
-import CGNS.PAT.cgnsutils  as s7parser
+import CGNS.PAT.cgnsutils  as PATu
 from   CGNS.NAV.supervisor import s7check
 
 import s7viewControl
@@ -28,7 +28,12 @@ import s7windoz
 import s7linkView
 import s7operateView
 import s7log
-import s7vtkView
+
+S7HASVTK=1
+try:
+  import s7vtkView
+except ImportError:
+  S7HASVTK=0
     
 # --------------------------------------------------------------------
 class wEditBarStore:
@@ -144,7 +149,7 @@ class wRename(wEditBarStore):
       r.oldname=e.path
       r.newname=string.join(e.path.split('/')[:-1],'/')+'/'\
                 +r.editbar.getStoreValue('__Rename')
-      if (r.newname in s7parser.childNames(pnode)):
+      if (r.newname in PATu.childNames(pnode)):
         s7utils.renameError(r.newname)
       else:
         e.node[0]=r.editbar.getStoreValue('__Rename')
@@ -304,11 +309,11 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
         ppth=parentnode.split('/')[1:-1]+startnode.split('/')
         self._parent=string.join(parentnode.split('/')[:-1],'/')+\
                                   '/'+startnode
-        self.CGNStarget=s7parser.getNodeFromPath(ppth,
+        self.CGNStarget=PATu.getNodeFromPath(ppth,
                                                 treefingerprint.tree)
       else:
         self._parent=startnode
-        self.CGNStarget=s7parser.getNodeFromPath(startnode.split('/')[1:],
+        self.CGNStarget=PATu.getNodeFromPath(startnode.split('/')[1:],
                                                 treefingerprint.tree)
       rootnodename=startnode.split('/')[-1]
     else:
@@ -410,10 +415,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       path=self.getSinglePathSelection()
       if (path == '/'): node=self.CGNStarget
       elif self._parent:
-        node=s7parser.getNodeFromPath(path.split('/'),
+        node=PATu.getNodeFromPath(path.split('/'),
                                      [None,None,[self.CGNStarget],None])  
       else:            
-        node=s7parser.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
+        node=PATu.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
       emptynode=['new node',None,[],'UserDefinedData_t']
       self.addToParentNode(node,emptynode)
 
@@ -431,7 +436,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       if (self.RetypeCascade.maxIndex):
         self.RetypeCascade.delete(0,self.RetypeCascade.maxIndex)
       pnode=self.findParentNodeFromPath(path)
-      tlist=s7parser.getNodeAllowedChildrenTypes(pnode,node)
+      tlist=PATu.getNodeAllowedChildrenTypes(pnode,node)
       try:
         tlist.remove(node[3])
         tlist=[node[3]]+tlist
@@ -447,7 +452,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       if (self.DataRetypeCascade.maxIndex):
         self.DataRetypeCascade.delete(0,self.DataRetypeCascade.maxIndex)
       pnode=self.findParentNodeFromPath(path)
-      tlist=s7parser.getNodeAllowedDataTypes(node)
+      tlist=PATu.getNodeAllowedDataTypes(node)
       self.DataRetypeCascade.maxIndex=len(tlist)
       for t in tlist:
         self.DataRetypeCascade.add_command(label=t,font=G___.font['E'],
@@ -865,25 +870,25 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     if (path == '/'):
       node=self.CGNStarget
     elif self._parent:
-      node=s7parser.getNodeFromPath(path.split('/'),
+      node=PATu.getNodeFromPath(path.split('/'),
                                    [None,None,[self.CGNStarget],None])  
     else:            
-      node=s7parser.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
+      node=PATu.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
     return node    
     
   def findParentPathFromPath(self,path,absolute=0):
     pnode=self.findParentNodeFromPath(path,absolute)
-    return s7parser.getPathFromNode(pnode,self.CGNStarget)
+    return PATu.getPathFromNode(pnode,self.CGNStarget)
   
   def findParentNodeFromNode(self,node):
-    path=s7parser.getPathFromNode(node,self.CGNStarget)
+    path=PATu.getPathFromNode(node,self.CGNStarget)
     return self.findParentNodeFromPath(path)
   
   def findParentNodeFromPath(self,path,absolute=0):
     if (not absolute and self._parent):
       path=string.join(self._parent.split('/')[:-1],'/')+'/'+path
     if (len(path.split('/'))>2):
-      return s7parser.getNodeFromPath(path.split('/')[1:-1],self._viewtree.tree)
+      return PATu.getNodeFromPath(path.split('/')[1:-1],self._viewtree.tree)
     else:
       # root node is parent
       return self._viewtree.tree
@@ -915,10 +920,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     path=self.getSinglePathSelection()
     if (path == '/'): node=self.CGNStarget
     elif self._parent:
-      node=s7parser.getNodeFromPath(path.split('/'),
+      node=PATu.getNodeFromPath(path.split('/'),
                                    [None,None,[self.CGNStarget],None])  
     else:            
-      node=s7parser.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
+      node=PATu.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
     emptynode=['new node',None,[],'UserDefinedData_t']
     self.addToParentNode(node,emptynode)
     self.modified()
@@ -960,10 +965,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     if (path == '/'):
       return
     elif self._parent:
-      node=s7parser.getNodeFromPath(path.split('/'),
+      node=PATu.getNodeFromPath(path.split('/'),
                                    [None,None,[self.CGNStarget],None])  
     else:            
-      node=s7parser.getNodeFromPath(path.split('/')[1:],
+      node=PATu.getNodeFromPath(path.split('/')[1:],
                                    self.CGNStarget)
     wTreeSimple._nodebuffer=node    
         
@@ -1033,20 +1038,21 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       return
     if self._parent:
       path=string.join(self._parent.split('/')[:-1],'/')+'/'+path
-    s7parser.removeNodeFromPath(path.split('/')[1:],self._viewtree.tree)
+    PATu.removeNodeFromPath(path.split('/')[1:],self._viewtree.tree)
     updateViews(self._viewtree)
     self.modified()
 
   def addToParentNode(self,parentnode,newnode):
-    if (newnode[0] in s7parser.childNames(parentnode)):
+    if (newnode[0] in PATu.childNames(parentnode)):
       if (G___.generateCopyNames):
         nm=s7utils.generateName(parentnode,newnode)
-        nnode=[nm,copy.copy(newnode[1]),copy.deepcopy(newnode[2]),newnode[3]]
+        nnode=PATu.copyNode(newnode)
+        nnode[0]=nm
       else:
         s7utils.copyNameCollision(newnode[0])
         return
     else:
-      nnode=copy.deepcopy(newnode)
+      nnode=PATu.copyNode(newnode)
     parentnode[2].append(nnode)
     updateViews(self._viewtree)
     
@@ -1065,10 +1071,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     currentpath=self.getSinglePathSelection()
     if (currentpath == '/'): node=self.CGNStarget
     elif self._parent:
-      node=s7parser.getNodeFromPath(currentpath.split('/'),
+      node=PATu.getNodeFromPath(currentpath.split('/'),
                                    [None,None,[self.CGNStarget],None])  
     else:            
-      node=s7parser.getNodeFromPath(currentpath.split('/')[1:],self.CGNStarget)
+      node=PATu.getNodeFromPath(currentpath.split('/')[1:],self.CGNStarget)
     self.addToParentNode(node,wTreeSimple._nodebuffer)
     self.modified()
   def clearAllMarks(self):
@@ -1141,10 +1147,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       if (path == '/'):
         node=self.CGNStarget
       elif self._parent:
-        node=s7parser.getNodeFromPath(path.split('/'),
+        node=PATu.getNodeFromPath(path.split('/'),
                                      [None,None,[self.CGNStarget],None])
       else:            
-        node=s7parser.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
+        node=PATu.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
       if (node == -1):
         for nl in namelist:
           opath=nl[0]
@@ -1166,10 +1172,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
             if (ppath == '/'):
               pnode=self.CGNStarget
             elif self._parent:
-              pnode=s7parser.getNodeFromPath(ppath.split('/'),
+              pnode=PATu.getNodeFromPath(ppath.split('/'),
                                            [None,None,[self.CGNStarget],None])
             else:            
-              pnode=s7parser.getNodeFromPath(ppath.split('/')[1:],
+              pnode=PATu.getNodeFromPath(ppath.split('/')[1:],
                                             self.CGNStarget)
             imode=s7check.getStatusForThisNode(ppath,pnode,self._parent,
                                                 self.CGNStarget)
@@ -1190,7 +1196,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
             if (it):
               tktree.itemelement_config(it, self.col_type, self.el_text2,
                                         text=pnode[3], datatype=STRING)
-              ndtype=s7parser.getNodeType(pnode)
+              ndtype=PATu.getNodeType(pnode)
               if s7linkView.isLinkNode(self._paths[str(it)],self._viewtree):
                 ndtype='LK'
               tktree.itemelement_config(it, self.col_xdata, self.el_text5,
@@ -1233,14 +1239,14 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
             
             tktree.itemelement_config(it, self.col_type, self.el_text2,
                                       text=node[3], datatype=STRING)
-            ndtype=s7parser.getNodeType(node)
+            ndtype=PATu.getNodeType(node)
             if s7linkView.isLinkNode(self._paths[str(it)],self._viewtree):
               ndtype='LK'
             tktree.itemelement_config(it, self.col_xdata, self.el_text5,
                                       text=ndtype,
                                       datatype=STRING)
             tktree.itemelement_config(it, self.col_ddata, self.el_text6,
-                                      text=s7parser.getNodeShape(node),
+                                      text=PATu.getNodeShape(node),
                                       datatype=STRING)
     
   # --------------------------------------------------------------------
@@ -1272,10 +1278,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       if (path == '/'):
         node=self.CGNStarget
       elif self._parent:
-        node=s7parser.getNodeFromPath(path.split('/'),
+        node=PATu.getNodeFromPath(path.split('/'),
                                      [None,None,[self.CGNStarget],None])
       else:            
-        node=s7parser.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
+        node=PATu.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
       if (node == -1):
           lmode=s7linkView.getLinkStatusForThisNode(path,node,
                                                     self._parent,
@@ -1293,10 +1299,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       if (path == '/'):
         node=self.CGNStarget
       elif self._parent:
-        node=s7parser.getNodeFromPath(path.split('/'),
+        node=PATu.getNodeFromPath(path.split('/'),
                                      [None,None,[self.CGNStarget],None])
       else:            
-        node=s7parser.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
+        node=PATu.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
       if (node != -1):
         for cn in node[2]:
           found=0
@@ -1350,10 +1356,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     if (path == '/'):
       targetNode=self.CGNStarget
     elif self._parent:
-      targetNode=s7parser.getNodeFromPath(path.split('/'),
+      targetNode=PATu.getNodeFromPath(path.split('/'),
                                          [None,None,[self.CGNStarget],None])  
     else:            
-      targetNode=s7parser.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
+      targetNode=PATu.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
     for nd in targetNode[2]:
       if (path != '/'): pth=path+"/%s"%nd[0]
       else:             pth=path+"%s"%nd[0]
@@ -1401,6 +1407,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     return self._viewtree.hasWindow['L']
     
   def vtkView(self):
+    if (not S7HASVTK): return
     if (not self._viewtree.hasWindow['G']):
       self._viewtree.hasWindow['G']=s7vtkView.wVTKView(self,self._viewtree)
     return self._viewtree.hasWindow['G']
@@ -1453,7 +1460,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
                               text=node[3], datatype=STRING)      
 
     tktree.itemstyle_set(enew, self.col_xdata, self.st_datatype)
-    ndtype=s7parser.getNodeType(node)
+    ndtype=PATu.getNodeType(node)
     if s7linkView.isLinkNode(self._paths[str(enew)],self._viewtree):
       ndtype='LK'
     tktree.itemelement_config(enew, self.col_xdata, self.el_text5,
@@ -1461,8 +1468,8 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
 
     tktree.itemstyle_set(enew, self.col_ddata, self.st_datadims)
     tktree.itemelement_config(enew, self.col_ddata, self.el_text6,
-                              text=s7parser.getNodeShape(node),datatype=STRING)
-    if (s7parser.hasFortranFlag(node)):
+                              text=PATu.getNodeShape(node),datatype=STRING)
+    if (PATu.hasFortranFlag(node)):
       tktree.itemstate_set(enew,'fortran')
     else:
       tktree.itemstate_set(enew,'!fortran')

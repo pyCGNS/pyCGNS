@@ -74,13 +74,13 @@ __vid__="%d.%d"%(__version__,__release__)
 __doc__="""pyCGNS - v%d.%s - Python package for CFD General Notation System"""%(__version__,__release__)
 version=__vid__
 #
-WRA_VERSION=__vid__+'.2'
+WRA_VERSION=__vid__+'.3'
 VAL_VERSION=__vid__+'.0'
-MAP_VERSION=__vid__+'.2'
-NAV_VERSION=__vid__+'.2'
-PAT_VERSION=__vid__+'.2'
+MAP_VERSION=__vid__+'.3'
+NAV_VERSION=__vid__+'.3'
+PAT_VERSION=__vid__+'.3'
 DAT_VERSION=__vid__+'.0'
-APP_VERSION=__vid__+'.2'
+APP_VERSION=__vid__+'.3'
 #
 file_pattern="""#  -------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System

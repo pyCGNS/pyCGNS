@@ -394,4 +394,26 @@ def checkLinkFile(lkfile,lksearch=['']):
       break
   return found
     
+# --------------------------------------------------
+def copyArray(a):
+  if (a==None): return None
+  if (NPY.isfortran(a)):
+    b=NPY.array(a,order='Fortran')
+  else:
+    b=NPY.array(a)
+  return b
+
+# --------------------------------------------------
+def copyNode(n):
+  newn=[n[0],copyArray(n[1]),deepcopyNodeList(n[2]),n[3]]
+  return newn
+
+# --------------------------------------------------
+def deepcopyNodeList(la):
+  if (not la): return la
+  ra=[]
+  for a in la:
+    ra.append(copyNode(a))
+  return ra
+
 # ----
