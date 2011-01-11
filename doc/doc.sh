@@ -5,6 +5,7 @@ mkdir build/doc/html/_pdf 2>/dev/null
 
 WITHPDFFILES="YES BOY YOU GO"
 WEBSITEUPDATE="OH OH OH... HERE WE GO"
+#WEBSITEUPDATESTARTSSH="LONG TIME YOUVE SEEN ME"
 
 # gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER \
 #    -dFirstPage=9 -dLastPage=17 \
@@ -93,10 +94,31 @@ cp build/doc/pdf/* ./doc
 cp build/doc/pdf/* ./build/doc/html/_pdf
 mkdir build/doc/html/images
 cp doc/images/* build/doc/html/images
+(cd build/doc/html; tar cvf ../pyCGNS-html.tar .)
 
 # --- web site update
 #
 if test "x$WEBSITEUPDATE" != "x"
 then
-  (cd build/doc/html;  scp -r . pycgns@pycgnsdoc2:/home/pycgns/public_html)
+#  (cd build/doc/html;  scp -r . pycgns@pycgnsdoc2:/home/pycgns/public_html)
+cd build/doc
+sftp poinot,pycgns@web.sourceforge.net <<EOC   
+cd htdocs
+put pyCGNS-html.tar
+exit
+EOC
+
+if test "x$WEBSITEUPDATESTARTSSH" != "x"
+then
+ ssh poinot,pycgns@shell.sourceforge.net create
 fi
+
+ssh poinot,pycgns@shell.sourceforge.net <<EOC
+cd /home/groups/p/py/pycgns/htdocs
+tar xvf pyCGNS-html.tar
+exit
+EOC
+
+fi
+# ---
+

@@ -6,6 +6,7 @@
 The pyCGNS documentation
 ++++++++++++++++++++++++
 pyCGNS is a Python package for the `CGNS <http://www.cgns.org>`_ standard.
+
 The package gathers various tools and libraries for end-users and
 Python application developpers. The main object of pyCGNS is to provide the
 application developpers with a Python interface to *CGNS/SIDS*, the data
@@ -42,12 +43,18 @@ The package also uses `numpy <http://numpy.scipy.org>`_ and
   <td align="center" valign="middle">
     <img src="images/DAT-logo.jpg" height="48" alt="DAT"/></td>
   <td align="center" valign="middle">
-    <img src="images/TRA-logo.jpg" height="48" alt="TRA"/></td>
+    <img src="images/APP-logo.jpg" height="48" alt="APP"/></td>
   </tr></table><br></div>
 
-  You also have PDF version of the documentation you can download from
-  the <a href="http://www.python-science.org/project/pyCGNS">
-  pyCGNS web site</a>.
+  You have downloadable PDF version of the documentation `here <download_pdf>`.
+
+.. note::
+  pyCGNS is released under LGPL2 license and hosted 
+  by `sourceforge <http://sourceforge.net/projects/pycgns>`_
+  where you can find `source download <http://sourceforge.net/projects/pycgns/files>`_, 
+  `help forum <http://sourceforge.net/projects/pycgns/forums/forum/1350997>`_, 
+  `wiki <http://sourceforge.net/apps/trac/pycgns/wiki>`_ 
+  and `bug tracking <http://sourceforge.net/apps/trac/pycgns/report/6>`_.
 
 Contents
 ++++++++
@@ -59,10 +66,25 @@ Contents
 
 ----
 
-* :ref:`MAP Index <map_index>`
-* :ref:`PAT Index <pat_index>`
-* :ref:`NAV Index <nav_index>`
-* :ref:`WRA Index <wra_index>`
+.. # * :ref:`MAP Index <map_index>`
+.. # * :ref:`PAT Index <pat_index>`
+.. # * :ref:`NAV Index <nav_index>`
+.. # * :ref:`WRA Index <wra_index>`
+
+----
+
+.. _download_pdf:
+
+PDF Docs
+++++++++
+
+  * `Introduction document <_pdf/pyCGNS_intro.pdf>`_
+  * `MAP manual <_pdf/pyCGNS_MAP.pdf>`_
+  * `PAT manual <_pdf/pyCGNS_PAT.pdf>`_
+  * `NAV manual <_pdf/pyCGNS_NAV.pdf>`_
+  * `WRA manual <_pdf/pyCGNS_WRA.pdf>`_
+  * `VAL manual <_pdf/pyCGNS_VAL.pdf>`_
+  * `APP manual <_pdf/pyCGNS_APP.pdf>`_
 
 * :ref:`search`
 
