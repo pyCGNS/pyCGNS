@@ -10,16 +10,17 @@ from time import localtime, strftime
 
 # --------------------------------------------------
 def printNodeArray(node):
-  return node[1].T.flat[:].tolist()
+  return node[1].flat[:].tolist()
     
 # --------------------------------------------------
-def printNodeValue(node):
+def printNodeValue(node,fortranflag=False):
   if (node[1] == None): return "None"
   nt=",dtype='%s'"%node[1].dtype.char
   no=""
   nd=printNodeArray(node)
   ns=node[1].shape
-  if ((numpy.isfortran(node[1]))or(len(node[1].shape)==1)): no=",order='F'"
+  if (fortranflag):
+    if ((numpy.isfortran(node[1]))or(len(node[1].shape)==1)): no=",order='F'"
   s="numpy.array(%s%s%s).reshape(%s%s)"%(nd,nt,no,ns,no)
   return s
     

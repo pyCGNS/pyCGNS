@@ -1,0 +1,42 @@
+
+Glossary
+++++++++
+
+.. glossary::
+
+ CGNS
+   The specific purpose of the CFD General Notation System (CGNS) project is to provide a standard 
+   for recording and recovering computer data associated with the numerical solution of the equations 
+   of fluid dynamics. Read more `here... <http://www.cgns.org>`_.
+
+ CGNS/SIDS
+   The `Standard Interface Data Structure` is the specification of the data model.
+   This public document describes the syntax and the semantics of all tree-structured
+   data required or proposed for a CFD simulation.
+   Both an HTML and a PDF version are available `here <http://www.grc.nasa.gov/WWW/cgns/sids/index.html>`_.
+
+ CGNS/MLL
+   The `Mid-Level Library` is an example implementation of *CGNS/SIDS* on top of
+   *CGNS/ADF and *CGNS/HDF5* mappings. This library has a C and a Fortran API.
+
+ CGNS/ADF
+   The `Advanced Data Format` *CGNS/SIDS* implementation.
+
+ CGNS/HDF5
+   The `Hierarchical Data Format` *CGNS/SIDS* implementation. 
+
+ CGNS/Python
+   The `Python programming langage` *CGNS/SIDS* implementation.
+
+ CHLone
+   A *CGNS/HDF5* compliant implementation. The `CHLone <http://chlone.sourceforge.net>`_ library
+   is available on SourceForge.
+
+ HDF5
+   A powerful storage system for large data.
+
+ numpy
+  The numerical library for Python.
+
+ VTK
+  A `visualization toolkit <http://www.vtk.org>`_ used to display 3D objects ni *CGNS.NAV*.

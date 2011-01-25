@@ -1,0 +1,25 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
+Test
+++++
+
+ adf -> adf
+ hdf -> hdf
+ py  -> py
+
+ adf -> py
+ py  -> adf
+
+ hdf -> py
+ py  -> hdf
+
+ adf -> hdf
+ hdf -> adf
+
+ adf -> py -> adf
+ hdf -> py -> hdf
+ adf -> py -> hdf
+ hdf -> py -> adf

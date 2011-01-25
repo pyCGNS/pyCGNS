@@ -74,6 +74,8 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
     self.addLinkWindow=None
     self.newcount=1
 
+    self._linkdestbuffer=None
+
     ScrolledMultiListbox.__init__(self,self._wtop,relief=GROOVE,border=3,
                                   height=G___.wminheight,width=G___.wminwidth)
     mcols=self.menu([('tree-new',W,2,self.cbk_newtree, 'New tree'),
@@ -299,7 +301,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
           flags=CGNS.MAP.S2P_NONE
           if (G___.followLinks):flags|=CGNS.MAP.S2P_FOLLOWLINKS
           if (G___.noData):     flags|=CGNS.MAP.S2P_NODATA
-          (tt,lk)=CGNS.MAP.load(filename,flags,searchpath)
+          (tt,lk)=CGNS.MAP.load(filename,flags)
           treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
         if (not treefingerprint.status):
           s7utils.badFileError(filename)

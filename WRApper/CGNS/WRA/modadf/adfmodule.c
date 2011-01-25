@@ -689,16 +689,13 @@ DBADF_readAllData(DBADFObject *self, PyObject *args)
     return NULL;
   }
 
-  /* TRANSPOSE ALERT !*/
-  /* index is the C order for numpy. Even if array is FORTRAN, you should
-     pass an index with the C order, i.e. imax,ijmax,kmax...
-     Then you have to reverse the size if you detect a fortran */
   size=1;
   for (n=0; n<ndim; n++)
   {
-    size*=dim_vals[ndim-n-1];
-    npy_dim_vals[n]=dim_vals[ndim-n-1];
+    size*=dim_vals[n];
+    npy_dim_vals[n]=dim_vals[n];
   } 
+
   if (size<=0)
   {
     PyErr_SetString(ADFErrorObject,
@@ -752,6 +749,14 @@ DBADF_readAllData(DBADFObject *self, PyObject *args)
     return NULL;
   }
 
+  if (    (!strcmp(label,"DataArray_t"))
+	||(!strcmp(label,"DimensionalUnits_t"))
+	||(!strcmp(label,"AdditionalUnits_t"))
+	||(!strcmp(label,"DimensionalExponents_t"))
+	||(!strcmp(label,"AdditionalExponents_t")) )
+  {
+    array=(PyArrayObject*)PyArray_NewCopy(array, NPY_FORTRANORDER); // oups!
+  }
   return (PyObject*)array;
 }
 
@@ -853,14 +858,20 @@ DBADF_writeAllData(DBADFObject *self, PyObject *args)
     PyErr_SetString(ADFErrorObject,sterror);
     return NULL;
   }
+  PyArray_UpdateFlags(oarray, PyArray_FLAGS(oarray) & ~NPY_FORTRANORDER);
+  oarray=(PyArrayObject*)PyArray_NewCopy(oarray, NPY_FORTRANORDER);
+  if (    (!strcmp(label,"DataArray_t"))
+	||(!strcmp(label,"DimensionalUnits_t"))
+	||(!strcmp(label,"AdditionalUnits_t"))
+	||(!strcmp(label,"DimensionalExponents_t"))
+	||(!strcmp(label,"AdditionalExponents_t")) )
+  {
+    oarray=(PyArrayObject*)PyArray_Transpose(oarray,NULL);
+  }
   ptrd=PyArray_DATA(oarray);
   dim_vals=PyArray_DIMS(oarray);
   ndim=PyArray_NDIM(oarray);
-  for (n=0; n<ndim; n++)
-  {
-    npy_dim_vals[n]=dim_vals[ndim-n-1];
-    dim_vals_int[n]=(int)(dim_vals[ndim-n-1]);
-  } 
+
   ADF__Put_Dimension_Information(node_id,data_type,ndim,dim_vals_int,
 				 &(self->last_error));  
   ADF__Write_All_Data(node_id,(char*)ptrd,&(self->last_error));

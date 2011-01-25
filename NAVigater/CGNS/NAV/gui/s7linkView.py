@@ -33,7 +33,7 @@ def sortLinkList(a,b):
 
 # -----------------------------------------------------------------------------
 class wLinkEdit(s7windoz.wWindoz):
-  def __init__(self,wcontrol,tree,fingerprint,node,ppath):
+  def __init__(self,wcontrol,tree,fingerprint,node,ppath,destdata=None):
 
     self.control=wcontrol
 
@@ -60,13 +60,20 @@ class wLinkEdit(s7windoz.wWindoz):
     self.v_lnode=StringVar()
     self.v_lnode.set(node[0])
     self.v_ddir=StringVar()
-    self.v_ddir.set(fingerprint.filedir)
     self.v_dfile=StringVar()
-    self.v_dfile.set(fingerprint.keyword)
     self.v_dpath=StringVar()
-    self.v_dpath.set(ppath)
     self.v_dnode=StringVar()
-    self.v_dnode.set(node[0])
+    if (destdata):
+      self.v_ddir.set(destdata[0])
+      self.v_dfile.set(destdata[1])
+      self.v_dpath.set(destdata[2])
+      self.v_dnode.set(destdata[3])
+    else:
+      self.v_ddir.set(fingerprint.filedir)
+      self.v_dfile.set(fingerprint.keyword)
+      self.v_dpath.set(ppath)
+      self.v_dnode.set(node[0])
+
     self.xdir=Label(self._wtop,text='Dir',font=G___.font['L'])
     self.xfile=Label(self._wtop,text='File',font=G___.font['L'])
     self.xpath=Label(self._wtop,text='Path',font=G___.font['L'])
@@ -138,6 +145,7 @@ class wLinkEdit(s7windoz.wWindoz):
       self.targetNode[2]=[]
       self.targetNode[3]=''
       s7treeSimple.updateViews(fg,links=True)
+      fg.modified()
     self.leave()
     
   def leave(self):
@@ -296,19 +304,19 @@ class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
     t.itemstate_set(enew,'leaf')
     t.itemstyle_set(enew, self.col_status,self.st_link)
     if   (lkstatus==1):
-      print 'lk state ',1
+#      print 'lk state ',1
       t.itemstate_set(enew,'islink')
     elif (lkstatus==2):
-      print 'lk state ',2
+#      print 'lk state ',2
       t.itemstate_set(enew,'!islinkignored')
     elif (lkstatus==3):
-      print 'lk state ',3
+#      print 'lk state ',3
       t.itemstate_set(enew,'!islinknofile')
     elif (lkstatus==4):
-      print 'lk state ',4
+#      print 'lk state ',4
       t.itemstate_set(enew,'!islinknopath')
     else:
-      print 'lk state (def)',lkstatus
+#      print 'lk state (def)',lkstatus
       pass
     t.itemstyle_set(enew,self.col_graph,self.st_leaf)
     t.itemelement_config(enew,self.col_graph,self.el_text2,
@@ -334,7 +342,7 @@ def getLinkStatusForThisNode(pth,node,parent,CGNStarget,treefinger):
     if (lk[1]==pth):             rt=1
     if ((rt==1) and (lk[5]==0)): rt=3
     if ((rt==1) and (not G___.followLinks)): rt=2
-  print 'status ',rt
+#  print 'status ',rt
   return rt
 
 def getLinkInfoForThisNode(pth,node,parent,CGNStarget,treefinger):

@@ -487,6 +487,9 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
                                command=self.SubEdit)
     self.popupmenu.add_separator()
     self.popupmenu.add_command(font=self.menufont,
+                               label="Copy as link destination (C-d)",
+                               command=self.SubCopyLinkDest)
+    self.popupmenu.add_command(font=self.menufont,
                                label="Add link (C-l)",
                                command=self.SubAddLink)
     self.popupmenu.add_command(font=self.menufont,
@@ -972,12 +975,23 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
                                    self.CGNStarget)
     wTreeSimple._nodebuffer=node    
         
+  def SubCopyLinkDest(self):
+    if (not self.getItemSelection()[0]): return
+    currentpath=self.getSinglePathSelection()
+    node=self.findNodeFromPath(currentpath)
+    ppath=self.findParentPathFromPath(currentpath,absolute=1)
+    self._control._linkdestbuffer=[self._viewtree.filedir,
+                                   "%s%s"%(self._viewtree.filename,
+                                           self._viewtree.fileext),
+                                   ppath,node[0]]
+    
   def SubAddLink(self):
     if (not self.getItemSelection()[0]): return
     currentpath=self.getSinglePathSelection()
     node=self.findNodeFromPath(currentpath)
     ppath=self.findParentPathFromPath(currentpath,absolute=1)
-    s7linkView.wLinkEdit(self._control,self._tree,self._viewtree,node,ppath)
+    s7linkView.wLinkEdit(self._control,self._tree,self._viewtree,node,ppath,
+                         destdata=self._control._linkdestbuffer)
     
   def SubDelLink(self):
     if (not self.getItemSelection()[0]): return

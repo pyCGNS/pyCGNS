@@ -5,23 +5,16 @@
 
 The pyCGNS documentation
 ++++++++++++++++++++++++
-pyCGNS is a Python package for the `CGNS <http://www.cgns.org>`_ standard.
+*pyCGNS* is a Python package for the :term:`CGNS` standard.
 
 The package gathers various tools and libraries for end-users and
-Python application developpers. The main object of pyCGNS is to provide the
-application developpers with a Python interface to *CGNS/SIDS*, the data
+Python application developpers. The main object of *pyCGNS* is to provide the
+application developpers with a Python interface to :term:`CGNS/SIDS`, the data
 model. The *MAP* and *PAT* modules are dedicated to this goal: map the 
-*CGNS/SIDS* data model to a Python implementation. The *WRA* module is a
-wrapper on *CGNS/MLL* and is not the important module of pyCGNS. One could 
-achieve such a wrapper using SWIG for example. This is the reason why the
-use of *CGNS/MLL* is optional.
-
-The *CGNS/SIDS* data model has a mapping the *HDF5* for file storage. The
-*MAP* module uses `CHLone <http://chlone.sourceforge.net>`_ 
-instead of *CGNS/MLL* to map its *CGNS/Python* trees to *HDF5*.
-
-The package also uses `numpy <http://numpy.scipy.org>`_ and 
-`hdf5 <http://www.hdfgroup.org>`_ you should install before pyCGNS.
+*CGNS/SIDS* data model to a :ref:`Python implementation <reference_sids_to_python>`. 
+The *WRA* module contains wrapper on :term:`CGNS/MLL`
+and a *MLL-like* set of functions that uses the
+:term:`CGNS/Python` mapping as implementation.
 
 .. raw:: html
 
@@ -40,16 +33,24 @@ The package also uses `numpy <http://numpy.scipy.org>`_ and
       <img src="images/WRA-logo.jpg" height="48" alt="WRA"/></a></td>
   <td align="center" valign="middle">
     <img src="images/VAL-logo.jpg" height="48" alt="VAL"/></td>
-  <td align="center" valign="middle">
-    <img src="images/DAT-logo.jpg" height="48" alt="DAT"/></td>
-  <td align="center" valign="middle">
-    <img src="images/APP-logo.jpg" height="48" alt="APP"/></td>
+  <td align="center" valign="middle"><a href="DAT/readme.html">
+    <img src="images/DAT-logo.jpg" height="48" alt="DAT"/></a></td>
+  <td align="center" valign="middle"><a href="APP/readme.html">
+    <img src="images/APP-logo.jpg" height="48" alt="APP"/></a></td>
   </tr></table><br></div>
 
-  You have downloadable PDF version of the documentation `here <download_pdf>`.
+The package uses :term:`numpy` and :term:`HDF5`
+you should install before pyCGNS.
+The *CGNS.NAV* tools has an optional :term:`VTK` viewer which requires the
+*VTK lib* and its python interface.
+
+The *CGNS/SIDS* data model has a mapping the *HDF5* for file storage. The
+*MAP* module uses :term:`CHLone` 
+instead of *CGNS/MLL* to map its :term:`CGNS/Python` trees to *HDF5*.
 
 .. note::
-  pyCGNS is released under LGPL2 license and hosted 
+  The *pyCGNS* python package is released 
+  under `LGPL2 license <http://opensource.org/licenses/lgpl-2.1>`_ and hosted 
   by `sourceforge <http://sourceforge.net/projects/pycgns>`_
   where you can find `source download <http://sourceforge.net/projects/pycgns/files>`_, 
   `help forum <http://sourceforge.net/projects/pycgns/forums/forum/1350997>`_, 
@@ -63,6 +64,8 @@ Contents
    
    introduction
    install
+   test
+   glossary
 
 ----
 
@@ -70,8 +73,6 @@ Contents
 .. # * :ref:`PAT Index <pat_index>`
 .. # * :ref:`NAV Index <nav_index>`
 .. # * :ref:`WRA Index <wra_index>`
-
-----
 
 .. _download_pdf:
 

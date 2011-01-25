@@ -342,7 +342,7 @@ def __parseAndReadADF(db,nodeid,__followlink=1,__maxreadalldata=0,
             info=[nodeinfo['name'],
                   CGNS.PAT.cgnsutils.setStringAsArray('%s:%s'%(linkFile,linkNode)),
                   [],nodeinfo['label']]
-          else:
+        else:
             info=[nodeinfo['name'],actualinfo[1],actualinfo[2],actualinfo[3]]
       else:
         info=[nodeinfo['name'],

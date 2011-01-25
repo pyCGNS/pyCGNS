@@ -51,9 +51,9 @@ class CGNSparser:
         cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
         cz=CGU.nodeByPath("%s/CoordinateZ"%gT[0],gT)
         shx=cx[1].shape
-        scx=cz[1].T.reshape(shx)
-        scy=cy[1].T.reshape(shx)
-        scz=cx[1].T.reshape(shx)
+        scx=cz[1].reshape(shx)
+        scy=cy[1].reshape(shx)
+        scz=cx[1].reshape(shx)
         simin=[scx[0,:,:], scy[0,:,:], scz[0,:,:]]
         simax=[scx[-1,:,:],scy[-1,:,:],scz[-1,:,:]]
         sjmin=[scx[:,0,:], scy[:,0,:], scz[:,0,:]]
@@ -95,7 +95,7 @@ class Mesh:
     pts=vtk.vtkPoints()
     pts.SetNumberOfPoints(self.imax*self.jmax*self.kmax)
     for i in range(len(self.dx.flat)):
-      pts.InsertPoint(i,self.dz.T.flat[i],self.dy.T.flat[i],self.dx.T.flat[i])
+      pts.InsertPoint(i,self.dz.flat[i],self.dy.flat[i],self.dx.flat[i])
     g=vtk.vtkStructuredGrid()
     self.odict[self.path]=g
     g.SetPoints(pts)
