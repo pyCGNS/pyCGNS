@@ -6,6 +6,9 @@
 
 .. _reference_sids_to_python:
 
+CGNS/Python Tree
+++++++++++++++++
+
 The CGNS/Python mapping defines a **tree** structure composed of 
 **nodes** implemented for the *Python* programming langage. 
 A special **links** structure is also defined for a correct mapping of
@@ -17,9 +20,6 @@ This specification is public and could be used as the basis for Python
 based CGNS application interoperability.
 *Python* is an interpreted langage and it has a textual representation of
 its objects, this representation can be used for CGNS/Python trees as well.
-
-CGNS/Python Tree
-++++++++++++++++
 
 Commitment with CGNS standard
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

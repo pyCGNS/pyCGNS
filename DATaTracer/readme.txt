@@ -9,10 +9,6 @@ CGNS.DAT
 The pyCGNS module is a set of tools for database management of your
 CGNS files.
 
-.. toctree::
-
-   quickstart
-
 .. warning::
 
    The actual database system used by CGNS.DAT depends on your installation.
@@ -23,6 +19,9 @@ CGNS files.
 -----
 
 .. _dat_index:
+
+DAT Index
+---------
 
 * :ref:`genindex`
 

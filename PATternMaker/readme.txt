@@ -52,11 +52,15 @@ CGNS Types
 
 CGNS.PAT.cgnserrors
 ---------------------
-.. autodata:: CGNS.PAT.cgnserrors
+
+.. ### autodata:: CGNS.PAT.cgnserrors
 
 -----
 
 .. _pat_index:
+
+PAT Index
+---------
 
 * :ref:`genindex`
 

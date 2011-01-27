@@ -1,22 +1,16 @@
 .. -------------------------------------------------------------------------
-.. pyCGNS - CFD General Notation System - 
+.. pyCGNS.VAL - CFD General Notation System - 
 .. See license.txt file in the root directory of this Python module source  
 .. -------------------------------------------------------------------------
 
-CGNS.APP
+CGNS.VAL
 ========
-
-The APP module is an informal set of tools, example, utilities, tests...
-
-.. toctree::
-
-   quickstart
 
 -----
 
-.. _app_index:
+.. _val_index:
 
-APP Index
+VAL Index
 ---------
 
 * :ref:`genindex`

@@ -142,6 +142,9 @@ are very close the to Python level interface functions.
 
 .. _map_index:
 
+MAP Index
+---------
+
 * :ref:`genindex`
 
 .. -------------------------------------------------------------------------

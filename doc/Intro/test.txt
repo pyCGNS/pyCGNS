@@ -3,23 +3,31 @@
 .. See license.txt file in the root directory of this Python module source  
 .. -------------------------------------------------------------------------
 
-Test
-++++
+Tests
++++++
 
- adf -> adf
- hdf -> hdf
- py  -> py
+Cross Matrix for data integrity
+-------------------------------
 
- adf -> py
- py  -> adf
+ WRA can read/write C|NS/ADF and CGNS/HDF5 files.
+ MAP can read/write CGNS/HDF and CGNS/Python files
+ PAT can read/write CGNS/Python files.
+ APP can read/write CGNS/Python files.
+ NAV can read/write all CGNS formats (using previous modules)
 
- hdf -> py
- py  -> hdf
+ The matrix here after shows the tested translations.
+ 
+  write:  WRA/ADF WRA/HDF MAP/HDF MAP/PY PAT/PY APP/PY NAV/ADF NAV/HDF NAV/PY
 
- adf -> hdf
- hdf -> adf
+read:    
+WRA/ADF  |   x 
+WRA/HDF  |   x 
+MAP/HDF  |
+MAP/PY 	 |
+PAT/PY 	 |
+APP/PY 	 |
+NAV/ADF  |
+NAV/HDF  |
+NAV/PY	 |
+	 
 
- adf -> py -> adf
- hdf -> py -> hdf
- adf -> py -> hdf
- hdf -> py -> adf

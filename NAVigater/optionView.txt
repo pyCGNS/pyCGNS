@@ -12,12 +12,20 @@ of these are very important and could change the actual contents of a
 file you want to store.
 
 .. image:: ../doc/images/options_view_1.png
-   :width: 16cm
-   :align: center
+   :width: 22cm
 
+You can change values in the *Option view* or edit the ``.cgnsnavoptions.py``
+file you can find in your home directory. For example you can customize the
+key bindings only in the ``.cgnsnavoptions.py`` file. This file is a plain 
+Python file, it is imported and re-generated each time you run 
+``CGNS.NAV``.
+
+The ``.cgnsnavhistory.py`` contains the history of directories where you
+opened a *CGNS* file.
 
 Options
 ~~~~~~~
+
 The check-box options are active when the box is *checked* (wouahahah !).
 Some are only related to the display of the data, some other are driving
 the way *CGNS.NAV* reads or writes the data on disk and have a strong
@@ -71,5 +79,68 @@ impact on the  actual CGNS file you will obtain.
   * `Force fortran flag in numpy arrays`
 
   * `Transpose array for edit/view`
+
+.. _keymousebindings:
+
+Default key/mouse bindings per view
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The *<C-x>* notation stands for *<Control-X>*, that is pressing the *Control*
+key and the *X* letter key at the same time. The mouse actions can be a
+*Single* or a *Double* click on the *L*eft, *M*iddle or *R*ight button.
+
++-------------+-------------+------------------------------------------------+
+| View        | Key/Mouse   | Action                                         |
++=============+=============+================================================+
+| ControlView | <Return>    | On a view line, raises this view window        |
+|             |             |                                                |
+|             | <Delete>    | On a view line, closes the window and its      |
+|             |             | children windows                               |
+|             |             |                                                |
+|             |             |                                                |
++-------------+-------------+------------------------------------------------+
+| TreeView    | <Backspace> | Raises the ControlView window                  |
+|             |             |                                                |
+|             | <Single-L>  | Select current node                            |
+|             |             |                                                |
+|             | <Return>    | On a node, open/close the selected node        |
+|             |             |                                                |
+|             | <Single-R>  | Opens the pop-up menu for selected node        |
+|             |             |                                                |
+|             | <C-c>       | Copy selected node                             |
+|             |             |                                                |
+|             | <C-x>       | Cut selected node                              |
+|             |             |                                                |
+|             | <C-v>       | Paste buffered tree as selected node's brother |
+|             |             |                                                |
+|             | <C-y>       | Paste buffered tree as selected node's child   |
+|             |             |                                                |
+|             | <C-w>       | Opens a new *Tree window* for selected node    |
+|             |             |                                                |
+|             | <C-t>       | Opens a new *Table window* for selected node   |
+|             |             |                                                |
+|             | <C-a>       | Change selected node's name                    |
+|             |             |                                                |
+|             | <C-s>       | Change selected node's CGNS type               |
+|             |             |                                                |
+|             | <C-e>       | Change selected node's value                   |
+|             |             |                                                |
+|             | <C-b>       | Add brother node to selected node              |
+|             |             |                                                |
+|             | <C-u>       | Add child node to selected node                |
+|             |             |                                                |
+|             | <C-d>       | Copy selected node as link destination         |
+|             |             |                                                |
+|             | <C-l>       | Add link to buffered link node destination     |
+|             |             |                                                |
+|             | <C-z>       | Check selected node and its sub-tree           |
+|             |             |                                                |
+|             |             |                                                |
+|             |             |                                                |
+|             |             |                                                |
++-------------+-------------+------------------------------------------------+
+| TableView   | <Backspace> | Raises the ControlView window                  |
++-------------+-------------+------------------------------------------------+
+
 
 .. -------------------------------------------------------------------------

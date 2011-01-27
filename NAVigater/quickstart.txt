@@ -8,29 +8,29 @@ QuickStart
 
 The first window you see when you start ``CGNS.NAV`` is the *Control View*.
 This main view helps you to find out the views you have and on which 
-CGNS tree they refer to. If you select the line of an existing view in the
-*Control view* and press `Return`, this view will be raised on your screen.
-You can find back the *Control view* from any other view
-just pressing the `BackSpace` key.
+CGNS tree they refer to. 
 
 .. image:: ../doc/images/control_view_1.png
-   :width: 16cm
-   :align: center
+   :width: 20cm
+
+If you select the line of an existing view in the
+*Control view* and press `Return`, this view will be raised on your screen.
+You can find back the *Control view* from any other view
+just pressing the `BackSpace` key 
+(See :ref:`Key/Mouse Bindings <keymousebindings>`).
+
+.. image:: ../doc/images/control_view_2.png
+   :width: 7cm
 
 From its icon menu you can *create* a new CGNS/Python tree, you can *Load*
 an existing file or open the *Pattern View*. There is also an icon for
 the *Option View* and an info about ``CGNS.NAV`` version.
 
-.. image:: ../doc/images/control_view_2.png
-   :width: 16cm
-   :align: center
-
 Each time you open a view on a file, the *Control* keeps track of it, you
 can check all the views you may have on the same file.
 
 .. image:: ../doc/images/control_view_3.png
-   :width: 16cm
-   :align: center
+   :width: 20cm
 
 The columns of the lines you see in this *Control* view are:
 
@@ -46,8 +46,7 @@ an existing one. The tree below is a large one and we have a lot of
 information. 
 
 .. image:: ../doc/images/tree_view_1.png
-   :width: 16cm
-   :align: center
+   :width: 20cm
 
 You click on the *+/-* icon before any node name in the tree to open/close 
 the child sub-tree for this node. A mouse left button simpple click on a node
@@ -57,7 +56,6 @@ change node name, type, add a child... Most of these functions have keyboard
 shortcuts.
 
 .. image:: ../doc/images/tree_view_2.png
-   :width: 16cm
-   :align: center
+   :width: 20cm
 
 .. -------------------------------------------------------------------------

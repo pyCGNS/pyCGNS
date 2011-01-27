@@ -68,7 +68,7 @@ the ``>>>`` string is the python interpreter prompt)::
 
 Now ``tree`` is a Python list with the whole`` ./001Disk.hdf`` CGNS tree
 into, with the data structure as described 
-in :ref:`SIDS-to-Python <reference_sids_to_python>`.
+in :ref:`SIDS-to-Python <mapix::reference_sids_to_python>`.
 
 Using PAT to modify a CGNS tree
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
