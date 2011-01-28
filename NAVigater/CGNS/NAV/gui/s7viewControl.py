@@ -40,11 +40,9 @@ import s7history
 # -----------------------------------------------------------------------------
 class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
   def lock_acquire(self,msg=''):
-#    print 's7 ACQ',msg
 #    self.lock.acquire()
     pass
   def lock_release(self,msg=''):
-#    print 's7 REL'  ,msg  
 #    self.lock.release()
     pass
   def cbk_newtree(self):
@@ -280,7 +278,6 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
   def readFile(self,fd,fn,fileext):
     filename='%s/%s%s'%(fd,fn,fileext)
     treefingerprint=self.getIfAlreadyImported(fd,fn)
-    searchpath=G___.profilePath
     if (treefingerprint and s7utils.updateTreeLoad()):
       self.closeTree(fd,fn)
       treefingerprint=None
@@ -292,16 +289,18 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
       if (not treefingerprint
           and (fileext in G___.cgnslibFiles+G___.cgnssslFiles)):
         if (not treefingerprint and (fileext in G___.cgnslibFiles)):
-          lk=CGNS.WRA.utilities.getLinksAsADF(filename,searchpath)
+          lk=CGNS.WRA.utilities.getLinksAsADF(filename,G___.linkSearchPath)
           if (G___.noData): vmax=G___.maxDisplaySize
           else:             vmax=sys.maxint
-          tt=CGNS.WRA.utilities.loadAsADF(filename,G___.followLinks,vmax)
+          tt=CGNS.WRA.utilities.loadAsADF(filename,G___.followLinks,vmax,
+                                          lksearch=G___.linkSearchPath)
           treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
         elif (not treefingerprint and (fileext in G___.cgnssslFiles)):
           flags=CGNS.MAP.S2P_NONE
           if (G___.followLinks):flags|=CGNS.MAP.S2P_FOLLOWLINKS
           if (G___.noData):     flags|=CGNS.MAP.S2P_NODATA
-          (tt,lk)=CGNS.MAP.load(filename,flags)
+          lkpath=G___.linkSearchPath
+          (tt,lk)=CGNS.MAP.load(filename,flags,0,999,'',lkpath)
           treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
         if (not treefingerprint.status):
           s7utils.badFileError(filename)

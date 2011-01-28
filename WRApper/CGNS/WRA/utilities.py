@@ -152,13 +152,16 @@ def __singleNodeFromADF(db,id,path,flink,maxread,dmax,ptarget,lksearch):
       if (rinfo!=None): return rinfo
   return None
   
-def getSingleNodeFromADF(file,path,flink,maxread,dmax,ptarget,psearch=[]):
-  db=WRP.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
+def getSingleNodeFromADF(rfile,path,flink,maxread,dmax,ptarget,lksearch):
+  pth=__trustLink(rfile,path,lksearch)[2]
+  tfile=pth+'/'+rfile
+  #print 'getSingleNodeFromADF ',rfile,path
+  db=WRP.pyADF(tfile,ADF.READ_ONLY,ADF.NATIVE)
   nodeinfo=db.nodeAsDict(db.root())
   for child in nodeinfo['children']:
     info=__singleNodeFromADF(db,db.get_node_id(db.root(),child),
                              string.split(path,'/')[1:],
-                             flink,maxread,dmax,ptarget,psearch)
+                             flink,maxread,dmax,ptarget,lksearch)
     if (info!=None): return info
   db.database_close()
   return info
@@ -324,29 +327,28 @@ def __parseAndReadADF(db,nodeid,__followlink=1,__maxreadalldata=0,
       ar=db.read_all_data(nodeinfo['id'])
     else:
       ar=None
-  #if ((ar!=None) and (nodeinfo['label']=='IndexRange_t')): print ar
   #link
   if ((nodeinfo['datatype']=='LK') and (__depthmax>0)):      
-      linkFile=nodeinfo['file']
-      linkNode=nodeinfo['path']
-      if (__trustLink(linkFile,linkNode) and __followlink):
-        actualinfo=getSingleNodeFromADF(linkFile,linkNode,
+      lkFile=nodeinfo['file']
+      lkNode=nodeinfo['path']
+      if (__trustLink(lkFile,lkNode,lksearch) and __followlink):
+        actualinfo=getSingleNodeFromADF(lkFile,lkNode,
                                         __followlink,__maxreadalldata,
                                         __depthmax,__pathtarget,lksearch)
         if (actualinfo==None):
-          result=loadAsADF(linkFile,
+          result=loadAsADF(lkFile,
                            __followlink,__maxreadalldata,
                            __depthmax,__pathtarget,dbs,0,lksearch)
-          info=nsearch([None, None, result, None], linkNode)
+          info=nsearch([None, None, result, None], lkNode)
           if (info==None):
             info=[nodeinfo['name'],
-                  CGNS.PAT.cgnsutils.setStringAsArray('%s:%s'%(linkFile,linkNode)),
+                  CGNS.PAT.cgnsutils.setStringAsArray('%s:%s'%(lkFile,lkNode)),
                   [],nodeinfo['label']]
         else:
             info=[nodeinfo['name'],actualinfo[1],actualinfo[2],actualinfo[3]]
       else:
         info=[nodeinfo['name'],
-              CGNS.PAT.cgnsutils.setStringAsArray('%s:%s'%(linkFile,linkNode)),
+              CGNS.PAT.cgnsutils.setStringAsArray('%s:%s'%(lkFile,lkNode)),
               [],nodeinfo['label']]
   #no link  
   elif (__depthmax>0): 
@@ -363,15 +365,10 @@ def __parseAndReadADF(db,nodeid,__followlink=1,__maxreadalldata=0,
     info+=[lc,nodeinfo['label']]
   return info    
 
-def __trustLink(file,path):
-  tfile=file
-  try:
-    if (not os.path.exists(tfile)):
-      print '## pyS7: lk error: no such file[%s]'%file
-      return (0,file)
-    return (1,tfile)
-  except:
-    return (0,file)
+def __trustLink(rfile,path,lksearch):
+  for lkp in ['./']+lksearch:
+    if (os.path.exists(lkp+'/'+rfile)): return (1,rfile,lkp)
+  return (0,rfile,'')
 
 def __parseAndFindLinksADF(db,nodeid,level,path,dbs,file,search):
   nodeinfo=db.nodeAsDict(nodeid)
@@ -438,11 +435,13 @@ def findLinkAsADF(file,lksearch,level=0,path='',dbs={}):
         del dbs[kdb]
   except ADF.error,e:
       print 'findLinkAsADF :',e
-  print __links
+  # print __links
   return __links
 
 # remove duplicates
 def getLinksAsADF(file,searchpath=[]):
+  for lkp in searchpath:
+    MLL.path_add(lkp+'/')
   r=findLinkAsADF(file,searchpath,dbs={})
   if (not r): return []
   r.sort()
@@ -469,6 +468,8 @@ def getLinksAsADF(file,searchpath=[]):
 def loadAsADF(file,link=1,max=0,depth=999,path=None,dbs={},
               start=1,lksearch=[]):
   __tree = None
+  for lkp in lksearch:
+    MLL.path_add(lkp+'/')
   lastfileentry='  last  '
   rfile=os.path.split(file)[-1]
   dfile=os.path.split(file)[0]  
@@ -494,7 +495,7 @@ def loadAsADF(file,link=1,max=0,depth=999,path=None,dbs={},
       for kdb in kdbs:
         del dbs[kdb]
   except ADF.error,e:
-      print e
+      print 'LoadAsADF :', e
   return __tree
 
 # -----------------------------------------------------------------------------

@@ -293,11 +293,53 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
   }
   return nid;
 }
+
+/* ------------------------------------------------------------------------- */
+/* Fill the link path table for the context. The searchpath should be a 
+   single string where paths are separated by : (classical way for paths) 
+*/
+static int s2p_setlinksearchpath(L3_Cursor_t *l3db,
+				 char *searchpath,
+				 s2p_ctx_t   *context)
+{
+  char *ptr,*path,*rpath;
+  int parse;
+
+  if (! searchpath)
+  {
+    return 1;
+  }
+  rpath=(char*)malloc(sizeof(char)*strlen(searchpath)+1);
+  strcpy(rpath,searchpath);
+  path=rpath;
+  parse=1;
+  while (parse)
+  {
+    ptr=path;
+    while ((ptr[0]!=':') && (ptr[0]!='\0'))
+    {
+      ptr++;
+    }
+    if (ptr[0]=='\0')
+    {
+      parse=0;
+    }
+    ptr[0]='\0';
+    S2P_TRACE(("\n### Add search path :[%s]",path));
+    CHL_addLinkSearchPath(l3db,path);
+    ptr++;
+    path=ptr;
+  }
+  free(rpath);
+  return 1;
+}
+
 /* ------------------------------------------------------------------------- */
 static int s2p_trustlink(char *file, char *name)
 {
   return 1;
 }
+
 /* ------------------------------------------------------------------------- */
 static int s2p_getData(PyObject *dobject, 
 		       char **dtype, int *ddims, int *dshape, char **dvalue,
@@ -305,13 +347,13 @@ static int s2p_getData(PyObject *dobject,
 {
   int n,total;
 
-  if (   (!PyArray_ISFORTRAN(dobject))
-      && (PyArray_NDIM(dobject)>1)
-      && (PyArray_NDIM(dobject)<MAXDIMENSIONVALUES))
-  {
-    S2P_TRACE(("\n ERROR: ARRAY SHOULD BE FORTRAN\n"));
-    return 0;
-  }
+/*   if (   (!PyArray_ISFORTRAN(dobject)) */
+/*       && (PyArray_NDIM(dobject)>1) */
+/*       && (PyArray_NDIM(dobject)<MAXDIMENSIONVALUES)) */
+/*   { */
+/*     S2P_TRACE(("\n ERROR: ARRAY SHOULD BE FORTRAN\n")); */
+/*     return 0; */
+/*   } */
 
   ddims[0]=0;
   *dtype=DT_MT;
@@ -458,7 +500,6 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
            || (S2P_HASFLAG(S2P_FREVERSEDIMS)) )
       {
 	npy_dim_vals[ndim-n-1]=rnode->dims[n];
-	S2P_TRACE(("### Reverse dimensions\n"));
       }
       else
       {
@@ -662,7 +703,8 @@ PyObject* s2p_loadAsHDF(char *filename,
                         int   flags,
                         int   threshold,
                         int   depth,
-                        char *path)
+                        char *path,
+			char *searchpath)
 {
   char cpath[MAXPATHSIZE];
   PyObject *tree,*ret,*links;
@@ -687,7 +729,9 @@ PyObject* s2p_loadAsHDF(char *filename,
   S2P_TRACE(("### SIDS-to-python v%d.%d\n",
 	     SIDSTOPYTHON_MAJOR,SIDSTOPYTHON_MINOR));
   S2P_TRACE(("### load file [%s]\n",filename));
+
   l3db=s2p_addoneHDF(filename,context);
+  s2p_setlinksearchpath(l3db,searchpath,context);
   rnode=L3_nodeRetrieve(l3db,l3db->root_id);
   ret=s2p_parseAndReadHDF(l3db->root_id,rnode->name,cpath,path,context,l3db);
   links=s2p_getlinktable(context);

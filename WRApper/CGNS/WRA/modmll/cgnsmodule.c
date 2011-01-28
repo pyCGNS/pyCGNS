@@ -84,6 +84,8 @@ double icg_root_id(int f,double *r)
 
 #endif
 
+extern int cgio_path_add (const char *path);
+
 /* ---------------------------------------------------------------------- */
 static DbMIDLEVELObject *
 newDbMIDLEVELObject(char* name, int mode)
@@ -5297,6 +5299,25 @@ midlevel_is_cgns(PyObject *self, PyObject *args)
   return PyInt_FromLong(1);
 }
 
+/* ---------------------------------------------------------------------- */
+/* addnuserdata: cg_nuser_data
+   returns number of CG_UserDefinedData_t children under the current node
+*/
+static PyObject *
+midlevel_path_add(PyObject *self, PyObject *args)
+{
+  char *path;
+  int error;
+
+  if (!PyArg_ParseTuple(args, "s",&path)) return NULL;
+
+  error=cgio_path_add(path);
+  if ( error ) return NULL;
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
 /* --------------------------------------------------------------------- */
 static PyObject *
 midlevel_configure(PyObject *self, PyObject *args)
@@ -5329,10 +5350,10 @@ midlevel_configure(PyObject *self, PyObject *args)
   }
 
   if ( error ) return NULL;
-  { 
+  /*  { 
     PyErr_SetString(MIDLEVELErrorObject,cg_get_error());
     return NULL;
-  }
+    }*/
   Py_INCREF(Py_None); 
   return Py_None;
 }
@@ -5358,6 +5379,7 @@ static PyMethodDef midlevel_methods[] = {
 #if CGNS_VERSION >= 3000
   {"configure",		midlevel_configure,	METH_VARARGS},  
   {"is_cgns",		midlevel_is_cgns,	METH_VARARGS},  
+  {"path_add",	        midlevel_path_add,	METH_VARARGS},
 #endif
   {NULL,		NULL}		/* sentinel */
 };

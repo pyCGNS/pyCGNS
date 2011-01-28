@@ -11,13 +11,15 @@
 static PyObject *
 MAP_load(PyObject *self, PyObject *args)
 {
-  char *filename, *path;
-  int flags,threshold,depth;
-  PyObject *lksearch;
+  char *filename, *path, *pth, *ptr;
+  int flags,threshold,depth,totalsize,n;
+  PyObject *lksearch,*ret;
 
   threshold=0;
   depth=999;
   path=NULL;
+  lksearch=NULL;
+  pth=NULL;
 
   if (!PyArg_ParseTuple(args,"si|iizO",
 			&filename,&flags,
@@ -25,7 +27,42 @@ MAP_load(PyObject *self, PyObject *args)
   {
     return NULL;
   }
-  return s2p_loadAsHDF(filename,flags,threshold,depth,path);
+
+  if (lksearch && PyList_Check(lksearch))
+  {
+    totalsize=0;
+    for (n=0;n<PyList_Size(lksearch);n++)
+    {
+      if (PyString_Check(PyList_GetItem(lksearch,n)))
+      {
+	totalsize+=PyString_Size(PyList_GetItem(lksearch,n))+1;
+      }
+    }
+    pth=(char*)malloc(sizeof(char)*totalsize);
+    ptr=pth;
+    for (n=0;n<PyList_Size(lksearch);n++)
+    {
+      if (   PyString_Check(PyList_GetItem(lksearch,n)) 
+          && PyString_Size(PyList_GetItem(lksearch,n)) > 0)
+      {
+	strcpy(ptr,PyString_AsString(PyList_GetItem(lksearch,n)));
+	ptr+=PyString_Size(PyList_GetItem(lksearch,n));
+	if (n!=PyList_Size(lksearch)-1)
+        {
+	  ptr[0]=':';
+	}
+	else
+        {
+	  ptr[0]='\0';
+	}
+	ptr++;
+      }
+    }
+  }
+  ret=s2p_loadAsHDF(filename,flags,threshold,depth,path,pth);
+  if (pth){free(pth);};
+
+  return ret;
 }
 /* ------------------------------------------------------------------------- */
 static PyObject *

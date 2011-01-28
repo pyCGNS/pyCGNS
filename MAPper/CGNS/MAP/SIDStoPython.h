@@ -15,7 +15,7 @@
 
 /* ------------------------------------------------------------------------- */
 #define SIDSTOPYTHON_MAJOR 0
-#define SIDSTOPYTHON_MINOR 2
+#define SIDSTOPYTHON_MINOR 3
 
 /* ------------------------------------------------------------------------- */
 #define S2P_FNONE          0x0000
@@ -45,6 +45,7 @@ typedef struct s2p_ent_t
 /* ------------------------------------------------------------------------- */
 typedef struct s2p_lnk_t
 {
+  char    	   *targetdirname;
   char    	   *targetfilename;
   char    	   *targetnodename;
   char    	   *localnodename;
@@ -71,7 +72,8 @@ PyObject* s2p_loadAsHDF(char *filename,
 			int flags,
 			int threshold,
 			int depth,
-			char *path);
+			char *path,
+			char *searchpath);
 /* ------------------------------------------------------------------------- */
 int 	  s2p_saveAsHDF(char      *filename,
     	                PyObject  *tree,

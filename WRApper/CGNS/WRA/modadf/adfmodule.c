@@ -786,9 +786,7 @@ DBADF_writeAllData(DBADFObject *self, PyObject *args)
   char           sterror[256];
   int            ndim;
   PyObject      *oarray;
-  int            n;
   void          *ptrd=NULL;
-  npy_intp       npy_dim_vals[MAXDIMENSIONVALUES];
   int            dim_vals_int[MAXDIMENSIONVALUES];
   npy_intp      *dim_vals;
 
@@ -858,19 +856,20 @@ DBADF_writeAllData(DBADFObject *self, PyObject *args)
     PyErr_SetString(ADFErrorObject,sterror);
     return NULL;
   }
-  PyArray_UpdateFlags(oarray, PyArray_FLAGS(oarray) & ~NPY_FORTRANORDER);
-  oarray=(PyArrayObject*)PyArray_NewCopy(oarray, NPY_FORTRANORDER);
+  PyArray_UpdateFlags((PyArrayObject*)oarray, 
+		       PyArray_FLAGS((PyArrayObject*)oarray) & ~NPY_FORTRANORDER);
+  oarray=PyArray_NewCopy((PyArrayObject*)oarray, NPY_FORTRANORDER);
   if (    (!strcmp(label,"DataArray_t"))
 	||(!strcmp(label,"DimensionalUnits_t"))
 	||(!strcmp(label,"AdditionalUnits_t"))
 	||(!strcmp(label,"DimensionalExponents_t"))
 	||(!strcmp(label,"AdditionalExponents_t")) )
   {
-    oarray=(PyArrayObject*)PyArray_Transpose(oarray,NULL);
+    oarray=PyArray_Transpose((PyArrayObject*)oarray,NULL);
   }
-  ptrd=PyArray_DATA(oarray);
-  dim_vals=PyArray_DIMS(oarray);
-  ndim=PyArray_NDIM(oarray);
+  ptrd=PyArray_DATA((PyArrayObject*)oarray);
+  dim_vals=PyArray_DIMS((PyArrayObject*)oarray);
+  ndim=PyArray_NDIM((PyArrayObject*)oarray);
 
   ADF__Put_Dimension_Information(node_id,data_type,ndim,dim_vals_int,
 				 &(self->last_error));  
