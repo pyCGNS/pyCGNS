@@ -6,13 +6,16 @@
 CGNS.MAP
 ========
 
- The MAP module is part of pyCGNS Python package
- MAP loads and saves  CGNS/HDF5 files as Python trees.
+The MAP module is one of the most important modules of *pyCGNS*.
+MAP is the translator to get *CGNS/Python* trees from 
+a *CGNS/HDF5* file and back, to save *CGNS/Python* trees
+as a *CGNS/HDF5* file.
 
 Quick start
 -----------
-The MAPper is a module implementing the SIDS-to-Python CGNS mapping.
-The MAP module loads and saves CGNS/HDF5 files as Python trees.
+The MAPper is a module implementing 
+the :ref:`SIDS-to-Python <mapix:reference_sids_to_python>` mapping.
+There are only two functions in the module: the **load** and the **save**.
 
 A simple exemple to load a *CGNS/HDF5* file as a *CGNS/Python* tree::
 
@@ -33,8 +36,8 @@ in order to be embedded separatly in an application
 Functions
 ~~~~~~~~~
 There are two functions: the ``load`` and the ``save``. The ``load`` reads
-a CGNS/HDF5 file and produces a CGNS/Python tree. The ``save`` takes a 
-CGNS/Python tree and writes the contents in a CGNS/HDF5 file::
+a *CGNS/HDF5* file and produces a *CGNS/Python* tree. The ``save`` takes a 
+*CGNS/Python* tree and writes the contents in a *CGNS/HDF5* file::
 
  (tree,links)=CGNS.MAP.load(filename,flags,threshold,depth,path)
 
@@ -50,7 +53,7 @@ The arguments and the return values are:
 
    During the *load*, the links are silently replaced by the linked-to tree 
    they are referring. The ``links`` value keeps track of these link 
-   references found while parsing the CGNS/HDF5 file. 
+   references found while parsing the *CGNS/HDF5* file. 
 
    During the *save*, the tree is splitted into separate files/nodes depending
    on the references found in the ``links`` value.
@@ -119,9 +122,10 @@ with another flag.
       an existing file with empty data!
 
   (5) The default behavior is to transpose array and dimensions of an array if
-      this is not a NPY_FORTRAN array. If you set this falg to 1, no transpose
+      this is not a ``NPY_FORTRAN`` array. If you set this 
+      flag to 1, no transpose
       would be performed and the array and its dimensions would be stored 
-      without modification even if the NY_FORTRAN flag is not there.
+      without modification even if the ``NY_FORTRAN`` flag is not there.
 
 -----
 

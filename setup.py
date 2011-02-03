@@ -11,6 +11,10 @@ import sys
 import string
 import getopt
 
+
+# - add a web site update here
+# hg push ssh://poinot@pycgns.hg.sourceforge.net/hgroot/pycgns/pycgns
+#
 pcom=sys.executable
 
 version=4
