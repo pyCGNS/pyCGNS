@@ -36,13 +36,13 @@ There are two functions: the ``load`` and the ``save``. The ``load`` reads
 a CGNS/HDF5 file and produces a CGNS/Python tree. The ``save`` takes a 
 CGNS/Python tree and writes the contents in a CGNS/HDF5 file::
 
- (tree,links)=CGNS.MAP.load(filename,flags,threshold,depth,path)
+ (tree,links)=CGNS.MAP.load(filename,flags,threshold,depth,path,linkpath)
 
  status=CGNS.MAP.save(filename,tree,links,flags,threshold,depth,path)
 
 The arguments and the return values are:
 
- * tree
+ * **tree**:
    The ``tree`` is the list representing the CGNS/Python tree. 
    The structure of a ``tree`` list is detailled 
    in :ref:`SIDS-to-Python <reference_sids_to_python>`.
@@ -55,12 +55,59 @@ The arguments and the return values are:
    During the *save*, the tree is splitted into separate files/nodes depending
    on the references found in the ``links`` value.
 
- * links
+ * **links**:
    The ``links`` is a list with the link node information. It is returned
    by a *load* and used as command parameters during the *save*. You can write
    your own ``links`` list or change the list you obtain after a *load*.
    The structure of a ``links`` list is detailled 
    in :ref:`SIDS-to-Python <reference_sids_to_python>`.
+
+ * **filename**:
+   The name of the target file, to read or to write. The ``filename`` can
+   be absolute or relative, it should be accessible in read/write depending
+   on the action you perform on it. The file extension is unused.
+
+ * **flags**:
+   You can control the behavior of a load/save using the 
+   :ref:`flags <mapflags>`. You have to look a these carefully, the same
+   tree can load/save in a completely different way depending 
+   on these ``flags``.
+
+ * **threshold**:
+   This positive integer value sets the maximum size of data to load/save.
+   If the data size is above the threshold, no action is performed on this
+   data. If you want to have all the data, use a 0 ``threshold`` which means
+   no limit on data size.
+
+ * **depth**:
+   This positive integer value sets the level of children the load/save
+   takes into account. For example, a depth of 2 would stop load/save
+   the CGNS tree once the children of the children of the start node
+   is reached. This level two child is used, its children are not.
+   If you want to have all the children, use a 0 ``depth`` which means
+   no limit on depth.
+
+ * **path**:
+   The ``path`` defines the start node of the load/save. It should be
+   an absolute path of an existing node in the argument filename.
+   All the nodes along this path are taken into account for load/save
+   actions.
+
+ * **linkpath**:
+   The load may need a *link files search path* if your linked-to files
+   are not in the current directory. The ``linkpath`` argument is a list
+   of strings, during the load *CGNS.MAP* will uadd the current directory
+   as first element of the list and will look for linked-to files using
+   this list. The list is parsed from the first element to the last,
+   the selected file is the first found in this directory list.
+
+.. warning::
+   The ``load`` function requires the first two arguments. The ``save``
+   requires the first three arguments. If you add more arguments to these
+   functions, you should pass them all. 
+   See the :ref:`examples <mapexamples>`.  
+
+.. _mapflags:
 
 Flags
 ~~~~~
@@ -131,6 +178,7 @@ SIDS-to-Python Mapping
 .. toctree::
 
    sids-to-python
+   examples
    
 The MAP API
 -----------

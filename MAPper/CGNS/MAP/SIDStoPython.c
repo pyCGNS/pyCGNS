@@ -385,17 +385,21 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
 {
   char      destnode[L3C_MAX_NAME+1];
   char      destfile[MAXFILENAMESIZE];
-  int       ndim,tsize,n,child;
-  int       arraytype,toknpath;
+  int       ndim,tsize,n,child,arraytype,psize,trackpath;
   hid_t     actualid;
   PyObject *o_clist,*o_value,*o_child,*o_node;
   npy_intp  npy_dim_vals[MAXDIMENSIONVALUES];
-  char     *nextpath;
   L3_Cursor_t *lkl3db;
   L3_Node_t *rnode,*cnode;
 
   context->dpt-=1;
-
+  trackpath=1;
+  if (    (path==NULL) 
+      || ((path!=NULL) && (path[0]=='\0'))
+      || ((path!=NULL) && (!strcmp(path,"/"))))
+  {
+    trackpath=0;
+  }
   o_value=NULL;
   
   /* In case of path, we are in a link search or sub-tree retrieval. We
@@ -421,6 +425,22 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   {
     S2P_TRACE(("### (%s) Retrieve returns NULL POINTER",curpath));
     return NULL;
+  }
+  strcat(curpath,"/");
+  strcat(curpath,rnode->name);
+  psize=(strlen(path)>strlen(curpath)?strlen(curpath):strlen(path));
+  if (trackpath && strcmp(curpath,"/HDF5 MotherNode"))
+  {
+      S2P_TRACE(("### Path filter \'%s\' \'%s\'[:%d]\n",path,curpath,psize));
+      if (strncmp(path,curpath,psize))
+      {
+	curpath[strlen(curpath)-strlen(rnode->name)-1]='\0';
+        return NULL;
+      } 
+  }
+  if (trackpath && !strcmp(curpath,"/HDF5 MotherNode"))
+  {
+    curpath[strlen(curpath)-strlen(rnode->name)-1]='\0';
   }
   if (S2P_HASFLAG(S2P_FALTERNATESIDS))
   {
@@ -522,42 +542,22 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   /* Loop on children. This is a depth first recurse. In case of a path search,
      skip until we have the right name. */
   o_clist=PyList_New(0);
-  nextpath=path;
   child=0;
-  /*
-  if (rnode->children == NULL)
-  {
-    S2P_TRACE(("### No child \n"));
-  }
-  */
   while ((rnode->children != NULL) && (rnode->children[child] != -1))
   {
     cnode=L3_nodeRetrieve(l3db,rnode->children[child]);
-    strcat(curpath,"/");
-    strcat(curpath,cnode->name);
-    if ((path!=NULL) && (strlen(path)!=0))
-    {
-      nextpath=strchr(path,'/');
-      if (nextpath)
-      {
-        toknpath=(int)(nextpath-path); /* should work for chars */
-        S2P_TRACE(("### Path compare [%s] to [%s] up to [%d]\n",
-                   path+1,cnode->name,toknpath));
-        if (!strncmp(path+1,cnode->name,toknpath))
-        {
-          S2P_TRACE(("### Path compare OK\n"));
-        } 
-      }
-    }
     /* HDF can parse paths, i.e. a node name can be a path and the
        resulting ID is the actual last node. However, we SHOULD not use that
        because we want to have control on link parse. */
-    o_child=s2p_parseAndReadHDF(cnode->id,cnode->name,curpath,nextpath,
+    o_child=s2p_parseAndReadHDF(cnode->id,cnode->name,curpath,path,
 				context,l3db);
-    curpath[strlen(curpath)-strlen(cnode->name)-1]='\0';
-    PyList_Append(o_clist,o_child);
+    if (o_child != NULL)
+    {
+      PyList_Append(o_clist,o_child);
+    }
     child++;
   }
+  curpath[strlen(curpath)-strlen(rnode->name)-1]='\0';
   if (o_value==NULL)
   {
     Py_INCREF(Py_None);

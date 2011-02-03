@@ -1,0 +1,39 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
+.. _mapexamples:
+
+MAP Examples
+++++++++++++
+
+The *CGNS.MAP* provides the user with two functions ``load`` and ``save``.
+The actual actions these functions are performing heavily depends on the
+arguments you pass to these functions. We give here some examples taken
+from usual applications of *CGNS.MAP*.
+
+Complete load of a *CGNS/HDF* file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Complete save of a *CGNS/Python* tree
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Load of a *CGNS/HDF* file skeletton
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Update a sub-tree
+~~~~~~~~~~~~~~~~~
+
+Copy a part of a tree
+~~~~~~~~~~~~~~~~~~~~~
+
+Copy and merge links
+~~~~~~~~~~~~~~~~~~~~
+
+Transpose C-order arrays during load/save
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
