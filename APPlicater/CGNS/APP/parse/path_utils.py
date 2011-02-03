@@ -21,3 +21,13 @@ def getAllNodesFromTypeList(typelist,node,path,result):
         getAllNodesFromTypeList(typelist[1:],c[2],"%s/%s"%(path,c[0]),result)
   return result
 
+def getPaths(tree,path,plist):
+  for c in tree[2]:
+    plist.append(path+'/'+c[0])
+    getPaths(c,path+'/'+c[0],plist)
+    
+def getAllPaths(tree):
+  plist=[]
+  path=''
+  getPaths(tree,path,plist)
+  return plist
