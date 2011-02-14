@@ -5,6 +5,10 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 
+cimport cython
+cimport cpython
+cimport numpy
+
 import Tkinter
 import math, os, sys
 import vtk
@@ -20,6 +24,10 @@ G___=s7globals.s7G
 import s7windoz
 import s7viewControl
 
+# Lot of hard-coded stuff in there
+# Now it works with both VTK and Cython,
+# we should move to something more generic
+
 #----------------------------------------------------------------------------
 class CGNSparser:
   def __init__(self):
@@ -34,8 +42,10 @@ class CGNSparser:
     m=[]
     sl=[]
     ml=[]
-    path=[]
-    paths=[]
+    bl=[]
+    mpath=[]
+    spath=[]
+    bpath=[]
     ncolors=0
     cl=G___.colors
     if (T[0]==None):
@@ -43,61 +53,88 @@ class CGNSparser:
      T[3]=CGK.CGNSTree_ts   
     for z in CGU.getAllNodesByTypeList([CGK.Zone_ts],T):
       zT=CGU.nodeByPath(z,T)
-      path.append(CGU.removeFirstPathItem(z))
+      mpath.append(CGU.removeFirstPathItem(z))
       ncolors+=1
-      for g in CGU.getAllNodesByTypeList([CGK.GridCoordinates_ts],zT):
-        gT=CGU.nodeByPath(g,zT)
-        cx=CGU.nodeByPath("%s/CoordinateX"%gT[0],gT)
-        cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
-        cz=CGU.nodeByPath("%s/CoordinateZ"%gT[0],gT)
-        shx=cx[1].shape
-        scx=cz[1].reshape(shx)
-        scy=cy[1].reshape(shx)
-        scz=cx[1].reshape(shx)
-        simin=[scx[0,:,:], scy[0,:,:], scz[0,:,:]]
-        simax=[scx[-1,:,:],scy[-1,:,:],scz[-1,:,:]]
-        sjmin=[scx[:,0,:], scy[:,0,:], scz[:,0,:]]
-        sjmax=[scx[:,-1,:],scy[:,-1:], scz[:,-1,:]]
-        skmin=[scx[:,:,0], scy[:,:,0], scz[:,:,0]]
-        skmax=[scx[:,:,-1],scy[:,:,-1],scz[:,:,-1]]
-        m+=[[cx,cy,cz]]
-        sl+=[[simin,simax,sjmin,sjmax,skmin,skmax]]
-        zp=CGU.removeFirstPathItem(z)
-        paths+=[[zp+'/[imin]',zp+'/[imax]',
-                 zp+'/[jmin]',zp+'/[jmax]',
-                 zp+'/[kmin]',zp+'/[kmax]']]
+      g=CGU.getAllNodesByTypeList([CGK.GridCoordinates_ts],zT)[0]
+      gT=CGU.nodeByPath(g,zT)
+      cx=CGU.nodeByPath("%s/CoordinateX"%gT[0],gT)
+      cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
+      cz=CGU.nodeByPath("%s/CoordinateZ"%gT[0],gT)
+      shx=cx[1].shape
+      scx=cz[1].reshape(shx)
+      scy=cy[1].reshape(shx)
+      scz=cx[1].reshape(shx)
+      simin=[scx[0,:,:], scy[0,:,:], scz[0,:,:]]
+      simax=[scx[-1,:,:],scy[-1,:,:],scz[-1,:,:]]
+      sjmin=[scx[:,0,:], scy[:,0,:], scz[:,0,:]]
+      sjmax=[scx[:,-1,:],scy[:,-1:], scz[:,-1,:]]
+      skmin=[scx[:,:,0], scy[:,:,0], scz[:,:,0]]
+      skmax=[scx[:,:,-1],scy[:,:,-1],scz[:,:,-1]]
+      m+=[[cx,cy,cz]]
+      sl+=[[simin,simax,sjmin,sjmax,skmin,skmax]]
+      zp=CGU.removeFirstPathItem(z)
+      spath+=[[zp+'/[imin]',zp+'/[imax]',
+               zp+'/[jmin]',zp+'/[jmax]',
+               zp+'/[kmin]',zp+'/[kmax]']]
+      for nzbc in CGU.getAllNodesByTypeList([CGK.ZoneBC_ts],zT):
+        zbcT=CGU.nodeByPath(nzbc,zT)
+        for nbc in CGU.getAllNodesByTypeList([CGK.BC_ts],zbcT):
+          bpath+=[['%s/[%s]'%(zp,nbc.split('/')[1])]]
+          bcT=CGU.nodeByPath(nbc,zbcT)
+          for rbc in CGU.getAllNodesByTypeList([CGK.IndexRange_ts],bcT):
+            ptr=CGU.nodeByPath(rbc,bcT)[1].T.flat
+            brg=scx[ptr[0]:ptr[3]+1,ptr[1]:ptr[4]+1,ptr[2]:ptr[5]+1]
+            bl+=[[brg]]
       col=cl[cl.keys()[random.randrange(len(cl.keys()))]]
-      mc=Mesh(m[-1],path[-1],sl[-1],paths[-1])
+      if (len(bpath)>0):
+        mc=Mesh(m[-1],mpath[-1],sl[-1],spath[-1],bl[-1],bpath[-1])
+      else:
+        mc=Mesh(m[-1],mpath[-1],sl[-1],spath[-1],[],[])
       mc.setColor(col)
       ml+=[mc]
     return ml
 
 #----------------------------------------------------------------------------
 class Mesh:
-  def __init__(self,gcoordinates,gpath,surfaces,spaths):
-    self.__data=gcoordinates
+
+  def __init__(self,gcoordinates,gpath,surfaces,spaths,bcs,bcpaths):
     self.__surfs=surfaces
-    self.__bnds=[]
-    self.dx=self.__data[0][1]
-    self.dy=self.__data[1][1]
-    self.dz=self.__data[2][1]
+    self.__bnds=bcs
+    self.dx=gcoordinates[0][1]
+    self.dy=gcoordinates[1][1]
+    self.dz=gcoordinates[2][1]
     self.imax=self.dx.shape[0]
     self.jmax=self.dx.shape[1]
     self.kmax=self.dx.shape[2]
     self.color=(130,130,130)
     self.actors=[]
-    self.path=gpath
-    self.paths=spaths
+    self.meshpath=gpath
+    self.surfpaths=spaths
+    self.bcpaths=bcpaths
     self.odict={}
+    
   def setColor(self,color):
     self.color=color
+    
+#  @cython.boundscheck(False)
   def do_volume(self):
+    cdef int p, i, j, k, idim, jdim, kdim
+    cdef double x,y,z
+    idim = self.imax
+    jdim = self.jmax
+    kdim = self.kmax
     pts=vtk.vtkPoints()
     pts.SetNumberOfPoints(self.imax*self.jmax*self.kmax)
-    for i in range(len(self.dx.flat)):
-      pts.InsertPoint(i,self.dz.flat[i],self.dy.flat[i],self.dx.flat[i])
+    for i in range(idim):
+     for j in range(jdim):
+      for k in range(kdim):
+       p=i+j*idim+k*idim*jdim
+       x = (<double*>numpy.PyArray_GETPTR1(self.dx,p))[0]
+       y = (<double*>numpy.PyArray_GETPTR1(self.dy,p))[0]
+       z = (<double*>numpy.PyArray_GETPTR1(self.dz,p))[0]
+       pts.InsertPoint(k+j*kdim+i*kdim*jdim,z,y,x)
     g=vtk.vtkStructuredGrid()
-    self.odict[self.path]=g
+    self.odict[self.meshpath]=g
     g.SetPoints(pts)
     g.SetExtent(0,self.kmax-1,0,self.jmax-1,0,self.imax-1)
     d=vtk.vtkDataSetMapper()
@@ -107,28 +144,29 @@ class Mesh:
     a.SetMapper(d)
     a.GetProperty().SetRepresentationToWireframe()
     a.GetProperty().SetColor(*self.color)
+
     self._bounds=a.GetBounds()
     return self
-  def do_surface(self,n):
+
+#  @cython.boundscheck(False)
+  def do_surface(self,int n):
+    cdef int i, j, imax, jmax, p1, p2, p3, p4
     imax=self.__surfs[n][0].shape[0]
     jmax=self.__surfs[n][0].shape[1]
     tx=self.__surfs[n][0].flat
     ty=self.__surfs[n][1].flat
     tz=self.__surfs[n][2].flat
     sg=vtk.vtkUnstructuredGrid()
-    self.odict[self.paths[n]]=sg
+    self.odict[self.surfpaths[n]]=sg
     sg.Allocate(1, 1)
     n=0
-    #print 'max ',imax,jmax
     qp = vtk.vtkPoints()
     for j in range(jmax-1):
      for i in range(imax-1):
-      #print 'idx ',i,j
       p1=j+      i*jmax +0
       p2=j+      i*jmax +1
       p3=j+jmax+ i*jmax +1
       p4=j+jmax+ i*jmax +0
-      # print 'pts ',p1,p2,p3,p4
       qp.InsertPoint(n*4+0,tx[p1],ty[p1],tz[p1])
       qp.InsertPoint(n*4+1,tx[p2],ty[p2],tz[p2])
       qp.InsertPoint(n*4+2,tx[p3],ty[p3],tz[p3])
@@ -147,10 +185,49 @@ class Mesh:
     self.actors.append(a)
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
-    #a.GetProperty().SetColor(*self.color)
+    a.GetProperty().SetColor(*self.color)
     return self
   def do_boundaries(self,n):
-    pass
+    print self.bcpaths[n],self.__bnds[n]
+    return self
+    cdef int i, j, imax, jmax, p1, p2, p3, p4
+    imax=self.__bnds[n][0].shape[0]
+    jmax=self.__bnds[n][0].shape[1]
+    kmax=self.__bnds[n][0].shape[2]
+    tx=self.__bnds[n][0].flat
+    ty=self.__bnds[n][1].flat
+    tz=self.__bnds[n][2].flat
+    sg=vtk.vtkUnstructuredGrid()
+    self.odict[self.surfpaths[n]]=sg
+    sg.Allocate(1, 1)
+    n=0
+    qp = vtk.vtkPoints()
+    for j in range(jmax-1):
+     for i in range(imax-1):
+      p1=j+      i*jmax +0
+      p2=j+      i*jmax +1
+      p3=j+jmax+ i*jmax +1
+      p4=j+jmax+ i*jmax +0
+      qp.InsertPoint(n*4+0,tx[p1],ty[p1],tz[p1])
+      qp.InsertPoint(n*4+1,tx[p2],ty[p2],tz[p2])
+      qp.InsertPoint(n*4+2,tx[p3],ty[p3],tz[p3])
+      qp.InsertPoint(n*4+3,tx[p4],ty[p4],tz[p4])
+      aq = vtk.vtkQuad()
+      aq.GetPointIds().SetId(0, n*4+0)
+      aq.GetPointIds().SetId(1, n*4+1)
+      aq.GetPointIds().SetId(2, n*4+2)
+      aq.GetPointIds().SetId(3, n*4+3)
+      sg.InsertNextCell(aq.GetCellType(), aq.GetPointIds())
+      n+=1
+    sg.SetPoints(qp)
+    am = vtk.vtkDataSetMapper()
+    am.SetInput(sg)
+    a = vtk.vtkActor()
+    self.actors.append(a)
+    a.SetMapper(am)
+    a.GetProperty().SetRepresentationToWireframe()
+    a.GetProperty().SetColor(*self.color)
+    return self
   def do_vtk(self):
     self.do_volume()
     for n in range(len(self.__surfs)):
@@ -368,7 +445,7 @@ class wVTKView(s7windoz.wWindoz):
 
       o=vtk.vtkObject()
       o.SetGlobalWarningDisplay(0)
-      del o
+      cpython.Py_DECREF(o)
       
       renWin = vtk.vtkRenderWindow()
       renWin.SetNumberOfLayers(2)
@@ -389,6 +466,7 @@ class wVTKView(s7windoz.wWindoz):
         self._meshes.append(m)
         for aa in a:
           wren.AddActor(aa)
+
         if (self._xmin>m._bounds[0]):self._xmin=m._bounds[0]
         if (self._ymin>m._bounds[2]):self._ymin=m._bounds[2]
         if (self._zmin>m._bounds[4]):self._zmin=m._bounds[4]
@@ -446,7 +524,6 @@ class wVTKView(s7windoz.wWindoz):
                        'w'     :self.b_wire }
 
       self._p_wire=True
-
       return self.rwin
 
   def b_shufflecolors(self,pos):

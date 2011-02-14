@@ -615,12 +615,20 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   child=0;
   while ((rnode->children != NULL) && (rnode->children[child] != -1))
   {
+    if (S2P_HASFLAG(S2P_FFOLLOWLINKS))
+    {
+      L3M_UNSETFLAG(l3db,L3F_FOLLOWLINKS);
+    }
     cnode=L3_nodeRetrieve(l3db,rnode->children[child]);
     /* HDF can parse paths, i.e. a node name can be a path and the
        resulting ID is the actual last node. However, we SHOULD not use that
        because we want to have control on link parse. */
     o_child=s2p_parseAndReadHDF(cnode->id,cnode->name,curpath,path,
 				context,l3db);
+    if (S2P_HASFLAG(S2P_FFOLLOWLINKS))
+    {
+      L3M_SETFLAG(l3db,L3F_FOLLOWLINKS);
+    }
     if (o_child != NULL)
     {
       PyList_Append(o_clist,o_child);
