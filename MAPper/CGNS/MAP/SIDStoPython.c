@@ -140,16 +140,24 @@ static s2p_ctx_t *s2p_filllinktable(PyObject *linktable, s2p_ctx_t *context)
        and it would lead to something too hairy here. */
     sz=PyString_Size(PySequence_GetItem(PyList_GetItem(linktable,n),0));
     st=PyString_AsString(PySequence_GetItem(PyList_GetItem(linktable,n),0));
-    nextlink->targetfilename=(char*)malloc(sizeof(char)*sz+1);
-    strcpy(nextlink->targetfilename,st);
+    nextlink->targetdirname=(char*)malloc(sizeof(char)*sz+1);
+    strcpy(nextlink->targetdirname,st);
+
     sz=PyString_Size(PySequence_GetItem(PyList_GetItem(linktable,n),1));
     st=PyString_AsString(PySequence_GetItem(PyList_GetItem(linktable,n),1));
-    nextlink->targetnodename=(char*)malloc(sizeof(char)*sz+1);
-    strcpy(nextlink->targetnodename,st);
+    nextlink->targetfilename=(char*)malloc(sizeof(char)*sz+1);
+    strcpy(nextlink->targetfilename,st);
+
     sz=PyString_Size(PySequence_GetItem(PyList_GetItem(linktable,n),2));
     st=PyString_AsString(PySequence_GetItem(PyList_GetItem(linktable,n),2));
+    nextlink->targetnodename=(char*)malloc(sizeof(char)*sz+1);
+    strcpy(nextlink->targetnodename,st);
+
+    sz=PyString_Size(PySequence_GetItem(PyList_GetItem(linktable,n),3));
+    st=PyString_AsString(PySequence_GetItem(PyList_GetItem(linktable,n),3));
     nextlink->localnodename=(char*)malloc(sizeof(char)*sz+1);
     strcpy(nextlink->localnodename,st);
+
     nextlink->next=NULL;
   }         
   return context;
@@ -164,6 +172,7 @@ static void s2p_freelinktable(s2p_ctx_t *context)
   {
     while (links->next!=NULL)
     {
+      free(links->targetdirname);
       free(links->targetfilename);
       free(links->targetnodename);
       free(links->localnodename);
@@ -203,7 +212,8 @@ static PyObject *s2p_getlinktable(s2p_ctx_t *context)
   links=context->lnk;
   while (links!=NULL)
   {
-    lk=Py_BuildValue("[sss]",
+    lk=Py_BuildValue("[ssss]",
+    		       links->targetdirname,
     		       links->targetfilename,
     		       links->targetnodename,
     		       links->localnodename);
@@ -214,6 +224,7 @@ static PyObject *s2p_getlinktable(s2p_ctx_t *context)
 }
 /* ------------------------------------------------------------------------- */
 static void s2p_linkstack(char 	     *curpath,
+                          char 	     *destdir,
                           char 	     *destfile,
 			  char 	     *destnode,
                           s2p_ctx_t  *context)
@@ -236,6 +247,8 @@ static void s2p_linkstack(char 	     *curpath,
     context->lnk=(s2p_lnk_t*)malloc(sizeof(s2p_lnk_t));
     curlink=context->lnk;
   }
+  sz=strlen(destdir);
+  curlink->targetdirname=(char*)malloc(sizeof(char)*sz+1);
   sz=strlen(destfile);
   curlink->targetfilename=(char*)malloc(sizeof(char)*sz+1);
   sz=strlen(destnode);
@@ -243,6 +256,7 @@ static void s2p_linkstack(char 	     *curpath,
   sz=strlen(curpath);
   curlink->localnodename=(char*)malloc(sizeof(char)*sz+1);
   curlink->next=NULL;
+  strcpy(curlink->targetdirname,destdir);
   strcpy(curlink->targetfilename,destfile);
   strcpy(curlink->targetnodename,destnode);
   strcpy(curlink->localnodename,curpath);
@@ -255,8 +269,9 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
   char curpath[MAXPATHSIZE];
   char name[L3C_MAX_NAME+1];
   char destnode[L3C_MAX_NAME+1];
+  char destdir[MAXFILENAMESIZE];
   char destfile[MAXFILENAMESIZE];
-  int parsepath,c;
+  int parsepath,c,ix;
   hid_t nid;
   char *p;
   L3_Cursor_t *lkhdfdb;
@@ -284,9 +299,13 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
     nid=L3_path2Node(l3db,curpath);
     if (L3_isLinkNode(l3db,nid,destfile,destnode))
     {
-      S2P_TRACE(("\n### Link Follow link: [%s][%s]\n",destfile,destnode));
-
-      s2p_linkstack(curpath,destfile,destnode,context);
+      /* L3 layer has its own link search path, we have to ask it
+         the directory used to open the actual file. */
+      ix=CHL_getFileInSearchPath(l3db,destfile);
+      strcpy(destdir,CHL_getLinkSearchPath(l3db,ix));
+      S2P_TRACE(("\n### Link Follow link: [%s][%s][%s]\n",
+		 destdir,destfile,destnode));
+      s2p_linkstack(curpath,destdir,destfile,destnode,context);
       lkhdfdb=s2p_addoneHDF(destfile,context);
       nid=s2p_linktrack(lkhdfdb,destnode,context);
     } 
@@ -325,7 +344,7 @@ static int s2p_setlinksearchpath(L3_Cursor_t *l3db,
       parse=0;
     }
     ptr[0]='\0';
-    S2P_TRACE(("\n### Add search path :[%s]",path));
+    S2P_TRACE(("### Add search path :[%s]\n",path));
     CHL_addLinkSearchPath(l3db,path);
     ptr++;
     path=ptr;
@@ -426,18 +445,26 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
 				     L3_Cursor_t *l3db)
 {
   char      destnode[L3C_MAX_NAME+1];
+  char      destdir[MAXFILENAMESIZE];
   char      destfile[MAXFILENAMESIZE];
-  int       ndim,tsize,n,child;
-  int       arraytype,toknpath;
+  int       ndim,tsize,n,child,arraytype,psize,trackpath,ix;
   hid_t     actualid;
   PyObject *o_clist,*o_value,*o_child,*o_node;
   npy_intp  npy_dim_vals[MAXDIMENSIONVALUES];
-  char     *nextpath;
   L3_Cursor_t *lkl3db;
   L3_Node_t *rnode,*cnode;
 
+  destnode[0]='\0';
+  destdir[0]='\0';
+  destfile[0]='\0';
   context->dpt-=1;
-
+  trackpath=1;
+  if (    (path==NULL) 
+      || ((path!=NULL) && (path[0]=='\0'))
+      || ((path!=NULL) && (!strcmp(path,"/"))))
+  {
+    trackpath=0;
+  }
   o_value=NULL;
   
   /* In case of path, we are in a link search or sub-tree retrieval. We
@@ -447,12 +474,18 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   {
     if (S2P_HASFLAG(S2P_FFOLLOWLINKS) && s2p_trustlink(destfile,destnode))
     {
-      S2P_TRACE(("\n### Parse Follow link: [%s][%s]\n",destfile,destnode));
+      /* L3 layer has its own link search path, we have to ask it
+         the directory used to open the actual file. */
+      ix=CHL_getFileInSearchPath(l3db,destfile);
+      strcpy(destdir,CHL_getLinkSearchPath(l3db,ix));
+
+      S2P_TRACE(("\n### Parse Follow link: [%s][%s][%s]\n",
+		 destdir,destfile,destnode));
+      s2p_linkstack(curpath,destdir,destfile,destnode,context);
       /* We recurse on destination file, S2P functions should be used and
          not HDF functions, because HDF lib would hide links to S2P.
          Then we start our parse from the root node and keep track of links,
          the actual node is finally used at the end. */
-      s2p_linkstack(curpath,destfile,destnode,context);
       lkl3db=s2p_addoneHDF(destfile,context);
       actualid=s2p_linktrack(lkl3db,destnode,context);
     }
@@ -461,8 +494,24 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   rnode=L3_nodeRetrieve(l3db,actualid);
   if (rnode == NULL)
   {
-    S2P_TRACE(("### (%s) Retrieve returns NULL POINTER",curpath));
+    S2P_TRACE(("### (%s) Retrieve returns NULL POINTER\n",curpath));
     return NULL;
+  }
+  strcat(curpath,"/");
+  strcat(curpath,rnode->name);
+  psize=(strlen(path)>strlen(curpath)?strlen(curpath):strlen(path));
+  if (trackpath && strcmp(curpath,"/HDF5 MotherNode"))
+  {
+      S2P_TRACE(("### Path filter \'%s\' \'%s\'[:%d]\n",path,curpath,psize));
+      if (strncmp(path,curpath,psize))
+      {
+	curpath[strlen(curpath)-strlen(rnode->name)-1]='\0';
+        return NULL;
+      } 
+  }
+  if (trackpath && !strcmp(curpath,"/HDF5 MotherNode"))
+  {
+    curpath[strlen(curpath)-strlen(rnode->name)-1]='\0';
   }
   if (S2P_HASFLAG(S2P_FALTERNATESIDS))
   {
@@ -563,42 +612,22 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   /* Loop on children. This is a depth first recurse. In case of a path search,
      skip until we have the right name. */
   o_clist=PyList_New(0);
-  nextpath=path;
   child=0;
-  /*
-  if (rnode->children == NULL)
-  {
-    S2P_TRACE(("### No child \n"));
-  }
-  */
   while ((rnode->children != NULL) && (rnode->children[child] != -1))
   {
     cnode=L3_nodeRetrieve(l3db,rnode->children[child]);
-    strcat(curpath,"/");
-    strcat(curpath,cnode->name);
-    if ((path!=NULL) && (strlen(path)!=0))
-    {
-      nextpath=strchr(path,'/');
-      if (nextpath)
-      {
-        toknpath=(int)(nextpath-path); /* should work for chars */
-        S2P_TRACE(("### Path compare [%s] to [%s] up to [%d]\n",
-                   path+1,cnode->name,toknpath));
-        if (!strncmp(path+1,cnode->name,toknpath))
-        {
-          S2P_TRACE(("### Path compare OK\n"));
-        } 
-      }
-    }
     /* HDF can parse paths, i.e. a node name can be a path and the
        resulting ID is the actual last node. However, we SHOULD not use that
        because we want to have control on link parse. */
-    o_child=s2p_parseAndReadHDF(cnode->id,cnode->name,curpath,nextpath,
+    o_child=s2p_parseAndReadHDF(cnode->id,cnode->name,curpath,path,
 				context,l3db);
-    curpath[strlen(curpath)-strlen(cnode->name)-1]='\0';
-    PyList_Append(o_clist,o_child);
+    if (o_child != NULL)
+    {
+      PyList_Append(o_clist,o_child);
+    }
     child++;
   }
+  curpath[strlen(curpath)-strlen(rnode->name)-1]='\0';
   if (o_value==NULL)
   {
     Py_INCREF(Py_None);

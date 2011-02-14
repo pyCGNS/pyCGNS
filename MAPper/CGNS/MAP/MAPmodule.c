@@ -42,8 +42,7 @@ MAP_load(PyObject *self, PyObject *args)
     ptr=pth;
     for (n=0;n<PyList_Size(lksearch);n++)
     {
-      if (   PyString_Check(PyList_GetItem(lksearch,n)) 
-          && PyString_Size(PyList_GetItem(lksearch,n)) > 0)
+      if (PyString_Check(PyList_GetItem(lksearch,n)))
       {
 	strcpy(ptr,PyString_AsString(PyList_GetItem(lksearch,n)));
 	ptr+=PyString_Size(PyList_GetItem(lksearch,n));
