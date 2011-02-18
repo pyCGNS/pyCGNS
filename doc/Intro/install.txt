@@ -166,5 +166,16 @@ WRA depends
 ~~~~~~~~~~~
 
 *CGNS/MLL* and *CGNS/ADF* libraries are required.
+You should build the CGNS libraries with the ``CG_BUILD_SCOPE`` 
+set to ``True``. To do so, edit your ``CMakeCache.txt`` file
+and set the following variable to ``ON``.
+
+.. highlight:: c
+
+.. code-block:: c
+ 
+ //Enable or disable scoping of enumeration values
+ ENABLE_SCOPING:BOOL=ON
+ 
 
 .. -------------------------------------------------------------------------

@@ -5,6 +5,8 @@
 #ifndef _ADFH_H_
 #define _ADFH_H_
 
+#include "cgnstypes.h"
+
 /* some stuff needed from standard ADF.h */
 
 #ifndef ADF_INCLUDE
@@ -129,8 +131,13 @@
 #define ADFH_ERR_GCLOSE_LABEL          105
 #define ADFH_ERR_ROOTNULL              106
 #define ADFH_ERR_NEED_TRANSPOSE        107
+#define ADFH_ERR_INVALID_OPTION        108
 
 #define ADFH_ERR_SENTINEL              999
+
+/* configuration options */
+
+#define ADFH_CONFIG_COMPRESS  1
 
 /***********************************************************************
 	Prototypes for Interface Routines
@@ -146,7 +153,11 @@
     extern "C" {
 #endif
 
-#ifndef __CGNS__HAS_ADF__
+EXTERN	void	ADFH_Configure(
+			const int option,
+			const void *value,
+			int *error_return ) ;
+
 EXTERN	void	ADFH_Children_Names(
 			const double PID,
 			const int istart,
@@ -230,7 +241,7 @@ EXTERN	void	ADFH_Get_Data_Type(
 
 EXTERN	void	ADFH_Get_Dimension_Values(
 			const double ID,
-			int dim_vals[],
+			cglong_t dim_vals[],
 			int *error_return ) ;
 
 EXTERN	void	ADFH_Get_Error_State(
@@ -307,7 +318,7 @@ EXTERN	void	ADFH_Put_Dimension_Information(
 			const double ID,
 			const char *data_type,
 			const int dims,
-			const int dim_vals[],
+			const cgsize_t dim_vals[],
 			int *error_return ) ;
 
 EXTERN	void	ADFH_Put_Name(
@@ -323,21 +334,21 @@ EXTERN	void	ADFH_Read_All_Data(
 
 EXTERN	void	ADFH_Read_Block_Data(
 			const double ID,
-			const long b_start,
-			const long b_end,
+			const cgsize_t b_start,
+			const cgsize_t b_end,
 			char *data,
 			int *error_return ) ;
 
 EXTERN	void	ADFH_Read_Data(
 			const double ID,
-			const int s_start[],
-			const int s_end[],
-			const int s_stride[],
+			const cgsize_t s_start[],
+			const cgsize_t s_end[],
+			const cgsize_t s_stride[],
 			const int m_num_dims,
-			const int m_dims[],
-			const int m_start[],
-			const int m_end[],
-			const int m_stride[],
+			const cgsize_t m_dims[],
+			const cgsize_t m_start[],
+			const cgsize_t m_end[],
+			const cgsize_t m_stride[],
 			char *data,
 			int *error_return ) ;
 
@@ -357,71 +368,27 @@ EXTERN	void	ADFH_Write_All_Data(
 
 EXTERN	void	ADFH_Write_Block_Data(
 			const double ID,
-			const long b_start,
-			const long b_end,
+			const cgsize_t b_start,
+			const cgsize_t b_end,
 			char *data,
 			int *error_return ) ;
 
 EXTERN	void	ADFH_Write_Data(
 			const double ID,
-			const int s_start[],
-			const int s_end[],
-			const int s_stride[],
+			const cgsize_t s_start[],
+			const cgsize_t s_end[],
+			const cgsize_t s_stride[],
 			const int m_num_dims,
-			const int m_dims[],
-			const int m_start[],
-			const int m_end[],
-			const int m_stride[],
+			const cgsize_t m_dims[],
+			const cgsize_t m_start[],
+			const cgsize_t m_end[],
+			const cgsize_t m_stride[],
 			const char *data,
 			int *error_return ) ;
 
 #define HAS_ADF_RELEASE_ID
 
 EXTERN  void	ADFH_Release_ID ( const double ID );
-
-#else
-
-#define ADFH_Children_Names ADF_Children_Names
-#define ADFH_Children_IDs ADF_Children_IDs
-#define ADFH_Create ADF_Create
-#define ADFH_Database_Close ADF_Database_Close
-#define ADFH_Database_Delete ADF_Database_Delete
-#define ADFH_Database_Garbage_Collection ADF_Database_Garbage_Collection
-#define ADFH_Database_Get_Format ADF_Database_Get_Format
-#define ADFH_Database_Open ADF_Database_Open
-#define ADFH_Database_Valid ADF_Database_Valid
-#define ADFH_Database_Set_Format ADF_Database_Set_Format
-#define ADFH_Database_Version ADF_Database_Version
-#define ADFH_Delete ADF_Delete
-#define ADFH_Error_Message ADF_Error_Message
-#define ADFH_Flush_to_Disk ADF_Flush_to_Disk
-#define ADFH_Get_Data_Type ADF_Get_Data_Type
-#define ADFH_Get_Dimension_Values ADF_Get_Dimension_Values
-#define ADFH_Get_Error_State ADF_Get_Error_State
-#define ADFH_Get_Label ADF_Get_Label
-#define ADFH_Get_Link_Path ADF_Get_Link_Path
-#define ADFH_Get_Name ADF_Get_Name
-#define ADFH_Get_Node_ID ADF_Get_Node_ID
-#define ADFH_Get_Number_of_Dimensions ADF_Get_Number_of_Dimensions
-#define ADFH_Get_Root_ID ADF_Get_Root_ID
-#define ADFH_Is_Link ADF_Is_Link
-#define ADFH_Library_Version ADF_Library_Version
-#define ADFH_Link ADF_Link
-#define ADFH_Link_Size ADF_Link_Size
-#define ADFH_Move_Child ADF_Move_Child
-#define ADFH_Number_of_Children ADF_Number_of_Children
-#define ADFH_Put_Dimension_Information ADF_Put_Dimension_Information
-#define ADFH_Put_Name ADF_Put_Name
-#define ADFH_Read_All_Data ADF_Read_All_Data
-#define ADFH_Read_Block_Data ADF_Read_Block_Data
-#define ADFH_Read_Data ADF_Read_Data
-#define ADFH_Set_Error_State ADF_Set_Error_State
-#define ADFH_Set_Label ADF_Set_Label
-#define ADFH_Write_All_Data ADF_Write_All_Data
-#define ADFH_Write_Block_Data ADF_Write_Block_Data
-#define ADFH_Write_Data ADF_Write_Data
-#define ADFH_Release_ID ADF_Release_ID
-#endif
 
 #if defined (__cplusplus)
     }

@@ -477,6 +477,11 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
       /* L3 layer has its own link search path, we have to ask it
          the directory used to open the actual file. */
       ix=CHL_getFileInSearchPath(l3db,destfile);
+      if (ix == -1)
+      {
+	S2P_TRACE(("### Linked-to file not readable (%s)\n",destfile));
+	return NULL;
+      }
       strcpy(destdir,CHL_getLinkSearchPath(l3db,ix));
 
       S2P_TRACE(("\n### Parse Follow link: [%s][%s][%s]\n",
@@ -623,6 +628,10 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     /* HDF can parse paths, i.e. a node name can be a path and the
        resulting ID is the actual last node. However, we SHOULD not use that
        because we want to have control on link parse. */
+    if (!strcmp(curpath,"/HDF5 MotherNode"))
+    {
+      curpath[0]='\0';
+    }
     o_child=s2p_parseAndReadHDF(cnode->id,cnode->name,curpath,path,
 				context,l3db);
     if (S2P_HASFLAG(S2P_FFOLLOWLINKS))
@@ -635,7 +644,10 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     }
     child++;
   }
-  curpath[strlen(curpath)-strlen(rnode->name)-1]='\0';
+  if (strcmp(rnode->name,"HDF5 MotherNode"))
+  {
+    curpath[strlen(curpath)-strlen(rnode->name)-1]='\0';
+  }
   if (o_value==NULL)
   {
     Py_INCREF(Py_None);

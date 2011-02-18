@@ -290,6 +290,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
           and (fileext in G___.cgnslibFiles+G___.cgnssslFiles)):
         if (not treefingerprint and (fileext in G___.cgnslibFiles)):
           lk=CGNS.WRA.utilities.getLinksAsADF(filename,G___.linkSearchPath)
+          print 'ADF LINKS ',lk
           if (G___.noData): vmax=G___.maxDisplaySize
           else:             vmax=sys.maxint
           tt=CGNS.WRA.utilities.loadAsADF(filename,G___.followLinks,vmax,
@@ -297,10 +298,12 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
           treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
         elif (not treefingerprint and (fileext in G___.cgnssslFiles)):
           flags=CGNS.MAP.S2P_NONE
+          #flags|=CGNS.MAP.S2P_TRACE
           if (G___.followLinks):flags|=CGNS.MAP.S2P_FOLLOWLINKS
           if (G___.noData):     flags|=CGNS.MAP.S2P_NODATA
           lkpath=G___.linkSearchPath
           (tt,lk)=CGNS.MAP.load(filename,flags,0,999,'',lkpath)
+          print 'MAP LINKS ',lk
           treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
         if (not treefingerprint.status):
           s7utils.badFileError(filename)

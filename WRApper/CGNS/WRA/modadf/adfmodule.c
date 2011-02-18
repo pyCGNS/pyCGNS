@@ -474,7 +474,8 @@ static PyObject*
 DBADF_getDimValues(DBADFObject *self, PyObject *args)
 {
   double    node;
-  int       dimval[MAXDIMENSIONVALUES],ndim,n;
+  long      dimval[MAXDIMENSIONVALUES];
+  int       ndim,n;
   PyObject *tp;
 
   if (!PyArg_ParseTuple(args, "d",&node))
@@ -511,7 +512,8 @@ DBADF_putDimInfo(DBADFObject *self, PyObject *args)
 {
   double node;
   char  *datatype;
-  int    ndim,*dimval,n;
+  int    ndim,n;
+  cgsize_t *dimval;
   PyObject *dimensions;
   
   if (!PyArg_ParseTuple(args, "dsO",&node,&datatype,&dimensions))
@@ -527,10 +529,10 @@ DBADF_putDimInfo(DBADFObject *self, PyObject *args)
     return NULL;
   }
   ndim=PyTuple_Size(dimensions);
-  dimval=(int*) malloc(sizeof(int)*ndim); /* allocated dimval */
+  dimval=(cgsize_t*) malloc(sizeof(cgsize_t)*ndim); /* allocated dimval */
   for (n=0;n<ndim;n++)
   {
-    dimval[n]=PyInt_AsLong(PyTuple_GetItem(dimensions,n));
+    dimval[n]=(cgsize_t)PyInt_AsLong(PyTuple_GetItem(dimensions,n));
   }
   
   ADF__Put_Dimension_Information(node,datatype,ndim,dimval,&(self->last_error));
@@ -629,7 +631,7 @@ DBADF_readAllData(DBADFObject *self, PyObject *args)
   char           data_type[MAXDATATYPESIZE];
   int            ndim,size,n;
   npy_intp       npy_dim_vals[MAXDIMENSIONVALUES];
-  int            dim_vals[MAXDIMENSIONVALUES];
+  long           dim_vals[MAXDIMENSIONVALUES];
   int            arraytype;
   char           sterror[256];
   PyArrayObject *array;
@@ -784,7 +786,7 @@ DBADF_writeAllData(DBADFObject *self, PyObject *args)
   char           name[ADF_NAME_LENGTH+1];
   char           label[ADF_LABEL_LENGTH+1];
   char           sterror[256];
-  int            ndim;
+  int            ndim,n;
   PyObject      *oarray;
   void          *ptrd=NULL;
   int            dim_vals_int[MAXDIMENSIONVALUES];
@@ -870,6 +872,11 @@ DBADF_writeAllData(DBADFObject *self, PyObject *args)
   ptrd=PyArray_DATA((PyArrayObject*)oarray);
   dim_vals=PyArray_DIMS((PyArrayObject*)oarray);
   ndim=PyArray_NDIM((PyArrayObject*)oarray);
+
+  for (n=0; n<ndim; n++)
+  {
+    dim_vals_int[n]=(long)dim_vals[n];
+  } 
 
   ADF__Put_Dimension_Information(node_id,data_type,ndim,dim_vals_int,
 				 &(self->last_error));  

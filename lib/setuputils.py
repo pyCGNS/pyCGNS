@@ -269,7 +269,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
   notfound=1
   vers=''
   libs=['cgns','hdf5']
-  extraargs=['-DCGNS_SCOPE_ENUMS']
+  extraargs=[]#'-DCG_BUILD_SCOPE']
   for pth in pincs:
     if (os.path.exists(pth+'/cgnslib.h')):
       notfound=0
