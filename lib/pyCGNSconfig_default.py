@@ -12,10 +12,10 @@
 #
 import sys
 
-mylocal='/usr/local'
+mylocal=sys.prefix
 
 INCLUDE_DIRS =['%s/include'%mylocal]
-LIBRARY_DIRS =['%s/include'%mylocal]
+LIBRARY_DIRS =['%s/lib'%mylocal]
 
 HAS_MLL=False
 HAS_NUMPY=False
