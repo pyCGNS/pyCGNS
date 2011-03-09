@@ -17,63 +17,6 @@
 
 #define Celcius Celsius
 
-#ifndef CG_MODE_READ
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
- *      modes for cgns file                                              *
-\* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-#define CG_MODE_READ	0
-#define CG_MODE_WRITE	1
-#define CG_MODE_CLOSED	2
-#define CG_MODE_MODIFY	3
-
-/* file types */
-
-#define CG_FILE_NONE 0
-#define CG_FILE_ADF  1
-#define CG_FILE_HDF5 2
-#define CG_FILE_XML  3
-
-/* function return codes */
-
-#define CG_OK		  0
-#define CG_ERROR	  1
-#define CG_NODE_NOT_FOUND 2
-#define CG_INCORRECT_PATH 3
-#define CG_NO_INDEX_DIM   4
-
-/* Null and UserDefined enums */
-
-#define CG_Null        0
-#define CG_UserDefined 1
-
-/* max goto depth */
-
-#define CG_MAX_GOTO_DEPTH 20
-
-/* configuration options */
-
-#define CG_CONFIG_ERROR     1
-#define CG_CONFIG_COMPRESS  2
-#define CG_CONFIG_SET_PATH  3
-#define CG_CONFIG_ADD_PATH  4
-#define CG_CONFIG_FILE_TYPE 5
-
-#define CG_CONFIG_XML_DELETED     301
-#define CG_CONFIG_XML_NAMESPACE   302
-#define CG_CONFIG_XML_THRESHOLD   303
-#define CG_CONFIG_XML_COMPRESSION 304
-
-/* legacy code support */
-
-#define MODE_READ	CG_MODE_READ
-#define MODE_WRITE	CG_MODE_WRITE
-#define MODE_MODIFY	2
-#define Null            CG_Null
-#define UserDefined	CG_UserDefined
-
-#endif
-
 /* macros for heavy use of Python dicts ;) */
 /* PyDict_SetItemString(xd, xdn##"_", xdd); \ */
 
@@ -117,12 +60,12 @@ void midleveldictionnary_init(PyObject *d)
   
   /* ----------- Open modes -1- */
   createDict(d, "OpenMode", dr, ddr);
-  addConstInDict2(d,dr,ddr,"CG_MODE_READ"  ,CG_MODE_READ);
-  addConstInDict2(d,dr,ddr,"CG_MODE_WRITE" ,CG_MODE_WRITE);
-  addConstInDict2(d,dr,ddr,"CG_MODE_MODIFY",CG_MODE_MODIFY);
-  addConstInDict2(d,dr,ddr,"CG_MODE_CLOSED",CG_MODE_CLOSED);
-  addConstInDict2(d,dr,ddr,"MODE_READ"  ,   CG_MODE_READ);
-  addConstInDict2(d,dr,ddr,"MODE_WRITE" ,   CG_MODE_WRITE);
+  addConstInDict2(d,dr,ddr,"CG_MODE_READ"  ,CGNS_ENUMV(CG_MODE_READ));
+  addConstInDict2(d,dr,ddr,"CG_MODE_WRITE" ,CGNS_ENUMV(CG_MODE_WRITE));
+  addConstInDict2(d,dr,ddr,"CG_MODE_MODIFY",CGNS_ENUMV(CG_MODE_MODIFY));
+  addConstInDict2(d,dr,ddr,"CG_MODE_CLOSED",CGNS_ENUMV(CG_MODE_CLOSED));
+  addConstInDict2(d,dr,ddr,"MODE_READ"  ,   CGNS_ENUMV(CG_MODE_READ));
+  addConstInDict2(d,dr,ddr,"MODE_WRITE" ,   CGNS_ENUMV(CG_MODE_WRITE));
 #if CGNS_VERSION < 3000
   addConstInDict2(d,dr,ddr,"MODE_MODIFY",   2);
   addConstInDict2(d,dr,ddr,"MODE_CLOSED",   3);
@@ -161,363 +104,363 @@ void midleveldictionnary_init(PyObject *d)
   /* ----------- UNITS -3-4-5-6-7- */
 
   createDict(d,  "MassUnits", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_MassUnitsNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_MassUnitsUserDefined);
-  addConstInDict2(d,dr,ddr,"Kilogram",CG_Kilogram);
-  addConstInDict2(d,dr,ddr,"Gram",CG_Gram);
-  addConstInDict2(d,dr,ddr,"Slug",CG_Slug);
-  addConstInDict2(d,dr,ddr,"PoundMass",CG_PoundMass);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(MassUnitsNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(MassUnitsUserDefined));
+  addConstInDict2(d,dr,ddr,"Kilogram",CGNS_ENUMV(Kilogram));
+  addConstInDict2(d,dr,ddr,"Gram",CGNS_ENUMV(Gram));
+  addConstInDict2(d,dr,ddr,"Slug",CGNS_ENUMV(Slug));
+  addConstInDict2(d,dr,ddr,"PoundMass",CGNS_ENUMV(PoundMass));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   createDict(d,  "LengthUnits", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_LengthUnitsNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_LengthUnitsUserDefined);
-  addConstInDict2(d,dr,ddr,"Meter",CG_Meter);
-  addConstInDict2(d,dr,ddr,"Centimeter",CG_Centimeter);
-  addConstInDict2(d,dr,ddr,"Millimeter",CG_Millimeter);
-  addConstInDict2(d,dr,ddr,"Foot",CG_Foot);
-  addConstInDict2(d,dr,ddr,"Inch",CG_Inch);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(LengthUnitsNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(LengthUnitsUserDefined));
+  addConstInDict2(d,dr,ddr,"Meter",CGNS_ENUMV(Meter));
+  addConstInDict2(d,dr,ddr,"Centimeter",CGNS_ENUMV(Centimeter));
+  addConstInDict2(d,dr,ddr,"Millimeter",CGNS_ENUMV(Millimeter));
+  addConstInDict2(d,dr,ddr,"Foot",CGNS_ENUMV(Foot));
+  addConstInDict2(d,dr,ddr,"Inch",CGNS_ENUMV(Inch));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   createDict(d, "TimeUnits", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_TimeUnitsNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_TimeUnitsUserDefined);
-  addConstInDict2(d,dr,ddr,"Second",CG_Second);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(TimeUnitsNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(TimeUnitsUserDefined));
+  addConstInDict2(d,dr,ddr,"Second",CGNS_ENUMV(Second));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   createDict(d, "TemperatureUnits", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_TemperatureUnitsNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_TemperatureUnitsUserDefined);
-  addConstInDict2(d,dr,ddr,"Kelvin",CG_Kelvin);
-  addConstInDict2(d,dr,ddr,"Celsius",CG_Celsius);
-  addConstInDict2(d,dr,ddr,"Rankine",CG_Rankine);
-  addConstInDict2(d,dr,ddr,"Fahrenheit",CG_Fahrenheit);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(TemperatureUnitsNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(TemperatureUnitsUserDefined));
+  addConstInDict2(d,dr,ddr,"Kelvin",CGNS_ENUMV(Kelvin));
+  addConstInDict2(d,dr,ddr,"Celsius",CGNS_ENUMV(Celsius));
+  addConstInDict2(d,dr,ddr,"Rankine",CGNS_ENUMV(Rankine));
+  addConstInDict2(d,dr,ddr,"Fahrenheit",CGNS_ENUMV(Fahrenheit));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   createDict(d, "AngleUnits", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_AngleUnitsNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_AngleUnitsUserDefined);
-  addConstInDict2(d,dr,ddr,"Degree",CG_Degree);
-  addConstInDict2(d,dr,ddr,"Radian",CG_Radian);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(AngleUnitsNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(AngleUnitsUserDefined));
+  addConstInDict2(d,dr,ddr,"Degree",CGNS_ENUMV(Degree));
+  addConstInDict2(d,dr,ddr,"Radian",CGNS_ENUMV(Radian));
   Py_DECREF(dr);
   Py_DECREF(ddr);
   
   /* ----------- DataClass_t -8- */
   createDict(d, "DataClass", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_DataClassNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_DataClassUserDefined);
-  addConstInDict2(d,dr,ddr,"Dimensional",CG_Dimensional);
-  addConstInDict2(d,dr,ddr,"NormalizedByDimensional",CG_NormalizedByDimensional);
-  addConstInDict2(d,dr,ddr,"NormalizedByUnknownDimensional",CG_NormalizedByUnknownDimensional);
-  addConstInDict2(d,dr,ddr,"NondimensionalParameter",CG_NondimensionalParameter);
-  addConstInDict2(d,dr,ddr,"DimensionlessConstant",CG_DimensionlessConstant);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(DataClassNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(DataClassUserDefined));
+  addConstInDict2(d,dr,ddr,"Dimensional",CGNS_ENUMV(Dimensional));
+  addConstInDict2(d,dr,ddr,"NormalizedByDimensional",CGNS_ENUMV(NormalizedByDimensional));
+  addConstInDict2(d,dr,ddr,"NormalizedByUnknownDimensional",CGNS_ENUMV(NormalizedByUnknownDimensional));
+  addConstInDict2(d,dr,ddr,"NondimensionalParameter",CGNS_ENUMV(NondimensionalParameter));
+  addConstInDict2(d,dr,ddr,"DimensionlessConstant",CGNS_ENUMV(DimensionlessConstant));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- GridLocation_t -9- */
   createDict(d, "GridLocation", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_GridLocationNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_GridLocationUserDefined);
-  addConstInDict2(d,dr,ddr,"Vertex",CG_Vertex);
-  addConstInDict2(d,dr,ddr,"CellCenter",CG_CellCenter);
-  addConstInDict2(d,dr,ddr,"FaceCenter",CG_FaceCenter);
-  addConstInDict2(d,dr,ddr,"IFaceCenter",CG_IFaceCenter);
-  addConstInDict2(d,dr,ddr,"JFaceCenter",CG_JFaceCenter);
-  addConstInDict2(d,dr,ddr,"KFaceCenter",CG_KFaceCenter);
-  addConstInDict2(d,dr,ddr,"EdgeCenter",CG_EdgeCenter);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(GridLocationNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(GridLocationUserDefined));
+  addConstInDict2(d,dr,ddr,"Vertex",CGNS_ENUMV(Vertex));
+  addConstInDict2(d,dr,ddr,"CellCenter",CGNS_ENUMV(CellCenter));
+  addConstInDict2(d,dr,ddr,"FaceCenter",CGNS_ENUMV(FaceCenter));
+  addConstInDict2(d,dr,ddr,"IFaceCenter",CGNS_ENUMV(IFaceCenter));
+  addConstInDict2(d,dr,ddr,"JFaceCenter",CGNS_ENUMV(JFaceCenter));
+  addConstInDict2(d,dr,ddr,"KFaceCenter",CGNS_ENUMV(KFaceCenter));
+  addConstInDict2(d,dr,ddr,"EdgeCenter",CGNS_ENUMV(EdgeCenter));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- BCDataType_t -10- */
   createDict(d, "BCDataType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_BCDataTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_BCDataTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"Dirichlet",CG_Dirichlet);
-  addConstInDict2(d,dr,ddr,"Neumann",CG_Neumann);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(BCDataTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(BCDataTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"Dirichlet",CGNS_ENUMV(Dirichlet));
+  addConstInDict2(d,dr,ddr,"Neumann",CGNS_ENUMV(Neumann));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- GridConnectivityType_t -11- */
   createDict(d, "GridConnectivityType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_GridConnectivityTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_GridConnectivityTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"Overset",CG_Overset);
-  addConstInDict2(d,dr,ddr,"Abutting",CG_Abutting);
-  addConstInDict2(d,dr,ddr,"Abutting1to1",CG_Abutting1to1);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(GridConnectivityTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(GridConnectivityTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"Overset",CGNS_ENUMV(Overset));
+  addConstInDict2(d,dr,ddr,"Abutting",CGNS_ENUMV(Abutting));
+  addConstInDict2(d,dr,ddr,"Abutting1to1",CGNS_ENUMV(Abutting1to1));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- PointSetType_t -12- */
   createDict(d, "PointSetType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_PointSetTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_PointSetTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"PointList",CG_PointList);
-  addConstInDict2(d,dr,ddr,"PointListDonor",CG_PointListDonor);
-  addConstInDict2(d,dr,ddr,"PointRange",CG_PointRange);
-  addConstInDict2(d,dr,ddr,"PointRangeDonor",CG_PointRangeDonor);
-  addConstInDict2(d,dr,ddr,"ElementRange",CG_ElementRange);
-  addConstInDict2(d,dr,ddr,"ElementList",CG_ElementList);
-  addConstInDict2(d,dr,ddr,"CellListDonor",CG_CellListDonor);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(PointSetTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(PointSetTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"PointList",CGNS_ENUMV(PointList));
+  addConstInDict2(d,dr,ddr,"PointListDonor",CGNS_ENUMV(PointListDonor));
+  addConstInDict2(d,dr,ddr,"PointRange",CGNS_ENUMV(PointRange));
+  addConstInDict2(d,dr,ddr,"PointRangeDonor",CGNS_ENUMV(PointRangeDonor));
+  addConstInDict2(d,dr,ddr,"ElementRange",CGNS_ENUMV(ElementRange));
+  addConstInDict2(d,dr,ddr,"ElementList",CGNS_ENUMV(ElementList));
+  addConstInDict2(d,dr,ddr,"CellListDonor",CGNS_ENUMV(CellListDonor));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- GoverningEquationsType_t -13- */
   createDict(d, "GoverningEquationsType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_GoverningEquationsNull); 
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_GoverningEquationsUserDefined);
-  addConstInDict2(d,dr,ddr,"FullPotential",CG_FullPotential);
-  addConstInDict2(d,dr,ddr,"Euler",CG_Euler);
-  addConstInDict2(d,dr,ddr,"NSLaminar",CG_NSLaminar);
-  addConstInDict2(d,dr,ddr,"NSTurbulent",CG_NSTurbulent);
-  addConstInDict2(d,dr,ddr,"NSLaminarIncompressible",CG_NSLaminarIncompressible);
-  addConstInDict2(d,dr,ddr,"NSTurbulentIncompressible",CG_NSTurbulentIncompressible);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(GoverningEquationsNull)); 
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(GoverningEquationsUserDefined));
+  addConstInDict2(d,dr,ddr,"FullPotential",CGNS_ENUMV(FullPotential));
+  addConstInDict2(d,dr,ddr,"Euler",CGNS_ENUMV(Euler));
+  addConstInDict2(d,dr,ddr,"NSLaminar",CGNS_ENUMV(NSLaminar));
+  addConstInDict2(d,dr,ddr,"NSTurbulent",CGNS_ENUMV(NSTurbulent));
+  addConstInDict2(d,dr,ddr,"NSLaminarIncompressible",CGNS_ENUMV(NSLaminarIncompressible));
+  addConstInDict2(d,dr,ddr,"NSTurbulentIncompressible",CGNS_ENUMV(NSTurbulentIncompressible));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- ModelType_t -14- (and associated) */
   createDict(d, "ModelType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_ModelTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_ModelTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"Ideal",CG_Ideal);
-  addConstInDict2(d,dr,ddr,"VanderWaals",CG_VanderWaals);
-  addConstInDict2(d,dr,ddr,"Constant",CG_Constant);
-  addConstInDict2(d,dr,ddr,"PowerLaw",CG_PowerLaw);
-  addConstInDict2(d,dr,ddr,"SutherlandLaw",CG_SutherlandLaw);
-  addConstInDict2(d,dr,ddr,"ConstantPrandtl",CG_ConstantPrandtl);
-  addConstInDict2(d,dr,ddr,"EddyViscosity",CG_EddyViscosity);
-  addConstInDict2(d,dr,ddr,"ReynoldsStress",CG_ReynoldsStress);
-  addConstInDict2(d,dr,ddr,"ReynoldsStressAlgebraic",CG_ReynoldsStressAlgebraic);
-  addConstInDict2(d,dr,ddr,"Algebraic_BaldwinLomax",CG_Algebraic_BaldwinLomax);
-  addConstInDict2(d,dr,ddr,"Algebraic_CebeciSmith",CG_Algebraic_CebeciSmith);
-  addConstInDict2(d,dr,ddr,"HalfEquation_JohnsonKing",CG_HalfEquation_JohnsonKing);
-  addConstInDict2(d,dr,ddr,"OneEquation_BaldwinBarth",CG_OneEquation_BaldwinBarth);
-  addConstInDict2(d,dr,ddr,"OneEquation_SpalartAllmaras",CG_OneEquation_SpalartAllmaras);
-  addConstInDict2(d,dr,ddr,"TwoEquation_JonesLaunder",CG_TwoEquation_JonesLaunder);
-  addConstInDict2(d,dr,ddr,"TwoEquation_MenterSST",CG_TwoEquation_MenterSST);
-  addConstInDict2(d,dr,ddr,"TwoEquation_Wilcox",CG_TwoEquation_Wilcox);
-  addConstInDict2(d,dr,ddr,"CaloricallyPerfect",CG_CaloricallyPerfect);
-  addConstInDict2(d,dr,ddr,"ThermallyPerfect",CG_ThermallyPerfect);
-  addConstInDict2(d,dr,ddr,"ConstantDensity",CG_ConstantDensity);
-  addConstInDict2(d,dr,ddr,"RedlichKwong",CG_RedlichKwong);
-  addConstInDict2(d,dr,ddr,"Frozen",CG_Frozen);
-  addConstInDict2(d,dr,ddr,"ThermalEquilib",CG_ThermalEquilib);
-  addConstInDict2(d,dr,ddr,"ThermalNonequilib",CG_ThermalNonequilib);
-  addConstInDict2(d,dr,ddr,"ChemicalEquilibCurveFit",CG_ChemicalEquilibCurveFit);
-  addConstInDict2(d,dr,ddr,"ChemicalEquilibMinimization",CG_ChemicalEquilibMinimization);
-  addConstInDict2(d,dr,ddr,"ChemicalNonequilib",CG_ChemicalNonequilib);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(ModelTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(ModelTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"Ideal",CGNS_ENUMV(Ideal));
+  addConstInDict2(d,dr,ddr,"VanderWaals",CGNS_ENUMV(VanderWaals));
+  addConstInDict2(d,dr,ddr,"Constant",CGNS_ENUMV(Constant));
+  addConstInDict2(d,dr,ddr,"PowerLaw",CGNS_ENUMV(PowerLaw));
+  addConstInDict2(d,dr,ddr,"SutherlandLaw",CGNS_ENUMV(SutherlandLaw));
+  addConstInDict2(d,dr,ddr,"ConstantPrandtl",CGNS_ENUMV(ConstantPrandtl));
+  addConstInDict2(d,dr,ddr,"EddyViscosity",CGNS_ENUMV(EddyViscosity));
+  addConstInDict2(d,dr,ddr,"ReynoldsStress",CGNS_ENUMV(ReynoldsStress));
+  addConstInDict2(d,dr,ddr,"ReynoldsStressAlgebraic",CGNS_ENUMV(ReynoldsStressAlgebraic));
+  addConstInDict2(d,dr,ddr,"Algebraic_BaldwinLomax",CGNS_ENUMV(Algebraic_BaldwinLomax));
+  addConstInDict2(d,dr,ddr,"Algebraic_CebeciSmith",CGNS_ENUMV(Algebraic_CebeciSmith));
+  addConstInDict2(d,dr,ddr,"HalfEquation_JohnsonKing",CGNS_ENUMV(HalfEquation_JohnsonKing));
+  addConstInDict2(d,dr,ddr,"OneEquation_BaldwinBarth",CGNS_ENUMV(OneEquation_BaldwinBarth));
+  addConstInDict2(d,dr,ddr,"OneEquation_SpalartAllmaras",CGNS_ENUMV(OneEquation_SpalartAllmaras));
+  addConstInDict2(d,dr,ddr,"TwoEquation_JonesLaunder",CGNS_ENUMV(TwoEquation_JonesLaunder));
+  addConstInDict2(d,dr,ddr,"TwoEquation_MenterSST",CGNS_ENUMV(TwoEquation_MenterSST));
+  addConstInDict2(d,dr,ddr,"TwoEquation_Wilcox",CGNS_ENUMV(TwoEquation_Wilcox));
+  addConstInDict2(d,dr,ddr,"CaloricallyPerfect",CGNS_ENUMV(CaloricallyPerfect));
+  addConstInDict2(d,dr,ddr,"ThermallyPerfect",CGNS_ENUMV(ThermallyPerfect));
+  addConstInDict2(d,dr,ddr,"ConstantDensity",CGNS_ENUMV(ConstantDensity));
+  addConstInDict2(d,dr,ddr,"RedlichKwong",CGNS_ENUMV(RedlichKwong));
+  addConstInDict2(d,dr,ddr,"Frozen",CGNS_ENUMV(Frozen));
+  addConstInDict2(d,dr,ddr,"ThermalEquilib",CGNS_ENUMV(ThermalEquilib));
+  addConstInDict2(d,dr,ddr,"ThermalNonequilib",CGNS_ENUMV(ThermalNonequilib));
+  addConstInDict2(d,dr,ddr,"ChemicalEquilibCurveFit",CGNS_ENUMV(ChemicalEquilibCurveFit));
+  addConstInDict2(d,dr,ddr,"ChemicalEquilibMinimization",CGNS_ENUMV(ChemicalEquilibMinimization));
+  addConstInDict2(d,dr,ddr,"ChemicalNonequilib",CGNS_ENUMV(ChemicalNonequilib));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   createDict(d, "GasModelType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_ModelTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_ModelTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"Ideal",CG_Ideal);
-  addConstInDict2(d,dr,ddr,"VanderWaals",CG_VanderWaals);
-  addConstInDict2(d,dr,ddr,"RedlichKwong",CG_RedlichKwong);
-  addConstInDict2(d,dr,ddr,"CaloricallyPerfect",CG_CaloricallyPerfect);
-  addConstInDict2(d,dr,ddr,"ThermallyPerfect",CG_ThermallyPerfect);
-  addConstInDict2(d,dr,ddr,"ConstantDensity",CG_ConstantDensity);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(ModelTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(ModelTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"Ideal",CGNS_ENUMV(Ideal));
+  addConstInDict2(d,dr,ddr,"VanderWaals",CGNS_ENUMV(VanderWaals));
+  addConstInDict2(d,dr,ddr,"RedlichKwong",CGNS_ENUMV(RedlichKwong));
+  addConstInDict2(d,dr,ddr,"CaloricallyPerfect",CGNS_ENUMV(CaloricallyPerfect));
+  addConstInDict2(d,dr,ddr,"ThermallyPerfect",CGNS_ENUMV(ThermallyPerfect));
+  addConstInDict2(d,dr,ddr,"ConstantDensity",CGNS_ENUMV(ConstantDensity));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   createDict(d, "ViscosityModelType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_ModelTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_ModelTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"Constant",CG_Constant);
-  addConstInDict2(d,dr,ddr,"PowerLaw",CG_PowerLaw);
-  addConstInDict2(d,dr,ddr,"SutherlandLaw",CG_SutherlandLaw);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(ModelTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(ModelTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"Constant",CGNS_ENUMV(Constant));
+  addConstInDict2(d,dr,ddr,"PowerLaw",CGNS_ENUMV(PowerLaw));
+  addConstInDict2(d,dr,ddr,"SutherlandLaw",CGNS_ENUMV(SutherlandLaw));
   Py_DECREF(dr);
   Py_DECREF(ddr);
   
   createDict(d, "ThermalConductivityModelType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_ModelTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_ModelTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"Constant",CG_Constant);
-  addConstInDict2(d,dr,ddr,"PowerLaw",CG_PowerLaw);
-  addConstInDict2(d,dr,ddr,"SutherlandLaw",CG_SutherlandLaw);
-  addConstInDict2(d,dr,ddr,"ConstantPrandtl",CG_ConstantPrandtl);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(ModelTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(ModelTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"Constant",CGNS_ENUMV(Constant));
+  addConstInDict2(d,dr,ddr,"PowerLaw",CGNS_ENUMV(PowerLaw));
+  addConstInDict2(d,dr,ddr,"SutherlandLaw",CGNS_ENUMV(SutherlandLaw));
+  addConstInDict2(d,dr,ddr,"ConstantPrandtl",CGNS_ENUMV(ConstantPrandtl));
   Py_DECREF(dr);
   Py_DECREF(ddr);
   
   createDict(d, "TurbulenceClosureType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_ModelTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_ModelTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"EddyViscosity",CG_EddyViscosity);
-  addConstInDict2(d,dr,ddr,"ReynoldsStress",CG_ReynoldsStress);
-  addConstInDict2(d,dr,ddr,"ReynoldsStressAlgebraic",CG_ReynoldsStressAlgebraic);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(ModelTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(ModelTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"EddyViscosity",CGNS_ENUMV(EddyViscosity));
+  addConstInDict2(d,dr,ddr,"ReynoldsStress",CGNS_ENUMV(ReynoldsStress));
+  addConstInDict2(d,dr,ddr,"ReynoldsStressAlgebraic",CGNS_ENUMV(ReynoldsStressAlgebraic));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   createDict(d, "TurbulenceModelType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_ModelTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_ModelTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"Algebraic_BaldwinLomax",CG_Algebraic_BaldwinLomax);
-  addConstInDict2(d,dr,ddr,"Algebraic_CebeciSmith",CG_Algebraic_CebeciSmith);
-  addConstInDict2(d,dr,ddr,"HalfEquation_JohnsonKing",CG_HalfEquation_JohnsonKing);
-  addConstInDict2(d,dr,ddr,"OneEquation_BaldwinBarth",CG_OneEquation_BaldwinBarth);
-  addConstInDict2(d,dr,ddr,"OneEquation_SpalartAllmaras",CG_OneEquation_SpalartAllmaras);
-  addConstInDict2(d,dr,ddr,"TwoEquation_JonesLaunder",CG_TwoEquation_JonesLaunder);
-  addConstInDict2(d,dr,ddr,"TwoEquation_MenterSST",CG_TwoEquation_MenterSST);
-  addConstInDict2(d,dr,ddr,"TwoEquation_Wilcox",CG_TwoEquation_Wilcox);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(ModelTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(ModelTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"Algebraic_BaldwinLomax",CGNS_ENUMV(Algebraic_BaldwinLomax));
+  addConstInDict2(d,dr,ddr,"Algebraic_CebeciSmith",CGNS_ENUMV(Algebraic_CebeciSmith));
+  addConstInDict2(d,dr,ddr,"HalfEquation_JohnsonKing",CGNS_ENUMV(HalfEquation_JohnsonKing));
+  addConstInDict2(d,dr,ddr,"OneEquation_BaldwinBarth",CGNS_ENUMV(OneEquation_BaldwinBarth));
+  addConstInDict2(d,dr,ddr,"OneEquation_SpalartAllmaras",CGNS_ENUMV(OneEquation_SpalartAllmaras));
+  addConstInDict2(d,dr,ddr,"TwoEquation_JonesLaunder",CGNS_ENUMV(TwoEquation_JonesLaunder));
+  addConstInDict2(d,dr,ddr,"TwoEquation_MenterSST",CGNS_ENUMV(TwoEquation_MenterSST));
+  addConstInDict2(d,dr,ddr,"TwoEquation_Wilcox",CGNS_ENUMV(TwoEquation_Wilcox));
   Py_DECREF(dr);
   Py_DECREF(ddr);
   
   createDict(d, "ThermalRelaxationModelType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_ModelTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_ModelTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"Frozen",CG_Frozen);
-  addConstInDict2(d,dr,ddr,"ThermalEquilib",CG_ThermalEquilib);
-  addConstInDict2(d,dr,ddr,"ThermalNonequilib",CG_ThermalNonequilib);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(ModelTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(ModelTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"Frozen",CGNS_ENUMV(Frozen));
+  addConstInDict2(d,dr,ddr,"ThermalEquilib",CGNS_ENUMV(ThermalEquilib));
+  addConstInDict2(d,dr,ddr,"ThermalNonequilib",CGNS_ENUMV(ThermalNonequilib));
   Py_DECREF(dr);
   Py_DECREF(ddr);
   
   createDict(d, "ChemicalKineticsModelType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_ModelTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_ModelTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"Frozen",CG_Frozen);
-  addConstInDict2(d,dr,ddr,"ChemicalEquilibCurveFit",CG_ChemicalEquilibCurveFit);
-  addConstInDict2(d,dr,ddr,"ChemicalEquilibMinimization",CG_ChemicalEquilibMinimization);
-  addConstInDict2(d,dr,ddr,"ChemicalNonequilib",CG_ChemicalNonequilib);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(ModelTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(ModelTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"Frozen",CGNS_ENUMV(Frozen));
+  addConstInDict2(d,dr,ddr,"ChemicalEquilibCurveFit",CGNS_ENUMV(ChemicalEquilibCurveFit));
+  addConstInDict2(d,dr,ddr,"ChemicalEquilibMinimization",CGNS_ENUMV(ChemicalEquilibMinimization));
+  addConstInDict2(d,dr,ddr,"ChemicalNonequilib",CGNS_ENUMV(ChemicalNonequilib));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- BCType_t -15- */
   createDict(d, "BCType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_BCTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_BCTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"BCAxisymmetricWedge",CG_BCAxisymmetricWedge);
-  addConstInDict2(d,dr,ddr,"BCDegenerateLine",CG_BCDegenerateLine);
-  addConstInDict2(d,dr,ddr,"BCDegeneratePoint",CG_BCDegeneratePoint);
-  addConstInDict2(d,dr,ddr,"BCDirichlet",CG_BCDirichlet);
-  addConstInDict2(d,dr,ddr,"BCExtrapolate",CG_BCExtrapolate);
-  addConstInDict2(d,dr,ddr,"BCFarfield",CG_BCFarfield);
-  addConstInDict2(d,dr,ddr,"BCGeneral",CG_BCGeneral);
-  addConstInDict2(d,dr,ddr,"BCInflow",CG_BCInflow);
-  addConstInDict2(d,dr,ddr,"BCInflowSubsonic",CG_BCInflowSubsonic);
-  addConstInDict2(d,dr,ddr,"BCInflowSupersonic",CG_BCInflowSupersonic);
-  addConstInDict2(d,dr,ddr,"BCNeumann",CG_BCNeumann);
-  addConstInDict2(d,dr,ddr,"BCOutflow",CG_BCOutflow);
-  addConstInDict2(d,dr,ddr,"BCOutflowSubsonic",CG_BCOutflowSubsonic);
-  addConstInDict2(d,dr,ddr,"BCOutflowSupersonic",CG_BCOutflowSupersonic);
-  addConstInDict2(d,dr,ddr,"BCSymmetryPlane",CG_BCSymmetryPlane);
-  addConstInDict2(d,dr,ddr,"BCSymmetryPolar",CG_BCSymmetryPolar);
-  addConstInDict2(d,dr,ddr,"BCTunnelInflow",CG_BCTunnelInflow);
-  addConstInDict2(d,dr,ddr,"BCTunnelOutflow",CG_BCTunnelOutflow);
-  addConstInDict2(d,dr,ddr,"BCWall",CG_BCWall);
-  addConstInDict2(d,dr,ddr,"BCWallInviscid",CG_BCWallInviscid);
-  addConstInDict2(d,dr,ddr,"BCWallViscous",CG_BCWallViscous);
-  addConstInDict2(d,dr,ddr,"BCWallViscousHeatFlux",CG_BCWallViscousHeatFlux);
-  addConstInDict2(d,dr,ddr,"BCWallViscousIsothermal",CG_BCWallViscousIsothermal);
-  addConstInDict2(d,dr,ddr,"FamilySpecified",CG_FamilySpecified);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(BCTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(BCTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"BCAxisymmetricWedge",CGNS_ENUMV(BCAxisymmetricWedge));
+  addConstInDict2(d,dr,ddr,"BCDegenerateLine",CGNS_ENUMV(BCDegenerateLine));
+  addConstInDict2(d,dr,ddr,"BCDegeneratePoint",CGNS_ENUMV(BCDegeneratePoint));
+  addConstInDict2(d,dr,ddr,"BCDirichlet",CGNS_ENUMV(BCDirichlet));
+  addConstInDict2(d,dr,ddr,"BCExtrapolate",CGNS_ENUMV(BCExtrapolate));
+  addConstInDict2(d,dr,ddr,"BCFarfield",CGNS_ENUMV(BCFarfield));
+  addConstInDict2(d,dr,ddr,"BCGeneral",CGNS_ENUMV(BCGeneral));
+  addConstInDict2(d,dr,ddr,"BCInflow",CGNS_ENUMV(BCInflow));
+  addConstInDict2(d,dr,ddr,"BCInflowSubsonic",CGNS_ENUMV(BCInflowSubsonic));
+  addConstInDict2(d,dr,ddr,"BCInflowSupersonic",CGNS_ENUMV(BCInflowSupersonic));
+  addConstInDict2(d,dr,ddr,"BCNeumann",CGNS_ENUMV(BCNeumann));
+  addConstInDict2(d,dr,ddr,"BCOutflow",CGNS_ENUMV(BCOutflow));
+  addConstInDict2(d,dr,ddr,"BCOutflowSubsonic",CGNS_ENUMV(BCOutflowSubsonic));
+  addConstInDict2(d,dr,ddr,"BCOutflowSupersonic",CGNS_ENUMV(BCOutflowSupersonic));
+  addConstInDict2(d,dr,ddr,"BCSymmetryPlane",CGNS_ENUMV(BCSymmetryPlane));
+  addConstInDict2(d,dr,ddr,"BCSymmetryPolar",CGNS_ENUMV(BCSymmetryPolar));
+  addConstInDict2(d,dr,ddr,"BCTunnelInflow",CGNS_ENUMV(BCTunnelInflow));
+  addConstInDict2(d,dr,ddr,"BCTunnelOutflow",CGNS_ENUMV(BCTunnelOutflow));
+  addConstInDict2(d,dr,ddr,"BCWall",CGNS_ENUMV(BCWall));
+  addConstInDict2(d,dr,ddr,"BCWallInviscid",CGNS_ENUMV(BCWallInviscid));
+  addConstInDict2(d,dr,ddr,"BCWallViscous",CGNS_ENUMV(BCWallViscous));
+  addConstInDict2(d,dr,ddr,"BCWallViscousHeatFlux",CGNS_ENUMV(BCWallViscousHeatFlux));
+  addConstInDict2(d,dr,ddr,"BCWallViscousIsothermal",CGNS_ENUMV(BCWallViscousIsothermal));
+  addConstInDict2(d,dr,ddr,"FamilySpecified",CGNS_ENUMV(FamilySpecified));
   Py_DECREF(dr);
   Py_DECREF(ddr);
   
   /* ----------- DataType_t -16- */
   createDict(d, "DataType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_DataTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_DataTypeUserDefined);
-  addConstInDict2(d,dr,ddr,Integer_s,CG_Integer);
-  addConstInDict2(d,dr,ddr,RealSingle_s,CG_RealSingle);
-  addConstInDict2(d,dr,ddr,RealDouble_s,CG_RealDouble);
-  addConstInDict2(d,dr,ddr,Character_s,CG_Character);
-  addConstInDict2(d,dr,ddr,"c",CG_Character); /* Unknown collision (Numeric ?) */
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(DataTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(DataTypeUserDefined));
+  addConstInDict2(d,dr,ddr,Integer_s,CGNS_ENUMV(Integer));
+  addConstInDict2(d,dr,ddr,RealSingle_s,CGNS_ENUMV(RealSingle));
+  addConstInDict2(d,dr,ddr,RealDouble_s,CGNS_ENUMV(RealDouble));
+  addConstInDict2(d,dr,ddr,Character_s,CGNS_ENUMV(Character));
+  addConstInDict2(d,dr,ddr,"c",CGNS_ENUMV(Character)); /* Unknown collision (Numeric ?) */
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- ElementType_t -17- */
   createDict(d, "ElementType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_ElementTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_ElementTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"NODE",CG_NODE);
-  addConstInDict2(d,dr,ddr,"BAR_2",CG_BAR_2);
-  addConstInDict2(d,dr,ddr,"BAR_3",CG_BAR_3);
-  addConstInDict2(d,dr,ddr,"TRI_3",CG_TRI_3);
-  addConstInDict2(d,dr,ddr,"TRI_6",CG_TRI_6);
-  addConstInDict2(d,dr,ddr,"QUAD_4",CG_QUAD_4);
-  addConstInDict2(d,dr,ddr,"QUAD_8",CG_QUAD_8);
-  addConstInDict2(d,dr,ddr,"QUAD_9",CG_QUAD_9);
-  addConstInDict2(d,dr,ddr,"TETRA_4",CG_TETRA_4);
-  addConstInDict2(d,dr,ddr,"TETRA_10",CG_TETRA_10);
-  addConstInDict2(d,dr,ddr,"PYRA_5",CG_PYRA_5);
-  addConstInDict2(d,dr,ddr,"PYRA_14",CG_PYRA_14);
-  addConstInDict2(d,dr,ddr,"PENTA_6",CG_PENTA_6);
-  addConstInDict2(d,dr,ddr,"PENTA_15",CG_PENTA_15);
-  addConstInDict2(d,dr,ddr,"PENTA_18",CG_PENTA_18);
-  addConstInDict2(d,dr,ddr,"HEXA_8",CG_HEXA_8);
-  addConstInDict2(d,dr,ddr,"HEXA_20",CG_HEXA_20);
-  addConstInDict2(d,dr,ddr,"HEXA_27",CG_HEXA_27);
-  addConstInDict2(d,dr,ddr,"MIXED",CG_MIXED);
-  addConstInDict2(d,dr,ddr,"NGON_n",CG_NGON_n);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(ElementTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(ElementTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"NODE",CGNS_ENUMV(NODE));
+  addConstInDict2(d,dr,ddr,"BAR_2",CGNS_ENUMV(BAR_2));
+  addConstInDict2(d,dr,ddr,"BAR_3",CGNS_ENUMV(BAR_3));
+  addConstInDict2(d,dr,ddr,"TRI_3",CGNS_ENUMV(TRI_3));
+  addConstInDict2(d,dr,ddr,"TRI_6",CGNS_ENUMV(TRI_6));
+  addConstInDict2(d,dr,ddr,"QUAD_4",CGNS_ENUMV(QUAD_4));
+  addConstInDict2(d,dr,ddr,"QUAD_8",CGNS_ENUMV(QUAD_8));
+  addConstInDict2(d,dr,ddr,"QUAD_9",CGNS_ENUMV(QUAD_9));
+  addConstInDict2(d,dr,ddr,"TETRA_4",CGNS_ENUMV(TETRA_4));
+  addConstInDict2(d,dr,ddr,"TETRA_10",CGNS_ENUMV(TETRA_10));
+  addConstInDict2(d,dr,ddr,"PYRA_5",CGNS_ENUMV(PYRA_5));
+  addConstInDict2(d,dr,ddr,"PYRA_14",CGNS_ENUMV(PYRA_14));
+  addConstInDict2(d,dr,ddr,"PENTA_6",CGNS_ENUMV(PENTA_6));
+  addConstInDict2(d,dr,ddr,"PENTA_15",CGNS_ENUMV(PENTA_15));
+  addConstInDict2(d,dr,ddr,"PENTA_18",CGNS_ENUMV(PENTA_18));
+  addConstInDict2(d,dr,ddr,"HEXA_8",CGNS_ENUMV(HEXA_8));
+  addConstInDict2(d,dr,ddr,"HEXA_20",CGNS_ENUMV(HEXA_20));
+  addConstInDict2(d,dr,ddr,"HEXA_27",CGNS_ENUMV(HEXA_27));
+  addConstInDict2(d,dr,ddr,"MIXED",CGNS_ENUMV(MIXED));
+  addConstInDict2(d,dr,ddr,"NGON_n",CGNS_ENUMV(NGON_n));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- ZoneType_t -18- */
   createDict(d, "ZoneType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_ZoneTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_ZoneTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"Structured",CG_Structured);
-  addConstInDict2(d,dr,ddr,"Unstructured",CG_Unstructured);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(ZoneTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(ZoneTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"Structured",CGNS_ENUMV(Structured));
+  addConstInDict2(d,dr,ddr,"Unstructured",CGNS_ENUMV(Unstructured));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- RigidGridMotionType_t -19- */
   createDict(d, "RigidGridMotionType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_RigidGridMotionTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_RigidGridMotionTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"ConstantRate",CG_ConstantRate);
-  addConstInDict2(d,dr,ddr,"VariableRate",CG_VariableRate);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(RigidGridMotionTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(RigidGridMotionTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"ConstantRate",CGNS_ENUMV(ConstantRate));
+  addConstInDict2(d,dr,ddr,"VariableRate",CGNS_ENUMV(VariableRate));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- ArbitraryGridMotionType_t -20- */
   createDict(d, "ArbitraryGridMotionType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_ArbitraryGridMotionTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_ArbitraryGridMotionTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"NonDeformingGrid",CG_NonDeformingGrid);
-  addConstInDict2(d,dr,ddr,"DeformingGrid",CG_DeformingGrid);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(ArbitraryGridMotionTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(ArbitraryGridMotionTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"NonDeformingGrid",CGNS_ENUMV(NonDeformingGrid));
+  addConstInDict2(d,dr,ddr,"DeformingGrid",CGNS_ENUMV(DeformingGrid));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- SimulationType_t -21- */
   createDict(d, "SimulationType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_SimulationTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_SimulationTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"TimeAccurate",CG_TimeAccurate);
-  addConstInDict2(d,dr,ddr,"NonTimeAccurate",CG_NonTimeAccurate);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(SimulationTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(SimulationTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"TimeAccurate",CGNS_ENUMV(TimeAccurate));
+  addConstInDict2(d,dr,ddr,"NonTimeAccurate",CGNS_ENUMV(NonTimeAccurate));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- WallFunctionType_t -22- */
   createDict(d, "WallFunctionType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_WallFunctionTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_WallFunctionTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"Generic",CG_Generic);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(WallFunctionTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(WallFunctionTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"Generic",CGNS_ENUMV(Generic));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- AreaType_t -23- */
   createDict(d, "AreaType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_AreaTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_AreaTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"BleedArea",CG_BleedArea);
-  addConstInDict2(d,dr,ddr,"CaptureArea",CG_CaptureArea);
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(AreaTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(AreaTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"BleedArea",CGNS_ENUMV(BleedArea));
+  addConstInDict2(d,dr,ddr,"CaptureArea",CGNS_ENUMV(CaptureArea));
   Py_DECREF(dr);
   Py_DECREF(ddr);
 
   /* ----------- AverageInterfaceType_t -24- */
   createDict(d, "AverageInterfaceType", dr, ddr);
-  addConstInDict2(d,dr,ddr,"Null",CG_AverageInterfaceTypeNull);
-  addConstInDict2(d,dr,ddr,"UserDefined",CG_AverageInterfaceTypeUserDefined);
-  addConstInDict2(d,dr,ddr,"AverageAll",CG_AverageAll);
-  addConstInDict2(d,dr,ddr,"AverageCircumferential",CG_AverageCircumferential);
-  addConstInDict2(d,dr,ddr,"AverageRadial",CG_AverageRadial);
-  addConstInDict2(d,dr,ddr,"AverageI",CG_AverageI);
-  addConstInDict2(d,dr,ddr,"AverageJ",CG_AverageJ);
-  addConstInDict2(d,dr,ddr,"AverageK",CG_AverageK);  
+  addConstInDict2(d,dr,ddr,"Null",CGNS_ENUMV(AverageInterfaceTypeNull));
+  addConstInDict2(d,dr,ddr,"UserDefined",CGNS_ENUMV(AverageInterfaceTypeUserDefined));
+  addConstInDict2(d,dr,ddr,"AverageAll",CGNS_ENUMV(AverageAll));
+  addConstInDict2(d,dr,ddr,"AverageCircumferential",CGNS_ENUMV(AverageCircumferential));
+  addConstInDict2(d,dr,ddr,"AverageRadial",CGNS_ENUMV(AverageRadial));
+  addConstInDict2(d,dr,ddr,"AverageI",CGNS_ENUMV(AverageI));
+  addConstInDict2(d,dr,ddr,"AverageJ",CGNS_ENUMV(AverageJ));
+  addConstInDict2(d,dr,ddr,"AverageK",CGNS_ENUMV(AverageK));  
   Py_DECREF(dr);
   Py_DECREF(ddr);
 

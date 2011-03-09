@@ -7,9 +7,9 @@
 
 # --- overall directories and libs
 #
-#mylocal='home/myself/tools'
-#INCLUDE_DIRS+=['%s/include'%mylocal]
-#LIBRARY_DIRS+=['%s/lib'%mylocal] 
+mylocal='/tmp_user/stelvio/poinot/tools'
+INCLUDE_DIRS=['%s/include'%mylocal]
+LIBRARY_DIRS=['%s/lib'%mylocal] 
 
 # --- If you leave empty the variables below the build process would
 #     try to guess for you, using the PATH you gave above.

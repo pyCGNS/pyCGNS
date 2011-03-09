@@ -17,6 +17,37 @@
 #include "cgnslib.h"
 #include "ADF__.h"
 
+#ifndef CGNS_SCOPE_ENUMS
+#define CG_SimulationType_t SimulationType_t
+#define CG_GoverningEquationsType_t GoverningEquationsType_t
+#define CG_ModelType_t ModelType_t
+#define CG_GridLocation_t GridLocation_t
+#define CG_GridConnectivityType_t GridConnectivityType_t
+#define CG_ZoneType_t ZoneType_t
+#define CG_PointSetType_t PointSetType_t
+#define CG_DataType_t DataType_t
+#define CG_AverageInterfaceType_t AverageInterfaceType_t
+#define CG_RealDouble RealDouble
+#define CG_RealSingle RealSingle
+#define CG_Integer Integer
+#define CG_Character Character
+#define CG_PointRange PointRange
+#define CG_BCType_t BCType_t
+#define CG_BCDataType_t BCDataType_t
+#define CG_RigidGridMotionType_t RigidGridMotionType_t
+#define CG_ArbitraryGridMotionType_t ArbitraryGridMotionType_t
+#define CG_ElementType_t ElementType_t
+#define CG_WallFunctionType_t WallFunctionType_t
+#define CG_AreaType_t AreaType_t
+#define CG_DataClass_t DataClass_t
+#define CG_MassUnits_t MassUnits_t
+#define CG_LengthUnits_t LengthUnits_t
+#define CG_TemperatureUnits_t TemperatureUnits_t
+#define CG_TimeUnits_t TimeUnits_t
+#define CG_AngleUnits_t AngleUnits_t
+#endif
+
+
 /* 
 
  *** NUMPY remarks (from Numpy various docs)

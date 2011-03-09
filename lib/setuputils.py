@@ -303,8 +303,10 @@ def find_MLL(pincs,plibs,libs,extraargs):
     if (os.path.exists(pth+'/adfh/ADFH.h')):
       extraargs+=['-D__ADF_IN_SOURCES__']
       notfound=0
+      break
     if (os.path.exists(pth+'/ADFH.h')):
       notfound=0
+      break
 
   if notfound:
     print pfx,"Warning: ADFH.h not found, using pyCGNS own headers"

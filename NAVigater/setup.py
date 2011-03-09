@@ -10,7 +10,11 @@ from  distutils.util import get_platform
 import glob
 import os
 
-from Cython.Distutils import build_ext
+try:
+  from Cython.Distutils import build_ext
+  HAS_CYTHON=True
+except:
+  HAS_CYTHON=False
 
 # --- pyCGNSconfig search
 import sys
@@ -53,6 +57,15 @@ if installprocess:
 if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
 
+if HAS_CYTHON:
+  cmdclassdict={'clean':setuputils.clean,'build_ext':build_ext}
+  extmods=[ Extension('CGNS.NAV.gui.s7vtkView',
+                           ['CGNS/NAV/gui/s7vtkView.pyx'],
+                           include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES) ]
+else:
+  cmdclassdict={'clean':setuputils.clean}
+  extmods=[]
+
 setup (
 name         = "CGNS.NAV",
 version      = pyCGNSconfig.NAV_VERSION,
@@ -63,11 +76,8 @@ license      = "LGPL 2",
 packages     = ['CGNS.NAV','CGNS.NAV.gui','CGNS.NAV.supervisor'],
 scripts      = ['CGNS/NAV/CGNS.NAV'],
 data_files   = [('share/CGNS/NAV/icons',glob.glob('CGNS/NAV/gui/icons/*'))],
-ext_modules  = [ Extension('CGNS.NAV.gui.s7vtkView',
-                           ['CGNS/NAV/gui/s7vtkView.pyx'],
-                           include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES) ],
-
-cmdclass={'clean':setuputils.clean,'build_ext':build_ext}
+ext_modules  = extmods,
+cmdclass     = cmdclassdict
 )
  
 # --- last line

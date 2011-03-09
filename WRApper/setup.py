@@ -85,19 +85,26 @@ lext_modules  = [
                         include_dirs = include_dirs,
                         library_dirs = library_dirs,
                         libraries    = optional_libs),
-#              Extension('CGNS.WRA.mll',['CGNS/WRA/mll.pyx'],
-#                        include_dirs = include_dirs,
-#                        library_dirs = library_dirs,
-#                        libraries    = optional_libs)
-              Extension('CGNS.WRA._libmodule',['CGNS/WRA/maplib.pyx'],
-                        include_dirs = include_dirs,
-                        library_dirs = library_dirs,
-                        libraries    = optional_libs)
               ] # close extension modules
 
+if HAS_CYTHON:
+  lext_modules+=[Extension('CGNS.WRA.mll',['CGNS/WRA/mll.pyx'],
+                           include_dirs = include_dirs,
+                           library_dirs = library_dirs,
+                           libraries    = optional_libs)]
+  lext_modules+=[Extension('CGNS.WRA._libmodule',['CGNS/WRA/maplib.pyx'],
+                           include_dirs = include_dirs,
+                           library_dirs = library_dirs,
+                           libraries    = optional_libs)]
+           
 if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
                 
+if HAS_CYTHON:
+  cmdclassdict={'clean':setuputils.clean,'build_ext': build_ext}
+else:
+  cmdclassdict={'clean':setuputils.clean}
+
 setup (
   name         = 'pyCGNS.WRA',
   version      = lversion,
@@ -110,8 +117,7 @@ setup (
   packages     = lpackages,
   scripts      = lscripts,
   data_files   = ldata_files,
-
-  cmdclass={'clean':setuputils.clean,'build_ext': build_ext}
+  cmdclass=cmdclassdict
 
 ) # close setup
 
