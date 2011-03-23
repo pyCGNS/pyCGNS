@@ -6,20 +6,40 @@
 #  $Release$
 #  ------------------------------------------------------------------------- 
 import CGNS.MAP
-import time
+from   CGNS.PAT.cgnskeywords import *
+import numpy
 import os
 
-import T0
-tree=T0.tree
-links=T0.links
+filename="/tmp/T0.cgns"
 
 try:
-  os.unlink("T0.py.cgns")
+  os.unlink(filename)
 except os.error: pass
-print '# CGNS.MAP.save'
-flags=CGNS.MAP.S2P_TRACE
-start=time.clock()
-CGNS.MAP.save("T0.py.cgns",tree,links,flags)
-end=time.clock()
-print '# time =',end-start
+
+# this is a small example, because it's quite hard to read!
+tree=[CGNSTree_s, None, [
+       [CGNSLibraryVersion_s,
+        numpy.array([2.4],dtype=numpy.float32),
+        [],
+        CGNSLibraryVersion_ts],
+       ['Helicopter',
+        numpy.array([3, 3], dtype=numpy.int32),
+        [
+         ['ReferenceState', None,
+          [
+           ['AngleofAttack',numpy.array([ 7.]), [], DataArray_ts],
+           ['BetaAngle', numpy.array([ 0.]), [], DataArray_ts],
+           ['Coef_Area', numpy.array([ 0.025]), [], DataArray_ts]
+          ],
+          ReferenceState_ts
+        ],
+       ],
+        CGNSBase_ts]
+       ],
+       CGNSTree_ts
+      ]
+        
+CGNS.MAP.save(filename,tree,[],CGNS.MAP.S2P_DEFAULT)
+
+# --- last line
 

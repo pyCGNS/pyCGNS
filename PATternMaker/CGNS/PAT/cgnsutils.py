@@ -320,6 +320,13 @@ def getAllNodesByTypeList(typelist,tree):
   return n
 
 # --------------------------------------------------
+def getAllNodesByTypeList2(typelist,tree):
+  if (tree[3]==CK.CGNSTree_ts): start=""
+  else:                         start="%s"%tree[0]
+  n=getAllNodesFromTypeList(typelist,tree[2],start,[])
+  return n
+
+# --------------------------------------------------
 def getAllNodesFromTypeList(typelist,node,path,result):
   for c in node:
     if (c[3] in typelist):

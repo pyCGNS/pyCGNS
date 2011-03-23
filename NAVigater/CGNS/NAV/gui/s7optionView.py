@@ -38,6 +38,8 @@ singleView=%(singleView)d
 flyCheck=%(flyCheck)d
 maxDisplaySize=%(maxDisplaySize)d
 showIndex=%(showIndex)d
+currentInSearchPath=%(currentInSearchPath)d
+rootInSearchPath=%(rootInSearchPath)d
 showColumnTitle=%(showColumnTitle)d
 defaultProfile='%(defaultProfile)s'
 profilePath=%(profilePath)s
@@ -48,6 +50,7 @@ saveLinks=%(saveLinks)d
 historyFile='%(historyFile)s'
 noData=%(noData)d
 forceFortranFlag=%(forceFortranFlag)d
+cgnsIsADF=%(cgnsIsADF)d
 transposeOnViewEdit=%(transposeOnViewEdit)d
 compactedValue=%(compactedValue)d
 showSIDS=%(showSIDS)d
@@ -115,6 +118,12 @@ class wOptionView(s7windoz.wWindoz):
   def _showIndex(self):
     G___.showIndex=not G___.showIndex
     
+  def _currentInSearchPath(self):
+    G___.currentInSearchPath=not G___.currentInSearchPath
+    
+  def _rootInSearchPath(self):
+    G___.rootInSearchPath=not G___.rootInSearchPath
+    
   def _maxRecurse(self):
     pass
     
@@ -138,6 +147,9 @@ class wOptionView(s7windoz.wWindoz):
     
   def _forceFortranFlag(self):
     G___.forceFortranFlag=not G___.forceFortranFlag
+    
+  def _cgnsIsADF(self):
+    G___.cgnsIsADF=not G___.cgnsIsADF
     
   def _transposeOnViewEdit(self):
     G___.transposeOnViewEdit=not G___.transposeOnViewEdit
@@ -205,6 +217,12 @@ class wOptionView(s7windoz.wWindoz):
     self.v_expandRecurse=IntVar()
     self.v_expandRecurse.set(G___.expandRecurse)
     self.d_expandRecurse='Recursive tree display'
+    self.v_currentInSearchPath=IntVar()
+    self.v_currentInSearchPath.set(G___.currentInSearchPath)
+    self.d_currentInSearchPath='Add current dir in link search path'
+    self.v_rootInSearchPath=IntVar()
+    self.v_rootInSearchPath.set(G___.rootInSearchPath)
+    self.d_rootInSearchPath='Add root dir in link search path'
     self.v_showIndex=IntVar()
     self.v_showIndex.set(G___.showIndex)
     self.d_showIndex='Show table index'
@@ -244,6 +262,9 @@ class wOptionView(s7windoz.wWindoz):
     self.v_forceFortranFlag=IntVar()
     self.v_forceFortranFlag.set(G___.forceFortranFlag)
     self.d_forceFortranFlag='Force Fortran flag in numpy arrays (no check)'
+    self.v_cgnsIsADF=IntVar()
+    self.v_cgnsIsADF.set(G___.cgnsIsADF)
+    self.d_cgnsIsADF='A .cgns file is and ADF file'
     self.v_transposeOnViewEdit=IntVar()
     self.v_transposeOnViewEdit.set(G___.transposeOnViewEdit)
     self.d_transposeOnViewEdit='Transpose array for view/edit'
@@ -294,6 +315,8 @@ class wOptionView(s7windoz.wWindoz):
     self.optCheck(_left,'flyCheck',DISABLED)
     self.optCheck(_left,'followLinks')
     self.optCheck(_left,'saveLinks')    
+    self.optCheck(_left,'currentInSearchPath')
+    self.optCheck(_left,'rootInSearchPath')
     self.optCheck(_left,'noData')
     self.optCheck(_left,'compactedValue')
     self.optCheck(_left,'showSIDS')
@@ -308,7 +331,8 @@ class wOptionView(s7windoz.wWindoz):
     self.optValue(_right,'profilePath',large=1)
     self.optValue(_right,'linkSearchPath',large=1)    
     self.optCheck(_right,'forceFortranFlag')
-    self.optCheck(_right,'transposeOnViewEdit')    
+    self.optCheck(_right,'transposeOnViewEdit')
+    self.optCheck(_right,'cgnsIsADF')
 
     self.options.fleft.grid(row=1,column=0,sticky=NW)
     self.options.fright.grid(row=1,column=1,sticky=NE,columnspan=3)

@@ -71,6 +71,7 @@ class s7optionsStorage:
     self.minFileSizeNoWarning=1000000000
     self.noData=0
     self.forceFortranFlag=0
+    self.cgnsIsADF=0
     self.transposeOnViewEdit=0        
     self.compactedValue=0
     self.showIndex=0
@@ -86,6 +87,8 @@ class s7optionsStorage:
     self.saveLinks=1
     self.historyFile='.cgnsnavhistory.py'    
     self.showSIDS=0
+    self.currentInSearchPath=1
+    self.rootInSearchPath=1
     self.directoriesHistory=[]
     self.filesHistory=[]
     self.directoriesHistorySize=20
@@ -176,9 +179,12 @@ class s7optionsStorage:
     self.allowedoptionslist+=['saveLinks']
     self.allowedoptionslist+=['noData']
     self.allowedoptionslist+=['forceFortranFlag']
+    self.allowedoptionslist+=['cgnsIsADF']
     self.allowedoptionslist+=['transposeOnViewEdit']    
     self.allowedoptionslist+=['compactedValue']
     self.allowedoptionslist+=['showSIDS']        
+    self.allowedoptionslist+=['currentInSearchPath']
+    self.allowedoptionslist+=['rootInSearchPath']        
     self.allowedoptionslist+=['helpBallooons']        
 
   def update(self):

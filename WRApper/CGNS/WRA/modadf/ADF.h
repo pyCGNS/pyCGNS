@@ -133,7 +133,7 @@ EXTERN	void	ADF_Get_Data_Type(
 
 EXTERN	void	ADF_Get_Dimension_Values(
 			const double ID,
-			cglong_t dim_vals[],
+			int dim_vals[],
 			int *error_return ) ;
 
 EXTERN	void	ADF_Get_Error_State(

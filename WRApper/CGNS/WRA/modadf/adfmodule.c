@@ -474,7 +474,7 @@ static PyObject*
 DBADF_getDimValues(DBADFObject *self, PyObject *args)
 {
   double    node;
-  long      dimval[MAXDIMENSIONVALUES];
+  int       dimval[MAXDIMENSIONVALUES];
   int       ndim,n;
   PyObject *tp;
 
@@ -484,7 +484,7 @@ DBADF_getDimValues(DBADFObject *self, PyObject *args)
                     "(dimension:integer,*)=adf.get_dimension_values(node-id:double)");
     return NULL;
   }
-  ADF__Get_Number_of_Dimensions(node,&ndim,&(self->last_error));
+  ADF__Get_Number_of_Dimensions(node,&ndim,&(self->last_error)); 
   if (self->last_error != -1) /* ADF NO ERROR IS -1 */
   {
     PyErr_SetString(ADFErrorObject,
@@ -513,7 +513,7 @@ DBADF_putDimInfo(DBADFObject *self, PyObject *args)
   double node;
   char  *datatype;
   int    ndim,n;
-  cgsize_t *dimval;
+  int   *dimval;
   PyObject *dimensions;
   
   if (!PyArg_ParseTuple(args, "dsO",&node,&datatype,&dimensions))
@@ -631,7 +631,7 @@ DBADF_readAllData(DBADFObject *self, PyObject *args)
   char           data_type[MAXDATATYPESIZE];
   int            ndim,size,n;
   npy_intp       npy_dim_vals[MAXDIMENSIONVALUES];
-  long           dim_vals[MAXDIMENSIONVALUES];
+  int            dim_vals[MAXDIMENSIONVALUES];
   int            arraytype;
   char           sterror[256];
   PyArrayObject *array;
@@ -653,6 +653,10 @@ DBADF_readAllData(DBADFObject *self, PyObject *args)
      and ADF directly fills it with the data.
      - the following part is taken from cgi_read_node, in cgns_internals.c
   */
+
+#ifndef CG_BUILD_LEGACY
+#error CGNS header file is not LEGACY or is not v3.1
+#endif
 
   /* read node data type */
   ADF__Get_Data_Type(node_id, data_type, &(self->last_error));

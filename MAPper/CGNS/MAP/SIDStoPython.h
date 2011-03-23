@@ -57,7 +57,6 @@ typedef struct s2p_ctx_t
 {
   s2p_lnk_t *lnk;
   s2p_ent_t *dbs;
-  int        thh;
   int        dpt;
   long       flg;
   int       *_c_int;
@@ -70,16 +69,15 @@ typedef struct s2p_ctx_t
 /* ------------------------------------------------------------------------- */
 PyObject* s2p_loadAsHDF(char *filename,
 			int flags,
-			int threshold,
 			int depth,
 			char *path,
-			char *searchpath);
+			char *searchpath,
+			PyObject *update);
 /* ------------------------------------------------------------------------- */
 int 	  s2p_saveAsHDF(char      *filename,
     	                PyObject  *tree,
     	                PyObject  *links,
     	                int        flags,
-    	                int        threshold,
     	                int        depth,
     	                char*      path);
 /* ------------------------------------------------------------------------- */

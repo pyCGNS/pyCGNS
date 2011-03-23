@@ -22,13 +22,44 @@ import s7treeSimple
 import s7utils
 import s7windoz
 
+# Link information
+#
+# Raw MAP return is: [targetdir,targetfile,targetnode,localnode]
+# We add in NAV    : [ ... ] + [level,status]
+#
+# Raw WRA return is: [localpath,localnode,targetpath,targetnode,level,status]
+# With localpath and targetpath a concat of dir+file
+# Then we split these to have the correct expected list
+
+# In all cases, NAV expects:
+#
+# [localdir,localfile,localnode,targetdir,targetfile,targetnode,level,status]
+#
+# local is the file you are browsing, target is the destination file(s)
+#
 def sortLinkList(a,b):
-  (acurfile,acurnode,atargetfile,atargetnode,alklevel,alkstatus)=a
-  (bcurfile,bcurnode,btargetfile,btargetnode,blklevel,blkstatus)=b
-  #print acurnode, bcurnode
-  if (acurnode<bcurnode): return -1
-  if (acurnode>bcurnode): return  1
+#  print a
+  if (a[2]<b[2]): return -1
+  if (a[2]>b[2]): return  1
   return 0
+
+def map2nav(t,lk):
+  nlk=[]
+  for x in lk:
+    nlk+=[[t.filedir,t.filename+t.fileext,x[3],x[0],x[1],x[2],0,0]]
+  nlk.sort(sortLinkList)
+  return nlk
+
+def wra2nav(t,lk):
+  nlk=[]
+  for x in lk:
+    ldir=os.path.dirname(x[0])    
+    lname=os.path.basename(x[0])    
+    tdir=os.path.dirname(x[2])    
+    tname=os.path.basename(x[2])    
+    nlk+=[[ldir,lname,x[1],tdir,tname,x[3],x[4],x[5]]]
+  nlk.sort(sortLinkList)
+  return nlk
 
 
 # -----------------------------------------------------------------------------
@@ -176,8 +207,6 @@ class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
     self._tree.state_define('islinknopath')  # link file ok but no node
 
     self._viewtree=treefingerprint
-    self._viewtree.links.sort(sortLinkList)
-
     self._viewWindow=wcontrol
 
     self._files={}
@@ -274,7 +303,8 @@ class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
 
   def addLinkEntries(self):
     for f in self._viewtree.links:
-      (currentfile, currentnode, targetfile, targetnode, lklevel, lkstatus)=f
+      (currentdir,currentfile,currentnode,\
+       targetdir,targetfile,targetnode,lklevel,lkstatus)=f
       if (not self._files.has_key(lklevel)):
         self._files[lklevel]={}
       if (not self._files[lklevel].has_key(targetfile)):

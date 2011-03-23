@@ -278,7 +278,7 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
 
   parsepath=1;
   p=nodename;
-  nid=l3db->root_id;
+  nid=-1;
   curpath[0]='\0';
 
   while (parsepath)
@@ -297,7 +297,7 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
     strcat(curpath,"/");
     strcat(curpath,name);
     nid=L3_path2Node(l3db,curpath);
-    if (L3_isLinkNode(l3db,nid,destfile,destnode))
+    if ((nid != -1) && L3_isLinkNode(l3db,nid,destfile,destnode))
     {
       /* L3 layer has its own link search path, we have to ask it
          the directory used to open the actual file. */
@@ -309,6 +309,7 @@ static hid_t s2p_linktrack(L3_Cursor_t *l3db,
       lkhdfdb=s2p_addoneHDF(destfile,context);
       nid=s2p_linktrack(lkhdfdb,destnode,context);
     } 
+    if (nid==-1) {break;}
   }
   return nid;
 }
@@ -439,8 +440,8 @@ static int s2p_getData(PyObject *dobject,
 /* ------------------------------------------------------------------------- */
 static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
                                      char      	 *name,
-                                     char*     	  curpath,    
-                                     char*     	  path,    
+                                     char        *curpath,    
+                                     char        *path,    
                                      s2p_ctx_t   *context,
 				     L3_Cursor_t *l3db)
 {
@@ -465,6 +466,10 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   {
     trackpath=0;
   }
+  else
+  {
+    S2P_TRACE(("### Target path (%s)\n",path));
+  }
   o_value=NULL;
   
   /* In case of path, we are in a link search or sub-tree retrieval. We
@@ -477,13 +482,14 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
       /* L3 layer has its own link search path, we have to ask it
          the directory used to open the actual file. */
       ix=CHL_getFileInSearchPath(l3db,destfile);
-      if (ix == -1)
+      if (ix!=-1)
+      {
+	strcpy(destdir,CHL_getLinkSearchPath(l3db,ix));
+      }
+      else
       {
 	S2P_TRACE(("### Linked-to file not readable (%s)\n",destfile));
-	return NULL;
       }
-      strcpy(destdir,CHL_getLinkSearchPath(l3db,ix));
-
       S2P_TRACE(("\n### Parse Follow link: [%s][%s][%s]\n",
 		 destdir,destfile,destnode));
       s2p_linkstack(curpath,destdir,destfile,destnode,context);
@@ -493,9 +499,22 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
          the actual node is finally used at the end. */
       lkl3db=s2p_addoneHDF(destfile,context);
       actualid=s2p_linktrack(lkl3db,destnode,context);
+      if (actualid==-1)
+      {
+	S2P_TRACE(("### Linked-to node (%s) does not exist\n",destnode));
+	return NULL;
+      }
     }
   }
-  L3M_SETFLAG(l3db,L3F_WITHCHILDREN|L3F_WITHDATA);
+  L3M_SETFLAG(l3db,L3F_WITHCHILDREN);
+  if (S2P_HASFLAG(S2P_FNODATA))
+  {
+    L3M_UNSETFLAG(l3db,L3F_WITHDATA);
+  }
+  else
+  {
+    L3M_SETFLAG(l3db,L3F_WITHDATA);
+  }
   L3M_NEWNODE(rnode);
   rnode=L3_nodeRetrieve(l3db,actualid,rnode);
   if (rnode == NULL)
@@ -503,9 +522,20 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     S2P_TRACE(("### (%s) Retrieve returns NULL POINTER\n",curpath));
     return NULL;
   }
+  if (S2P_HASFLAG(S2P_FNODATA))
+  {
+    rnode->dtype=L3E_VOID;
+  }
   strcat(curpath,"/");
   strcat(curpath,rnode->name);
-  psize=(strlen(path)>strlen(curpath)?strlen(curpath):strlen(path));
+  if (path != NULL)
+  {
+    psize=(strlen(path)>strlen(curpath)?strlen(curpath):strlen(path));
+  }
+  else
+  {
+    psize=strlen(curpath);
+  }
   if (trackpath && strcmp(curpath,"/HDF5 MotherNode"))
   {
       S2P_TRACE(("### Path filter \'%s\' \'%s\'[:%d]\n",path,curpath,psize));
@@ -621,7 +651,10 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   o_clist=PyList_New(0);
   child=0;
   L3M_NEWNODE(cnode);
-  while ((rnode->children != NULL) && (rnode->children[child] != -1))
+  while ((rnode->children != NULL) && 
+         (rnode->children[child] != -1) &&
+	 (context->dpt > 0)
+        )
   {
     if (S2P_HASFLAG(S2P_FFOLLOWLINKS))
     {
@@ -658,6 +691,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     o_value=Py_None;
   };
   o_node=Py_BuildValue("[sOOs]",name,o_value,o_clist,rnode->label);
+  context->dpt+=1;
 
   if (rnode!=NULL){ free(rnode);}
 
@@ -756,10 +790,10 @@ static int s2p_parseAndWriteHDF(hid_t     id,
 /* ------------------------------------------------------------------------- */
 PyObject* s2p_loadAsHDF(char *filename,
                         int   flags,
-                        int   threshold,
                         int   depth,
                         char *path,
-			char *searchpath)
+			char *searchpath,
+                        PyObject *update)
 {
   char cpath[MAXPATHSIZE];
   PyObject *tree,*ret,*links;
@@ -771,7 +805,6 @@ PyObject* s2p_loadAsHDF(char *filename,
   context->flg=flags;
   context->lnk=NULL;
   context->dbs=NULL;
-  context->thh=threshold;
   context->dpt=depth;
   context->_c_float =NULL;
   context->_c_double=NULL;
@@ -818,7 +851,6 @@ int s2p_saveAsHDF(char      *filename,
                   PyObject  *tree,
                   PyObject  *links,
                   int        flags,
-                  int        threshold,
                   int        depth,
                   char*      path)    
 {
@@ -836,7 +868,6 @@ int s2p_saveAsHDF(char      *filename,
   context->flg=flags;
   context->lnk=NULL;
   context->dbs=NULL;
-  context->thh=threshold;
   context->dpt=depth;
   context->_c_float =NULL;
   context->_c_int=NULL;

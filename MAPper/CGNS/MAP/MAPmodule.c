@@ -12,23 +12,26 @@ static PyObject *
 MAP_load(PyObject *self, PyObject *args)
 {
   char *filename, *path, *pth, *ptr;
-  int flags,threshold,depth,totalsize,n;
-  PyObject *lksearch,*ret;
+  int flags,depth,totalsize,n;
+  PyObject *lksearch,*ret,*update;
 
-  threshold=0;
   depth=999;
   path=NULL;
   lksearch=NULL;
   pth=NULL;
 
-  if (!PyArg_ParseTuple(args,"si|iizO",
+  if (!PyArg_ParseTuple(args,"si|izOO",
 			&filename,&flags,
-			&threshold,&depth,&path,&lksearch))
+			&depth,&path,&lksearch,&update))
   {
     return NULL;
   }
-
-  if (lksearch && PyList_Check(lksearch))
+  if (depth < 1){ depth=999; }
+  if ( lksearch && 
+       PyList_Check(lksearch) && 
+       PyList_Size(lksearch) &&
+       PyString_Check(PyList_GetItem(lksearch,0))
+     )
   {
     totalsize=0;
     for (n=0;n<PyList_Size(lksearch);n++)
@@ -58,7 +61,7 @@ MAP_load(PyObject *self, PyObject *args)
       }
     }
   }
-  ret=s2p_loadAsHDF(filename,flags,threshold,depth,path,pth);
+  ret=s2p_loadAsHDF(filename,flags,depth,path,pth,update);
   if (pth){free(pth);};
 
   return ret;
@@ -68,20 +71,19 @@ static PyObject *
 MAP_save(PyObject *self, PyObject *args)
 {
   char *filename, *path;
-  int flags,threshold,depth,ret;
+  int flags,depth,ret;
   PyObject *tree,*links;
 
-  threshold=0;
   depth=999;
   path=NULL;
 
-  if (!PyArg_ParseTuple(args,"sOOi|iis",
+  if (!PyArg_ParseTuple(args,"sOOi|is",
 			&filename,&tree,&links,&flags,
-			&threshold,&depth,&path))
+			&depth,&path))
   {
     return NULL;
   }
-  ret=s2p_saveAsHDF(filename,tree,links,flags,threshold,depth,path);
+  ret=s2p_saveAsHDF(filename,tree,links,flags,depth,path);
   return PyInt_FromLong(ret);
 }
 /* ------------------------------------------------------------------------- */

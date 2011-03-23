@@ -155,7 +155,7 @@ def __singleNodeFromADF(db,id,path,flink,maxread,dmax,ptarget,lksearch):
 def getSingleNodeFromADF(rfile,path,flink,maxread,dmax,ptarget,lksearch):
   pth=__trustLink(rfile,path,lksearch)[2]
   tfile=pth+'/'+rfile
-  #print 'getSingleNodeFromADF ',rfile,path
+  #print 'getSingleNodeFromADF ',rfile,pth
   db=WRP.pyADF(tfile,ADF.READ_ONLY,ADF.NATIVE)
   nodeinfo=db.nodeAsDict(db.root())
   for child in nodeinfo['children']:
@@ -301,7 +301,7 @@ def __parseAndReadADF(db,nodeid,__followlink=1,__maxreadalldata=0,
   __depthmax-=1
   nodeinfo=db.nodeAsDict(nodeid)
   clist=list(nodeinfo['children'])
-#  print nodeinfo['name']
+  #print nodeinfo['name']
   if (__pathtarget!=None):
     if (__pathtarget==[]): clist=[]
     else:
@@ -389,7 +389,6 @@ def __parseAndFindLinksADF(db,nodeid,level,path,dbs,file,search):
     r=None
     if (tfile):
       actualfile=os.path.normpath(tdir+'/'+tfile)
-      #print '__parseAndFindLinksADF',level,tfile,linkNode
       r=findLinkAsADF(actualfile,search,level+1,'',dbs)
       actualinfo=getSingleNodeFromADF(actualfile,linkNode,1,0,999,None,search)
       if (actualinfo!=None):
@@ -479,7 +478,6 @@ def loadAsADF(file,link=1,max=0,depth=999,path=None,dbs={},
       if ((dbs[f]==dbs[rfile]) and (f!=lastfileentry)): rfile=f
   try:     
     if (not dbs.has_key(rfile)):
-      #print 'pyCGNS: loadAsADF (open) ',file,path
       db=WRP.pyADF(file,ADF.READ_ONLY,ADF.NATIVE)
       r=__parseAndReadADF(db,db.root(),link,max,depth,path,dbs,lksearch)
       db.database_close()
@@ -487,10 +485,8 @@ def loadAsADF(file,link=1,max=0,depth=999,path=None,dbs={},
       dbs[lastfileentry]=r[2]
       __tree=r[2]
     else:
-      #print 'pyCGNS: loadAsADF (cache)',file,path
       __tree=dbs[rfile]
     if (start):
-      #print 'pyCGNS: loadAsADF free cache'
       kdbs=dbs.keys()
       for kdb in kdbs:
         del dbs[kdb]

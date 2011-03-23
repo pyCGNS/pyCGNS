@@ -5,15 +5,27 @@
 #  $Release$
 #  ------------------------------------------------------------------------- 
 
- Tests
- 
- start with load.py, it loads HDF5 T0.cgns and dumps it as T0.py Python file.
+MAP demos
+~~~~~~~~~
 
- then run save.py, it loads T0.py and saves T0.py.cgns HDF5 file.
+The data files required for input are into the ``data`` directory.
+The temporary files are created into ``/tmp`` and you have to clean
+it by yourself.
 
- links.py is a link parse test, uses T1.cgns-T8.cgns HDF5 files.
+The first demo to look at are ``load.py`` and ``save.py``. The first
+reads a *CGNS/HDF* file and returns the corresponding *CGNS/Python* tree.
+The second has a *CGNS/Python* tree and produces a new *CGNS/HDF5* file.
 
- dictionnary.py shakes the enumerates in the MAP python dict.
+The ``links.py`` demo shows how to parse links or to avoid parsing them
+during the *load*. It shows how to write a file with links or without
+them, for example in order to merge linked files into a single file.
+The use of the *link search path* is also shown.
+
+The ``nodepernode.py`` demo shows how to load a file skeleton, without data,
+and then ask for a specific node data. This is useful when you want to
+load very large files. Also in this demo you can check that actual data is
+returned in existing *numpy* arrays you already have allocated.
+
+The ``dictionnary.py`` is a simple demo about *MAP* constants.
 
 # -------------------------------------------------------------------------
- 
