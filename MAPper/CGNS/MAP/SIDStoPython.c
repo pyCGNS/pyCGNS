@@ -496,7 +496,8 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     }
   }
   L3M_SETFLAG(l3db,L3F_WITHCHILDREN|L3F_WITHDATA);
-  rnode=L3_nodeRetrieve(l3db,actualid);
+  L3M_NEWNODE(rnode);
+  rnode=L3_nodeRetrieve(l3db,actualid,rnode);
   if (rnode == NULL)
   {
     S2P_TRACE(("### (%s) Retrieve returns NULL POINTER\n",curpath));
@@ -511,6 +512,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
       if (strncmp(path,curpath,psize))
       {
 	curpath[strlen(curpath)-strlen(rnode->name)-1]='\0';
+	if (rnode!=NULL){ free(rnode);}
         return NULL;
       } 
   }
@@ -618,13 +620,14 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
      skip until we have the right name. */
   o_clist=PyList_New(0);
   child=0;
+  L3M_NEWNODE(cnode);
   while ((rnode->children != NULL) && (rnode->children[child] != -1))
   {
     if (S2P_HASFLAG(S2P_FFOLLOWLINKS))
     {
       L3M_UNSETFLAG(l3db,L3F_FOLLOWLINKS);
     }
-    cnode=L3_nodeRetrieve(l3db,rnode->children[child]);
+    cnode=L3_nodeRetrieve(l3db,rnode->children[child],cnode);
     /* HDF can parse paths, i.e. a node name can be a path and the
        resulting ID is the actual last node. However, we SHOULD not use that
        because we want to have control on link parse. */
@@ -644,6 +647,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     }
     child++;
   }
+  if (cnode!=NULL){ free(cnode);}
   if (strcmp(rnode->name,"HDF5 MotherNode"))
   {
     curpath[strlen(curpath)-strlen(rnode->name)-1]='\0';
@@ -654,6 +658,8 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     o_value=Py_None;
   };
   o_node=Py_BuildValue("[sOOs]",name,o_value,o_clist,rnode->label);
+
+  if (rnode!=NULL){ free(rnode);}
 
   return o_node;
 }
@@ -781,7 +787,8 @@ PyObject* s2p_loadAsHDF(char *filename,
 
   l3db=s2p_addoneHDF(filename,context);
   s2p_setlinksearchpath(l3db,searchpath,context);
-  rnode=L3_nodeRetrieve(l3db,l3db->root_id);
+  L3M_NEWNODE(rnode);
+  rnode=L3_nodeRetrieve(l3db,l3db->root_id,rnode);
   ret=s2p_parseAndReadHDF(l3db->root_id,rnode->name,cpath,path,context,l3db);
   links=s2p_getlinktable(context);
   s2p_freelinktable(context);
@@ -800,6 +807,7 @@ PyObject* s2p_loadAsHDF(char *filename,
   }
   s2p_closeallHDF(context);
   Py_INCREF(Py_None);
+  if (rnode!=NULL) { free(rnode); }
   S2P_FREECONTEXTPTR(context);
   free(context);
 
