@@ -154,12 +154,6 @@ def checkNode(node,dienow=0):
     
 # -----------------------------------------------------------------------------
 def isRootNode(node,dienow=0):
-#   """isRootNode :
-#   Check wether a node is a CGNS root node (returns 1)
-#   or not a root node (returns 0).    
-#   A root node is a list of a single CGNSLibraryVersion_t node and zero or more
-#   CGNSBase_t nodes. We do not check first level type, no standard for it, even
-#   if we set it to CGNSTree."""
   if (node in [ [], None ]):         return 0
   versionfound=0
   if (not checkNode(node)):          return 0
@@ -241,8 +235,14 @@ def removeFirstPathItem(path):
     return '/'
 
 # --------------------------------------------------
-def getValueByPath(path,tree): # not bulletproof
-  n=getNodeFromPath(path.split('/'),tree)
+def getValueByPath(node, path):
+  """node : Root node of the tree parse
+     path : Path string of the target node
+
+     Gets the value of the CGNS/Python node with name 'path'.
+     Returns None if the node is not found.
+  """
+  n=getNodeFromPath(path.split('/'),node)
   if (n==-1): return None
   return n[1]
 
@@ -268,7 +268,7 @@ def nodeByPath(path,tree):
   if (n==-1): return None
   return n
 
-# -----------------------------------------------------------------------------
+# --------------------------------------------------
 def removeChildByName(parent,name):
   for n in range(len(parent[2])):
     if (parent[2][n][0] == name):
@@ -289,6 +289,9 @@ def removeNodeFromPath(path,node):
     
 # --------------------------------------------------
 def getNodeFromPath(path,node):
+  """path : path to look for as a list of strings
+     node : root node for the tree parse
+  """
   for c in node[2]:
     if (c[0] == path[0]):
       if (len(path) == 1): return c
@@ -303,6 +306,36 @@ def getPathFromNode(node,rootnode,path=''):
     p=getPathFromNode(node,c,path+'/'+c[0])
     if (p): return p
   return None
+
+# --------------------------------------------------
+def getAllNodesByTypeList(typelist,tree):
+  if (tree[3] != typelist[0]): return None
+  n=getAllNodesFromTypeList(typelist[1:],tree[2],"%s"%tree[0],[])
+  if (n==-1): return None
+  return n
+
+# --------------------------------------------------
+def getAllNodesFromTypeList(typelist,node,path,result):
+  for c in node:
+    if (c[3] == typelist[0]):
+      if (len(typelist) == 1):
+        result.append("%s/%s"%(path,c[0]))
+      else:
+        getAllNodesFromTypeList(typelist[1:],c[2],"%s/%s"%(path,c[0]),result)
+  return result
+
+# --------------------------------------------------
+def getPaths(tree,path,plist):
+  for c in tree[2]:
+    plist.append(path+'/'+c[0])
+    getPaths(c,path+'/'+c[0],plist)
+ 
+# --------------------------------------------------   
+def getAllPaths(tree):
+  plist=[]
+  path=''
+  getPaths(tree,path,plist)
+  return plist
 
 # --------------------------------------------------
 def childNames(node):

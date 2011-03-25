@@ -359,6 +359,17 @@ static int s2p_trustlink(char *file, char *name)
 {
   return 1;
 }
+/* ------------------------------------------------------------------------- */
+static PyObject* s2p_getObjectByPath(PyObject* updict, char *path)
+{
+  PyObject *ret=NULL;
+
+  if ((updict !=NULL) && PyDict_Check(updict))
+  {
+    ret=PyDict_GetItemString(updict,path);
+  }
+  return ret;
+}
 
 /* ------------------------------------------------------------------------- */
 static int s2p_getData(PyObject *dobject, 
@@ -448,9 +459,9 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   char      destnode[L3C_MAX_NAME+1];
   char      destdir[MAXFILENAMESIZE];
   char      destfile[MAXFILENAMESIZE];
-  int       ndim,tsize,n,child,arraytype,psize,trackpath,ix;
+  int       ndim,tsize,n,child,arraytype,psize,trackpath,ix,skipnewarray;
   hid_t     actualid;
-  PyObject *o_clist,*o_value,*o_child,*o_node;
+  PyObject *o_clist,*o_value,*o_child,*o_node,*u_value;
   npy_intp  npy_dim_vals[MAXDIMENSIONVALUES];
   L3_Cursor_t *lkl3db;
   L3_Node_t *rnode,*cnode;
@@ -507,14 +518,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     }
   }
   L3M_SETFLAG(l3db,L3F_WITHCHILDREN);
-  if (S2P_HASFLAG(S2P_FNODATA))
-  {
-    L3M_UNSETFLAG(l3db,L3F_WITHDATA);
-  }
-  else
-  {
-    L3M_SETFLAG(l3db,L3F_WITHDATA);
-  }
+  L3M_UNSETFLAG(l3db,L3F_WITHDATA);
   L3M_NEWNODE(rnode);
   rnode=L3_nodeRetrieve(l3db,actualid,rnode);
   if (rnode == NULL)
@@ -522,12 +526,25 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     S2P_TRACE(("### (%s) Retrieve returns NULL POINTER\n",curpath));
     return NULL;
   }
+  strcat(curpath,"/");
+  strcat(curpath,rnode->name);
+  skipnewarray=0;
+  if (!S2P_HASFLAG(S2P_FNODATA))
+  {
+    u_value=s2p_getObjectByPath(context->obj,curpath);
+    if (u_value!=NULL)
+    {
+      rnode->data=PyArray_DATA(u_value);
+      skipnewarray=1;
+      printf("##### DATA FOUND\n");
+    }
+    L3M_SETFLAG(l3db,L3F_WITHDATA);
+    rnode=L3_nodeRetrieve(l3db,actualid,rnode);
+  }
   if (S2P_HASFLAG(S2P_FNODATA))
   {
     rnode->dtype=L3E_VOID;
   }
-  strcat(curpath,"/");
-  strcat(curpath,rnode->name);
   if (path != NULL)
   {
     psize=(strlen(path)>strlen(curpath)?strlen(curpath):strlen(path));
@@ -562,7 +579,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     }
   }
   S2P_TRACE(("### (%s) [%s]",curpath,rnode->label));
-  if (rnode->dtype!=L3E_VOID)
+  if (!skipnewarray || (rnode->dtype!=L3E_VOID))
   {
     S2P_TRACE(("[%s]",L3_typeAsStr(rnode->dtype)));
     tsize=1;
@@ -806,6 +823,7 @@ PyObject* s2p_loadAsHDF(char *filename,
   context->lnk=NULL;
   context->dbs=NULL;
   context->dpt=depth;
+  context->obj=update;
   context->_c_float =NULL;
   context->_c_double=NULL;
   context->_c_int=NULL;
