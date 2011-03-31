@@ -16,7 +16,7 @@ do_mod()
  if test "x${WITHPDFFILES}" != "x"
  then
   sphinx-build -b latex -c doc $3 build/doc/latex$5
-  (cd build/doc/latex; pdflatex pyCGNS_$4.tex; mv *.pdf ./../pdf)
+  (cd build/doc/latex$5; pdflatex pyCGNS_$4.tex; mv *.pdf ./../pdf)
  fi
 }
 
