@@ -286,6 +286,9 @@ def newDataConversion(parent,ConversionScale=1.0,ConversionOffset=1.0):
   return node
 
 # -----------------------------------------------------------------------------
+def newCGNSTree():
+  return newCGNS()
+
 def newCGNS():
   """-Tree node creation -Tree
 

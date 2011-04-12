@@ -16,7 +16,7 @@ do_mod()
  if test "x${WITHPDFFILES}" != "x"
  then
   sphinx-build -b latex -c doc $3 build/doc/latex$5
-  (cd build/doc/latex$5; pdflatex pyCGNS_$4.tex; mv *.pdf ./../pdf)
+  (cd build/doc/latex$5; pdflatex pyCGNS_$4.tex)
  fi
 }
 
@@ -30,14 +30,13 @@ do_mod APP readme APPlicater APP /APP
 do_mod VAL readme VALidater VAL /VAL
 
 # --- ALL
+cp build/doc/latex/*.pdf   ./build/doc/pdf
+cp build/doc/latex/*/*.pdf ./build/doc/pdf
 cp build/doc/pdf/* ./doc
 cp build/doc/pdf/* ./build/doc/html/_pdf
 mkdir build/doc/html/images 2>/dev/null
 cp doc/images/* build/doc/html/images
-if test "x$WEBSITEUPDATE" != "x"
-then
- (cd build/doc/html; tar cvf ../pyCGNS-html.tar .)
-fi
+(cd build/doc/html; tar cvf ../pyCGNS-html.tar .)
 
 # --- web site update
 #

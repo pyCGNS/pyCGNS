@@ -303,7 +303,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
           if (G___.followLinks):flags|=CGNS.MAP.S2P_FOLLOWLINKS
           if (G___.noData):     flags|=CGNS.MAP.S2P_NODATA
           lkpath=G___.linkSearchPath
-          (tt,lk)=CGNS.MAP.load(filename,flags,0,999,'',lkpath)
+          (tt,lk)=CGNS.MAP.load(filename,flags,0,'',lkpath)
           treefingerprint=s7treeFingerPrint.wTreeFingerPrint(fd,fn,tt)
           treefingerprint.fileext=fileext
           lk=s7linkView.map2nav(treefingerprint,lk)
