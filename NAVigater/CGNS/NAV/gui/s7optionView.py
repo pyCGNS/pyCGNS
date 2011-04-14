@@ -337,7 +337,7 @@ class wOptionView(s7windoz.wWindoz):
     self.options.fleft.grid(row=1,column=0,sticky=NW)
     self.options.fright.grid(row=1,column=1,sticky=NE,columnspan=3)
 
-    self.options.ok=Button(self.options,text="Ok",font=G___.font['B'],
+    self.options.ok=Button(self.options,text="Save",font=G___.font['B'],
                            command=self.save,borderwidth=1)
     self.options.ok.grid(row=self.options.fright.row,column=3,sticky=W)
     self.options.nx=Button(self.options,text="Cancel",font=G___.font['B'],

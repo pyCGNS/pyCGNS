@@ -445,6 +445,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
                                      s2p_ctx_t   *context,
 				     L3_Cursor_t *l3db)
 {
+  char      localnode[MAXPATHSIZE];
   char      destnode[L3C_MAX_NAME+1];
   char      destdir[MAXFILENAMESIZE];
   char      destfile[MAXFILENAMESIZE];
@@ -492,7 +493,8 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
       }
       S2P_TRACE(("\n### Parse Follow link: [%s][%s][%s]\n",
 		 destdir,destfile,destnode));
-      s2p_linkstack(curpath,destdir,destfile,destnode,context);
+      sprintf(localnode,"%s/%s",curpath,name);
+      s2p_linkstack(localnode,destdir,destfile,destnode,context);
       /* We recurse on destination file, S2P functions should be used and
          not HDF functions, because HDF lib would hide links to S2P.
          Then we start our parse from the root node and keep track of links,
