@@ -58,6 +58,7 @@ typedef struct s2p_ctx_t
   s2p_lnk_t *lnk;
   s2p_ent_t *dbs;
   int        dpt;
+  PyObject  *obj;
   long       flg;
   int       *_c_int;
   long      *_c_long;
