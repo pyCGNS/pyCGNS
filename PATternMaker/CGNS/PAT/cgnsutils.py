@@ -83,6 +83,7 @@ def getValue(node):
   
 # -----------------------------------------------------------------------------
 def checkArray(a):
+  return
   if (type(a) != type(NPY.array((1)))): raise CE.cgnsException(109)
   if ((len(a.shape)>1) and not NPY.isfortran(a)):
     raise CE.cgnsException(710)  
@@ -188,6 +189,7 @@ def newNode(name,value,children,type,parent=None):
 # --------------------------------------------------
 def hasFortranFlag(node):
   if (node[1]==None): return 1
+  if (node[1]==[]):   return 1
   if (type(node[1])==type('')): return 1 # link
   if (not node[1].shape): return 1
   if (len(node[1].shape)==1): return 1  
@@ -197,6 +199,7 @@ def hasFortranFlag(node):
 def getNodeShape(node):
   r="-"
   if   (node[1]==None): r="-"
+  elif (node[1]==[]):   r="-"
   elif (node[3]==''):   r="-"
   elif (node[1].shape in ['',(0,),()]): r="[0]"
   else: r=str(list(node[1].shape))
@@ -437,6 +440,7 @@ def checkLinkFile(lkfile,lksearch=['']):
 # --------------------------------------------------
 def copyArray(a):
   if (a==None): return None
+  if (a==[]):   return None
   if (NPY.isfortran(a)):
     b=NPY.array(a,order='Fortran')
   else:

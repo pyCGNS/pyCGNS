@@ -221,12 +221,12 @@ def newGridLocation(parent,value=CG_K.CellCenter_s):
   return node
   
 # -----------------------------------------------------------------------------
-def newIndexArray(parent,name,value=[]):
+def newIndexArray(parent,name,value=None):
   checkDuplicatedName(parent,name)
   node=newNode(name,value,[],CG_K.IndexArray_ts,parent)
   return node
   
-def newPointList(parent,name=CG_K.PointList_s,value=[]):
+def newPointList(parent,name=CG_K.PointList_s,value=None):
   """-PointList node creation -PointList
   
   'newNode:N='*newPointList*'(parent:N,name:S,value:[])'

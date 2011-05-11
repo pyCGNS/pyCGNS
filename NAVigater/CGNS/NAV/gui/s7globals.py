@@ -45,7 +45,9 @@ class s7optionsStorage:
      'flag-revert','flag-none','flag-all','operate-view','operate-list',
      'flag-bwd','flag-fwd','select-update','link-nofile','link-nopath','vtk',
      'level-in','level-out','tree-new','tree-add','tree-del','tree-load',
-     'snapshot','pattern-view','link-view','query-and','query-or','query-not'
+     'snapshot','pattern-view','link-view',
+     'query-and','query-or','query-not',
+     'query-and-s','query-or-s','query-not-s'
      ]
     # Next line is replaced each time you run distutils...
     # then s7globals_.py becomes... s7globals.py (good job boy !) 

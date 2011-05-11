@@ -1091,12 +1091,15 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       node=PATu.getNodeFromPath(currentpath.split('/')[1:],self.CGNStarget)
     self.addToParentNode(node,wTreeSimple._nodebuffer)
     self.modified()
+    
   def clearAllMarks(self):
     self.cbk_unflagall()
+    
   def updateMarkedFromList(self,sl):
     for k in self._paths:
       if (self._paths[k] in sl): self._tree.itemstate_set(k,'marked')
       else:                      self._tree.itemstate_set(k,'!marked')
+      
   def getFirstMarkedFrom(self,back=0):
     sitem=self.getItemSelection()[0]
     self._tree.selection_modify(select=ALL)

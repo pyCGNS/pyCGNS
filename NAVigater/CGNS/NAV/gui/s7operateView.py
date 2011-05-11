@@ -28,11 +28,16 @@ from CGNS.NAV.supervisor.s7check import s7Query
 # -----------------------------------------------------------------------------
 class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
   def getItemSelection(self):
-    tktree=self._qtree
-    selection=tktree.selection_get()
-    if (selection == None): selection=ROOT
-    item=tktree.item_id(selection)
+    try:
+      item=self.lastselected
+    except AttributeError:
+      item=self._qtree.item_id(ROOT)
+    s=self._qtree.selection_get()
+    if (s!=None):
+      i=self._qtree.item_id(s)
+      if (i!=item and self._qtree.itemstate_get(i,'leaf')): item=i
     return item
+
   # --------------------------------------------------------------------
   class qEntry:
     VAR=2
@@ -243,7 +248,7 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
     q.load(dir,mod)
     self.updateQueryTree(q.Q)
   def cbk_execute(self):
-    tree=self._wtree.CGNStarget[2][1] # first base
+    tree=self._wtree.CGNStarget#[2][1] # first base
     qry=self.query.getAsQuery()
     q=s7Query(qry)
     for s in self.woperate.selectedlist:
@@ -269,7 +274,7 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
                                    text=qent[0], datatype=STRING)      
     return enew
   def add_group(self,item,op):
-    enew=self._qtree.create_item(parent=item, button=1, open=0)[0]    
+    enew=self._qtree.create_item(parent=item, button=1, open=0)[0]
     self._qtree.itemstate_set(enew,op)
     self._qtree.itemstyle_set(enew,self.cl_ctr,self.st_ctr)
     return enew
@@ -293,6 +298,40 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
     self.active=None
     self.woperate=woperate
 
+    def mark_node(event):
+      try:
+        s=self.lastselected
+      except AttributeError:
+        self.lastselected=None
+      tktree=self._qtree
+      selection=tktree.selection_get()
+      if (selection == None): selection=ROOT
+      if (self.lastselected!=None):
+        lstates=tktree.itemstate_get(self.lastselected)
+        item=tktree.item_id(self.lastselected)
+        if ( 'orS' in lstates):
+          tktree.itemstate_set(item,'or')
+          tktree.itemstate_set(item,'!orS')
+        if ( 'andS' in lstates):
+          tktree.itemstate_set(item,'and')
+          tktree.itemstate_set(item,'!andS')
+        if ( 'notS' in lstates):
+          tktree.itemstate_set(item,'not')      
+          tktree.itemstate_set(item,'!notS')
+      item=tktree.item_id(selection)
+      self.lastselected=item
+      lstates=tktree.itemstate_get(item)
+      if ( 'or' in lstates):
+        tktree.itemstate_set(item,'!or')
+        tktree.itemstate_set(item,'orS')
+      if ( 'and' in lstates):
+        tktree.itemstate_set(item,'!and')
+        tktree.itemstate_set(item,'andS')
+      if ( 'not' in lstates):
+        tktree.itemstate_set(item,'!not')      
+        tktree.itemstate_set(item,'notS')
+      return item
+      
     def open_menu(event):
       tktree=event.widget
       id=tktree.identify(event.x,event.y)
@@ -309,15 +348,42 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
     
     self.treectrl.configure(yscrollincrement=40) # hmmmm, what else ?
 
+    def kadd_entry(event=None):
+      self.AddEntry()
+    
+    def kadd_and(event=None):
+      self.AddAnd()
+    
+    def kadd_or(event=None):
+      self.AddOr()
+    
+    def kadd_not(event=None):
+      self.AddNot()
+    
+    def kcut_node(event=None):
+      self.SubCut()
+    
+    def kedit_var(event=None):
+      self.SubEditVar()
+
+    def kedit_val(event=None):
+      self.SubEditVal()
+    
     self.menu([('operate-add',    NW, 2,self.cbk_load,'Load query'),
                ('operate-save',   NW, 2,self.cbk_save,'Save query definition'),
                ('operate-probe',  NW, 2,self.cbk_probe,'Probe query'),
+               ('query-or',       NW,20,kadd_or,'OR'),
+               ('query-and',      NW, 2,kadd_and,'AND'),
+               ('query-not',      NW, 2,kadd_not,'NOT'),
                ('operate-execute',NW,20,self.cbk_execute,'Execute query')]) 
 
     self._qtree=self.treectrl
     self._qtree.state_define('and')
     self._qtree.state_define('or')
     self._qtree.state_define('not')
+    self._qtree.state_define('andS')
+    self._qtree.state_define('orS')
+    self._qtree.state_define('notS')
     self._qtree.state_define('leaf')
     self._qtree.state_define('isroot')
 
@@ -338,27 +404,7 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
       self.popupmenu.grab_release()
       self.popupmenu.unpost()
         
-    def kadd_entry(event):
-      self.AddEntry()
-    
-    def kadd_and(event):
-      self.AddAnd()
-    
-    def kadd_or(event):
-      self.AddOr()
-    
-    def kadd_not(event):
-      self.AddNot()
-    
-    def kcut_node(event):
-      self.SubCut()
-    
-    def kedit_var(event):
-      self.SubEditVar()
-
-    def kedit_val(event):
-      self.SubEditVal()
-    
+    self._qtree.bind('<Double-Button-1>', mark_node)
     self._qtree.bind('<Button-3>', open_menu)
 #     self._qtree.bind('<Control-c>',copy_node)
     self._qtree.bind('<Control-r>',kedit_var)
@@ -419,7 +465,10 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
     self.el_ctr=self._qtree.element_create(type=IMAGE,image=(\
       ik['query-and'],s7Query.AND,\
       ik['query-or'], s7Query.OR,\
-      ik['query-not'],s7Query.NOT))
+      ik['query-not'],s7Query.NOT,
+      ik['query-and-s'],s7Query.AND+'S',\
+      ik['query-or-s'], s7Query.OR+'S',\
+      ik['query-not-s'],s7Query.NOT+'S'))
     self.el_ctricon=self._qtree.element_create(type=IMAGE,
                                                image=(ik['query-or'],'isroot'))
     self.st_ctr=self._qtree.style_create()
@@ -525,6 +574,7 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
     self.query.cut(item[0])
     p=self._qtree.item_ancestors(item)[0]
     self._qtree.item_delete(item)
+    self.lastselected=None
     
   def AddAnd(self):
     item=self.getItemSelection()
@@ -544,6 +594,7 @@ class wQueryView(s7windoz.wWindoz,ScrolledTreectrl):
   def AddEntry(self):
     qe=(self.vlist[0],self.defvalue)
     item=self.getItemSelection()
+    if (item==None):return
     if (self._qtree.itemstate_get(item,'leaf')): return
     enew=self.add_entry(item[0],qe)
     self.query.add(item[0],enew,qe)
