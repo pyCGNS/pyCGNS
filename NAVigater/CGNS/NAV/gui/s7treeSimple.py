@@ -351,6 +351,9 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self._edit.feed()
     self._edit.grid(row=2,column=0,sticky=N+W+S,columnspan=3)
 
+    self.setPosition()
+   
+
     self.menu([('save-done',    NW, 2,self.cbk_savedone,'Save current tree'),
                ('tree-save',    NW,20,self.cbk_saveas,'Save tree as'),
                ('pattern-save', NW, 2,self.cbk_savepattern,'Save as pattern'),

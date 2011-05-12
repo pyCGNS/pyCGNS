@@ -53,6 +53,18 @@ class wWindoz:
 
     self.unlockMouse()
 
+  def setPosition(self,x=None,y=None,stack=1):
+    if ((x==None) and (y==None)):(x,y)=self.getPosition()
+    if (stack):
+      x=int(x)+30
+      y=int(y)+30
+    self._wtop.geometry('+%s+%s'%(x,y))
+    
+  def getPosition(self):
+    if (self._control): g=self._control._wtop.geometry()
+    else:               g=self._wtop.geometry()
+    return tuple(g.split('+')[-2:])
+    
   def menu(self,mlist):
     self._tool=Frame(self._wtop)
     self._menuentries=[]

@@ -106,7 +106,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
     t=self.winfo_toplevel() 
     t.rowconfigure(1,weight=1,minsize=0,uniform=2)
     t.columnconfigure(0,weight=1,minsize=20)
-   
+    self.setPosition(30,30)
 
   # --------------------------------------------------------------------
   def s7_recursive_open(self):
@@ -448,7 +448,7 @@ class wTopControl(s7windoz.wWindoz,ScrolledMultiListbox): #,threading.Thread):
     self.lock_release('closeTree')
 
   def closeAllTrees(self):
-    if (s7utils.leaveCheck()): self.closeAll()
+    if (s7utils.leaveCheck(pos=self.getPosition())): self.closeAll()
 
   def delTreeView(self,nv,fd,fn):
     self.lock_acquire('delTreeView')

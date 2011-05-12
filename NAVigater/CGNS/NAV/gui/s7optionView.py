@@ -346,6 +346,7 @@ class wOptionView(s7windoz.wWindoz):
     
     t=self.options.winfo_toplevel() 
     t.rowconfigure(0,weight=1)
+    self.setPosition()
     self.options.grab_set()
 
   def save(self):

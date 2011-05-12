@@ -142,7 +142,7 @@ def generateName(noderoot,nodeappend):
 
 # --------------------------------------------------
 class msginfo:
-  def __init__(self,title,msg,other=None):
+  def __init__(self,title,msg,other=None,geo=None):
     self._result = None
     def wtopIsTrue():
       self._result=1
@@ -164,6 +164,10 @@ class msginfo:
     f.bind("<Return>", wtopIsTrue)
     f.bind("<Escape>", wtopIsFalse)
     wtop.protocol("WM_DELETE_WINDOW", wtopIsFalse)
+    if (geo!=None):
+      wtop.geometry('+%s+%s'%geo)
+    else:
+      wtop.geometry('+30+30')
     wtop.wait_visibility()
     wtop.grab_set()
     wtop.wait_window(wtop)
@@ -174,61 +178,63 @@ class msginfo:
 def onexit():
   closeWarning()
 
-def mainCloseWarning():
+def mainCloseWarning(pos=None):
   return msginfo("CGNS.NAV: Warning",
-  "Please use Quit icon (Control Panel) to close CGNS.NAV.").result()
-def closeWarning():
+  "Please use Quit icon (Control Panel) to close CGNS.NAV.",geo=pos).result()
+def closeWarning(pos=None):
   return msginfo("CGNS.NAV: Warning",
-                 "Please use Control Panel to close views.").result()
-def forceNoRecursionWarning():
+                 "Please use Control Panel to close views.",geo=pos).result()
+def forceNoRecursionWarning(pos=None):
   return msginfo("CGNS.NAV: Warning",
-                 "CGNS.NAV forces [No Recursion] flag.").result()
-def operateWarning():
+                 "CGNS.NAV forces [No Recursion] flag.",geo=pos).result()
+def operateWarning(pos=None):
   return msginfo("CGNS.NAV: Warning",
 """Operate view is already open.
-Close operate view to perform actions on another view.""").result()
-def fileWarning(ext):
+Close operate view to perform actions on another view.""",geo=pos).result()
+def fileWarning(extpos=None):
   return msginfo("CNS.NAV: Error",
-                 "Don't know how to read [%s] files..."%ext).result()
-def badFileError(name):
+                 "Don't know how to read [%s] files..."%ext,geo=pos).result()
+def badFileError(name,pos=None):
   return msginfo("CNS.NAV: Error",
-                 "Something wrong with file\n%s"%name).result()
-def renameError(name):
+                 "Something wrong with file\n%s"%name,geo=pos).result()
+def renameError(name,pos=None):
   return msginfo("CGNS.NAV: Error",
-                 "Name [%s] already exists"%name).result()
-def queryViewCloseError():
+                 "Name [%s] already exists"%name,geo=pos).result()
+def queryViewCloseError(pos=None):
   return msginfo("CGNS.NAV: Error",
-                 "Please close first Selection List View").result()
-def cutError():
+                 "Please close first Selection List View",geo=pos).result()
+def cutError(pos=None):
   return msginfo("CGNS.NAV: Error",
-                 "Cannot cut root node").result()
-def pasteBrotherError():
+                 "Cannot cut root node",geo=pos).result()
+def pasteBrotherError(pos=None):
   return msginfo("CGNS.NAV: Error",
-                 "Cannot paste as root node brother").result()
-def shapeChangeError(shape):
+                 "Cannot paste as root node brother",geo=pos).result()
+def shapeChangeError(shape,pos=None):
   return msginfo("CGNS.NAV: Error",
-                 "Value rejected: you change the previous shape %s"%shape).result()
-def importCGNSWarning(ext):
+                 "Value rejected: you change the previous shape %s"%shape,
+                 geo=pos).result()
+def importCGNSWarning(ext,pos=None):
   return msginfo("CGNS.NAV: Error",
-  "Cannot import pyCGNS module\nThis is required for %s files"%ext).result()
+  "Cannot import pyCGNS module\nThis is required for %s files"%ext,
+                 geo=pos).result()
 
-def importProfileWarning(mod,msg):
+def importProfileWarning(mod,msg,pos=None):
   return msginfo("CGNS.NAV: Error",
-  "Cannot import %s profile\nError message is:\n%s"%(mod,msg)).result()
+  "Cannot import %s profile\nError message is:\n%s"%(mod,msg),geo=pos).result()
 
-def spaceInFileName(fnm):
+def spaceInFileName(fnm,pos=None):
   return msginfo("CGNS.NAV: Error",
-                 "Pattern name contains <space> char: '%s'"%fnm).result()
+                 "Pattern name contains <space> char: '%s'"%fnm,geo=pos).result()
 
-def importCGNSFunction(ext):
+def importCGNSFunction(ext,pos=None):
   return msginfo("CGNS.NAV: Error",
-                 "Cannot import pyCGNS module\nRequired for %s"%ext).result()
+                 "Cannot import pyCGNS module\nRequired for %s"%ext,geo=pos).result()
 
-def copyNameCollision(name):
+def copyNameCollision(name,pos=None):
   return msginfo("CGNS.NAV: Error",
-  "Inserted tree has same name as existing child\n[%s]"%name).result()
+  "Inserted tree has same name as existing child\n[%s]"%name,geo=pos).result()
 
-def aboutInfo():
+def aboutInfo(pos=None):
   msg="""
 
  %s
@@ -245,86 +251,86 @@ pyCGNS web site is http://www.python-science.org/projets/pyCGNS
   """%(Cfg.__doc__,Cfg.DATE,Cfg.PLATFORM,
   Cfg.MAP_VERSION,Cfg.PAT_VERSION,Cfg.WRA_VERSION,
   Cfg.APP_VERSION,Cfg.NAV_VERSION)
-  return msginfo("CGNS.NAV: About",msg).result()
+  return msginfo("CGNS.NAV: About",msg,geo=pos).result()
 
-def snapShotWarning(file):
-  return msginfo("CGNS.NAV: Info","Snapshot into file\n[%s]"%file).result()
+def snapShotWarning(file,pos=None):
+  return msginfo("CGNS.NAV: Info","Snapshot into file\n[%s]"%file,geo=pos).result()
 
-def saveFileWarning(file):
+def saveFileWarning(file,pos=None):
   return msginfo("CGNS.NAV: Info",
-                 "Tree saved into file\n%s"%file).result()
+                 "Tree saved into file\n%s"%file,geo=pos).result()
 
-def profileDirNotFound(prf):
+def profileDirNotFound(prf,pos=None):
   return msginfo("CGNS.NAV: Error",
-                 "Profile dir doesn't exist:\n%s"%prf).result()
+                 "Profile dir doesn't exist:\n%s"%prf,geo=pos).result()
 
-def createProfileDirInit(prof):
+def createProfileDirInit(prof,pos=None):
   return msginfo("CGNS.NAV: Confirm",
-                 "No __init__.py in profile dir '%s'.\nDo you want me to create it?"%prof).result()
+                 "No __init__.py in profile dir '%s'.\nDo you want me to create it?"%prof,geo=pos).result()
 
-def removeNotFoundDir(dir):
+def removeNotFoundDir(dir,pos=None):
   return msginfo("CNS.NAV: Confirm",
-                 "Directory '%s' not found.\nDo you want to remove it in history list?"%dir,"no, keep directory in history list").result()
+                 "Directory '%s' not found.\nDo you want to remove it in history list?"%dir,"no, keep directory in history list",geo=pos).result()
 
-def cutRootWarning():
+def cutRootWarning(pos=None):
   return msginfo("CGNS.NAV: Confirm",
                  "You selected Root node to Cut! Delete all tree?",
-                 "cancel").result()
+                 "cancel",geo=pos).result()
 
-def addLinkWarning(lnk):
+def addLinkWarning(lnk,pos=None):
   return msginfo("CGNS.NAV: Confirm",
                  "You remove existing subtree and replace it by the link:\n%s"%lnk,
-                 "cancel").result()
+                 "cancel",geo=pos).result()
 
-def bigFileWarning(flag):
+def bigFileWarning(flag,pos=None):
   msg="The file you want to load looks quite big!\n"
   if (flag):
     msg+="You have set the [No Data] options, but\n"
   else:
     msg+="Maybe you could set the [No Data] options,\n"
   msg+="do you really want to load the file?"
-  return msginfo("CGNS.NAV: Confirm",msg,"Don't load the file").result()
+  return msginfo("CGNS.NAV: Confirm",msg,"Don't load the file",geo=pos).result()
 
-def patternOverwrite(file):
+def patternOverwrite(file,pos=None):
   return msginfo("CGNS.NAV: Confirm",
 """Pattern '%s' already exists! Do you really want to replace it ?"""%file,
-"cancel").result()
+"cancel",geo=pos).result()
 
-def fileOverwrite(file):
+def fileOverwrite(file,pos=None):
   return msginfo("CGNS.NAV: Confirm",
 """File '%s' already exists! Do you really want to overwrite it ?"""%file,
-"cancel").result()
+"cancel",geo=pos).result()
 
-def duplicatedPattern(pat):
+def duplicatedPattern(pat,pos=None):
   return msginfo("CGNS.NAV: Confirm",
 """Pattern '%s' already imported!
 CGNS.NAV skips this pattern,
-do you want to continue to import profile?"""%pat,"cancel").result()
+do you want to continue to import profile?"""%pat,"cancel",geo=pos).result()
 
-def leaveCheck():
+def leaveCheck(pos=None):
   return msginfo("CGNS.NAV: Confirm","Close all CGNS.NAV views and leave",
-                 "cancel").result()
+                 "cancel",geo=pos).result()
 
-def saveCheck():
+def saveCheck(pos=None):
   return msginfo("CGNS.NAV: Confirm",
-                 "Tree is modified, close without save ?","cancel").result()
+                 "Tree is modified, close without save ?","cancel",geo=pos).result()
 
-def overwriteCheck():
+def overwriteCheck(pos=None):
   return msginfo("CGNS.NAV: Confirm",
-                 "Tree already exist, overwrite ?","cancel").result()
+                 "Tree already exist, overwrite ?","cancel",geo=pos).result()
 
-def noDataSave():
+def noDataSave(pos=None):
   return msginfo("CGNS.NAV: Confirm",
 """This CGNS tree has been read WITHOUT large DataArrays.
 Your save will store data with ZERO values.
 Click if you really want to overwrite with ZEROs.
-Select [cancel] if you do not want to save file""","cancel").result()
+Select [cancel] if you do not want to save file""","cancel",geo=pos).result()
 
-def updateTreeLoad():
+def updateTreeLoad(pos=None):
   return msginfo("CGNS.NAV: Confirm",
 """You have already read this file,
 do you want to force load and replace all these tree views?""",
-                 "cancel").result()
+                 "cancel",geo=pos).result()
 
 # --------------------------------------------------
 def asFileString(tree):
