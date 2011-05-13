@@ -666,6 +666,7 @@ class wOperateView(s7windoz.wWindoz,ScrolledMultiListbox):
     t=self.winfo_toplevel() 
     t.rowconfigure(1,weight=1)
     t.columnconfigure(0,weight=1)
+    self.setPosition()
 
   def go_operate(self):
     if (self._tree == None): return

@@ -11,7 +11,7 @@ flags=CGNS.MAP.S2P_FOLLOWLINKS|CGNS.MAP.S2P_TRACE
 start=time.clock()
 (tree,links)=CGNS.MAP.load("./001Disk.hdf",flags)
 
-node=PU.getNodeByPath("/Disk/zone1/ZoneBC/ext1/PointRange",tree)
+node=PU.getNodeByPath(tree,"/Disk/zone1/ZoneBC/ext1/PointRange")
 
 print "PointRange is fortran:",numpy.isfortran(node[1]),node[1],node[1].shape
 

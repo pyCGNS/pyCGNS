@@ -850,13 +850,13 @@ PyObject* s2p_loadAsHDF(char *filename,
   {
     ret=Py_None;
     tree=Py_BuildValue("([sOOs]O)",
-		       CGNSTree_n,Py_None,ret,CGNSTree_ts,links);
+		       CG_CGNSTree_n,Py_None,ret,CG_CGNSTree_ts,links);
   }
   else
   {
     tree=Py_BuildValue("([sOOs]O)",
-		       CGNSTree_n,Py_None,PyList_GetItem(ret,2),CGNSTree_ts,
-		       links);
+		       CG_CGNSTree_n,Py_None,PyList_GetItem(ret,2),
+		       CG_CGNSTree_ts,links);
   }
   s2p_closeallHDF(context);
   Py_INCREF(Py_None);
@@ -923,14 +923,15 @@ int s2p_saveAsHDF(char      *filename,
 	    && PyString_Check(PyList_GetItem(otree,0))
 	    && PyString_Check(PyList_GetItem(otree,3))
 	    && !strcmp(PyString_AsString(PyList_GetItem(otree,3)),
-		       CGNSLibraryVersion_ts))
+		       CG_CGNSLibraryVersion_ts))
 	{
 	  S2P_TRACE(("### create [CGNSLibraryVersion]\n"));
 	  S2P_FREECONTEXTPTR(context);
 	  s2p_getData(PyList_GetItem(otree,1),&tdat,&ndat,ddat,&vdat,
 		      0,context);
 	  L3_initDims(dims,1,-1);
-	  node=L3_nodeSet(l3db,node,CGNSLibraryVersion_n,CGNSLibraryVersion_ts,
+	  node=L3_nodeSet(l3db,node,
+			  CG_CGNSLibraryVersion_n,CG_CGNSLibraryVersion_ts,
 			  dims,L3E_R4,vdat,L3F_NONE);
 	  L3_nodeCreate(l3db,l3db->root_id,node);
 	}

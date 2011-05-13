@@ -884,10 +884,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     
   def findParentPathFromPath(self,path,absolute=0):
     pnode=self.findParentNodeFromPath(path,absolute)
-    return PATu.getPathFromNode(pnode,self.CGNStarget)
+    return PATu.getPathFromNode(self.CGNStarget,pnode)
   
   def findParentNodeFromNode(self,node):
-    path=PATu.getPathFromNode(node,self.CGNStarget)
+    path=PATu.getPathFromNode(self.CGNStarget,node)
     return self.findParentNodeFromPath(path)
   
   def findParentNodeFromPath(self,path,absolute=0):
@@ -1377,7 +1377,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
       targetNode=self.CGNStarget
     elif self._parent:
       targetNode=PATu.getNodeFromPath(path.split('/'),
-                                         [None,None,[self.CGNStarget],None])  
+                                      [None,None,[self.CGNStarget],None])  
     else:            
       targetNode=PATu.getNodeFromPath(path.split('/')[1:],self.CGNStarget)
     for nd in targetNode[2]:

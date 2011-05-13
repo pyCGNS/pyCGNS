@@ -91,7 +91,7 @@ class s7Query:
       if (vartag==s7Query.qDataType):
         match=re.match(nvalue,s7parser.getNodeType(node))
       if (vartag==s7Query.qPath):
-        match=re.match(nvalue,s7parser.getPathFromNode(node,tree))
+        match=re.match(nvalue,s7parser.getPathFromNode(tree,node))
       if (vartag==s7Query.qValue):
         pass
       if (vartag==s7Query.qParentName):

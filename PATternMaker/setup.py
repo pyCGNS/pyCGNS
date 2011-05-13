@@ -5,8 +5,17 @@
 #  $Release$
 #  ---------------------------------------------------------------------------
 import os
-from distutils.core import setup
+from distutils.core import setup, Extension
 from distutils import sysconfig
+
+try:
+  from Cython.Distutils import build_ext
+  HAS_CYTHON=True
+except:
+  HAS_CYTHON=False
+
+# skip it now
+HAS_CYTHON=False
 
 # --- pyCGNSconfig search
 import sys
@@ -18,6 +27,15 @@ import setuputils
 if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
 
+if HAS_CYTHON:
+  cmdclassdict={'clean':setuputils.clean,'build_ext':build_ext}
+  extmods=[ Extension('CGNS.PAT.cgnsutils',
+                           ['CGNS/PAT/cgnsutils.pyx'],
+                           include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES) ]
+else:
+  cmdclassdict={'clean':setuputils.clean}
+  extmods=[]
+
 setup (
 name         = "CGNS.PAT",
 version      = pyCGNSconfig.PAT_VERSION,
@@ -26,6 +44,7 @@ author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",
 packages=['CGNS.PAT','CGNS.PAT.SIDS'],
-cmdclass={'clean':setuputils.clean}
+ext_modules  = extmods,
+cmdclass     = cmdclassdict
 )
 # --- last line

@@ -27,6 +27,7 @@ license      = "LGPL 2",
 packages     = ['CGNS.VAL',
                 'CGNS.VAL.grammars',
                 'CGNS.VAL.parse'],
+scripts      = ['CGNS/VAL/CGNS.VAL'],
 cmdclass={'clean':setuputils.clean}
 ) # close setup
 

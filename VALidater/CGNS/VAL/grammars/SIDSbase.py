@@ -110,7 +110,7 @@ class SIDSbase:
         tag='#FAIL'
         clevel=2
         log.push("%sForbidden char '%s' in name\n"%(shft,c),tag)
-    for c in ['.','>','<','`',"'",'"']:
+    for c in ['.','>','<','`',"'",'"',' ']:
       if (c in nm):
         tag='#WARNING'
         clevel=1
@@ -268,13 +268,13 @@ class SIDSpython(SIDSbase):
     rs=1
     r=0
     msg='## No Zone_t found in this CGNSBase_t'
-    r=CU.hasChildNodeOfType(node,'Zone_t')
+    r=CU.hasChildNodeOfType(node,CK.Zone_ts)
     if (not r): log.push("\n%s\n"%(msg),'#FAIL')
     rs*=r
     r=0
     msg='## No ReferenceState found in this CGNSBase_t'
     for cn in CU.childNames(node):
-      if (cn!='ReferenceState'):
+      if (cn!=CK.ReferenceState_s):
         r=1
         break
     if (not r): log.push("\n%s\n"%(msg),'#WARNING')

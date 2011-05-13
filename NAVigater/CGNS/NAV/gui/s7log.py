@@ -64,6 +64,7 @@ class wLog(s7windoz.wWindoz):
     t=self.log.winfo_toplevel() 
     t.rowconfigure(1,weight=1)
     t.columnconfigure(0,weight=1)
+    self.setPosition()
 
   def nexttag(self):
     self.currenttag+=1
