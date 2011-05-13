@@ -56,7 +56,7 @@ then
 fi
 
 ssh poinot,pycgns@shell.sourceforge.net <<EOC
-cd /home/groups/p/py/pycgns/htdocs
+cd /home/project-web/pycgns/htdocs
 tar xvf pyCGNS-html.tar
 exit
 EOC
