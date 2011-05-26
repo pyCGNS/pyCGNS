@@ -47,6 +47,7 @@ linkSearchPath=%(linkSearchPath)s
 forceLegacyMapping=%(forceLegacyMapping)s
 followLinks=%(followLinks)d
 saveLinks=%(saveLinks)d
+checkLinks=%(checkLinks)d
 historyFile='%(historyFile)s'
 noData=%(noData)d
 forceFortranFlag=%(forceFortranFlag)d
@@ -76,7 +77,6 @@ class wOptionView(s7windoz.wWindoz):
     cm=getattr(self,'_'+key)
     tx=getattr(self,'d_'+key)
     vr=getattr(self,'v_'+key)
- #   f=Frame(fr,relief=FLAT)
     l=Label(fr,text=tx,justify=LEFT,font=G___.font['L'])
     if (not large):
       e=Entry(fr,textvariable=vr,justify=RIGHT,width=16,font=G___.font['E'],
@@ -96,20 +96,21 @@ class wOptionView(s7windoz.wWindoz):
     self.olist[key]=e
     return fr
      
-  def optVlist(self,fr,txt,ls,vr,cm):
-    f=Frame(fr,relief=FLAT)
-    l=Label(f,text=txt,justify=LEFT,font=G___.font['L'])
-    m=Menubutton(f,textvariable=vr)
-    m.menu=Menu(m,tearoff=0)
-    m['menu']=m.menu
-    for v in ls:
-      m.menu.add_radiobutton(label=v,var=vr,value=v)
-    l.grid(row=fr.row,column=fr.col,sticky=NW)
-    m.grid(row=fr.row,column=fr.col+1,sticky=E)
-    f.grid()
-    fr.row+=1
-    self.olist[key]=m
-    return f
+  def optVlist(self,fr,key):
+    cm=getattr(self,'_'+key)
+    tx=getattr(self,'d_'+key)
+    vr=getattr(self,'v_'+key)
+    ls=getattr(self,'l_'+key)
+    l=Label(fr,text=tx,justify=LEFT,font=G___.font['L'])
+    l.grid(row=fr.row,column=fr.col,columnspan=1,sticky=NW)
+    l.olist=[]
+    for (vt,vv) in ls:
+      l.olist+=[Radiobutton(fr,text=vt,variable=vr,value=vv,justify=RIGHT,
+                            relief=FLAT,borderwidth=1,font=G___.font['L'],
+                            command=cm)]
+      l.olist[-1].grid(row=fr.row,column=fr.col+1,sticky=W)
+      fr.row+=1
+    return fr
 
   def _expandRecurse(self):
     if (G___.expandRecurse): G___.expandRecurse=0
@@ -138,6 +139,9 @@ class wOptionView(s7windoz.wWindoz):
     
   def _saveLinks(self):
     G___.saveLinks=not G___.saveLinks
+    
+  def _checkLinks(self):
+    G___.checkLinks=self.v_checkLinks.get()
     
   def _showSIDS(self):
     G___.showSIDS=not G___.showSIDS
@@ -253,6 +257,10 @@ class wOptionView(s7windoz.wWindoz):
     self.v_saveLinks=IntVar()
     self.v_saveLinks.set(G___.saveLinks)
     self.d_saveLinks='Do NOT follow links during file save'
+    self.v_checkLinks=IntVar()
+    self.v_checkLinks.set(G___.checkLinks)
+    self.d_checkLinks='Check destination file/node at link creation'
+    self.l_checkLinks=[('No check',0),('Check',1),('Check and load',2)]
     self.v_showSIDS=IntVar()
     self.v_showSIDS.set(G___.showSIDS)
     self.d_showSIDS='Show SIDS status column'
@@ -296,7 +304,7 @@ class wOptionView(s7windoz.wWindoz):
 
     self.options = self._wtop
     self.options.title('CGNS.NAV: Options')
-    self.options.fleft=Frame(self.options,relief=GROOVE,borderwidth=3)
+    self.options.fleft=Frame(self.options,relief=FLAT,borderwidth=3)
     self.options.fright=Frame(self.options,relief=GROOVE,borderwidth=3)
     self.options.fleft.row=1
     self.options.fleft.col=0
@@ -320,19 +328,17 @@ class wOptionView(s7windoz.wWindoz):
     self.optCheck(_left,'noData')
     self.optCheck(_left,'compactedValue')
     self.optCheck(_left,'showSIDS')
+    self.optCheck(_left,'forceFortranFlag')
+    self.optCheck(_left,'transposeOnViewEdit')
+    self.optCheck(_left,'cgnsIsADF')
     self.optCheck(_left,'forceLegacyMapping',DISABLED)        
-#    self.optVlist(_right,'Follow file links :',
-#                  ['Always','Never','Only first level'],
-#                  self.opt_sidsrecurse,self.s7_sids_recurse)
+    self.optVlist(_right,'checkLinks')
     self.optValue(_right,'maxRecurse')
     self.optValue(_right,'maxDisplaySize')
     self.optValue(_right,'historyFile')
     self.optValue(_right,'defaultProfile')
     self.optValue(_right,'profilePath',large=1)
     self.optValue(_right,'linkSearchPath',large=1)    
-    self.optCheck(_right,'forceFortranFlag')
-    self.optCheck(_right,'transposeOnViewEdit')
-    self.optCheck(_right,'cgnsIsADF')
 
     self.options.fleft.grid(row=1,column=0,sticky=NW)
     self.options.fright.grid(row=1,column=1,sticky=NE,columnspan=3)

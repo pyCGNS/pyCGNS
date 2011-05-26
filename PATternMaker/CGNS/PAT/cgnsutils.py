@@ -433,9 +433,9 @@ def getPathFromNode(tree,node,path=''):
   """
   Returns the path of a node, given the CGNS/Python tree and the node.
   """
-  if (node == rootnode):
+  if (node == tree):
     return path
-  for c in rootnode[2]:
+  for c in tree[2]:
     p=getPathFromNode(c,node,path+'/'+c[0])
     if (p): return p
   return None
@@ -607,6 +607,16 @@ def stringValueMatches(node,reval):
 
 # --------------------------------------------------
 def checkLinkFile(lkfile,lksearch=['']):
+  """
+  Returns a tuple if the argument filename is found.
+  The tuple contains (directory, filename) with directory the place
+  where the filename was found.
+
+  The search path list argument contains the ordered list of
+  directories where to look for the file.
+
+  If the file is not found, (None,None) is returned.
+  """
   found=(None,None)
   if (lksearch==[]): lksearch=['']
   for spath in lksearch:
@@ -628,6 +638,9 @@ def copyArray(a):
 
 # --------------------------------------------------
 def copyNode(n):
+  """
+  Returns a **deep** copy of current node.
+  """
   newn=[n[0],copyArray(n[1]),deepcopyNodeList(n[2]),n[3]]
   return newn
 

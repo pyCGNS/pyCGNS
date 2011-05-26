@@ -51,7 +51,7 @@ class s7optionsStorage:
      ]
     # Next line is replaced each time you run distutils...
     # then s7globals_.py becomes... s7globals.py (good job boy !) 
-    self.s7icondirectoryprefix="/home_local/eucass/tools"
+    self.s7icondirectoryprefix="/home/tools/local/eosz"
     self.iconDir=self.s7icondirectoryprefix+'/share/CGNS/NAV/icons'
     self.firedox='firefox %s/share/CGNS/NAV/doc/CGNSNAV.html &'%\
                   self.s7icondirectoryprefix
@@ -87,6 +87,7 @@ class s7optionsStorage:
     self.printTag='CGNS.NAV:'
     self.followLinks=1
     self.saveLinks=1
+    self.checkLinks=1
     self.historyFile='.cgnsnavhistory.py'    
     self.showSIDS=0
     self.currentInSearchPath=1
@@ -179,6 +180,7 @@ class s7optionsStorage:
     self.allowedoptionslist+=['linkSearchPath']    
     self.allowedoptionslist+=['followLinks']
     self.allowedoptionslist+=['saveLinks']
+    self.allowedoptionslist+=['checkLinks']
     self.allowedoptionslist+=['noData']
     self.allowedoptionslist+=['forceFortranFlag']
     self.allowedoptionslist+=['cgnsIsADF']

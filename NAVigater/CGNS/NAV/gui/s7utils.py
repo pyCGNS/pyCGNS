@@ -282,6 +282,16 @@ def addLinkWarning(lnk,pos=None):
                  "You remove existing subtree and replace it by the link:\n%s"%lnk,
                  "cancel",geo=pos).result()
 
+def reloadLinkFileWarning(lnk,pos=None):
+  return msginfo("CGNS.NAV: Info",
+                 "The linked node is now removed: the force linked-to node option is not set. You have to realod your file if you want now to see the linked-to subtree.",
+                 geo=pos).result()
+
+def noLinkFileWarning(lnk,pos=None):
+  return msginfo("CGNS.NAV: Error",
+                 "Destination file not found:\n%s"%lnk,
+                 "force",geo=pos).result()
+
 def bigFileWarning(flag,pos=None):
   msg="The file you want to load looks quite big!\n"
   if (flag):

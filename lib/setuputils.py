@@ -268,6 +268,7 @@ def find_HDF5(pincs,plibs,libs):
 def find_MLL(pincs,plibs,libs,extraargs):
   notfound=1
   vers=''
+  cgnsversion='3130'
   libs=['cgns','hdf5']
   extraargs=[]#'-DCG_BUILD_SCOPE']
   for pth in pincs:

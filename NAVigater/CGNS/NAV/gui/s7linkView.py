@@ -169,9 +169,20 @@ class wLinkEdit(s7windoz.wWindoz):
       npaths=os.path.normpath(self.targetPath+'/'+self.targetNode[0])
       nnamed=os.path.normpath(ddir+'/'+dfile)
       npathd=os.path.normpath(dpath+'/'+dnode)
-      nlink=(nnames,npaths,nnamed,npathd,0,0)
+      nlink=(fg.filedir,fg.filename+fg.fileext,npaths,ddir,dfile,npathd,0,0)
       if (nlink not in fg.links):
         fg.links.append(nlink)
+      # if node not found remove source node but keep link entry
+      # otherwise perform a copy which would be removed at save time
+      if (G___.checkLinks):
+        (rd,rf)=PATu.checkLinkFile(ddir+'/'+dfile,G___.linkSearchPath)
+        if ((rd,rf)!=(None,None)):
+          pass
+        else:
+          r=s7utils.noLinkFileWarning(ddir+'/'+dfile)
+          print r
+      else:
+          r=s7utils.reloadLinkFileWarning()
       self.targetNode[1]=None
       self.targetNode[2]=[]
       self.targetNode[3]=''
@@ -303,6 +314,7 @@ class wLinkView(s7windoz.wWindoz,ScrolledTreectrl):
 
   def addLinkEntries(self):
     for f in self._viewtree.links:
+      print f
       (currentdir,currentfile,currentnode,\
        targetdir,targetfile,targetnode,lklevel,lkstatus)=f
       if (not self._files.has_key(lklevel)):

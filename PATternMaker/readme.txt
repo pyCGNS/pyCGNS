@@ -23,6 +23,9 @@ for used to read/write/modify a set of nodes matching a CGNS/SIDS type.
 The Pythonish flavour of this library declares a set of functions with more
 or less the same interface but with Python values.
 
+.. automodule:: CGNS.PAT.cgnslib
+   :members:
+
 Utilities
 ---------
 

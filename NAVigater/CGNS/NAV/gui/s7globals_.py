@@ -87,6 +87,7 @@ class s7optionsStorage:
     self.printTag='CGNS.NAV:'
     self.followLinks=1
     self.saveLinks=1
+    self.checkLinks=1
     self.historyFile='.cgnsnavhistory.py'    
     self.showSIDS=0
     self.currentInSearchPath=1
@@ -179,6 +180,7 @@ class s7optionsStorage:
     self.allowedoptionslist+=['linkSearchPath']    
     self.allowedoptionslist+=['followLinks']
     self.allowedoptionslist+=['saveLinks']
+    self.allowedoptionslist+=['checkLinks']
     self.allowedoptionslist+=['noData']
     self.allowedoptionslist+=['forceFortranFlag']
     self.allowedoptionslist+=['cgnsIsADF']

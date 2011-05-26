@@ -374,17 +374,18 @@ static PyObject* s2p_getObjectByPath(PyObject* updict, char *path)
 /* ------------------------------------------------------------------------- */
 static int s2p_getData(PyObject *dobject, 
 		       char **dtype, int *ddims, int *dshape, char **dvalue,
-		       int isdataarray, s2p_ctx_t  *context)
+		       int reversedims, int transposedata, s2p_ctx_t  *context)
 {
-  int n,total;
+  int n,total=1;
 
-/*   if (   (!PyArray_ISFORTRAN(dobject)) */
-/*       && (PyArray_NDIM(dobject)>1) */
-/*       && (PyArray_NDIM(dobject)<MAXDIMENSIONVALUES)) */
-/*   { */
-/*     S2P_TRACE(("\n ERROR: ARRAY SHOULD BE FORTRAN\n")); */
-/*     return 0; */
-/*   } */
+  if (   S2P_HASFLAG(S2P_FFORTRANFLAG)
+      && (!PyArray_ISFORTRAN(dobject))
+      && (PyArray_NDIM(dobject)>1)
+      && (PyArray_NDIM(dobject)<MAXDIMENSIONVALUES))
+  {
+    S2P_TRACE(("\n ERROR: ARRAY SHOULD BE FORTRAN\n"));
+    return 0;
+  }
 
   ddims[0]=0;
   *dtype=DT_MT;
@@ -395,10 +396,9 @@ static int s2p_getData(PyObject *dobject,
   if (PyArray_Check(dobject))
   {
      ddims[0]=PyArray_NDIM(dobject);
-     total=1;
      for (n=0; n<ddims[0]; n++)
      {
-     	if (S2P_HASFLAG(S2P_FREVERSEDIMS) || !isdataarray)
+        if (transposedata || reversedims)
      	{ 
      	  dshape[n]=(int)PyArray_DIM(dobject,ddims[0]-n-1);
      	  total*=dshape[ddims[0]-n-1];
@@ -409,7 +409,7 @@ static int s2p_getData(PyObject *dobject,
      	  total*=dshape[n];
      	}
      } 
-     if (isdataarray)
+     if (transposedata)
      {
        dobject=(PyObject*)(PyArray_Transpose((PyArrayObject*)dobject,NULL));
      }
@@ -449,6 +449,33 @@ static int s2p_getData(PyObject *dobject,
   return 0;
 }
 /* ------------------------------------------------------------------------- */
+static int s2p_hasToReverseDims(char *name, char *label,s2p_ctx_t *context)
+{
+  if (S2P_HASFLAG(S2P_FREVERSEDIMS))           { return 1;}
+  return 0;
+  if (!strcmp(label,"DataArray_t"))            { return 1;}
+  if (!strcmp(label,"DimensionalUnits_t"))     { return 1;}
+  if (!strcmp(label,"AdditionalUnits_t"))      { return 1;}
+  if (!strcmp(label,"DimensionalExponents_t")) { return 1;}
+  if (!strcmp(label,"AdditionalExponents_t"))  { return 1;}
+  return 0;
+}
+/* ------------------------------------------------------------------------- */
+static int s2p_hasToTransposeData(char *name, char *label,s2p_ctx_t *context)
+{
+  return 1;
+  if (!strcmp(label,"DataArray_t"))            { return 1;}
+  if (!strcmp(label,"DimensionalUnits_t"))     { return 1;}
+  if (!strcmp(label,"AdditionalUnits_t"))      { return 1;}
+  if (!strcmp(label,"DimensionalExponents_t")) { return 1;}
+  if (!strcmp(label,"AdditionalExponents_t")) 
+  if (   (!strcmp(label,"IndexRange_t") 
+	  && (!strcmp(name,"PointRange"))))       { return 1;}
+  if (   (!strcmp(label,"IndexRange_t") 
+      && (!strcmp(name,"PointRangeDonor")))) { return 1;}
+  return 0;
+}
+/* ------------------------------------------------------------------------- */
 static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
                                      char      	 *name,
                                      char        *curpath,    
@@ -464,6 +491,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   hid_t     actualid;
   PyObject *o_clist,*o_value,*o_child,*o_node,*u_value;
   npy_intp  npy_dim_vals[MAXDIMENSIONVALUES];
+  npy_uint32 npyflags;
   L3_Cursor_t *lkl3db;
   L3_Node_t *rnode,*cnode;
 
@@ -597,12 +625,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     n=0;
     while ((n<L3C_MAX_DIMS)&&(rnode->dims[n]!=-1))
     {
-      if (    (!strcmp(rnode->label,"DataArray_t"))
-           || (!strcmp(rnode->label,"DimensionalUnits_t"))
-           || (!strcmp(rnode->label,"AdditionalUnits_t"))
-           || (!strcmp(rnode->label,"DimensionalExponents_t"))
-           || (!strcmp(rnode->label,"AdditionalExponents_t")) 
-           || (S2P_HASFLAG(S2P_FREVERSEDIMS)) )
+      if (s2p_hasToReverseDims(rnode->name,rnode->label,context))
       {
 	npy_dim_vals[ndim-n-1]=rnode->dims[n];
       }
@@ -648,17 +671,18 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
     }
     if (arraytype!=-1)
     {
+      npyflags=NPY_OWNDATA;
+      if (S2P_HASFLAG(S2P_FFORTRANFLAG))
+      {
+	npyflags|=NPY_FORTRAN;
+      }
       o_value=(PyObject*)PyArray_New(&PyArray_Type,
 				     ndim,npy_dim_vals, 
 				     arraytype,(npy_intp *)NULL,
 				     (void*)rnode->data,0, 
-				     NPY_OWNDATA|NPY_FORTRAN,
+				     NPY_OWNDATA,
 				     (PyObject*)NULL);
-      if (    (!strcmp(rnode->label,"DataArray_t"))
-           || (!strcmp(rnode->label,"DimensionalUnits_t"))
-           || (!strcmp(rnode->label,"AdditionalUnits_t"))
-           || (!strcmp(rnode->label,"DimensionalExponents_t"))
-           || (!strcmp(rnode->label,"AdditionalExponents_t")) )
+      if (s2p_hasToTransposeData(rnode->name,rnode->label,context))
       {
 	o_value=(PyObject*)(PyArray_Transpose((PyArrayObject*)o_value,NULL));
       }
@@ -725,7 +749,7 @@ static int s2p_parseAndWriteHDF(hid_t     id,
 				L3_Cursor_t *l3db)
 {
   char *name=NULL,*label=NULL,*tdat=NULL,altlabel[L3C_MAX_NAME+1];
-  int sz=0,n=0,ret=0,tsize=1,isdataarray=0;
+  int sz=0,n=0,ret=0,tsize=1,transpose=0,reverse=0;
   int ndat=0,ddat[NPY_MAXDIMS];
   char *vdat=NULL;
   L3_Node_t *node=NULL;
@@ -748,30 +772,39 @@ static int s2p_parseAndWriteHDF(hid_t     id,
     }
     strcat(curpath,"/");
     strcat(curpath,name);
-    if (S2P_HASFLAG(S2P_FREVERSEDIMS))
-    { 
-      S2P_TRACE(("### create (swap dims) [%s][%s]",curpath,altlabel));
-    }
-    else
-    { 
-      S2P_TRACE(("### create [%s][%s]",curpath,altlabel));
-    }
     if (s2p_checklinktable(context,curpath))
     {
       S2P_TRACE(("### linked to [%s][%s]\n",curpath,altlabel));
     }
-    S2P_FREECONTEXTPTR(context);
-    if (    (!strcmp(altlabel,"DataArray_t"))
-         || (!strcmp(altlabel,"DimensionalUnits_t"))
-         || (!strcmp(altlabel,"AdditionalUnits_t"))
-         || (!strcmp(altlabel,"DimensionalExponents_t"))
-         || (!strcmp(altlabel,"AdditionalExponents_t")) )
-    {
-      isdataarray=1;
+    transpose=s2p_hasToTransposeData(name,altlabel,context);
+    reverse=s2p_hasToReverseDims(name,altlabel,context);
+    if (reverse)
+    { 
+      if (transpose)
+      {
+        S2P_TRACE(("### create (swap dims and transpose) [%s][%s]",
+		   curpath,altlabel));
+      }
+      else
+      {
+        S2P_TRACE(("### create (swap dims) [%s][%s]",curpath,altlabel));
+      }
+    }
+    else
+    { 
+      if (transpose)
+      {
+        S2P_TRACE(("### create (transpose) [%s][%s]",curpath,altlabel));
+      }
+      else
+      {
+        S2P_TRACE(("### create [%s][%s]",curpath,altlabel));
+      }
     }
     if (s2p_getData(PyList_GetItem(tree,1),&tdat,&ndat,ddat,&vdat,
-		    isdataarray,context))
+		    reverse,transpose,context))
     {
+      S2P_TRACE(("### FATAL ERROR: s2p_getData [%s][%s]",curpath,altlabel));
     }
     n=0;
     tsize=1;
@@ -802,6 +835,7 @@ static int s2p_parseAndWriteHDF(hid_t     id,
     }
     curpath[strlen(curpath)-strlen(name)-1]='\0';
   }
+  S2P_FREECONTEXTPTR(context);
   return ret;
 }
 /* ------------------------------------------------------------------------- */
@@ -928,7 +962,7 @@ int s2p_saveAsHDF(char      *filename,
 	  S2P_TRACE(("### create [CGNSLibraryVersion]\n"));
 	  S2P_FREECONTEXTPTR(context);
 	  s2p_getData(PyList_GetItem(otree,1),&tdat,&ndat,ddat,&vdat,
-		      0,context);
+		      0,0,context);
 	  L3_initDims(dims,1,-1);
 	  node=L3_nodeSet(l3db,node,
 			  CG_CGNSLibraryVersion_n,CG_CGNSLibraryVersion_ts,
