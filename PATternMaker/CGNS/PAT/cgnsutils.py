@@ -5,38 +5,389 @@
 #  $Release$
 #  ---------------------------------------------------------------------------
 
+import CGNS
 import CGNS.PAT.cgnskeywords as CK
 import CGNS.PAT.cgnstypes    as CT
 import CGNS.PAT.cgnserrors   as CE
-import CGNS
 
 import numpy as NPY
+
 import os.path
 import string
 import re
 
 # -----------------------------------------------------------------------------
-# support functions
-# -----------------------------------------------------------------------------
-def checkName(name):
+def nodeCreate(name,value,children,type,parent=None,dienow=False):
   """
-  Checks if the name is CGNS/Python compliant node name.
+  Create a new node with and bind it to its parent::
+
+    import CGNS.PAT.cgnskeywords as CK
+
+    n=createNode('Base',numpy([3,3]),[],CK.CGNSBase_t)
+    z=createNode('ReferenceState',None,[],CK.ReferenceState_t,parent=n)
+
+  - Args:
+   * `name`: node name as a string
+   * `value`: node value as a numpy array
+   * `children`: list of node children 
+   * `type`: CGNS type as a string
+   * `parent`: parent node where to insert the new node (default: None)
+   * `dienow`: If True raises an exception in case of problem (default: False)
+
+  - Return:
+   * The new node
+
+  - Remarks:
+   * If parent is None (default) node is orphan
+   * Full-checks the node with `checkNodeCompliant` only if `dienow` is True.
+
   """
-  if (type(name) != type("s")): raise CE.cgnsException(22)
-  if (len(name) == 0):          raise CE.cgnsException(23)
-  if ('/' in name):             raise CE.cgnsException(24)
-  if (len(name) > 32):          raise CE.cgnsException(25)
+  return newNode(name,value,children,type,parent,dienow)
+    
+# --------------------------------------------------
+def nodeCopy(node):
+  """
+  Creates a new node sub-tree as a copy of the argument node sub-tree.
+  A deep copy is performed on the node, including the values, which can
+  lead to a very large memory use::
+
+    n1=getNodeByPath(T,'/Base/Zone1/ZoneGridConnectivity')
+    n2=getNodeByPath(T,'/Base/Zone1/ZoneGridConnectivity/Connect1')
+    n3=nodeCopy(n3)
+    nodeChild(n1,n3)
+
+  - Args:
+   * `node`: node to copy
+
+  - Return:
+   * The new node
+
+  - Remarks:
+   * Full-checks the node with `checkNodeCompliant` only if `dienow` is True.
+   
+  """
+  return copyNode(node)
+
+def copyNode(n):
+  newn=[n[0],copyArray(n[1]),deepcopyNodeList(n[2]),n[3]]
+  return newn
+
+# --------------------------------------------------
+def nodeDelete(tree,node,legacy=False):
+  """
+  Deletes a node from a tree::
+
+    import CGNS.PAT.cgnslib as CL
+        
+    T =CL.newCGNSTree()
+    b1=CL.newBase(T,'Base',3,3)
+    z1=CL.newZone(b1,'Zone1')
+    z2=CL.newZone(b1,'Zone2')
+    print getPathFullTree(T)
+    # ['/CGNSLibraryVersion', '/Base', '/Base/Zone1', '/Base/Zone1/ZoneType', '/Base/Zone2', '/Base/Zone2/ZoneType']
+    nodeDelete(T,z1)
+    print getPathFullTree(T)
+    # ['/CGNSLibraryVersion', '/Base', '/Base/Zone2', '/Base/Zone2/ZoneType']
+
+  - Args:
+   * `tree`: target tree where to find the node to remove
+   * `node`: node to remove
+
+  - Return:
+   * The tree argument (without the deleted node)
+
+  - Remarks:
+   * Uses :py:func:`checkSameNode`.
+   * The actual memory of the node only if no other reference to this node is found by Python.
+   
+  """
+  path=getPathFromNode(tree,node)
+  if (path is not None):
+    pp=getPathAncestor(path)
+    pc=getPathLeaf(path)
+    if (pp!=path):
+      np=getNodeByPath(tree,pp)
+      removeChildByName(np,pc)
+  return tree
+
+# --------------------------------------------------
+def nodeLink(node):
+  """
+  undocumented
+  """
+  return node
+
+# --------------------------------------------------
+def deepcopyNodeList(la):
+  if (not la): return la
+  ra=[]
+  for a in la:
+    ra.append(copyNode(a))
+  return ra
 
 # -----------------------------------------------------------------------------
-def checkDuplicatedName(parent,name):
+# support functions
+# -----------------------------------------------------------------------------
+def checkNodeName(name,dienow=False):
   """
-  Checks if the name is not already in the children list.
+  Checks if the name is CGNS/Python compliant node name.
+
+   - Type of name should be a Python string
+   - Name cannot be empty
+   - No '/' is allowed in the name
+   - No single '.' or '..' are allowed
+
+  Raises :ref:`cgnsnameerror` codes 22,23,24,25,29 if `dienow` is True
+  
   """
-  if (not parent): return
-  if (parent[2] == None): return
-  checkName(name)
+  return checkName(name,dienow)
+
+def checkName(name,dienow=False):
+  if (type(name) != type("s")):
+    if (dienow): raise CE.cgnsNameError(22)
+    return False
+  if (len(name) == 0):
+    if (dienow): raise CE.cgnsNameError(23)
+    return False
+  if ('/' in name):
+    if (dienow): raise CE.cgnsNameError(24,name)
+    return False
+  if (len(name) > 32):
+    if (dienow): raise CE.cgnsNameError(25,name)
+    return False
+  if (name in ['.','..']):
+    if (dienow): raise CE.cgnsNameError(29)
+    return False
+  return True
+
+# --------------------------------------------------
+def setChild(parent,node):
+  """
+  Adds a child node to the parent node chlidren list::
+
+    n1=getNodeByPath(T,'/Base/Zone1/ZoneGridConnectivity')
+    n2=getNodeByPath(T,'/Base/Zone1/ZoneGridConnectivity/Connect1')
+    n3=nodeCopy(n3)
+    nodeChild(n1,n3)
+    
+  - Args:
+   * `parent`: the parent node
+   * `node`: the child node to add to parent
+
+  - Return:
+   * The parent node
+
+  """
+  parent[2].append(node)
+  return parent
+
+# -----------------------------------------------------------------------------
+def checkDuplicatedName(parent,name,dienow=1):
+  """
+  Checks if the name is not already in the children list of the parent.
+
+  Raises :ref:`cgnsnameerror` code 102 if `dienow` is True
+  
+  """
+  if (not parent): return True
+  if (parent[2] == None): return True
   for nc in parent[2]:
-    if (nc[0] == name): raise CE.cgnsException(102,(name,parent[0]))
+    if (nc[0] == name):
+      if (dienow): raise CE.cgnsNameError(102,(name,parent[0]))
+      return False
+  return True
+
+# -----------------------------------------------------------------------------
+def checkNodeType(node,cgnstype=[],dienow=False):
+  """
+  Check the CGNS type of a node. The type can be a single value or
+  a list of values. Each type to check is a string such as
+  CGNS.PAT.cgnskeywords.CGNSBase_ts constant for example.
+  If the list is empty, the check uses the list of all existing CGNS types.
+
+  Raises :ref:`cgnstypeerror` codes 103,104,40 if `dienow` is True
+  
+  """
+  return checkType(node,cgnstype,'',dienow)
+
+def checkType(parent,ltype,name,dienow=False):
+  if (parent == None): return None
+  if ((ltype==[]) and (parent[3] not in CK.cgnstypes)): 
+    if (dienow): raise CE.cgnsTypeError(40,(parent,parent[3]))
+  elif ((type(ltype )==list()) and (parent[3] not in ltype)): 
+    if (dienow): raise CE.cgnsTypeError(104,(parent,ltype))
+  elif (parent[3] != ltype): 
+    if (dienow): raise CE.cgnsTypeError(103,(parent,ltype))
+  return True
+
+# -----------------------------------------------------------------------------
+def checkParentType(parent,stype):
+  if (parent == None):     return False
+  if (parent[3] != stype): return False
+  return True
+
+# -----------------------------------------------------------------------------
+def checkTypeList(parent,ltype,name):
+  if (parent == None): return None
+  if (parent[3] not in ltype): 
+    raise CE.cgnsException(104,(name,ltype))
+  return None
+
+# -----------------------------------------------------------------------------
+def checkParent(node,dienow=0):
+  if (node == None): return 1
+  return checkNode(node,dienow)
+
+# -----------------------------------------------------------------------------
+def checkNode(node,dienow=False):
+  """
+  Checks if a node is a compliant CGNS/Python node.
+  Node should be a list of
+  [<name:string>, <value:numpy>, <children:list-of-nodes>, <cgnstype:string>]
+
+  Doesn't perform sub checks such as `checkNodeName`,`checkNodeType`...
+  
+  Raises :ref:`cgnsnodeerror` codes 1,2,3,4,5 if `dienow` is True
+  
+  """
+  if (node in [ [], None ]):
+    if (dienow): raise CE.cgnsException(1)
+    return False
+  if (type(node) != type([3,])):
+    if (dienow): raise CE.cgnsException(2)
+    return False
+  if (len(node) != 4):
+    if (dienow): raise CE.cgnsException(2)
+    return False
+  if (type(node[0]) != type("")):
+    if (dienow): raise CE.cgnsException(3)
+    return False
+  if (type(node[2]) != type([3,])):
+    if (dienow): raise CE.cgnsException(4,node[0])
+    return False
+  if ((node[1] != None) and (type(node[1])) != type(NPY.array([3,]))):
+    if (dienow): raise CE.cgnsException(5,node[0])
+    return False
+  return True
+    
+# -----------------------------------------------------------------------------
+def checkRootNode(node,legacy=False,dienow=False):
+  """
+  Checks if a node is the CGNS/Python tree root node.
+  If `legacy` is True, then `[None, None, [children], None]` is
+  accepted as Root. Children contains then the `CGNSLibraryVersion`
+  and `CGNSBase` nodes as flat list.
+
+
+  Raises :ref:`cgnsnodeerror` codes 90,91,99 if `dienow` is True
+  
+  """
+  return isRootNode(node,legacy,dienow)
+
+def isRootNode(node,legacy=False,dienow=False):
+  if (node in [ [], None ]):
+    if (dienow): raise CE.cgnsNodeError(90)
+    return False
+  versionfound=0
+  if (not checkNode(node,dienow)): return False
+  start=[None,None,[node],None]
+  if ((not legacy) and (node[3] != CK.CGNSTree_ts)): return False
+  if (legacy): start=node
+  for n in start[2]:
+     if (not checkNode(n,dienow)): return False 
+     if (     (n[0] == CK.CGNSLibraryVersion_s)
+          and (n[3] == CK.CGNSLibraryVersion_ts) ):
+         if versionfound and dienow:
+           raise CE.cgnsNodeError(99)
+           return False
+         versionfound=1
+     elif ( n[3] != CK.CGNSBase_ts ):
+       if (dienow): raise CE.cgnsNodeError(91)
+       return False
+  if (versionfound): return True
+  else:              return True
+       
+# -----------------------------------------------------------------------------
+# Arbitrary and incomplete node comparison (lazy evaluation)
+def checkSameNode(nodeA,nodeB,dienow=False):
+  """
+  Checks if two node have the same contents.
+
+  Raises :ref:`cgnsnodeerror` code 30 if `dienow` is True
+
+  * Remarks
+   * Comparison looks at contents values (name string, type string,...)
+   * There is no recursion in the children list
+   
+  """
+  return sameNode(nodeA,nodeB,dienow)
+  
+def sameNode(nodeA,nodeB,dienow=False):
+  same=True
+  if (not (checkNode(nodeA) and checkNode(nodeB))): same=False
+  elif (nodeA[0] != nodeB[0]):                      same=False
+  elif (nodeA[3] != nodeB[3]):                      same=False
+  elif (type(nodeA[1]) != type(nodeB[1])):          same=False
+  elif (len(nodeA[1])  != len(nodeB[1])):           same=False
+  elif (len(nodeA[2])  != len(nodeB[2])):           same=False
+  if (not same and dienow):
+    raise cgnsNodeError(30,(nodeA[0],nodeB[0]))
+  return same
+
+# -----------------------------------------------------------------------------
+def checkArray(a,dienow=False):
+  """
+  Check if the array value of a node is a numpy array.
+
+  Raises :ref:`cgnserror` codes 109,170 if `dienow` is True
+  
+  """
+  if (type(a) != type(NPY.array((1)))):
+    if (dienow): raise CE.cgnsException(109)
+    return False
+  if ((len(a.shape)>1) and not NPY.isfortran(a)):
+    if (dienow): raise CE.cgnsException(710)
+    return False
+  return True
+
+# -----------------------------------------------------------------------------
+def checkArrayChar(a,dienow=False):
+  checkArray(a)
+  if (a.dtype.char not in ['S','a']):  raise CE.cgnsException(105)
+  return a
+
+# -----------------------------------------------------------------------------
+def checkArrayReal(a,dienow=False):
+  checkArray(a)
+  if (a.dtype.char not in ['d','f']):  raise CE.cgnsException(106)
+  return a
+
+# -----------------------------------------------------------------------------
+def checkArrayInteger(a,dienow=False):
+  checkArray(a)
+  if (a.dtype.char not in ['i','u']):  raise CE.cgnsException(107)
+  return a
+
+# -----------------------------------------------------------------------------
+def checkNodeCompliant(node,parent,dienow=False):
+  """
+  Performs all possible checks on a node. Can raise any of the exceptions
+  related to node checks (checkNodeName, checkNodeType, checkArray...)
+  
+  """
+  r=checkNode(node,dienow=dienow)\
+    and checkName(node[0],dienow=dienow)\
+    and checkDuplicatedName(parent,node[0],dienow=dienow)\
+    and checkArray(node[2],dienow=dienow)\
+    and checkNodeType(node,dienow=dienow)
+  return r
+
+# -----------------------------------------------------------------------------
+def newNode(name,value,children,type,parent=None,dienow=False):
+  node=[name, value, children, type]
+  if (dienow): checkNodeCompliant(node,parent,dienow)
+  if (parent): parent[2].append(node)
+  return node
 
 # -----------------------------------------------------------------------------
 def concatenateForArrayChar(nlist):
@@ -88,154 +439,8 @@ def getValue(node):
   if (t == CK.Character_s):  return v
   return v
   
-# -----------------------------------------------------------------------------
-def checkArray(a):
-  return
-  if (type(a) != type(NPY.array((1)))): raise CE.cgnsException(109)
-  if ((len(a.shape)>1) and not NPY.isfortran(a)):
-    raise CE.cgnsException(710)  
-
-# -----------------------------------------------------------------------------
-def checkArrayChar(a):
-  checkArray(a)
-  if (a.dtype.char not in ['S','a']):  raise CE.cgnsException(105)
-  return a
-
-# -----------------------------------------------------------------------------
-def checkArrayReal(a):
-  checkArray(a)
-  if (a.dtype.char not in ['d','f']):  raise CE.cgnsException(106)
-  return a
-
-# -----------------------------------------------------------------------------
-def checkArrayInteger(a):
-  checkArray(a)
-  if (a.dtype.char not in ['i','u']):  raise CE.cgnsException(107)
-  return a
-
-# -----------------------------------------------------------------------------
-def checkType(parent,stype,name):
-  if (parent == None): return None
-  if (parent[3] != stype): 
-    raise CE.cgnsException(103,(name,stype))
-  return None
-
-# -----------------------------------------------------------------------------
-def checkParentType(parent,stype):
-  if (parent == None):     return False
-  if (parent[3] != stype): return False
-  return True
-
-# -----------------------------------------------------------------------------
-def checkTypeList(parent,ltype,name):
-  if (parent == None): return None
-  if (parent[3] not in ltype): 
-    raise CE.cgnsException(104,(name,ltype))
-  return None
-
-# -----------------------------------------------------------------------------
-def checkParent(node,dienow=0):
-  if (node == None): return 1
-  return checkNode(node,dienow)
-
-# -----------------------------------------------------------------------------
-def checkNode(node,dienow=0):
-  """
-  Checks if a node is a compliant CGNS/Python node.
-  If `dienow` is set to True, an exception is raised if the check is bad.
-  """
-  if (node in [ [], None ]):
-    if (dienow): raise CE.cgnsException(1)
-    return 0
-  if (type(node) != type([3,])):
-    if (dienow): raise CE.cgnsException(2)
-    return 0
-  if (len(node) != 4):
-    if (dienow): raise CE.cgnsException(2)
-    return 0
-  if (type(node[0]) != type("")):
-    if (dienow): raise CE.cgnsException(3)
-    return 0
-  if (type(node[2]) != type([3,])):
-    if (dienow): raise CE.cgnsException(4,node[0])
-    return 0
-  if ((node[1] != None) and (type(node[1])) != type(NPY.array([3,]))):
-    if (dienow): raise CE.cgnsException(5,node[0])
-    return 0
-  return 1
-    
-# -----------------------------------------------------------------------------
-def isRootNode(node,dienow=False):
-  """
-  Checks if a node is the CGNS/Python tree root node.
-  If `dienow` is set to True, an exception is raised if the check is bad.
-  """
-  if (node in [ [], None ]):         return False
-  versionfound=0
-  if (not checkNode(node)):          return False
-  for n in node[2]:
-     if (not checkNode(n,dienow)):   return False 
-     if (     (n[0] == CK.CGNSLibraryVersion_s)
-          and (n[3] == CK.CGNSLibraryVersion_ts) ):
-         if versionfound: raise CE.cgnsException(99)
-         versionfound=1
-     elif ( n[3] != CK.CGNSBase_ts ): return False
-  if (versionfound):                  return True
-  else:                               return True
-       
-# -----------------------------------------------------------------------------
-# Arbitrary and incomplete node comparison (lazy evaluation)
-def sameNode(nodeA,nodeB):
-  """
-  Compare two nodes.
-
-  Args:
-   * nodeA: first node to compare to second one
-   * nodeB: second node to compare to first one
-
-  Return:
-   * False if there is any kind of diffence with node contents
-
-  Remarks:
-   * Comparison looks at contents values (name string, type string,...)
-   * There is no recursion in the children list
-  """
-  if (not (checkNode(nodeA) and checkNode(nodeB))): return False
-  if (nodeA[0] != nodeB[0]):                        return False
-  if (nodeA[3] != nodeB[3]):                        return False
-  if (type(nodeA[1]) != type(nodeB[1])):            return False
-  if (len(nodeA[1])  != len(nodeB[1])):             return False
-  if (len(nodeA[2])  != len(nodeB[2])):             return False
-  return True      
-
-# -----------------------------------------------------------------------------
-def newNode(name,value,children,type,parent=None):
-  """
-  Creates a new node with and bind it to its parent.
-
-  Args:
-   * name: node name
-   * value: node value
-   * children: list of node children
-   * type: CGNS type
-   * parent: parent node where to insert the new node
-
-  Return:
-   * The new node
-
-  Remark:
-   * If parent is None (default) node is orphan
-  """
-  node=[name, value, children, type]
-  if (parent): parent[2].append(node)
-  return node
-
 # --------------------------------------------------
 def hasFortranFlag(node):
-  """
-  Returns False if the node value is a numpy array with Fortran flag OFF.
-  Any other case leads to a True return.
-  """
   if (node[1]==None):           return True
   if (node[1]==[]):             return True
   if (type(node[1])==type('')): return True # link
@@ -244,12 +449,15 @@ def hasFortranFlag(node):
   return NPY.isfortran(node[1])
 
 # --------------------------------------------------
-def getNodeShape(node):
+def getValueShape(node):
   """
   Returns the value data shape for a CGNS/Python node.
   If the shape cannot be determined a `-` is returned.
   The returned value is a string.
   """
+  return getNodeShape(node)
+
+def getNodeShape(node):
   r="-"
   if   (node[1]==None): r="-"
   elif (node[1]==[]):   r="-"
@@ -259,13 +467,16 @@ def getNodeShape(node):
   return r
 
 # --------------------------------------------------
-def getNodeType(node):
+def getValueDataType(node):
   """
   Returns the value data type for a CGNS/Python node.
   Data type is one of `C1,I4,I8,R4,R8`, a `??` is returned
   if datatype is not of these.
   The returned value is a string.
   """
+  return getNodeType(node)
+
+def getNodeType(node):
   data=node[1]
   if (node[0] == 'CGNSLibraryVersion_t'):
     return CK.R4 # ONLY ONE R4 IN ALL SIDS !
@@ -283,16 +494,7 @@ def getNodeType(node):
   return '??'
 
 # --------------------------------------------------
-def checkPath(path):
-  return True
-
-# --------------------------------------------------
 def removeFirstPathItem(path):
-  """
-  Returns the path without its first element. If there is only
-  one element in the path, or if the path is `/` then `/` is
-  returned.
-  """
   p=path.split('/')
   if ((p[0]=='') and (p>2)):
     return string.join(['']+p[2:],'/')
@@ -304,20 +506,24 @@ def removeFirstPathItem(path):
 # --------------------------------------------------
 def getNodeByPath(tree,path):
   """
-  Returns a CGNS/Python node with the argument path.
+  Returns the CGNS/Python node with the argument path::
+
+   zbc=getNodeByPath(T,'/Base/Zone001/ZoneBC')
+   bc1=getNodeByPath(zbc,'wall01')
 
   Args:
-   * tree: the target tree to parse
-   * path: a string representing an absolute or relative path
+   * `tree`: the target tree to parse
+   * `path`: a string representing an absolute or relative path
 
-  Remarks:
-   * the node is returned with all sub-tree
+  Remark:
    * Returns None if the path is not found
+   * No wildcards allowed (see :py:func:`getPathByNameFilter` and :py:func:`getPathByNameFilter` )
+     
   """
   if (not checkPath(path)): return None
   if (path[0]=='/'): path=path[1:]
   if (tree[3]==CK.CGNSTree_ts): T=tree
-  else: T=[None,None,[tree],None]
+  else: T=[CK.CGNSTree_s,None,[tree],CK.CGNSTree_ts]
   n=getNodeFromPath(path.split('/'),T)
   if (n==-1): return None
   return n
@@ -325,14 +531,22 @@ def getNodeByPath(tree,path):
 # --------------------------------------------------
 def getValueByPath(tree,path):
   """
-  Returns the value of a CGNS/Python node with the argument path.
+  Returns the value of a CGNS/Python node with the argument path::
+
+   import CGNS.PAT.cgnskeywords as CK
+  
+   v=getNodeByPath(T,'/Base/Zone001/ZoneType')
+
+   if (v == CK.Structured_s): print 'Structured Zone Found'
   
   Args:
-   * tree: the target tree to parse
-   * path: a string representing an absolute or relative path
+   * `tree`: the target tree to parse
+   * `path`: a string representing an absolute or relative path
 
   Remark:
    * Returns None if the path is not found
+   * No wildcards allowed (see :py:func:`getPathByNameFilter` and :py:func:`getPathByNameFilter` )
+   
   """
   n=getNodeByPath(tree,path)
   if (n==-1): return None
@@ -341,14 +555,22 @@ def getValueByPath(tree,path):
 # --------------------------------------------------
 def getChildrenByPath(tree,path):
   """
-  Returns the children list of a CGNS/Python node with the argument path.
-  
+  Returns the children list of a CGNS/Python node with the argument path::
+
+   import CGNS.PAT.cgnskeywords as CK
+
+   for bc in getChildrenByPath(T,'/Base/Zone01/ZoneBC'):
+     if (bc[3] == CK.BC_ts): 
+       print 'BC found:', bc[0]
+
   Args:
-   * tree: the target tree to parse
-   * path: a string representing an absolute or relative path
+   * `tree`: the target tree to parse
+   * `path`: a string representing an absolute or relative path
 
   Remark:
    * Returns None if the path is not found
+   * No wildcards allowed (see :py:func:`getPathByNameFilter` and :py:func:`getPathByNameFilter` )
+   
   """
   n=getNodeByPath(tree,path)
   if (n==-1): return None
@@ -357,18 +579,72 @@ def getChildrenByPath(tree,path):
 # --------------------------------------------------
 def getTypeByPath(tree,path):
   """
-  Returns the CGNS type of a CGNS/Python node with the argument path.
+  Returns the CGNS type of a CGNS/Python node with the argument path::
+
+   import CGNS.PAT.cgnskeywords as CK
+
+   if (getTypeByPath(T,'/Base/Zone01/ZoneBC/'):
+     if (bc[3] == CK.BC_ts): 
+       print 'BC found:', bc[0]
 
   Args:
-   * tree: the target tree to parse
-   * path: a string representing an absolute or relative path
+   * `tree`: the target tree to parse
+   * `path`: a string representing an absolute or relative path
 
   Remark:
    * Returns None if the path is not found
+   * No wildcards allowed (see :py:func:`getPathByTypeFilter` and :py:func:`getPathByNameFilter` )
+   
   """
   n=getNodeByPath(tree,path)
-  if (n==-1): return None
-  return n[3]
+  if (n is not None): return n[3]
+  return None
+
+# --------------------------------------------------
+def getPathByNameFilter(tree,filter=None):
+  """
+  Returns a list of paths from T matching the filter. The filter is a
+  `regular expression <http://docs.python.org/library/re.html>`_
+  used to match the path of **node names**::
+
+   import CGNS.PAT.cgnskeywords as CK
+
+   for path in filterPathByName(T,'/Base[0-1]/domain\..*/.*/.*/FamilyName'):
+      print 'FamilyName ',path,' is ',path[2]
+
+  Args:
+   * `tree`: the target tree to parse
+   * `filter`: a regular expresion for the complete path to math to
+
+  Remark:
+   * Returns empty list if no match
+   
+  """
+  return []
+
+# --------------------------------------------------
+def getPathByTypeFilter(tree,filter=None):
+  """
+  Returns a list of paths from T matching the filter. The filter is a
+  `regular expression <http://docs.python.org/library/re.html>`_
+  used to match the path of **node types**::
+
+   import CGNS.PAT.cgnskeywords as CK
+
+   for path in filterPathByType(T,'/.*/.*/.*/BC_t'):
+     for child in getChildrenByPath(T,path):
+      if (child[3]==CK.FamilyName_t):
+        print 'BC ',path,' belongs to ',child[2]
+
+  Args:
+   * `tree`: the target tree to parse
+   * `filter`: a regular expresion for the complete path to math to
+
+  Remark:
+   * Returns empty list if no match
+   
+  """
+  return []
 
 # --------------------------------------------------
 def nodeByPath(path,tree):
@@ -403,6 +679,9 @@ def removeNodeFromPath(path,node):
     
 # --------------------------------------------------
 def getNodeFromPath(path,node):
+  """
+  undocumented
+  """
   for c in node[2]:
     if (c[0] == path[0]):
       if (len(path) == 1): return c
@@ -410,31 +689,27 @@ def getNodeFromPath(path,node):
   return -1
 
 # --------------------------------------------------
-# def getNodeFromPath2(path,node):
-#   cdef int ix,c,t,lp
-#   n=node[2]
-#   ix=len(n)
-#   lp=len(path)
-#   np=path[0]
-#   if (lp>1):
-#     sp=path[1:]
-#   for c in range(ix):
-#     cn=n[c]
-#     cnm=cn[0]
-#     t=(cnm==np)
-#     if (t and (lp == 1)):
-#       return cn
-#     if (t):
-#       return getNodeFromPath2(sp,cn)
-#   return -1
-
-# --------------------------------------------------
 def getPathFromNode(tree,node,path=''):
   """
-  Returns the path of a node, given the CGNS/Python tree and the node.
+  Returns the path from a node in a tree. The argument tree is parsed and
+  a path is built-up until the node is found. The node object is compared
+  to the tree nodes, if you have multiple references to the same node, the
+  first found is used for the path::
+
+   # T is a compliant CGNS/Python tree
+   
+   path=getPathFromNode(T,node)
+   getNodeByPath(T,pathAncestor(path))
+
+  Args:
+   * `tree`: the target tree to parse
+   * `node`: the target node to find
+
+  Remark:
+   * Returns None if not found
+   
   """
-  if (node == tree):
-    return path
+  if (node == tree): return path
   for c in tree[2]:
     p=getPathFromNode(c,node,path+'/'+c[0])
     if (p): return p
@@ -458,7 +733,7 @@ def getAllNodesByTypeList(tree,typelist):
 
   Return:
    * a list of strings, each string is the path to a matching node
-   
+ 
   """
   if (tree[3] != typelist[0]): return None
   if (tree[3]==CK.CGNSTree_ts): start=""
@@ -485,19 +760,206 @@ def getPaths(tree,path,plist):
  
 # --------------------------------------------------   
 def getAllPaths(tree):
-  """
-  Returns all the paths of a CGNS/Python tree as a list of strings.
-  """
   plist=[]
   path=''
   getPaths(tree,path,plist)
   return plist
 
+# --------------------------------------------------   
+def getPathFullTree(tree):
+  """
+  undocumented
+  """
+  return getAllPaths(tree)
+
+# --------------------------------------------------   
+def checkPath(path):
+  """
+  undocumented
+  """
+  return path
+
+# --------------------------------------------------   
+def hasValueFlags(node,flags):
+  """
+  undocumented
+  """
+  return path
+
+# --------------------------------------------------   
+def hasValue(node,flags):
+  """
+  undocumented
+  """
+  return path
+
+# --------------------------------------------------   
+def hasValueDataType(node,flags):
+  """
+  undocumented
+  """
+  return path
+
+# --------------------------------------------------   
+def getPathToList(path,nofirst=False,noroot=True):
+  """
+  Return the path as a list of node names::
+
+    >>>print getPathToList('/Base/Zone/ZoneBC')
+    ['','Base','Zone','ZoneBC']
+    >>>print getPathToList('/Base/Zone/ZoneBC',True)
+    ['Base','Zone','ZoneBC']
+    >>>print getPathToList('/')
+    []
+
+  - Args:
+   * `path`: path string to split
+   * `nofirst`: Removes the first empty string that appears for absoulte paths (default: False)
+   * `noroot`: If true then removes the CGNS/HDF5 root if found (default: True)
+
+  - Return:
+   * The list of path elements as strings
+   * With '/' as argument, the function returns an empty list
+
+  - Remarks:
+   * The path is first processed by :py:func`getPathNormalize` before its split
+   
+  """
+  lp=[]
+  if (len(path)>0):
+    path=getPathNormalize(path)
+    if (noroot): path=getPathNoRoot(path)
+    if (nofirst and (path[0]=='/')): path=path[1:]
+    if (path not in ['/','']): lp=path.split('/')
+  return lp
+
+# --------------------------------------------------   
+def getPathAncestor(path,level=1):
+  """
+  Return the path of the node parent of the argument node path::
+
+    >>>print getPathAncestor('/Base/Zone/ZoneBC')
+    '/Base/Zone'
+
+  - Args:
+   * `path`: path string of the child node 
+   * `level`: number of levels back from the child (default: 1 means the father of the node)
+
+  - Return:
+   * The ancestor path
+   * If the path is '/' its ancestor is None.
+   
+  """
+  lp=getPathToList(path)
+  if (len(lp)>1):    ancestor='/'.join(lp[:-1])
+  elif (len(lp)==1): ancestor='/'
+  else:              ancestor=None
+  return ancestor
+
+# --------------------------------------------------   
+def getPathLeaf(path):
+  """
+  Return the leaf node name of the path::
+
+    >>>print getPathLeaf('/Base/Zone/ZoneBC')
+    'ZoneBC'
+
+  - Args:
+   * `path`: path string of the child node 
+
+  - Return:
+   * The leaf node name
+   * If the path is '/' the function returns ''
+
+  """
+  leaf=''
+  lp=getPathToList(path)
+  if (len(lp)>0): leaf=lp[-1]
+  return leaf
+
+# --------------------------------------------------   
+def getPathNoRoot(path):
+  """
+  Return the path without the implementation node 'HDF5 Mother node'
+  if detected as first element::
+
+    >>>print getPathNoRoot('/HDF5 Mother Node/Base/Zone/ZoneBC')
+    ['Base','Zone','ZoneBC']
+
+  - Args:
+   * `path`: path string to check
+
+  - Return:
+   * The new path without `HDF5 Mother node` if found
+
+  - Remarks:
+   * The path is processed by :py:func`getPathNormalize`
+   
+  """
+  lp=[]
+  if (len(path)>0):
+    path=getPathNormalize(path)
+    lp=path.split('/')
+    if (lp[0]==CK.CGNSHDF5ROOT_s): lp=lp[1:]
+    '/'.join(lp)
+  return path
+
+# --------------------------------------------------   
+def getPathAsTypes(tree,path):
+  """
+  Return the list of types corrsponding to the argument path in the tree::
+
+    >>>getPathAsTypes(T,'/Base/Zone/ZoneBC')
+    ['CGNSBase_t','Zone_t','ZoneBC_t']
+
+  - Args:
+   * `tree`: target tree
+   * `path`: path to parse in the tree
+
+  - Return:
+   * The list of CGNS types found
+   * `None` if the path is not found
+   
+  """
+  ltypes=[]
+  leg=True
+  if (checkRootNode(tree,legacy=False)):
+    p=getPathToList(path)
+    if (p and (p[0] != CK.CGNSTree_ts)):
+      path='/'+CK.CGNSTree_s+'/'+path
+      leg=False
+  path=getPathNormalize(path)
+  while path not in ['/', None]:
+    t=getTypeByPath(tree,path)
+    ltypes+=[t]
+    path=getPathAncestor(path)
+  if (leg and (len(ltypes)>0)): ltypes=ltypes[:-1]
+  ltypes.reverse()
+  return ltypes
+
+# --------------------------------------------------   
+def getPathNormalize(path):
+  """
+  Return the same path as minimal string, removes `////` and `/./` and other simplifiable stuff::
+
+    >>>print getPathNormalize('///Base/././//Zone/../Zone/./ZoneBC//.')
+    '/Base/Zone/ZoneBC'
+
+  - Args:
+   * `path`: path string to simplify
+
+  - Return:
+   * The simplified path
+
+  - Remarks:
+   * Uses :py:func`os.path.normpath`
+   
+  """
+  path=os.path.normpath(path)
+  return path
+
 # --------------------------------------------------
 def childNames(node):
-  """
-  Returns the list of children names of a CGNS/Python node
-  """
   r=[]
   if (node == None): return r
   for c in node[2]:
@@ -537,6 +999,9 @@ def getAllNodesByTypeSet(tree,typeset):
 
 # --------------------------------------------------
 def getAllNodesFromTypeSet(typelist,node,path,result):
+  """
+  undocumented
+  """
   for c in node:
     if (c[3] in typelist):
       result.append("%s/%s"%(path,c[0]))
@@ -571,7 +1036,10 @@ def getNodeAllowedDataTypes(node):
   return tlist
 
 # -----------------------------------------------------------------------------
-def hasChildrenType(parent,ntype):
+def hasChildType(parent,ntype):
+  """
+  undocumented
+  """
   if (not parent): return None
   r=[]
   for n in parent[2]:
@@ -580,7 +1048,52 @@ def hasChildrenType(parent,ntype):
   return None
 
 # -----------------------------------------------------------------------------
+def hasAncestorName(child,name):
+  """
+  undocumented
+  """
+  return True
+
+# -----------------------------------------------------------------------------
+def hasAncestorType(child,type):
+  """
+  undocumented
+  """
+  return True
+
+# -----------------------------------------------------------------------------
+def hasAncestorLink(child):
+  """
+  undocumented
+  """
+  return True
+
+# -----------------------------------------------------------------------------
+def hasParentLink(child):
+  """
+  undocumented
+  """
+  return True
+
+# -----------------------------------------------------------------------------
+def getPathToLink(child):
+  """
+  undocumented
+  """
+  return True
+
+# -----------------------------------------------------------------------------
+def hasChildLink(child):
+  """
+  undocumented
+  """
+  return True
+
+# -----------------------------------------------------------------------------
 def hasChildName(parent,name):
+  """
+  undocumented
+  """
   if (not parent): return None
   for n in parent[2]:
     if (n[0] == name): return n
@@ -607,16 +1120,6 @@ def stringValueMatches(node,reval):
 
 # --------------------------------------------------
 def checkLinkFile(lkfile,lksearch=['']):
-  """
-  Returns a tuple if the argument filename is found.
-  The tuple contains (directory, filename) with directory the place
-  where the filename was found.
-
-  The search path list argument contains the ordered list of
-  directories where to look for the file.
-
-  If the file is not found, (None,None) is returned.
-  """
   found=(None,None)
   if (lksearch==[]): lksearch=['']
   for spath in lksearch:
@@ -637,19 +1140,25 @@ def copyArray(a):
   return b
 
 # --------------------------------------------------
-def copyNode(n):
+def checkLink(tree,node):
   """
-  Returns a **deep** copy of current node.
+  undocumented
   """
-  newn=[n[0],copyArray(n[1]),deepcopyNodeList(n[2]),n[3]]
-  return newn
+  return node
 
 # --------------------------------------------------
-def deepcopyNodeList(la):
-  if (not la): return la
-  ra=[]
-  for a in la:
-    ra.append(copyNode(a))
-  return ra
-
+# should not be documentated with docstrings
+def test():
+  p='/Base/Zone/ZoneBC'
+  print getPathNoRoot(p)
+  print getPathNormalize(p)
+  print getPathToList(p)
+  print getPathToList(p,True)
+  import CGNS.PAT.cgnslib as CGLB
+  T=CGLB.newCGNSTree()
+  b=CGLB.newBase(T,'Base',3,3)
+  z=CGLB.newZone(b,'Zone')
+  x=CGLB.newBoundary(z,'Bnd01',((1,1,1),(1,1,1)))
+  print getPathAsTypes(T,'/Base/Zone/ZoneBC')
+  
 # ----

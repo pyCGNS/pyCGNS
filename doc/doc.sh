@@ -20,23 +20,26 @@ do_mod()
  fi
 }
 
-do_mod intro index doc/Intro intro ' '
+#do_mod intro index doc/Intro intro ' '
 do_mod PAT readme PATternMaker PAT /PAT
-do_mod NAV readme NAVigater NAV /NAV
-do_mod MAP readme MAPper MAP /MAP
-do_mod DAT readme DATaTracer DAT /DAT
-do_mod WRA readme WRApper WRA /WRA
-do_mod APP readme APPlicater APP /APP
-do_mod VAL readme VALidater VAL /VAL
+#do_mod NAV readme NAVigater NAV /NAV
+#do_mod MAP readme MAPper MAP /MAP
+#do_mod DAT readme DATaTracer DAT /DAT
+#do_mod WRA readme WRApper WRA /WRA
+#do_mod APP readme APPlicater APP /APP
+#do_mod VAL readme VALidater VAL /VAL
 
 # --- ALL
+if test "x$WITHPDFFILES" != "x"
+then
 cp build/doc/latex/*.pdf   ./build/doc/pdf
 cp build/doc/latex/*/*.pdf ./build/doc/pdf
 cp build/doc/pdf/* ./doc
 cp build/doc/pdf/* ./build/doc/html/_pdf
+fi
 mkdir build/doc/html/images 2>/dev/null
 cp doc/images/* build/doc/html/images
-(cd build/doc/html; tar cvf ../pyCGNS-html.tar .)
+#(cd build/doc/html; tar cvf ../pyCGNS-html.tar .)
 
 # --- web site update
 #

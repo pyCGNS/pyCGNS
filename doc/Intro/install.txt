@@ -153,8 +153,14 @@ NAV depends
 The *TkTreectrl* module is required. You first need to install *tktreectrl*
 (last version tested is *tktreectrl-2.3) and *TkinterTreectrl* to map it
 to Python (last version tested is *TkinterTreectrl-1.0*).
-You may have to add the *tktreectrl* path into a `TCLLIBPATH` shell
-variable (maybe you should add a `LD_LIBRARY_PATH` as well).
+
+.. warning::
+
+The usual error : `_tkinter.TclError: can't find package treectrl`
+comes from a missing search path for TK/Tcl, you have to set the
+the *tktreectrl* path into the `TCLLIBPATH` shell variable.
+
+
 
 MAP depends
 ~~~~~~~~~~~

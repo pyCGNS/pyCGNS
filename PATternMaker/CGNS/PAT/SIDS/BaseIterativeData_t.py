@@ -8,7 +8,7 @@
 import CGNS.PAT.cgnslib      as C
 import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
-import numpy             as N
+import numpy                 as N
 #
 data=C.newBaseIterativeData(None)
 C.newDataArray(data,K.NumberOfZones_s)

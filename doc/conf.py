@@ -11,7 +11,8 @@ intersphinx_mapping={'wraix': (mapdir+'/WRA',None),
                      'datix': (mapdir+'/DAT',None)
                      }
 
-templates_path = ['_templates']
+#templates_path = ['_templates']
+html_theme_path = ['.']
 source_suffix = '.txt'
 
 import os
@@ -27,11 +28,11 @@ exclude_dirnames = ['VALidater','TRAnslater','DATaTracer','APPlicater',
                  'build','doc','lib','.hg']
 
 pygments_style = 'sphinx'
-html_theme = 'sphinxdoc'
+html_theme = 'pycgns'
 html_title = "%s"%os.environ['PYCGNSMOD']
 html_logo = 'images/%s-logo-small.jpg'%os.environ['PYCGNSMOD']
 html_favicon =  'images/pyCGNS-logo-tiny.ico'
-html_static_path = ['_static']
+#html_static_path = ['_static']
 html_use_index = True
 htmlhelp_basename = 'pyCGNSdoc'
 
@@ -47,5 +48,7 @@ latex_documents = [
 latex_logo = 'images/%s-logo.jpg'%os.environ['PYCGNSMOD']
 latex_use_parts = False
 latex_use_modindex = True
+
+autodoc_member_order='bysource'
 
 # --- last line

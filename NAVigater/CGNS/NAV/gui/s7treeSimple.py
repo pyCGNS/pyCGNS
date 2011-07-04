@@ -32,7 +32,7 @@ import s7log
 S7HASVTK=1
 try:
   import s7vtkView
-except ImportError:
+except ValueError: #ImportError:
   S7HASVTK=0
     
 # --------------------------------------------------------------------

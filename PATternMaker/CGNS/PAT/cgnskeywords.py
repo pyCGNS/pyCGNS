@@ -32,9 +32,9 @@ import CGNS.pyCGNSconfig
 try:
   CGNS_VERSION = int(float(CGNS.pyCGNSconfig.MLL_VERSION))
   CGNS_DOTVERS = CGNS_VERSION/1000.
-except TypeError:
-  CGNS_VERSION = 2520
-  CGNS_DOTVERS = 2.52
+except (TypeError,ValueError):
+  CGNS_VERSION = 3130
+  CGNS_DOTVERS = '3.1.3'
 
 MODE_READ  = 0
 MODE_WRITE = 1
@@ -59,6 +59,8 @@ CG_FILE_NONE      = 0
 CG_FILE_ADF       = 1
 CG_FILE_HDF5      = 2
 CG_FILE_XML       = 3    
+
+CGNSHDF5ROOT_s = "HDF5 MotherNode"
 
 # --------------------------------------------------
 # --- ADF Datatypes

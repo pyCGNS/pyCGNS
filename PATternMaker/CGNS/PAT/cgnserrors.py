@@ -21,13 +21,22 @@ def perr(id, *tp):
   return ret
 
 class cgnsException(Exception):
-  def __init__(self,value,msg=""):
-    self.value = value
-    self.msg=msg
+  def __init__(self,code,args=None):
+    self.code=code
+    self.value=args
   def __str__(self):
-    if self.msg: ret=perr(self.value,self.msg)
-    else:        ret=perr(self.value)
+    if (self.value is not None): ret=perr(self.code,self.value)
+    else:                       ret=perr(self.code)
     return ret
+
+class cgnsNodeError(cgnsException):
+  pass
+
+class cgnsNameError(cgnsNodeError):
+  pass
+
+class cgnsTypeError(cgnsNodeError):
+  pass
 
 # -----------------------------------------------------------------------------
 errorTable={
@@ -48,17 +57,22 @@ errorTable={
    21 : "No node with name [%s]",
    22 : "Node name should have type string",
    23 : "Empty string is not allowed for a node name",
-   24 : "Node name should not contain a '/'",
-   25 : "Node name length should not be greater than 32 chars",
+   24 : "Node name should not contain a '/' (you have [%s])",
+   25 : "Node name length should not be greater than 32 chars: %s",
    26 : "Bad name [%s] for this node",
    27 : "Bad type [%s] for this node",
-   28 : "Node [%s] should have no child",            
+   28 : "Node [%s] should have no child",
+   29 : "Node name cannot be '.' or '..'",
+   30 : "Nodes [%s] and [%s] are different",
+   40 : "Node [%s] has type [%s] which is not a CGNS/SIDS type",
+   90 : "Node is None!",
+   91 : "Root node can have only CGNSBase_t or CGNSLibraryVersion_t children",
    99 : "More than one CGNSLibraryVersion node found",
   100 : "Absolute path implies a root node with CGNSLibraryVersion node",
   101 : "No child on CGNS tree first level",
   102 : "Duplicated child name [%s] in [%s]",
-  103 : "Parent node of [%s] should have type [%s]",
-  104 : "Parent node of [%s] should have type in %s",
+  103 : "Node type of [%s] not [%s]",
+  104 : "Node type of [%s] not in %s",
   105 : "String data should have type array or string",
   106 : "Value should be a real array",
   107 : "Value should be an integer array",

@@ -33,7 +33,6 @@ if (mllp is not None):
 else:
   mllroot='/usr/local'
 
-
 # --- If you leave empty the variables below the build process would
 #     try to guess for you, using the PATH you gave above.
 #     Change these values only if you need to add/change something.
