@@ -638,7 +638,7 @@ def getPathByTypeFilter(tree,filter=None):
 
   Args:
    * `tree`: the target tree to parse
-   * `filter`: a regular expresion for the complete path to math to
+   * `filter`: a regular expression for the complete path to math to
 
   Remark:
    * Returns empty list if no match
@@ -651,7 +651,8 @@ def nodeByPath(path,tree):
   if (not checkPath(path)): return None
   if (path[0]=='/'): path=path[1:]
   if (tree[3]==CK.CGNSTree_ts):
-    path=string.join(path.split('/')[1:],'/')
+#    path=string.join([CK.CGNSTree_s]+path.split('/')[1:],'/')
+#    path=string.join(path.split('/')[1:],'/')
     n=getNodeFromPath(path.split('/'),tree)
   else:
     n=getNodeFromPath(path.split('/'),[None,None,[tree],None])
@@ -683,6 +684,7 @@ def getNodeFromPath(path,node):
   undocumented
   """
   for c in node[2]:
+    print c[0], path
     if (c[0] == path[0]):
       if (len(path) == 1): return c
       return getNodeFromPath(path[1:],c)
@@ -735,7 +737,7 @@ def getAllNodesByTypeList(tree,typelist):
    * a list of strings, each string is the path to a matching node
  
   """
-  if (tree[3] != typelist[0]): return None
+  if (tree[3]!=typelist[0]): return None
   if (tree[3]==CK.CGNSTree_ts): start=""
   else:                         start="%s"%tree[0]
   n=getAllNodesFromTypeList(typelist[1:],tree[2],start,[])
@@ -745,7 +747,7 @@ def getAllNodesByTypeList(tree,typelist):
 # --------------------------------------------------
 def getAllNodesFromTypeList(typelist,node,path,result):
   for c in node:
-    if (c[3] == typelist[0]):
+    if (c[3]==typelist[0]):
       if (len(typelist) == 1):
         result.append("%s/%s"%(path,c[0]))
       else:

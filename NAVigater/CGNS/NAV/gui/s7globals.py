@@ -51,7 +51,7 @@ class s7optionsStorage:
      ]
     # Next line is replaced each time you run distutils...
     # then s7globals_.py becomes... s7globals.py (good job boy !) 
-    self.s7icondirectoryprefix="/home_local/eucass/tools"
+    self.s7icondirectoryprefix="/home/tools/local/eosz"
     self.iconDir=self.s7icondirectoryprefix+'/share/CGNS/NAV/icons'
     self.firedox='firefox %s/share/CGNS/NAV/doc/CGNSNAV.html &'%\
                   self.s7icondirectoryprefix

@@ -29,11 +29,12 @@ import s7linkView
 import s7operateView
 import s7log
 
-S7HASVTK=1
-try:
-  import s7vtkView
-except ValueError: #ImportError:
-  S7HASVTK=0
+# should rewrite the vtk driver
+S7HASVTK=0 
+#try:
+#  import s7vtkView
+#except ImportError:
+#  S7HASVTK=0 
     
 # --------------------------------------------------------------------
 class wEditBarStore:
@@ -561,6 +562,7 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     self.el_t3=it.element_create(type=IMAGE,image=ik['data-array-large'])
     self.el_t5=it.element_create(type=IMAGE,image=ik['node-sids-leaf'])
     self.el_t2=it.element_create(type=IMAGE,image=ik['mark-node'])
+    self._tree.element_configure(self.el_t2,draw=(0,'!marked'))
     self.el_t6=it.element_create(type=IMAGE,image=(\
       ik['subtree-sids-failed'], 'checkfail',\
       ik['subtree-sids-ok'],     'checkgood',\
@@ -1434,35 +1436,44 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     
   def getSIDSelement(self,tktree,pth,node,item):
     enew = tktree.create_item(parent=item, button=1, open=0)[0]
-
+    newstateslist=''
     imode=s7check.getStatusForThisNode(pth,node,self._parent,self.CGNStarget)
     self._paths[str(enew)]=pth
     
-    tktree.itemstate_set(enew,'!leaf')
+    #tktree.itemstate_set(enew,'!leaf')
 
     tktree.itemstyle_set(enew, self.col_check, self.st_checkicon)
-    tktree.itemstate_set(enew,'!checkwarn')
-    tktree.itemstate_set(enew,'!checkgood')
-    tktree.itemstate_set(enew,'!checkfail')
+    #tktree.itemstate_set(enew,'!checkwarn')
+    #tktree.itemstate_set(enew,'!checkgood')
+    #tktree.itemstate_set(enew,'!checkfail')
+    newstateslist+=' !checkwarn !checkgood !checkfail'
 
     lmode=s7linkView.getLinkStatusForThisNode(pth,node,
                                               self._parent,self.CGNStarget,
                                               self._viewtree)
 
     tktree.itemstyle_set(enew, self.col_linkstatus,self.st_link)
-    tktree.itemstate_set(enew,'!islink')
-    tktree.itemstate_set(enew,'!islinkignored')
-    tktree.itemstate_set(enew,'!islinkbroken')    
-    if (lmode==1): tktree.itemstate_set(enew,'islink')
-    if (lmode==2): tktree.itemstate_set(enew,'islinkignored')
-    if (lmode==3): tktree.itemstate_set(enew,'islinkbroken')
+    #tktree.itemstate_set(enew,'!islink')
+    #tktree.itemstate_set(enew,'!islinkignored')
+    #tktree.itemstate_set(enew,'!islinkbroken')    
+    if   (lmode==1):
+      #tktree.itemstate_set(enew,'islink')
+      newstateslist+=' islink !islinkignored !islinkbroken'
+    elif (lmode==2):
+      #tktree.itemstate_set(enew,'islinkignored')
+      newstateslist+=' !islink islinkignored !islinkbroken'
+    elif (lmode==3):
+      #tktree.itemstate_set(enew,'islinkbroken')
+      newstateslist+=' !islink !islinkignored islinkbroken'
 
     if (node[2] == []):
       tktree.item_configure(enew,button=False)
-      tktree.itemstate_set(enew,'leaf')
+      #tktree.itemstate_set(enew,'leaf')
+      newstateslist+=' leaf'
       tktree.itemstyle_set(enew, self.col_graph, self.st_leaf)
     else:   
       tktree.itemstyle_set(enew, self.col_graph, self.st_folder)
+      newstateslist+=' !leaf'
 
     if (imode[0]):
       tktree.itemelement_config(enew, self.col_graph, self.el_text1,
@@ -1490,9 +1501,11 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
     tktree.itemelement_config(enew, self.col_ddata, self.el_text6,
                               text=PATu.getNodeShape(node),datatype=STRING)
     if (PATu.hasFortranFlag(node)):
-      tktree.itemstate_set(enew,'fortran')
+      #tktree.itemstate_set(enew,'fortran')
+      newstateslist+=' fortran'
     else:
-      tktree.itemstate_set(enew,'!fortran')
+      #tktree.itemstate_set(enew,'!fortran')
+      newstateslist+=' !fortran'
 
     tktree.itemstyle_set(enew, self.col_tdata, self.st_dataentry)
     if (s7utils.canBeShown(node[1])) :
@@ -1516,7 +1529,10 @@ class wTreeSimple(s7windoz.wWindoz,ScrolledTreectrl):
 
     tktree.itemstyle_set(enew, self.col_status, self.st_statusicon)
     tktree.element_configure(self.el_t2,draw=(0,'!marked'))
-    tktree.itemstate_set(enew,'!marked')
+    #tktree.itemstate_set(enew,'!marked')
+    newstateslist+=' !marked'
+
+    tktree.itemstate_set(enew,newstateslist)
     
   # --------------------------------------------------------------------
   class wEditBase(Frame):

@@ -41,9 +41,10 @@ else:
 # --- stuff to add for HDF5 
 
 HDF5_INSTALL=h5root
+HDF5_INSTALL2=h5root+'/../'
 #HDF5_VERSION          = ''
-HDF5_PATH_INCLUDES    = [HDF5_INSTALL+'/include']
-HDF5_PATH_LIBRARIES   = [HDF5_INSTALL+'/lib']
+HDF5_PATH_INCLUDES    = [HDF5_INSTALL+'/include',HDF5_INSTALL2+'/include']
+HDF5_PATH_LIBRARIES   = [HDF5_INSTALL+'/lib',HDF5_INSTALL2+'/lib']
 #HDF5_LINK_LIBRARIES   = []
 #HDF5_EXTRA_ARGS       = []
 

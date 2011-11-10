@@ -35,6 +35,8 @@
 
 #define S2P_FDEFAULT  ((S2P_FNONE|S2P_FFOLLOWLINKS)& ~S2P_FREVERSEDIMS)
 
+static PyObject *MAPErrorObject;
+
 /* ------------------------------------------------------------------------- */
 typedef struct s2p_ent_t
 {
@@ -77,7 +79,7 @@ PyObject* s2p_loadAsHDF(char *filename,
 			char *searchpath,
 			PyObject *update);
 /* ------------------------------------------------------------------------- */
-int 	  s2p_saveAsHDF(char      *filename,
+PyObject* s2p_saveAsHDF(char      *filename,
     	                PyObject  *tree,
     	                PyObject  *links,
     	                int        flags,

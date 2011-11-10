@@ -12,18 +12,55 @@ The *CGNS.MAP* provides the user with two functions ``load`` and ``save``.
 The actual actions these functions are performing heavily depends on the
 arguments you pass to these functions. We give here some examples taken
 from usual applications of *CGNS.MAP*.
+All the examples are assuming the following imports::
+
+  import CGNS.MAP
+  import CGNS.PAT.cgnsutils    as CGU
+  import CGNS.PAT.cgnskeywords as CGK
 
 Complete load of a *CGNS/HDF* file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The flag means we want to follow the symbolic links and then obtain
+a merged tree as if there was a single one::
+
+  (tree,links)=CGNS.MAP.load("./T0.cgns",CGNS.MAP.S2P_FOLLOWLINKS)
+
 
 Complete save of a *CGNS/Python* tree
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Load of a *CGNS/HDF* file skeletton
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You want to parse a GCNS/Python tree without the actual data (numpy arrays).
+This is usefull when you want to find out specific nodes before actually
+load them::
+
+  flags=CGNS.MAP.S2P_DEFAULT|CGNS.MAP.S2P_NODATA
+  (tree,lk)=CGNS.MAP.load("data/T0.cgns",flags,0,None,[],None)
+
+  # find all zones
+  zlist=CGU.getAllNodesByTypeList2([CGK.Zone_ts],tree)
+
+In this example, we can also set the *depth* to 3 instead of 0. Then
+the parse would stop at the zone level.
+If you set *depth* to 0 there is no depth limit, 
+a level of 1 means only `CGNSTree_t`,
+a level of 2 means `CGNSLibraryVersion_t`, `CGNSBase_t` and so on...
 
 Update a sub-tree
 ~~~~~~~~~~~~~~~~~
+
+An existing CGNS/Python tree is read again from a file. The *update*
+dictionnary declares the nodes you want to update instead of creating
+new ones::
+
+  updict={}
+  path='/Disk/zone1/GridCoordinates/CoordinateZ'
+  updict[path]=CGU.getValueByPath(tree,path)
+  path='/Disk/zone2/GridCoordinates/CoordinateX'
+  updict[path]=CGU.getValueByPath(tree,path)
+
+  (tree,lk)=CGNS.MAP.load("data/T0.cgns",CGNS.MAP.S2P_DEFAULT,0,None,[],updict)
 
 Copy a part of a tree
 ~~~~~~~~~~~~~~~~~~~~~
@@ -34,6 +71,14 @@ Copy and merge links
 Transpose C-order arrays during load/save
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Some usual issues
+~~~~~~~~~~~~~~~~~
 
+Your load leads to an empty tree::
 
+ >>>import CGNS.MAP
+ >>>(tree,links)=CGNS.MAP.load("./T0.cgns",CGNS.MAP.S2P_FOLLOWLINKS)
+ >>>tree
+ ['CGNSTree', None, None, 'CGNSTree_t']
 
+your file is an ADF file, not an HDF5 file.

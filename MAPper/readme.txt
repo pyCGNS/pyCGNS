@@ -39,9 +39,9 @@ There are two functions: the ``load`` and the ``save``. The ``load`` reads
 a *CGNS/HDF5* file and produces a *CGNS/Python* tree. The ``save`` takes a 
 *CGNS/Python* tree and writes the contents in a *CGNS/HDF5* file::
 
- (tree,links)=CGNS.MAP.load(filename,flags,threshold,depth,path,linkpath)
+ (tree,links)=CGNS.MAP.load(filename,flags,depth,path,linkpaths,updatepaths)
 
- status=CGNS.MAP.save(filename,tree,links,flags,threshold,depth,path)
+ status=CGNS.MAP.save(filename,tree,links,flags,depth,path)
 
 The arguments and the return values are:
 
@@ -76,12 +76,6 @@ The arguments and the return values are:
    tree can load/save in a completely different way depending 
    on these ``flags``.
 
- * **threshold**:
-   This positive integer value sets the maximum size of data to load/save.
-   If the data size is above the threshold, no action is performed on this
-   data. If you want to have all the data, use a 0 ``threshold`` which means
-   no limit on data size.
-
  * **depth**:
    This positive integer value sets the level of children the load/save
    takes into account. For example, a depth of 2 would stop load/save
@@ -96,13 +90,19 @@ The arguments and the return values are:
    All the nodes along this path are taken into account for load/save
    actions.
 
- * **linkpath**:
+ * **linkpaths**:
    The load may need a *link files search path* if your linked-to files
    are not in the current directory. The ``linkpath`` argument is a list
    of strings, during the load *CGNS.MAP* will look for linked-to files using
    this list: it is parsed from the first element to the last,
    the selected file is the first found in this directory list.
    See the **very important warning** below.
+
+ * **updatepaths**:
+   A dictionnary of paths (string) as keys and CGNS/Python nodes as values.
+   When the load reaches a node with the path in the keys, the numpy value
+   is updated instead of creating a new array. You can pass your own array
+   with an already allocated memory zone or update and already loaded numpy.
 
 .. warning::
    The current directory is **not** in the link search path. So if your
@@ -199,6 +199,12 @@ SIDS-to-Python Mapping
 .. toctree::
 
    sids-to-python
+
+Examples
+--------
+
+.. toctree::
+
    examples
    
 The MAP API

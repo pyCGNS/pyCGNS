@@ -15,7 +15,7 @@ if (prog[0]=='/'):
   ppref=os.path.dirname(prog)
 else:
   for pp in os.environ['PATH'].split(':'):
-    if (os.exists("%s/%s"%(pp,prog))):
+    if (os.path.exists("%s/%s"%(pp,prog))):
       ppref=os.path.dirname("%s/%s"%(pp,prog))
       break
 ppref=ppref+'/../lib/python%s/site-packages'%sys.version[:3]
@@ -63,7 +63,11 @@ for o, a in opts:
   if (o in ("-h", "--help")): usage()
 
 import CGNS.NAV.gui.s7mainWindow as s7tk
-s7tk.run(args,recurse,ppath,verbose)
+if 0:
+ s7tk.run(args,recurse,ppath,verbose)
+else:
+ import cProfile
+ cProfile.run('s7tk.run(args,recurse,ppath,verbose)', 'CGNS.NAV.profile')
 
 
 # --------------------------------------------------------------------

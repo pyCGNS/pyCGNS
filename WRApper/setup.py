@@ -89,11 +89,7 @@ lext_modules  = [
 
 if HAS_CYTHON:
   lext_modules+=[Extension('CGNS.WRA.mll',['CGNS/WRA/mll.pyx'],
-                           include_dirs = include_dirs,
-                           library_dirs = library_dirs,
-                           libraries    = optional_libs)]
-  lext_modules+=[Extension('CGNS.WRA._libmodule',['CGNS/WRA/maplib.pyx'],
-                           include_dirs = include_dirs,
+                           include_dirs = include_dirs+['CGNS/WRA'],
                            library_dirs = library_dirs,
                            libraries    = optional_libs)]
            

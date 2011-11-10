@@ -4,7 +4,7 @@
 #  -------------------------------------------------------------------------
 #  $File$
 #  $Node$
-#  $Last$
+#  $Last: v4.0.1 $
 #  -------------------------------------------------------------------------
 import os
 import sys
@@ -23,7 +23,10 @@ versionList=[4]
 # order IS significant
 CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater',
              'DATaTracer','VALidater','APPlicater']
+
 modList=CGNSmodList[:]
+modList.remove('DATaTracer')
+modList.remove('VALidater')
 
 solist='m:'
 lolist=["without-mod=","single-mod=","prefix="]

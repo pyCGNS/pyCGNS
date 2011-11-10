@@ -51,11 +51,11 @@ class CGNSparser:
     if (T[0]==None):
      T[0]=CGK.CGNSTree_s
      T[3]=CGK.CGNSTree_ts   
-    for z in CGU.getAllNodesByTypeList([CGK.Zone_ts],T):
+    for z in CGU.getAllNodesByTypeSet(T,[CGK.Zone_ts]):
       zT=CGU.nodeByPath(z,T)
       mpath.append(CGU.removeFirstPathItem(z))
       ncolors+=1
-      g=CGU.getAllNodesByTypeList([CGK.GridCoordinates_ts],zT)[0]
+      g=CGU.getAllNodesByTypeSet(zT,[CGK.GridCoordinates_ts])[0]
       gT=CGU.nodeByPath(g,zT)
       cx=CGU.nodeByPath("%s/CoordinateX"%gT[0],gT)
       cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
@@ -76,12 +76,12 @@ class CGNSparser:
       spath+=[[zp+'/[imin]',zp+'/[imax]',
                zp+'/[jmin]',zp+'/[jmax]',
                zp+'/[kmin]',zp+'/[kmax]']]
-      for nzbc in CGU.getAllNodesByTypeList([CGK.ZoneBC_ts],zT):
+      for nzbc in CGU.getAllNodesByTypeSet(zT,[CGK.ZoneBC_ts]):
         zbcT=CGU.nodeByPath(nzbc,zT)
-        for nbc in CGU.getAllNodesByTypeList([CGK.BC_ts],zbcT):
+        for nbc in CGU.getAllNodesByTypeSet(zbcT,[CGK.BC_ts]):
           bpath+=[['%s/[%s]'%(zp,nbc.split('/')[1])]]
           bcT=CGU.nodeByPath(nbc,zbcT)
-          for rbc in CGU.getAllNodesByTypeList([CGK.IndexRange_ts],bcT):
+          for rbc in CGU.getAllNodesByTypeSet(bcT,[CGK.IndexRange_ts]):
             ptr=CGU.nodeByPath(rbc,bcT)[1].T.flat
             brg=scx[ptr[0]:ptr[3]+1,ptr[1]:ptr[4]+1,ptr[2]:ptr[5]+1]
             bl+=[[brg]]
@@ -457,16 +457,16 @@ class wVTKView(s7windoz.wWindoz):
       renWin.AddRenderer(waxs)
       wren.SetLayer(0)
       waxs.SetLayer(1)
-
+      
       self._meshes=[]
       self._parser=CGNSparser()
-      
+
       for m in self._parser.getActorList(T):
         a=m.actors
         self._meshes.append(m)
         for aa in a:
           wren.AddActor(aa)
-
+      
         if (self._xmin>m._bounds[0]):self._xmin=m._bounds[0]
         if (self._ymin>m._bounds[2]):self._ymin=m._bounds[2]
         if (self._zmin>m._bounds[4]):self._zmin=m._bounds[4]
@@ -480,7 +480,7 @@ class wVTKView(s7windoz.wWindoz):
       wren.GetActiveCamera().Azimuth(90.0)
       wren.GetActiveCamera().Zoom(1.0)
       wren.GetActiveCamera().OrthogonalizeViewUp()
-
+      
       (self.vx,self.vy,self.vz)=wren.GetActiveCamera().GetViewUp()
       (self.cx,self.cy,self.cz)=wren.GetActiveCamera().GetFocalPoint()
       (self.px,self.py,self.pz)=wren.GetActiveCamera().GetPosition()

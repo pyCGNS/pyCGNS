@@ -45,11 +45,11 @@ static char *DT_C1="C1";
 /* ------------------------------------------------------------------------- */
 static L3_Cursor_t *s2p_addoneHDF(char *filename,s2p_ctx_t *context)
 {
-  L3_Cursor_t *l3db;
+  L3_Cursor_t *l3dbptr;
   int openfile;
   s2p_ent_t *nextdbs,*prevdbs;
 
-  l3db=NULL;
+  l3dbptr=NULL;
   openfile=1;
   nextdbs=context->dbs;
   if (nextdbs==NULL)
@@ -64,7 +64,7 @@ static L3_Cursor_t *s2p_addoneHDF(char *filename,s2p_ctx_t *context)
     {
       if (!strcmp(nextdbs->filename,filename))
       {
-	l3db=nextdbs->l3db;
+	l3dbptr=nextdbs->l3db;
 	openfile=0;
 	S2P_TRACE(("### open [%s] (already opened)\n",filename));
 	break;
@@ -81,15 +81,20 @@ static L3_Cursor_t *s2p_addoneHDF(char *filename,s2p_ctx_t *context)
   if (openfile)
   {
     /* L3_F_OWNDATA|L3_F_WITHCHILDREN */
-    nextdbs->l3db=L3_openFile(filename,L3E_OPEN_OLD,L3F_DEFAULT);
+    l3dbptr=L3_openFile(filename,L3E_OPEN_OLD,L3F_DEFAULT);
+    if (!L3M_ECHECK(l3dbptr))
+    {
+      PyErr_SetString(MAPErrorObject,CHL_getMessage(l3dbptr));
+      return NULL;
+    }
     nextdbs->filename=(char*)malloc(sizeof(char)*strlen(filename)+1);
     strcpy(nextdbs->filename,filename);
     nextdbs->dirname=NULL;
     nextdbs->next=NULL;
-    l3db=nextdbs->l3db;
+    l3dbptr=nextdbs->l3db=l3dbptr;
     S2P_TRACE(("### open [%s]\n",filename));
   }
-  return l3db;
+  return l3dbptr;
 }
 /* ------------------------------------------------------------------------- */
 static void s2p_closeallHDF(s2p_ctx_t *context)
@@ -741,7 +746,7 @@ static PyObject* s2p_parseAndReadHDF(hid_t    	  id,
   return o_node;
 }
 /* ------------------------------------------------------------------------- */
-static int s2p_parseAndWriteHDF(hid_t     id,
+static PyObject* s2p_parseAndWriteHDF(hid_t     id,
                                 PyObject  *tree,
                                 char      *curpath,
                                 char      *path,
@@ -749,16 +754,18 @@ static int s2p_parseAndWriteHDF(hid_t     id,
 				L3_Cursor_t *l3db)
 {
   char *name=NULL,*label=NULL,*tdat=NULL,altlabel[L3C_MAX_NAME+1];
-  int sz=0,n=0,ret=0,tsize=1,transpose=0,reverse=0;
+  int sz=0,n=0,tsize=1,transpose=0,reverse=0;
   int ndat=0,ddat[NPY_MAXDIMS];
   char *vdat=NULL;
   L3_Node_t *node=NULL;
+  PyObject *ret=NULL;
 
   if (    (PyList_Check(tree))
        && (PyList_Size(tree) == 4)
        && (PyString_Check(PyList_GetItem(tree,0)))
        && (PyString_Check(PyList_GetItem(tree,3))))
   {
+    ret=tree;
     name=PyString_AsString(PyList_GetItem(tree,0));
     label=PyString_AsString(PyList_GetItem(tree,3));
     strcpy(altlabel,label);
@@ -835,6 +842,10 @@ static int s2p_parseAndWriteHDF(hid_t     id,
     }
     curpath[strlen(curpath)-strlen(name)-1]='\0';
   }
+  else
+  {
+    PyErr_SetString(MAPErrorObject,"CGNS/Python bad node structure");
+  }
   S2P_FREECONTEXTPTR(context);
   return ret;
 }
@@ -873,6 +884,10 @@ PyObject* s2p_loadAsHDF(char *filename,
   S2P_TRACE(("### load file [%s]\n",filename));
 
   l3db=s2p_addoneHDF(filename,context);
+  if (l3db==NULL)
+  {
+    return NULL;
+  }
   s2p_setlinksearchpath(l3db,searchpath,context);
   L3M_NEWNODE(rnode);
   rnode=L3_nodeRetrieve(l3db,l3db->root_id,rnode);
@@ -901,17 +916,17 @@ PyObject* s2p_loadAsHDF(char *filename,
   return tree;
 }
 /* ------------------------------------------------------------------------- */
-int s2p_saveAsHDF(char      *filename,
-                  PyObject  *tree,
-                  PyObject  *links,
-                  int        flags,
-                  int        depth,
-                  char*      path)    
+PyObject* s2p_saveAsHDF(char      *filename,
+			PyObject  *tree,
+			PyObject  *links,
+			int        flags,
+			int        depth,
+			char*      path)    
 {
-  int ret=0,sz=-1;
+  int sz=-1;
   char cpath[MAXPATHSIZE],*tdat=NULL;
   s2p_ctx_t *context=NULL;
-  PyObject *rtree,*otree=NULL;
+  PyObject *rtree,*otree=NULL,*ret;
   int dims[L3C_MAX_DIMS];
   int ndat=0,ddat[NPY_MAXDIMS],n=0;
   char *vdat=NULL;
@@ -932,6 +947,7 @@ int s2p_saveAsHDF(char      *filename,
   S2P_TRACE(("### SIDS-to-python v%d.%d\n",
 	     SIDSTOPYTHON_MAJOR,SIDSTOPYTHON_MINOR));
   S2P_TRACE(("### save in file [%s]\n",filename));
+  ret=tree;
   if (    (PyList_Check(tree))
        && (PyList_Size(tree) == 4)
        && (PyString_Check(PyList_GetItem(tree,0)))
@@ -942,8 +958,8 @@ int s2p_saveAsHDF(char      *filename,
     l3db=L3_openFile(filename,L3E_OPEN_NEW,L3F_DEFAULT);
     if (!L3M_ECHECK(l3db))
     {
-      CHL_printError(l3db);
-      return -1;
+      PyErr_SetString(MAPErrorObject,CHL_getMessage(l3db));
+      return NULL;
     }
     rtree=PyList_GetItem(tree,2);
     if (PyList_Check(rtree))
@@ -981,7 +997,6 @@ int s2p_saveAsHDF(char      *filename,
     S2P_FREECONTEXTPTR(context);
     free(context);
   }
-
   return ret;
 }
 /* ------------------------------------------------------------------------- */

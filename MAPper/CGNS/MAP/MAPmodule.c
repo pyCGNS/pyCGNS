@@ -7,6 +7,7 @@
 #  ------------------------------------------------------------------------- 
 */
 #include "SIDStoPython.c"
+
 /* ------------------------------------------------------------------------- */
 static PyObject *
 MAP_load(PyObject *self, PyObject *args)
@@ -63,7 +64,6 @@ MAP_load(PyObject *self, PyObject *args)
   }
   ret=s2p_loadAsHDF(filename,flags,depth,path,pth,update);
   if (pth){free(pth);};
-
   return ret;
 }
 /* ------------------------------------------------------------------------- */
@@ -71,8 +71,8 @@ static PyObject *
 MAP_save(PyObject *self, PyObject *args)
 {
   char *filename, *path;
-  int flags,depth,ret;
-  PyObject *tree,*links;
+  int flags,depth;
+  PyObject *tree,*links,*ret;
 
   depth=999;
   path=NULL;
@@ -84,7 +84,7 @@ MAP_save(PyObject *self, PyObject *args)
     return NULL;
   }
   ret=s2p_saveAsHDF(filename,tree,links,flags,depth,path);
-  return PyInt_FromLong(ret);
+  return ret;
 }
 /* ------------------------------------------------------------------------- */
 static PyMethodDef MAP_methods[] = {
@@ -140,6 +140,14 @@ initMAP(void)
   S2P_SETCONSTINDICT("DELETEMISSING",S2P_FDELETEMISSING);
   S2P_SETCONSTINDICT("DEFAULT",S2P_FDEFAULT);
   S2P_SETCONSTINDICT("DEFAULTS",S2P_FDEFAULT);
+
+  if (MAPErrorObject == NULL) 
+  {
+    MAPErrorObject = PyErr_NewException("CGNS.MAP.error", NULL, NULL);
+    if (MAPErrorObject == NULL) { return; }
+  }
+  Py_INCREF(MAPErrorObject);
+  PyModule_AddObject(s2p_m, "error", MAPErrorObject);
 }
 /* ------------------------------------------------------------------------- */
 
