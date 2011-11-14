@@ -4,29 +4,42 @@
 #  ---------------------------------------------------------------------------
 #  $Release$
 #  ---------------------------------------------------------------------------
+"""
+ TYPES, ENUMERATES, CONSTANTS, NAMES from CGNS/MLL
+
+ Conventions:
+
+ [1] A CGNS/SIDS string constant is postfixed with _s
+ 'ZoneType' is ZoneType_s
+
+ [2] A CGNS/SIDS string constant repersenting a type has _ts
+ 'ZoneType_t' is ZoneType_ts
+
+ [3] A list of possible values for a given type has _l
+ ZoneType_l is [Null_s,UserDefined_s,Structured_s,Unstructured_s]
+ which is same as ["Null","UserDefined","Structured","Unstructured"]
+ List should be ordered wrt the actual enumerate
+
+ [4] An enumerate mapping of a list of values is not prefixed
+ ZoneType is {'Unstructured':3,'Null':0,'Structured':2,'UserDefined':1}
+
+ [5] The reverse dictionnary of the previous one is postfixed with _
+ ZoneType_ is {0:'Null',1:'UserDefined',2:'Structured',3:'Unstructured'}
+
+ [6] The variables are declared with an integer value (not enumerates)
+ wrt their position in the _l list, for example:
+ (Null,UserDefined,Structured,Unstructured)=ZoneType_.keys()
+ 
+"""
 
 # ----------------------------------------------------------------------------
-# TYPES, ENUMERATES, CONSTANTS, NAMES from CGNS/SIDS v2.5.3
-#
-# [1] A CGNS/SIDS string constant is postfixed with _s
-# 'ZoneType' is ZoneType_s
-#
-# [2] A CGNS/SIDS string constant repersenting a type has _ts
-# 'ZoneType_t' is ZoneType_ts
-#
-# [3] A list of possible values for a given type has _l
-# ZoneType_l is [Structured_s,Unstructured_s,Null_s,UserDefined_s]
-# which is same as ["Structured","Unstructured","Null","UserDefined"]
-#
-# [4] An enumerate mapping of a list of values is not prefixed
-# ZoneType is {'Unstructured':3,'Null':0,'Structured':2,'UserDefined':1}
-#
-# [5] The reverse dictionnary of the previous one is postfixed with _
-# ZoneType_ is {0:'Null',1:'UserDefined',2:'Structured',3:'Unstructured'}
-#
-# ----------------------------------------------------------------------------
-#
 import CGNS.pyCGNSconfig
+
+def stringAsKeyDict(l):
+  return dict(zip(l,range(len(l))))
+
+def enumAsKeyDict(l):
+  return dict(zip(range(len(l)),l))
 
 # -------------------------------------------------- MLL numeric constants
 try:
@@ -286,19 +299,28 @@ GridConnectivityType_l = [Overset_s,Abutting_s,Abutting1to1_s,
                           Null_s,UserDefined_s]
 
 # --------------------------------------------------
+ZoneType_ts    = "ZoneType_t"
+Zone_ts        = "Zone_t"
+
 Structured_s   = "Structured"
 Unstructured_s = "Unstructured"
+
 ZoneType_s     = "ZoneType"
-ZoneType_l     = [Structured_s,Unstructured_s,Null_s,UserDefined_s]
+
+ZoneType_l     = [Null_s,UserDefined_s,Structured_s,Unstructured_s]
+ZoneType       = stringAsKeyDict(ZoneType_l)
+ZoneType_      = enumAsKeyDict(ZoneType_l)
+
+(Null,Userdefined,Structured,Unstructured)=ZoneType_.keys()
 
 # --------------------------------------------------
 TimeAccurate_s    = "TimeAccurate"
 NonTimeAccurate_s = "NonTimeAccurate"
 SimulationType_ts = "SimulationType_t"
 SimulationType_s  = "SimulationType"
-SimulationType_l  = [TimeAccurate_s,NonTimeAccurate_s,Null_s,UserDefined_s]
-
-
+SimulationType_l  = [Null_s,UserDefined_s,TimeAccurate_s,NonTimeAccurate_s]
+SimulationType    = stringAsKeyDict(SimulationType_l)
+SimulationType_   = enumAsKeyDict(SimulationType_l)
 
 # --------------------------------------------------
 ConstantRate_s        = "ConstantRate"
@@ -701,34 +723,61 @@ GoverningEquationsType_l      = [Euler_s,NSLaminar_s,NSTurbulent_s]
 GoverningEquationsType_s      = "GoverningEquationsType"
 GoverningEquationsType_ts     = "GoverningEquationsType_t"
 
-BCType_s                      = "BCType"
-BCType_ts                     = "BCType_t"
-BCTypeSimple_s                = "BCTypeSimple"
-BCTypeSimple_ts               = "BCTypeSimple_t"
+# --------------------------------------------------
+BCType_s                   = "BCType"
+BCType_ts                  = "BCType_t"
+BCTypeSimple_s             = "BCTypeSimple"
+BCTypeSimple_ts            = "BCTypeSimple_t"
 
-BCAxisymmetricWedge_s         = "BCAxisymmetricWedge"
-BCDegenerateLine_s            = "BCDegenerateLine"
-BCDegeneratePoint_s           = "BCDegeneratePoint"
-BCDirichlet_s                 = "BCDirichlet"
-BCExtrapolate_s               = "BCExtrapolate"
-BCFarfield_s                  = "BCFarfield"
-BCGeneral_s                   = "BCGeneral"
-BCInflow_s                    = "BCInflow"
-BCInflowSubsonic_s            = "BCInflowSubsonic"
-BCInflowSupersonic_s          = "BCInflowSupersonic"
-BCNeumann_s                   = "BCNeumann"
-BCOutflow_s                   = "BCOutflow"
-BCOutflowSubsonic_s           = "BCOutflowSubsonic"
-BCOutflowSupersonic_s         = "BCOutflowSupersonic"
-BCSymmetryPlane_s             = "BCSymmetryPlane"
-BCSymmetryPolar_s             = "BCSymmetryPolar"
-BCTunnelInflow_s              = "BCTunnelInflow"
-BCTunnelOutflow_s             = "BCTunnelOutflow"
-BCWall_s                      = "BCWall"
-BCWallInviscid_s              = "BCWallInviscid"
-BCWallViscous_s               = "BCWallViscous"
-BCWallViscousHeatFlux_s       = "BCWallViscousHeatFlux"
-BCWallViscousIsothermal_s     = "BCWallViscousIsothermal"
+BCAxisymmetricWedge_s      = "BCAxisymmetricWedge"
+BCDegenerateLine_s         = "BCDegenerateLine"
+BCDegeneratePoint_s        = "BCDegeneratePoint"
+BCDirichlet_s              = "BCDirichlet"
+BCExtrapolate_s            = "BCExtrapolate"
+BCFarfield_s               = "BCFarfield"
+BCGeneral_s                = "BCGeneral"
+BCInflow_s                 = "BCInflow"
+BCInflowSubsonic_s         = "BCInflowSubsonic"
+BCInflowSupersonic_s       = "BCInflowSupersonic"
+BCNeumann_s                = "BCNeumann"
+BCOutflow_s                = "BCOutflow"
+BCOutflowSubsonic_s        = "BCOutflowSubsonic"
+BCOutflowSupersonic_s      = "BCOutflowSupersonic"
+BCSymmetryPlane_s          = "BCSymmetryPlane"
+BCSymmetryPolar_s          = "BCSymmetryPolar"
+BCTunnelInflow_s           = "BCTunnelInflow"
+BCTunnelOutflow_s          = "BCTunnelOutflow"
+BCWall_s                   = "BCWall"
+BCWallInviscid_s           = "BCWallInviscid"
+BCWallViscous_s            = "BCWallViscous"
+BCWallViscousHeatFlux_s    = "BCWallViscousHeatFlux"
+BCWallViscousIsothermal_s  = "BCWallViscousIsothermal"
+
+BCType_l = [Null_s,UserDefined_s,
+           BCAxisymmetricWedge_s,BCDegenerateLine_s,BCDegeneratePoint_s,
+           BCDirichlet_s,BCExtrapolate_s,BCFarfield_s,
+           BCGeneral_s,BCInflow_s,BCInflowSubsonic_s,BCInflowSupersonic_s,
+           BCNeumann_s,BCOutflow_s,BCOutflowSubsonic_s,BCOutflowSupersonic_s,
+           BCSymmetryPlane_s,BCSymmetryPolar_s,
+           BCTunnelInflow_s,BCTunnelOutflow_s,
+           BCWall_s,BCWallInviscid_s,BCWallViscous_s,
+           BCWallViscousHeatFlux_s,BCWallViscousIsothermal_s,
+           FamilySpecified_s]
+BCType   = stringAsKeyDict(BCType_l)
+BCType_  = enumAsKeyDict(BCType_l)
+(Null,UserDefined,
+ BCAxisymmetricWedge,BCDegenerateLine,BCDegeneratePoint,
+ BCDirichlet,BCExtrapolate,BCFarfield,
+ BCGeneral,BCInflow,BCInflowSubsonic,BCInflowSupersonic,
+ BCNeumann,BCOutflow,BCOutflowSubsonic,BCOutflowSupersonic,
+ BCSymmetryPlane,BCSymmetryPolar,
+ BCTunnelInflow,BCTunnelOutflow,
+ BCWall,BCWallInviscid,BCWallViscous,
+ BCWallViscousHeatFlux,BCWallViscousIsothermal,
+ FamilySpecified)=BCType_.keys()
+
+# CAUTION, index of values in the lists below cannot be used as enumerate,
+# the lists are subset of the global list and some index are missing.
 BCTypeSimple_l   =[Null_s,BCGeneral_s,BCDirichlet_s,BCNeumann_s,
                    BCExtrapolate_s,BCWallInviscid_s,BCWallViscousHeatFlux_s,
                    BCWallViscousIsothermal_s,BCWallViscous_s,BCWall_s,
@@ -739,8 +788,8 @@ BCTypeSimple_l   =[Null_s,BCGeneral_s,BCDirichlet_s,BCNeumann_s,
                    UserDefined_s]
 BCTypeCompound_l = [BCInflow_s,BCOutflow_s,BCFarfield_s,
                     Null_s,UserDefined_s]
-BCType_l         = BCTypeSimple_l+BCTypeCompound_l
 
+# --------------------------------------------------
 ThermalConductivityModel_ts          = "ThermalConductivityModel_t"
 ThermalConductivityModel_s           = "ThermalConductivityModel"
 ThermalConductivityModelType_l       = [Null_s,ConstantPrandtl_s,PowerLaw_s,
@@ -869,8 +918,6 @@ ZoneBC_s                      = "ZoneBC"
 ZoneGridConnectivity_ts       = "ZoneGridConnectivity_t"
 ZoneIterativeData_ts          = "ZoneIterativeData_t"
 ZoneIterativeData_s           = "ZoneIterativeData"
-ZoneType_ts                   = "ZoneType_t"
-Zone_ts                       = "Zone_t"
 
 UserDefinedData_ts            = "UserDefinedData_t"
 
