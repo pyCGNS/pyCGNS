@@ -4,7 +4,7 @@
 #  -------------------------------------------------------------------------
 #  $File$
 #  $Node$
-#  $Last$
+#  $Last: v4.0.1 $
 #  -------------------------------------------------------------------------
 #
 # Change these values to fit your installation
@@ -12,8 +12,17 @@
 #
 import sys
 
+# --------------------------------------------------------------------
+def pathfromexec(execname):
+  import os
+  for pth in os.environ['PATH']:
+    apth=os.path.normpath(os.path.expanduser(pth))
+    if os.path.exists(apth+'/'+execname): return pth
+  return ''
+
 mylocal=sys.prefix
 
+# --------------------------------------------------------------------
 INCLUDE_DIRS =['%s/include'%mylocal]
 LIBRARY_DIRS =['%s/lib'%mylocal]
 
@@ -29,10 +38,11 @@ PYTHON_PATH_LIBRARIES   = [sys.prefix+'/lib']
 PYTHON_LINK_LIBRARIES   = [] 
 PYTHON_EXTRA_ARGS       = []
 
-HDF5_VERSION          = ''
-HDF5_PATH_INCLUDES    = []
-HDF5_PATH_LIBRARIES   = []
-HDF5_LINK_LIBRARIES   = [] 
+hdf5path=pathfromexec('h5dump')
+HDF5_VERSION          = '1.8'
+HDF5_PATH_INCLUDES    = [hdf5path+'../include']
+HDF5_PATH_LIBRARIES   = [hdf5path+'..:lib']
+HDF5_LINK_LIBRARIES   = ['hdf5'] 
 HDF5_EXTRA_ARGS       = []
 
 MLL_PATH_LIBRARIES    = []

@@ -118,7 +118,9 @@ def search(tag,deps=[]):
        C.NUMPY_PATH_INCLUDES,
        C.NUMPY_PATH_LIBRARIES,
        C.NUMPY_LINK_LIBRARIES,
-       C.NUMPY_EXTRA_ARGS)=find_numpy(C.NUMPY_PATH_INCLUDES)
+       C.NUMPY_EXTRA_ARGS)=find_numpy(C.NUMPY_PATH_INCLUDES,
+                                      C.NUMPY_PATH_LIBRARIES,
+                                      C.NUMPY_LINK_LIBRARIES)
 
       if (C.NUMPY_VERSION == ''):
         print pfx+'ERROR: %s setup cannot find Numpy!'%tag
@@ -357,11 +359,9 @@ def find_CHLone(pincs,plibs,libs):
   return (vers,pincs,plibs,libs,extraargs)
 
 # --------------------------------------------------------------------
-def find_numpy(pincs):
+def find_numpy(pincs,plibs,libs):
   vers=''
   extraargs=[]
-  libs=[]
-  plibs=[]
   pdir=os.path.normpath(sys.prefix)
   xdir=os.path.normpath(sys.exec_prefix)
   pincs+=['%s/lib/python%s/site-packages/numpy/core/include'\

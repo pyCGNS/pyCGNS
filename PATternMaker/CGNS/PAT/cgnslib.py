@@ -13,7 +13,7 @@ import CGNS.PAT.cgnsutils    as CU
 
 import numpy as NPY
 
-__CGNS_LIBRARY_VERSION__=2.4
+__CGNS_LIBRARY_VERSION__=3.1
 
 # =============================================================================
 # MLL-like calls
@@ -24,36 +24,63 @@ __CGNS_LIBRARY_VERSION__=2.4
 # - function patterns
 #   newXXX :   creates a new XXX_t type node
 #   updateXXX: updates fields in the XXX_t node
-#   checkXXX:  check if node is ok for SIDS and for Python/CGNS
+#   checkXXX:  check if node is ok for SIDS and for CGNS/Python
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
 def newCGNSTree():
-  """Tree node creation::
+  """Top CGNS/Python tree node creation::
 
-  'newNode:N='*newCGNS*'()'
+   T=newCGNSTree()
 
-  Returns a new <node> representing a CGNS tree root, with a `CGNSTree_t` type
-  (**NOT** a SIDS type) and with a `CGNSLibraryVersion` child.
+  - Return:
+   * The new `CGNSTree_t` node
+
+  - Remarks:
+   * You *should* keep the returned node in a variable or reference to it in
+     any other way, this tree root is a Python object that would be garbagged
+     if its reference count reaches zero.
+   * The `CGNSTree` node is a CGNS/Python node which has no existence in a
+     disk HDF5 file.
+   
+  - Children:
+   * :py:func:`newCGNSBase`
+
   """
   return newCGNS()
 
 def newCGNSBase(tree,name,ncell,nphys):
-  """-CGNSBase node creation::
+  """*CGNSBase* node creation::
 
-  'newNode:N='*newBase*'(parent:N,name:S,ncell:[1,2,3],nphys:[1,2,3])'
+    # The base is put in the `T` children list
+    T=newCGNSTree()
+    newBase(T,'Box-1',3,3)
+
+    # No parent, you should fetch the new node using a variable
+    B=newBase(None,'Box-2',3,3)
   
-  Returns a new <node> representing a CGNSBase_t sub-tree.
-  If a parent is given, the new <node> is added to the parent children list,
-  that is to the base list of the parent CGNSTree.
-  Maps the 'cg_base_write' MLL
-  chapter 6.2
+  - Args:
+   * `tree`: the parent node (`<node>` or `None`)
+   * `name`: base name (`string`)
+   * `cdim`: cell dimensions (`int`)
+   * `pdim`: physical dimensions (`int`)
+
+  - Return:
+   * The new `CGNSBase_t` node
+
+  - Remarks:
+   * If a parent is given, the new node is added to the parent children list.
+
+  - Children:
+   * :py:func:`newZone`
   """
   return newBase(tree,name,ncell,nphys)
 
 def newCGNS():
   ##code correction: Modify CGNS value type from float64 to float32.
-  node=[CK.CGNSLibraryVersion_s,NPY.array([__CGNS_LIBRARY_VERSION__],dtype='float32'),[],
+  node=[CK.CGNSLibraryVersion_s,
+        NPY.array([__CGNS_LIBRARY_VERSION__],dtype='float32'),
+        [],
         CK.CGNSLibraryVersion_ts]
   badnode=[CK.CGNSTree_s,None,[node],CK.CGNSTree_ts]
   return badnode
@@ -389,41 +416,43 @@ def newOrdinal(parent,value=0):
   return node
 
 # -----------------------------------------------------------------------------
-def newZone(parent,name,size=(2,2,2),
+def newZone(parent,name,zsize=None,
             ztype=CK.Structured_s,
             family=''):
-  """-Zone node creation -Zone
+  """*Zone* node creation::
+
+    s=NPY.array([[10],[2],[0]],dtype='i')
+    
+    T=newCGNSTree()
+    B=newBase(T,'Box-1',3,3)
+    Z=newZone(B,name,s,CK.Unstructured_s,'Wing')
   
-  'newNode:N='*newZone*'(parent:N,name:S,size:(I*),ztype:CK.ZoneType)'
+  - Args:
+   * `parent`: the parent node (`<node>` or `None`)
+   * `name`: zone name (`string`)
+   * `zsize`: array of dimensions (`numpy.ndarray`)
+   * `ztype`: zone type (`string`)
+   * `family`: zone family (`string`)
+
+  - Return:
+   * The new `Zone_t` node
+
+  - Remarks:
+   * The zone size has dimensions [IndexDimensions][3]
   
-  Returns a new <node> representing a Zone_t sub-tree.
-  If a parent is given, the new <node> is added to the parent children list.
-  Maps the 'cg_zone_write' MLL
-  chapter 6.3
+  - Children:
+   * :py:func:`newElements`
+   
   """
   asize=None
   if (ztype not in CK.ZoneType_l): raise CE.cgnsException(206,ztype)
-  if ((len(size) == 3) and (ztype == CK.Structured_s)):
-    ##size=[[size[0],size[1],size[2]],[size[0]-1,size[1]-1,size[2]-1],[0,0,0]]
-    ## code correction: Modify array dimensions:
-    size=[[size[0],size[0]-1,0],[size[1],size[1]-1,0],[size[2],size[2]-1,0]]    
-    asize=NPY.array(size,dtype=NPY.int32,order='Fortran')
-  if ((len(size) == 2) and (ztype == CK.Structured_s)):
-    size=[[size[0],size[1]],[size[0]-1,size[1]-1],[0,0]]
-    asize=NPY.array(size,dtype=NPY.int32,order='Fortran')
-  if ((len(size) == 1) and (ztype == CK.Structured_s)):
-    size=[[size[0][1]],[size[0]-1],[0]]
-    asize=NPY.array(size,dtype=NPY.int32,order='Fortran')
-  if (ztype == CK.Unstructured_s):
-    asize=NPY.array(size,dtype=NPY.int32,order='Fortran')
-  if (asize == None): raise CE.cgnsException(999) 
+  if (zsize == None): raise CE.cgnsException(999) 
   CU.checkDuplicatedName(parent,name)
-  znode=CU.newNode(name,asize,[],CK.Zone_ts,parent)
-  ## code correction: Modify ztype string into NPY string array
+  znode=CU.newNode(name,zsize,[],CK.Zone_ts,parent)
   CU.newNode(CK.ZoneType_s,CU.setStringAsArray(ztype),[],CK.ZoneType_ts,znode)
   if (family):
-    ## code correction: Modify family string into NPY string array
-    CU.newNode(CK.FamilyName_s,CU.setStringAsArray(family),[],CK.FamilyName_ts,znode)
+    CU.newNode(CK.FamilyName_s,
+               CU.setStringAsArray(family),[],CK.FamilyName_ts,znode)
   return znode
 
 def numberOfZones(tree,basename):
@@ -516,32 +545,42 @@ def newDiscreteData(parent,name):
   return node 
   
 # -----------------------------------------------------------------------------
-def newElements(parent,
-                elementstype=CK.UserDefined_s,
-                elementsconnectivity=None,
-                elementsrange=None):
-  """
-  -Elements node creation -Elements
+def newElements(parent,name,
+                etype=CK.UserDefined_s,
+                econnectivity=None,
+                erange=None,
+                eboundary=0
+                ):
+  """*Elements_t* node creation::
+
+   quads=newElements(None,'QUADS',CGK.QUAD_4,quad_array,NPY.array(start,end))'
   
-  'newNode:N='*newAElements*'(parent:N,elementsType:CK.ElementType,value:CK.ElementConnectivity)'
-  
-   Returns a new <node> representing a Element_t sub-tree. 
-   If a parent is given, the new <node> is added to the parent children list. 
-   If the parent has already a child name Element then
-   only the ElementType,IndexRange_t,ElementConnectivity are created.
-   chapter 7.3 Add node :ElementType,IndexRange_t are required Add DataArray : ElementConnectivity is required
+  - Args:
+   * `parent`: the parent node (`<node>` or `None`)
+   * `name`: element node name (`string`)
+   * `etype`: the type of element (`string`)
+   * `econnectivity`: actual array of point connectivities (`numpy.ndarray`)
+   * `erange`: the first and last index of the connectivity (`numpy.ndarray`)
+   * `eboundary`: number of boundary elements (`int`)
+
+  - Return:
+   * The new `Elements_t` node
+
+  - Remarks:
+   * If a parent is given, the new node is added to the parent children list.
+   * The `elementsrange` *should* insure a unique and continuous index for
+     all elements nodes in the same parent zone.
+     
+  - Children:
+   * :py:func:`newDescriptor`
   """
-  enode=CU.hasChildName(parent,CK.Element_s)
-  if (enode == None):
-    enode=CU.newNode(CK.Element_s,None,[],CK.Element_ts,parent)
-  if (elementstype not in CK.ElementType_l):
-    raise CE.cgnsException(250,elementstype)
-  CU.checkDuplicatedName(enode,CK.ElementType_s)   
-  ccnode=CU.newNode(CK.ElementType_s,CU.setStringAsArray(elementstype),[],
-                 CK.ElementType_ts,enode)
-  newDataArray(enode,CK.ElementConnectivity_s,elementsconnectivity)
-  CU.checkDuplicatedName(enode,CK.ElementRange_s) 
-  cnode=CU.newNode(CK.ElementRange_s,elementsrange,[],CK.IndexRange_ts,enode)  
+  CU.checkDuplicatedName(parent,name)   
+  if (etype not in CK.ElementType_l):
+    raise CE.cgnsException(250,etype)
+  v=NPY.array([CK.ElementType[etype],eboundary],dtype='i')
+  enode=CU.newNode(name,v,[],CK.Elements_ts,parent)
+  newDataArray(enode,CK.ElementConnectivity_s,econnectivity)
+  newPointRange(enode,CK.ElementRange_s,erange)
   return enode
 
 # -----------------------------------------------------------------------------
@@ -1411,3 +1450,15 @@ def newDiffusionModel(parent):
 #def newPart():
 #  pass
 
+# -----------------------------------------------------------------------------
+def nextRange(previous,etype,earray):
+  r=previous
+  if (previous==None): r=NPY.array([0,0],dtype='i')
+  npe=CK.ElementTypeNPE[etype]
+  if (npe):
+    nelems=len(earray.flat)/npe
+  else:
+    raise 'Oupss not implemented variable number of elems'
+  start=r[1]+1
+  end  =start+nelems-1
+  return NPY.array([start,end],dtype='i')

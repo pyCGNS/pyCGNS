@@ -34,6 +34,29 @@ cdef cg_open_(char *filename, int mode):
 cdef enum:
   MAXNAMELENGTH = 33
 
+cdef asnumpydtype(cgnslib.DataType_t dtype):
+    if (dtype==CK.RealSingle):  return numpy.float32
+    if (dtype==CK.RealDouble):  return numpy.float64
+    if (dtype==CK.Integer):     return numpy.int32
+    if (dtype==CK.LongInteger): return numpy.int64
+    if (dtype==CK.Character):   return numpy.uint8
+    return None
+        
+cdef fromnumpydtype(dtype):
+    if (dtype==numpy.float32):  return CK.RealSingle
+    if (dtype==numpy.float64):  return CK.RealDouble
+    if (dtype==numpy.int32):    return CK.Integer
+    if (dtype==numpy.int64):    return CK.LongInteger
+    if (dtype==numpy.uint8):    return CK.Character
+    return None
+
+class CGNSException(Exception):
+    def __init__(self,code,msg):
+        self.msg=msg
+        self.code=code
+    def __str__(self):
+        return "pyCGNS Error: [%.4d] %s"%(self.code,self.msg)
+    
 # ====================================================================
 cdef class pyCGNS(object):
   """
@@ -359,7 +382,7 @@ cdef class pyCGNS(object):
 
     - Return:
      * An `xrange` from 1 to <number of families> or an empty list if there is
-       no zone at all.
+       no family at all.
        
     - Remarks:
      * See also :py:func:`nfamilies`
@@ -463,5 +486,372 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_fambc_write(self._root,B,F,fambcname,
                                        bocotype,&fbcid)
     return fbcid
+  # ---------------------------------------------------------------------------
+  cpdef geo_read(self, int B, int F, int G):
+    """
+    Returns a tuple with information about the Geometry reference.
+
+    - Args:
+     * `B`: base id 
+     * `F`: family id
+     * `G`: geometry reference id 
+
+    - Return:
+     * argument base id (`int`)
+     * argument family id (`int`)     
+     * argument geometry reference id (`int`)     
+     * geometry reference name (`string`)
+     * geometry reference file (`string`)
+     * geometry reference CAD name (`string`)
+     * geometry reference number of parts (`int`)     
+
+     - Remarks:
+     * use :py:func:`family_read` to get the geometry reference id
+    """
+    cdef char *filename
+    cdef int   n
+    cdef char  geoname[MAXNAMELENGTH]
+    cdef char  cadname[MAXNAMELENGTH]
+    self._error=cgnslib.cg_geo_read(self._root,B,F,G,geoname,&filename,
+                                    cadname,&n)
+    return (B,F,G,geoname,filename,cadname,n)
+  # ---------------------------------------------------------------------------
+  cpdef geo_write(self, int B, int F, char *geoname, char *filename,
+                  char *cadname):
+    """
+    Creates a new Geometry reference.
+
+    - Args:
+     * `B`: parent base id (:py:func:`bases` and :py:func:`nbases`).
+     * `F`: parent family id (:py:func:`families` and :py:func:`nfamilies`).
+     * `geoname`: name of the new geometry reference (`string` should not exceed 32 chars)
+     * `filename`: path to geometry reference file
+     * `cadname`: name of the geometry reference CAD
+
+    - Return:
+     * New Geometry reference id
+
+    - Remarks:
+     * The cad should be an enumerate as described in SIDS section 12.7
+    """
+    cdef int gid
+    self._error=cgnslib.cg_geo_write(self._root,B,F,geoname,filename,cadname,
+                                     &gid)
+    return gid
+  # ---------------------------------------------------------------------------
+  cpdef part_read(self, int B, int F, int G, int P):
+    """
+    Returns a tuple with information about a Geometry reference part.
+
+    - Args:
+     * `B`: base id 
+     * `F`: family id
+     * `G`: geometry reference id
+     * `P`: geometry reference part id 
+
+    - Return:
+     * argument base id (`int`)
+     * argument family id (`int`)     
+     * argument geometry reference id (`int`)
+     * argument geometry reference part id (`int`)     
+     * geometry reference part name (`string`)
+    """
+    cdef char partname[MAXNAMELENGTH]
+    self._error=cgnslib.cg_part_read(self._root,B,F,G,P,partname)
+    return (B,F,G,P,partname)
+  # ---------------------------------------------------------------------------
+  cpdef part_write(self, int B, int F, int G, char *partname):
+    """
+   Creates a new Geometry reference part.
+
+    - Args:
+     * `B`: parent base id (:py:func:`bases` and :py:func:`nbases`).
+     * `F`: parent family id (:py:func:`families` and :py:func:`nfamilies`).
+     * `G`: geometry reference id
+     * `partname`: name of the new geometry reference part (`string` should not exceed 32 chars)
+
+    - Return:
+     * New Geometry reference part id
+    """
+    cdef int pid
+    self._error=cgnslib.cg_part_write(self._root,B,F,G,partname,&pid)
+    return pid
+  # ---------------------------------------------------------------------------
+  cpdef ngrids(self, int B, int Z):
+    """
+    Returns the number of grids in a zone::
+
+      for G in range(1,db.ngrids(B,Z)+1):
+         print db.grid_read(B,Z,G)
+
+    - Args:
+     * `B`: parent base id (:py:func:`bases` and :py:func:`nbases`).
+     * `Z`: parent zone id (:py:func:`zones` and :py:func:`nzones`).
+
+    - Return:
+     * The number of grids as an integer
+
+    - Remarks:
+     * See also :py:func:`grids`
+    """
+    cdef int n
+    self._error=cgnslib.cg_ngrids(self._root,B,Z,&n)
+    return n
+  # ---------------------------------------------------------------------------
+  cpdef grids(self, int B, int Z):
+    """
+    Returns the number of grids indices of a zone::
+
+      for G in db.grids(B,Z):
+         print db.grid_read(B,Z,G)
+
+    - Args:
+     * `B`: parent base id (:py:func:`bases` and :py:func:`nbases`).
+     * `Z`: parent zone id (:py:func:`zones` and :py:func:`nzones`).
+
+    - Return:
+     * An `xrange` from 1 to <number of grids> or an empty list if there is
+       no grid at all.
+
+    - Remarks:
+     * See also :py:func:`ngrids`
+    """
+    cdef int n
+    self._error=cgnslib.cg_ngrids(self._root,B,Z,&n)
+    if (n!=0): return xrange(1,n+1)
+    return []
+  # ---------------------------------------------------------------------------
+  cpdef grid_read(self, int B, int Z, int G):
+    """
+    Returns a tuple with information about the grid.
+
+    - Args:
+     * `B`: base id 
+     * `Z`: zone id
+     * `G`: grid id      
+
+    - Return:
+     * argument base id (`int`)
+     * argument zone id (`int`)     
+     * argument grid id (`int`)     
+     * grid name (`string`)
+    """
+    cdef char gridname[MAXNAMELENGTH]
+    self._error=cgnslib.cg_grid_read(self._root,B,Z,G,gridname)
+    return (B,Z,G,gridname)
+  # ---------------------------------------------------------------------------
+  cpdef grid_write(self, int B, int Z, char *gridname):
+    """
+    Creates a new grid.
+
+    - Args:
+     * `B`: base id 
+     * `Z`: zone id
+     * `gridname`: name of the new grid (`string` should not exceed 32 chars)
+
+    - Return:
+     * The `GridCoordinates` name is reserved for the default grid name.
+     You should have one `GridCoordinates` grid per zone if your zone is not
+     empty. See also :py:func:`coord_write` which creates `GridCoordinates`
+     or uses it if present.
+    """
+    cdef int gid
+    self._error=cgnslib.cg_grid_write(self._root,B,Z,gridname,&gid)
+    return gid
+  # ---------------------------------------------------------------------------
+  cpdef ncoords(self, int B, int Z):
+    """
+    Returns the number of coordinates array in the GridCoordinates node.
+
+    - Args:
+     * `B`: parent base id
+     * `Z`: parent zone id
+
+    - Return:
+     * The number of coordinates arrays as an integer
+
+    - Remarks:
+     * See also :py:func:`coords`
+    """
+    cdef int n
+    self._error=cgnslib.cg_ncoords(self._root,B,Z,&n)
+    return n
+  # ---------------------------------------------------------------------------
+  cpdef coords(self, int B, int Z):
+    """
+    Returns the number of coordinates array indices of a zone.
+
+    - Args:
+     * `B`: parent base id
+     * `Z`: parent zone id
+
+    - Return:
+     * An `xrange` from 1 to <number of nodes> or an empty list if there is
+       no coordinates at all.
+
+    - Remarks:
+     * See also :py:func:`ncoords`
+    """
+    cdef int n
+    self._error=cgnslib.cg_ncoords(self._root,B,Z,&n)
+    if (n!=0): return xrange(1,n+1)
+    return []
+  # ---------------------------------------------------------------------------
+  cpdef coord_info(self, int B, int Z, int C):
+    """
+    Returns a tuple with information about the coordinates.
+
+    - Args:
+     * `B`: base id 
+     * `Z`: zone id
+     * `C`: coordinates id (:py:func:`coords` and :py:func:`ncoords`)
+
+    - Return:
+     * argument base id (`int`)
+     * argument zone id (`int`)     
+     * argument coordinates id (`int`)
+     * coordinates array data type (`int`)
+     * coordinate name (`string`)
+
+    - Remarks:
+     * With a X,Y,Z coordinate system, you should look for X (one coordinate
+     id), X (another coordinate id) and Z (another coordinate id). That makes
+     three calls of `coord_info`.
+     * The coordinate array datatype is from `CGNS.PAT.cgnskeywords.DataType_`
+    """
+    cdef cgnslib.DataType_t dtype
+    cdef char coordname[MAXNAMELENGTH]
+    self._error=cgnslib.cg_coord_info(self._root, B, Z, C,&dtype,coordname)
+    return (B,Z,C,dtype,coordname)
+  # ---------------------------------------------------------------------------
+  cpdef coord_read(self, int B, int Z,
+                   char *coordname, cgnslib.DataType_t dtype):
+    """
+    Returns a tuple with actual coordinates array.
+
+    - Args:
+     * `B`: base id 
+     * `Z`: zone id
+     * `coordname`: coordinate array name to read
+     * `dtype`: datatype of the array 
+
+    - Return:
+     * argument base id (`int`)
+     * argument zone id (`int`)     
+     * argument coordinates name (`string`)
+     * argument coordinates array data type (`int`)
+     * min indices (`numpy.ndarray`)
+     * max indices (`numpy.ndarray`)
+     * coordinates (`numpy.ndarray`)
+
+    - Remarks:
+     * The datatype forces a cast if it is not the original type of the array
+     * The coordinate array datatype is from `CGNS.PAT.cgnskeywords.DataType_`
+     * The dtype can be a numpy dtype as far as it can be translated
+    """
+    (bid,bname,cdim,pdim)=self.base_read(B)
+    (bid,zid,zname,zsize)=self.zone_read(B,Z)
+    (bid,zid,zname,zsize)=self.zone_read(B,Z)
+    rmin=numpy.ones((cdim),dtype=numpy.int32)
+    rmax=numpy.ones((cdim),dtype=numpy.int32)
+    rminptr=<int *>numpy.PyArray_DATA(rmin)
+    rmaxptr=<int *>numpy.PyArray_DATA(rmax)
+    cdtype=asnumpydtype(dtype)
+    if (cdtype == None):
+        ndtype=fromnumpydtype(dtype)
+        if (ndtype == None):
+            raise CGNSException(10,"No such data type: %s"%str(ndtype))
+        dtype=ndtype
+        cdtype=asnumpydtype(dtype)
+    coords=numpy.ones(zsize,dtype=cdtype)
+    coordsptr=<void *>numpy.PyArray_DATA(coords)
+    self._error=cgnslib.cg_coord_read(self._root, B, Z,
+                                      coordname,dtype,
+                                      rminptr,rmaxptr,coordsptr)
+    return (B,Z,coordname,dtype,rmin,rmax,coords)
+  # ---------------------------------------------------------------------------
+  cpdef coord_id(self, int B, int Z, int C):
+    """
+    Returns the base internal id.
+
+    - Args:
+     * `B`: the CGNS/MLL base id
+     * `Z`: the CGNS/MLL zone id
+     * `C`: the CGNS/MLL coordinates id
+
+    - Return:
+     * The coordinates internal id
+
+    - Remarks:
+     * This id can be used with the CGNS/ADF or CGNS/HDF5 API. If you don't
+     know what this id is... then you should not use it.
+    """
+    cdef double icid
+    self._error=cgnslib.cg_coord_id(self._root,B,Z,C,&icid)
+    return icid
+  # ---------------------------------------------------------------------------
+  cpdef coord_write(self, int B, int Z, cgnslib.DataType_t dtype,
+                   char *coordname, coords):
+    """
+    Creates a new coordinates.
+
+    - Args:
+     * `B`: base id 
+     * `Z`: zone id
+     * `dtype`: data type of the array contents (`int`)
+     * `coordname`: name of the new coordinates (`string` should not exceed 32 chars)
+     * `coords`: array of actual coordinates (`numpy.ndarray`)
+     
+    - Return:
+     * Creates by default the `GridCoordinates` node
+     * the coords array is a `numpy` with correct data type with respect
+     to the `CGNS.PAT.cgnskeywords.DataType_` argument.
+     * The dtype can be a numpy dtype as far as it can be translated
+    """
+    cdef int cid
+    cdtype=asnumpydtype(dtype)
+    if (cdtype == None):
+        ndtype=fromnumpydtype(dtype)
+        if (ndtype == None):
+            raise CGNSException(10,"No such data type: %s"%str(ndtype))
+        dtype=ndtype
+    coordsptr=<void *>numpy.PyArray_DATA(coords)
+    self._error=cgnslib.cg_coord_write(self._root, B, Z,
+                                       dtype, coordname,coordsptr,&cid)
+    return cid
+  # ---------------------------------------------------------------------------
+  cpdef coord_partial_write(self, int B, int Z, cgnslib.DataType_t dtype,
+                            char *coordname, rmin, rmax, coords):
+    """
+    Modify coordinates.
+
+    - Args:
+     * `B`: base id 
+     * `Z`: zone id
+     * `dtype`: data type of the array contents (`int`)
+     * `coordname`: name of the new coordinates (`string` should not exceed 32 chars)
+     * `rmin`: min range of data to write  (`numpy.ndarray`)
+     * `rmax`: max range of data to write  (`numpy.ndarray`)
+     * `coords`: array of actual coordinates (`numpy.ndarray`)
+     
+    - Return:
+     * Creates by default the `GridCoordinates` node
+     * the coords array is a `numpy` with correct data type with respect
+     to the `CGNS.PAT.cgnskeywords.DataType_` argument.
+    """
+    cdef int cid
+    rminptr=<int *>numpy.PyArray_DATA(rmin)
+    rmaxptr=<int *>numpy.PyArray_DATA(rmax)
+    coordsptr=<float *>numpy.PyArray_DATA(coords)
+    cdtype=asnumpydtype(dtype)
+    if (cdtype == None):
+        ndtype=fromnumpydtype(dtype)
+        if (ndtype == None):
+            raise CGNSException(10,"No such data type: %s"%str(ndtype))
+        dtype=ndtype
+    self._error=cgnslib.cg_coord_partial_write(self._root, B, Z, dtype,
+                                               coordname, rminptr, rmaxptr, 
+                                               coordsptr,&cid)
+    return cid
     
 # ====================================================================

@@ -9,18 +9,24 @@ from  distutils.core import setup, Extension
 from  distutils.util import get_platform
 import glob
 import os
+import sys
+
+cui='/home/tools/local/tiamat/bin/pyside-uic'
+crc='/home/tools/local/tiamat/bin/pyside-rcc'
+ccy='cython'
 
 try:
   from Cython.Distutils import build_ext
   HAS_CYTHON=True
 except:
   HAS_CYTHON=False
+  raise 'Cannot build CGNS.NAV without cython'
+  sys.exit()
 
 # --- pyCGNSconfig search
-import sys
-sys.path+=['../lib']
+sys.path=['../lib']+sys.path
 import setuputils
-(pyCGNSconfig,installprocess)=setuputils.search('NAV')
+(pyCGNSconfig,installprocess)=setuputils.search('NAV',['numpy'])
 # ---
 
 if installprocess:
@@ -39,33 +45,48 @@ if installprocess:
     (options, args) = parser.parse_args(sys.argv)
   except optparse.OptionError: pass
 
-  icondirprefix=sys.prefix
-  try:
-    if (options.prefix != None): icondirprefix=options.prefix
-    fg=open("./CGNS/NAV/gui/s7globals_.py",'r')
-    llg=fg.readlines()
-    fg.close()
-    gg=open("./CGNS/NAV/gui/s7globals.py",'w+')
-    for lg in llg:
-      if (lg[:31]=='    self.s7icondirectoryprefix='):
-        gg.write('    self.s7icondirectoryprefix="%s"\n'%icondirprefix)
-      else:
-        gg.write(lg)
-    gg.close()
-  except KeyError: pass
 
-if (not os.path.exists("build")): os.system("ln -sf ../build build")
-setuputils.installConfigFiles()
+  if (not os.path.exists("build")): os.system("ln -sf ../build build")
+  setuputils.installConfigFiles()
 
-if HAS_CYTHON:
+  modnamelist=[
+      'Q7TreeWindow',
+      'Q7MainWindow',
+      'Q7OptionsWindow',
+      'Q7FormWindow',
+      'Q7FileWindow',
+      'Q7VTKWindow'
+      ]
+  modgenlist=[]
+  modextlist=[Extension("CGNS.NAV.mtree", ["CGNS/NAV/mtree.pyx"],
+                        include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
+                        library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
+                        libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
+                        )]
+  for m in modnamelist:
+     modextlist+=[Extension("CGNS.NAV.%s"%m, ["CGNS/NAV/G/%s.pyx"%m],
+                            include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
+                            library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
+                            libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
+                            )]
+     g=("CGNS/NAV/T/%s.ui"%m,"CGNS/NAV/G/%s.pyx"%m)
+     if (os.path.getmtime(g[0])>os.path.getmtime(g[1])): modgenlist+=[m]
+                  
+  for m in modgenlist:
+      print 'Generate from updated GUI templates: ',m
+      com="(%s -o CGNS/NAV/G/%s.pyx CGNS/NAV/T/%s.ui;(cd CGNS/NAV/G;%s -a %s.pyx))"%(cui,m,m,ccy,m)
+      os.system(com)
+         
+  if (os.path.getmtime('CGNS/NAV/R/Res.qrc')>os.path.getmtime('CGNS/NAV/Res_rc.py')):
+      print 'Generate from updated GUI Ressources'
+      com="(%s -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc)"%(crc)
+      os.system(com)
   cmdclassdict={'clean':setuputils.clean,'build_ext':build_ext}
-  extmods=[ Extension('CGNS.NAV.gui.s7vtkView',
-                           ['CGNS/NAV/gui/s7vtkView.pyx'],
-                           include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES) ]
 else:
   cmdclassdict={'clean':setuputils.clean}
-  extmods=[]
+  modextlist=[]
 
+print pyCGNSconfig.NUMPY_PATH_LIBRARIES
 setup (
 name         = "CGNS.NAV",
 version      = pyCGNSconfig.NAV_VERSION,
@@ -73,10 +94,9 @@ description  = "pyCGNS NAVigator - CGNS/Python trees navigator and editor",
 author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",
-packages     = ['CGNS.NAV','CGNS.NAV.gui','CGNS.NAV.supervisor'],
+packages     = ['CGNS.NAV'],
 scripts      = ['CGNS/NAV/CGNS.NAV'],
-data_files   = [('share/CGNS/NAV/icons',glob.glob('CGNS/NAV/gui/icons/*'))],
-ext_modules  = extmods,
+ext_modules  = modextlist,
 cmdclass     = cmdclassdict
 )
  

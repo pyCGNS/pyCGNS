@@ -62,12 +62,7 @@ for o, a in opts:
   if (o == "-v"): verbose=True
   if (o in ("-h", "--help")): usage()
 
-import CGNS.NAV.gui.s7mainWindow as s7tk
-if 0:
- s7tk.run(args,recurse,ppath,verbose)
-else:
- import cProfile
- cProfile.run('s7tk.run(args,recurse,ppath,verbose)', 'CGNS.NAV.profile')
-
+import CGNS.NAV.script
+CGNS.NAV.script.run(sys.argv,args,recurse,ppath,verbose)
 
 # --------------------------------------------------------------------

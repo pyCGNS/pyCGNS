@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Q7OptionsWindow</class>
+ <widget class="QWidget" name="Q7OptionsWindow">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>577</width>
+    <height>359</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QTabWidget" name="tabs">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>561</width>
+     <height>311</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>5</number>
+   </property>
+   <widget class="QWidget" name="tab_1">
+    <attribute name="title">
+     <string>Load/Save</string>
+    </attribute>
+    <widget class="QCheckBox" name="__O_recursivetreedisplay">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Recursive tree display</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_recursivesidspatternsload">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>10</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Recursive SIDS patterns load</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_loadnodedisplay">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Load node on display request</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_followlinksatload">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>170</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Follow links during file load</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_donotfollowlinksatsave">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>210</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Do not follow links during file save</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_donotloadlargearrays">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Do not load large data arrays</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_1">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>217</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Max tree parse recursion level</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="__O_maxrecursionlevel">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>30</y>
+       <width>71</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>7</number>
+     </property>
+     <property name="value">
+      <number>7</number>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="__O_maxloaddatasize">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>110</y>
+       <width>71</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>7</number>
+     </property>
+     <property name="value">
+      <number>7</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>217</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Max data size to load</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_stoploadbrokenlinks">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>190</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Stop loading on broken link</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_filterhdffiles">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>60</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>filter *.hdf files</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_filtercgnsfiles">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>140</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>filter *.cgns files</string>
+     </property>
+    </widget>
+    <widget class="Line" name="line">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>10</y>
+       <width>20</width>
+       <height>261</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QPlainTextEdit" name="__O_cgnsfileextension">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>80</y>
+       <width>211</width>
+       <height>41</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPlainTextEdit" name="__O_hdffileextension">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>160</y>
+       <width>211</width>
+       <height>41</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Paths</string>
+    </attribute>
+    <widget class="QCheckBox" name="__O_addcurrentdirinsearch">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string comment="Set to always add the current directory as the first in the linked-to files search.">Set to always add the current directory as the first in the linked-to files search.</string>
+     </property>
+     <property name="text">
+      <string>Add current dir in link search path</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_addrootdirinsearch">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>311</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Add file system root dir in link search path</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>150</y>
+       <width>147</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Profile search paths</string>
+     </property>
+    </widget>
+    <widget class="QPlainTextEdit" name="__O_linksearchpathlist">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>60</y>
+       <width>411</width>
+       <height>101</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>147</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Link search path</string>
+     </property>
+    </widget>
+    <widget class="QPlainTextEdit" name="__O_profilesearchpathlist">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>170</y>
+       <width>411</width>
+       <height>101</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_6">
+    <attribute name="title">
+     <string>Checks</string>
+    </attribute>
+    <widget class="QCheckBox" name="__O_checkonthefly">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Check on the fly</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_forcesidslegacymapping">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Force SIDS legacy mapping</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_forcefortranflag">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Force fortran flag in numpy arrays</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>Fonts</string>
+    </attribute>
+    <widget class="QFontComboBox" name="fontComboBox">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>10</y>
+       <width>230</width>
+       <height>27</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox">
+     <property name="geometry">
+      <rect>
+       <x>480</x>
+       <y>10</y>
+       <width>55</width>
+       <height>27</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>201</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Tree view node name</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_4">
+    <attribute name="title">
+     <string>Windows</string>
+    </attribute>
+    <widget class="QCheckBox" name="__O_showtableindex">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Show table index</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_oneviewpertreenode">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>0</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>One view per tree/node</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_showcolumnindex">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Show columns titles</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_showhelpballoons">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Shows the help balloon you are reading right now.</string>
+     </property>
+     <property name="text">
+      <string>Show tooltips</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_show1Dasplain">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Show 1D values as Python plain types</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_showsidsstatuscolumn">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Show SIDS status column</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>217</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Max length of data display in tree</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="__O_maxlengthdatadisplay">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>110</y>
+       <width>101</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>999999999</number>
+     </property>
+     <property name="singleStep">
+      <number>10</number>
+     </property>
+     <property name="value">
+      <number>700</number>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_transposearrayforview">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>20</y>
+       <width>274</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Transpose arrays for view/edit</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_5">
+    <attribute name="title">
+     <string>Other</string>
+    </attribute>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>147</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>User queries directory</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>147</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Snapshot directory</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="__O_snapshotdirectory">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>70</y>
+       <width>396</width>
+       <height>27</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="__O_queriesdirectory">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>40</y>
+       <width>396</width>
+       <height>27</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>147</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Selection list directory</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="__O_selectionlistdirectory">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>100</y>
+       <width>396</width>
+       <height>27</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="bClose">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>330</y>
+     <width>88</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="bApply">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>330</y>
+     <width>88</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Apply</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="bReset">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>330</y>
+     <width>81</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

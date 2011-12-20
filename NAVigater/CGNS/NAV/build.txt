@@ -1,0 +1,17 @@
+# -----------------------------------------------------------------
+# All rights reserved, contact marc.poinot@onera.fr
+# Copyright Onera-the French Aerospace Labs, Marc Poinot, 2011-
+# -----------------------------------------------------------------
+#
+# cgSpy - CGNS tree editor
+#
+# -----------------------------------------------------------------
+
+Process:
+
+ Edit UI usign QTdesigner ./D -> files into ./T
+ Generate from templates in ./T using ./P -> files into ./G
+ Update cgSpy/*
+ Update ./R (ressources)
+ Main script into ./X
+

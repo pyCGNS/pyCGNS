@@ -264,31 +264,23 @@ Chemistry_LinRessler_s        = "Chemistry_LinRessler"
 
 FamilySpecified_s             = "FamilySpecified"
 
-Integer_s                     = "Integer"
-RealSingle_s                  = "RealSingle"
-RealDouble_s                  = "RealDouble"
-Character_s                   = "Character"
+# --------------------------------------------------
+DataType_ts    = "DataType_t"
+DataType_s     = "DataType"
 
-NODE_s                        = "NODE"
-BAR_2_s                       = "BAR_2"
-BAR_3_s                       = "BAR_3"
-TRI_3_s                       = "TRI_3"
-TRI_6_s                       = "TRI_6"
-QUAD_4_s                      = "QUAD_4"
-QUAD_8_s                      = "QUAD_8"
-QUAD_9_s                      = "QUAD_9"
-TETRA_4_s                     = "TETRA_4"
-TETRA_10_s                    = "TETRA_10"
-PYRA_5_s                      = "PYRA_5"
-PYRA_14_s                     = "PYRA_14"
-PENTA_6_s                     = "PENTA_6"
-PENTA_15_s                    = "PENTA_15"
-PENTA_18_s                    = "PENTA_18"
-HEXA_8_s                      = "HEXA_8"
-HEXA_20_s                     = "HEXA_20"
-HEXA_27_s                     = "HEXA_27"
-MIXED_s                       = "MIXED"
-NGON_n_s                      = "NGON_n"
+Integer_s      = "Integer"
+LongInteger_s  = "LongInteger"
+RealSingle_s   = "RealSingle"
+RealDouble_s   = "RealDouble"
+Character_s    = "Character"
+
+DataType_l = [Null_s,UserDefined_s,
+              Integer_s,RealSingle_s,RealDouble_s,Character_s,LongInteger_s]
+DataType   = stringAsKeyDict(DataType_l)
+DataType_  = enumAsKeyDict(DataType_l)
+
+(Null,UserDefined,\
+ Integer,RealSingle,RealDouble,Character,LongInteger)=DataType_.keys()
 
 # --------------------------------------------------
 Overset_s       = "Overset"
@@ -300,12 +292,11 @@ GridConnectivityType_l = [Overset_s,Abutting_s,Abutting1to1_s,
 
 # --------------------------------------------------
 ZoneType_ts    = "ZoneType_t"
+ZoneType_s     = "ZoneType"
 Zone_ts        = "Zone_t"
 
 Structured_s   = "Structured"
 Unstructured_s = "Unstructured"
-
-ZoneType_s     = "ZoneType"
 
 ZoneType_l     = [Null_s,UserDefined_s,Structured_s,Unstructured_s]
 ZoneType       = stringAsKeyDict(ZoneType_l)
@@ -314,13 +305,17 @@ ZoneType_      = enumAsKeyDict(ZoneType_l)
 (Null,Userdefined,Structured,Unstructured)=ZoneType_.keys()
 
 # --------------------------------------------------
-TimeAccurate_s    = "TimeAccurate"
-NonTimeAccurate_s = "NonTimeAccurate"
 SimulationType_ts = "SimulationType_t"
 SimulationType_s  = "SimulationType"
+
+TimeAccurate_s    = "TimeAccurate"
+NonTimeAccurate_s = "NonTimeAccurate"
+
 SimulationType_l  = [Null_s,UserDefined_s,TimeAccurate_s,NonTimeAccurate_s]
 SimulationType    = stringAsKeyDict(SimulationType_l)
 SimulationType_   = enumAsKeyDict(SimulationType_l)
+
+(Null,UserDefined,TimeAccurate,NonTimeAccurate)=SimulationType_.keys()
 
 # --------------------------------------------------
 ConstantRate_s        = "ConstantRate"
@@ -641,7 +636,6 @@ AdditionalExponents_ts        = "AdditionalExponents_t"
 
 DiscreteData_ts               = "DiscreteData_t"
 DiscreteData_s                = "DiscreteData"
-Elements_ts                   = "Elements_t"
 
 FamilyBC_s                    = "FamilyBC"
 FamilyBC_ts                   = "FamilyBC_t"
@@ -896,17 +890,80 @@ AverageInterfaceType_l  = [Null_s,AverageAll_s,AverageCircumferential_s,
 AverageInterface_s      = "AverageInterface"
 AverageInterface_ts     = "AverageInterface_t"
 
-Element_ts     = "Element_t"
+NODE_s     = "NODE"
+BAR_2_s    = "BAR_2"
+BAR_3_s    = "BAR_3"
+TRI_3_s    = "TRI_3"
+TRI_6_s    = "TRI_6"
+QUAD_4_s   = "QUAD_4"
+QUAD_8_s   = "QUAD_8"
+QUAD_9_s   = "QUAD_9"
+TETRA_4_s  = "TETRA_4"
+TETRA_10_s = "TETRA_10"
+PYRA_5_s   = "PYRA_5"
+PYRA_13_s  = "PYRA_13"
+PYRA_14_s  = "PYRA_14"
+PENTA_6_s  = "PENTA_6"
+PENTA_15_s = "PENTA_15"
+PENTA_18_s = "PENTA_18"
+HEXA_8_s   = "HEXA_8"
+HEXA_20_s  = "HEXA_20"
+HEXA_27_s  = "HEXA_27"
+MIXED_s    = "MIXED"
+NGON_n_s   = "NGON_n"
+NFACE_n_s  = "NFACE_n"
+
+Null_npe        = 0
+UserDefined_npe = 0
+
+NODE_npe     = 1
+BAR_2_npe    = 2
+BAR_3_npe    = 3
+TRI_3_npe    = 3
+TRI_6_npe    = 6
+QUAD_4_npe   = 4
+QUAD_8_npe   = 8
+QUAD_9_npe   = 9
+TETRA_4_npe  = 4
+TETRA_10_npe = 10
+PYRA_5_npe   = 5
+PYRA_13_npe  = 13
+PYRA_14_npe  = 14
+PENTA_6_npe  = 6
+PENTA_15_npe = 15
+PENTA_18_npe = 18
+HEXA_8_npe   = 8
+HEXA_20_npe  = 20
+HEXA_27_npe  = 27
+MIXED_npe    = 0
+NGON_n_npe   = 0
+NFACE_n_npe  = 0
+
+Elements_ts    = "Elements_t"
 ElementType_ts = "ElementType_t"
 ElementType_s  = "ElementType"
-Element_s      = "Element"
-ElementType_l  = [Null_s, NODE_s, BAR_2_s, BAR_3_s,
+Elements_s     = "Elements"
+ElementType_l  = [Null_s, UserDefined_s, NODE_s, BAR_2_s, BAR_3_s,
                  TRI_3_s, TRI_6_s, QUAD_4_s, QUAD_8_s, QUAD_9_s,
                  TETRA_4_s, TETRA_10_s, PYRA_5_s, PYRA_14_s,
                  PENTA_6_s, PENTA_15_s, PENTA_18_s,
-                 HEXA_8_s, HEXA_20_s, HEXA_27_s, MIXED_s, NGON_n_s,
-                 UserDefined_s]
-
+                 HEXA_8_s, HEXA_20_s, HEXA_27_s, MIXED_s, PYRA_13_s,
+                 NGON_n_s, NFACE_n_s]
+ElementTypeNPE_l = [Null_npe, UserDefined_npe, NODE_npe, BAR_2_npe, BAR_3_npe,
+                   TRI_3_npe, TRI_6_npe, QUAD_4_npe, QUAD_8_npe, QUAD_9_npe,
+                   TETRA_4_npe, TETRA_10_npe, PYRA_5_npe, PYRA_14_npe,
+                   PENTA_6_npe, PENTA_15_npe, PENTA_18_npe,
+                   HEXA_8_npe, HEXA_20_npe, HEXA_27_npe, MIXED_npe, 
+                   PYRA_13_npe, NGON_n_npe, NFACE_n_npe]
+ElementType    = stringAsKeyDict(ElementType_l)
+ElementType_   = enumAsKeyDict(ElementType_l)
+ElementTypeNPE = dict(zip(ElementType_l,ElementTypeNPE_l))
+(Null, UserDefined, NODE, BAR_2, BAR_3,
+ TRI_3, TRI_6, QUAD_4, QUAD_8, QUAD_9,
+ TETRA_4, TETRA_10, PYRA_5, PYRA_14,
+ PENTA_6, PENTA_15, PENTA_18,
+ HEXA_8, HEXA_20, HEXA_27, MIXED, PYRA_13,
+ NGON_n, NFACE_n)=ElementType_.keys()
 #
 
 WallFunction_ts               = "WallFunction_t"

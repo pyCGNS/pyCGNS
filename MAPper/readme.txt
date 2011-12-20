@@ -163,7 +163,7 @@ The table below gives the `CGNS.MAP` flags.
  +-----------------------+------------------------------------------------------+
  | ``S2P_NODATA``        | Do not load large 'DataArray_t' \(2) \(4)            |
  +-----------------------+------------------------------------------------------+
- | ``S2P_UPDATE``        | not used                                             |
+ | ``S2P_UPDATE``        | Save updates existing file \(6)                      |
  +-----------------------+------------------------------------------------------+
  | ``S2P_DELETEMISSING`` | not used                                             |
  +-----------------------+------------------------------------------------------+
@@ -190,6 +190,11 @@ with another flag.
       flag to 1, no transpose
       would be performed and the array and its dimensions would be stored 
       without modification even if the ``NY_FORTRAN`` flag is not there.
+
+  (6) The file should exist, all new nodes are added, thus modifying the
+      children list of their parents. Existing nodes are updated only in 
+      the case of value change. There no children removal, name or label
+      change.
 
 -----
 

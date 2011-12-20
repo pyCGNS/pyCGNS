@@ -684,7 +684,7 @@ def getNodeFromPath(path,node):
   undocumented
   """
   for c in node[2]:
-    print c[0], path
+    #print c[0], path
     if (c[0] == path[0]):
       if (len(path) == 1): return c
       return getNodeFromPath(path[1:],c)
@@ -824,7 +824,7 @@ def getPathToList(path,nofirst=False,noroot=True):
    * With '/' as argument, the function returns an empty list
 
   - Remarks:
-   * The path is first processed by :py:func`getPathNormalize` before its split
+   * The path is first processed by :py:func:`getPathNormalize` before its split
    
   """
   lp=[]
@@ -895,7 +895,7 @@ def getPathNoRoot(path):
    * The new path without `HDF5 Mother node` if found
 
   - Remarks:
-   * The path is processed by :py:func`getPathNormalize`
+   * The path is processed by :py:func:`getPathNormalize`
    
   """
   lp=[]
@@ -954,7 +954,7 @@ def getPathNormalize(path):
    * The simplified path
 
   - Remarks:
-   * Uses :py:func`os.path.normpath`
+   * Uses :py:func:`os.path.normpath`
    
   """
   path=os.path.normpath(path)
