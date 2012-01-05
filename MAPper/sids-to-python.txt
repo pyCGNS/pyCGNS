@@ -494,7 +494,7 @@ If you do not specify an order to *numpy*, the default is the C-order::
  >>> numpy.isfortran(a)
  False
  >>> a[0]
- [1,2,3]
+ array([1,2,3], dtype=int32)
  >>> a.shape
  (2,3)
 
@@ -506,7 +506,7 @@ Or you can enter the list itself using an explicit Fortran-order::
  >>> numpy.isfortran(a)
  False
  >>> a[0]
- [1,4]
+ array([1,4], dtype=int32)
  >>> a.shape
  (3,2)
 
@@ -518,7 +518,7 @@ The possible creation of the array above is then::
  >>> numpy.isfortran(a)
  True
  >>> a[0]
- [1,4]
+ array([1,4], dtype=int32)
  >>> a.shape
  (3,2)
 
@@ -643,13 +643,13 @@ Once `import`-ed, your Python code can insert this node in its
 structure (here our previous code snippet is in the file ``refstate.py``::
 
   import numpy
-  import restate
+  import refstate
 
   tree=['CGNSTree',None,[],'CGNSTree_t']
   base=['Fuselage',numpy.array([3,3],dtype=numpy.int32),[],'CGNSBase_t']
 
   tree[2].append(base)
-  base[2].append(restate.data)
+  base[2].append(refstate.data)
 
 Sub-tree share
 ~~~~~~~~~~~~~~
