@@ -31,7 +31,7 @@ User interface
 --------------
 MAP is a lightweight module, its purpose is to be as small as possible
 in order to be embedded separatly in an application 
-(see :ref:`Embbeded MAP <reference_embedded_map>` .
+(see :ref:`Embbeded MAP <reference_embedded_map>`) .
 
 Functions
 ~~~~~~~~~
@@ -39,9 +39,9 @@ There are two functions: the ``load`` and the ``save``. The ``load`` reads
 a *CGNS/HDF5* file and produces a *CGNS/Python* tree. The ``save`` takes a 
 *CGNS/Python* tree and writes the contents in a *CGNS/HDF5* file::
 
- (tree,links)=CGNS.MAP.load(filename,flags,threshold,depth,path,linkpath)
+ (tree,links)=CGNS.MAP.load(filename,flags,depth,path,linkpath,update)
 
- status=CGNS.MAP.save(filename,tree,links,flags,threshold,depth,path)
+ status=CGNS.MAP.save(filename,tree,links,flags,depth,path)
 
 The arguments and the return values are:
 
@@ -102,7 +102,14 @@ The arguments and the return values are:
    of strings, during the load *CGNS.MAP* will look for linked-to files using
    this list: it is parsed from the first element to the last,
    the selected file is the first found in this directory list.
+
+ * **update**:
+   This option is useful if you want to have the values for only one or several nodes, 
+   what allows to limit the time of data's load. The ``update`` argument is a dictionary
+   which is composed of the ``path`` where is located the node to be modified and the data of this node.
+
    See the **very important warning** below.
+
 
 .. warning::
    The current directory is **not** in the link search path. So if your
@@ -115,17 +122,12 @@ The arguments and the return values are:
 
 .. warning::
    The ``load`` function requires the first two arguments. The ``save``
-   requires the first three arguments. If you add more arguments to these
-   functions, you should pass them all. 
+   requires the first four arguments. If you add more arguments to these
+   functions, you should pass them by respecting the order in which are these
+   arguments. 
    See the :ref:`examples <mapexamples>`.  
 
-.. warning::
-   The *root* node of an *HDF5* file is the ``/`` group with an attribute
-   name of ``HDF5 MotherNode``. This is an exception in the *CGNS/HDF5* tree,
-   all other nodes have the same *group name* as the value of 
-   the ``name`` attribute. Then, if you want to use ``h5dump`` on a 
-   *CGNS/HDF5* tree, keep in mind that the name ``HDF5 MotherNode`` is an
-   internal name and this should *not* be used by applications.
+
 
 .. _mapflags:
 
@@ -157,16 +159,16 @@ The table below gives the `CGNS.MAP` flags.
  +-----------------------+------------------------------------------------------+
  | ``S2P_COMPRESS``      | Sets the compress flag for 'DataArray_t' \(2)        |
  +-----------------------+------------------------------------------------------+
- | ``S2P_NOTRANSPOSE``   | No *dimensions* transpose during load and save. \(5) |
- +-----------------------+------------------------------------------------------+
  | ``S2P_NOOWNDATA``     | Forces the `numpy` flag ``\~NPY_OWNDATA`` \(1) \(3)  |
  +-----------------------+------------------------------------------------------+
- | ``S2P_NODATA``        | Do not load large 'DataArray_t' \(2) \(4)            |
+ | ``S2P_NODATA``        | Do not load large 'DataArray_t' \(1)                 |
  +-----------------------+------------------------------------------------------+
  | ``S2P_UPDATE``        | not used                                             |
  +-----------------------+------------------------------------------------------+
  | ``S2P_DELETEMISSING`` | not used                                             |
  +-----------------------+------------------------------------------------------+
+
+The ``S2P_DEFAULT`` flag corresponds to ``S2P_NONE | S2P_FOLLOWLINKS & S2P_REVERSEDIMS``.
 
 There is no requirements or check on which flag can or cannot be associated
 with another flag.
@@ -180,18 +182,21 @@ with another flag.
   (3) Which means all ``DataArray_t`` actual memory zones will **NOT** be
       released by Python.
 
-  (4) The term `large` has to be defined. The *save* will **NOT** check if
+  (3) The term `large` has to be defined. The *save* will **NOT** check if
       the CGNS/Python tree was performed with the ``S2P_NODATA`` flag on,
       then you have to check by yourself that your *save* will not overwrite
       an existing file with empty data!
 
-  (5) The default behavior is to transpose array and dimensions of an array if
+  (4) The default behavior is to transpose array and dimensions of an array if
       this is not a ``NPY_FORTRAN`` array. If you set this 
       flag to 1, no transpose
       would be performed and the array and its dimensions would be stored 
       without modification even if the ``NY_FORTRAN`` flag is not there.
 
------
+.. toctree::
+
+   examples
+
 
 SIDS-to-Python Mapping
 ----------------------
@@ -199,7 +204,7 @@ SIDS-to-Python Mapping
 .. toctree::
 
    sids-to-python
-   examples
+
    
 The MAP API
 -----------
@@ -207,7 +212,15 @@ The MAP API
 The MAP module is designed so that you can re-use the lead/save function and
 put them into your own application. This allows you to create a *CGNS/HDF*
 tree from a *CGNS/Python* tree into your C code. The two function
-are very close the to Python level interface functions.
+are very close to the Python level interface functions.
+
+.. warning::
+   The *root* node of an *HDF5* file is the ``/`` group with an attribute
+   name of ``HDF5 MotherNode``. This is an exception in the *CGNS/HDF5* tree,
+   all other nodes have the same *group name* as the value of 
+   the ``name`` attribute. Then, if you want to use ``h5dump`` on a 
+   *CGNS/HDF5* tree, keep in mind that the name ``HDF5 MotherNode`` is an
+   internal name and this should *not* be used by applications.
 
 .. _map_index:
 
