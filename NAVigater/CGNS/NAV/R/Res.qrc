@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/folder.gif</file>
     <file>Res.qrc</file>
     <file>icons/add.gif</file>
     <file>icons/arrow.gif</file>

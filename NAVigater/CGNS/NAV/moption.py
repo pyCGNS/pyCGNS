@@ -54,7 +54,7 @@ def trpath(path):
 
 def writeHistory(control):
   filename=trpath(G__HISTORYFILENAME)
-  writeFile('History','history',control.history,filename)
+  writeFile('History','history',control._history,filename)
 
 def readHistory(control):
   filename=trpath(G__HISTORYFILENAME)
@@ -64,12 +64,12 @@ def readHistory(control):
 
 def writeOptions(control):
   filename=trpath(G__OPTIONSFILENAME)
-  writeFile('User options','options',control.options,filename)
+  writeFile('User options','options',control._options,filename)
   
 def readOptions(control):
   filename=trpath(G__OPTIONSFILENAME)
   m=readFile('options ',filename)
   if (m is None): return None
-  return m.options
+  return m._options
 
 # -----------------------------------------------------------------

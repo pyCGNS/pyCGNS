@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Tue Dec 20 14:32:40 2011
+# Created: Tue Jan  3 17:30:05 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -114,5 +114,5 @@ class Ui_Q7VTKWindow(object):
         self.bY.setText(QtGui.QApplication.translate("Q7VTKWindow", "Y", None, QtGui.QApplication.UnicodeUTF8))
         self.bZ.setText(QtGui.QApplication.translate("Q7VTKWindow", "Z", None, QtGui.QApplication.UnicodeUTF8))
 
-from CGNS.NAV.wvtkrender import QVTKRenderWindowInteractor
+from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import Res_rc

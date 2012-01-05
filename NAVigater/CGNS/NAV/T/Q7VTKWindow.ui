@@ -210,7 +210,7 @@
   <customwidget>
    <class>QVTKRenderWindowInteractor</class>
    <extends>QGraphicsView</extends>
-   <header>CGNS.NAV.wvtkrender</header>
+   <header>vtk.qt4.QVTKRenderWindowInteractor</header>
   </customwidget>
  </customwidgets>
  <resources>

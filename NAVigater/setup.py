@@ -51,7 +51,7 @@ if installprocess:
 
   modnamelist=[
       'Q7TreeWindow',
-      'Q7MainWindow',
+      'Q7ControlWindow',
       'Q7OptionsWindow',
       'Q7FormWindow',
       'Q7FileWindow',
@@ -59,6 +59,11 @@ if installprocess:
       ]
   modgenlist=[]
   modextlist=[Extension("CGNS.NAV.mtree", ["CGNS/NAV/mtree.pyx"],
+                        include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
+                        library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
+                        libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
+                        ),
+              Extension("CGNS.NAV.mtable", ["CGNS/NAV/mtable.pyx"],
                         include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
                         library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
                         libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,

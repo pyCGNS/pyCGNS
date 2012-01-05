@@ -12,8 +12,8 @@ from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.wform import Q7Form
 from CGNS.NAV.wvtk import Q7VTK
 from CGNS.NAV.mtree import Q7TreeModel
-from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET
 import CGNS.NAV.wconstants as Q7WC
+from CGNS.NAV.wfingerprint import Q7Window
 
 # -----------------------------------------------------------------
 class Q7ItemDelegate(QStyledItemDelegate):
@@ -29,17 +29,10 @@ class Q7ItemDelegate(QStyledItemDelegate):
             QStyledItemDelegate.paint(self, painter, option, index)
 
 # -----------------------------------------------------------------
-class Q7Tree(QWidget,Ui_Q7TreeWindow):
-    def __init__(self,parent):
-        QWidget.__init__(self,None)
-        self._stylesheet=Q7TREEVIEWSTYLESHEET
-        self._parent=parent
-        self._fingerprint=None
+class Q7Tree(Q7Window,Ui_Q7TreeWindow):
+    def __init__(self,control,path,fgprint):
+        Q7Window.__init__(self,Q7Window.VIEW_TREE,control,path,fgprint)
         self._depthExpanded=0
-        self._closealone=False
-        self.form=None
-        self.setupUi(self)
-        self.setWindowTitle("Tree")
         QObject.connect(self.treeview,
                         SIGNAL("expanded(QModelIndex)"),
                         self.expandNode)
@@ -65,16 +58,18 @@ class Q7Tree(QWidget,Ui_Q7TreeWindow):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.popupmenu.addAction(QAction("Open form",self))
+        self.treeview.setModel(self._fgprint.model)
+        self.treeview.setItemDelegate(Q7ItemDelegate(self))
     def expandMinMax(self):
-        if (self._depthExpanded==self._fingerprint.depth-2):
+        if (self._depthExpanded==self._fgprint.depth-2):
             self._depthExpanded=-1
             self.treeview.collapseAll()
         else:
-            self._depthExpanded=self._fingerprint.depth-2
+            self._depthExpanded=self._fgprint.depth-2
             self.treeview.expandAll()
         self.resizeAll()
     def expandLevel(self):
-        if (self._depthExpanded<self._fingerprint.depth-2):
+        if (self._depthExpanded<self._fgprint.depth-2):
             self._depthExpanded+=1
         self.treeview.expandToDepth(self._depthExpanded)
         self.resizeAll()
@@ -107,32 +102,19 @@ class Q7Tree(QWidget,Ui_Q7TreeWindow):
        super(Q7Tree, self).show()
     def formview(self):
         node=self.treeview.currentIndex().internalPointer()
-        self.form=Q7Form(self,node)
-        self.form.show()
+        form=Q7Form(self._control,node,self._fgprint)
+        form.show()
     def vtkview(self):
-        self.vtk=Q7VTK(self)
-        self.vtk.show()
-    def bindTree(self,fgprint):
-        self._fingerprint=fgprint
-        self.treeview._parent=self
-        self.treeview.setModel(self._fingerprint.model)
-        self.treeview.setStyleSheet(self._stylesheet)
-        self.treeview.setItemDelegate(Q7ItemDelegate(self))
+        node=self.treeview.currentIndex().internalPointer()
+        vtk=Q7VTK(self._control,node,self._fgprint)
+        vtk.show()
     def closeEvent(self, event):
-        if (not self._closealone):
-            if (self._parent.close()):
-                if (self.form): self.form.close()
-                event.accept()
-            else: event.ignore()
-        else:
-          if (self.form): self.form.close()
-          event.accept()
+        event.accept()
     def closeAlone(self):
-        if (self.form): self.form.close()
+        pass
     def forceapply(self):
         pass
     def leave(self):
-        self._closealone=True
         self.close()
         
 # -----------------------------------------------------------------

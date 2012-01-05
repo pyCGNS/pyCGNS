@@ -63,23 +63,38 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         return True
    
 # -----------------------------------------------------------------
+class Q7FileIconProvider(QFileIconProvider):
+    slist=['hdf','HDF','cgns','CGNS']
+    def __init__(self):
+        super(Q7FileIconProvider, self).__init__()
+        self.dir=QIcon(QPixmap(":/images/icons/folder.gif"))
+        self.cgns=QIcon(QPixmap(":/images/icons/tree-load.gif"))
+        self.empty=QIcon()
+    def icon(self,fileinfo):
+        if (type(fileinfo) is not QFileInfo): return self.empty
+        if (fileinfo.isDir()): return self.dir
+        if (fileinfo.suffix() in Q7FileIconProvider.slist): return self.cgns
+        return self.empty
+
+# -----------------------------------------------------------------
 class Q7File(QWidget,Ui_Q7FileWindow):
     def __init__(self,parent,mode=LOADMODE):
         super(Q7File, self).__init__()
         self.setupUi(self)
         self.setWindowTitle("Load/Save")
-        self.selecteddir=os.getcwd()
-        self.selectedfile=""
         self.parent=parent
+        self.iconProvider=Q7FileIconProvider()
         self.model = QFileSystemModel()
+        self.model.setIconProvider(self.iconProvider)
         self.proxy = Q7FileFilterProxy(self)
         self.proxy.setSourceModel(self.model)
         hlist=self.parent.getHistory()
         flist=[]
         self.fileentries.addItem("")
         for i in hlist.keys():
-            self.direntries.addItem(i)
-            flist=flist+hlist[i]
+            if (i != self.parent.getHistoryLastKey()):
+                self.direntries.addItem(i)
+                flist=flist+hlist[i]
         for i in flist:
             self.fileentries.addItem(i)
         self.treeview.setModel(self.proxy)
@@ -102,7 +117,18 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.bBack.clicked.connect(self.backDir)
         self.setMode()
         self.setBoxes()
-        self.setCurrentDir(self.selecteddir)
+        if (self.parent.getHistoryLastKey() in hlist.keys()):
+            self.selecteddir=hlist[self.parent.getHistoryLastKey()][0]
+            self.selectedfile=hlist[self.parent.getHistoryLastKey()][1]
+            #ixd=self.direntries.findText(self.selecteddir)
+            self.setCurrentDir(self.selecteddir)
+            ixf=self.fileentries.findText(self.selectedfile)
+            self.fileentries.setCurrentIndex(ixf)
+            self.changeFile()
+        else:
+            self.selecteddir=os.getcwd()
+            self.selectedfile=""
+            self.setCurrentDir(self.selecteddir)
     def updateView(self):
         p=self.direntries.currentText()
         self.setCurrentDir(p)
@@ -150,8 +176,13 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         p=self.direntries.currentText()
         if (os.path.isdir(p)): self.updateView()
     def changeFile(self,*args):
-        self.selecteddir=self.direntries.lineEdit().text()
         self.selectedfile=self.fileentries.lineEdit().text()
+        d=self.parent.getHistoryFile(self.selectedfile)
+        if (d is not None):
+            self.selecteddir=d[0]
+            ix=self.direntries.findText(self.selecteddir)
+            if (ix!=-1): self.direntries.setCurrentIndex(ix)
+        else: self.selecteddir=self.direntries.lineEdit().text()
         self.updateFileIfFound()
     def selectedPath(self):
         return self.selecteddir+'/'+self.selectedfile
@@ -162,6 +193,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         fidx=self.proxy.mapFromSource(midx)
         if (fidx.row==1): return
         self.treeview.setCurrentIndex(fidx)
+        self.treeview.scrollTo(fidx)
     def setCurrentDir(self,newpath):
         self.model.setRootPath(newpath)
         midx=self.model.index(newpath)
@@ -215,7 +247,18 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         else:
             f=os.path.basename(self.path(index))
             d=os.path.dirname(self.path(index))
-        self.fileentries.setItemText(self.fileentries.currentIndex(),f)
+        ix=self.direntries.findText(d)
+        if (ix!=-1):
+            self.direntries.setCurrentIndex(ix)
+        else:
+            self.direntries.addItem(d)
+            self.direntries.setCurrentIndex(self.direntries.findText(d))
+        ix=self.fileentries.findText(f)
+        if (ix!=-1):
+            self.fileentries.setCurrentIndex(ix)
+        else:
+            self.fileentries.addItem(f)
+            self.fileentries.setCurrentIndex(self.fileentries.findText(f))
         self.selecteddir=self.direntries.lineEdit().text()
         self.selectedfile=self.fileentries.lineEdit().text()
 

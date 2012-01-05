@@ -7,15 +7,14 @@
 from PySide.QtCore    import *
 from PySide.QtGui     import *
 from CGNS.NAV.Q7VTKWindow import Ui_Q7VTKWindow
+from CGNS.NAV.wfingerprint import Q7Window
 
 import vtk
 
 # -----------------------------------------------------------------
-class Q7VTK(QWidget,Ui_Q7VTKWindow):
-    def __init__(self,parent):
-        QWidget.__init__(self,None)
-        self.setupUi(self)
-        self.setWindowTitle("VTK")
+class Q7VTK(Q7Window,Ui_Q7VTKWindow):
+    def __init__(self,control,node,fgprint):
+        Q7Window.__init__(self,Q7Window.VIEW_VTK,control,node,fgprint)
         widget = self.display
         widget.Initialize()
         widget.Start()

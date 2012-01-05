@@ -37,12 +37,12 @@ G__HDFFILEEXTENSION='hdffileextension'
 G__MAXLENGTHDATADISPLAY='maxlengthdatadisplay'
 G__MAXRECURSIONLEVEL='maxrecursionlevel'
 
-G__toolname='cgSpy'
-G__toolversion='v1.0'
-G__HISTORYFILENAME= '~/.cgSpy.history'
-G__OPTIONSFILENAME= '~/.cgSpy.options'
+G__TOOLNAME='CGNS.NAV'
+G__TOOLVERSION='v4.2'
+G__HISTORYFILENAME= '~/.CGNS.NAV.history'
+G__OPTIONSFILENAME= '~/.CGNS.NAV.options'
 
-G__options={
+G__OPTIONS={
     G__RECURSIVETREEDISPLAY:False,
     G__ONEVIEWPERTREENODE:  False,
     G__SHOWTABLEINDEX: True,
@@ -75,5 +75,12 @@ G__options={
     G__MAXLENGTHDATADISPLAY: 700,
     G__MAXRECURSIONLEVEL: 7,
 }
+
+G__COPYRIGHTNOTICE="""
+Copyright (c) 2010-2012 Marc Poinot - Onera - The French Aerospace Labs
+All rights reserved in accordance with GPL v2 
+NO WARRANTY :
+Check GPL v2 sections 15 and 16 about loss of data or corrupted data
+"""
 
 # -----------------------------------------------------------------

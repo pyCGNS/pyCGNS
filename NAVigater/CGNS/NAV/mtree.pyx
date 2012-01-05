@@ -27,7 +27,7 @@ import CGNS.PAT.cgnsutils as CT
 class Q7TreeView(QTreeView):
     def  __init__(self,parent):
         QTreeView.__init__(self,None)
-        self._parent=None
+        self._parent=parent
     def selectionChanged(self,old,new):
         QTreeView.selectionChanged(self,old,new)
         if (old.count()):
@@ -39,6 +39,8 @@ class Q7TreeView(QTreeView):
        
 # -----------------------------------------------------------------
 class Q7TreeItem(object):
+    dtype=['MT','I4','I8','R4','R8','C1','LK']
+    stype={'MT':0,'I4':4,'I8':8,'R4':4,'R8':8,'C1':1,'LK':0}
     def __init__(self,control,data,parent=None):  
         self._parentitem=parent  
         self._itemnode=data  
@@ -48,7 +50,7 @@ class Q7TreeItem(object):
         else:                    self._path=''
         self._depth=self._path.count('/')
         self._size=None
-        self._options=control.options
+        self._control=control
     def sidsParent(self):
         return self._parentitem._itemnode
     def sidsPath(self):
@@ -61,6 +63,11 @@ class Q7TreeItem(object):
         return self._itemnode[2]
     def sidsType(self):
         return self._itemnode[3]
+    def sidsDataType(self,all=False):
+        if (all): return Q7TreeItem.dtype
+        return CT.getValueDataType(self._itemnode)
+    def sidsDataTypeSize(self):
+        return Q7TreeItem.stype[CT.getValueDataType(self._itemnode)]
     def sidsTypeList(self):
         tlist=CT.getNodeAllowedChildrenTypes(self._parentitem._itemnode,
                                              self._itemnode)
@@ -93,7 +100,7 @@ class Q7TreeItem(object):
             if (self.sidsValue() is None): return None
             if (type(self.sidsValue())==numpy.ndarray):
                 vsize=reduce(lambda x,y: x*y, self.sidsValue().shape)
-                if (vsize > self._options['maxlengthdatadisplay']):
+                if (vsize>self._control.getOptionValue('maxlengthdatadisplay')):
                     return HIDEVALUE
                 if (self.sidsValue().dtype.char in ['S','c']):
                     return self.sidsValue().tostring()

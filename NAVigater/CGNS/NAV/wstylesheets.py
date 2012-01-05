@@ -5,6 +5,21 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 
+Q7TABLEVIEWSTYLESHEET="""
+ QTableView {
+ show-decoration-selected: 1;
+ }
+
+ QTableView::item {
+ border: 1px solid #d9d9d9;
+ border-top-color: transparent;
+ border-bottom-color: transparent;
+ text-align:right;
+ font-family: "Fixed"
+ font-size: 10
+ }
+"""
+
 Q7TREEVIEWSTYLESHEET="""
  QTreeView {
  show-decoration-selected: 1;
