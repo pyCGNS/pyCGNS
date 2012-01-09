@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Tue Jan  3 17:30:05 2012
+# Created: Thu Jan  5 16:47:19 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -87,6 +87,8 @@ class Ui_Q7VTKWindow(object):
         self.bOptions.setObjectName("bOptions")
         self.horizontalLayout.addWidget(self.bOptions)
         self.verticalLayout.addLayout(self.horizontalLayout)
+        self.verticalLayout_2 = QtGui.QVBoxLayout()
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.display = QVTKRenderWindowInteractor(Q7VTKWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -94,7 +96,8 @@ class Ui_Q7VTKWindow(object):
         sizePolicy.setHeightForWidth(self.display.sizePolicy().hasHeightForWidth())
         self.display.setSizePolicy(sizePolicy)
         self.display.setObjectName("display")
-        self.verticalLayout.addWidget(self.display)
+        self.verticalLayout_2.addWidget(self.display)
+        self.verticalLayout.addLayout(self.verticalLayout_2)
         self.comboBox = QtGui.QComboBox(Q7VTKWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
