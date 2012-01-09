@@ -10,7 +10,8 @@ import numpy
 from PySide.QtCore    import *
 from PySide.QtGui     import *
 
-import CGNS.PAT.cgnsutils as CT
+import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
 class Q7TableView(QTableView):
@@ -49,6 +50,17 @@ class Q7TableModel(QAbstractTableModel):
         return self.fmt%self.flatarray[index.row()*self.cs+index.column()]
     def flags(self, index):  
         if (not index.isValid()):  return Qt.NoItemFlags  
-        return Qt.ItemIsEnabled | Qt.ItemIsSelectable  
+        return Qt.ItemIsEnabled | Qt.ItemIsSelectable
+    def getValue(self,index):
+        return self.flatarray[index.row()*self.cs+index.column()]
+    def getEnumeratedValueIfPossible(self,index):
+        if (self.node.sidsType()==CGK.Elements_ts):
+            if ((index.row()==0) and (index.column()==0)):
+                ev=CGK.ElementType_l
+                et=[CGK.ElementType_ts]
+                eti=0
+                evi=self.flatarray[index.row()*self.cs+index.column()]
+                return (et,ev,eti,evi)
+        return None
 
 # -----------------------------------------------------------------

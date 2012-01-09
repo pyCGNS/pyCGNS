@@ -13,6 +13,7 @@ from CGNS.NAV.wstylesheets import Q7TABLEVIEWSTYLESHEET
 from CGNS.NAV.wfingerprint import Q7Window
 
 import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
 class Q7TableItemDelegate(QStyledItemDelegate):
@@ -64,7 +65,13 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         QObject.connect(self.cMinimize,
                         SIGNAL("stateChanged(int)"),
                         self.minimizeCells)
+        QObject.connect(self.tableView,
+                        SIGNAL("clicked(QModelIndex)"),
+                        self.clickedNode)
         #self.tableView.setItemDelegate(Q7TableItemDelegate(self))
+    def clickedNode(self,index):
+        tp=self.model.getEnumeratedValueIfPossible(index)
+        if (tp): self.setEnumerateValue(*tp)
     def minimizeCells(self,*args):
         if (self.cMinimize.isChecked()):
             self.tableView.resizeColumnsToContents()
@@ -79,4 +86,14 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.cDataType.setCurrentIndex(ix)
     def addControlLine(self):
         pass
+    def setEnumerateValue(self,etype,evalue,etypeidx,evalueidx):
+        self.cEnumType.clear()
+        self.cEnumValue.clear()
+        for et in etype:
+            self.cEnumType.addItem(et)
+        for ev in evalue:
+            self.cEnumValue.addItem(ev)
+        self.cEnumType.setCurrentIndex(etypeidx)
+        self.cEnumValue.setCurrentIndex(evalueidx)
+            
 # -----------------------------------------------------------------

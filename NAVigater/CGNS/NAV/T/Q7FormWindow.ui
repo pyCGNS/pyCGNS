@@ -56,7 +56,7 @@
       <rect>
        <x>49</x>
        <y>9</y>
-       <width>81</width>
+       <width>51</width>
        <height>20</height>
       </rect>
      </property>
@@ -64,9 +64,9 @@
     <widget class="QLineEdit" name="eDims">
      <property name="geometry">
       <rect>
-       <x>136</x>
-       <y>9</y>
-       <width>127</width>
+       <x>110</x>
+       <y>10</y>
+       <width>111</width>
        <height>20</height>
       </rect>
      </property>
@@ -74,7 +74,7 @@
     <widget class="Line" name="line">
      <property name="geometry">
       <rect>
-       <x>260</x>
+       <x>220</x>
        <y>9</y>
        <width>16</width>
        <height>46</height>
@@ -100,9 +100,9 @@
     <widget class="QLineEdit" name="eItems">
      <property name="geometry">
       <rect>
-       <x>49</x>
-       <y>35</y>
-       <width>211</width>
+       <x>50</x>
+       <y>32</y>
+       <width>171</width>
        <height>20</height>
       </rect>
      </property>
@@ -110,22 +110,22 @@
     <widget class="QLabel" name="label_22">
      <property name="geometry">
       <rect>
-       <x>280</x>
-       <y>30</y>
+       <x>234</x>
+       <y>10</y>
        <width>47</width>
        <height>16</height>
       </rect>
      </property>
      <property name="text">
-      <string>Show as</string>
+      <string>As</string>
      </property>
     </widget>
     <widget class="QComboBox" name="cShowAs">
      <property name="geometry">
       <rect>
-       <x>330</x>
-       <y>30</y>
-       <width>151</width>
+       <x>270</x>
+       <y>10</y>
+       <width>121</width>
        <height>20</height>
       </rect>
      </property>
@@ -133,9 +133,9 @@
     <widget class="QSpinBox" name="spinBox_3">
      <property name="geometry">
       <rect>
-       <x>340</x>
-       <y>430</y>
-       <width>37</width>
+       <x>346</x>
+       <y>33</y>
+       <width>61</width>
        <height>20</height>
       </rect>
      </property>
@@ -143,9 +143,9 @@
     <widget class="QSpinBox" name="spinBox_2">
      <property name="geometry">
       <rect>
-       <x>440</x>
-       <y>430</y>
-       <width>37</width>
+       <x>416</x>
+       <y>33</y>
+       <width>61</width>
        <height>20</height>
       </rect>
      </property>
@@ -178,8 +178,8 @@
     <widget class="QLabel" name="label_24">
      <property name="geometry">
       <rect>
-       <x>190</x>
-       <y>430</y>
+       <x>234</x>
+       <y>36</y>
        <width>47</width>
        <height>16</height>
       </rect>
@@ -191,50 +191,70 @@
     <widget class="QComboBox" name="cPlane">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>430</y>
+       <x>270</x>
+       <y>33</y>
        <width>71</width>
        <height>20</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLabel" name="label_30">
-     <property name="geometry">
-      <rect>
-       <x>310</x>
-       <y>430</y>
-       <width>47</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Col</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_31">
-     <property name="geometry">
-      <rect>
-       <x>390</x>
-       <y>430</y>
-       <width>47</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Row</string>
-     </property>
-    </widget>
     <widget class="QCheckBox" name="cMinimize">
      <property name="geometry">
       <rect>
-       <x>280</x>
-       <y>5</y>
-       <width>151</width>
+       <x>400</x>
+       <y>9</y>
+       <width>81</width>
        <height>22</height>
       </rect>
      </property>
      <property name="text">
-      <string>Minimize cell size</string>
+      <string>Minimize</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="cEnumType">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>426</y>
+       <width>131</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>430</y>
+       <width>56</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Enum</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="cEnumValue">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>426</y>
+       <width>171</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="cSingleSelect">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>427</y>
+       <width>111</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Single select</string>
      </property>
     </widget>
    </widget>
