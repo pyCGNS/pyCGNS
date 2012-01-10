@@ -86,13 +86,13 @@ class Mesh(CGNSparser):
   def getObjectList(self):
     return self._actors
 
+  def getPathList(self):
+    return [a[3] for a in self._actors]
+
   def getPathFromObject(self,selectedobject):
     for (o,p) in [(a[2],a[3]) for a in self._actors]:
         if (selectedobject==o): return p
     return ''
-    
-##   def setColor(self,color):
-##     self.color=color
     
 #  @cython.boundscheck(False)
   def do_volume(self,path,dx,dy,dz):
@@ -119,12 +119,14 @@ class Mesh(CGNSparser):
     a=vtk.vtkActor()
     a.SetMapper(d)
     a.GetProperty().SetRepresentationToWireframe()
-##     a.GetProperty().SetColor(*self.color)
     return (a,a.GetBounds(),g,path)
 
 #  @cython.boundscheck(False)
   def do_surface(self,surf,path): 
     cdef int i, j, imax, jmax, p1, p2, p3, p4
+    cdef double* ptrx
+    cdef double* ptry
+    cdef double* ptrz
     imax=surf[0].shape[0]
     jmax=surf[0].shape[1]
     tx=surf[0].flat
@@ -157,7 +159,6 @@ class Mesh(CGNSparser):
     a = vtk.vtkActor()
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
-##     a.GetProperty().SetColor(*self.color)
     return (a,None,sg,path)
 
   def do_boundaries(self,bnd,path):
@@ -195,8 +196,6 @@ class Mesh(CGNSparser):
     am.SetInput(sg)
     a = vtk.vtkActor()
     a.SetMapper(am)
-##     a.GetProperty().SetRepresentationToWireframe()
-##     a.GetProperty().SetColor(*self.color)
     return (a,None,sg,path)
 
   def do_vtk(self,z):

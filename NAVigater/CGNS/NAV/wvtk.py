@@ -9,8 +9,9 @@ from PySide.QtGui     import *
 from CGNS.NAV.Q7VTKWindow import Ui_Q7VTKWindow
 from CGNS.NAV.wfingerprint import Q7Window
 from CGNS.NAV.mparser import Mesh
+from CGNS.NAV.defaults import G__COLORS
 import numpy as NPY
-
+import random
 import vtk
 
 # ----------------------------------------------------------------------------
@@ -50,21 +51,23 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._T=self._fgprint.tree
       self._selected=[]
       self._currentactor=None
+      self._blackonwhite=False
       self.display.Initialize()
       self.display.Start()
       self.display.show()
+      self.bX.clicked.connect(self.b_xaxis)
+      self.bY.clicked.connect(self.b_yaxis)
+      self.bZ.clicked.connect(self.b_zaxis)
+      self.bSuffleColors.clicked.connect(self.b_shufflecolors)
+      self.bBlackColor.clicked.connect(self.b_blackandwhite)
+      self.bAddView.clicked.connect(self.b_saveview)
  
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
     self.camAxes.SetViewUp(cam.GetViewUp())
     self.camAxes.OrthogonalizeViewUp()
-    proj = cam.GetDirectionOfProjection()      
     x, y, z = cam.GetDirectionOfProjection()
 
-    # figure out the distance away from 0 0 0
-    # if the renderer resets the camera to optimally inlcude all props
-    # composing the orientation marker
- 
     bnds = self.renAxes.ComputeVisiblePropBounds()
     x0, x1, y0, y1, z0, z1 = self.renAxes.ComputeVisiblePropBounds()
     self.renAxes.ResetCamera(x0, x1, y0, y1, z0, z1) 
@@ -73,8 +76,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     d = NPY.sqrt(px*px + py*py + pz*pz)
     dproj = NPY.sqrt(x*x + y*y + z*z)
 
-    # reset the camera back along the unit vector of the
-    # direction of projection using our optimal distance
     self.camAxes.SetFocalPoint(0,0,0)
     self.camAxes.SetPosition(-d*x/dproj, -d*y/dproj, -d*z/dproj)
     self.renAxes.ResetCameraClippingRange()
@@ -113,17 +114,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           s=self.findObjectPath(x)
           print s
           a=pickAct.GetNextItem()
+          self.setCurrentPath(s)
                              
-##           s=self.findObjectPath(x)
-##           sl.append(s)
-##           t+=s+'\n'
-##           self._selected+=[(s,x)]
-##           a=pickAct.GetNextItem()     
-##         self.textMapper.SetInput('toto')
-##         yd=self._vtk.GetRenderWindow().GetSize()[1]-self.textMapper.GetHeight(self._vtkren)-10.
-##         self.textActor.SetPosition((10.,yd))
-##         self.textActor.VisibilityOn()
-
   def addPicker(self):
     self.textMapper = vtk.vtkTextMapper()
     tprop = self.textMapper.GetTextProperty()
@@ -224,10 +216,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       del o
       
       self._vtk=self.display
-     
-      # if you dont want the 'q' key to exit comment this.
-      self._vtk.AddObserver("ExitEvent", lambda o, e, a=self: self.close()) 
-
       self._vtkren = vtk.vtkRenderer()
       
       self._waxs=self.addAxis()
@@ -242,6 +230,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     
       self._parser=Mesh(T)
       alist=self._parser.createActors()
+      self.fillCurrentPath()
 
       for a in alist:
         self._vtkren.AddActor(a[0])
@@ -266,6 +255,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       (self.px,self.py,self.pz)=self._vtkren.GetActiveCamera().GetPosition()
       (self.sx,self.sy,self.sz)=(0.,0.,0.)
       (self.ox,self.oy,self.oz)=(0.,0.,0.)
+
       self._ctxt=wVTKContext(self._vtkren.GetActiveCamera())
       self._ctxt.setViewUp(self.vx,self.vy,self.vz)
       self._ctxt.setFocalPoint(self.cx,self.cy,self.cz)
@@ -282,30 +272,48 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
       self._vtkren.AddObserver("StartEvent", self.SyncCameras)
       
-      
       self._bindings={ 'space' :self.b_refresh,
                        'c'     :self.b_shufflecolors,
                        'Tab'   :self.b_nexttarget,
                        'x'     :self.b_xaxis,
                        'y'     :self.b_yaxis,
                        'z'     :self.b_zaxis,
-                       'X'     :self.b_xaxis_flip,
                        's'     :self.b_surf,
                        'w'     :self.b_wire }
 
       self._p_wire=True
+      self.setColors(True)
 
       return self._vtk.GetRenderWindow()
 
-  def b_shufflecolors(self,pos):
+  def b_shufflecolors(self,pos=None):
+      self.setColors(True)
+      
+  def b_blackandwhite(self,pos=None):
+      self.setColors()
+      
+  def getRandomColor(self):
+      cl=G__COLORS[G__COLORS.keys()[random.randrange(len(G__COLORS.keys()))]]
+      return cl
+      
+  def setColors(self,randcolors=False):
+      if (not randcolors):
+          if (self._blackonwhite):
+              self._vtkren.SetBackground(1,1,1)
+              cl=(0,0,0)
+          else:
+              self._vtkren.SetBackground(0,0,0)
+              cl=(1,1,1)
+          self._blackonwhite=not self._blackonwhite
       actors = self._vtkren.GetActors()
       actors.InitTraversal()
       actor = actors.GetNextItem()
       while actor:
-          actor.GetProperty().SetColor(1,1,0)
+          if (randcolors): cl=self.getRandomColor()
+          actor.GetProperty().SetColor(cl)
           actor = actors.GetNextItem()
-          self.iren.GetRenderWindow().Render() 
-      
+      self.iren.GetRenderWindow().Render()
+
   def b_nexttarget(self,pos):
       if (len(self._selected)>1):
           self._selected=self._selected[1:]+[self._selected[0]]
@@ -313,28 +321,42 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
               self._currentactor=self._selected[0]      
               self._vtk.GetRenderWindow().Render()
       
+  def b_saveview(self):
+      camera = self._vtkren.GetActiveCamera()
+      vname=self.cViews.currentText()
+      print 'Save view ',vname
+      print camera.GetViewUp()
+      print camera.GetDirectionOfProjection()
+      print camera.GetPosition()
+      self.cViews.addItem(vname)
+      #camera.OrthogonalizeViewUp()
+
   def b_refresh(self,pos):
       self._vtk.GetRenderWindow().Render()
       
-  def b_xaxis(self,pos):
-      self.setAxis(pos,1)
+  def b_xaxis(self,pos=None):
+      if (self.cMirror.isChecked()): self.setAxis(pos,-1)
+      else: self.setAxis(pos,1)
     
-  def b_yaxis(self,pos):
-      self.setAxis(pos,2)
+  def b_yaxis(self,pos=None):
+      if (self.cMirror.isChecked()): self.setAxis(pos,-2)
+      else: self.setAxis(pos,2)
+   
+  def b_zaxis(self,pos=None):
+      if (self.cMirror.isChecked()): self.setAxis(pos,-3)
+      else: self.setAxis(pos,3)
     
-  def b_zaxis(self,pos):
-      self.setAxis(pos,3)
-    
-  def b_xaxis_flip(self,pos):
-      self.setAxis(pos,-1)
+  def setCurrentPath(self,path):
+      ix=self.cCurrentPath.findText(path)
+      if (ix!=-1): self.cCurrentPath.setCurrentIndex(ix)
 
-  def b_yaxis_flip(self,pos):
-      self.setAxis(pos,-2)
-
-  def b_zaxis_flip(self,pos):
-      self.setAxis(pos,-3)
-
+  def fillCurrentPath(self):
+      self.cCurrentPath.clear()
+      for i in self._parser.getPathList():
+          self.cCurrentPath.addItem(i)
+          
   def setAxis(self,pos,iaxis):
+      fit=self.cFit.isChecked()
       rat=50
       cx = (0.5*(self._xmax-self._xmin))
       cy = (0.5*(self._ymax-self._ymin))
@@ -385,7 +407,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       while actor:
           actor.GetProperty().SetRepresentationToSurface()
           actor = actors.GetNextItem()
-          self._vtk.GetRenderWindow().Render()
+      self._vtk.GetRenderWindow().Render()
       
   def b_wire(self,pos):  
       if (self._p_wire):
@@ -398,7 +420,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       while actor:
           actor.GetProperty().SetRepresentationToWireframe()
           actor = actors.GetNextItem()
-          self._vtk.GetRenderWindow().Render() 
+      self._vtk.GetRenderWindow().Render() 
       
   def MotionCallback(self,obj,event):
       pos = self._vtk.GetEventPosition()
@@ -406,11 +428,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       return
 
   def CharCallback(self,obj,event):
-    
-    keysym  = self.iren.GetKeySym()
-    pos = self.iren.GetEventPosition()
-    if (self._bindings.has_key(keysym)): self._bindings[keysym](pos)
-    return
+      keysym  = self.iren.GetKeySym()
+      pos = self.iren.GetEventPosition()
+      if (self._bindings.has_key(keysym)): self._bindings[keysym](pos)
+      return
   
   def closeEvent(self, event):
       self._control.close()

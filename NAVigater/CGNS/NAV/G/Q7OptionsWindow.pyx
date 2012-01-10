@@ -2,11 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-<<<<<<< local
-# Created: Fri Jan  6 11:17:23 2012
-=======
-# Created: Thu Jan  5 16:14:06 2012
->>>>>>> other
+# Created: Mon Jan  9 16:54:43 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -18,6 +14,9 @@ class Ui_Q7OptionsWindow(object):
         Q7OptionsWindow.setObjectName("Q7OptionsWindow")
         Q7OptionsWindow.setWindowModality(QtCore.Qt.ApplicationModal)
         Q7OptionsWindow.resize(577, 359)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Q7OptionsWindow.setWindowIcon(icon)
         self.tabs = QtGui.QTabWidget(Q7OptionsWindow)
         self.tabs.setGeometry(QtCore.QRect(10, 10, 561, 311))
         self.tabs.setObjectName("tabs")
@@ -236,3 +235,4 @@ class Ui_Q7OptionsWindow(object):
         self.bApply.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Apply", None, QtGui.QApplication.UnicodeUTF8))
         self.bReset.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Reset", None, QtGui.QApplication.UnicodeUTF8))
 
+import Res_rc

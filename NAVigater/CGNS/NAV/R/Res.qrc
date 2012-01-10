@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/camera-add.gif</file>
+    <file>icons/colors-bw.gif</file>
     <file>icons/folder.gif</file>
     <file>Res.qrc</file>
     <file>icons/add.gif</file>
@@ -14,6 +16,7 @@
     <file>icons/check-save.gif</file>
     <file>icons/check-view.gif</file>
     <file>icons/close-view.gif</file>
+    <file>icons/colors.gif</file>
     <file>icons/data-array-large.gif</file>
     <file>icons/delete.gif</file>
     <file>icons/flag-all.gif</file>

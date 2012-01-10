@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FileWindow.ui'
 #
-# Created: Thu Jan  5 16:14:08 2012
+# Created: Mon Jan  9 17:31:18 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,6 +21,9 @@ class Ui_Q7FileWindow(object):
         Q7FileWindow.setSizePolicy(sizePolicy)
         Q7FileWindow.setMinimumSize(QtCore.QSize(720, 400))
         Q7FileWindow.setMaximumSize(QtCore.QSize(720, 400))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Q7FileWindow.setWindowIcon(icon)
         self.verticalLayout = QtGui.QVBoxLayout(Q7FileWindow)
         self.verticalLayout.setObjectName("verticalLayout")
         self.tabs = QtGui.QTabWidget(Q7FileWindow)
@@ -80,9 +83,9 @@ class Ui_Q7FileWindow(object):
         self.bAction.setMinimumSize(QtCore.QSize(25, 25))
         self.bAction.setMaximumSize(QtCore.QSize(25, 25))
         self.bAction.setText("")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bAction.setIcon(icon)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bAction.setIcon(icon1)
         self.bAction.setObjectName("bAction")
         self.cShowAll = QtGui.QCheckBox(self.Selection)
         self.cShowAll.setGeometry(QtCore.QRect(610, 40, 91, 22))
@@ -92,9 +95,9 @@ class Ui_Q7FileWindow(object):
         self.bBack.setMinimumSize(QtCore.QSize(25, 25))
         self.bBack.setMaximumSize(QtCore.QSize(25, 25))
         self.bBack.setText("")
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/arrow.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bBack.setIcon(icon1)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/images/icons/arrow.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bBack.setIcon(icon2)
         self.bBack.setObjectName("bBack")
         self.cShowDirs = QtGui.QCheckBox(self.Selection)
         self.cShowDirs.setGeometry(QtCore.QRect(470, 40, 141, 22))

@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../R/Res.qrc">
+    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+  </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
@@ -216,7 +220,7 @@
       <rect>
        <x>50</x>
        <y>426</y>
-       <width>131</width>
+       <width>211</width>
        <height>22</height>
       </rect>
      </property>
@@ -237,24 +241,11 @@
     <widget class="QComboBox" name="cEnumValue">
      <property name="geometry">
       <rect>
-       <x>190</x>
+       <x>270</x>
        <y>426</y>
-       <width>171</width>
+       <width>211</width>
        <height>22</height>
       </rect>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="cSingleSelect">
-     <property name="geometry">
-      <rect>
-       <x>370</x>
-       <y>427</y>
-       <width>111</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Single select</string>
      </property>
     </widget>
    </widget>
@@ -1219,6 +1210,8 @@
    <header>CGNS.NAV.mtable</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../R/Res.qrc"/>
+ </resources>
  <connections/>
 </ui>

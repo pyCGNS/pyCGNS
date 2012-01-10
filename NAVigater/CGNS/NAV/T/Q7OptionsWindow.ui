@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../R/Res.qrc">
+    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+  </property>
   <widget class="QTabWidget" name="tabs">
    <property name="geometry">
     <rect>
@@ -652,6 +656,8 @@
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../R/Res.qrc"/>
+ </resources>
  <connections/>
 </ui>

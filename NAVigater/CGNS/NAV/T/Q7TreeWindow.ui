@@ -21,7 +21,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QToolButton" name="toolButton">
+      <widget class="QToolButton" name="bSave">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -213,7 +213,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_10">
+      <widget class="QToolButton" name="bPreviousMark">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -236,7 +236,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_11">
+      <widget class="QToolButton" name="bNextMark">
        <property name="minimumSize">
         <size>
          <width>25</width>

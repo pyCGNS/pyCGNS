@@ -57,8 +57,8 @@ class Q7TableModel(QAbstractTableModel):
         if (self.node.sidsType()==CGK.Elements_ts):
             if ((index.row()==0) and (index.column()==0)):
                 ev=CGK.ElementType_l
-                et=[CGK.ElementType_ts]
-                eti=0
+                et=[s[:-1]+'t' for s in CGK.cgnsenums]
+                eti=et.index(CGK.ElementType_ts)
                 evi=self.flatarray[index.row()*self.cs+index.column()]
                 return (et,ev,eti,evi)
         return None

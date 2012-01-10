@@ -2,11 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-<<<<<<< local
-# Created: Mon Jan  9 14:03:01 2012
-=======
-# Created: Thu Jan  5 16:14:07 2012
->>>>>>> other
+# Created: Mon Jan  9 17:11:07 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -22,6 +18,9 @@ class Ui_Q7FormWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Q7FormWindow.sizePolicy().hasHeightForWidth())
         Q7FormWindow.setSizePolicy(sizePolicy)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Q7FormWindow.setWindowIcon(icon)
         self.tabWidget = QtGui.QTabWidget(Q7FormWindow)
         self.tabWidget.setGeometry(QtCore.QRect(0, 70, 491, 481))
         self.tabWidget.setObjectName("tabWidget")
@@ -85,17 +84,14 @@ class Ui_Q7FormWindow(object):
         self.cMinimize.setGeometry(QtCore.QRect(400, 9, 81, 22))
         self.cMinimize.setObjectName("cMinimize")
         self.cEnumType = QtGui.QComboBox(self.tData)
-        self.cEnumType.setGeometry(QtCore.QRect(50, 426, 131, 22))
+        self.cEnumType.setGeometry(QtCore.QRect(50, 426, 211, 22))
         self.cEnumType.setObjectName("cEnumType")
         self.label_4 = QtGui.QLabel(self.tData)
         self.label_4.setGeometry(QtCore.QRect(10, 430, 56, 14))
         self.label_4.setObjectName("label_4")
         self.cEnumValue = QtGui.QComboBox(self.tData)
-        self.cEnumValue.setGeometry(QtCore.QRect(190, 426, 171, 22))
+        self.cEnumValue.setGeometry(QtCore.QRect(270, 426, 211, 22))
         self.cEnumValue.setObjectName("cEnumValue")
-        self.cSingleSelect = QtGui.QCheckBox(self.tData)
-        self.cSingleSelect.setGeometry(QtCore.QRect(370, 427, 111, 22))
-        self.cSingleSelect.setObjectName("cSingleSelect")
         self.tabWidget.addTab(self.tData, "")
         self.tFiles = QtGui.QWidget()
         self.tFiles.setObjectName("tFiles")
@@ -355,7 +351,6 @@ class Ui_Q7FormWindow(object):
         self.label_24.setText(QtGui.QApplication.translate("Q7FormWindow", "Plane", None, QtGui.QApplication.UnicodeUTF8))
         self.cMinimize.setText(QtGui.QApplication.translate("Q7FormWindow", "Minimize", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("Q7FormWindow", "Enum", None, QtGui.QApplication.UnicodeUTF8))
-        self.cSingleSelect.setText(QtGui.QApplication.translate("Q7FormWindow", "Single select", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tData), QtGui.QApplication.translate("Q7FormWindow", "Data", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("Q7FormWindow", "Destination", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("Q7FormWindow", "Path", None, QtGui.QApplication.UnicodeUTF8))
@@ -414,3 +409,4 @@ class Ui_Q7FormWindow(object):
         self.bApply.setText(QtGui.QApplication.translate("Q7FormWindow", "Apply", None, QtGui.QApplication.UnicodeUTF8))
 
 from CGNS.NAV.mtable import Q7TableView
+import Res_rc

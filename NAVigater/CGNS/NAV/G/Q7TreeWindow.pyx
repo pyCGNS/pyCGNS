@@ -2,11 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
-<<<<<<< local
-# Created: Fri Jan  6 14:11:54 2012
-=======
-# Created: Thu Jan  5 16:14:04 2012
->>>>>>> other
+# Created: Mon Jan  9 16:54:42 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -24,14 +20,14 @@ class Ui_Q7TreeWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.toolButton = QtGui.QToolButton(Q7TreeWindow)
-        self.toolButton.setMinimumSize(QtCore.QSize(25, 25))
-        self.toolButton.setMaximumSize(QtCore.QSize(25, 25))
+        self.bSave = QtGui.QToolButton(Q7TreeWindow)
+        self.bSave.setMinimumSize(QtCore.QSize(25, 25))
+        self.bSave.setMaximumSize(QtCore.QSize(25, 25))
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/images/icons/save-done.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton.setIcon(icon1)
-        self.toolButton.setObjectName("toolButton")
-        self.horizontalLayout.addWidget(self.toolButton)
+        self.bSave.setIcon(icon1)
+        self.bSave.setObjectName("bSave")
+        self.horizontalLayout.addWidget(self.bSave)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.toolButton_2 = QtGui.QToolButton(Q7TreeWindow)
@@ -84,22 +80,22 @@ class Ui_Q7TreeWindow(object):
         self.horizontalLayout.addWidget(self.bZoomIn)
         spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem2)
-        self.toolButton_10 = QtGui.QToolButton(Q7TreeWindow)
-        self.toolButton_10.setMinimumSize(QtCore.QSize(25, 25))
-        self.toolButton_10.setMaximumSize(QtCore.QSize(25, 25))
+        self.bPreviousMark = QtGui.QToolButton(Q7TreeWindow)
+        self.bPreviousMark.setMinimumSize(QtCore.QSize(25, 25))
+        self.bPreviousMark.setMaximumSize(QtCore.QSize(25, 25))
         icon7 = QtGui.QIcon()
         icon7.addPixmap(QtGui.QPixmap(":/images/icons/flag-bwd.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_10.setIcon(icon7)
-        self.toolButton_10.setObjectName("toolButton_10")
-        self.horizontalLayout.addWidget(self.toolButton_10)
-        self.toolButton_11 = QtGui.QToolButton(Q7TreeWindow)
-        self.toolButton_11.setMinimumSize(QtCore.QSize(25, 25))
-        self.toolButton_11.setMaximumSize(QtCore.QSize(25, 25))
+        self.bPreviousMark.setIcon(icon7)
+        self.bPreviousMark.setObjectName("bPreviousMark")
+        self.horizontalLayout.addWidget(self.bPreviousMark)
+        self.bNextMark = QtGui.QToolButton(Q7TreeWindow)
+        self.bNextMark.setMinimumSize(QtCore.QSize(25, 25))
+        self.bNextMark.setMaximumSize(QtCore.QSize(25, 25))
         icon8 = QtGui.QIcon()
         icon8.addPixmap(QtGui.QPixmap(":/images/icons/flag-fwd.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_11.setIcon(icon8)
-        self.toolButton_11.setObjectName("toolButton_11")
-        self.horizontalLayout.addWidget(self.toolButton_11)
+        self.bNextMark.setIcon(icon8)
+        self.bNextMark.setObjectName("bNextMark")
+        self.horizontalLayout.addWidget(self.bNextMark)
         self.toolButton_8 = QtGui.QToolButton(Q7TreeWindow)
         self.toolButton_8.setMinimumSize(QtCore.QSize(25, 25))
         self.toolButton_8.setMaximumSize(QtCore.QSize(25, 25))
@@ -276,13 +272,13 @@ class Ui_Q7TreeWindow(object):
 
     def retranslateUi(self, Q7TreeWindow):
         Q7TreeWindow.setWindowTitle(QtGui.QApplication.translate("Q7TreeWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.bSave.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton_2.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton_3.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bZoomOut.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bZoomIn.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton_10.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton_11.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.bPreviousMark.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.bNextMark.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton_8.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton_7.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton_6.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
