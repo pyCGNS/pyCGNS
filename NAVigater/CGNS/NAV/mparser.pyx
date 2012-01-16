@@ -57,12 +57,12 @@ class CGNSparser:
       for nzbc in CGU.getAllNodesByTypeSet(zT,[CGK.ZoneBC_ts]):
         zbcT=CGU.nodeByPath(nzbc,zT)
         for nbc in CGU.getAllNodesByTypeSet(zbcT,[CGK.BC_ts]):
-          bcpaths+=[['%s/[%s]'%(zp,nbc.split('/')[1])]]
+          bcpaths+=['%s/[%s]'%(zp,nbc.split('/')[1])]
           bcT=CGU.nodeByPath(nbc,zbcT)
           for rbc in CGU.getAllNodesByTypeSet(bcT,[CGK.IndexRange_ts]):
-            ptr=CGU.nodeByPath(rbc,bcT)[1].T.flat
-            brg=scx[ptr[0]:ptr[3]+1,ptr[1]:ptr[4]+1,ptr[2]:ptr[5]+1]
-            bndlist+=[[brg]]
+            ptr=CGU.nodeByPath(rbc,bcT)[1].T.flat                                                                      
+            brg=[scx[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],scy[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],scz[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]]]
+            bndlist+=[brg]
       self._zones[z]=([cx[1],cy[1],cz[1]],[simin,simax,sjmin,sjmax,skmin,skmax],bndlist,
                       meshpath,surfpaths,bcpaths)
     return None
@@ -122,7 +122,7 @@ class Mesh(CGNSparser):
     return (a,a.GetBounds(),g,path)
 
 #  @cython.boundscheck(False)
-  def do_surface(self,surf,path): 
+  def do_surface(self,surf,path):
     cdef int i, j, imax, jmax, p1, p2, p3, p4
     cdef double* ptrx
     cdef double* ptry
@@ -162,11 +162,10 @@ class Mesh(CGNSparser):
     return (a,None,sg,path)
 
   def do_boundaries(self,bnd,path):
-    return self 
-    cdef int i, j, imax, jmax, p1, p2, p3, p4
-    imax=bnd[0].shape[0]
-    jmax=bnd[0].shape[1]
-    kmax=bnd[0].shape[2]
+    cdef int i, j, imax, jmax, p1, p2, p3, p4    
+    max=[x for x in bnd[0].shape if x!=1]
+    imax=max[0]
+    jmax=max[1]
     tx=bnd[0].flat
     ty=bnd[1].flat
     tz=bnd[2].flat
@@ -196,14 +195,15 @@ class Mesh(CGNSparser):
     am.SetInput(sg)
     a = vtk.vtkActor()
     a.SetMapper(am)
+    a.GetProperty().SetRepresentationToWireframe()
     return (a,None,sg,path)
 
   def do_vtk(self,z):
-    self._actors+=[self.do_volume(z[3],z[0][0],z[0][1],z[0][2])]
-    for (s,sp) in zip(z[1],z[4]):
-      self._actors+=[self.do_surface(s,sp)]
-    #for (b,sb) in zip(z[2],z[5]):
-    #  self._actors+=self.do_boundaries(b,sb)
+      self._actors+=[self.do_volume(z[3],z[0][0],z[0][1],z[0][2])]
+      for (s,sp) in zip(z[1],z[4]):
+        self._actors+=[self.do_surface(s,sp)]
+      for (b,sb) in zip(z[2],z[5]):
+        self._actors+=[self.do_boundaries(b,sb)]
 
 #----------------------------------------------------------------------------
 

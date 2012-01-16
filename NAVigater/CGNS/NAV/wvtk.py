@@ -11,6 +11,7 @@ from CGNS.NAV.wfingerprint import Q7Window
 from CGNS.NAV.mparser import Mesh
 from CGNS.NAV.defaults import G__COLORS
 import numpy as NPY
+
 import random
 import vtk
 
@@ -88,7 +89,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     self._wtop.destroy()
     self._control._hasvtkWindow=None
   
-  def onexit(self):
+  def onexit(self):  
     self._control._control.delTreeView(self._viewid,
                                        self._fgprint.filedir,
                                        self._fgprint.filename)
@@ -98,28 +99,31 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     self._selected=[]
     if self.picker.GetCellId() < 0:
         self.textActor.VisibilityOff()
-    else:
-        selPt = self.picker.GetSelectionPoint()
-        pickPos = self.picker.GetPickPosition()
-        self.textMapper.SetInput("(%.6f, %.6f, %.6f)"%pickPos)
-        self.textActor.SetPosition(selPt[:2])
-        self.textActor.VisibilityOn()
+        self._selected=[]
+    else:        
         selPt = self.picker.GetSelectionPoint()
         pickAct = self.picker.GetActors()     
-        pickAct.InitTraversal()
+        a=pickAct.InitTraversal()
         a=pickAct.GetNextItem()
         t=''
         sl=[]
         while a:
           x=a.GetMapper().GetInput()
           s=self.findObjectPath(x)
-          print s
+          t+=s+'\n'
+##           self._selected+=[(s,a)]
+          self._selected+=[[s,a]]
+          self.textMapper.SetInput(t)
+          yd=self._vtk.GetRenderWindow().GetSize()[1]-self.textMapper.GetHeight(self._vtkren)-10.
+          self.textActor.SetPosition((10.,yd))
+          self.textActor.VisibilityOn()
+          self._vtkren.AddActor(self.textActor)
           a=pickAct.GetNextItem()
           self.setCurrentPath(s)
                              
   def addPicker(self):
     self.textMapper = vtk.vtkTextMapper()
-    tprop = self.textMapper.GetTextProperty()
+    tprop = self.textMapper.GetTextProperty()  
     tprop.SetFontFamilyToArial()
     tprop.SetFontSize(10)
     tprop.BoldOff()
@@ -218,13 +222,14 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       
       self._vtk=self.display
       self._vtkren = vtk.vtkRenderer()
+      self._targetren=vtk.vtkRenderer()
       
       self._waxs=self.addAxis()
       wpck = self.addPicker()
 
       self._vtk.GetRenderWindow().SetNumberOfLayers(2)
       self._vtkren.SetLayer(0)
-      self._waxs.SetLayer(1) 
+      self._waxs.SetLayer(1)
 
       self._vtk.GetRenderWindow().AddRenderer(self._vtkren)
       self._vtk.GetRenderWindow().AddRenderer(self._waxs)
@@ -264,6 +269,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                 
       istyle = vtk.vtkInteractorStyleTrackballCamera()
       self._vtk.SetInteractorStyle(istyle)
+      
       self._vtk.AddObserver("KeyPressEvent", self.CharCallback)
       self._vtk.SetPicker(self.picker)
 
@@ -272,10 +278,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.iren.SetPicker(self.picker)
 
       self._vtkren.AddObserver("StartEvent", self.SyncCameras)
+        
       
-      self._bindings={ 'space' :self.b_refresh,
+      self._bindings={ 'r' :self.b_refresh,
                        'c'     :self.b_shufflecolors,
-                       'Tab'   :self.b_nexttarget,
+                       'T'     :self.b_nexttarget,
                        'x'     :self.b_xaxis,
                        'y'     :self.b_yaxis,
                        'z'     :self.b_zaxis,
@@ -319,11 +326,25 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.b_nexttarget(None)
       
   def b_nexttarget(self,pos):
-      if (len(self._selected)>1):
+      if (self._currentactor !=None):
+          color=self._currentactor[2]
+          actor=self._currentactor[1]
+          actor.GetProperty().SetColor(color)
+          self._vtk.GetRenderWindow().GetRenderers().GetFirstRenderer().RemoveActor(actor)
+          self._vtkren.AddActor(actor)
+          self._vtk.GetRenderWindow().Render()
+
+      if (len(self._selected)>0):        
           self._selected=self._selected[1:]+[self._selected[0]]
-          if (self._currentactor==None):
-              self._currentactor=self._selected[0]      
-              self._vtk.GetRenderWindow().Render()
+          self._currentactor=self._selected[0]
+          actor=self._currentactor[1]
+          color=actor.GetProperty().GetColor()
+##           self._currentactor=list(self._currentactor)
+          self._currentactor.append(color)
+          actor.GetProperty().SetColor(1,0,0)
+          self._vtkren.RemoveActor(actor)
+          self._vtk.GetRenderWindow().GetRenderers().GetFirstRenderer().AddActor(actor)
+          self._vtk.GetRenderWindow().Render()                
       
   def b_saveview(self):
       camera = self._vtkren.GetActiveCamera()
@@ -426,12 +447,13 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           actor = actors.GetNextItem()
       self._vtk.GetRenderWindow().Render() 
       
-  def MotionCallback(self,obj,event):
-      pos = self._vtk.GetEventPosition()
-      print 'MOTION AT ',pos
-      return
+##   def MotionCallback(self,obj,event):
+##       pos = self._vtk.GetEventPosition()
+##       print 'MOTION AT ',pos
+##       return
 
   def CharCallback(self,obj,event):
+    # keysym  = self.iren.GetKeyCode()
       keysym  = self.iren.GetKeySym()
       pos = self.iren.GetEventPosition()
       if (self._bindings.has_key(keysym)): self._bindings[keysym](pos)
