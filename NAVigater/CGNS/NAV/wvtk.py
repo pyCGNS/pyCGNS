@@ -61,6 +61,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bSuffleColors.clicked.connect(self.b_shufflecolors)
       self.bBlackColor.clicked.connect(self.b_blackandwhite)
       self.bAddView.clicked.connect(self.b_saveview)
+      self.bNext.clicked.connect(self.b_next)
  
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
@@ -314,6 +315,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           actor = actors.GetNextItem()
       self.iren.GetRenderWindow().Render()
 
+  def b_next(self):
+      self.b_nexttarget(None)
+      
   def b_nexttarget(self,pos):
       if (len(self._selected)>1):
           self._selected=self._selected[1:]+[self._selected[0]]

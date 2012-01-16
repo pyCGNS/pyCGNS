@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Tue Jan 10 09:11:51 2012
+# Created: Mon Jan 16 11:20:03 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -178,6 +178,24 @@ class Ui_Q7VTKWindow(object):
         self.cExclusive = QtGui.QCheckBox(Q7VTKWindow)
         self.cExclusive.setObjectName("cExclusive")
         self.horizontalLayout_2.addWidget(self.cExclusive)
+        spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem3)
+        self.bPrevious = QtGui.QPushButton(Q7VTKWindow)
+        self.bPrevious.setMinimumSize(QtCore.QSize(25, 25))
+        self.bPrevious.setMaximumSize(QtCore.QSize(25, 25))
+        self.bPrevious.setText("")
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(":/images/icons/arrow.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bPrevious.setIcon(icon6)
+        self.bPrevious.setObjectName("bPrevious")
+        self.horizontalLayout_2.addWidget(self.bPrevious)
+        self.bNext = QtGui.QPushButton(Q7VTKWindow)
+        self.bNext.setText("")
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(":/images/icons/arrow_R.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bNext.setIcon(icon7)
+        self.bNext.setObjectName("bNext")
+        self.horizontalLayout_2.addWidget(self.bNext)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
 
         self.retranslateUi(Q7VTKWindow)
