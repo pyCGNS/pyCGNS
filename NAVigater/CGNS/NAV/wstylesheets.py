@@ -5,7 +5,7 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 
-colordict={'high':'#7ebaff', 'low':'#78b5e9'}
+colordict={'high':'#7ebaff', 'low':'#78b5e9','high2':'#bad5f4','low2':'#bad5ff'}
 
 Q7CONTROLVIEWSTYLESHEET="""
  QTableView {
@@ -58,11 +58,6 @@ Q7TREEVIEWSTYLESHEET="""
  border-bottom-color: transparent;
  text-align:right;
  color:black;
- }
-
- QTreeView::item:hover {
- background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 %(high)s,stop:1 %(low)s);
- border: 1px solid #bfcde4;
  }
 
  QTreeView::item:selected {

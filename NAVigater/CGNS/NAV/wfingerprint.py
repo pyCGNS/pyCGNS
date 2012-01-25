@@ -23,6 +23,7 @@ class Q7Window(QWidget,object):
     VIEW_TREE='T'
     VIEW_VTK='G'
     VIEW_FORM='F'
+    VIEW_QUERY='Q'
     STATUS_UNCHANGED='U'
     STATUS_MODIFIED='M'
     HISTORYLASTKEY='///LAST///'
@@ -41,7 +42,15 @@ class Q7Window(QWidget,object):
         self._control=control
         self._fgprint=fgprint
         self._index=self.addChildWindow()
-        self.setWindowTitle("%s:%s%.3d"%(G__TOOLNAME,self._vtype,self._index))
+        if (self._index==0):
+            tit="%s:%s%.3d"%(G__TOOLNAME,self._vtype,self._index)
+        else:
+            tit="%s:Control"%(G__TOOLNAME)            
+        self.setWindowTitle(tit)
+        try:
+            self.bBackControl.clicked.connect(self.backcontrol)
+        except AttributeError:
+            pass
     def validateOption(self,name,value):
         return True
     def getOptions(self):
@@ -94,6 +103,8 @@ class Q7Window(QWidget,object):
     def closeEvent(self, event):
         self._control.delLine('%.3d'%self._index)
         event.accept()
+    def backcontrol(self):
+        self._fgprint.raiseControlView()
     
 # -----------------------------------------------------------------
 class Q7fingerPrint:
@@ -129,6 +140,8 @@ class Q7fingerPrint:
         self.views={}
         self.control=control
         Q7fingerPrint.__extension.append(self)
+    def raiseControlView(self):
+        self.control.raise_()
     def addChild(self,viewtype,view):
         Q7fingerPrint.__viewscounter+=1
         idx=Q7fingerPrint.__viewscounter
@@ -138,6 +151,5 @@ class Q7fingerPrint:
     def closeAllViews(self):
         for vtype in self.views:
             for (v,i) in self.views[vtype]: v.close()
-            
-    
+        
 # -----------------------------------------------------------------

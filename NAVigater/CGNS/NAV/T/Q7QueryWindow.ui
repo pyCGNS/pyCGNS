@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Q7QueryWindow</class>
+ <widget class="QWidget" name="Q7QueryWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>715</width>
+    <height>350</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>715</width>
+    <height>350</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>715</width>
+    <height>350</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="5" column="1">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>695</width>
+       <height>265</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>695</width>
+       <height>265</height>
+      </size>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="widget">
+      <attribute name="title">
+       <string>Edit</string>
+      </attribute>
+      <widget class="Q7QueryTableView" name="querytableview">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>33</y>
+         <width>680</width>
+         <height>120</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <attribute name="horizontalHeaderStretchLastSection">
+        <bool>true</bool>
+       </attribute>
+      </widget>
+      <widget class="QPushButton" name="bAddClause">
+       <property name="geometry">
+        <rect>
+         <x>630</x>
+         <y>5</y>
+         <width>25</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Add new line in predicate</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/add.gif</normaloff>:/images/icons/add.gif</iconset>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="bDelClause">
+       <property name="geometry">
+        <rect>
+         <x>660</x>
+         <y>5</y>
+         <width>25</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Remove current line in predicate</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/delete.gif</normaloff>:/images/icons/delete.gif</iconset>
+       </property>
+      </widget>
+      <widget class="QFrame" name="editFrame">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>155</y>
+         <width>671</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <property name="lineWidth">
+        <number>2</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="bOk">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>5</y>
+         <width>25</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Validate change</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/mandatory-sids-node.gif</normaloff>:/images/icons/mandatory-sids-node.gif</iconset>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="bCancel">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>5</y>
+         <width>25</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Cancel change</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/close-view.gif</normaloff>:/images/icons/close-view.gif</iconset>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Python</string>
+      </attribute>
+      <widget class="QPlainTextEdit" name="plainTextEdit_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>671</width>
+         <height>221</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Result</string>
+      </attribute>
+      <widget class="QListView" name="listView">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>671</width>
+         <height>191</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>5</y>
+         <width>25</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>25</horstretch>
+         <verstretch>25</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/operate-execute.gif</normaloff>:/images/icons/operate-execute.gif</iconset>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="bBackControl">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/control.gif</normaloff>:/images/icons/control.gif</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bClose">
+       <property name="text">
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Query:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="cQueryName">
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bSave">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cShorbox">
+       <property name="text">
+        <string>ShortBox</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Q7QueryTableView</class>
+   <extends>QTableView</extends>
+   <header>CGNS.NAV.mquery</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../R/Res.qrc"/>
+ </resources>
+ <connections/>
+</ui>

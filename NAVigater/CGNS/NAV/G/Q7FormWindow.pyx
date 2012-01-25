@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created: Mon Jan 16 11:44:26 2012
+# Created: Tue Jan 24 16:37:03 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,12 +12,14 @@ from PySide import QtCore, QtGui
 class Ui_Q7FormWindow(object):
     def setupUi(self, Q7FormWindow):
         Q7FormWindow.setObjectName("Q7FormWindow")
-        Q7FormWindow.resize(496, 591)
+        Q7FormWindow.resize(495, 595)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Q7FormWindow.sizePolicy().hasHeightForWidth())
         Q7FormWindow.setSizePolicy(sizePolicy)
+        Q7FormWindow.setMinimumSize(QtCore.QSize(495, 595))
+        Q7FormWindow.setMaximumSize(QtCore.QSize(495, 595))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7FormWindow.setWindowIcon(icon)
@@ -330,7 +332,7 @@ class Ui_Q7FormWindow(object):
         self.ePath.setGeometry(QtCore.QRect(50, 40, 441, 27))
         self.ePath.setObjectName("ePath")
         self.checkBox_18 = QtGui.QCheckBox(Q7FormWindow)
-        self.checkBox_18.setGeometry(QtCore.QRect(370, 70, 151, 22))
+        self.checkBox_18.setGeometry(QtCore.QRect(240, 70, 151, 22))
         self.checkBox_18.setObjectName("checkBox_18")
         self.bClose = QtGui.QPushButton(Q7FormWindow)
         self.bClose.setGeometry(QtCore.QRect(400, 560, 88, 27))
@@ -338,9 +340,18 @@ class Ui_Q7FormWindow(object):
         self.bApply = QtGui.QPushButton(Q7FormWindow)
         self.bApply.setGeometry(QtCore.QRect(310, 560, 88, 27))
         self.bApply.setObjectName("bApply")
+        self.bBackControl = QtGui.QPushButton(Q7FormWindow)
+        self.bBackControl.setGeometry(QtCore.QRect(0, 570, 25, 25))
+        self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))
+        self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
+        self.bBackControl.setText("")
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/control.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bBackControl.setIcon(icon1)
+        self.bBackControl.setObjectName("bBackControl")
 
         self.retranslateUi(Q7FormWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Q7FormWindow)
 
     def retranslateUi(self, Q7FormWindow):

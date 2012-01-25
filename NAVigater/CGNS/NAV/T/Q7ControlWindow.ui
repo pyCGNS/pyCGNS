@@ -41,7 +41,7 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Load an existing CGNS file</string>
+        <string>Load the last used CGNS file</string>
        </property>
        <property name="text">
         <string/>
@@ -247,6 +247,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Close all CGNS.NAV windows</string>
        </property>
        <property name="text">
         <string/>

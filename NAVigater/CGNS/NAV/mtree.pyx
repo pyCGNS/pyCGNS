@@ -21,6 +21,44 @@ STLKTOPBK='@@LTOPBK@@' # broken top link entry
 STLKTOPNF='@@LTOPNF@@' # top link entry ok not followed
 STLKNOLNK='@@LNOLNK@@' # no link
 
+STCHKUNKN='@@CKUNKN@@' # unknown
+STCHKGOOD='@@CKGOOD@@' # good, ok
+STCHKWARN='@@CKWARN@@' # warning
+STCHKFAIL='@@CKFAIL@@' # fail, bad
+
+STFORUNKN='@@FORUNK@@'
+
+STMARK_ON='@@MARK_ON@@'
+STMARKOFF='@@MARKOFF@@'
+
+STSHRUNKN='@@SHRUNKN@@'
+
+EDITNODE='@@NODEDIT@@'
+MARKNODE='@@NODEMARK@@'
+DOWNNODE='@@NODEDOWN@@'
+UPNODE  ='@@NODEUP@@'
+
+ICONMAPPING={
+ STLKNOLNK:":/images/icons/link-node.gif",
+
+ STCHKUNKN:":/images/icons/empty.gif",
+ STCHKGOOD:":/images/icons/subtree-sids-ok.gif",
+ STCHKFAIL:":/images/icons/subtree-sids-failed.gif",
+ STCHKWARN:":/images/icons/subtree-sids-warning.gif",
+
+ STFORUNKN:":/images/icons/empty.gif",   
+ STSHRUNKN:":/images/icons/empty.gif",   
+ STMARKOFF:":/images/icons/empty.gif",
+ STMARK_ON:":/images/icons/mark-node.gif",   
+}
+
+KEYMAPPING={
+ MARKNODE:   Qt.Key_Space,
+ EDITNODE:   Qt.Key_Insert,
+ UPNODE:     Qt.Key_Up,
+ DOWNNODE:   Qt.Key_Down,
+}
+
 import CGNS.PAT.cgnsutils as CT
 
 # -----------------------------------------------------------------
@@ -28,20 +66,95 @@ class Q7TreeView(QTreeView):
     def  __init__(self,parent):
         QTreeView.__init__(self,None)
         self._parent=parent
+        self._control=None
+        self._model=None
+    def setControlWindow(self,control,model):
+        self._control=control
+        self._model=model
+    def getLastEntered(self):
+        if (self._control is not None): return self._control.getLastEntered()
+        return None
+    def setLastEntered(self):
+        if (self._control is not None): self._control.setLastEntered()
     def selectionChanged(self,old,new):
         QTreeView.selectionChanged(self,old,new)
         if (old.count()):
             self._parent.updateStatus(old[0].topLeft().internalPointer())
     def mousePressEvent(self,event):
-       self.lastPos=event.globalPos()
-       self.lastButton=event.button()
-       QTreeView.mousePressEvent(self,event)
+        self.lastPos=event.globalPos()
+        self.lastButton=event.button()
+        QTreeView.mousePressEvent(self,event)
+    def keyPressEvent(self,event):
+        last=self.getLastEntered()
+        if (last is not None):
+          kmod=event.modifiers()
+          kval=event.key()
+          if (kval==KEYMAPPING[MARKNODE]):
+              last.internalPointer().switchMarked()
+              last.internalPointer()._model.updateSelected()
+              self.changeRow(last.row())
+          if (kval==KEYMAPPING[UPNODE]):
+              if   (kmod==Qt.ControlModifier): self.upRowLevel(last)
+              elif (kmod==Qt.ShiftModifier):   self.upRowMarked()
+              else: QTreeView.keyPressEvent(self,event)
+          if (kval==KEYMAPPING[DOWNNODE]):
+              if (kmod==Qt.ControlModifier): self.downRowLevel(last)
+              elif (kmod==Qt.ShiftModifier): self.downRowMarked()
+              else: QTreeView.keyPressEvent(self,event)
+        self.setLastEntered()
+        self.scrollTo(self.getLastEntered())
+    def upRowLevel(self,index):
+        self.relativeMoveToRow(-1,index)
+    def downRowLevel(self,index):
+        self.relativeMoveToRow(+1,index)
+    def upRowMarked(self):
+        self.changeSelectedMark(-1)
+    def downRowMarked(self):
+        self.changeSelectedMark(+1)
+    def relativeMoveToRow(self,shift,index):
+        row=index.row()
+        col=index.column()
+        if (not index.sibling(row+shift,col).isValid()): return
+        parent=index.parent()
+        nix=self.model().index(row+shift,col,parent)
+        self.exclusiveSelectRow(nix)
+    def changeRow(self,row):
+        ix1=self._model.createIndex(row,0)
+        ix2=self._model.createIndex(row,DATACOLUMN-1)
+        self._model.dataChanged.emit(ix1,ix2)
+    def exclusiveSelectRow(self,index):
+        row=index.row()
+        col=index.column()
+        parent=index.parent()
+        nix=self.model().index(row,col,parent)
+        mod=QItemSelectionModel.SelectCurrent|QItemSelectionModel.Rows
+        self.selectionModel().setCurrentIndex(nix,mod)
+        self.setLastEntered()
+        self.scrollTo(index)
+    def changeSelectedMark(self,delta):
+        sidx=self.model()._selectedIndex
+        if (self.model()._selectedIndex==-1): self.model()._selectedIndex=0
+        elif ((delta==-1) and (sidx==0)):
+            self.model()._selectedIndex=len(self.model()._selected)-1
+        elif (delta==-1):
+            self.model()._selectedIndex-=1
+        elif ((delta==+1) and (sidx==len(self.model()._selected)-1)):
+            self.model()._selectedIndex=0
+        elif (delta==+1):
+            self.model()._selectedIndex+=1
+        if (self.model()._selected!=-1):
+            path=self.model()._selected[self.model()._selectedIndex]
+            idx=self.model().match(self.model().index(0,0,QModelIndex()),
+                                   Qt.UserRole,
+                                   path,
+                                   flags=Qt.MatchExactly|Qt.MatchRecursive)
+            if (idx[0].isValid()): self.exclusiveSelectRow(idx[0])
        
 # -----------------------------------------------------------------
 class Q7TreeItem(object):
     dtype=['MT','I4','I8','R4','R8','C1','LK']
     stype={'MT':0,'I4':4,'I8':8,'R4':4,'R8':8,'C1':1,'LK':0}
-    def __init__(self,control,data,parent=None):  
+    def __init__(self,control,data,model,parent=None):  
         self._parentitem=parent  
         self._itemnode=data  
         self._childrenitems=[]
@@ -51,6 +164,11 @@ class Q7TreeItem(object):
         self._depth=self._path.count('/')
         self._size=None
         self._control=control
+        self._states={'mark':STMARKOFF,'check':STCHKUNKN,
+                      'fortran':STFORUNKN,'shared':STSHRUNKN}
+        self._model=model
+        if ((parent is not None) and (model is not None)):
+            self._model._extension[self._path]=self
     def sidsParent(self):
         return self._parentitem._itemnode
     def sidsPath(self):
@@ -96,6 +214,10 @@ class Q7TreeItem(object):
         if (column==3):
             if (self.sidsValue() is None): return None
             return str(self.sidsValue().shape)
+        if (column==4): return self._states['mark']
+        if (column==5): return self._states['shared']
+        if (column==6): return self._states['check']
+        if (column==7): return self._states['fortran']
         if (column==8):
             if (self.sidsValue() is None): return None
             if (type(self.sidsValue())==numpy.ndarray):
@@ -111,22 +233,52 @@ class Q7TreeItem(object):
     def row(self):  
         if self._parentitem:  
             return self._parentitem._childrenitems.index(self)  
-        return 0  
-  
+        return 0
+    def switchMarked(self):
+        if (self._states['mark']==STMARK_ON): self._states['mark']=STMARKOFF
+        else:                                 self._states['mark']=STMARK_ON
+        
 # -----------------------------------------------------------------
-class Q7TreeModel(QAbstractItemModel):  
+class Q7TreeModel(QAbstractItemModel):
+    _icons={}
     def __init__(self,fgprint,parent=None):  
         super(Q7TreeModel, self).__init__(parent)  
-        self._rootitem = Q7TreeItem(fgprint.control,(None))  
+        self._extension={}
+        self._rootitem = Q7TreeItem(fgprint.control,(None),None)  
         self._fingerprint=fgprint
         self.parseAndUpdate(self._rootitem, self._fingerprint.tree)
         fgprint.model=self
+        for ik in ICONMAPPING:
+            Q7TreeModel._icons[ik]=QIcon(QPixmap(ICONMAPPING[ik]))
+        self._selectedList=[]
+        self._selectedIndex=-1
+    def nodeFromPath(self,path):
+        if (path in self._extension.keys()): return self._extension[path]
+        return None
+    def updateSelected(self):
+        self._selected=[]
+        self._selectedIndex=-1
+        for k in self._extension:
+           if (self._extension[k]._states['mark']==STMARK_ON):
+               self._selected+=[self._extension[k].sidsPath()]
+        self._selected.sort()
+    def markAll(self):
+        for k in self._extension:
+           self._extension[k]._states['mark']=STMARK_ON
+    def unmarkAll(self):
+        for k in self._extension:
+           self._extension[k]._states['mark']=STMARKOFF
+    def swapMarks(self):
+        for k in self._extension:
+           self._extension[k].switchMarked()
     def columnCount(self, parent):  
         if (parent.isValid()): return parent.internalPointer().columnCount()  
         else:                  return self._rootitem.columnCount()  
     def data(self, index, role):
-        if (not index.isValid()): return None  
-        if (role not in [Qt.DisplayRole,Qt.DecorationRole]): return None
+        if (not index.isValid()): return None
+        if (role == Qt.UserRole): return index.internalPointer().sidsPath()
+        if (role not in [Qt.EditRole,Qt.DisplayRole,Qt.DecorationRole]):
+            return None
         if ((role == Qt.DecorationRole)
             and (index.column() not in COLUMNICO)): return None
         item = index.internalPointer()
@@ -139,8 +291,8 @@ class Q7TreeModel(QAbstractItemModel):
         if ((index.column()==DATACOLUMN) and (role == Qt.DisplayRole)):
             if (disp == HIDEVALUE):
                 return None
-        if (disp == STLKNOLNK):
-            disp=QIcon(QPixmap(":/images/icons/link-node.gif"))
+        if (disp in ICONMAPPING.keys()):
+            disp=Q7TreeModel._icons[disp]
         return disp
     def flags(self, index):  
         if (not index.isValid()):  return Qt.NoItemFlags  
@@ -158,7 +310,8 @@ class Q7TreeModel(QAbstractItemModel):
         return QModelIndex()  
     def parent(self, index):  
         if (not index.isValid()): return QModelIndex()  
-        childitem = index.internalPointer()  
+        childitem = index.internalPointer()
+        if (childitem is None): return QModelIndex()  
         parentitem = childitem.parent()  
         if (parentitem == self._rootitem): return QModelIndex()  
         return self.createIndex(parentitem.row(), 0, parentitem)  
@@ -168,7 +321,7 @@ class Q7TreeModel(QAbstractItemModel):
         else:                      parentitem = parent.internalPointer()  
         return parentitem.childCount()  
     def parseAndUpdate(self,parent,node):
-        newnode=Q7TreeItem(self._fingerprint.control,(node),parent)
+        newnode=Q7TreeItem(self._fingerprint.control,(node),self,parent)
         parent.addChild(newnode)
         for childnode in node[2]:
             c=self.parseAndUpdate(newnode,childnode)

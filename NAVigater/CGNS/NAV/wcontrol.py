@@ -54,6 +54,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.I_MODIFIED=QIcon(QPixmap(":/images/icons/save.gif"))
         self.I_TREE=QIcon(QPixmap(":/images/icons/tree-load.gif"))
         self.I_VTK=QIcon(QPixmap(":/images/icons/vtk.gif"))
+        self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.gif"))
         self.I_FORM=QIcon(QPixmap(":/images/icons/form-open.gif"))
         self.controlTable.setItemDelegate(Q7ControlItemDelegate(self))
         self.signals=Q7SignalPool()
@@ -114,6 +115,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             tpitem=QTableWidgetItem(self.I_FORM,'')
         if (l[1]==Q7Window.VIEW_VTK):
             tpitem=QTableWidgetItem(self.I_VTK,'')
+        if (l[1]==Q7Window.VIEW_QUERY):
+            tpitem=QTableWidgetItem(self.I_QUERY,'')
         ctw.setItem(r,0,stitem)
         ctw.setItem(r,1,tpitem)
         for i in range(len(l)-2):
@@ -151,6 +154,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.fdialog=Q7File(self)
         self.fdialog.show()
     def loadlast(self):
+        if (self.getLastFile() is None): return
         self.signals.buffer=self.getLastFile()[0]+'/'+self.getLastFile()[1]
         if (self.signals.buffer is None): self.load()
         else: self.signals.loadFile.emit()

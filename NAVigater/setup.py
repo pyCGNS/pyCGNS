@@ -55,6 +55,7 @@ if installprocess:
       'Q7OptionsWindow',
       'Q7FormWindow',
       'Q7FileWindow',
+      'Q7QueryWindow',
       'Q7VTKWindow'
       ]
   modgenlist=[]
@@ -64,6 +65,11 @@ if installprocess:
                         libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
                         ),
               Extension("CGNS.NAV.mparser", ["CGNS/NAV/mparser.pyx"],
+                        include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
+                        library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
+                        libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
+                        ),
+              Extension("CGNS.NAV.mquery", ["CGNS/NAV/mquery.pyx"],
                         include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
                         library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
                         libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,

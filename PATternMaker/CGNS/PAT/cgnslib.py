@@ -1443,8 +1443,16 @@ def newDiffusionModel(parent):
 #  pass
 
 # -----------------------------------------------------------------------------
-#def newParentData():
-#  pass
+def newParentElements(parent,value):
+  CU.checkDuplicatedName(parent,CK.ParentElements_s)
+  node=CU.newNode(CK.ParentElements_s,value,[],CK.DataArray_ts,parent)
+  return node
+
+# -----------------------------------------------------------------------------
+def newParentElementsPosition(parent,value):
+  CU.checkDuplicatedName(parent,CK.ParentElementsPosition_s)
+  node=CU.newNode(CK.ParentElementsPosition_s,value,[],CK.DataArray_ts,parent)
+  return node
 
 # -----------------------------------------------------------------------------
 #def newPart():

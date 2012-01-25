@@ -34,6 +34,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Save tree (overwrite existing file)</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -73,6 +76,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Save tree as (creates a new file)</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -95,6 +101,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Save tree as profile</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -135,6 +144,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Collapse lowest tree level</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -164,6 +176,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Expand all tree</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -186,6 +201,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Expand lowest tree level</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -226,6 +244,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Select previous marked node</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -249,6 +270,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Select next marked node</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -259,7 +283,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_8">
+      <widget class="QToolButton" name="bSwapMarks">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -271,6 +295,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Swap marked/unmarked nodes</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -282,7 +309,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_7">
+      <widget class="QToolButton" name="bUnmarkAll">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -294,6 +321,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Unmark all nodes</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -305,7 +335,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_6">
+      <widget class="QToolButton" name="bMarkAll">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -317,6 +347,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Mark all nodes</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -328,7 +361,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_9">
+      <widget class="QToolButton" name="bMarksAsList">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -340,6 +373,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Open selected nodes list</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -380,6 +416,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Check tree</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -403,6 +442,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Remove check labels</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -425,6 +467,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Save check diagnostics</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -465,6 +510,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Open links window</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -488,6 +536,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Open queries window</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -510,6 +561,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Open check window</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -556,6 +610,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Open form view on selected node</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -578,6 +635,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Open VTK view</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -615,6 +675,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Save tree view snapshot</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -630,10 +693,25 @@
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="Q7TreeView" name="treeview">
+       <property name="cursor" stdset="0">
+        <cursorShape>CrossCursor</cursorShape>
+       </property>
+       <property name="autoScroll">
+        <bool>false</bool>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
        <property name="indentation">
         <number>16</number>
        </property>
        <property name="rootIsDecorated">
+        <bool>true</bool>
+       </property>
+       <property name="uniformRowHeights">
         <bool>true</bool>
        </property>
        <property name="expandsOnDoubleClick">
@@ -645,6 +723,29 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QPushButton" name="bBackControl">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/control.gif</normaloff>:/images/icons/control.gif</iconset>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QLineEdit" name="lineEdit">
        <property name="sizePolicy">

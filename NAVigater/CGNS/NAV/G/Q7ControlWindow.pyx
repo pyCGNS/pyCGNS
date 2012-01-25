@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ControlWindow.ui'
 #
-# Created: Mon Jan 16 11:44:25 2012
+# Created: Tue Jan 24 09:04:46 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -116,7 +116,7 @@ class Ui_Q7ControlWindow(object):
 
     def retranslateUi(self, Q7ControlWindow):
         Q7ControlWindow.setWindowTitle(QtGui.QApplication.translate("Q7ControlWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
-        self.bTreeLoadLast.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "Load an existing CGNS file", None, QtGui.QApplication.UnicodeUTF8))
+        self.bTreeLoadLast.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "Load the last used CGNS file", None, QtGui.QApplication.UnicodeUTF8))
         self.bTreeLoad.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "Load an existing CGNS file", None, QtGui.QApplication.UnicodeUTF8))
         self.bEditTree.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "Create a new CGNS tree from scratch", None, QtGui.QApplication.UnicodeUTF8))
         self.bEditTree.setText(QtGui.QApplication.translate("Q7ControlWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
@@ -126,6 +126,7 @@ class Ui_Q7ControlWindow(object):
         self.bOptionView.setText(QtGui.QApplication.translate("Q7ControlWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bAbout.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "About....", None, QtGui.QApplication.UnicodeUTF8))
         self.bAbout.setText(QtGui.QApplication.translate("Q7ControlWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.bClose.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "Close all CGNS.NAV windows", None, QtGui.QApplication.UnicodeUTF8))
         self.controlTable.setSortingEnabled(True)
 
 import Res_rc

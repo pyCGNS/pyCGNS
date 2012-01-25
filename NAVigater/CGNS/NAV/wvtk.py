@@ -447,13 +447,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           actor = actors.GetNextItem()
       self._vtk.GetRenderWindow().Render() 
       
-##   def MotionCallback(self,obj,event):
-##       pos = self._vtk.GetEventPosition()
-##       print 'MOTION AT ',pos
-##       return
-
   def CharCallback(self,obj,event):
-    # keysym  = self.iren.GetKeyCode()
       keysym  = self.iren.GetKeySym()
       pos = self.iren.GetEventPosition()
       if (self._bindings.has_key(keysym)): self._bindings[keysym](pos)

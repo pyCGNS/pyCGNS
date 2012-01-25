@@ -13,16 +13,20 @@ from CGNS.NAV.wfingerprint import Q7Window
 # -----------------------------------------------------------------
 class Q7Option(Q7Window,Ui_Q7OptionsWindow):
     def __init__(self,parent):
+        print '#1'
         Q7Window.__init__(self,Q7Window.VIEW_OPTION,parent,None,None)
         self.bApply.clicked.connect(self.accept)
         self.bClose.clicked.connect(self.reject)
         self.bReset.clicked.connect(self.reset)
+        print '#2'
     def getopt(self,name):
         return getattr(self,'__O_'+name)
     def reset(self):
+        print '#3'
         self.getOptions()
         data=self._options
         for k in data:
+          print '#4',k
           if (type(data[k]) is bool):
             if (data[k]): self.getopt(k).setCheckState(Qt.Checked)
             else: self.getopt(k).setCheckState(Qt.Unchecked)
@@ -35,9 +39,12 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
             for l in data[k]:
                 s+='%s\n'%l
             self.getopt(k).setPlainText(s)
+        print '#5'
     def show(self):
         self.reset()
+        print '#6'
         super(Q7Option, self).show()
+        print '#7'
     def accept(self):
         data=self._options
         for k in data:
