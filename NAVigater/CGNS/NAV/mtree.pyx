@@ -6,6 +6,7 @@
 #  -------------------------------------------------------------------------
 import sys
 import numpy
+import copy
 
 from PySide.QtCore    import *
 from PySide.QtGui     import *
@@ -59,7 +60,8 @@ KEYMAPPING={
  DOWNNODE:   Qt.Key_Down,
 }
 
-import CGNS.PAT.cgnsutils as CT
+import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
 class Q7TreeView(QTreeView):
@@ -154,7 +156,7 @@ class Q7TreeView(QTreeView):
 class Q7TreeItem(object):
     dtype=['MT','I4','I8','R4','R8','C1','LK']
     stype={'MT':0,'I4':4,'I8':8,'R4':4,'R8':8,'C1':1,'LK':0}
-    def __init__(self,control,data,model,parent=None):  
+    def __init__(self,fgprint,data,model,tag="",parent=None):  
         self._parentitem=parent  
         self._itemnode=data  
         self._childrenitems=[]
@@ -163,12 +165,16 @@ class Q7TreeItem(object):
         else:                    self._path=''
         self._depth=self._path.count('/')
         self._size=None
-        self._control=control
+        self._fingerprint=fgprint
+        self._control=self._fingerprint.control
         self._states={'mark':STMARKOFF,'check':STCHKUNKN,
                       'fortran':STFORUNKN,'shared':STSHRUNKN}
         self._model=model
+        self._tag=tag
         if ((parent is not None) and (model is not None)):
             self._model._extension[self._path]=self
+    def orderTag(self):
+        return self._tag+"0"*(self._fingerprint.depth*4-len(self._tag))
     def sidsParent(self):
         return self._parentitem._itemnode
     def sidsPath(self):
@@ -183,11 +189,11 @@ class Q7TreeItem(object):
         return self._itemnode[3]
     def sidsDataType(self,all=False):
         if (all): return Q7TreeItem.dtype
-        return CT.getValueDataType(self._itemnode)
+        return CGU.getValueDataType(self._itemnode)
     def sidsDataTypeSize(self):
-        return Q7TreeItem.stype[CT.getValueDataType(self._itemnode)]
+        return Q7TreeItem.stype[CGU.getValueDataType(self._itemnode)]
     def sidsTypeList(self):
-        tlist=CT.getNodeAllowedChildrenTypes(self._parentitem._itemnode,
+        tlist=CGU.getNodeAllowedChildrenTypes(self._parentitem._itemnode,
                                              self._itemnode)
         return tlist
     def sidsDims(self):
@@ -237,15 +243,19 @@ class Q7TreeItem(object):
     def switchMarked(self):
         if (self._states['mark']==STMARK_ON): self._states['mark']=STMARKOFF
         else:                                 self._states['mark']=STMARK_ON
-        
+
+SORTTAG="%.4x"
+
 # -----------------------------------------------------------------
 class Q7TreeModel(QAbstractItemModel):
     _icons={}
     def __init__(self,fgprint,parent=None):  
         super(Q7TreeModel, self).__init__(parent)  
         self._extension={}
-        self._rootitem = Q7TreeItem(fgprint.control,(None),None)  
+        self._rootitem = Q7TreeItem(fgprint,(None),None)  
         self._fingerprint=fgprint
+        self._slist=fgprint.control.getOptionValue('sortedtypelist')
+        self._count=0
         self.parseAndUpdate(self._rootitem, self._fingerprint.tree)
         fgprint.model=self
         for ik in ICONMAPPING:
@@ -255,13 +265,22 @@ class Q7TreeModel(QAbstractItemModel):
     def nodeFromPath(self,path):
         if (path in self._extension.keys()): return self._extension[path]
         return None
+    def sortNamesAndTypes(self,paths):
+        t=[]
+        if (paths is None): return []
+        for p in paths:
+            n=self.nodeFromPath(p)
+            if (n is not None):
+                t+=[(n.orderTag(),p)]
+        t.sort()
+        return [e[1] for e in t]
     def updateSelected(self):
         self._selected=[]
         self._selectedIndex=-1
         for k in self._extension:
            if (self._extension[k]._states['mark']==STMARK_ON):
                self._selected+=[self._extension[k].sidsPath()]
-        self._selected.sort()
+        self._selected=self.sortNamesAndTypes(self._selected)
     def markAll(self):
         for k in self._extension:
            self._extension[k]._states['mark']=STMARK_ON
@@ -320,11 +339,13 @@ class Q7TreeModel(QAbstractItemModel):
         if (not parent.isValid()): parentitem = self._rootitem  
         else:                      parentitem = parent.internalPointer()  
         return parentitem.childCount()  
-    def parseAndUpdate(self,parent,node):
-        newnode=Q7TreeItem(self._fingerprint.control,(node),self,parent)
+    def parseAndUpdate(self,parent,node,parenttag=""):
+        self._count+=1
+        tag=parenttag+SORTTAG%self._count
+        newnode=Q7TreeItem(self._fingerprint,(node),self,tag,parent)
         parent.addChild(newnode)
-        for childnode in node[2]:
-            c=self.parseAndUpdate(newnode,childnode)
+        for childnode in CGU.getNextChildSortByType(node,criteria=self._slist):
+            c=self.parseAndUpdate(newnode,childnode,tag)
             self._fingerprint.depth=max(c._depth,self._fingerprint.depth)
         return newnode
 

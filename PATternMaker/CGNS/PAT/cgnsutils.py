@@ -577,6 +577,59 @@ def getChildrenByPath(tree,path):
   return n[2]
 
 # --------------------------------------------------
+def getNextChildSortByType(node,parent=None,criteria=CK.cgnstypes):
+  """
+  Iterator, returns the children list of the argument CGNS/Python
+  sorted using the CGNS type then the name. The `sortlist` gives
+  an alternate sort list/dictionnary.
+
+   for child in getNextChildSortByType(node):
+       print 'Next child:', child[0]
+
+   zonesort=[CGK.Elements_ts, CGK.Family_ts, CGK.ZoneType_ts]
+   for child in getNextChildSortByType(node,criteria=mysort):
+       print 'Next child:', child[0]
+
+   mysort={CGK.Zone_t: zonesort}
+   for child in getNextChildSortByType(node,parent,mysort):
+       print 'Next child:', child[0]
+
+  Args:
+   * `node`: the target node
+   * `parent`: the parent node
+   * `criteria`: a list or a dictionnary used as the sort criteria
+
+  Remark:
+   * The function is an iterator
+   * If criteria is a list of type, the sort order for the type is the
+     list order. If it is a dictionnary, its keys are the parent types
+     and the values are list of types.
+   
+  """
+  def sortbytypesasincriteria(a,b):
+    if ((a[0] in a[2]) and (b[0] in b[2])):
+      if (a[2].index(a[0])>b[2].index(b[0])): return  1
+      if (a[2].index(a[0])<b[2].index(b[0])): return -1
+    if (a[1]>b[1]): return  1
+    if (a[1]<b[1]): return -1
+    return 0
+  
+  __criteria=[]
+  if (type(criteria)==list):
+    __criteria=criteria
+  if (    (type(criteria)==dict)
+      and (parent is not None)
+      and (criteria.has_key(parent[3]))):
+    __criteria=criteria[parent[3]]
+  r=[]
+  for i in range(len(node[2])):
+    c=node[2][i]
+    r+=[(c[3],c[0],__criteria,i)]
+  r.sort(sortbytypesasincriteria)
+  for i in r:
+    yield node[2][i[3]]
+
+# --------------------------------------------------
 def getTypeByPath(tree,path):
   """
   Returns the CGNS type of a CGNS/Python node with the argument path::

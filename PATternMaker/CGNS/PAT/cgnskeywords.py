@@ -981,9 +981,13 @@ ZoneIterativeData_s           = "ZoneIterativeData"
 UserDefinedData_ts            = "UserDefinedData_t"
 
 # ---
-cgnsnames=[k for k in dir() if (k[-2:]=='_s')]
-cgnstypes=[k for k in dir() if (k[-3:]=='_ts')]
-cgnsenums=[k for k in dir() if (k[-2:]=='_l')]
+cgnsnames=[globals()[k] for k in dir() if (k[-2:]=='_s')]
+cgnstypes=[globals()[k] for k in dir() if (k[-3:]=='_ts')]
+cgnsenums=[globals()[k] for k in dir() if (k[-2:]=='_l')]
+#
+cgnsnames.sort()
+cgnstypes.sort()
+cgnsenums.sort()
 #
 # --- last line
 
