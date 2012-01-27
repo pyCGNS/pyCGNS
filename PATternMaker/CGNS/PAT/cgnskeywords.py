@@ -983,7 +983,7 @@ UserDefinedData_ts            = "UserDefinedData_t"
 # ---
 cgnsnames=[globals()[k] for k in dir() if (k[-2:]=='_s')]
 cgnstypes=[globals()[k] for k in dir() if (k[-3:]=='_ts')]
-cgnsenums=[globals()[k] for k in dir() if (k[-2:]=='_l')]
+cgnsenums=[k[:-1]+'t' for k in dir() if (k[-2:]=='_l')]
 #
 cgnsnames.sort()
 cgnstypes.sort()
