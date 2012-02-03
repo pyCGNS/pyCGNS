@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7QueryWindow.ui'
 #
-# Created: Wed Jan 25 15:23:12 2012
+# Created: Fri Feb  3 17:15:13 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -40,6 +40,8 @@ class Ui_Q7QueryWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.querytableview.sizePolicy().hasHeightForWidth())
         self.querytableview.setSizePolicy(sizePolicy)
+        self.querytableview.setSelectionMode(QtGui.QAbstractItemView.NoSelection)
+        self.querytableview.setCornerButtonEnabled(False)
         self.querytableview.setObjectName("querytableview")
         self.querytableview.horizontalHeader().setStretchLastSection(True)
         self.bAddClause = QtGui.QPushButton(self.widget)

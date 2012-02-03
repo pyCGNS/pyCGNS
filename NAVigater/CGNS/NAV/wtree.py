@@ -55,9 +55,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                         SIGNAL("customContextMenuRequested(QPoint)"),
                         self.clickedNode)
         self.querymodel=Q7QueryTableModel(self)
-        self._currentQuery=self.querymodel.currentQuery
+        self.querymodel.setDefaultQuery()
         for q in self.querymodel.defaultQueriesList: self.cQuery.addItem(q)
-        ix=self.cQuery.findText(self._currentQuery)
+        ix=self.cQuery.findText(self.querymodel.getCurrentQuery())
         if (ix!=-1): self.cQuery.setCurrentIndex(ix)
         self.bApply.clicked.connect(self.forceapply)
         self.bClose.clicked.connect(self.leave)
@@ -157,8 +157,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         vtk=Q7VTK(self._control,node,self._fgprint)
         vtk.show()
     def queryview(self):
+        q=self.querymodel.getCurrentQuery()
+        self.querymodel.setCurrentQuery(' ')
         qry=Q7Query(self._control,self._fgprint,self)
         qry.show()
+        self.querymodel.setCurrentQuery(q)
     def closeAlone(self):
         pass
     def forceapply(self):
