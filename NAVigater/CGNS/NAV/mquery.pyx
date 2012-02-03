@@ -73,6 +73,7 @@ class Q7QueryEntry(object):
         return s
     def run(self,tree):
         result=[]
+        print 'RUN '
         return result
     
 # -----------------------------------------------------------------
@@ -136,26 +137,31 @@ class Q7ComboBoxDelegate(QItemDelegate):
 class Q7QueryTableModel(QAbstractTableModel):  
     def __init__(self,parent):  
         QAbstractTableModel.__init__(self,parent)
-        self._tableview=parent.querytableview
-        self._edit=parent.editFrame
         self._queries={}
         self._cols=4
-        self._current='QUADs'
+        self._parent=parent
         self.fillQueries()
-        self.resizeAll()
+        self.defaultQueriesList=self._queries.keys()
+        self.currentQuery=self.defaultQueriesList[0]
     def columnCount(self, parent):
         return self._cols
     def rowCount(self, parent):
         if (self._queries!={}):
-            return self._queries[self._current].clausecount
+            return self._queries[self.currentQuery].clausecount
         return 0
+    def minIndex(self):
+        return QModelIndex(self.createIndex(0,0))
+    def maxIndex(self):
+        maxl=self._queries[self.currentQuery].clausecount
+        return QModelIndex(self.createIndex(maxl,self._cols))
     def index(self, row, column, parent):
         return self.createIndex(row, column, 0)  
     def data(self, index, role=Qt.DisplayRole):
         l=index.row()
         c=index.column()
+        print 'TABLE ',l,c
         if (role not in (Qt.EditRole,Qt.DisplayRole)) :return
-        q=self._queries[self._current]
+        q=self._queries[self.currentQuery]
         if ((c>self._cols) or (l>q.clausecount)): return
         return q.clause[l][c]
     def flags(self, index):
@@ -165,23 +171,21 @@ class Q7QueryTableModel(QAbstractTableModel):
     def setData(self, index, value, role = Qt.DisplayRole):
         r=index.row()
         c=index.column()
-        self._queries[self._current].clauseChange(r,c,value)
-        self.resizeAll()
+        self._queries[self.currentQuery].clauseChange(r,c,value)
         return value
-    def resizeAll(self):
-        for c in range(self._cols):
-            self._tableview.resizeColumnToContents(c)
     def fillQueries(self):
         for qe in DEFAULTQUERIES:
             q=Q7QueryEntry(qe['name'])
             for c in qe['clauses']:
                 q.addClause(*c)
             self._queries[qe['name']]=q
-    def setDelegates(self,tableview):
+    def queries(self):
+        return self._queries
+    def setDelegates(self,tableview,editframe):
         opd=Q7ComboBoxDelegate(self,Q_OPERATOR)
         tgd=Q7ComboBoxDelegate(self,Q_TARGET)
         atd=Q7ComboBoxDelegate(self,Q_ATTRIBUTE)
-        scd=Q7EditBoxDelegate(self,self._edit)
+        scd=Q7EditBoxDelegate(self,editframe)
         tableview.setItemDelegateForColumn(0,opd)
         tableview.setItemDelegateForColumn(1,tgd)
         tableview.setItemDelegateForColumn(2,atd)

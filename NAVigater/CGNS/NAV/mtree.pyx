@@ -281,6 +281,10 @@ class Q7TreeModel(QAbstractItemModel):
            if (self._extension[k]._states['mark']==STMARK_ON):
                self._selected+=[self._extension[k].sidsPath()]
         self._selected=self.sortNamesAndTypes(self._selected)
+    def markExtendToList(self,mlist):
+        for k in self._extension:
+            if (k in mlist):
+                self._extension[k]._states['mark']=STMARK_ON
     def markAll(self):
         for k in self._extension:
            self._extension[k]._states['mark']=STMARK_ON

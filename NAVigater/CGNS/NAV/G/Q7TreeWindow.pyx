@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
-# Created: Tue Jan 24 16:37:01 2012
+# Created: Fri Feb  3 09:13:00 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -249,33 +249,27 @@ class Ui_Q7TreeWindow(object):
         self.lineEdit.setMinimumSize(QtCore.QSize(0, 0))
         self.lineEdit.setObjectName("lineEdit")
         self.horizontalLayout_3.addWidget(self.lineEdit)
-        self.Q7QueryComboWidget = QtGui.QComboBox(Q7TreeWindow)
+        spacerItem7 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem7)
+        self.cQuery = QtGui.QComboBox(Q7TreeWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Q7QueryComboWidget.sizePolicy().hasHeightForWidth())
-        self.Q7QueryComboWidget.setSizePolicy(sizePolicy)
-        self.Q7QueryComboWidget.setObjectName("Q7QueryComboWidget")
-        self.horizontalLayout_3.addWidget(self.Q7QueryComboWidget)
-        self.toolButton_21 = QtGui.QToolButton(Q7TreeWindow)
-        self.toolButton_21.setMinimumSize(QtCore.QSize(25, 25))
-        self.toolButton_21.setMaximumSize(QtCore.QSize(25, 25))
-        icon23 = QtGui.QIcon()
-        icon23.addPixmap(QtGui.QPixmap(":/images/icons/arrow.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_21.setIcon(icon23)
-        self.toolButton_21.setObjectName("toolButton_21")
-        self.horizontalLayout_3.addWidget(self.toolButton_21)
-        self.toolButton_20 = QtGui.QToolButton(Q7TreeWindow)
-        self.toolButton_20.setMinimumSize(QtCore.QSize(25, 25))
-        self.toolButton_20.setMaximumSize(QtCore.QSize(25, 25))
-        icon24 = QtGui.QIcon()
-        icon24.addPixmap(QtGui.QPixmap(":/images/icons/arrow_R.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_20.setIcon(icon24)
-        self.toolButton_20.setObjectName("toolButton_20")
-        self.horizontalLayout_3.addWidget(self.toolButton_20)
+        sizePolicy.setHeightForWidth(self.cQuery.sizePolicy().hasHeightForWidth())
+        self.cQuery.setSizePolicy(sizePolicy)
+        self.cQuery.setObjectName("cQuery")
+        self.horizontalLayout_3.addWidget(self.cQuery)
         self.bApply = QtGui.QPushButton(Q7TreeWindow)
+        self.bApply.setMinimumSize(QtCore.QSize(25, 25))
+        self.bApply.setMaximumSize(QtCore.QSize(25, 25))
+        self.bApply.setText("")
+        icon23 = QtGui.QIcon()
+        icon23.addPixmap(QtGui.QPixmap(":/images/icons/undo-last-modification.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bApply.setIcon(icon23)
         self.bApply.setObjectName("bApply")
         self.horizontalLayout_3.addWidget(self.bApply)
+        spacerItem8 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem8)
         self.bClose = QtGui.QPushButton(Q7TreeWindow)
         self.bClose.setObjectName("bClose")
         self.horizontalLayout_3.addWidget(self.bClose)
@@ -326,9 +320,6 @@ class Ui_Q7TreeWindow(object):
         self.bVTK.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton_18.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Save tree view snapshot", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton_18.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton_21.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton_20.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.bApply.setText(QtGui.QApplication.translate("Q7TreeWindow", "Apply", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setText(QtGui.QApplication.translate("Q7TreeWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
 
 from CGNS.NAV.mtree import Q7TreeView

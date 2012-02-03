@@ -25,18 +25,33 @@ class Q7QueryTableItemDelegate(QStyledItemDelegate):
 class Q7Query(Q7Window,Ui_Q7QueryWindow):
     def __init__(self,control,fgprint,treeview):
         Q7Window.__init__(self,Q7Window.VIEW_QUERY,control,'/',fgprint)
-        self.querytablemodel=Q7QueryTableModel(self)
+        self.querytablemodel=treeview.querymodel
         self.querytableview.setModel(self.querytablemodel)
         self.querytableview.setEditTriggers(QAbstractItemView.CurrentChanged)
         self.querytableview.viewport().installEventFilter(self)
-        self.querytablemodel.setDelegates(self.querytableview)
+        self.querytablemodel.setDelegates(self.querytableview,self.editFrame)
         self.bClose.clicked.connect(self.reject)
-        self.showQuery('QUADs')
+        QObject.connect(self.cQueryName,
+                        SIGNAL("currentIndexChanged(int)"),
+                        self.changeCurrentQuery)
+        self.resizeAll()
+        self.showQuery(self.querytablemodel.currentQuery)
+    def changeCurrentQuery(self,*args):
+        self.querytablemodel.currentQuery=self.cQueryName.currentText()
+        sig=SIGNAL("dataChanged(const QModelIndex&, const QModelIndex &)")
+        imin=self.querytablemodel.minIndex()
+        imax=self.querytablemodel.maxIndex()
+        QObject.emit(self.querytablemodel,sig,imin,imax)
+    def resizeAll(self):
+        for c in range(self.querytablemodel._cols):
+            self.querytableview.resizeColumnToContents(c)
     def reject(self):
         self.close()
     def reset(self):
         for qn in self.querytablemodel._queries:
             self.cQueryName.addItem(qn)
+    def queries(self):
+        return self.querytablemodel._queries
     def showQuery(self,name):
         if (self.querytablemodel._queries.has_key(name)):
             pass

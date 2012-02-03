@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created: Tue Jan 24 16:37:03 2012
+# Created: Fri Feb  3 09:13:02 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -351,7 +351,7 @@ class Ui_Q7FormWindow(object):
         self.bBackControl.setObjectName("bBackControl")
 
         self.retranslateUi(Q7FormWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Q7FormWindow)
 
     def retranslateUi(self, Q7FormWindow):

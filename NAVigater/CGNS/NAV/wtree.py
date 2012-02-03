@@ -12,6 +12,7 @@ from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.wform import Q7Form
 from CGNS.NAV.wvtk import Q7VTK
 from CGNS.NAV.wquery import Q7Query
+from CGNS.NAV.mquery import Q7QueryTableModel
 from CGNS.NAV.mtree import Q7TreeModel
 from CGNS.NAV.mtree import Q7TreeItem
 import CGNS.NAV.wconstants as Q7WC
@@ -53,9 +54,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         QObject.connect(self.treeview,
                         SIGNAL("customContextMenuRequested(QPoint)"),
                         self.clickedNode)
-        queries=['','BCWall','ORPHAN','Trigger']
-        for q in queries:
-          self.Q7QueryComboWidget.addItem(q)
+        self.querymodel=Q7QueryTableModel(self)
+        self._currentQuery=self.querymodel.currentQuery
+        for q in self.querymodel.defaultQueriesList: self.cQuery.addItem(q)
+        ix=self.cQuery.findText(self._currentQuery)
+        if (ix!=-1): self.cQuery.setCurrentIndex(ix)
         self.bApply.clicked.connect(self.forceapply)
         self.bClose.clicked.connect(self.leave)
         self.bZoomIn.clicked.connect(self.expandLevel)
@@ -67,6 +70,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bPreviousMark.clicked.connect(self.previousmark)
         self.bNextMark.clicked.connect(self.nextmark)
         self.bSwapMarks.clicked.connect(self.swapmarks)
+        self.bApply.clicked.connect(self.applyquery)
         self.bVTK.clicked.connect(self.vtkview)
         self.bOpenOperateView.clicked.connect(self.queryview)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -120,6 +124,16 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.treeview.resizeColumnToContents(n)
     def show(self):
         super(Q7Tree, self).show()
+    def applyquery(self):
+        q=self.cQuery.currentText()
+        if (q==''):
+            self.unmarkall()
+            return
+        qry=self.querymodel
+        if (q in qry.queries()):
+            sl=qry.queries()[q].run(self._fgprint.tree)
+            self.treeview.model().markExtendToList(sl)
+            self.treeview.model().updateSelected()
     def previousmark(self):
         self.treeview.changeSelectedMark(-1)
     def nextmark(self):
