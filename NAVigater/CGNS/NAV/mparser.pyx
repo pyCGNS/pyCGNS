@@ -22,7 +22,7 @@ class CGNSparser:
   
   def __init__(self,T):    
     self._zones={}
-    self._tree=T      
+    self._tree=T
     
   def parseZones(self):
     T=self._tree
@@ -124,9 +124,9 @@ class Mesh(CGNSparser):
 #  @cython.boundscheck(False)
   def do_surface(self,surf,path):
     cdef int i, j, imax, jmax, p1, p2, p3, p4
-    cdef double* ptrx
-    cdef double* ptry
-    cdef double* ptrz
+##     cdef double* ptrx
+##     cdef double* ptry
+##     cdef double* ptrz
     imax=surf[0].shape[0]
     jmax=surf[0].shape[1]
     tx=surf[0].flat
