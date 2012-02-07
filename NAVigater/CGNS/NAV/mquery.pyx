@@ -34,16 +34,41 @@ Q_SCRIPT='Python script'
 
 Q_ATTRIBUTE=(Q_CGNSTYPE,Q_VALUETYPE,Q_NAME,Q_VALUE,Q_SCRIPT)
 
+Q_VAR_NAME='NAME'
+Q_VAR_VALUE='VALUE'
+Q_VAR_CGNSTYPE='CGNSTYPE'
+Q_VAR_CHILDREN='CHILDREN'
+Q_VAR_TREE='TREE'
+Q_VAR_PATH='PATH'
+Q_VAR_RESULT='RESULT'
+Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
+
+Q_SCRIPT_PRE="""
+import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils as CGU
+"""
+
+Q_SCRIPT_POST="""
+%s[0]=%s
+"""%(Q_VAR_RESULT_LIST,Q_VAR_RESULT)
+
 DEFAULTQUERIES=[
+    {'name':'Families','clauses':[
+        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.Family_ts)
+        ]},
+    {'name':'Family names','clauses':[
+        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.FamilyName_ts)
+        ]},
     {'name':'BCs','clauses':[
-        (Q_OR,  Q_PARENT, Q_NAME, CGK.ZoneBC_ts)
+        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.BC_ts)
         ]},
     {'name':'QUADs','clauses':[
         (Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
-        (Q_AND, Q_NODE, Q_SCRIPT, 'VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)')
+        (Q_AND, Q_NODE, Q_SCRIPT, 'RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)')
         ]},
-    {'name':'Z CH4','clauses':[
-        (Q_OR,  Q_CHILDREN, Q_VALUETYPE, 4)
+    {'name':'TRIs','clauses':[
+        (Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
+        (Q_AND, Q_NODE, Q_SCRIPT, """RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)""")
         ]},
     {'name':' ','clauses':[
         (' '*8,' '*16,' '*16,' '),
@@ -58,6 +83,63 @@ DEFAULTQUERIES=[
         (' ',' ',' ',' '),
         ]},
 ]
+# -----------------------------------------------------------------
+def sameVal(n,v):
+    if (n==v): return True
+    return False
+# -----------------------------------------------------------------
+def sameValType(n,v):
+    if (type(n)!=numpy.ndarray): return False
+    if (n.dtype.char==v): return True
+    return False
+# -----------------------------------------------------------------
+def evalScript(node,parent,tree,path,val):
+    l=locals()
+    l[Q_VAR_RESULT_LIST]=[False]
+    l[Q_VAR_NAME]=node[0]
+    l[Q_VAR_VALUE]=node[1]
+    l[Q_VAR_CGNSTYPE]=node[3]
+    l[Q_VAR_CHILDREN]=node[2]
+    l[Q_VAR_TREE]=tree
+    l[Q_VAR_PATH]=path
+    pre=Q_SCRIPT_PRE+val+Q_SCRIPT_POST
+    try:
+      eval(compile(pre,'<string>','exec'),globals(),l)
+    except:
+      RESULT=False
+    RESULT=l[Q_VAR_RESULT_LIST][0]
+    return RESULT
+# -----------------------------------------------------------------
+def parseAndSelect(tree,node,parent,path,clause):
+    Q=False
+    path=path+'/'+node[0]
+    for (opr,tgt,att,val) in clause:
+      P=False
+      
+      N=(tgt==Q_PARENT)      
+      P|=(N and(att==Q_CGNSTYPE)  and (parent[3]==val))
+      P|=(N and(att==Q_NAME)      and (parent[0]==val))
+      P|=(N and(att==Q_VALUE)     and (sameVal(parent[1],val)))
+      P|=(N and(att==Q_VALUETYPE) and (sameValType(parent[1],val)))
+      P|=(N and(att==Q_SCRIPT)    and (evalScript(node,parent,tree,path,val)))
+
+      N=(tgt==Q_NODE)      
+      P|=(N and(att==Q_CGNSTYPE)  and (node[3]==val))
+      P|=(N and(att==Q_NAME)      and (node[0]==val))
+      P|=(N and(att==Q_VALUE)     and (sameVal(node[1],val)))
+      P|=(N and(att==Q_VALUETYPE) and (sameValType(node[1],val)))
+      P|=(N and(att==Q_SCRIPT)    and (evalScript(node,parent,tree,path,val)))
+
+      if (opr==Q_OR):     Q|= P
+      if (opr==Q_AND):    Q&= P
+      if (opr==Q_ORNOT):  Q|=~P
+      if (opr==Q_ANDNOT): Q&=~P
+      
+    R=[]
+    if (Q): R=[path]
+    for C in node[2]:
+        R+=parseAndSelect(tree,C,node,path,clause)
+    return R
 
 # -----------------------------------------------------------------
 class Q7QueryEntry(object):
@@ -87,8 +169,7 @@ class Q7QueryEntry(object):
         s+="]},"
         return s
     def run(self,tree):
-        result=[]
-        print 'RUN '
+        result=parseAndSelect(tree,tree,[None,None,[],None],'',self.clause)
         return result
     
 # -----------------------------------------------------------------

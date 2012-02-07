@@ -105,6 +105,10 @@ class Q7Window(QWidget,object):
         event.accept()
     def backcontrol(self):
         self._fgprint.raiseControlView()
+    def busyCursor(self):
+        QApplication.setOverrideCursor(QCursor(QPixmap(":/images/icons/cgSpy.gif")))
+    def readyCursor(self):
+        QApplication.restoreOverrideCursor()
     
 # -----------------------------------------------------------------
 class Q7fingerPrint:

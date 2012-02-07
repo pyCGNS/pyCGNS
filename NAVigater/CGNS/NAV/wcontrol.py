@@ -142,10 +142,12 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             if (int(idx)==int(self.controlTable.item(n,2).text())):found=n
         return found
     def loading(self,*args):
+        self.busyCursor()
         fgprint=Q7fingerPrint.treeLoad(self,self.signals.buffer)
         if (fgprint is None): return
         Q7TreeModel(fgprint)
         child=Q7Tree(self,'/',fgprint)
+        self.readyCursor()
         child.show()
         self.setHistory(fgprint.filedir,fgprint.filename)
     def saving(self,*args):
