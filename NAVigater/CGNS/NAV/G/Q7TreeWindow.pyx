@@ -2,7 +2,11 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
+<<<<<<< local
 # Created: Fri Feb  3 15:45:59 2012
+=======
+# Created: Tue Feb  7 10:52:40 2012
+>>>>>>> other
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -222,6 +226,7 @@ class Ui_Q7TreeWindow(object):
         self.treeview.setAutoScroll(False)
         self.treeview.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         self.treeview.setProperty("showDropIndicator", False)
+        self.treeview.setHorizontalScrollMode(QtGui.QAbstractItemView.ScrollPerItem)
         self.treeview.setIndentation(16)
         self.treeview.setRootIsDecorated(True)
         self.treeview.setUniformRowHeights(True)

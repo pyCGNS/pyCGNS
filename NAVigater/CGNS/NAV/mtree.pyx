@@ -105,6 +105,14 @@ class Q7TreeView(QTreeView):
               else: QTreeView.keyPressEvent(self,event)
         self.setLastEntered()
         self.scrollTo(self.getLastEntered())
+    def refreshView(self):
+        ixc=self.currentIndex()
+        row=ixc.row()
+        row1=min(0,row-20)
+        row2=min(row+20,self._model._maxrow)
+        ix1=self._model.createIndex(row1,0)
+        ix2=self._model.createIndex(row2,DATACOLUMN-1)
+        self._model.dataChanged.emit(ix1,ix2)
     def upRowLevel(self,index):
         self.relativeMoveToRow(-1,index)
     def downRowLevel(self,index):
@@ -134,6 +142,7 @@ class Q7TreeView(QTreeView):
         self.setLastEntered()
         self.scrollTo(index)
     def changeSelectedMark(self,delta):
+        if (self.model()._selected==[]): return
         sidx=self.model()._selectedIndex
         if (self.model()._selectedIndex==-1): self.model()._selectedIndex=0
         elif ((delta==-1) and (sidx==0)):
@@ -144,7 +153,8 @@ class Q7TreeView(QTreeView):
             self.model()._selectedIndex=0
         elif (delta==+1):
             self.model()._selectedIndex+=1
-        if (self.model()._selected!=-1):
+        if ((self.model()._selectedIndex!=-1)
+             and (self.model()._selectedIndex<len(self.model()._selected))):
             path=self.model()._selected[self.model()._selectedIndex]
             idx=self.model().match(self.model().index(0,0,QModelIndex()),
                                    Qt.UserRole,
@@ -252,15 +262,16 @@ class Q7TreeModel(QAbstractItemModel):
     def __init__(self,fgprint,parent=None):  
         super(Q7TreeModel, self).__init__(parent)  
         self._extension={}
-        self._rootitem = Q7TreeItem(fgprint,(None),None)  
+        self._rootitem=Q7TreeItem(fgprint,(None),None)  
         self._fingerprint=fgprint
         self._slist=fgprint.control.getOptionValue('sortedtypelist')
         self._count=0
+        self._maxrow=0
         self.parseAndUpdate(self._rootitem, self._fingerprint.tree)
         fgprint.model=self
         for ik in ICONMAPPING:
             Q7TreeModel._icons[ik]=QIcon(QPixmap(ICONMAPPING[ik]))
-        self._selectedList=[]
+        self._selected=[]
         self._selectedIndex=-1
     def nodeFromPath(self,path):
         if (path in self._extension.keys()): return self._extension[path]
@@ -324,7 +335,8 @@ class Q7TreeModel(QAbstractItemModel):
         if ((orientation == Qt.Horizontal) and (role == Qt.DisplayRole)):  
             return self._rootitem.data(section)  
         return None  
-    def index(self, row, column, parent):  
+    def index(self, row, column, parent):
+        self._maxrow=max(row,self._maxrow)
         if (not self.hasIndex(row, column, parent)): return QModelIndex()  
         if (not parent.isValid()): parentitem = self._rootitem  
         else:                      parentitem = parent.internalPointer()  

@@ -37,11 +37,9 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.resizeAll()
         self.showQuery(self.querytablemodel.currentQuery)
     def changeCurrentQuery(self,*args):
-        self.querytablemodel.currentQuery=self.cQueryName.currentText()
-        sig=SIGNAL("dataChanged(const QModelIndex&, const QModelIndex &)")
-        imin=self.querytablemodel.minIndex()
-        imax=self.querytablemodel.maxIndex()
-        QObject.emit(self.querytablemodel,sig,imin,imax)
+        qtm=self.querytablemodel
+        qtm.setCurrentQuery(self.cQueryName.currentText())
+        qtm.refreshRows(self.querytableview)
     def resizeAll(self):
         for c in range(self.querytablemodel._cols):
             self.querytableview.resizeColumnToContents(c)

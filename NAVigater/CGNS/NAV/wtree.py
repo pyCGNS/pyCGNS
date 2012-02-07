@@ -55,9 +55,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                         SIGNAL("customContextMenuRequested(QPoint)"),
                         self.clickedNode)
         self.querymodel=Q7QueryTableModel(self)
-        self._currentQuery=self.querymodel.currentQuery
-        for q in self.querymodel.defaultQueriesList: self.cQuery.addItem(q)
-        ix=self.cQuery.findText(self._currentQuery)
+        self.querymodel.setDefaultQuery()
+        qlist=self.querymodel.defaultQueriesList
+        qlist.sort()
+        for q in qlist: self.cQuery.addItem(q)
+        ix=self.cQuery.findText(self.querymodel.getCurrentQuery())
         if (ix!=-1): self.cQuery.setCurrentIndex(ix)
         self.bApply.clicked.connect(self.forceapply)
         self.bClose.clicked.connect(self.leave)
@@ -103,7 +105,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.lineEdit.clear()
         self.lineEdit.insert(node.sidsPath())
     def updateMenu(self,node):
-        print node.sidsPath()
         self.popupmenu.addAction(QAction("About %s"%node.sidsType(),self))
     def setLastEntered(self):
         self._lastEntered=self.treeview.currentIndex()
@@ -115,10 +116,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.updateMenu(self.treeview.currentIndex().internalPointer())
             self.popupmenu.popup(self.treeview.lastPos)
     def expandNode(self,*args):
-        print 'EXPAND ',args
         self.resizeAll()
     def collapseNode(self,*args):
-        print 'COLLAPSE ',args
+        pass
     def resizeAll(self):
         for n in range(9):
             self.treeview.resizeColumnToContents(n)
@@ -126,7 +126,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         super(Q7Tree, self).show()
     def applyquery(self):
         q=self.cQuery.currentText()
-        if (q==''):
+        if (q in ['',' ']):
             self.unmarkall()
             return
         qry=self.querymodel
@@ -134,6 +134,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             sl=qry.queries()[q].run(self._fgprint.tree)
             self.treeview.model().markExtendToList(sl)
             self.treeview.model().updateSelected()
+        self.treeview.refreshView()
     def previousmark(self):
         self.treeview.changeSelectedMark(-1)
     def nextmark(self):
@@ -141,12 +142,15 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def markall(self):
         self.treeview.model().markAll()
         self.treeview.model().updateSelected()
+        self.treeview.refreshView()
     def unmarkall(self):
         self.treeview.model().unmarkAll()
         self.treeview.model().updateSelected()
+        self.treeview.refreshView()
     def swapmarks(self):
         self.treeview.model().swapMarks()
         self.treeview.model().updateSelected()
+        self.treeview.refreshView()
     def formview(self):
         node=self.treeview.currentIndex().internalPointer()
         if (node.sidsType()=='CGNSTree_t'): return
@@ -157,8 +161,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         vtk=Q7VTK(self._control,node,self._fgprint)
         vtk.show()
     def queryview(self):
+        q=self.querymodel.getCurrentQuery()
+        self.querymodel.setCurrentQuery(' ')
         qry=Q7Query(self._control,self._fgprint,self)
         qry.show()
+        self.querymodel.setCurrentQuery(q)
     def closeAlone(self):
         pass
     def forceapply(self):

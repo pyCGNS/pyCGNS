@@ -705,6 +705,9 @@
        <property name="showDropIndicator" stdset="0">
         <bool>false</bool>
        </property>
+       <property name="horizontalScrollMode">
+        <enum>QAbstractItemView::ScrollPerItem</enum>
+       </property>
        <property name="indentation">
         <number>16</number>
        </property>
