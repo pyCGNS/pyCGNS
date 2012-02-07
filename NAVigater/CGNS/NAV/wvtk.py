@@ -236,18 +236,24 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     
       self._parser=Mesh(T)
       alist=self._parser.createActors()
-      self.fillCurrentPath()
+##       self.fillCurrentPath()
+      alist_ns=self._parser.createActors_ns(T)
 
-      for a in alist:
-        self._vtkren.AddActor(a[0])
+      if (alist_ns!=[]):
+          for a in alist_ns:
+              self._vtkren.AddActor(a)
 
-        if (a[1] is not None):
-           if (self._xmin>a[1][0]):self._xmin=a[1][0]
-           if (self._ymin>a[1][2]):self._ymin=a[1][2]
-           if (self._zmin>a[1][4]):self._zmin=a[1][4]
-           if (self._xmax<a[1][1]):self._xmax=a[1][1]
-           if (self._ymax>a[1][3]):self._ymax=a[1][3]
-           if (self._zmax>a[1][5]):self._zmax=a[1][5]
+      if (alist!=[]):
+          for a in alist:
+              self._vtkren.AddActor(a[0])
+
+              if (a[1] is not None):
+                  if (self._xmin>a[1][0]):self._xmin=a[1][0]
+                  if (self._ymin>a[1][2]):self._ymin=a[1][2]
+                  if (self._zmin>a[1][4]):self._zmin=a[1][4]
+                  if (self._xmax<a[1][1]):self._xmax=a[1][1]
+                  if (self._ymax>a[1][3]):self._ymax=a[1][3]
+                  if (self._zmax>a[1][5]):self._zmax=a[1][5]
                
       self._vtkren.SetBackground(1,1,1)  
       self._vtkren.ResetCamera()
