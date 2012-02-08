@@ -111,7 +111,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           x=a.GetMapper().GetInput()
           s=self.findObjectPath(x)
           t+=s+'\n'
-##           self._selected+=[(s,a)]
           self._selected+=[[s,a]]
           self.textMapper.SetInput(t)
           yd=self._vtk.GetRenderWindow().GetSize()[1]-self.textMapper.GetHeight(self._vtkren)-10.
@@ -236,8 +235,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     
       self._parser=Mesh(T)
       alist=self._parser.createActors()
-##       self.fillCurrentPath()
-      alist_ns=self._parser.createActors_ns(T)
+      self.fillCurrentPath()
+      alist_ns=self._parser.createActors_ns()
 
       if (alist_ns!=[]):
           for a in alist_ns:
@@ -345,7 +344,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self._currentactor=self._selected[0]
           actor=self._currentactor[1]
           color=actor.GetProperty().GetColor()
-##           self._currentactor=list(self._currentactor)
           self._currentactor.append(color)
           actor.GetProperty().SetColor(1,0,0)
           self._vtkren.RemoveActor(actor)
