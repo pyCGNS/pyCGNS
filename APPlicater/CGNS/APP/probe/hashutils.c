@@ -160,7 +160,7 @@ void addHashEntry(__f_entry_t *table[],int tsize,
 
   SORTPOINTSANDFILLBUFF(buff,p1,p2,p3,p4);
 #ifdef PROBE_DEBUG
-  printf("FACE [%.8d,%.8d,%.8d,%.8d] INS %.8d ",
+  printf("FACE [%.8d,%.8d,%.8d,%.8d] INS %.8d\n",
 	 buff[0],buff[1],buff[2],buff[3],face);
 #endif
   __f_hashInsert(table,buff,face,tsize,sec);
@@ -174,8 +174,8 @@ int fetchHashEntry(__f_entry_t *table[],int tsize,
   SORTPOINTSANDFILLBUFF(buff,p1,p2,p3,p4);
   r=__f_hashLookUp(table,buff,tsize,(sec==-1)?0:1,sec,&i);
 #ifdef PROBE_DEBUG
-  if (r) {printf("FACE [%.8d,%.8d,%.8d,%.8d] RET %.8d\n",
-		 buff[0],buff[1],buff[2],buff[3],r);}
+  if (r) {printf("FACE [%.8d,%.8d,%.8d,%.8d] RET %.8d SEC %d\n",
+		 buff[0],buff[1],buff[2],buff[3],r,sec);}
 #endif
   return r;
 }

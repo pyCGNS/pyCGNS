@@ -360,6 +360,8 @@ cdef class SectionParse(object):
   TRI_TYPES=[CGK.TRI_3,CGK.TRI_6]
   TETRA_TYPES=[CGK.TETRA_4,CGK.TETRA_10]
   
+  SURFACE_TYPES=QUAD_TYPES+TRI_TYPES
+
   def __cinit__(self):
     self.sizeH=44497
     self.sizeH=1686049
@@ -381,14 +383,20 @@ cdef class SectionParse(object):
     re=NPY.zeros((ec*qnpe*fnpe),dtype=NPY.int32)
     h=self.facesH
     hsz=self.sizeH
-    if (et in self.QUAD_TYPES): f=_quadsFromQuad(ea,ec,re,enpe,mr,b,h,hsz,sn)
+    if (et in self.QUAD_TYPES):
+      re=ea
+      f=ec
     if (et in self.PENTA_TYPES):f=_quadsFromPenta(ea,ec,re,enpe,mr,b,h,hsz,sn)
     if (et in self.HEXA_TYPES): f=_quadsFromHexa(ea,ec,re,enpe,mr,b,h,hsz,sn)
     if (et in self.PYRA_TYPES): f=_quadsFromPyra(ea,ec,re,enpe,mr,b,h,hsz,sn)
     rx=NPY.zeros((f*fnpe),dtype=NPY.int32)
     re=re[:f*fnpe].copy()
-    fx=_exteriorFaces(re,f,rx,fnpe,h,hsz,sn)
-    return (CGK.QUAD_4,re[:fx*fnpe],mr,f+mr,fx+mr)
+    if (et in self.SURFACE_TYPES):
+      rx=re
+      fx=f
+    else:
+      fx=_exteriorFaces(re[:f*fnpe].copy(),f,rx,fnpe,h,hsz,sn)
+    return (CGK.QUAD_4,rx[:fx*fnpe],mr,f+mr,fx+mr)
 
   def extTriFacesPoints(self,ea,et,sn,mr,b):
     if (et in self.TRI_TYPES):   qnpe=1
@@ -403,13 +411,19 @@ cdef class SectionParse(object):
     re=NPY.zeros((ec*qnpe*fnpe),dtype=NPY.int32)
     h=self.facesH
     hsz=self.sizeH
-    if (et in self.TRI_TYPES):  f=_trisFromTri(ea,ec,re,enpe,mr,b,h,hsz,sn)
+    if (et in self.TRI_TYPES):
+      re=ea
+      f=ec
     if (et in self.PENTA_TYPES):f=_trisFromPenta(ea,ec,re,enpe,mr,b,h,hsz,sn)
     if (et in self.TETRA_TYPES):f=_trisFromTetra(ea,ec,re,enpe,mr,b,h,hsz,sn)
     if (et in self.PYRA_TYPES): f=_trisFromPyra(ea,ec,re,enpe,mr,b,h,hsz,sn)
     rx=NPY.zeros((f*fnpe),dtype=NPY.int32)
-    fx=_exteriorFaces(re[:f*fnpe].copy(),f,rx,fnpe,h,hsz,sn)
-    return (CGK.TRI_3,re[:fx*fnpe].copy(),mr,f+mr,fx+mr)
+    if (et in self.SURFACE_TYPES):
+      rx=re
+      fx=f
+    else:
+      fx=_exteriorFaces(re[:f*fnpe].copy(),f,rx,fnpe,h,hsz,sn)
+    return (CGK.TRI_3,rx[:fx*fnpe].copy(),mr,f+mr,fx+mr)
     
 # ----------------------------------------------------------------------
 # --- last line

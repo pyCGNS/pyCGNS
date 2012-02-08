@@ -17,6 +17,7 @@ from CGNS.NAV.mtree import Q7TreeModel
 from CGNS.NAV.mtree import Q7TreeItem
 import CGNS.NAV.wconstants as Q7WC
 from CGNS.NAV.wfingerprint import Q7Window
+import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
 class Q7TreeItemDelegate(QStyledItemDelegate):
@@ -153,7 +154,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.treeview.refreshView()
     def formview(self):
         node=self.treeview.currentIndex().internalPointer()
-        if (node.sidsType()=='CGNSTree_t'): return
+        if (node.sidsType()==CGK.CGNSTree_ts): return
         form=Q7Form(self._control,node,self._fgprint)
         form.show()
     def vtkview(self):

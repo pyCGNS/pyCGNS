@@ -236,7 +236,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     
       self._parser=Mesh(T)
       alist=self._parser.createActors()
-##       self.fillCurrentPath()
       alist_ns=self._parser.createActors_ns(T)
 
       if (alist_ns!=[]):
