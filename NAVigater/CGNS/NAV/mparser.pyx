@@ -150,7 +150,9 @@ class Mesh(CGNSparser):
     elif ((connectivity[0]==10) or (connectivity[0]==11)):
       (ti,tx)=self.parsetetra(face,connectivity[1])                 
     elif ((connectivity[0]==12) or (connectivity[0]==13)):
-      (ti,tx)=self.parsepyra(face,connectivity[1])                    
+      (ti,tx)=self.parsepyra(face,connectivity[1])
+    elif ((connectivity[0]==14) or (connectivity[0]==15) or (connectivity[0]==16)):
+      (ti,tx)=self.parsepenta(face,connectivity[1])                    
     return (ti,tx)
 
   def getFacevolume(self,face,connectivity):
@@ -159,10 +161,12 @@ class Mesh(CGNSparser):
     elif ((connectivity[0]==10) or (connectivity[0]==11)):
       f=self.getFacetetra(face,connectivity[1])                 
     elif ((connectivity[0]==12) or (connectivity[0]==13)):
-      f=self.getFacepyra(face,connectivity[1])       
+      f=self.getFacepyra(face,connectivity[1])
+    elif ((connectivity[0]==14) or (connectivity[0]==15) or (connectivity[0]==16)):
+      f=self.getFacepenta(face,connectivity[1])     
     return f
     
-  def parsetetra(self,face,connectivity):
+  def parsetetra(self,face,connectivity):    
     ti={}
     tx={}
     n=0
@@ -200,7 +204,20 @@ class Mesh(CGNSparser):
       (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+3],connectivity[i+0],connectivity[i+4])
       n+=1
     return (ti,tx)
-  
+
+  def parsepenta(self,face,connectivity):
+    ti={}
+    tx={}
+    n=0
+    for i in range(0,len(connectivity),6): 
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+1],connectivity[i+4],connectivity[i+3])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+1],connectivity[i+2],connectivity[i+5],connectivity[i+4])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+2],connectivity[i+0],connectivity[i+3],connectivity[i+5])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+2],connectivity[i+1])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+3],connectivity[i+4],connectivity[i+5])
+      n+=1
+    return (ti,tx)
+    
   def getFacetetra(self,face,connectivity):
     faces=[]
     for i in range(0,len(connectivity),4):
@@ -233,6 +250,17 @@ class Mesh(CGNSparser):
       f5=self.getFace(face,connectivity[i+3],connectivity[i+0],connectivity[i+4])
       faces+=[f1,f2,f3,f4,f5]
     return faces
+
+  def getFacepenta(self,face,connectivity):
+    faces=[]
+    for i in range(0,len(connectivity),6): 
+      f1=self.getFace(face,connectivity[i+0],connectivity[i+1],connectivity[i+4],connectivity[i+3])
+      f2=self.getFace(face,connectivity[i+1],connectivity[i+2],connectivity[i+5],connectivity[i+4])
+      f3=self.getFace(face,connectivity[i+2],connectivity[i+0],connectivity[i+3],connectivity[i+5])
+      f4=self.getFace(face,connectivity[i+0],connectivity[i+2],connectivity[i+1])
+      f5=self.getFace(face,connectivity[i+3],connectivity[i+4],connectivity[i+5])
+      faces+=[f1,f2,f3,f4,f5]
+    return faces
       
   def do_volume_ns(self,index,coordinates,shape,path):
     qp=vtk.vtkPoints()
@@ -251,7 +279,7 @@ class Mesh(CGNSparser):
     a = vtk.vtkActor()
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
-    return (a,None,sg,path)
+    return (a,None,sg,'/'+path)
 
   def do_surface_ns(self,dx,dy,dz,connectivity,path):
      pt=self.def_volume(connectivity[0])[1][0]
@@ -272,7 +300,7 @@ class Mesh(CGNSparser):
      a = vtk.vtkActor()
      a.SetMapper(am)
      a.GetProperty().SetRepresentationToWireframe()
-     return (a,None,sg,path)
+     return (a,None,sg,'/'+path)
    
   def getObjectList(self):  
     return self._actors                 
@@ -416,14 +444,6 @@ class Mesh(CGNSparser):
     (p1,p2,p3)=self.sorting3(p1,p2,p3)
     (p1,p2,p3,p4)=self.sorting4(p1,p2,p3,p4)
     return p1,p2,p3,p4
-
-  def parsetri(self,ti,tx,n,connectivity,i):
-    (ti,tx)=self.addFaceIntAndExt(ti,tx,n,connectivity[i],connectivity[i+1],connectivity[i+2])
-    return (ti,tx)
-
-  def parsequad(self,ti,tx,n,connectivity,i):
-     (ti,tx)=self.addFaceIntAndExt(ti,tx,n,connectivity[i],connectivity[i+1],connectivity[i+2],connectivity[i+3])
-     return (ti,tx) 
 
   def def_volume(self,n):
     dic={2:(vtk.vtkVertex(),(1,1)),3:(vtk.vtkLine(),(2,2)),4:(vtk.vtkLine(),(2,3)),
