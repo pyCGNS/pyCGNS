@@ -7,6 +7,8 @@
 
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU
+import CGNS.APP.probe.arrayutils as CGA
+
 import numpy as NPY
 
 cimport cython
@@ -39,12 +41,12 @@ class CGNSparser:
       cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
       cz=CGU.nodeByPath("%s/CoordinateZ"%gT[0],gT)
       zonetype=CGU.getAllNodesByTypeSet(zT,[CGK.ZoneType_ts])
-      type=CGU.nodeByPath(zonetype[0],zT)      
-      if (type[1].tostring()==CGK.Structured_s):          
+      ztype=CGU.nodeByPath(zonetype[0],zT)      
+      if (ztype[1].tostring()==CGK.Structured_s):          
         shx=cx[1].shape
-        scx=cz[1].reshape(shx)
+        scx=cx[1].reshape(shx)
         scy=cy[1].reshape(shx)
-        scz=cx[1].reshape(shx)
+        scz=cz[1].reshape(shx)
         simin=[scx[0,:,:], scy[0,:,:], scz[0,:,:]]
         simax=[scx[-1,:,:],scy[-1,:,:],scz[-1,:,:]]
         sjmin=[scx[:,0,:], scy[:,0,:], scz[:,0,:]]
@@ -63,36 +65,58 @@ class CGNSparser:
             bcpaths+=['%s/[%s]'%(zp,nbc.split('/')[1])]
             bcT=CGU.nodeByPath(nbc,zbcT)
             for rbc in CGU.getAllNodesByTypeSet(bcT,[CGK.IndexRange_ts]):
-              ptr=CGU.nodeByPath(rbc,bcT)[1].T.flat                                                                      
-              brg=[scx[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],scy[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],scz[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]]]
+              ptr=CGU.nodeByPath(rbc,bcT)[1].T.flat
+              brg=[scx[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],
+                   scy[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],
+                   scz[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]]]
               bndlist+=[brg]
-        self._zones[z]=([cx[1],cy[1],cz[1]],[simin,simax,sjmin,sjmax,skmin,skmax],bndlist,
-                      meshpath,surfpaths,bcpaths)
-      elif (type[1].tostring()==CGK.Unstructured_s):
+        self._zones[z]=([cx[1],cy[1],cz[1]],
+                        [simin,simax,sjmin,sjmax,skmin,skmax],bndlist,
+                        meshpath,surfpaths,bcpaths)
+      elif (ztype[1].tostring()==CGK.Unstructured_s):
         volume={}
         surface={}
-        for e in CGU.getAllNodesByTypeSet(zT,[CGK.Elements_ts]):
-          zbcT=CGU.nodeByPath(e,zT)
-          path=CGU.removeFirstPathItem(e)
-          connectivity=CGU.getAllNodesByTypeSet(zbcT,[CGK.DataArray_ts])[0]
-          rang=CGU.getAllNodesByTypeSet(zbcT,[CGK.IndexRange_ts])[0]
-          co=CGU.nodeByPath(connectivity,zbcT)[1]   
-          ra=CGU.nodeByPath(rang,zbcT)[1]
-          if (zbcT[1][0]>=10):
-            volume[e]=zbcT[1][0],co,ra
-          else:
-            surface[e]=zbcT[1][0],co,ra                   
-        self._zones_ns[z]=([cx[1],cy[1],cz[1]],meshpath,volume,surface)
+        typeset=[CGK.Elements_ts]
+        elist=CGU.getAllNodesByTypeSet(zT,typeset)
+        sp=CGA.SectionParse()
+        mr=1
+        sn=0
+        sl=[]
+        for e in elist:
+          sn+=1
+          ne=CGU.getNodeByPath(zT,e)[1]
+          et=ne[0]
+          eb=ne[1]
+          ea=CGU.getNodeByPath(zT,e+'/'+CGK.ElementConnectivity_s)[1]
+          if (et in sp.QUAD_SURFACE):
+            sl.append(sp.extQuadFacesPoints(ea,et,sn,mr,eb))
+          if (et in sp.TRI_SURFACE):
+            sl.append(sp.extTriFacesPoints(ea,et,sn,mr,eb))
+        self._zones_ns[z]=([cx[1],cy[1],cz[1]],meshpath,et,sl,e)
     return None
 
 #----------------------------------------------------------------------------
- 
 class Mesh(CGNSparser):
 
   def __init__(self,T):
     CGNSparser.__init__(self,T)
     self._color=(1,0,0)
     self._actors=[]
+    self._vtkelts={CGK.TRI_3:   (vtk.vtkTriangle,  (3,3)),
+                   CGK.TRI_6:   (vtk.vtkTriangle,  (3,6)),
+                   CGK.QUAD_4:  (vtk.vtkQuad,      (4,4)),
+                   CGK.QUAD_8:  (vtk.vtkQuad,      (4,8)),
+                   CGK.QUAD_9:  (vtk.vtkQuad,      (4,9)),
+                   CGK.TETRA_4: (vtk.vtkTetra,     (4,4)),
+                   CGK.TETRA_10:(vtk.vtkTetra,     (4,10)),
+                   CGK.PYRA_5:  (vtk.vtkPyramid,   (5,5)),
+                   CGK.PYRA_14: (vtk.vtkPyramid,   (5,14)),
+                   CGK.PENTA_6: (vtk.vtkPolyhedron,(6,6)),
+                   CGK.PENTA_15:(vtk.vtkPolyhedron,(6,15)),
+                   CGK.PENTA_18:(vtk.vtkPolyhedron,(6,18)),
+                   CGK.HEXA_8:  (vtk.vtkHexahedron,(8,8)),
+                   CGK.HEXA_20: (vtk.vtkHexahedron,(8,20)),
+                   CGK.HEXA_27: (vtk.vtkHexahedron,(8,27))}
     self.parseZones()
 
   def createActors(self):
@@ -102,206 +126,9 @@ class Mesh(CGNSparser):
     return self._actors
 
   def createActors_ns(self):
-    actors_ns=[]
-    for k,n in self._zones_ns.iteritems():
-      dx=n[0][0]
-      dy=n[0][1]
-      dz=n[0][2]
-      for l,m in n[2].iteritems():
-        volume=self.parsevolume(m[2][0],m)
-        faces=self.getFacevolume(volume[1],m)
-        index=self.extractFaces(faces,m)
-        if (index!=[]):
-          actors_ns+=[self.do_volume_ns(index,n[0],m[0],l)]
-      for i,j in n[3].iteritems():
-        actors_ns+=[self.do_surface_ns(dx,dy,dz,j,i)]
-    return actors_ns
-          
-  def extractFaces(self,faces,k):
-    pt=self.def_volume(k[0])[1][0]
-    step=self.def_volume(k[0])[1][1]
-    index=[]
-    for i in faces:
-      if ((i>=k[2][0]) and (i<=k[2][1])):
-        n=i-k[2][0]
-        for j in range(pt):
-          index+=[k[1][n*step+j]]
-    return index  
-
-  def addFaceIntAndExt(self,ti,tx,face,p1,p2,p3,p4=0):
-    (p1,p2,p3,p4)=self.sort(p1,p2,p3,p4)
-    k="%12s%12s%12s%12s"%(p1,p2,p3,p4)
-    if (tx.has_key(k)):
-         ti[k]=face
-         del tx[k]
-    else: tx[k]=face
-    return (ti,tx)
-
-  def getFace(self,t,p1,p2,p3,p4=0):
-    (t1,t2,t3,t4)=(p1,p2,p3,p4)
-    (p1,p2,p3,p4)=self.sort(p1,p2,p3,p4)
-    k="%12s%12s%12s%12s"%(p1,p2,p3,p4)
-    if (t.has_key(k)): return t[k]
-    return -1
-
-  def parsevolume(self,face,connectivity):
-    if ((connectivity[0]==17) or (connectivity[0]==18) or (connectivity[0]==19)):
-      (ti,tx)=self.parsehex(face,connectivity[1])
-    elif ((connectivity[0]==10) or (connectivity[0]==11)):
-      (ti,tx)=self.parsetetra(face,connectivity[1])                 
-    elif ((connectivity[0]==12) or (connectivity[0]==13)):
-      (ti,tx)=self.parsepyra(face,connectivity[1])
-    elif ((connectivity[0]==14) or (connectivity[0]==15) or (connectivity[0]==16)):
-      (ti,tx)=self.parsepenta(face,connectivity[1])                    
-    return (ti,tx)
-
-  def getFacevolume(self,face,connectivity):
-    if ((connectivity[0]==17) or (connectivity[0]==18) or (connectivity[0]==19)):
-      f=self.getFacehex(face,connectivity[1])
-    elif ((connectivity[0]==10) or (connectivity[0]==11)):
-      f=self.getFacetetra(face,connectivity[1])                 
-    elif ((connectivity[0]==12) or (connectivity[0]==13)):
-      f=self.getFacepyra(face,connectivity[1])
-    elif ((connectivity[0]==14) or (connectivity[0]==15) or (connectivity[0]==16)):
-      f=self.getFacepenta(face,connectivity[1])     
-    return f
+    actors=self.do_surface_ns(self._zones_ns)    
+    return actors
     
-  def parsetetra(self,face,connectivity):    
-    ti={}
-    tx={}
-    n=0
-    for i in range(0,len(connectivity),4): 
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+2],connectivity[i+1])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+1],connectivity[i+3])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+1],connectivity[i+2],connectivity[i+3])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+2],connectivity[i+0],connectivity[i+3])
-      n+=1
-    return (ti,tx)
-          
-  def parsehex(self,face,connectivity):
-    ti={}
-    tx={}
-    n=0
-    for i in range(0,len(connectivity),8):                    
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+3],connectivity[i+2],connectivity[i+1])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+1],connectivity[i+5],connectivity[i+4])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+1],connectivity[i+2],connectivity[i+6],connectivity[i+5])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+2],connectivity[i+3],connectivity[i+7],connectivity[i+6])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+4],connectivity[i+7],connectivity[i+3])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+4],connectivity[i+5],connectivity[i+6],connectivity[i+7])
-      n+=1
-    return (ti,tx)
-
-  def parsepyra(self,face,connectivity):
-    ti={}
-    tx={}
-    n=0
-    for i in range(0,len(connectivity),5): 
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+3],connectivity[i+2],connectivity[i+1])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+1],connectivity[i+4])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+1],connectivity[i+2],connectivity[i+4])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+2],connectivity[i+3],connectivity[i+4])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+3],connectivity[i+0],connectivity[i+4])
-      n+=1
-    return (ti,tx)
-
-  def parsepenta(self,face,connectivity):
-    ti={}
-    tx={}
-    n=0
-    for i in range(0,len(connectivity),6): 
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+1],connectivity[i+4],connectivity[i+3])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+1],connectivity[i+2],connectivity[i+5],connectivity[i+4])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+2],connectivity[i+0],connectivity[i+3],connectivity[i+5])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+2],connectivity[i+1])
-      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+3],connectivity[i+4],connectivity[i+5])
-      n+=1
-    return (ti,tx)
-    
-  def getFacetetra(self,face,connectivity):
-    faces=[]
-    for i in range(0,len(connectivity),4):
-      f1=self.getFace(face,connectivity[i+0],connectivity[i+2],connectivity[i+1])
-      f2=self.getFace(face,connectivity[i+0],connectivity[i+1],connectivity[i+3])
-      f3=self.getFace(face,connectivity[i+1],connectivity[i+2],connectivity[i+3])
-      f4=self.getFace(face,connectivity[i+2],connectivity[i+0],connectivity[i+3])
-      faces+=[f1,f2,f3,f4]
-    return faces
-          
-  def getFacehex(self,face,connectivity):
-    faces=[]
-    for i in range(0,len(connectivity),8):                    
-      f1=self.getFace(face,connectivity[i+0],connectivity[i+3],connectivity[i+2],connectivity[i+1])
-      f2=self.getFace(face,connectivity[i+0],connectivity[i+1],connectivity[i+5],connectivity[i+4])
-      f3=self.getFace(face,connectivity[i+1],connectivity[i+2],connectivity[i+6],connectivity[i+5])
-      f4=self.getFace(face,connectivity[i+2],connectivity[i+3],connectivity[i+7],connectivity[i+6])
-      f5=self.getFace(face,connectivity[i+0],connectivity[i+4],connectivity[i+7],connectivity[i+3])
-      f6=self.getFace(face,connectivity[i+4],connectivity[i+5],connectivity[i+6],connectivity[i+7])
-      faces+=[f1,f2,f3,f4,f5,f6]
-    return faces
-
-  def getFacepyra(self,face,connectivity):
-    faces=[]
-    for i in range(0,len(connectivity),5): 
-      f1=self.getFace(face,connectivity[i+0],connectivity[i+3],connectivity[i+2],connectivity[i+1])
-      f2=self.getFace(face,connectivity[i+0],connectivity[i+1],connectivity[i+4])
-      f3=self.getFace(face,connectivity[i+1],connectivity[i+2],connectivity[i+4])
-      f4=self.getFace(face,connectivity[i+2],connectivity[i+3],connectivity[i+4])
-      f5=self.getFace(face,connectivity[i+3],connectivity[i+0],connectivity[i+4])
-      faces+=[f1,f2,f3,f4,f5]
-    return faces
-
-  def getFacepenta(self,face,connectivity):
-    faces=[]
-    for i in range(0,len(connectivity),6): 
-      f1=self.getFace(face,connectivity[i+0],connectivity[i+1],connectivity[i+4],connectivity[i+3])
-      f2=self.getFace(face,connectivity[i+1],connectivity[i+2],connectivity[i+5],connectivity[i+4])
-      f3=self.getFace(face,connectivity[i+2],connectivity[i+0],connectivity[i+3],connectivity[i+5])
-      f4=self.getFace(face,connectivity[i+0],connectivity[i+2],connectivity[i+1])
-      f5=self.getFace(face,connectivity[i+3],connectivity[i+4],connectivity[i+5])
-      faces+=[f1,f2,f3,f4,f5]
-    return faces
-      
-  def do_volume_ns(self,index,coordinates,shape,path):
-    qp=vtk.vtkPoints()
-    sg=vtk.vtkUnstructuredGrid()
-    sg.Allocate(1, 1)
-    pt=self.def_volume(shape)[1][0]
-    for n in range(0,len(index),pt):
-      aq=self.def_volume(shape)[0]
-      for m in range(pt):
-        qp.InsertPoint(n+m,coordinates[0][index[n+m]-1],coordinates[1][index[n+m]-1],coordinates[2][index[n+m]-1])
-        aq.GetPointIds().SetId(m,n+m)
-      sg.InsertNextCell(aq.GetCellType(),aq.GetPointIds())
-    sg.SetPoints(qp)
-    am = vtk.vtkDataSetMapper()
-    am.SetInput(sg)
-    a = vtk.vtkActor()
-    a.SetMapper(am)
-    a.GetProperty().SetRepresentationToWireframe()
-    return (a,None,sg,'/'+path)
-
-  def do_surface_ns(self,dx,dy,dz,connectivity,path):
-     pt=self.def_volume(connectivity[0])[1][0]
-     step=self.def_volume(connectivity[0])[1][1]      
-     qp=vtk.vtkPoints()
-     sg=vtk.vtkUnstructuredGrid()
-     sg.Allocate(1, 1)
-     aq = vtk.vtkHexahedron()
-     for n in range(0,len(connectivity[1]),step):
-          aq=self.def_volume(connectivity[0])[0]
-          for m in range(pt):
-               qp.InsertPoint(n+m,dx[connectivity[1][n+m]-1],dy[connectivity[1][n+m]-1],dz[connectivity[1][n+m]-1])         
-               aq.GetPointIds().SetId(m,n+m)               
-          sg.InsertNextCell(aq.GetCellType(),aq.GetPointIds())          
-     sg.SetPoints(qp)    
-     am = vtk.vtkDataSetMapper()
-     am.SetInput(sg)
-     a = vtk.vtkActor()
-     a.SetMapper(am)
-     a.GetProperty().SetRepresentationToWireframe()
-     return (a,None,sg,'/'+path)
-   
   def getObjectList(self):  
     return self._actors                 
 
@@ -322,17 +149,17 @@ class Mesh(CGNSparser):
     kdim = dx.shape[2]
     pts=vtk.vtkPoints()
     pts.SetNumberOfPoints(idim*jdim*kdim)
-    for i in range(idim):
+    for k in range(kdim):
      for j in range(jdim):
-      for k in range(kdim):
+      for i in range(idim):
        p=i+j*idim+k*idim*jdim
        x = (<double*>CNPY.PyArray_GETPTR1(dx,p))[0]
        y = (<double*>CNPY.PyArray_GETPTR1(dy,p))[0]
        z = (<double*>CNPY.PyArray_GETPTR1(dz,p))[0]
-       pts.InsertPoint(k+j*kdim+i*kdim*jdim,z,y,x)
+       pts.InsertPoint(p,x,y,z)
     g=vtk.vtkStructuredGrid()
     g.SetPoints(pts)
-    g.SetExtent(0,kdim-1,0,jdim-1,0,idim-1)
+    g.SetExtent(0,idim-1,0,jdim-1,0,kdim-1)
     d=vtk.vtkDataSetMapper()
     d.SetInput(g)
     a=vtk.vtkActor()
@@ -420,43 +247,51 @@ class Mesh(CGNSparser):
         self._actors+=[self.do_surface(s,sp)]
       for (b,sb) in zip(z[2],z[5]):
         self._actors+=[self.do_boundaries(b,sb)]
+      return
 
-  def sorting2(self,p1,p2):
-     t=p1
-     if p1>p2:
-          p1=p2
-          p2=t
-     return p1,p2
-     
-  def sorting3(self,p1,p2,p3):
-    (p1,p3)=self.sorting2(p1,p3)
-    (p2,p3)=self.sorting2(p2,p3)
-    return p1,p2,p3
-
-  def sorting4(self,p1,p2,p3,p4):
-    (p1,p4)=self.sorting2(p1,p4)
-    (p2,p4)=self.sorting2(p2,p4)
-    (p3,p4)=self.sorting2(p3,p4)
-    return p1,p2,p3,p4
-     
-  def sort(self,p1,p2,p3,p4):
-    (p1,p2)=self.sorting2(p1,p2)
-    (p1,p2,p3)=self.sorting3(p1,p2,p3)
-    (p1,p2,p3,p4)=self.sorting4(p1,p2,p3,p4)
-    return p1,p2,p3,p4
+#  @cython.boundscheck(False)
+  def do_surface_ns(self,zones):
+    cdef int e,elts,n,npe,idg,idx
+    actors=[]
+    for zn in zones:
+      dx=zones[zn][0][0]
+      dy=zones[zn][0][1]
+      dz=zones[zn][0][2]
+      for surf in zones[zn][-2]:
+        path=zones[zn][-1]
+        if (surf[0]==CGK.QUAD_4): npe=4
+        else: npe=3
+        sf=surf[1]
+        elts=len(sf)/npe
+        sg=vtk.vtkUnstructuredGrid()
+        sg.Allocate(1, 1)
+        e=0
+        qp=vtk.vtkPoints()
+        vtkelt=self.def_volume(surf[0])[0]
+        while (e<elts):
+          n=0
+          aq=vtkelt()
+          while (n<npe):
+            idg=(e*npe+n)
+            ids=sf[idg]-1
+            qp.InsertPoint(idg,dx[ids],dy[ids],dz[ids])
+            aq.GetPointIds().SetId(n,idg)
+            n+=1
+          sg.InsertNextCell(aq.GetCellType(),aq.GetPointIds())
+          e+=1
+        sg.SetPoints(qp)    
+        am = vtk.vtkDataSetMapper()
+        am.SetInput(sg)
+        a = vtk.vtkActor()
+        a.SetMapper(am)
+        a.GetProperty().SetRepresentationToWireframe()
+        actors+=[(a,None,sg,'/'+path)]
+    return actors
 
   def def_volume(self,n):
-    dic={2:(vtk.vtkVertex(),(1,1)),3:(vtk.vtkLine(),(2,2)),4:(vtk.vtkLine(),(2,3)),
-         5:(vtk.vtkTriangle(),(3,3)),6:(vtk.vtkTriangle(),(3,6)),7:(vtk.vtkQuad(),(4,4)),
-         8:(vtk.vtkQuad(),(4,8)),9:(vtk.vtkQuad(),(4,9)),10:(vtk.vtkTetra(),(4,4)),
-         11:(vtk.vtkTetra(),(4,10)),12:(vtk.vtkPyramid(),(5,5)),13:(vtk.vtkPyramid(),(5,14)),
-         14:(vtk.vtkPolyhedron(),(6,6)),15:(vtk.vtkPolyhedron(),(6,15)),16:(vtk.vtkPolyhedron(),(6,18)),
-         17:(vtk.vtkHexahedron(),(8,8)),18:(vtk.vtkHexahedron(),(8,20)),19:(vtk.vtkHexahedron(),(8,27))}
-    if dic.has_key(n):
-      return dic[n]
-    else:
-      print "type non gere"          
-      return False
+    if self._vtkelts.has_key(n):
+      return self._vtkelts[n]
+    return None
 
 #----------------------------------------------------------------------------
 
