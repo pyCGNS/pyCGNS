@@ -159,7 +159,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         form.show()
     def vtkview(self):
         node=self.treeview.currentIndex().internalPointer()
+        self.busyCursor()
         vtk=Q7VTK(self._control,node,self._fgprint)
+        self.readyCursor()
         vtk.show()
     def queryview(self):
         q=self.querymodel.getCurrentQuery()

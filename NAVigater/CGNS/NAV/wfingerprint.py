@@ -37,6 +37,7 @@ class Q7Window(QWidget,object):
         self.setupUi(self)
         if (self._stylesheet is not None): self.setStyleSheet(self._stylesheet)
         self.getOptions()
+        self._timercount=0
         self._vtype=vtype
         self._path=path
         self._control=control
@@ -109,7 +110,7 @@ class Q7Window(QWidget,object):
         QApplication.setOverrideCursor(QCursor(QPixmap(":/images/icons/cgSpy.gif")))
     def readyCursor(self):
         QApplication.restoreOverrideCursor()
-    
+
 # -----------------------------------------------------------------
 class Q7fingerPrint:
     __viewscounter=0

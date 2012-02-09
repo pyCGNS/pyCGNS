@@ -59,6 +59,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bX.clicked.connect(self.b_xaxis)
       self.bY.clicked.connect(self.b_yaxis)
       self.bZ.clicked.connect(self.b_zaxis)
+      self.bSaveVTK.clicked.connect(self.b_saveVTK)
       self.bSuffleColors.clicked.connect(self.b_shufflecolors)
       self.bBlackColor.clicked.connect(self.b_blackandwhite)
       self.bAddView.clicked.connect(self.b_saveview)
@@ -364,6 +365,17 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def b_refresh(self,pos):
       self._vtk.GetRenderWindow().Render()
       
+  def b_saveVTK(self,*args):
+      w=vtk.vtkGenericDataObjectWriter()
+      w.SetFileName('/tmp/Foo.vtk')
+      actors = self._vtkren.GetActors()
+      actors.InitTraversal()
+      actor = actors.GetNextItem()
+      while actor:
+          w.SetInput(actor.GetMapper().GetInput())
+          actor = actors.GetNextItem()
+      w.Write()
+
   def b_xaxis(self,pos=None):
       if (self.cMirror.isChecked()): self.setAxis(pos,-1)
       else: self.setAxis(pos,1)
