@@ -93,30 +93,148 @@ class Mesh(CGNSparser):
     CGNSparser.__init__(self,T)
     self._color=(1,0,0)
     self._actors=[]
-    self._actors_ns=[]
     self.parseZones()
-         
+
   def createActors(self):
     for z in self._zones.values():
       self.do_vtk(z)
+    self._actors+=self.createActors_ns()
     return self._actors
 
   def createActors_ns(self):
-    actors=[]
+    actors_ns=[]
     for k,n in self._zones_ns.iteritems():
-      for p,m in n[3].iteritems():
-        ti={}
-        tx={}
-        surface=self.parsesurface(m,ti,tx)
-      for l,o in n[2].iteritems():
-        volume=self.parsevolume(o,surface)
-        for u,i in n[3].iteritems():
-          index=self.extractFaces(volume[0],i)
-          if (index!=[]):
-            actors+=[self.do_surface_ns(index,n[0],i[0])]
-    return actors
-        
-  def do_surface_ns(self,index,coordinates,shape):
+      dx=n[0][0]
+      dy=n[0][1]
+      dz=n[0][2]
+      for l,m in n[2].iteritems():
+        volume=self.parsevolume(m[2][0],m)
+        faces=self.getFacevolume(volume[1],m)
+        index=self.extractFaces(faces,m)
+        if (index!=[]):
+          actors_ns+=[self.do_volume_ns(index,n[0],m[0],l)]
+      for i,j in n[3].iteritems():
+        actors_ns+=[self.do_surface_ns(dx,dy,dz,j,i)]
+    return actors_ns
+          
+  def extractFaces(self,faces,k):
+    pt=self.def_volume(k[0])[1][0]
+    step=self.def_volume(k[0])[1][1]
+    index=[]
+    for i in faces:
+      if ((i>=k[2][0]) and (i<=k[2][1])):
+        n=i-k[2][0]
+        for j in range(pt):
+          index+=[k[1][n*step+j]]
+    return index  
+
+  def addFaceIntAndExt(self,ti,tx,face,p1,p2,p3,p4=0):
+    (p1,p2,p3,p4)=self.sort(p1,p2,p3,p4)
+    k="%12s%12s%12s%12s"%(p1,p2,p3,p4)
+    if (tx.has_key(k)):
+         ti[k]=face
+         del tx[k]
+    else: tx[k]=face
+    return (ti,tx)
+
+  def getFace(self,t,p1,p2,p3,p4=0):
+    (t1,t2,t3,t4)=(p1,p2,p3,p4)
+    (p1,p2,p3,p4)=self.sort(p1,p2,p3,p4)
+    k="%12s%12s%12s%12s"%(p1,p2,p3,p4)
+    if (t.has_key(k)): return t[k]
+    return -1
+
+  def parsevolume(self,face,connectivity):
+    if ((connectivity[0]==17) or (connectivity[0]==18) or (connectivity[0]==19)):
+      (ti,tx)=self.parsehex(face,connectivity[1])
+    elif ((connectivity[0]==10) or (connectivity[0]==11)):
+      (ti,tx)=self.parsetetra(face,connectivity[1])                 
+    elif ((connectivity[0]==12) or (connectivity[0]==13)):
+      (ti,tx)=self.parsepyra(face,connectivity[1])                    
+    return (ti,tx)
+
+  def getFacevolume(self,face,connectivity):
+    if ((connectivity[0]==17) or (connectivity[0]==18) or (connectivity[0]==19)):
+      f=self.getFacehex(face,connectivity[1])
+    elif ((connectivity[0]==10) or (connectivity[0]==11)):
+      f=self.getFacetetra(face,connectivity[1])                 
+    elif ((connectivity[0]==12) or (connectivity[0]==13)):
+      f=self.getFacepyra(face,connectivity[1])       
+    return f
+    
+  def parsetetra(self,face,connectivity):
+    ti={}
+    tx={}
+    n=0
+    for i in range(0,len(connectivity),4): 
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+2],connectivity[i+1])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+1],connectivity[i+3])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+1],connectivity[i+2],connectivity[i+3])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+2],connectivity[i+0],connectivity[i+3])
+      n+=1
+    return (ti,tx)
+          
+  def parsehex(self,face,connectivity):
+    ti={}
+    tx={}
+    n=0
+    for i in range(0,len(connectivity),8):                    
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+3],connectivity[i+2],connectivity[i+1])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+1],connectivity[i+5],connectivity[i+4])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+1],connectivity[i+2],connectivity[i+6],connectivity[i+5])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+2],connectivity[i+3],connectivity[i+7],connectivity[i+6])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+4],connectivity[i+7],connectivity[i+3])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+4],connectivity[i+5],connectivity[i+6],connectivity[i+7])
+      n+=1
+    return (ti,tx)
+
+  def parsepyra(self,face,connectivity):
+    ti={}
+    tx={}
+    n=0
+    for i in range(0,len(connectivity),5): 
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+3],connectivity[i+2],connectivity[i+1])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+0],connectivity[i+1],connectivity[i+4])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+1],connectivity[i+2],connectivity[i+4])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+2],connectivity[i+3],connectivity[i+4])
+      (ti,tx)=self.addFaceIntAndExt(ti,tx,face+n,connectivity[i+3],connectivity[i+0],connectivity[i+4])
+      n+=1
+    return (ti,tx)
+  
+  def getFacetetra(self,face,connectivity):
+    faces=[]
+    for i in range(0,len(connectivity),4):
+      f1=self.getFace(face,connectivity[i+0],connectivity[i+2],connectivity[i+1])
+      f2=self.getFace(face,connectivity[i+0],connectivity[i+1],connectivity[i+3])
+      f3=self.getFace(face,connectivity[i+1],connectivity[i+2],connectivity[i+3])
+      f4=self.getFace(face,connectivity[i+2],connectivity[i+0],connectivity[i+3])
+      faces+=[f1,f2,f3,f4]
+    return faces
+          
+  def getFacehex(self,face,connectivity):
+    faces=[]
+    for i in range(0,len(connectivity),8):                    
+      f1=self.getFace(face,connectivity[i+0],connectivity[i+3],connectivity[i+2],connectivity[i+1])
+      f2=self.getFace(face,connectivity[i+0],connectivity[i+1],connectivity[i+5],connectivity[i+4])
+      f3=self.getFace(face,connectivity[i+1],connectivity[i+2],connectivity[i+6],connectivity[i+5])
+      f4=self.getFace(face,connectivity[i+2],connectivity[i+3],connectivity[i+7],connectivity[i+6])
+      f5=self.getFace(face,connectivity[i+0],connectivity[i+4],connectivity[i+7],connectivity[i+3])
+      f6=self.getFace(face,connectivity[i+4],connectivity[i+5],connectivity[i+6],connectivity[i+7])
+      faces+=[f1,f2,f3,f4,f5,f6]
+    return faces
+
+  def getFacepyra(self,face,connectivity):
+    faces=[]
+    for i in range(0,len(connectivity),5): 
+      f1=self.getFace(face,connectivity[i+0],connectivity[i+3],connectivity[i+2],connectivity[i+1])
+      f2=self.getFace(face,connectivity[i+0],connectivity[i+1],connectivity[i+4])
+      f3=self.getFace(face,connectivity[i+1],connectivity[i+2],connectivity[i+4])
+      f4=self.getFace(face,connectivity[i+2],connectivity[i+3],connectivity[i+4])
+      f5=self.getFace(face,connectivity[i+3],connectivity[i+0],connectivity[i+4])
+      faces+=[f1,f2,f3,f4,f5]
+    return faces
+      
+  def do_volume_ns(self,index,coordinates,shape,path):
     qp=vtk.vtkPoints()
     sg=vtk.vtkUnstructuredGrid()
     sg.Allocate(1, 1)
@@ -127,45 +245,34 @@ class Mesh(CGNSparser):
         qp.InsertPoint(n+m,coordinates[0][index[n+m]-1],coordinates[1][index[n+m]-1],coordinates[2][index[n+m]-1])
         aq.GetPointIds().SetId(m,n+m)
       sg.InsertNextCell(aq.GetCellType(),aq.GetPointIds())
-    sg.SetPoints(qp)    
+    sg.SetPoints(qp)
     am = vtk.vtkDataSetMapper()
     am.SetInput(sg)
     a = vtk.vtkActor()
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
-    return a
-        
-  def extractFaces(self,volume,k):
-    pt=self.def_volume(k[0])[1][0]
-    step=self.def_volume(k[0])[1][1]
-    index=[]
-    for i in volume:
-      if ((i>=k[2][0]) and (i<=k[2][1])):
-        n=i-k[2][0]
-        for j in range(pt):
-          index+=[k[1][n*step+j]]
-    return index          
+    return (a,None,sg,path)
 
-  def parsesurface(self,connectivity,ti,tx):
-     face=connectivity[2][0]
-     step=self.def_volume(connectivity[0])[1][1]
-     for i in range(0,len(connectivity[1]),step):
-       if ((connectivity[0]==5) or (connectivity[0]==6)):
-         (ti,tx)=self.parsetri(ti,tx,face,connectivity[1],i)
-       elif (connectivity[0]==7 or (connectivity[0]==8) or (connectivity[0]==9)):
-         (ti,tx)=self.parsequad(ti,tx,face,connectivity[1],i)
-       face+=1
-     return tx
-
-  def parsevolume(self,connectivity,surface):
-    faces=[]
-    if ((connectivity[0]==17) or (connectivity[0]==18) or (connectivity[0]==19)):
-      faces+=[self.parsehex(surface,connectivity[1])]
-    elif ((connectivity[0]==10) or (connectivity[0]==11)):
-      faces+=[self.parsetetra(surface,connectivity[1])]                 
-    elif ((connectivity[0]==12) or (connectivity[0]==13)):
-      faces+=[self.parsepyra(surface,connectivity[1])]                    
-    return faces
+  def do_surface_ns(self,dx,dy,dz,connectivity,path):
+     pt=self.def_volume(connectivity[0])[1][0]
+     step=self.def_volume(connectivity[0])[1][1]      
+     qp=vtk.vtkPoints()
+     sg=vtk.vtkUnstructuredGrid()
+     sg.Allocate(1, 1)
+     aq = vtk.vtkHexahedron()
+     for n in range(0,len(connectivity[1]),step):
+          aq=self.def_volume(connectivity[0])[0]
+          for m in range(pt):
+               qp.InsertPoint(n+m,dx[connectivity[1][n+m]-1],dy[connectivity[1][n+m]-1],dz[connectivity[1][n+m]-1])         
+               aq.GetPointIds().SetId(m,n+m)               
+          sg.InsertNextCell(aq.GetCellType(),aq.GetPointIds())          
+     sg.SetPoints(qp)    
+     am = vtk.vtkDataSetMapper()
+     am.SetInput(sg)
+     a = vtk.vtkActor()
+     a.SetMapper(am)
+     a.GetProperty().SetRepresentationToWireframe()
+     return (a,None,sg,path)
    
   def getObjectList(self):  
     return self._actors                 
@@ -309,22 +416,6 @@ class Mesh(CGNSparser):
     (p1,p2,p3)=self.sorting3(p1,p2,p3)
     (p1,p2,p3,p4)=self.sorting4(p1,p2,p3,p4)
     return p1,p2,p3,p4
-                   
-  def addFaceIntAndExt(self,ti,tx,face,p1,p2,p3,p4=0):
-    (p1,p2,p3,p4)=self.sort(p1,p2,p3,p4)
-    k="%12s%12s%12s%12s"%(p1,p2,p3,p4)
-    if (tx.has_key(k)):
-         ti[k]=face
-         del tx[k]
-    else: tx[k]=face
-    return (ti,tx)
-
-  def getFace(self,t,p1,p2,p3,p4=0):
-    (t1,t2,t3,t4)=(p1,p2,p3,p4)
-    (p1,p2,p3,p4)=self.sort(p1,p2,p3,p4)
-    k="%12s%12s%12s%12s"%(p1,p2,p3,p4)
-    if (t.has_key(k)): return t[k]
-    return -1
 
   def parsetri(self,ti,tx,n,connectivity,i):
     (ti,tx)=self.addFaceIntAndExt(ti,tx,n,connectivity[i],connectivity[i+1],connectivity[i+2])
@@ -332,40 +423,7 @@ class Mesh(CGNSparser):
 
   def parsequad(self,ti,tx,n,connectivity,i):
      (ti,tx)=self.addFaceIntAndExt(ti,tx,n,connectivity[i],connectivity[i+1],connectivity[i+2],connectivity[i+3])
-     return (ti,tx)
-
-  def parsetetra(self,surface,connectivity):
-    faces=[]
-    for i in range(0,len(connectivity),4): 
-      f1=self.getFace(surface,connectivity[i+0],connectivity[i+2],connectivity[i+1])
-      f2=self.getFace(surface,connectivity[i+0],connectivity[i+1],connectivity[i+3])
-      f3=self.getFace(surface,connectivity[i+1],connectivity[i+2],connectivity[i+3])
-      f4=self.getFace(surface,connectivity[i+2],connectivity[i+0],connectivity[i+3])
-      faces+=[f1,f2,f3,f4]
-    return faces
-          
-  def parsehex(self,surface,connectivity):
-    faces=[]
-    for i in range(0,len(connectivity),8):                    
-      f1=self.getFace(surface,connectivity[i+0],connectivity[i+3],connectivity[i+2],connectivity[i+1])
-      f2=self.getFace(surface,connectivity[i+0],connectivity[i+1],connectivity[i+5],connectivity[i+4])
-      f3=self.getFace(surface,connectivity[i+1],connectivity[i+2],connectivity[i+6],connectivity[i+5])
-      f4=self.getFace(surface,connectivity[i+2],connectivity[i+3],connectivity[i+7],connectivity[i+6])
-      f5=self.getFace(surface,connectivity[i+0],connectivity[i+4],connectivity[i+7],connectivity[i+3])
-      f6=self.getFace(surface,connectivity[i+4],connectivity[i+5],connectivity[i+6],connectivity[i+7])
-      faces+=[f1,f2,f3,f4,f5,f6]
-    return faces
-
-  def parsepyra(self,surface,connectivity):
-    faces=[]
-    for i in range(0,len(connectivity),5): 
-      f1=self.getFace(surface,connectivity[i+0],connectivity[i+3],connectivity[i+2],connectivity[i+1])
-      f2=self.getFace(surface,connectivity[i+0],connectivity[i+1],connectivity[i+4])
-      f3=self.getFace(surface,connectivity[i+1],connectivity[i+2],connectivity[i+4])
-      f4=self.getFace(surface,connectivity[i+2],connectivity[i+3],connectivity[i+4])
-      f5=self.getFace(surface,connectivity[i+3],connectivity[i+0],connectivity[i+4])
-      faces+=[f1,f2,f3,f4,f5]
-    return faces  
+     return (ti,tx) 
 
   def def_volume(self,n):
     dic={2:(vtk.vtkVertex(),(1,1)),3:(vtk.vtkLine(),(2,2)),4:(vtk.vtkLine(),(2,3)),

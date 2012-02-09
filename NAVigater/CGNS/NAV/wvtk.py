@@ -102,7 +102,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
         self._selected=[]
     else:        
         selPt = self.picker.GetSelectionPoint()
-        pickAct = self.picker.GetActors()     
+        pickAct = self.picker.GetActors()
         a=pickAct.InitTraversal()
         a=pickAct.GetNextItem()
         t=''
@@ -236,12 +236,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._parser=Mesh(T)
       alist=self._parser.createActors()
       self.fillCurrentPath()
-      alist_ns=self._parser.createActors_ns()
-
-      if (alist_ns!=[]):
-          for a in alist_ns:
-              self._vtkren.AddActor(a)
-
+ 
       if (alist!=[]):
           for a in alist:
               self._vtkren.AddActor(a[0])
