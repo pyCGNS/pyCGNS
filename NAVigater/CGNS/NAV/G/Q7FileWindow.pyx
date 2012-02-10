@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FileWindow.ui'
 #
-# Created: Tue Feb  7 11:18:09 2012
+# Created: Fri Feb 10 10:32:55 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -84,11 +84,11 @@ class Ui_Q7FileWindow(object):
         self.bAction.setMaximumSize(QtCore.QSize(25, 25))
         self.bAction.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/save-tree.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bAction.setIcon(icon1)
         self.bAction.setObjectName("bAction")
         self.cShowAll = QtGui.QCheckBox(self.Selection)
-        self.cShowAll.setGeometry(QtCore.QRect(610, 40, 91, 22))
+        self.cShowAll.setGeometry(QtCore.QRect(570, 40, 91, 22))
         self.cShowAll.setObjectName("cShowAll")
         self.bBack = QtGui.QPushButton(self.Selection)
         self.bBack.setGeometry(QtCore.QRect(10, 10, 25, 25))
@@ -100,7 +100,8 @@ class Ui_Q7FileWindow(object):
         self.bBack.setIcon(icon2)
         self.bBack.setObjectName("bBack")
         self.cShowDirs = QtGui.QCheckBox(self.Selection)
-        self.cShowDirs.setGeometry(QtCore.QRect(470, 40, 141, 22))
+        self.cShowDirs.setGeometry(QtCore.QRect(470, 40, 91, 22))
+        self.cShowDirs.setChecked(True)
         self.cShowDirs.setObjectName("cShowDirs")
         self.tabs.addTab(self.Selection, "")
         self.tab_2 = QtGui.QWidget()
@@ -177,8 +178,8 @@ class Ui_Q7FileWindow(object):
         Q7FileWindow.setWindowTitle(QtGui.QApplication.translate("Q7FileWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7FileWindow", "Current directory", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Q7FileWindow", "Selected file", None, QtGui.QApplication.UnicodeUTF8))
-        self.cShowAll.setText(QtGui.QApplication.translate("Q7FileWindow", "Show all", None, QtGui.QApplication.UnicodeUTF8))
-        self.cShowDirs.setText(QtGui.QApplication.translate("Q7FileWindow", "Show directories", None, QtGui.QApplication.UnicodeUTF8))
+        self.cShowAll.setText(QtGui.QApplication.translate("Q7FileWindow", "All", None, QtGui.QApplication.UnicodeUTF8))
+        self.cShowDirs.setText(QtGui.QApplication.translate("Q7FileWindow", "Directories", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.Selection), QtGui.QApplication.translate("Q7FileWindow", "Selection", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_filtercgnsfiles.setText(QtGui.QApplication.translate("Q7FileWindow", "Show .cgns files", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_filterhdffiles.setText(QtGui.QApplication.translate("Q7FileWindow", "Show .hdf* files", None, QtGui.QApplication.UnicodeUTF8))

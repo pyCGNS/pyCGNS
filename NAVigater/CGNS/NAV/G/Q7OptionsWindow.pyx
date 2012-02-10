@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Tue Feb  7 11:18:05 2012
+# Created: Fri Feb 10 13:47:25 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -121,6 +121,12 @@ class Ui_Q7OptionsWindow(object):
         self.label = QtGui.QLabel(self.tab_3)
         self.label.setGeometry(QtCore.QRect(10, 20, 201, 17))
         self.label.setObjectName("label")
+        self.label_3 = QtGui.QLabel(self.tab_3)
+        self.label_3.setGeometry(QtCore.QRect(20, 60, 58, 16))
+        self.label_3.setObjectName("label_3")
+        self.__O_fixedfonttable = QtGui.QLineEdit(self.tab_3)
+        self.__O_fixedfonttable.setGeometry(QtCore.QRect(90, 60, 113, 22))
+        self.__O_fixedfonttable.setObjectName("__O_fixedfonttable")
         self.tabs.addTab(self.tab_3, "")
         self.tab_4 = QtGui.QWidget()
         self.tab_4.setObjectName("tab_4")
@@ -136,9 +142,9 @@ class Ui_Q7OptionsWindow(object):
         self.__O_showhelpballoons = QtGui.QCheckBox(self.tab_4)
         self.__O_showhelpballoons.setGeometry(QtCore.QRect(10, 80, 274, 22))
         self.__O_showhelpballoons.setObjectName("__O_showhelpballoons")
-        self.__O_show1Dasplain = QtGui.QCheckBox(self.tab_4)
-        self.__O_show1Dasplain.setGeometry(QtCore.QRect(10, 20, 274, 22))
-        self.__O_show1Dasplain.setObjectName("__O_show1Dasplain")
+        self.__O_show1dasplain = QtGui.QCheckBox(self.tab_4)
+        self.__O_show1dasplain.setGeometry(QtCore.QRect(10, 20, 274, 22))
+        self.__O_show1dasplain.setObjectName("__O_show1dasplain")
         self.__O_showsidsstatuscolumn = QtGui.QCheckBox(self.tab_4)
         self.__O_showsidsstatuscolumn.setGeometry(QtCore.QRect(10, 0, 274, 22))
         self.__O_showsidsstatuscolumn.setObjectName("__O_showsidsstatuscolumn")
@@ -176,6 +182,9 @@ class Ui_Q7OptionsWindow(object):
         self.__O_selectionlistdirectory = QtGui.QLineEdit(self.tab_5)
         self.__O_selectionlistdirectory.setGeometry(QtCore.QRect(160, 100, 396, 27))
         self.__O_selectionlistdirectory.setObjectName("__O_selectionlistdirectory")
+        self.__O_chlonetrace = QtGui.QCheckBox(self.tab_5)
+        self.__O_chlonetrace.setGeometry(QtCore.QRect(10, 260, 111, 21))
+        self.__O_chlonetrace.setObjectName("__O_chlonetrace")
         self.tabs.addTab(self.tab_5, "")
         self.bClose = QtGui.QPushButton(Q7OptionsWindow)
         self.bClose.setGeometry(QtCore.QRect(480, 330, 88, 27))
@@ -216,13 +225,14 @@ class Ui_Q7OptionsWindow(object):
         self.__O_forcefortranflag.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Force fortran flag in numpy arrays", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.tab_6), QtGui.QApplication.translate("Q7OptionsWindow", "Checks", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Tree view node name", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Table", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.tab_3), QtGui.QApplication.translate("Q7OptionsWindow", "Fonts", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_showtableindex.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Show table index", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_oneviewpertreenode.setText(QtGui.QApplication.translate("Q7OptionsWindow", "One view per tree/node", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_showcolumnindex.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Show columns titles", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_showhelpballoons.setToolTip(QtGui.QApplication.translate("Q7OptionsWindow", "Shows the help balloon you are reading right now.", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_showhelpballoons.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Show tooltips", None, QtGui.QApplication.UnicodeUTF8))
-        self.__O_show1Dasplain.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Show 1D values as Python plain types", None, QtGui.QApplication.UnicodeUTF8))
+        self.__O_show1dasplain.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Show 1D values as Python plain types", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_showsidsstatuscolumn.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Show SIDS status column", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Max length of data display in tree", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_transposearrayforview.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Transpose arrays for view/edit", None, QtGui.QApplication.UnicodeUTF8))
@@ -230,6 +240,7 @@ class Ui_Q7OptionsWindow(object):
         self.label_4.setText(QtGui.QApplication.translate("Q7OptionsWindow", "User queries directory", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Snapshot directory", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Selection list directory", None, QtGui.QApplication.UnicodeUTF8))
+        self.__O_chlonetrace.setText(QtGui.QApplication.translate("Q7OptionsWindow", "CHLone trace", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.tab_5), QtGui.QApplication.translate("Q7OptionsWindow", "Other", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
         self.bApply.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Apply", None, QtGui.QApplication.UnicodeUTF8))

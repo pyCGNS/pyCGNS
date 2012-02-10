@@ -10,9 +10,7 @@ import os.path
 import CGNS.MAP
 
 import CGNS.NAV.wmessages as MSG
-import CGNS.NAV.moption   as MOP
-from CGNS.NAV.defaults import G__OPTIONS,G__TOOLNAME,G__TOOLVERSION
-from CGNS.NAV.defaults import G__COPYRIGHTNOTICE
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
 from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
 
@@ -44,9 +42,9 @@ class Q7Window(QWidget,object):
         self._fgprint=fgprint
         self._index=self.addChildWindow()
         if (self._index==0):
-            tit="%s:%s%.3d"%(G__TOOLNAME,self._vtype,self._index)
+            tit="%s:%s%.3d"%(OCTXT._ToolName,self._vtype,self._index)
         else:
-            tit="%s:Control"%(G__TOOLNAME)            
+            tit="%s:Control"%(OCTXT._ToolName)            
         self.setWindowTitle(tit)
         try:
             self.bBackControl.clicked.connect(self.backcontrol)
@@ -55,11 +53,11 @@ class Q7Window(QWidget,object):
     def validateOption(self,name,value):
         return True
     def getOptions(self):
-        self._options=MOP.readOptions(self)
-        if (self._options is None): self._options=G__OPTIONS
+        self._options=OCTXT._readOptions(self)
+        if (self._options is None): self._options=OCTXT()
         return self._options
     def setOptions(self):
-        MOP.writeOptions(self)
+        OCTXT._writeOptions(self)
     def getOptionValue(self,name):
         return self._options[name]
     def setOptionValue(self,name,value):
@@ -70,7 +68,7 @@ class Q7Window(QWidget,object):
     def getHistoryLastKey(self):
         return Q7Window.HISTORYLASTKEY
     def getHistory(self):
-        self._history=MOP.readHistory(self)
+        self._history=OCTXT._readHistory(self)
         if (self._history is None): self._history={}
         return self._history
     def getHistoryFile(self,file):
@@ -87,7 +85,7 @@ class Q7Window(QWidget,object):
                 self._history[filedir]=[filename]
         if (self._history=={}): self._history[filedir]=[filename]
         self._history[Q7Window.HISTORYLASTKEY]=(filedir,filename)
-        MOP.writeHistory(self)
+        OCTXT._writeHistory(self)
         return self._history
     def getLastFile(self):
         if ((self._history=={})
@@ -120,8 +118,12 @@ class Q7fingerPrint:
         f=selectedfile
         (filedir,filename)=(os.path.normpath(os.path.dirname(f)),
                             os.path.basename(f))
+        slp=OCTXT.LinkSearchPathList
+        slp+=[filedir]
+        flags=CGNS.MAP.S2P_DEFAULT
+        if (OCTXT.CHLoneTrace): flags|=CGNS.MAP.S2P_TRACE
         try:
-            (tree,links)=CGNS.MAP.load(f,CGNS.MAP.S2P_DEFAULT)
+            (tree,links)=CGNS.MAP.load(f,flags,lksearch=slp)
         except CGNS.MAP.error:
             MSG.message("Cannot open file:",filedir+'/'+filename,MSG.WARNING)
             return None

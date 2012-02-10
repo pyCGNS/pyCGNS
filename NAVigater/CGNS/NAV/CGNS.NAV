@@ -8,7 +8,26 @@
 import getopt
 import sys
 import os
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
+try:
+  import PySide.QtCore
+except:
+  print """%s: cannot import PySide.QtCore..."""%(OCTXT.ToolName)
+  sys.exit(-1)
+  
+try:
+  import vtk
+except:
+  print """%s: cannot import vtk..."""%(OCTXT.ToolName)
+  sys.exit(-1)
+  
+try:
+  import numpy
+except:
+  print """%s: cannot import numpy..."""%(OCTXT.ToolName)
+  sys.exit(-1)
+  
 prog=sys.argv[0]
 ppref='./'
 if (prog[0]=='/'):
@@ -22,27 +41,25 @@ ppref=ppref+'/../lib/python%s/site-packages'%sys.version[:3]
 if (ppref not in sys.path):
   sys.path.append(ppref)
 
-from CGNS.pyCGNSconfig import version as __vid__
-
 def usage():
-  print """CGNS.NAV v%s
-  -P <profiles-paths> : override S7PROFILEPATH variable for profile search
+  print """%s v%s
+  -P <profiles-paths> : override CGNSPROFILEPATH variable for profile search
                         path variable. It is a ':' separated list of paths.
 
   -R : recurse on all tree
   -h : help
   -v : verbose (trace)
-  """%__vid__
+  """%(OCTXT.ToolName,OCTXT.ToolVersion)
   sys.exit(-1)
 
 try:
   os.environ['DISPLAY']
 except KeyError:
-  print """CGNS.NAV: you should define a DISPLAY variable..."""
+  print """%s: you should define a DISPLAY variable..."""%(OCTXT.ToolName)
   sys.exit(-1)
   
 try:
-  ppath=os.environ['S7PROFILEPATH']
+  ppath=os.environ['CGNSPROFILEPATH']
 except KeyError:
   ppath=""
   
