@@ -52,6 +52,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._T=self._fgprint.tree
       self._selected=[]
       self._currentactor=None
+      self._camera=[]
       self._blackonwhite=False
       self.display.Initialize()
       self.display.Start()
@@ -63,6 +64,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bSuffleColors.clicked.connect(self.b_shufflecolors)
       self.bBlackColor.clicked.connect(self.b_blackandwhite)
       self.bAddView.clicked.connect(self.b_saveview)
+      self.bSnapshot.clicked.connect(self.b_loadview)
       self.bNext.clicked.connect(self.b_next)
  
   def SyncCameras(self,ren,event):
@@ -243,12 +245,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
               self._vtkren.AddActor(a[0])
 
               if (a[1] is not None):
-                  if (self._xmin>a[1][0]):self._xmin=a[1][0]
-                  if (self._ymin>a[1][2]):self._ymin=a[1][2]
-                  if (self._zmin>a[1][4]):self._zmin=a[1][4]
-                  if (self._xmax<a[1][1]):self._xmax=a[1][1]
-                  if (self._ymax>a[1][3]):self._ymax=a[1][3]
-                  if (self._zmax>a[1][5]):self._zmax=a[1][5]
+                if (self._xmin>a[1][0]):self._xmin=a[1][0]
+                if (self._ymin>a[1][2]):self._ymin=a[1][2]
+                if (self._zmin>a[1][4]):self._zmin=a[1][4]
+                if (self._xmax<a[1][1]):self._xmax=a[1][1]
+                if (self._ymax<a[1][3]):self._ymax=a[1][3]
+                if (self._zmax<a[1][5]):self._zmax=a[1][5]
                
       self._vtkren.SetBackground(1,1,1)  
       self._vtkren.ResetCamera()
@@ -346,18 +348,27 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self._vtk.GetRenderWindow().GetRenderers().GetFirstRenderer().AddActor(actor)
           self._vtk.GetRenderWindow().Render()                
       
-  def b_loadview(self,name):
-      pass
-    
+  def b_loadview(self,name=None):
+    if (self._camera!=[]):
+      self._camera=self._camera[1:]+[self._camera[0]]
+      parameters=self._camera[0]
+      camera=self._vtkren.GetActiveCamera()
+      camera.SetViewUp(parameters[0])
+      camera.SetClippingRange(parameters[1])
+      camera.SetPosition(parameters[2])
+      self._vtkren.Render()
+      self._waxs.Render()
+      self.iren.Render()
+      
   def b_saveview(self,name=None):
-      camera = self._vtkren.GetActiveCamera()
-      vname=self.cViews.currentText()
-      print 'Save view ',vname
-      print camera.GetViewUp()
-      print camera.GetDirectionOfProjection()
-      print camera.GetPosition()
-      self.cViews.addItem(vname)
-      #camera.OrthogonalizeViewUp()
+    camera = self._vtkren.GetActiveCamera()
+    vname=self.cViews.currentText()
+##     print 'Save view ',vname
+##     print 'viewup',camera.GetViewUp()
+##     print 'position',camera.GetPosition()
+##     print camera.GetFocalPoint()
+    self.cViews.addItem(vname)
+    self._camera+=[[camera.GetViewUp(),camera.GetClippingRange(),camera.GetPosition()]]
 
   def b_refresh(self,pos):
       self._vtk.GetRenderWindow().Render()
@@ -404,32 +415,31 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           (vx,vy,vz)=(0.,0.,1.)
           (px,py,pz)=(rat*cx,cy,cz)
       elif iaxis == 2:
-          (vx,vy,vz)=(0.5,0.,0.)
+          (vx,vy,vz)=(1.,0.,0.)
           (px,py,pz)=(cx,rat*cy,cz)
       elif iaxis == 3:
           (vx,vy,vz)=(0.,1.,0.)
           (px,py,pz)=(cx,cy,rat*cz)
       elif iaxis == -1:
-          (vx,vy,vz)=(0.,0.,-1.)
+          (vx,vy,vz)=(0.,1.,0.)
           (px,py,pz)=(rat*cx,cy,cz)
       elif iaxis == -2:
-          (vx,vy,vz)=(-0.5,0.,0.)
+          (vx,vy,vz)=(0.,0.,1.)
           (px,py,pz)=(cx,rat*cy,cz)
       elif iaxis == -3:
-          (vx,vy,vz)=(0.,-1.,0.)
+          (vx,vy,vz)=(1.,0.,0.)
           (px,py,pz)=(cx,cy,rat*cz)
 
       camera = self._vtkren.GetActiveCamera()
       camera.SetViewUp(vx, vy, vz)
       camera.SetFocalPoint(cx, cy, cz)
       camera.SetPosition(px, py, pz)
-      camera.OrthogonalizeViewUp()
+##       camera.OrthogonalizeViewUp()
       self._vtkren.ResetCameraClippingRange()
       self._vtkren.Render()
       self._waxs.Render()
       self._vtkren.ResetCamera()
       self.iren.Render()
-      
       self._ctxt=wVTKContext(camera)
       self._ctxt.setViewUp(vx,vy,vz)
       self._ctxt.setFocalPoint(cx,cy,cz)

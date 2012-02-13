@@ -46,14 +46,14 @@ class CGNSparser:
         shx=cx[1].shape
         scx=cx[1].reshape(shx)
         scy=cy[1].reshape(shx)
-        scz=cz[1].reshape(shx)
+        scz=cz[1].reshape(shx)        
         simin=[scx[0,:,:], scy[0,:,:], scz[0,:,:]]
         simax=[scx[-1,:,:],scy[-1,:,:],scz[-1,:,:]]
         sjmin=[scx[:,0,:], scy[:,0,:], scz[:,0,:]]
         sjmax=[scx[:,-1,:],scy[:,-1:], scz[:,-1,:]]
         skmin=[scx[:,:,0], scy[:,:,0], scz[:,:,0]]
         skmax=[scx[:,:,-1],scy[:,:,-1],scz[:,:,-1]]
-        zp=CGU.removeFirstPathItem(z)
+        zp=CGU.removeFirstPathItem(z)        
         surfpaths=[zp+'/[imin]',zp+'/[imax]',
                  zp+'/[jmin]',zp+'/[jmax]',
                  zp+'/[kmin]',zp+'/[kmax]']
@@ -87,6 +87,7 @@ class CGNSparser:
           ne=CGU.getNodeByPath(zT,e)[1]
           et=ne[0]
           eb=ne[1]
+          
           ea=CGU.getNodeByPath(zT,e+'/'+CGK.ElementConnectivity_s)[1]
           if (et in sp.QUAD_SURFACE):
             sl.append(sp.extQuadFacesPoints(ea,et,sn,mr,eb))
@@ -99,7 +100,8 @@ class CGNSparser:
 class Mesh(CGNSparser):
 
   def __init__(self,T):
-    CGNSparser.__init__(self,T)
+    
+    CGNSparser.__init__(self,T)    
     self._color=(1,0,0)
     self._actors=[]
     self._vtkelts={CGK.TRI_3:   (vtk.vtkTriangle,  (3,3)),
@@ -120,23 +122,23 @@ class Mesh(CGNSparser):
     self.parseZones()
 
   def createActors(self):
-    for z in self._zones.values():
+    for z in self._zones.values():      
       self.do_vtk(z)
     self._actors+=self.createActors_ns()
     return self._actors
 
   def createActors_ns(self):
-    actors=self.do_surface_ns(self._zones_ns)    
+    actors=self.do_surface_ns(self._zones_ns)
     return actors
     
-  def getObjectList(self):  
+  def getObjectList(self):    
     return self._actors                 
 
   def getPathList(self):
     return [a[3] for a in self._actors]
 
   def getPathFromObject(self,selectedobject):
-    for (o,p) in [(a[2],a[3]) for a in self._actors]:
+    for (o,p) in [(a[2],a[3]) for a in self._actors]:                  
         if (selectedobject==o): return p
     return ''
     
@@ -285,7 +287,7 @@ class Mesh(CGNSparser):
         a = vtk.vtkActor()
         a.SetMapper(am)
         a.GetProperty().SetRepresentationToWireframe()
-        actors+=[(a,None,sg,'/'+path)]
+        actors+=[(a,a.GetBounds(),sg,'/'+path)]
     return actors
 
   def def_volume(self,n):
