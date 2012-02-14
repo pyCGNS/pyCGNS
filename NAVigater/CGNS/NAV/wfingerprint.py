@@ -124,8 +124,10 @@ class Q7fingerPrint:
         if (OCTXT.CHLoneTrace): flags|=CGNS.MAP.S2P_TRACE
         try:
             (tree,links)=CGNS.MAP.load(f,flags,lksearch=slp)
-        except CGNS.MAP.error:
-            MSG.message("Cannot open file:",filedir+'/'+filename,MSG.WARNING)
+        except CGNS.MAP.error,e:
+            control.readyCursor()
+            txt="""The current operation has been aborted, while trying to load a file, the following error occurs:"""
+            MSG.wError(e[0],txt,e[1])
             return None
         return Q7fingerPrint(control,filedir,filename,tree,links)
     @classmethod
