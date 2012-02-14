@@ -406,7 +406,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self.cCurrentPath.addItem(i)
           
   def setAxis(self,pos,iaxis):
-      fit=self.cFit.isChecked()
       rat=50
       cx = (0.5*(self._xmax-self._xmin))
       cy = (0.5*(self._ymax-self._ymin))
