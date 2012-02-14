@@ -14,6 +14,7 @@ import numpy as NPY
 
 import random
 import vtk
+import math
 
 # ----------------------------------------------------------------------------
 
@@ -406,44 +407,39 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self.cCurrentPath.addItem(i)
           
   def setAxis(self,pos,iaxis):
-      rat=50
-      cx = (0.5*(self._xmax-self._xmin))
-      cy = (0.5*(self._ymax-self._ymin))
-      cz = (0.5*(self._zmax-self._zmin))
-      if iaxis == 1:
-          (vx,vy,vz)=(0.,0.,1.)
-          (px,py,pz)=(rat*cx,cy,cz)
-      elif iaxis == 2:
-          (vx,vy,vz)=(1.,0.,0.)
-          (px,py,pz)=(cx,rat*cy,cz)
-      elif iaxis == 3:
-          (vx,vy,vz)=(0.,1.,0.)
-          (px,py,pz)=(cx,cy,rat*cz)
-      elif iaxis == -1:
-          (vx,vy,vz)=(0.,1.,0.)
-          (px,py,pz)=(rat*cx,cy,cz)
-      elif iaxis == -2:
-          (vx,vy,vz)=(0.,0.,1.)
-          (px,py,pz)=(cx,rat*cy,cz)
-      elif iaxis == -3:
-          (vx,vy,vz)=(1.,0.,0.)
-          (px,py,pz)=(cx,cy,rat*cz)
-
-      camera = self._vtkren.GetActiveCamera()
-      camera.SetViewUp(vx, vy, vz)
-      camera.SetFocalPoint(cx, cy, cz)
-      camera.SetPosition(px, py, pz)
-##       camera.OrthogonalizeViewUp()
-      self._vtkren.ResetCameraClippingRange()
-      self._vtkren.Render()
-      self._waxs.Render()
-      self._vtkren.ResetCamera()
-      self.iren.Render()
-      self._ctxt=wVTKContext(camera)
-      self._ctxt.setViewUp(vx,vy,vz)
-      self._ctxt.setFocalPoint(cx,cy,cz)
-      self._ctxt.setPosition(px,py,pz)
-
+    camera=self._vtkren.GetActiveCamera()
+    fp=camera.GetFocalPoint()
+    pos=camera.GetPosition()
+    distance=math.sqrt((fp[0]-pos[0])*(fp[0]-pos[0])+(fp[1]-pos[1])*(fp[1]-pos[1])+(fp[2]-pos[2])*(fp[2]-pos[2]))
+    if iaxis == 1:
+      (vx,vy,vz)=(0.,0.,1.)
+      (px,py,pz)=(fp[0]+distance,fp[1],fp[2])
+    elif iaxis == 2:
+      (vx,vy,vz)=(0.,0.,1.)
+      (px,py,pz)=(fp[0],fp[1]+distance,fp[2])
+    elif iaxis == 3:
+      (vx,vy,vz)=(0.,1.,0.)
+      (px,py,pz)=(fp[0],fp[1],fp[2]+distance)
+    elif iaxis == -1:
+      (vx,vy,vz)=(0.,0.,1.)
+      (px,py,pz)=(fp[0]-distance,fp[1],fp[2])
+    elif iaxis == -2:
+      (vx,vy,vz)=(0.,0.,1.)
+      (px,py,pz)=(fp[0],fp[1]-distance,fp[2])
+    elif iaxis == -3:
+      (vx,vy,vz)=(0.,1.,0.)
+      (px,py,pz)=(fp[0],fp[1],fp[2]-distance)
+    camera.SetViewUp(vx, vy, vz)
+    camera.SetPosition(px, py, pz)
+    self._vtkren.ResetCameraClippingRange()
+    self._vtkren.Render()
+    self._waxs.Render()
+    self._vtkren.ResetCamera()
+    self.iren.Render()
+    self._ctxt=wVTKContext(camera)
+    self._ctxt.setViewUp(vx,vy,vz)
+    self._ctxt.setPosition(px,py,pz)
+          
   def b_surf(self,pos):
       if (not self._p_wire):
           self.b_wire(pos)
