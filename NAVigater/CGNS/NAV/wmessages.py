@@ -23,9 +23,17 @@ def message(text,info,btype=INFO):
       msgBox.setStandardButtons(QMessageBox.Ok)
       msgBox.setDefaultButton(QMessageBox.Ok)
       msgBox.setIcon(QMessageBox.Warning)
+  if (btype == ERROR):
+      msgBox.setStandardButtons(QMessageBox.Ok)
+      msgBox.setDefaultButton(QMessageBox.Ok)
+      msgBox.setIconPixmap(QPixmap(":/images/icons/cgSpy.gif"))
   if (btype == YESNO):
       msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
       msgBox.setDefaultButton(QMessageBox.No)
       msgBox.setIcon(QMessageBox.Question)
   return msgBox.exec_()
   
+def wError(code,info,error):
+  filler=160*'-'
+  error="<b>%s</b><br>"%error
+  message("<big>ERROR #%d</big><br>%s%s"%(code,filler,info),error,ERROR)

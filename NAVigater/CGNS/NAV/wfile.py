@@ -9,11 +9,12 @@ from PySide.QtCore    import *
 from PySide.QtGui     import *
 from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
 
-import CGNS.NAV.defaults  as CGD
+from CGNS.NAV.moption import Q7OptionContext  as OCTXT
 import CGNS.NAV.wmessages as MSG
 
 import os.path
 import stat
+import string
 
 LOADBUTTON='Load'
 SAVEBUTTON='Save'
@@ -33,16 +34,14 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         p=self.model.filePath(idx)
         if not self.checkPermission(p): return False
         if (os.path.isdir(p)):
-            if (self.wparent.cShowDirs.checkState()==Qt.Checked):
+            if (self.wparent.cShowDirs.checkState()!=Qt.Checked):
                 if (len(p)>len(self.wparent.selecteddir)): return False
             return True
         (fname,ext)=os.path.splitext(os.path.basename(p))
         xlist=[]
         self.wparent.getBoxes()
-        if (self.control.getOptionValue(CGD.G__FILTERCGNSFILES)):
-            xlist+=self.control.getOptionValue(CGD.G__CGNSFILEEXTENSION)
-        if (self.control.getOptionValue(CGD.G__FILTERHDFFILES)):
-            xlist+=self.control.getOptionValue(CGD.G__HDFFILEEXTENSION)
+        if (OCTXT.FilterCGNSFiles): xlist+=OCTXT.CGNSFileExtension
+        if (OCTXT.FilterHDFFiles):  xlist+=OCTXT.HDFFileExtension
         if (self.wparent.cShowAll.checkState()==Qt.Checked): xlist=[]
         if ((xlist == []) or (ext in xlist)): return True
         return False
@@ -139,15 +138,15 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.expandCols()
         self.setBoxes()
     def getOpt(self,name):
-        return getattr(self,'__O_'+name)
+        return getattr(self,'__O_'+string.lower(name))
     def setBoxes(self):
-        ckh=self.getOpt(CGD.G__FILTERHDFFILES)
-        ckg=self.getOpt(CGD.G__FILTERCGNSFILES)
-        if (self.parent.getOptionValue(CGD.G__FILTERHDFFILES)):
+        ckh=self.getOpt('FilterHDFFiles')
+        ckg=self.getOpt('FilterCGNSFiles')
+        if (self.parent.getOptionValue('FilterHDFFiles')):
             ckh.setCheckState(Qt.Checked)
         else:
             ckh.setCheckState(Qt.Unchecked)
-        if (self.parent.getOptionValue(CGD.G__FILTERCGNSFILES)):
+        if (self.parent.getOptionValue('FilterCGNSFiles')):
             ckg.setCheckState(Qt.Checked)
         else:
             ckg.setCheckState(Qt.Unchecked)
@@ -155,14 +154,14 @@ class Q7File(QWidget,Ui_Q7FileWindow):
               and (ckg.checkState()==Qt.Unchecked)):
           self.cShowAll.setCheckState(Qt.Checked)
     def getBoxes(self):
-        if (self.getOpt(CGD.G__FILTERHDFFILES).checkState()==Qt.Unchecked):
-            self.parent.setOptionValue(CGD.G__FILTERHDFFILES,False)
+        if (self.getOpt('FilterHDFFiles').checkState()==Qt.Unchecked):
+            self.parent.setOptionValue('FilterHDFFiles',False)
         else: 
-            self.parent.setOptionValue(CGD.G__FILTERHDFFILES,True)           
-        if (self.getOpt(CGD.G__FILTERCGNSFILES).checkState()==Qt.Unchecked):
-            self.parent.setOptionValue(CGD.G__FILTERCGNSFILES,False)
+            self.parent.setOptionValue('FilterHDFFiles',True)           
+        if (self.getOpt('FilterCGNSFiles').checkState()==Qt.Unchecked):
+            self.parent.setOptionValue('FilterCGNSFiles',False)
         else: 
-            self.parent.setOptionValue(CGD.G__FILTERCGNSFILES,True)           
+            self.parent.setOptionValue('FilterCGNSFiles',True)           
     def expandCols(self,*args):
         self.getBoxes()
         for n in range(3):

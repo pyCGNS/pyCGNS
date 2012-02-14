@@ -211,20 +211,20 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+         <normaloff>:/images/icons/save-tree.gif</normaloff>:/images/icons/save-tree.gif</iconset>
        </property>
       </widget>
       <widget class="QCheckBox" name="cShowAll">
        <property name="geometry">
         <rect>
-         <x>610</x>
+         <x>570</x>
          <y>40</y>
          <width>91</width>
          <height>22</height>
         </rect>
        </property>
        <property name="text">
-        <string>Show all</string>
+        <string>All</string>
        </property>
       </widget>
       <widget class="QPushButton" name="bBack">
@@ -261,12 +261,15 @@
         <rect>
          <x>470</x>
          <y>40</y>
-         <width>141</width>
+         <width>91</width>
          <height>22</height>
         </rect>
        </property>
        <property name="text">
-        <string>Show directories</string>
+        <string>Directories</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </widget>

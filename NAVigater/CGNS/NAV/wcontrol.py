@@ -12,12 +12,12 @@ from PySide.QtGui import *
 from CGNS.NAV.Q7ControlWindow import Ui_Q7ControlWindow
 from CGNS.NAV.wfile import Q7File
 from CGNS.NAV.woption import Q7Option
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wtree import Q7Tree
 from CGNS.NAV.mtree import Q7TreeModel
 from CGNS.NAV.wfingerprint import Q7fingerPrint, Q7Window
 
 import CGNS.NAV.wmessages as MSG
-from CGNS.NAV.defaults import G__TOOLNAME, G__TOOLVERSION, G__COPYRIGHTNOTICE
 
 # -----------------------------------------------------------------
 class Q7SignalPool(QObject):
@@ -69,13 +69,16 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             self.wOption=Q7Option(self)
         self.wOption.show()
     def about(self):
-        MSG.message("About CGNS.NAV",
-                    """<b>%s %s</b><p>%s<p>http://www.onera.fr"""\
-                    %(G__TOOLNAME,G__TOOLVERSION,G__COPYRIGHTNOTICE),MSG.INFO)
+        MSG.message("About %s"%OCTXT._ToolName,
+               """<b>%s %s</b><p>%s<p>http://www.onera.fr"""\
+               %(OCTXT._ToolName,OCTXT._ToolVersion,OCTXT._CopyrightNotice),
+               MSG.INFO)
     def closeApplication(self):
         reply = MSG.message('Double check...',
-            """Do you want to quit %s,<p>close all views<P>
-               and <b>loose</b> any modification?"""%G__TOOLNAME,MSG.YESNO)
+                            """Do you want to quit %s,<b>close all views<b><br>
+                            and forget unsaved modifications?""" \
+                            %OCTXT._ToolName,
+                            MSG.YESNO)
         if (reply == QMessageBox.Yes):
             Q7fingerPrint.closeAllTrees()
             return True

@@ -11,6 +11,7 @@ import copy
 from PySide.QtCore    import *
 from PySide.QtGui     import *
 from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 HIDEVALUE='@@HIDE@@'
 COLUMNICO=[2,4,5,6,7,8]
@@ -238,7 +239,7 @@ class Q7TreeItem(object):
             if (self.sidsValue() is None): return None
             if (type(self.sidsValue())==numpy.ndarray):
                 vsize=reduce(lambda x,y: x*y, self.sidsValue().shape)
-                if (vsize>self._control.getOptionValue('maxlengthdatadisplay')):
+                if (vsize>OCTXT.MaxLengthDataDisplay):
                     return HIDEVALUE
                 if (self.sidsValue().dtype.char in ['S','c']):
                     return self.sidsValue().tostring()
@@ -264,7 +265,7 @@ class Q7TreeModel(QAbstractItemModel):
         self._extension={}
         self._rootitem=Q7TreeItem(fgprint,(None),None)  
         self._fingerprint=fgprint
-        self._slist=fgprint.control.getOptionValue('sortedtypelist')
+        self._slist=OCTXT._SortedTypeList
         self._count=0
         self._maxrow=0
         self.parseAndUpdate(self._rootitem, self._fingerprint.tree)

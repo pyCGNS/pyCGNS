@@ -12,3 +12,4 @@ WRApper/build
 APPlicater/build
 *~
 log
+*.*.orig

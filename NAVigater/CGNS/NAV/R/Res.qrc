@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/camera-snap.gif</file>
+    <file>icons/camera-remove.gif</file>
     <file>icons/control.gif</file>
     <file>icons/merge.gif</file>
     <file>icons/camera-add.gif</file>
