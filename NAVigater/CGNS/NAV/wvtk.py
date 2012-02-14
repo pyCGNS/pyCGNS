@@ -14,7 +14,7 @@ import numpy as NPY
 
 import random
 import vtk
-import math
+
 
 # ----------------------------------------------------------------------------
 
@@ -410,7 +410,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     camera=self._vtkren.GetActiveCamera()
     fp=camera.GetFocalPoint()
     pos=camera.GetPosition()
-    distance=math.sqrt((fp[0]-pos[0])*(fp[0]-pos[0])+(fp[1]-pos[1])*(fp[1]-pos[1])+(fp[2]-pos[2])*(fp[2]-pos[2]))
+    distance=NPY.sqrt((fp[0]-pos[0])*(fp[0]-pos[0])+(fp[1]-pos[1])*(fp[1]-pos[1])+(fp[2]-pos[2])*(fp[2]-pos[2]))
     if iaxis == 1:
       (vx,vy,vz)=(0.,0.,1.)
       (px,py,pz)=(fp[0]+distance,fp[1],fp[2])
@@ -429,8 +429,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     elif iaxis == -3:
       (vx,vy,vz)=(0.,1.,0.)
       (px,py,pz)=(fp[0],fp[1],fp[2]-distance)
-    camera.SetViewUp(vx, vy, vz)
-    camera.SetPosition(px, py, pz)
+    camera.SetViewUp(vx,vy,vz)
+    camera.SetPosition(px,py,pz)
     self._vtkren.ResetCameraClippingRange()
     self._vtkren.Render()
     self._waxs.Render()
