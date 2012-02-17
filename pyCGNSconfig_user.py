@@ -53,7 +53,7 @@ HDF5_PATH_LIBRARIES   = [HDF5_INSTALL+'/lib',HDF5_INSTALL2+'/lib']
 #NUMPY_VERSION         = ''
 #NUMPY_PATH_INCLUDES   = []
 NUMPY_PATH_LIBRARIES  = ['/opt/intel/Compiler/11.1/069/lib/intel64']
-NUMPY_LINK_LIBRARIES  = ['irc']
+#NUMPY_LINK_LIBRARIES  = ['irc']
 #NUMPY_EXTRA_ARGS      = [] 
 
 # --- stuff to add for CGNS/MLL (set the HAS_MLL to True)
