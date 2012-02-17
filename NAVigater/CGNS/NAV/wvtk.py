@@ -9,7 +9,7 @@ from PySide.QtGui     import *
 from CGNS.NAV.Q7VTKWindow import Ui_Q7VTKWindow
 from CGNS.NAV.wfingerprint import Q7Window
 from CGNS.NAV.mparser import Mesh
-from CGNS.NAV.defaults import G__COLORS
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import numpy as NPY
 
 import random
@@ -304,7 +304,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.setColors()
       
   def getRandomColor(self):
-      cl=G__COLORS[G__COLORS.keys()[random.randrange(len(G__COLORS.keys()))]]
+      clst=OCTXT._ColorList
+      cl=clst[clst.keys()[random.randrange(len(clst.keys()))]]
       return cl
       
   def setColors(self,randcolors=False):

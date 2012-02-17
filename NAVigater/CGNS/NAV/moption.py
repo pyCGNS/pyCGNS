@@ -57,7 +57,7 @@ All rights reserved in accordance with GPL v2
 NO WARRANTY :
 Check GPL v2 sections 15 and 16 about loss of data or corrupted data
 """
-    FixedFontTable='FixedFontTable'
+    FixedFontTable='fixed'
 
     _ColorList={\
     'cold_grey':                   (0.5000, 0.5400, 0.5300),

@@ -15,20 +15,20 @@ from CGNS.NAV.wquery import Q7Query
 from CGNS.NAV.mquery import Q7QueryTableModel
 from CGNS.NAV.mtree import Q7TreeModel
 from CGNS.NAV.mtree import Q7TreeItem
-import CGNS.NAV.wconstants as Q7WC
 from CGNS.NAV.wfingerprint import Q7Window
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
 class Q7TreeItemDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         if ((index.column()==0) and
-            (index.internalPointer().sidsName() not in Q7WC.reservedNames)):
+            (index.internalPointer().sidsName() not in OCTXT._ReservedNames)):
             option.font.setWeight(QFont.Bold)
             QStyledItemDelegate.paint(self, painter, option, index)
             option.font.setWeight(QFont.Light)
         elif (index.column()==8):
-            option.font.setFamily(Q7WC.FixedFontTable)
+            option.font.setFamily(OCTXT.FixedFontTable)
             QStyledItemDelegate.paint(self, painter, option, index)
         elif (index.column() in [2,4,5,6,7]):
             option.decorationPosition=QStyleOptionViewItem.Top
