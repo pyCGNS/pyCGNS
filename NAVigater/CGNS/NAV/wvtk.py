@@ -9,7 +9,7 @@ from PySide.QtGui     import *
 from CGNS.NAV.Q7VTKWindow import Ui_Q7VTKWindow
 from CGNS.NAV.wfingerprint import Q7Window
 from CGNS.NAV.mparser import Mesh
-from CGNS.NAV.defaults import G__COLORS
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import numpy as NPY
 
 import random
@@ -53,7 +53,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._T=self._fgprint.tree
       self._selected=[]
       self._currentactor=None
-      self._camera=[]
+      self._camera={}
       self._blackonwhite=False
       self.display.Initialize()
       self.display.Start()
@@ -66,24 +66,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bBlackColor.clicked.connect(self.b_blackandwhite)
       self.bAddView.clicked.connect(self.b_saveview)
       self.bNext.clicked.connect(self.b_next)
-
-      lcd=QLCDNumber(self)
-      self.horizontalSlider_3.setRange(5,85)
-      self.horizontalSlider_3.setValue(30)
-      self.horizontalSlider_3.valueChanged.connect(lcd.display)
-      self.horizontalSlider_3.valueChanged.connect(self.setViewAngle)
-
-##       lcd1=QLCDNumber(self)
-      self.horizontalSlider.setRange(1,100)
-      self.horizontalSlider.setValue(50)
-##       self.horizontalSlider.valueChanged.connect(lcd1.display)
-      self.horizontalSlider.valueChanged.connect(self.setFarClippingPlane)
-
-##       lcd2=QLCDNumber(self)
-      self.horizontalSlider_2.setRange(1,1000)
-      self.horizontalSlider_2.setValue(25)
-##       self.horizontalSlider_2.valueChanged.connect(lcd2.display)
-      self.horizontalSlider_2.valueChanged.connect(self.setNearClippingPlane)
+      QObject.connect(self.cViews,SIGNAL("currentIndexChanged(int)"),self.b_loadview)
 
   def setNearClippingPlane(self,plane):
     camera=self._vtkren.GetActiveCamera()
@@ -145,15 +128,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 ##     angle=camera.GetViewAngle()
 ##     taille=2*NPY.tan(angle/2.*NPY.pi/360)*dist
 
-##     print taille
     
     self._vtkren.Render()
     self._waxs.Render()
     self.iren.Render()
 
-##     print dist,distance
-##     print camera
-         
+        
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
     self.camAxes.SetViewUp(cam.GetViewUp())
@@ -356,7 +336,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._ctxt.setPosition(self.px,self.py,self.pz)
                 
       istyle = vtk.vtkInteractorStyleTrackballCamera()
-      istyle.AutoAdjustCameraClippingRangeOff()
+      istyle.AutoAdjustCameraClippingRangeOn()
       self._vtk.SetInteractorStyle(istyle)
       
       self._vtk.AddObserver("KeyPressEvent", self.CharCallback)
@@ -390,7 +370,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.setColors()
       
   def getRandomColor(self):
-      cl=G__COLORS[G__COLORS.keys()[random.randrange(len(G__COLORS.keys()))]]
+      clst=OCTXT._ColorList
+      cl=clst[clst.keys()[random.randrange(len(clst.keys()))]]
       return cl
       
   def setColors(self,randcolors=False):
@@ -435,27 +416,28 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self._vtk.GetRenderWindow().Render()                
       
   def b_loadview(self,name=None):
-    if (self._camera!=[]):
-      self._camera=self._camera[1:]+[self._camera[0]]
-      parameters=self._camera[0]
-      camera=self._vtkren.GetActiveCamera()
-      camera.SetViewUp(parameters[0])
-      camera.SetClippingRange(parameters[1])
-      camera.SetPosition(parameters[2])
-      self._vtkren.Render()
-      self._waxs.Render()
-      self.iren.Render()
+      vname=self.cViews.currentText()
+      if (vname!=""):
+          parameters=self._camera[vname]
+          camera=self._vtkren.GetActiveCamera()
+          camera.SetViewUp(parameters[0])
+          camera.SetClippingRange(parameters[1])
+          camera.SetPosition(parameters[2])
+          self._vtkren.Render()
+          self._waxs.Render()
+          self.iren.Render()
       
   def b_saveview(self,name=None):
+    if (self._camera=={}):
+        self.cViews.addItem("")          
     camera = self._vtkren.GetActiveCamera()
-    vname=self.cViews.currentText()
-    print camera
-##     print 'Save view ',vname
-##     print 'viewup',camera.GetViewUp()
-##     print 'position',camera.GetPosition()
-##     print camera.GetFocalPoint()
-    self.cViews.addItem(vname)
-    self._camera+=[[camera.GetViewUp(),camera.GetClippingRange(),camera.GetPosition()]]
+    n=1
+    name='View %s' % n 
+    while self._camera.has_key(name):
+        n+=1
+        name='View %s' % n
+    self._camera[name]=(camera.GetViewUp(),camera.GetClippingRange(),camera.GetPosition())
+    self.cViews.addItem(name)
 
   def b_refresh(self,pos):
       self._vtk.GetRenderWindow().Render()
@@ -470,9 +452,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           w.SetInput(actor.GetMapper().GetInput())
           actor = actors.GetNextItem()
       w.Write()
-
-  def changeview(self):
-    print 'toto'
 
   def b_xaxis(self,pos=None):
       if (self.cMirror.isChecked()): self.setAxis(pos,-1)
