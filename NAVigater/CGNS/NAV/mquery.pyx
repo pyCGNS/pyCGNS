@@ -10,81 +10,33 @@ import numpy
 from PySide.QtCore    import *
 from PySide.QtGui     import *
 
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+import CGNS.NAV.moption as OCST
+
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-Q_OR    ='or'
-Q_AND   ='and'
-Q_ORNOT ='or not'
-Q_ANDNOT='and not'
-
-Q_OPERATOR=(Q_OR,Q_AND,Q_ORNOT,Q_ANDNOT)
-
-Q_PARENT  ='Parent'
-Q_NODE    ='Node'
-Q_CHILDREN='Children'
-
-Q_TARGET=(Q_PARENT,Q_NODE,Q_CHILDREN)
-
-Q_CGNSTYPE='CGNS type'
-Q_VALUETYPE='Value type'
-Q_NAME='Name'
-Q_VALUE='Value'
-Q_SCRIPT='Python script'
-
-Q_ATTRIBUTE=(Q_CGNSTYPE,Q_VALUETYPE,Q_NAME,Q_VALUE,Q_SCRIPT)
-
-Q_VAR_NAME='NAME'
-Q_VAR_VALUE='VALUE'
-Q_VAR_CGNSTYPE='CGNSTYPE'
-Q_VAR_CHILDREN='CHILDREN'
-Q_VAR_TREE='TREE'
-Q_VAR_PATH='PATH'
-Q_VAR_RESULT='RESULT'
-Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
-
-Q_SCRIPT_PRE="""
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.cgnsutils as CGU
-"""
-
-Q_SCRIPT_POST="""
-%s[0]=%s
-"""%(Q_VAR_RESULT_LIST,Q_VAR_RESULT)
-
-DEFAULTQUERIES=[
-    {'name':'Families','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.Family_ts)
-        ]},
-    {'name':'Family names','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.FamilyName_ts)
-        ]},
-    {'name':'BCs','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.BC_ts)
-        ]},
-    {'name':'QUADs','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
-        (Q_AND, Q_NODE, Q_SCRIPT, 'RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)')
-        ]},
-    {'name':'TRIs','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
-        (Q_AND, Q_NODE, Q_SCRIPT, """RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)""")
-        ]},
-    {'name':' ','clauses':[
-        (' '*8,' '*16,' '*16,' '),
-        (' ',' ',' ',' '),
-        (' ',' ',' ',' '),
-        (' ',' ',' ',' '),
-        (' ',' ',' ',' '),
-        (' ',' ',' ',' '),
-        (' ',' ',' ',' '),
-        (' ',' ',' ',' '),
-        (' ',' ',' ',' '),
-        (' ',' ',' ',' '),
-        ]},
-]
+BLANKQUERYKEY=' '
+BLANKQUERY=[[ BLANKQUERYKEY, # name
+             [   # clause
+                 (' '*8,' '*16,' '*16,' '),
+                 (' ',' ',' ',' '),
+                 (' ',' ',' ',' '),
+                 (' ',' ',' ',' '),
+                 (' ',' ',' ',' '),
+                 (' ',' ',' ',' '),
+                 (' ',' ',' ',' '),
+                 (' ',' ',' ',' '),
+                 (' ',' ',' ',' '),
+                 (' ',' ',' ',' '),
+                 ]]]
 # -----------------------------------------------------------------
 def sameVal(n,v):
+    if (n is None):
+        if (v is None): return True
+        return False
+    if (n.dtype.char in ['S','c']): return (n.tostring() == v)
+    if (n.dtype.char in ['d','f','i','l']): return (n.flat[0] == v)
     if (n==v): return True
     return False
 # -----------------------------------------------------------------
@@ -95,19 +47,19 @@ def sameValType(n,v):
 # -----------------------------------------------------------------
 def evalScript(node,parent,tree,path,val):
     l=locals()
-    l[Q_VAR_RESULT_LIST]=[False]
-    l[Q_VAR_NAME]=node[0]
-    l[Q_VAR_VALUE]=node[1]
-    l[Q_VAR_CGNSTYPE]=node[3]
-    l[Q_VAR_CHILDREN]=node[2]
-    l[Q_VAR_TREE]=tree
-    l[Q_VAR_PATH]=path
-    pre=Q_SCRIPT_PRE+val+Q_SCRIPT_POST
+    l[OCST.Q_VAR_RESULT_LIST]=[False]
+    l[OCST.Q_VAR_NAME]=node[0]
+    l[OCST.Q_VAR_VALUE]=node[1]
+    l[OCST.Q_VAR_CGNSTYPE]=node[3]
+    l[OCST.Q_VAR_CHILDREN]=node[2]
+    l[OCST.Q_VAR_TREE]=tree
+    l[OCST.Q_VAR_PATH]=path
+    pre=OCST.Q_SCRIPT_PRE+val+OCST.Q_SCRIPT_POST
     try:
       eval(compile(pre,'<string>','exec'),globals(),l)
     except:
       RESULT=False
-    RESULT=l[Q_VAR_RESULT_LIST][0]
+    RESULT=l[OCST.Q_VAR_RESULT_LIST][0]
     return RESULT
 # -----------------------------------------------------------------
 def parseAndSelect(tree,node,parent,path,clause):
@@ -116,24 +68,26 @@ def parseAndSelect(tree,node,parent,path,clause):
     for (opr,tgt,att,val) in clause:
       P=False
       
-      N=(tgt==Q_PARENT)      
-      P|=(N and(att==Q_CGNSTYPE)  and (parent[3]==val))
-      P|=(N and(att==Q_NAME)      and (parent[0]==val))
-      P|=(N and(att==Q_VALUE)     and (sameVal(parent[1],val)))
-      P|=(N and(att==Q_VALUETYPE) and (sameValType(parent[1],val)))
-      P|=(N and(att==Q_SCRIPT)    and (evalScript(node,parent,tree,path,val)))
+      N=(tgt==OCST.Q_PARENT)      
+      P|=(N and(att==OCST.Q_CGNSTYPE)  and (parent[3]==val))
+      P|=(N and(att==OCST.Q_NAME)      and (parent[0]==val))
+      P|=(N and(att==OCST.Q_VALUE)     and (sameVal(parent[1],val)))
+      P|=(N and(att==OCST.Q_VALUETYPE) and (sameValType(parent[1],val)))
+      P|=(N and(att==OCST.Q_SCRIPT)    and (evalScript(node,parent,tree,
+                                                        path,val)))
 
-      N=(tgt==Q_NODE)      
-      P|=(N and(att==Q_CGNSTYPE)  and (node[3]==val))
-      P|=(N and(att==Q_NAME)      and (node[0]==val))
-      P|=(N and(att==Q_VALUE)     and (sameVal(node[1],val)))
-      P|=(N and(att==Q_VALUETYPE) and (sameValType(node[1],val)))
-      P|=(N and(att==Q_SCRIPT)    and (evalScript(node,parent,tree,path,val)))
+      N=(tgt==OCST.Q_NODE)      
+      P|=(N and(att==OCST.Q_CGNSTYPE)  and (node[3]==val))
+      P|=(N and(att==OCST.Q_NAME)      and (node[0]==val))
+      P|=(N and(att==OCST.Q_VALUE)     and (sameVal(node[1],val)))
+      P|=(N and(att==OCST.Q_VALUETYPE) and (sameValType(node[1],val)))
+      P|=(N and(att==OCST.Q_SCRIPT)    and (evalScript(node,parent,tree,
+                                                        path,val)))
 
-      if (opr==Q_OR):     Q|= P
-      if (opr==Q_AND):    Q&= P
-      if (opr==Q_ORNOT):  Q|=~P
-      if (opr==Q_ANDNOT): Q&=~P
+      if (opr==OCST.Q_OR):     Q|= P
+      if (opr==OCST.Q_AND):    Q&= P
+      if (opr==OCST.Q_ORNOT):  Q|=~P
+      if (opr==OCST.Q_ANDNOT): Q&=~P
       
     R=[]
     if (Q): R=[path]
@@ -160,13 +114,22 @@ class Q7QueryEntry(object):
         self.clause[r]=p
         return 1
     def __str__(self):
-        s="{'name':'%s','clauses':["%self.name
+        s="['%s',["%self.name
         for c in self.clause:
-            c0=Q_ENUMSTRINGS[c[0]]
-            c1=Q_ENUMSTRINGS[c[1]]
-            c2=Q_ENUMSTRINGS[c[2]]
+            if (c[0]==OCST.Q_OR):       c0="CGO.Q_OR"
+            if (c[0]==OCST.Q_AND):      c0="CGO.Q_AND"
+            if (c[0]==OCST.Q_ORNOT):    c0="CGO.Q_ORNOT"
+            if (c[0]==OCST.Q_ANDNOT):   c0="CGO.Q_ANDNOT"
+            if (c[1]==OCST.Q_PARENT):   c1="CGO.Q_PARENT"
+            if (c[1]==OCST.Q_NODE):     c1="CGO.Q_NODE"
+            if (c[1]==OCST.Q_CHILDREN): c1="CGO.Q_CHILDREN"
+            if (c[2]==OCST.Q_CGNSTYPE): c2="CGO.Q_CGNSTYPE"
+            if (c[2]==OCST.Q_VALUETYPE):c2="CGO.Q_VALUETYPE"
+            if (c[2]==OCST.Q_NAME):     c2="CGO.Q_NAME"
+            if (c[2]==OCST.Q_VALUE):    c2="CGO.Q_VALUE"
+            if (c[2]==OCST.Q_SCRIPT):   c2="CGO.Q_SCRIPT"
             s+='(%s,%s,%s,"""%s"""),'%(c0,c1,c2,c[3])
-        s+="]},"
+        s+="]]"
         return s
     def run(self,tree):
         result=parseAndSelect(tree,tree,[None,None,[],None],'',self.clause)
@@ -184,7 +147,6 @@ class Q7EditBoxDelegate(QItemDelegate):
          QItemDelegate.__init__(self, owner)
          self.edit=editwidget
          self.parent=owner
- 
      def createEditor(self, parent, option, index):
          editor = QPlainTextEdit(self.edit)
          fs=self.edit.frameSize()
@@ -192,16 +154,13 @@ class Q7EditBoxDelegate(QItemDelegate):
          editor.installEventFilter(self)
          self.setEditorData(editor,index)
          return editor
- 
      def setEditorData(self, editor, index):
          value = index.data()
          editor.clear()
          editor.insertPlainText(value)
- 
      def setModelData(self,editor,model,index):
          value = editor.toPlainText()
          model.setData(index,value,role=Qt.EditRole)
-
      def updateEditorGeometry(self, editor, option, index):
          editor.setGeometry(*editor.transgeometry)
 
@@ -211,7 +170,6 @@ class Q7ComboBoxDelegate(QItemDelegate):
          QItemDelegate.__init__(self, owner)
          self.itemslist = itemslist
          self.parent=owner
- 
      def createEditor(self, parent, option, index):
          editor = QComboBox(parent)
          editor.addItems(self.itemslist)
@@ -219,36 +177,32 @@ class Q7ComboBoxDelegate(QItemDelegate):
          editor.installEventFilter(self)
          self.setEditorData(editor,index)
          return editor
- 
      def setEditorData(self, editor, index):
          value = index.data()
          ix=editor.findText(value)
          if (ix!=-1): editor.setCurrentIndex(ix)
- 
      def setModelData(self,editor,model,index):
          value = editor.currentText()
          model.setData(index,value,role=Qt.EditRole)
 
 # -----------------------------------------------------------------
 class Q7QueryTableModel(QAbstractTableModel):  
-    def __init__(self,parent):  
+    def __init__(self,parent):
         QAbstractTableModel.__init__(self,parent)
-        self._queries={}
+        self._allQueries={}
         self._cols=4
         self._parent=parent
-        self._previousrows=0
-        self.currentQuery=None
+        self._previousRows=0
+        self._currentQuery=None
+        self.loadUserQueries()
         self.fillQueries()
-        self.defaultQueriesList=self._queries.keys()
-        self.setDefaultQuery()
-    def setDefaultQuery(self):
-        self.setCurrentQuery(self.defaultQueriesList[0])
+        self.setCurrentQuery(self.queriesNamesList()[0]) 
     def getCurrentQuery(self):
-        return self.currentQuery
+        return self._currentQuery
     def setCurrentQuery(self,name):
-        self._previousrows=self.rowCount()
-        self.currentQuery=name
-        self.removeRows(0,self._previousrows)
+        self._previousRows=self.rowCount()
+        self._currentQuery=name
+        self.removeRows(0,self._previousRows)
         self.insertRows(0,self.rowCount())
         sig=SIGNAL("dataChanged(const QModelIndex&, const QModelIndex &)")
         imin=self.minIndex()
@@ -259,16 +213,16 @@ class Q7QueryTableModel(QAbstractTableModel):
     def columnCount(self, parent):
         return self._cols
     def rowCount(self, parent=None):
-        if ((self.currentQuery is not None) and (self._queries!={})):
-            return self._queries[self.currentQuery].clausecount
+        if ((self._currentQuery is not None) and (self._allQueries!={})):
+            return self._allQueries[self._currentQuery].clausecount
         return 0
     def minIndex(self):
         return QModelIndex(self.createIndex(0,0))
     def maxIndex(self):
-        maxl=self._queries[self.currentQuery].clausecount
+        maxl=self._allQueries[self._currentQuery].clausecount
         return QModelIndex(self.createIndex(maxl,self._cols))
     def insertRows(self,row,count):
-        q=self._queries[self.currentQuery]
+        q=self._allQueries[self._currentQuery]
         for r in range(count):
             for c in range(self._cols):
                 self.setData(self.createIndex(r,c),q.clause[r][c])
@@ -280,7 +234,7 @@ class Q7QueryTableModel(QAbstractTableModel):
         l=index.row()
         c=index.column()
         if (role not in (Qt.EditRole,Qt.DisplayRole)) :return
-        q=self._queries[self.currentQuery]
+        q=self._allQueries[self._currentQuery]
         if ((c>self._cols) or (l>q.clausecount)): return
         return q.clause[l][c]
     def flags(self, index):
@@ -291,20 +245,38 @@ class Q7QueryTableModel(QAbstractTableModel):
         r=index.row()
         c=index.column()
         if (role==Qt.EditRole):
-            self._queries[self.currentQuery].clauseChange(r,c,value)
+            self._allQueries[self._currentQuery].clauseChange(r,c,value)
         return value
     def fillQueries(self):
-        for qe in DEFAULTQUERIES:
-            q=Q7QueryEntry(qe['name'])
-            for c in qe['clauses']:
+        allqueriestext=self._userQueriesText+OCTXT._UsualQueriesText+BLANKQUERY
+        self._defaultQueriesNames=[n[0] for n in OCTXT._UsualQueriesText]
+        self._defaultQueriesNames+=[BLANKQUERYKEY]
+        for qe in allqueriestext:
+            q=Q7QueryEntry(qe[0])
+            for c in qe[1]:
                 q.addClause(*c)
-            self._queries[qe['name']]=q
-    def queries(self):
-        return self._queries
+            self._allQueries[qe[0]]=q
+    def getQuery(self,name):
+        if (name in self.queriesNamesList()): return self._allQueries[name]
+        return None
+    def loadUserQueries(self):
+        self._userQueriesText=OCTXT._readQueries(self)
+        if (self._userQueriesText is None): self._userQueriesText=[]
+        return self._userQueriesText
+    def saveUserQueries(self):
+        ql=[]
+        for q in self._allQueries:
+            if (q not in self._defaultQueriesNames):
+                ql+=[str(self._allQueries[q])]
+        OCTXT._writeQueries(self,ql)
+    def queriesNamesList(self):
+        k=self._allQueries.keys()
+        k.sort()
+        return k
     def setDelegates(self,tableview,editframe):
-        opd=Q7ComboBoxDelegate(self,Q_OPERATOR)
-        tgd=Q7ComboBoxDelegate(self,Q_TARGET)
-        atd=Q7ComboBoxDelegate(self,Q_ATTRIBUTE)
+        opd=Q7ComboBoxDelegate(self,OCST.Q_OPERATOR)
+        tgd=Q7ComboBoxDelegate(self,OCST.Q_TARGET)
+        atd=Q7ComboBoxDelegate(self,OCST.Q_ATTRIBUTE)
         scd=Q7EditBoxDelegate(self,editframe)
         tableview.setItemDelegateForColumn(0,opd)
         tableview.setItemDelegateForColumn(1,tgd)

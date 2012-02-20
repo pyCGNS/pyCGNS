@@ -16,6 +16,52 @@ from CGNS.pyCGNSconfig import version as __vid__
 import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
+Q_OR    ='or'
+Q_AND   ='and'
+Q_ORNOT ='or not'
+Q_ANDNOT='and not'
+
+Q_OPERATOR=(Q_OR,Q_AND,Q_ORNOT,Q_ANDNOT)
+
+Q_PARENT  ='Parent'
+Q_NODE    ='Node'
+Q_CHILDREN='Children'
+
+Q_TARGET=(Q_PARENT,Q_NODE,Q_CHILDREN)
+
+Q_CGNSTYPE='CGNS type'
+Q_VALUETYPE='Value type'
+Q_NAME='Name'
+Q_VALUE='Value'
+Q_SCRIPT='Python script'
+
+Q_ATTRIBUTE=(Q_CGNSTYPE,Q_VALUETYPE,Q_NAME,Q_VALUE,Q_SCRIPT)
+
+Q_VAR_NAME='NAME'
+Q_VAR_VALUE='VALUE'
+Q_VAR_CGNSTYPE='CGNSTYPE'
+Q_VAR_CHILDREN='CHILDREN'
+Q_VAR_TREE='TREE'
+Q_VAR_PATH='PATH'
+Q_VAR_RESULT='RESULT'
+Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
+
+Q_SCRIPT_PRE="""
+import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils as CGU
+"""
+
+Q_FILE_PRE="""
+import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils as CGU
+import CGNS.NAV.moption as CGO
+"""
+
+Q_SCRIPT_POST="""
+%s[0]=%s
+"""%(Q_VAR_RESULT_LIST,Q_VAR_RESULT)
+
+# -----------------------------------------------------------------
 class Q7OptionContext(object):
     CHLoneTrace=False
     RecursiveTreeDisplay=False
@@ -38,7 +84,7 @@ class Q7OptionContext(object):
     TransposeArrayForView=True
     Show1DAsPlain=True
     SelectionListDirectory='~/.CGNS.NAV/selectionlist'
-    QueriesDirectory='~/.CGNS.NAV/queries'
+    QueriesFilename='~/.CGNS.NAV/queriesfile.py'
     SnapShotDirectory='~/.CGNS.NAV/snapshots'
     _HistoryFileName='~/.CGNS.NAV/historyfile.py'
     _OptionsFileName='~/.CGNS.NAV/optionsfile.py'
@@ -57,7 +103,7 @@ All rights reserved in accordance with GPL v2
 NO WARRANTY :
 Check GPL v2 sections 15 and 16 about loss of data or corrupted data
 """
-    FixedFontTable='FixedFontTable'
+    FixedFontTable='fixed'
 
     _ColorList={\
     'cold_grey':                   (0.5000, 0.5400, 0.5300),
@@ -320,20 +366,40 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     CGK.ZoneGridConnectivity_ts,
     CGK.ZoneIterativeData_ts,
     CGK.CGNSLibraryVersion_ts,
-    ]   
+    ]
+
+    _UsualQueriesText=[
+    ['Families',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.Family_ts)]],
+    ['Family names',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.FamilyName_ts)]],
+    ['BCs',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.BC_ts)]],
+    ['QUADs',[(Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
+              (Q_AND, Q_NODE, Q_SCRIPT,
+               'RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)')]],
+    ['TRIs',[(Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
+             (Q_AND, Q_NODE, Q_SCRIPT,
+              'RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)')]],
+    ]
+    # -----------------------------------------------------------------
     @classmethod
     def _setOption(cls,name,value):
         setattr(cls,name,value)
     @classmethod
-    def _writeFile(cls,tag,name,udict,filename):
+    def _writeFile(cls,tag,name,udata,filename,prefix=""):
       gdate=strftime("%Y-%m-%d %H:%M:%S", gmtime())
-      s="""# %s - %s file - Generated %s\n%s={\n"""%\
-         (cls._ToolName,tag,gdate,name)
-      for k in udict:
-        val=str(udict[k])
-        if (type(udict[k]) in [unicode, str]): val="'%s'"%str(udict[k])
-        s+="""'%s':%s,\n"""%(k,val)
-      s+="""} # --- last line\n"""
+      s="""# %s - %s file - Generated %s\n%s\n%s="""%\
+         (cls._ToolName,tag,gdate,prefix,name)
+      if (type(udata)==dict):
+        s+="""{\n"""
+        for k in udata:
+          val=str(udata[k])
+          if (type(udata[k]) in [unicode, str]): val="'%s'"%str(udata[k])
+          s+="""'%s':%s,\n"""%(k,val)
+        s+="""}\n\n# --- last line\n"""
+      elif (type(udata)==list):
+        s+="""[\n"""
+        for k in udata:
+          s+="""%s,\n"""%(k)
+        s+="""]\n\n# --- last line\n"""
       cls._crpath(filename)
       f=open(filename,'w+')
       f.write(s)
@@ -380,7 +446,7 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     @classmethod
     def _readHistory(cls,control):
       filename=cls._trpath(cls._HistoryFileName)
-      m=cls._readFile('history ',filename)
+      m=cls._readFile('history',filename)
       if (m is None): return None
       return m.history
     @classmethod
@@ -390,9 +456,19 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     @classmethod
     def _readOptions(cls,control):
       filename=cls._trpath(cls._OptionsFileName)
-      m=cls._readFile('options ',filename)
+      m=cls._readFile('options',filename)
       if (m is None): return None
       return m.options
+    @classmethod
+    def _writeQueries(cls,control,q):
+      filename=cls._trpath(cls.QueriesFilename)
+      cls._writeFile('User queries','queries',q,filename,Q_FILE_PRE)
+    @classmethod
+    def _readQueries(cls,control):
+      filename=cls._trpath(cls.QueriesFilename)
+      m=cls._readFile('queries',filename)
+      if (m is None): return None
+      return m.queries
     def __init__(self):
       pass
     def __getitem__(self,name):

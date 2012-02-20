@@ -286,6 +286,8 @@ class Q7TreeModel(QAbstractItemModel):
                 t+=[(n.orderTag(),p)]
         t.sort()
         return [e[1] for e in t]
+    def getSelectedShortCut(self):
+        return self._selected
     def updateSelected(self):
         self._selected=[]
         self._selectedIndex=-1

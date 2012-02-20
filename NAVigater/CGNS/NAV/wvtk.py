@@ -15,9 +15,7 @@ import numpy as NPY
 import random
 import vtk
 
-
 # ----------------------------------------------------------------------------
-
 class wVTKContext():
     def __init__(self,cm):
       (self.vx,self.vy,self.vz)=cm.GetViewUp()
@@ -46,12 +44,13 @@ class wVTKContext():
 
 # -----------------------------------------------------------------
 class Q7VTK(Q7Window,Ui_Q7VTKWindow):
-  def __init__(self,control,node,fgprint):
+  def __init__(self,control,node,fgprint,tmodel):
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,node,fgprint)
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
       self._vtktree=self.wCGNSTree(self._fgprint.tree)
       self._T=self._fgprint.tree
       self._selected=[]
+      self._tmodel=tmodel
       self._currentactor=None
       self._camera=[]
       self._blackonwhite=False
@@ -66,30 +65,17 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bBlackColor.clicked.connect(self.b_blackandwhite)
       self.bAddView.clicked.connect(self.b_saveview)
       self.bNext.clicked.connect(self.b_next)
-
-      lcd=QLCDNumber(self)
-      self.horizontalSlider_3.setRange(5,85)
-      self.horizontalSlider_3.setValue(30)
-      self.horizontalSlider_3.valueChanged.connect(lcd.display)
-      self.horizontalSlider_3.valueChanged.connect(self.setViewAngle)
-
-##       lcd1=QLCDNumber(self)
-      self.horizontalSlider.setRange(1,100)
-      self.horizontalSlider.setValue(50)
-##       self.horizontalSlider.valueChanged.connect(lcd1.display)
-      self.horizontalSlider.valueChanged.connect(self.setFarClippingPlane)
-
-##       lcd2=QLCDNumber(self)
-      self.horizontalSlider_2.setRange(1,1000)
-      self.horizontalSlider_2.setValue(25)
-##       self.horizontalSlider_2.valueChanged.connect(lcd2.display)
-      self.horizontalSlider_2.valueChanged.connect(self.setNearClippingPlane)
+      self.bPrevious.clicked.connect(self.b_prev)
+      self.bReset.clicked.connect(self.b_reset)
+      self.bUpdate.clicked.connect(self.b_update)
+      QObject.connect(self.cCurrentPath,
+                      SIGNAL("currentIndexChanged(int)"),
+                      self.changeCurrentPath)
 
   def setNearClippingPlane(self,plane):
     camera=self._vtkren.GetActiveCamera()
     value=plane/1000.
     camera.SetClippingRange(value,camera.GetClippingRange()[1])
-    print camera.GetClippingRange()
     self._vtkren.Render()
     self._waxs.Render()
     self.iren.Render()
@@ -98,7 +84,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     camera=self._vtkren.GetActiveCamera()
     value=plane/20.
     camera.SetClippingRange(camera.GetClippingRange()[0],value)
-    print camera.GetClippingRange()
     self._vtkren.Render()
     self._waxs.Render()
     self.iren.Render()    
@@ -106,53 +91,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def setViewAngle(self,angle):
     camera=self._vtkren.GetActiveCamera()
     camera.SetViewAngle(angle)
-##     camera.SetUseHorizontalViewAngle(30)
-##     self._vtkren.ResetCameraClippingRange()
-##     self._vtkren.ResetCamera()
-    
     bounds=self._vtkren.ComputeVisiblePropBounds()
-    
-##     w1=self._xmax-self._xmin
-##     w2=self._ymax-self._ymin
-##     w3=self._zmax-self._zmin
-##     c1=(self._xmax+self._xmin)/2.0
-##     c2=(self._ymax+self._ymin)/2.0
-##     c3=(self._zmax+self._zmin)/2.0
-
-##     w1=(bounds[1]-bounds[0])
-##     w2=(bounds[3]-bounds[2])
-##     w3=(bounds[5]-bounds[4])        
-##     c1=(bounds[0]+bounds[1])/2.0
-##     c2=(bounds[3]+bounds[2])/2.0
-##     c3=(bounds[4]+bounds[5])/2.0
     self._vtkren.ResetCamera()
-    
-##     vn=camera.GetViewPlaneNormal()        
-##     radius=w1+w2+w3
-##     radius=NPY.sqrt(radius)*0.5
-##     sinus=NPY.sin(camera.GetViewAngle()*NPY.pi/360)
-##     distance=radius/sinus
-
-##     camera.SetPosition(c1+distance*vn[0],c2+distance*vn[1],c3+distance*vn[2])
-##     camera.SetFocalPoint(c1,c2,c3)
-##     self._vtkren.ResetCameraClippingRange(bounds)
-##     camera.SetParallelScale(radius);
-    
-##     pos=camera.GetPosition()
-##     fp=camera.GetFocalPoint()
-##     dist=NPY.sqrt((pos[0]-fp[0])*(pos[0]-fp[0])+(pos[1]-fp[1])*(pos[1]-fp[1])+(pos[2]-fp[2])*(pos[2]-fp[2]))
-
-##     angle=camera.GetViewAngle()
-##     taille=2*NPY.tan(angle/2.*NPY.pi/360)*dist
-
-##     print taille
-    
     self._vtkren.Render()
     self._waxs.Render()
     self.iren.Render()
-
-##     print dist,distance
-##     print camera
          
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
@@ -172,6 +115,15 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def findObjectPath(self,selected):
     return self._parser.getPathFromObject(selected)
+    
+  def findPathObject(self,path):
+    alist=self._vtkren.GetActors()
+    alist.InitTraversal()
+    a=alist.GetNextItem()
+    while a:
+        if (path==self.findObjectPath(a.GetMapper().GetInput())): return a
+        a=alist.GetNextItem()
+    return None
     
   def leave(self):
     self._wtop.destroy()
@@ -201,7 +153,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           t+=s+'\n'
           self._selected+=[[s,a]]
           self.textMapper.SetInput(t)
-          yd=self._vtk.GetRenderWindow().GetSize()[1]-self.textMapper.GetHeight(self._vtkren)-10.
+          yd=self._vtkwin.GetSize()[1]-self.textMapper.GetHeight(self._vtkren)-10.
           self.textActor.SetPosition((10.,yd))
           self.textActor.VisibilityOn()
           self._vtkren.AddActor(self.textActor)
@@ -314,7 +266,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._waxs=self.addAxis()
       wpck = self.addPicker()
 
-      self._vtk.GetRenderWindow().SetNumberOfLayers(2)
+      self._vtkwin=self._vtk.GetRenderWindow()
+      self._vtkwin.SetNumberOfLayers(2)
       self._vtkren.SetLayer(0)
       self._waxs.SetLayer(1)
 
@@ -356,7 +309,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._ctxt.setPosition(self.px,self.py,self.pz)
                 
       istyle = vtk.vtkInteractorStyleTrackballCamera()
-      istyle.AutoAdjustCameraClippingRangeOff()
+      istyle.AutoAdjustCameraClippingRangeOn()
       self._vtk.SetInteractorStyle(istyle)
       
       self._vtk.AddObserver("KeyPressEvent", self.CharCallback)
@@ -367,11 +320,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.iren.SetPicker(self.picker)
 
       self._vtkren.AddObserver("StartEvent", self.SyncCameras)
-        
       
       self._bindings={ 'r' :self.b_refresh,
                        'c'     :self.b_shufflecolors,
-                       'T'     :self.b_nexttarget,
                        'x'     :self.b_xaxis,
                        'y'     :self.b_yaxis,
                        'z'     :self.b_zaxis,
@@ -412,28 +363,45 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           actor = actors.GetNextItem()
       self.iren.GetRenderWindow().Render()
 
-  def b_next(self):
-      self.b_nexttarget(None)
+  def b_update(self):
+      self._selected=[]
+      self.textActor.VisibilityOff()
+      print self._tmodel.getSelectedShortCut()
       
-  def b_nexttarget(self,pos):
-      if (self._currentactor !=None):
-          color=self._currentactor[2]
-          actor=self._currentactor[1]
-          actor.GetProperty().SetColor(color)
-          self._vtk.GetRenderWindow().GetRenderers().GetFirstRenderer().RemoveActor(actor)
-          self._vtkren.AddActor(actor)
-          self._vtk.GetRenderWindow().Render()
-
+  def b_reset(self):
+      self._selected=[]
+      self.textActor.VisibilityOff()
+      
+  def b_next(self):
       if (len(self._selected)>0):        
           self._selected=self._selected[1:]+[self._selected[0]]
-          self._currentactor=self._selected[0]
-          actor=self._currentactor[1]
-          color=actor.GetProperty().GetColor()
-          self._currentactor.append(color)
-          actor.GetProperty().SetColor(1,0,0)
-          self._vtkren.RemoveActor(actor)
-          self._vtk.GetRenderWindow().GetRenderers().GetFirstRenderer().AddActor(actor)
-          self._vtk.GetRenderWindow().Render()                
+          self.changeCurrentActor(self._selected[0],False)
+      
+  def b_prev(self):
+      if (len(self._selected)>0):        
+          self._selected=[self._selected[-1]]+self._selected[0:-1]
+          self.changeCurrentActor(self._selected[0],False)
+      
+  def changeCurrentActor(self,atp,combo=True):
+      path =atp[0]
+      actor=atp[1]
+      if (len(atp)<3): atp=[path,actor,self.getRandomColor()]
+      color=atp[2]
+      self._currentactor=[path,actor,color]
+      
+      actor.GetProperty().SetColor(color)
+      self._vtkwin.GetRenderers().GetFirstRenderer().RemoveActor(actor)
+      self._vtkren.AddActor(actor)
+      self._vtk.GetRenderWindow().Render()
+
+      if (not combo):
+          path=self.findObjectPath(actor.GetMapper().GetInput())
+          self.setCurrentPath(path)
+
+      actor.GetProperty().SetColor(1,0,0)
+      self._vtkren.RemoveActor(actor)
+      self._vtkwin.GetRenderers().GetFirstRenderer().AddActor(actor)
+      self._vtkwin.Render()
       
   def b_loadview(self,name=None):
     if (self._camera!=[]):
@@ -450,11 +418,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def b_saveview(self,name=None):
     camera = self._vtkren.GetActiveCamera()
     vname=self.cViews.currentText()
-    print camera
-##     print 'Save view ',vname
-##     print 'viewup',camera.GetViewUp()
-##     print 'position',camera.GetPosition()
-##     print camera.GetFocalPoint()
     self.cViews.addItem(vname)
     self._camera+=[[camera.GetViewUp(),camera.GetClippingRange(),camera.GetPosition()]]
 
@@ -473,7 +436,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       w.Write()
 
   def changeview(self):
-    print 'toto'
+      pass
 
   def b_xaxis(self,pos=None):
       if (self.cMirror.isChecked()): self.setAxis(pos,-1)
@@ -487,6 +450,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (self.cMirror.isChecked()): self.setAxis(pos,-3)
       else: self.setAxis(pos,3)
     
+  def changeCurrentPath(self, *args):
+      path=self.cCurrentPath.currentText()
+      actor=self.findPathObject(path)
+      self.changeCurrentActor([path,actor])
+
   def setCurrentPath(self,path):
       ix=self.cCurrentPath.findText(path)
       if (ix!=-1): self.cCurrentPath.setCurrentIndex(ix)
