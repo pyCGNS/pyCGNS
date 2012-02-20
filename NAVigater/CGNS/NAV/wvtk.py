@@ -67,72 +67,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bAddView.clicked.connect(self.b_saveview)
       self.bNext.clicked.connect(self.b_next)
       QObject.connect(self.cViews,SIGNAL("currentIndexChanged(int)"),self.b_loadview)
-
-  def setNearClippingPlane(self,plane):
-    camera=self._vtkren.GetActiveCamera()
-    value=plane/1000.
-    camera.SetClippingRange(value,camera.GetClippingRange()[1])
-    print camera.GetClippingRange()
-    self._vtkren.Render()
-    self._waxs.Render()
-    self.iren.Render()
-
-  def setFarClippingPlane(self,plane):
-    camera=self._vtkren.GetActiveCamera()
-    value=plane/20.
-    camera.SetClippingRange(camera.GetClippingRange()[0],value)
-    print camera.GetClippingRange()
-    self._vtkren.Render()
-    self._waxs.Render()
-    self.iren.Render()    
-      
-  def setViewAngle(self,angle):
-    camera=self._vtkren.GetActiveCamera()
-    camera.SetViewAngle(angle)
-##     camera.SetUseHorizontalViewAngle(30)
-##     self._vtkren.ResetCameraClippingRange()
-##     self._vtkren.ResetCamera()
-    
-    bounds=self._vtkren.ComputeVisiblePropBounds()
-    
-##     w1=self._xmax-self._xmin
-##     w2=self._ymax-self._ymin
-##     w3=self._zmax-self._zmin
-##     c1=(self._xmax+self._xmin)/2.0
-##     c2=(self._ymax+self._ymin)/2.0
-##     c3=(self._zmax+self._zmin)/2.0
-
-##     w1=(bounds[1]-bounds[0])
-##     w2=(bounds[3]-bounds[2])
-##     w3=(bounds[5]-bounds[4])        
-##     c1=(bounds[0]+bounds[1])/2.0
-##     c2=(bounds[3]+bounds[2])/2.0
-##     c3=(bounds[4]+bounds[5])/2.0
-    self._vtkren.ResetCamera()
-    
-##     vn=camera.GetViewPlaneNormal()        
-##     radius=w1+w2+w3
-##     radius=NPY.sqrt(radius)*0.5
-##     sinus=NPY.sin(camera.GetViewAngle()*NPY.pi/360)
-##     distance=radius/sinus
-
-##     camera.SetPosition(c1+distance*vn[0],c2+distance*vn[1],c3+distance*vn[2])
-##     camera.SetFocalPoint(c1,c2,c3)
-##     self._vtkren.ResetCameraClippingRange(bounds)
-##     camera.SetParallelScale(radius);
-    
-##     pos=camera.GetPosition()
-##     fp=camera.GetFocalPoint()
-##     dist=NPY.sqrt((pos[0]-fp[0])*(pos[0]-fp[0])+(pos[1]-fp[1])*(pos[1]-fp[1])+(pos[2]-fp[2])*(pos[2]-fp[2]))
-
-##     angle=camera.GetViewAngle()
-##     taille=2*NPY.tan(angle/2.*NPY.pi/360)*dist
-
-    
-    self._vtkren.Render()
-    self._waxs.Render()
-    self.iren.Render()
-
+      self.PickedRenderer=None
         
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
@@ -413,30 +348,51 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           actor.GetProperty().SetColor(1,0,0)
           self._vtkren.RemoveActor(actor)
           self._vtk.GetRenderWindow().GetRenderers().GetFirstRenderer().AddActor(actor)
-          self._vtk.GetRenderWindow().Render()                
+          self._vtk.GetRenderWindow().Render()
+
+  def HighlightBoundingBox(self):
+      outline=vtk.vtkOutlineSource()
+      outlineMapper=vtk.vtkPolyDataMapper()
+      outlineMapper.SetInput(outline.GetOutput())
+
+      pickedRenderer=None
+      currentProp=None
+
+      outlineActor=vtk.vtkActor()
+      outlineActor.PickableOff()
+      outlineActor.DragableOff()
+      outlineActor.SetMapper(outlineMapper)
+      outlineActor.GetProperty().SetColor(1,0,0)
+      outlineActor.GetProperty().SetAmbient(1.0)
+      outlineActor.GetProperty().SetDiffuse(0.0)
+
+      
+      
       
   def b_loadview(self,name=None):
       vname=self.cViews.currentText()
       if (vname!=""):
-          parameters=self._camera[vname]
+          (vu,cr,p,fp)=self._camera[vname]
           camera=self._vtkren.GetActiveCamera()
-          camera.SetViewUp(parameters[0])
-          camera.SetClippingRange(parameters[1])
-          camera.SetPosition(parameters[2])
+          camera.SetViewUp(vu)
+          camera.SetClippingRange(cr)
+          camera.SetPosition(p)
+          camera.SetFocalPoint(fp)
           self._vtkren.Render()
           self._waxs.Render()
           self.iren.Render()
+
       
   def b_saveview(self,name=None):
     if (self._camera=={}):
-        self.cViews.addItem("")          
+        self.cViews.addItem("")
     camera = self._vtkren.GetActiveCamera()
     n=1
     name='View %s' % n 
     while self._camera.has_key(name):
         n+=1
         name='View %s' % n
-    self._camera[name]=(camera.GetViewUp(),camera.GetClippingRange(),camera.GetPosition())
+    self._camera[name]=(camera.GetViewUp(),camera.GetClippingRange(),camera.GetPosition(),camera.GetFocalPoint())
     self.cViews.addItem(name)
 
   def b_refresh(self,pos):
