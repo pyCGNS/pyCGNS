@@ -138,27 +138,28 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def annotatePick(self, object, event):
     self._selected=[]
     if self.picker.GetCellId() < 0:
-        self.textActor.VisibilityOff()
-        self._selected=[]
+      self.textActor.VisibilityOff()
+      self._selected=[]
     else:        
-        selPt = self.picker.GetSelectionPoint()
-        pickAct = self.picker.GetActors()
-        a=pickAct.InitTraversal()
+      selPt = self.picker.GetSelectionPoint()
+      pickAct = self.picker.GetActors()
+      a=pickAct.InitTraversal()
+      a=pickAct.GetNextItem()
+      t=''
+      sl=[]
+      while a:
+        x=a.GetMapper().GetInput()
+        s=self.findObjectPath(x)
+        t+=s+'\n'
+        self._selected+=[[s,a]]
+        self.textMapper.SetInput(t)
+        y=self._vtkwin.GetSize()[1]-self.textMapper.GetHeight(self._vtkren)-10.
+        self.textActor.SetPosition((10.,y))
+        self.textActor.VisibilityOn()
+        self._vtkren.AddActor(self.textActor)
         a=pickAct.GetNextItem()
-        t=''
-        sl=[]
-        while a:
-          x=a.GetMapper().GetInput()
-          s=self.findObjectPath(x)
-          t+=s+'\n'
-          self._selected+=[[s,a]]
-          self.textMapper.SetInput(t)
-          yd=self._vtkwin.GetSize()[1]-self.textMapper.GetHeight(self._vtkren)-10.
-          self.textActor.SetPosition((10.,yd))
-          self.textActor.VisibilityOn()
-          self._vtkren.AddActor(self.textActor)
-          a=pickAct.GetNextItem()
-          self.setCurrentPath(s)
+        self.setCurrentPath(s)
+      self.fillCurrentPath()
                              
   def addPicker(self):
     self.textMapper = vtk.vtkTextMapper()
@@ -275,6 +276,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtk.GetRenderWindow().AddRenderer(self._waxs)
     
       self._parser=Mesh(T)
+      self._selected=[]
       alist=self._parser.createActors()
       self.fillCurrentPath()
  
@@ -366,11 +368,16 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def b_update(self):
       self._selected=[]
       self.textActor.VisibilityOff()
-      print self._tmodel.getSelectedShortCut()
+      tlist=self._tmodel.getSelectedShortCut()
+      for i in self._parser.getPathList():
+          if (i in tlist):
+              self._selected+=[[i,self.findPathObject(i)]]
+      self.fillCurrentPath()
       
   def b_reset(self):
       self._selected=[]
       self.textActor.VisibilityOff()
+      self.fillCurrentPath()
       
   def b_next(self):
       if (len(self._selected)>0):        
@@ -385,6 +392,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def changeCurrentActor(self,atp,combo=True):
       path =atp[0]
       actor=atp[1]
+
+      if (actor is None): return
+      
       if (len(atp)<3): atp=[path,actor,self.getRandomColor()]
       color=atp[2]
       self._currentactor=[path,actor,color]
@@ -461,8 +471,13 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def fillCurrentPath(self):
       self.cCurrentPath.clear()
+      spix=QIcon(QPixmap(":/images/icons/selected.gif"))
+      npix=QIcon(QPixmap(":/images/icons/unselected.gif"))
+      sel=[n[0] for n in self._selected]
       for i in self._parser.getPathList():
-          self.cCurrentPath.addItem(i)
+          pix=npix
+          if (i in sel): pix=spix
+          self.cCurrentPath.addItem(pix,i)
           
   def setAxis(self,pos,iaxis):
     camera=self._vtkren.GetActiveCamera()
