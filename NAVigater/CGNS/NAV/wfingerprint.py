@@ -87,6 +87,13 @@ class Q7Window(QWidget,object):
         self._history[Q7Window.HISTORYLASTKEY]=(filedir,filename)
         OCTXT._writeHistory(self)
         return self._history
+    def getQueries(self):
+        self._queries=OCTXT._readQueries(self)
+        if (self._queries is None): self._queries=[]
+        return self._queries
+    def setQueries(self):
+        OCTXT._writeQueries(self)
+        return self._queries
     def getLastFile(self):
         if ((self._history=={})
             or not self._history.has_key(Q7Window.HISTORYLASTKEY)):

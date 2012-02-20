@@ -13,8 +13,7 @@ from CGNS.NAV.wform import Q7Form
 from CGNS.NAV.wvtk import Q7VTK
 from CGNS.NAV.wquery import Q7Query
 from CGNS.NAV.mquery import Q7QueryTableModel
-from CGNS.NAV.mtree import Q7TreeModel
-from CGNS.NAV.mtree import Q7TreeItem
+from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem
 from CGNS.NAV.wfingerprint import Q7Window
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import CGNS.PAT.cgnskeywords as CGK
@@ -56,7 +55,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                         SIGNAL("customContextMenuRequested(QPoint)"),
                         self.clickedNode)
         self.querymodel=Q7QueryTableModel(self)
-        self.querymodel.setDefaultQuery()
+        self.querymodel.setup(self)
         qlist=self.querymodel.defaultQueriesList
         qlist.sort()
         for q in qlist: self.cQuery.addItem(q)

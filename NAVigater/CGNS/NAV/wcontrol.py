@@ -62,6 +62,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.signals.saveFile.connect(self.saving)
         self.getHistory()
         self.getOptions()
+        self.getQueries()
     def clickedLine(self,*args):
         Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))
     def option(self):

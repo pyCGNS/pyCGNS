@@ -15,6 +15,7 @@ import numpy as NPY
 import random
 import vtk
 
+
 # ----------------------------------------------------------------------------
 
 class wVTKContext():
@@ -64,15 +65,82 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bSuffleColors.clicked.connect(self.b_shufflecolors)
       self.bBlackColor.clicked.connect(self.b_blackandwhite)
       self.bAddView.clicked.connect(self.b_saveview)
-      self.bSnapshot.clicked.connect(self.b_loadview)
       self.bNext.clicked.connect(self.b_next)
- 
+
+  def setNearClippingPlane(self,plane):
+    camera=self._vtkren.GetActiveCamera()
+    value=plane/1000.
+    camera.SetClippingRange(value,camera.GetClippingRange()[1])
+    print camera.GetClippingRange()
+    self._vtkren.Render()
+    self._waxs.Render()
+    self.iren.Render()
+
+  def setFarClippingPlane(self,plane):
+    camera=self._vtkren.GetActiveCamera()
+    value=plane/20.
+    camera.SetClippingRange(camera.GetClippingRange()[0],value)
+    print camera.GetClippingRange()
+    self._vtkren.Render()
+    self._waxs.Render()
+    self.iren.Render()    
+      
+  def setViewAngle(self,angle):
+    camera=self._vtkren.GetActiveCamera()
+    camera.SetViewAngle(angle)
+##     camera.SetUseHorizontalViewAngle(30)
+##     self._vtkren.ResetCameraClippingRange()
+##     self._vtkren.ResetCamera()
+    
+    bounds=self._vtkren.ComputeVisiblePropBounds()
+    
+##     w1=self._xmax-self._xmin
+##     w2=self._ymax-self._ymin
+##     w3=self._zmax-self._zmin
+##     c1=(self._xmax+self._xmin)/2.0
+##     c2=(self._ymax+self._ymin)/2.0
+##     c3=(self._zmax+self._zmin)/2.0
+
+##     w1=(bounds[1]-bounds[0])
+##     w2=(bounds[3]-bounds[2])
+##     w3=(bounds[5]-bounds[4])        
+##     c1=(bounds[0]+bounds[1])/2.0
+##     c2=(bounds[3]+bounds[2])/2.0
+##     c3=(bounds[4]+bounds[5])/2.0
+    self._vtkren.ResetCamera()
+    
+##     vn=camera.GetViewPlaneNormal()        
+##     radius=w1+w2+w3
+##     radius=NPY.sqrt(radius)*0.5
+##     sinus=NPY.sin(camera.GetViewAngle()*NPY.pi/360)
+##     distance=radius/sinus
+
+##     camera.SetPosition(c1+distance*vn[0],c2+distance*vn[1],c3+distance*vn[2])
+##     camera.SetFocalPoint(c1,c2,c3)
+##     self._vtkren.ResetCameraClippingRange(bounds)
+##     camera.SetParallelScale(radius);
+    
+##     pos=camera.GetPosition()
+##     fp=camera.GetFocalPoint()
+##     dist=NPY.sqrt((pos[0]-fp[0])*(pos[0]-fp[0])+(pos[1]-fp[1])*(pos[1]-fp[1])+(pos[2]-fp[2])*(pos[2]-fp[2]))
+
+##     angle=camera.GetViewAngle()
+##     taille=2*NPY.tan(angle/2.*NPY.pi/360)*dist
+
+##     print taille
+    
+    self._vtkren.Render()
+    self._waxs.Render()
+    self.iren.Render()
+
+##     print dist,distance
+##     print camera
+         
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
     self.camAxes.SetViewUp(cam.GetViewUp())
     self.camAxes.OrthogonalizeViewUp()
     x, y, z = cam.GetDirectionOfProjection()
-
     bnds = self.renAxes.ComputeVisiblePropBounds()
     x0, x1, y0, y1, z0, z1 = self.renAxes.ComputeVisiblePropBounds()
     self.renAxes.ResetCamera(x0, x1, y0, y1, z0, z1) 
@@ -80,7 +148,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     px, py, pz = self.camAxes.GetPosition()
     d = NPY.sqrt(px*px + py*py + pz*pz)
     dproj = NPY.sqrt(x*x + y*y + z*z)
-
     self.camAxes.SetFocalPoint(0,0,0)
     self.camAxes.SetPosition(-d*x/dproj, -d*y/dproj, -d*z/dproj)
     self.renAxes.ResetCameraClippingRange()
@@ -271,6 +338,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._ctxt.setPosition(self.px,self.py,self.pz)
                 
       istyle = vtk.vtkInteractorStyleTrackballCamera()
+      istyle.AutoAdjustCameraClippingRangeOff()
       self._vtk.SetInteractorStyle(istyle)
       
       self._vtk.AddObserver("KeyPressEvent", self.CharCallback)
@@ -364,6 +432,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def b_saveview(self,name=None):
     camera = self._vtkren.GetActiveCamera()
     vname=self.cViews.currentText()
+    print camera
 ##     print 'Save view ',vname
 ##     print 'viewup',camera.GetViewUp()
 ##     print 'position',camera.GetPosition()
@@ -384,6 +453,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           w.SetInput(actor.GetMapper().GetInput())
           actor = actors.GetNextItem()
       w.Write()
+
+  def changeview(self):
+    print 'toto'
 
   def b_xaxis(self,pos=None):
       if (self.cMirror.isChecked()): self.setAxis(pos,-1)
@@ -407,44 +479,40 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self.cCurrentPath.addItem(i)
           
   def setAxis(self,pos,iaxis):
-      rat=50
-      cx = (0.5*(self._xmax-self._xmin))
-      cy = (0.5*(self._ymax-self._ymin))
-      cz = (0.5*(self._zmax-self._zmin))
-      if iaxis == 1:
-          (vx,vy,vz)=(0.,0.,1.)
-          (px,py,pz)=(rat*cx,cy,cz)
-      elif iaxis == 2:
-          (vx,vy,vz)=(1.,0.,0.)
-          (px,py,pz)=(cx,rat*cy,cz)
-      elif iaxis == 3:
-          (vx,vy,vz)=(0.,1.,0.)
-          (px,py,pz)=(cx,cy,rat*cz)
-      elif iaxis == -1:
-          (vx,vy,vz)=(0.,1.,0.)
-          (px,py,pz)=(rat*cx,cy,cz)
-      elif iaxis == -2:
-          (vx,vy,vz)=(0.,0.,1.)
-          (px,py,pz)=(cx,rat*cy,cz)
-      elif iaxis == -3:
-          (vx,vy,vz)=(1.,0.,0.)
-          (px,py,pz)=(cx,cy,rat*cz)
-
-      camera = self._vtkren.GetActiveCamera()
-      camera.SetViewUp(vx, vy, vz)
-      camera.SetFocalPoint(cx, cy, cz)
-      camera.SetPosition(px, py, pz)
-##       camera.OrthogonalizeViewUp()
-      self._vtkren.ResetCameraClippingRange()
-      self._vtkren.Render()
-      self._waxs.Render()
-      self._vtkren.ResetCamera()
-      self.iren.Render()
-      self._ctxt=wVTKContext(camera)
-      self._ctxt.setViewUp(vx,vy,vz)
-      self._ctxt.setFocalPoint(cx,cy,cz)
-      self._ctxt.setPosition(px,py,pz)
-
+    camera=self._vtkren.GetActiveCamera()
+    fp=camera.GetFocalPoint()
+    pos=camera.GetPosition()
+    distance=NPY.sqrt((fp[0]-pos[0])*(fp[0]-pos[0])+(fp[1]-pos[1])*(fp[1]-pos[1])+(fp[2]-pos[2])*(fp[2]-pos[2]))
+    if iaxis == 1:
+      (vx,vy,vz)=(0.,0.,1.)
+      (px,py,pz)=(fp[0]+distance,fp[1],fp[2])
+    elif iaxis == 2:
+      (vx,vy,vz)=(0.,0.,1.)
+      (px,py,pz)=(fp[0],fp[1]+distance,fp[2])
+    elif iaxis == 3:
+      (vx,vy,vz)=(0.,1.,0.)
+      (px,py,pz)=(fp[0],fp[1],fp[2]+distance)
+    elif iaxis == -1:
+      (vx,vy,vz)=(0.,0.,1.)
+      (px,py,pz)=(fp[0]-distance,fp[1],fp[2])
+    elif iaxis == -2:
+      (vx,vy,vz)=(0.,0.,1.)
+      (px,py,pz)=(fp[0],fp[1]-distance,fp[2])
+    elif iaxis == -3:
+      (vx,vy,vz)=(0.,1.,0.)
+      (px,py,pz)=(fp[0],fp[1],fp[2]-distance)
+    camera.SetViewUp(vx,vy,vz)
+    camera.SetPosition(px,py,pz)
+    camera.SetViewAngle(0)
+    self._vtkren.ResetCameraClippingRange()
+    self._vtkren.Render()
+    self._waxs.Render()
+    self._vtkren.ResetCamera()
+    self.iren.Render()
+    self._ctxt=wVTKContext(camera)
+    self._ctxt.setViewUp(vx,vy,vz)
+    self._ctxt.setPosition(px,py,pz)
+          
   def b_surf(self,pos):
       if (not self._p_wire):
           self.b_wire(pos)
@@ -483,6 +551,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def close(self):
       self._vtk.GetRenderWindow().Finalize()
       QWidget.close(self)
-      
+
+    
 # -----------------------------------------------------------------------------
         
+
