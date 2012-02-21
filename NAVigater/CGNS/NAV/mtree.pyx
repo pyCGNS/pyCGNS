@@ -287,7 +287,11 @@ class Q7TreeModel(QAbstractItemModel):
         t.sort()
         return [e[1] for e in t]
     def getSelectedShortCut(self):
-        return self._selected
+        slist=[]
+        for pth in self._selected:
+            if (CGU.hasFirstPathItem(pth)): pth=CGU.removeFirstPathItem(pth)
+            slist+=[pth]
+        return slist
     def updateSelected(self):
         self._selected=[]
         self._selectedIndex=-1

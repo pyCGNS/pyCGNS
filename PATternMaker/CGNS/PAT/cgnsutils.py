@@ -494,11 +494,18 @@ def getNodeType(node):
   return '??'
 
 # --------------------------------------------------
+def hasFirstPathItem(path,sidstype=CK.CGNSTree_s):
+  if ((len(path)>0) and (path[0]=='/')): path=path[1:]
+  p=path.split('/')
+  if ((len(p)>1) and (sidstype==p[0])): return True
+  return False
+    
+# --------------------------------------------------
 def removeFirstPathItem(path):
   p=path.split('/')
   if ((p[0]=='') and (p>2)):
     return string.join(['']+p[2:],'/')
-  elif (p>1):
+  elif (len(p)>1):
     return string.join(p[1:],'/')
   else:
     return '/'

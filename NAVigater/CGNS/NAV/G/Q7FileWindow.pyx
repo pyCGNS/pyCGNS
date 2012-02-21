@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FileWindow.ui'
 #
-# Created: Tue Feb 14 14:23:59 2012
+# Created: Tue Feb 21 09:52:55 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -178,7 +178,9 @@ class Ui_Q7FileWindow(object):
         Q7FileWindow.setWindowTitle(QtGui.QApplication.translate("Q7FileWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7FileWindow", "Current directory", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Q7FileWindow", "Selected file", None, QtGui.QApplication.UnicodeUTF8))
+        self.bAction.setToolTip(QtGui.QApplication.translate("Q7FileWindow", "Use selected file for load/save", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowAll.setText(QtGui.QApplication.translate("Q7FileWindow", "All", None, QtGui.QApplication.UnicodeUTF8))
+        self.bBack.setToolTip(QtGui.QApplication.translate("Q7FileWindow", "Go back to parent directory", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowDirs.setText(QtGui.QApplication.translate("Q7FileWindow", "Directories", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.Selection), QtGui.QApplication.translate("Q7FileWindow", "Selection", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_filtercgnsfiles.setText(QtGui.QApplication.translate("Q7FileWindow", "Show .cgns files", None, QtGui.QApplication.UnicodeUTF8))

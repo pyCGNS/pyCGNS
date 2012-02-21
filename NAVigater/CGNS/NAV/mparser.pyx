@@ -28,13 +28,12 @@ class CGNSparser:
     
   def parseZones(self):
     T=self._tree
-
     if (T[0]==None):
       T[0]=CGK.CGNSTree_s
       T[3]=CGK.CGNSTree_ts   
     for z in CGU.getAllNodesByTypeSet(T,[CGK.Zone_ts]):
       zT=CGU.nodeByPath(z,T)
-      meshpath=CGU.removeFirstPathItem(z)
+      meshpath=z#CGU.removeFirstPathItem(z)
       g=CGU.getAllNodesByTypeSet(zT,[CGK.GridCoordinates_ts])[0]
       gT=CGU.nodeByPath(g,zT)
       cx=CGU.nodeByPath("%s/CoordinateX"%gT[0],gT)
@@ -53,16 +52,16 @@ class CGNSparser:
         sjmax=[scx[:,-1,:],scy[:,-1:], scz[:,-1,:]]
         skmin=[scx[:,:,0], scy[:,:,0], scz[:,:,0]]
         skmax=[scx[:,:,-1],scy[:,:,-1],scz[:,:,-1]]
-        zp=CGU.removeFirstPathItem(z)        
-        surfpaths=[zp+'/[imin]',zp+'/[imax]',
-                 zp+'/[jmin]',zp+'/[jmax]',
-                 zp+'/[kmin]',zp+'/[kmax]']
+        zp=z#CGU.removeFirstPathItem(z)        
+        surfpaths=[zp+' {imin}',zp+' {imax}',
+                   zp+' {jmin}',zp+' {jmax}',
+                   zp+' {kmin}',zp+' {kmax}']
         bndlist=[]
         bcpaths=[]
         for nzbc in CGU.getAllNodesByTypeSet(zT,[CGK.ZoneBC_ts]):
           zbcT=CGU.nodeByPath(nzbc,zT)
           for nbc in CGU.getAllNodesByTypeSet(zbcT,[CGK.BC_ts]):
-            bcpaths+=['%s/[%s]'%(zp,nbc.split('/')[1])]
+            bcpaths+=['%s/ZoneBC/%s'%(zp,nbc.split('/')[1])]
             bcT=CGU.nodeByPath(nbc,zbcT)
             for rbc in CGU.getAllNodesByTypeSet(bcT,[CGK.IndexRange_ts]):
               ptr=CGU.nodeByPath(rbc,bcT)[1].T.flat
@@ -89,9 +88,11 @@ class CGNSparser:
           eb=ne[1]
           ea=CGU.getNodeByPath(zT,e+'/'+CGK.ElementConnectivity_s)[1]
           if (et in sp.QUAD_SURFACE):
-            sl.append(list(sp.extQuadFacesPoints(ea,et,sn,mr,eb))+[e+'[QUAD]'])
+            pth=CGU.getPathAncestor(meshpath)+e+' {QUAD}'
+            sl.append(list(sp.extQuadFacesPoints(ea,et,sn,mr,eb))+[pth])
           if (et in sp.TRI_SURFACE):
-            sl.append(list(sp.extTriFacesPoints(ea,et,sn,mr,eb))+[e+'[TRI]'])
+            pth=e+' {TRI}'
+            sl.append(list(sp.extTriFacesPoints(ea,et,sn,mr,eb))+[pth])
         self._zones_ns[z]=([cx[1],cy[1],cz[1]],meshpath,et,sl)
     return None
 
@@ -291,7 +292,7 @@ class Mesh(CGNSparser):
         a = vtk.vtkActor()
         a.SetMapper(am)
         a.GetProperty().SetRepresentationToWireframe()
-        actors+=[(a,a.GetBounds(),sg,'/'+path)]
+        actors+=[(a,a.GetBounds(),sg,path)]
     return actors
 
   def def_volume(self,n):

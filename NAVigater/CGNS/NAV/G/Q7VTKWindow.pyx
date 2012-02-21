@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Mon Feb 20 16:44:41 2012
+# Created: Tue Feb 21 09:52:56 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -246,12 +246,27 @@ class Ui_Q7VTKWindow(object):
 
     def retranslateUi(self, Q7VTKWindow):
         Q7VTKWindow.setWindowTitle(QtGui.QApplication.translate("Q7VTKWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        self.bAddView.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Add current view to view list", None, QtGui.QApplication.UnicodeUTF8))
+        self.bSaveView.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Write view list into a file", None, QtGui.QApplication.UnicodeUTF8))
+        self.bRemoveView.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Remove current view from view list", None, QtGui.QApplication.UnicodeUTF8))
+        self.bSnapshot.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Save view snapshot into a file", None, QtGui.QApplication.UnicodeUTF8))
+        self.bSaveVTK.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Save VTK data into a file", None, QtGui.QApplication.UnicodeUTF8))
+        self.bX.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Show Y/Z plane", None, QtGui.QApplication.UnicodeUTF8))
         self.bX.setText(QtGui.QApplication.translate("Q7VTKWindow", "X", None, QtGui.QApplication.UnicodeUTF8))
+        self.bY.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Show X/Z plane", None, QtGui.QApplication.UnicodeUTF8))
         self.bY.setText(QtGui.QApplication.translate("Q7VTKWindow", "Y", None, QtGui.QApplication.UnicodeUTF8))
+        self.bZ.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Show X/Y plane", None, QtGui.QApplication.UnicodeUTF8))
         self.bZ.setText(QtGui.QApplication.translate("Q7VTKWindow", "Z", None, QtGui.QApplication.UnicodeUTF8))
         self.cMirror.setText(QtGui.QApplication.translate("Q7VTKWindow", "Mirror", None, QtGui.QApplication.UnicodeUTF8))
+        self.bSuffleColors.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Change colors to random", None, QtGui.QApplication.UnicodeUTF8))
+        self.bBlackColor.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Switch black/white colors", None, QtGui.QApplication.UnicodeUTF8))
+        self.bBackControl.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Raise CGNS.NAV control window", None, QtGui.QApplication.UnicodeUTF8))
+        self.bUpdate.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Update selected list from tree view", None, QtGui.QApplication.UnicodeUTF8))
         self.cRevert.setText(QtGui.QApplication.translate("Q7VTKWindow", "Revert", None, QtGui.QApplication.UnicodeUTF8))
         self.cSync.setText(QtGui.QApplication.translate("Q7VTKWindow", "Sync", None, QtGui.QApplication.UnicodeUTF8))
+        self.bPrevious.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Highlight previous selected item", None, QtGui.QApplication.UnicodeUTF8))
+        self.bReset.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Clear selection list", None, QtGui.QApplication.UnicodeUTF8))
+        self.bNext.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Highlight next selected item", None, QtGui.QApplication.UnicodeUTF8))
 
 from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import Res_rc

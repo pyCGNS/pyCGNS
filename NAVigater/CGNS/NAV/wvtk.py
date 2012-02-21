@@ -47,13 +47,17 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def __init__(self,control,node,fgprint,tmodel):
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,node,fgprint)
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
-      self._vtktree=self.wCGNSTree(self._fgprint.tree)
+      self._epix=QIcon(QPixmap(":/images/icons/empty.gif"))
+      self._spix=QIcon(QPixmap(":/images/icons/selected.gif"))
+      self._npix=QIcon(QPixmap(":/images/icons/unselected.gif"))
       self._T=self._fgprint.tree
       self._selected=[]
+      self._cacheActor={}
       self._tmodel=tmodel
       self._currentactor=None
       self._camera={}
       self._blackonwhite=False
+      self._vtktree=self.wCGNSTree(self._fgprint.tree)
       self.display.Initialize()
       self.display.Start()
       self.display.show()
@@ -119,11 +123,14 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     return self._parser.getPathFromObject(selected)
     
   def findPathObject(self,path):
+    if (self._cacheActor.has_key(path)): return self._cacheActor[path]
     alist=self._vtkren.GetActors()
     alist.InitTraversal()
     a=alist.GetNextItem()
     while a:
-        if (path==self.findObjectPath(a.GetMapper().GetInput())): return a
+        if (path==self.findObjectPath(a.GetMapper().GetInput())):
+            self._cacheActor[path]=a
+            return a
         a=alist.GetNextItem()
     return None
     
@@ -140,27 +147,29 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def annotatePick(self, object, event):
     self._selected=[]
     if self.picker.GetCellId() < 0:
-        self.textActor.VisibilityOff()
-        self._selected=[]
+      self.textActor.VisibilityOff()
+      self._selected=[]
     else:        
-        selPt = self.picker.GetSelectionPoint()
-        pickAct = self.picker.GetActors()
-        a=pickAct.InitTraversal()
+      selPt = self.picker.GetSelectionPoint()
+      pickAct = self.picker.GetActors()
+      a=pickAct.InitTraversal()
+      a=pickAct.GetNextItem()
+      t=''
+      sl=[]
+      sz=self._vtkwin.GetSize()[1]
+      while a:
+        x=a.GetMapper().GetInput()
+        s=self.findObjectPath(x)
+        t+=s+'\n'
+        self._selected+=[[s,a]]
+        self.textMapper.SetInput(t)
+        y=sz-self.textMapper.GetHeight(self._vtkren)-10.
+        self.textActor.SetPosition((10.,y))
+        self.textActor.VisibilityOn()
+        self._vtkren.AddActor(self.textActor)
         a=pickAct.GetNextItem()
-        t=''
-        sl=[]
-        while a:
-          x=a.GetMapper().GetInput()
-          s=self.findObjectPath(x)
-          t+=s+'\n'
-          self._selected+=[[s,a]]
-          self.textMapper.SetInput(t)
-          yd=self._vtkwin.GetSize()[1]-self.textMapper.GetHeight(self._vtkren)-10.
-          self.textActor.SetPosition((10.,yd))
-          self.textActor.VisibilityOn()
-          self._vtkren.AddActor(self.textActor)
-          a=pickAct.GetNextItem()
-          self.setCurrentPath(s)
+        self.setCurrentPath(s)
+      self.fillCurrentPath()
                              
   def addPicker(self):
     self.textMapper = vtk.vtkTextMapper()
@@ -277,6 +286,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtk.GetRenderWindow().AddRenderer(self._waxs)
     
       self._parser=Mesh(T)
+      self._selected=[]
       alist=self._parser.createActors()
       self.fillCurrentPath()
  
@@ -312,7 +322,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                 
       istyle = vtk.vtkInteractorStyleTrackballCamera()
       istyle.AutoAdjustCameraClippingRangeOn()
-      istyle=InteractorStyle()
+      #istyle=InteractorStyle()
       self._vtk.SetInteractorStyle(istyle)
       
       self._vtk.AddObserver("KeyPressEvent", self.CharCallback)
@@ -367,13 +377,21 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.iren.GetRenderWindow().Render()
 
   def b_update(self):
+      self.busyCursor()
       self._selected=[]
       self.textActor.VisibilityOff()
-      print self._tmodel.getSelectedShortCut()
+      tlist=self._tmodel.getSelectedShortCut()
+      slist=self._parser.getPathList()
+      for i in tlist:
+          if (i in slist):
+              self._selected+=[[i,self.findPathObject(i)]]
+      self.fillCurrentPath()
+      self.readyCursor()
       
   def b_reset(self):
       self._selected=[]
       self.textActor.VisibilityOff()
+      self.fillCurrentPath()
       
   def b_next(self):
       if (len(self._selected)>0):        
@@ -388,6 +406,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def changeCurrentActor(self,atp,combo=True):
       path =atp[0]
       actor=atp[1]
+
+      if (actor is None): return
+      
       if (len(atp)<3): atp=[path,actor,self.getRandomColor()]
       color=atp[2]
       self._currentactor=[path,actor,color]
@@ -479,6 +500,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     
   def changeCurrentPath(self, *args):
       path=self.cCurrentPath.currentText()
+      if (path==''): return
       actor=self.findPathObject(path)
       self.changeCurrentActor([path,actor])
 
@@ -488,8 +510,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def fillCurrentPath(self):
       self.cCurrentPath.clear()
+      sel=[n[0] for n in self._selected]
+      self.cCurrentPath.addItem(self._epix,'')
       for i in self._parser.getPathList():
-          self.cCurrentPath.addItem(i)
+          pix=self._npix
+          if (i in sel): pix=self._spix
+          self.cCurrentPath.addItem(pix,i)
           
   def setAxis(self,pos,iaxis):
     camera=self._vtkren.GetActiveCamera()
@@ -565,12 +591,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtk.GetRenderWindow().Finalize()
       QWidget.close(self)  
 
-class InteractorStyle(vtk.vtkInteractorStyle):
-    def __init__(self):
-        vtk.vtkInteractorStyle.__init__(self)        
-        self.HighlightProp3D()
-    def HighlightProp3D(self,prop3D=None):
-        print 'rere'
+# class InteractorStyle(vtk.vtkInteractorStyle):
+#     def __init__(self):
+#         vtk.vtkInteractorStyle.__init__(self)        
+#         self.HighlightProp3D()
+#     def HighlightProp3D(self,prop3D=None):
+#         print 'rere'
 
     
 # -----------------------------------------------------------------------------
