@@ -59,6 +59,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Add current view to view list</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -82,6 +85,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Write view list into a file</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -104,6 +110,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Remove current view from view list</string>
        </property>
        <property name="text">
         <string/>
@@ -147,6 +156,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Save view snapshot into a file</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -169,6 +181,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Save VTK data into a file</string>
        </property>
        <property name="text">
         <string/>
@@ -210,6 +225,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Show Y/Z plane</string>
+       </property>
        <property name="text">
         <string>X</string>
        </property>
@@ -235,6 +253,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Show X/Z plane</string>
+       </property>
        <property name="text">
         <string>Y</string>
        </property>
@@ -259,6 +280,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Show X/Y plane</string>
        </property>
        <property name="text">
         <string>Z</string>
@@ -308,6 +332,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Change colors to random</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -336,6 +363,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Switch black/white colors</string>
        </property>
        <property name="text">
         <string/>
@@ -394,6 +424,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Raise CGNS.NAV control window</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -429,6 +462,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Update selected list from tree view</string>
        </property>
        <property name="text">
         <string/>
@@ -493,6 +529,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Highlight previous selected item</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -516,6 +555,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Clear selection list</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -538,6 +580,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Highlight next selected item</string>
        </property>
        <property name="text">
         <string/>
