@@ -41,7 +41,7 @@ class Q7Window(QWidget,object):
         self._control=control
         self._fgprint=fgprint
         self._index=self.addChildWindow()
-        if (self._index==0):
+        if (self._index!=0):
             tit="%s:%s%.3d"%(OCTXT._ToolName,self._vtype,self._index)
         else:
             tit="%s:Control"%(OCTXT._ToolName)            

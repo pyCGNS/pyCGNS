@@ -15,9 +15,7 @@ import numpy as NPY
 import random
 import vtk
 
-
 # ----------------------------------------------------------------------------
-
 class wVTKContext():
     def __init__(self,cm):
       (self.vx,self.vy,self.vz)=cm.GetViewUp()
@@ -46,12 +44,13 @@ class wVTKContext():
 
 # -----------------------------------------------------------------
 class Q7VTK(Q7Window,Ui_Q7VTKWindow):
-  def __init__(self,control,node,fgprint):
+  def __init__(self,control,node,fgprint,tmodel):
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,node,fgprint)
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
       self._vtktree=self.wCGNSTree(self._fgprint.tree)
       self._T=self._fgprint.tree
       self._selected=[]
+      self._tmodel=tmodel
       self._currentactor=None
       self._camera={}
       self._blackonwhite=False
@@ -66,9 +65,40 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bBlackColor.clicked.connect(self.b_blackandwhite)
       self.bAddView.clicked.connect(self.b_saveview)
       self.bNext.clicked.connect(self.b_next)
-      QObject.connect(self.cViews,SIGNAL("currentIndexChanged(int)"),self.b_loadview)
       self.PickedRenderer=None
-        
+      self.bPrevious.clicked.connect(self.b_prev)
+      self.bReset.clicked.connect(self.b_reset)
+      self.bUpdate.clicked.connect(self.b_update)
+      QObject.connect(self.cViews,SIGNAL("currentIndexChanged(int)"),self.b_loadview)
+      QObject.connect(self.cCurrentPath,
+                      SIGNAL("currentIndexChanged(int)"),
+                      self.changeCurrentPath)
+
+  def setNearClippingPlane(self,plane):
+    camera=self._vtkren.GetActiveCamera()
+    value=plane/1000.
+    camera.SetClippingRange(value,camera.GetClippingRange()[1])
+    self._vtkren.Render()
+    self._waxs.Render()
+    self.iren.Render()
+
+  def setFarClippingPlane(self,plane):
+    camera=self._vtkren.GetActiveCamera()
+    value=plane/20.
+    camera.SetClippingRange(camera.GetClippingRange()[0],value)
+    self._vtkren.Render()
+    self._waxs.Render()
+    self.iren.Render()    
+      
+  def setViewAngle(self,angle):
+    camera=self._vtkren.GetActiveCamera()
+    camera.SetViewAngle(angle)
+    bounds=self._vtkren.ComputeVisiblePropBounds()
+    self._vtkren.ResetCamera()
+    self._vtkren.Render()
+    self._waxs.Render()
+    self.iren.Render()
+         
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
     self.camAxes.SetViewUp(cam.GetViewUp())
@@ -87,6 +117,15 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def findObjectPath(self,selected):
     return self._parser.getPathFromObject(selected)
+    
+  def findPathObject(self,path):
+    alist=self._vtkren.GetActors()
+    alist.InitTraversal()
+    a=alist.GetNextItem()
+    while a:
+        if (path==self.findObjectPath(a.GetMapper().GetInput())): return a
+        a=alist.GetNextItem()
+    return None
     
   def leave(self):
     self._wtop.destroy()
@@ -116,7 +155,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           t+=s+'\n'
           self._selected+=[[s,a]]
           self.textMapper.SetInput(t)
-          yd=self._vtk.GetRenderWindow().GetSize()[1]-self.textMapper.GetHeight(self._vtkren)-10.
+          yd=self._vtkwin.GetSize()[1]-self.textMapper.GetHeight(self._vtkren)-10.
           self.textActor.SetPosition((10.,yd))
           self.textActor.VisibilityOn()
           self._vtkren.AddActor(self.textActor)
@@ -136,7 +175,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     self.textActor.SetMapper(self.textMapper)
     self.picker = vtk.vtkCellPicker()
     self.picker.SetTolerance(0.001)
-    self.picker.AddObserver("EndPickEvent", self.annotatePick)
+    self.picker.AddObserver("EndPickEvent", self.annotatePick)   
     
   def addAxis(self):
     self.camAxes = vtk.vtkCamera()
@@ -229,7 +268,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._waxs=self.addAxis()
       wpck = self.addPicker()
 
-      self._vtk.GetRenderWindow().SetNumberOfLayers(2)
+      self._vtkwin=self._vtk.GetRenderWindow()
+      self._vtkwin.SetNumberOfLayers(2)
       self._vtkren.SetLayer(0)
       self._waxs.SetLayer(1)
 
@@ -272,6 +312,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                 
       istyle = vtk.vtkInteractorStyleTrackballCamera()
       istyle.AutoAdjustCameraClippingRangeOn()
+      istyle=InteractorStyle()
       self._vtk.SetInteractorStyle(istyle)
       
       self._vtk.AddObserver("KeyPressEvent", self.CharCallback)
@@ -282,11 +323,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.iren.SetPicker(self.picker)
 
       self._vtkren.AddObserver("StartEvent", self.SyncCameras)
-        
       
       self._bindings={ 'r' :self.b_refresh,
                        'c'     :self.b_shufflecolors,
-                       'T'     :self.b_nexttarget,
                        'x'     :self.b_xaxis,
                        'y'     :self.b_yaxis,
                        'z'     :self.b_zaxis,
@@ -327,34 +366,51 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           actor = actors.GetNextItem()
       self.iren.GetRenderWindow().Render()
 
-  def b_next(self):
-      self.b_nexttarget(None)
+  def b_update(self):
+      self._selected=[]
+      self.textActor.VisibilityOff()
+      print self._tmodel.getSelectedShortCut()
       
-  def b_nexttarget(self,pos):
-      if (self._currentactor !=None):
-          color=self._currentactor[2]
-          actor=self._currentactor[1]
-          actor.GetProperty().SetColor(color)
-          self._vtk.GetRenderWindow().GetRenderers().GetFirstRenderer().RemoveActor(actor)
-          self._vtkren.AddActor(actor)
-          self._vtk.GetRenderWindow().Render()
-
+  def b_reset(self):
+      self._selected=[]
+      self.textActor.VisibilityOff()
+      
+  def b_next(self):
       if (len(self._selected)>0):        
           self._selected=self._selected[1:]+[self._selected[0]]
-          self._currentactor=self._selected[0]
-          actor=self._currentactor[1]
-          color=actor.GetProperty().GetColor()
-          self._currentactor.append(color)
-          actor.GetProperty().SetColor(1,0,0)
-          self._vtkren.RemoveActor(actor)
-          self._vtk.GetRenderWindow().GetRenderers().GetFirstRenderer().AddActor(actor)
-          self._vtk.GetRenderWindow().Render()
+          self.changeCurrentActor(self._selected[0],False)
+      
+  def b_prev(self):
+      if (len(self._selected)>0):        
+          self._selected=[self._selected[-1]]+self._selected[0:-1]
+          self.changeCurrentActor(self._selected[0],False)
+      
+  def changeCurrentActor(self,atp,combo=True):
+      path =atp[0]
+      actor=atp[1]
+      if (len(atp)<3): atp=[path,actor,self.getRandomColor()]
+      color=atp[2]
+      self._currentactor=[path,actor,color]
+      
+      actor.GetProperty().SetColor(color)
+      self._vtkwin.GetRenderers().GetFirstRenderer().RemoveActor(actor)
+      self._vtkren.AddActor(actor)
+      self._vtk.GetRenderWindow().Render()
+
+      if (not combo):
+          path=self.findObjectPath(actor.GetMapper().GetInput())
+          self.setCurrentPath(path)
+
+      actor.GetProperty().SetColor(1,0,0)
+      self._vtkren.RemoveActor(actor)
+      self._vtkwin.GetRenderers().GetFirstRenderer().AddActor(actor)
+      self._vtkwin.Render()
+
 
   def HighlightBoundingBox(self):
       outline=vtk.vtkOutlineSource()
       outlineMapper=vtk.vtkPolyDataMapper()
       outlineMapper.SetInput(outline.GetOutput())
-
       pickedRenderer=None
       currentProp=None
 
@@ -366,9 +422,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       outlineActor.GetProperty().SetAmbient(1.0)
       outlineActor.GetProperty().SetDiffuse(0.0)
 
-      
-      
-      
   def b_loadview(self,name=None):
       vname=self.cViews.currentText()
       if (vname!=""):
@@ -392,7 +445,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     while self._camera.has_key(name):
         n+=1
         name='View %s' % n
-    self._camera[name]=(camera.GetViewUp(),camera.GetClippingRange(),camera.GetPosition(),camera.GetFocalPoint())
+    self._camera[name]=(camera.GetViewUp(),
+                        camera.GetClippingRange(),
+                        camera.GetPosition(),
+                        camera.GetFocalPoint())
     self.cViews.addItem(name)
 
   def b_refresh(self,pos):
@@ -421,6 +477,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (self.cMirror.isChecked()): self.setAxis(pos,-3)
       else: self.setAxis(pos,3)
     
+  def changeCurrentPath(self, *args):
+      path=self.cCurrentPath.currentText()
+      actor=self.findPathObject(path)
+      self.changeCurrentActor([path,actor])
+
   def setCurrentPath(self,path):
       ix=self.cCurrentPath.findText(path)
       if (ix!=-1): self.cCurrentPath.setCurrentIndex(ix)
@@ -502,7 +563,14 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def close(self):
       self._vtk.GetRenderWindow().Finalize()
-      QWidget.close(self)
+      QWidget.close(self)  
+
+class InteractorStyle(vtk.vtkInteractorStyle):
+    def __init__(self):
+        vtk.vtkInteractorStyle.__init__(self)        
+        self.HighlightProp3D()
+    def HighlightProp3D(self,prop3D=None):
+        print 'rere'
 
     
 # -----------------------------------------------------------------------------

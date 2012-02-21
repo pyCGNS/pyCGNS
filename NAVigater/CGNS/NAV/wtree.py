@@ -13,22 +13,21 @@ from CGNS.NAV.wform import Q7Form
 from CGNS.NAV.wvtk import Q7VTK
 from CGNS.NAV.wquery import Q7Query
 from CGNS.NAV.mquery import Q7QueryTableModel
-from CGNS.NAV.mtree import Q7TreeModel
-from CGNS.NAV.mtree import Q7TreeItem
-import CGNS.NAV.wconstants as Q7WC
+from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem
 from CGNS.NAV.wfingerprint import Q7Window
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
 class Q7TreeItemDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         if ((index.column()==0) and
-            (index.internalPointer().sidsName() not in Q7WC.reservedNames)):
+            (index.internalPointer().sidsName() not in OCTXT._ReservedNames)):
             option.font.setWeight(QFont.Bold)
             QStyledItemDelegate.paint(self, painter, option, index)
             option.font.setWeight(QFont.Light)
         elif (index.column()==8):
-            option.font.setFamily(Q7WC.FixedFontTable)
+            option.font.setFamily(OCTXT.FixedFontTable)
             QStyledItemDelegate.paint(self, painter, option, index)
         elif (index.column() in [2,4,5,6,7]):
             option.decorationPosition=QStyleOptionViewItem.Top
@@ -56,8 +55,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                         SIGNAL("customContextMenuRequested(QPoint)"),
                         self.clickedNode)
         self.querymodel=Q7QueryTableModel(self)
-        self.querymodel.setDefaultQuery()
-        qlist=self.querymodel.defaultQueriesList
+        qlist=self.querymodel.queriesNamesList()
         qlist.sort()
         for q in qlist: self.cQuery.addItem(q)
         ix=self.cQuery.findText(self.querymodel.getCurrentQuery())
@@ -131,8 +129,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.unmarkall()
             return
         qry=self.querymodel
-        if (q in qry.queries()):
-            sl=qry.queries()[q].run(self._fgprint.tree)
+        if (q in qry.queriesNamesList()):
+            sl=qry.getQuery(q).run(self._fgprint.tree)
             self.treeview.model().markExtendToList(sl)
             self.treeview.model().updateSelected()
         self.treeview.refreshView()
@@ -160,7 +158,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def vtkview(self):
         node=self.treeview.currentIndex().internalPointer()
         self.busyCursor()
-        vtk=Q7VTK(self._control,node,self._fgprint)
+        vtk=Q7VTK(self._control,node,self._fgprint,self.treeview.model())
         self.readyCursor()
         vtk.show()
     def queryview(self):

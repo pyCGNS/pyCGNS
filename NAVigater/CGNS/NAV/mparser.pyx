@@ -87,13 +87,12 @@ class CGNSparser:
           ne=CGU.getNodeByPath(zT,e)[1]
           et=ne[0]
           eb=ne[1]
-          
           ea=CGU.getNodeByPath(zT,e+'/'+CGK.ElementConnectivity_s)[1]
           if (et in sp.QUAD_SURFACE):
-            sl.append(sp.extQuadFacesPoints(ea,et,sn,mr,eb))
+            sl.append(list(sp.extQuadFacesPoints(ea,et,sn,mr,eb))+[e+'[QUAD]'])
           if (et in sp.TRI_SURFACE):
-            sl.append(sp.extTriFacesPoints(ea,et,sn,mr,eb))
-        self._zones_ns[z]=([cx[1],cy[1],cz[1]],meshpath,et,sl,e)
+            sl.append(list(sp.extTriFacesPoints(ea,et,sn,mr,eb))+[e+'[TRI]'])
+        self._zones_ns[z]=([cx[1],cy[1],cz[1]],meshpath,et,sl)
     return None
 
 #----------------------------------------------------------------------------
@@ -140,6 +139,11 @@ class Mesh(CGNSparser):
   def getPathFromObject(self,selectedobject):
     for (o,p) in [(a[2],a[3]) for a in self._actors]:                  
         if (selectedobject==o): return p
+    return ''
+    
+  def getObjectFromPath(self,selectedpath):
+    for (o,p) in [(a[2],a[3]) for a in self._actors]:                  
+        if (selectedpath==p): return o
     return ''
     
 #  @cython.boundscheck(False)
@@ -259,8 +263,8 @@ class Mesh(CGNSparser):
       dx=zones[zn][0][0]
       dy=zones[zn][0][1]
       dz=zones[zn][0][2]
-      for surf in zones[zn][-2]:
-        path=zones[zn][-1]
+      for surf in zones[zn][-1]:
+        path=surf[-1]
         if (surf[0]==CGK.QUAD_4): npe=4
         else: npe=3
         sf=surf[1]

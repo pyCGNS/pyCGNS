@@ -399,7 +399,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/control.gif</normaloff>:/images/icons/control.gif</iconset>
+         <normaloff>:/images/icons/top.gif</normaloff>:/images/icons/top.gif</iconset>
        </property>
       </widget>
      </item>
@@ -417,9 +417,25 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="bReset">
+      <widget class="QPushButton" name="bUpdate">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="text">
-        <string>Reset</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/undo-last-modification.gif</normaloff>:/images/icons/undo-last-modification.gif</iconset>
        </property>
       </widget>
      </item>
@@ -437,16 +453,16 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="cHide">
+      <widget class="QCheckBox" name="cRevert">
        <property name="text">
-        <string>Hide</string>
+        <string>Revert</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="cExclusive">
+      <widget class="QCheckBox" name="cSync">
        <property name="text">
-        <string>Exclusive</string>
+        <string>Sync</string>
        </property>
       </widget>
      </item>
@@ -482,12 +498,12 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/arrow.gif</normaloff>:/images/icons/arrow.gif</iconset>
+         <normaloff>:/images/icons/control.gif</normaloff>:/images/icons/control.gif</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="bUpdate">
+      <widget class="QPushButton" name="bReset">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -505,7 +521,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/undo-last-modification.gif</normaloff>:/images/icons/undo-last-modification.gif</iconset>
+         <normaloff>:/images/icons/node-sids-leaf.gif</normaloff>:/images/icons/node-sids-leaf.gif</iconset>
        </property>
       </widget>
      </item>
@@ -528,7 +544,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/arrow_R.gif</normaloff>:/images/icons/arrow_R.gif</iconset>
+         <normaloff>:/images/icons/node-sids-closed.gif</normaloff>:/images/icons/node-sids-closed.gif</iconset>
        </property>
       </widget>
      </item>

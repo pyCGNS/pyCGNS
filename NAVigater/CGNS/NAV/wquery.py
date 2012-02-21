@@ -31,11 +31,14 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.querytableview.viewport().installEventFilter(self)
         self.querytablemodel.setDelegates(self.querytableview,self.editFrame)
         self.bClose.clicked.connect(self.reject)
+        self.bSave.clicked.connect(self.queriessave)
         QObject.connect(self.cQueryName,
                         SIGNAL("currentIndexChanged(int)"),
                         self.changeCurrentQuery)
         self.resizeAll()
-        self.showQuery(self.querytablemodel.currentQuery)
+        self.showQuery(self.querytablemodel.getCurrentQuery())
+    def queriessave(self):
+        self.querytablemodel.saveUserQueries()
     def changeCurrentQuery(self,*args):
         qtm=self.querytablemodel
         qtm.setCurrentQuery(self.cQueryName.currentText())
@@ -46,12 +49,12 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
     def reject(self):
         self.close()
     def reset(self):
-        for qn in self.querytablemodel._queries:
+        for qn in self.querytablemodel.queriesNamesList():
             self.cQueryName.addItem(qn)
     def queries(self):
-        return self.querytablemodel._queries
+        return self.querytablemodel.queriesNamesList()
     def showQuery(self,name):
-        if (self.querytablemodel._queries.has_key(name)):
+        if (name in self.querytablemodel.queriesNamesList()):
             pass
     def show(self):
         self.reset()
