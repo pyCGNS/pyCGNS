@@ -68,12 +68,18 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bSuffleColors.clicked.connect(self.b_shufflecolors)
       self.bBlackColor.clicked.connect(self.b_blackandwhite)
       self.bAddView.clicked.connect(self.b_saveview)
+      self.bRemoveView.clicked.connect(self.b_delview)
       self.bNext.clicked.connect(self.b_next)
       self.PickedRenderer=None
       self.bPrevious.clicked.connect(self.b_prev)
       self.bReset.clicked.connect(self.b_reset)
       self.bUpdate.clicked.connect(self.b_update)
-      QObject.connect(self.cViews,SIGNAL("currentIndexChanged(int)"),self.b_loadview)
+      QObject.connect(self.cViews,
+                      SIGNAL("currentIndexChanged(int)"),
+                      self.b_loadview)
+      QObject.connect(self.cViews.lineEdit(),
+                      SIGNAL("editingFinished()"),
+                      self.b_saveview)
       QObject.connect(self.cCurrentPath,
                       SIGNAL("currentIndexChanged(int)"),
                       self.changeCurrentPath)
@@ -445,7 +451,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def b_loadview(self,name=None):
       vname=self.cViews.currentText()
-      if (vname!=""):
+      if (self._camera.has_key(vname)):
           (vu,cr,p,fp)=self._camera[vname]
           camera=self._vtkren.GetActiveCamera()
           camera.SetViewUp(vu)
@@ -456,21 +462,27 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self._waxs.Render()
           self.iren.Render()
 
-      
+  def updateViewList(self):
+    k=self._camera.keys()
+    k.sort()
+    self.cViews.clear()
+    for i in k: self.cViews.addItem(i)
+        
+  def b_delview(self,name=None):
+    name=str(self.cViews.currentText())
+    if ((name=="") or (not self._camera.has_key(name))): return
+    del self._camera[name]
+    self.updateViewList()
+    
   def b_saveview(self,name=None):
-    if (self._camera=={}):
-        self.cViews.addItem("")
     camera = self._vtkren.GetActiveCamera()
-    n=1
-    name='View %s' % n 
-    while self._camera.has_key(name):
-        n+=1
-        name='View %s' % n
+    name=str(self.cViews.currentText())
+    if ((name=="") or (self._camera.has_key(name))): return
     self._camera[name]=(camera.GetViewUp(),
                         camera.GetClippingRange(),
                         camera.GetPosition(),
                         camera.GetFocalPoint())
-    self.cViews.addItem(name)
+    self.updateViewList()
 
   def b_refresh(self,pos):
       self._vtk.GetRenderWindow().Render()
