@@ -77,32 +77,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       QObject.connect(self.cCurrentPath,
                       SIGNAL("currentIndexChanged(int)"),
                       self.changeCurrentPath)
-
-  def setNearClippingPlane(self,plane):
-    camera=self._vtkren.GetActiveCamera()
-    value=plane/1000.
-    camera.SetClippingRange(value,camera.GetClippingRange()[1])
-    self._vtkren.Render()
-    self._waxs.Render()
-    self.iren.Render()
-
-  def setFarClippingPlane(self,plane):
-    camera=self._vtkren.GetActiveCamera()
-    value=plane/20.
-    camera.SetClippingRange(camera.GetClippingRange()[0],value)
-    self._vtkren.Render()
-    self._waxs.Render()
-    self.iren.Render()    
+      self._outlineActor=None
       
-  def setViewAngle(self,angle):
-    camera=self._vtkren.GetActiveCamera()
-    camera.SetViewAngle(angle)
-    bounds=self._vtkren.ComputeVisiblePropBounds()
-    self._vtkren.ResetCamera()
-    self._vtkren.Render()
-    self._waxs.Render()
-    self.iren.Render()
-         
+      self.pickedRenderer=None
+      self.currentRenderer=None
+        
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
     self.camAxes.SetViewUp(cam.GetViewUp())
@@ -301,7 +280,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                 if (self._xmax<a[1][1]):self._xmax=a[1][1]
                 if (self._ymax<a[1][3]):self._ymax=a[1][3]
                 if (self._zmax<a[1][5]):self._zmax=a[1][5]
-               
+                
       self._vtkren.SetBackground(1,1,1)  
       self._vtkren.ResetCamera()
       self._vtkren.GetActiveCamera().Elevation(0.0)
@@ -321,8 +300,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._ctxt.setPosition(self.px,self.py,self.pz)
                 
       istyle = vtk.vtkInteractorStyleTrackballCamera()
-      istyle.AutoAdjustCameraClippingRangeOn()
-      #istyle=InteractorStyle()
+##       istyle.AutoAdjustCameraClippingRangeOn()
+##       istyle=vtk.vtkInteractorStyleUser()
+##       istyle.SetPickColor(0,1,0)
+##       istyle=InteractorStyle()
       self._vtk.SetInteractorStyle(istyle)
       
       self._vtk.AddObserver("KeyPressEvent", self.CharCallback)
@@ -403,45 +384,31 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self._selected=[self._selected[-1]]+self._selected[0:-1]
           self.changeCurrentActor(self._selected[0],False)
       
-  def changeCurrentActor(self,atp,combo=True):
-      path =atp[0]
-      actor=atp[1]
+##   def changeCurrentActor(self,atp,combo=True):
+##       path =atp[0]
+##       actor=atp[1]
 
-      if (actor is None): return
+##       self.showSelectedActor(actor)
+
+##       if (actor is None): return
       
-      if (len(atp)<3): atp=[path,actor,self.getRandomColor()]
-      color=atp[2]
-      self._currentactor=[path,actor,color]
+##       if (len(atp)<3): atp=[path,actor,self.getRandomColor()]
+##       color=atp[2]
+##       self._currentactor=[path,actor,color]
       
-      actor.GetProperty().SetColor(color)
-      self._vtkwin.GetRenderers().GetFirstRenderer().RemoveActor(actor)
-      self._vtkren.AddActor(actor)
-      self._vtk.GetRenderWindow().Render()
+##       actor.GetProperty().SetColor(color)
+##       self._vtkwin.GetRenderers().GetFirstRenderer().RemoveActor(actor)
+##       self._vtkren.AddActor(actor)
+##       self._vtk.GetRenderWindow().Render()
 
-      if (not combo):
-          path=self.findObjectPath(actor.GetMapper().GetInput())
-          self.setCurrentPath(path)
+##       if (not combo):
+##           path=self.findObjectPath(actor.GetMapper().GetInput())
+##           self.setCurrentPath(path)
 
-      actor.GetProperty().SetColor(1,0,0)
-      self._vtkren.RemoveActor(actor)
-      self._vtkwin.GetRenderers().GetFirstRenderer().AddActor(actor)
-      self._vtkwin.Render()
-
-
-  def HighlightBoundingBox(self):
-      outline=vtk.vtkOutlineSource()
-      outlineMapper=vtk.vtkPolyDataMapper()
-      outlineMapper.SetInput(outline.GetOutput())
-      pickedRenderer=None
-      currentProp=None
-
-      outlineActor=vtk.vtkActor()
-      outlineActor.PickableOff()
-      outlineActor.DragableOff()
-      outlineActor.SetMapper(outlineMapper)
-      outlineActor.GetProperty().SetColor(1,0,0)
-      outlineActor.GetProperty().SetAmbient(1.0)
-      outlineActor.GetProperty().SetDiffuse(0.0)
+##       actor.GetProperty().SetColor(1,0,0)
+##       self._vtkren.RemoveActor(actor)
+##       self._vtkwin.GetRenderers().GetFirstRenderer().AddActor(actor)
+##       self._vtkwin.Render()
 
   def b_loadview(self,name=None):
       vname=self.cViews.currentText()
@@ -458,6 +425,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
       
   def b_saveview(self,name=None):
+    self.picker.Pick(0,0,0,0)
     if (self._camera=={}):
         self.cViews.addItem("")
     camera = self._vtkren.GetActiveCamera()
@@ -589,16 +557,87 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def close(self):
       self._vtk.GetRenderWindow().Finalize()
-      QWidget.close(self)  
+      QWidget.close(self)
 
-# class InteractorStyle(vtk.vtkInteractorStyle):
-#     def __init__(self):
-#         vtk.vtkInteractorStyle.__init__(self)        
-#         self.HighlightProp3D()
-#     def HighlightProp3D(self,prop3D=None):
-#         print 'rere'
+  def changeCurrentActor(self,atp,combo=True):
+      if (not combo):
+          path=self.findObjectPath(actor.GetMapper().GetInput())
+          self.setCurrentPath(path)
+      path =atp[0]
+      actor=atp[1]
+      
+##       if (len(atp)<3): atp=[path,actor,self.getRandomColor()]
+##       color=atp[2]
+##       self._currentactor=[path,actor,color] 
+      
+      if (actor is None): return
+      if (not self._outlineActor is None):
+          self._vtkren.RemoveActor(self._outlineActor)
+      if (not self._currentactor is None):
+          act=self._currentactor[1]
+          col=self._currentactor[2]
+          self._vtkwin.GetRenderers().GetFirstRenderer().RemoveActor(act)
+          act.GetProperty().SetColor(col)
+          self._vtkren.AddActor(act)
+          
+      outline=vtk.vtkOutlineSource()
+      outlineMapper=vtk.vtkPolyDataMapper()
+      outlineMapper.SetInput(outline.GetOutput())
+      self._outlineActor=vtk.vtkActor()
+      self._outlineActor.PickableOff()
+      self._outlineActor.DragableOff()
+      self._outlineActor.SetMapper(outlineMapper)
+      self._outlineActor.GetProperty().SetColor(1,0,0)
+      self._outlineActor.GetProperty().SetAmbient(1.0)
+      self._outlineActor.GetProperty().SetDiffuse(0.0)
+      bounds=actor.GetBounds()
+      outline.SetBounds(bounds)
+      self._vtkren.AddActor(self._outlineActor)
+
+      color=actor.GetProperty().GetColor()
+      actor.GetProperty().SetColor(1,0,0)
+      self._vtkren.RemoveActor(actor)
+      self._vtkwin.GetRenderers().GetFirstRenderer().AddActor(actor)      
+      self._vtk.GetRenderWindow().Render() 
+      self._vtkren.Render()
+      self._waxs.Render()
+      self.iren.Render()
+      self._currentactor=[path,actor,color]  
+      
+
+class InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
+    def __init__(self):
+        self.HighlightProp3D()
+    def HighlightProp3D(self,prop3D=None):
+        print 'titi'
+
 
     
 # -----------------------------------------------------------------------------
         
+##     def HighlightProp3D(self, prop3D):
+##         # no prop picked now 
+##         if not prop3D is None:
+##             # was there previously?
+##             if not self.PickedRenderer is None and self.OutlineActor <> None:
+##                 self.PickedRenderer.RemoveActor(self.OutlineActor)
+##                 self.PickedRenderer = None
+##             else: #prop picked now 
+##                 if not self.OutlineActor:
+##                     # have to defer creation to get right type
+##                     self.OutlineActor = vtk.vtkActor()
+##                     self.OutlineActor.PickableOff()
+##                     self.OutlineActor.DragableOff()
+##                     self.OutlineActor.SetMapper(self.OutlineMapper)
+##                     self.OutlineActor.GetProperty().SetColor(self.PickColor)
+##                     self.OutlineActor.GetProperty().SetAmbient(1.0)
+##                     self.OutlineActor.GetProperty().SetDiffuse(0.0)
+                
+##                 # check if picked in different renderer to previous pick
+##                 if self.CurrentRenderer <> self.PickedRenderer:
+##                     if self.PickedRenderer <> None and self.OutlineActor <> None:
+##                         self.PickedRenderer.RemoveActor(self.OutlineActor)
+##                     self.CurrentRenderer.AddActor(self.OutlineActor)
+##                     self.PickedRenderer = self.CurrentRenderer
+##                 self.Outline.SetBounds(prop3D.GetBounds())
 
