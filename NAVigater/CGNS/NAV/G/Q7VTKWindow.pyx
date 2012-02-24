@@ -164,7 +164,7 @@ class Ui_Q7VTKWindow(object):
         self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.verticalLayout_2 = QtGui.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.display = QVTKRenderWindowInteractor(Q7VTKWindow)
+        self.display = Q7VTKRenderWindowInteractor(Q7VTKWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -268,5 +268,5 @@ class Ui_Q7VTKWindow(object):
         self.bReset.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Clear selection list", None, QtGui.QApplication.UnicodeUTF8))
         self.bNext.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Highlight next selected item", None, QtGui.QApplication.UnicodeUTF8))
 
-from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
+from CGNS.NAV.wvtkinteractor import Q7VTKRenderWindowInteractor
 import Res_rc
