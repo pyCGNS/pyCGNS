@@ -13,19 +13,19 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 try:
   import PySide.QtCore
 except:
-  print """%s: cannot import PySide.QtCore..."""%(OCTXT.ToolName)
+  print """%s: cannot import PySide.QtCore..."""%(OCTXT._ToolName)
   sys.exit(-1)
   
 try:
   import vtk
 except:
-  print """%s: cannot import vtk..."""%(OCTXT.ToolName)
+  print """%s: cannot import vtk..."""%(OCTXT._ToolName)
   sys.exit(-1)
   
 try:
   import numpy
 except:
-  print """%s: cannot import numpy..."""%(OCTXT.ToolName)
+  print """%s: cannot import numpy..."""%(OCTXT._ToolName)
   sys.exit(-1)
   
 prog=sys.argv[0]
@@ -49,13 +49,13 @@ def usage():
   -R : recurse on all tree
   -h : help
   -v : verbose (trace)
-  """%(OCTXT.ToolName,OCTXT.ToolVersion)
+  """%(OCTXT._ToolName,OCTXT._ToolVersion)
   sys.exit(-1)
 
 try:
   os.environ['DISPLAY']
 except KeyError:
-  print """%s: you should define a DISPLAY variable..."""%(OCTXT.ToolName)
+  print """%s: you should define a DISPLAY variable..."""%(OCTXT._ToolName)
   sys.exit(-1)
   
 try:

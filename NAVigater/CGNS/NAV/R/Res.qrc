@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/hidden.gif</file>
     <file>icons/unselected.gif</file>
     <file>icons/selected.gif</file>
     <file>icons/top.gif</file>

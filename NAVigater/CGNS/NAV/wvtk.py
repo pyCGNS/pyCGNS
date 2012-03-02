@@ -50,8 +50,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._epix=QIcon(QPixmap(":/images/icons/empty.gif"))
       self._spix=QIcon(QPixmap(":/images/icons/selected.gif"))
       self._npix=QIcon(QPixmap(":/images/icons/unselected.gif"))
+      self._hpix=QIcon(QPixmap(":/images/icons/hidden.gif"))
       self._T=self._fgprint.tree
       self._selected=[]
+      self._hidden=[]
       self._cacheActor={}
       self._tmodel=tmodel
       self._currentactor=None
@@ -70,7 +72,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bAddView.clicked.connect(self.b_saveview)
       self.bRemoveView.clicked.connect(self.b_delview)
       self.bNext.clicked.connect(self.b_next)
-      self.PickedRenderer=None
       self.bPrevious.clicked.connect(self.b_prev)
       self.bReset.clicked.connect(self.b_reset)
       self.bUpdate.clicked.connect(self.b_update)
@@ -83,10 +84,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       QObject.connect(self.cCurrentPath,
                       SIGNAL("currentIndexChanged(int)"),
                       self.changeCurrentPath)
-
+      QObject.connect(self.cRevert,SIGNAL("stateChanged(int)"),self.revertActor)
       self.PickedRenderer=None
       self.OutlineActor=None
-      self._outlineActor=None
+      self.PropPicked=0
    
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
@@ -127,49 +128,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     self._control._control.delTreeView(self._viewid,
                                        self._fgprint.filedir,
                                        self._fgprint.filename)
-    self.leave()
-
-##   def annotatePick(self, object, event):
-##     self._selected=[]
-##     if self.picker.GetCellId() < 0:
-##       self.textActor.VisibilityOff()
-##       self._selected=[]
-##     else:
-##       selPt = self.picker.GetSelectionPoint()
-##       pickAct = self.picker.GetActors()
-##       a=pickAct.InitTraversal()
-##       a=pickAct.GetNextItem()
-##       t=''
-##       sl=[]
-##       sz=self._vtkwin.GetSize()[1]
-##       while a:
-##         x=a.GetMapper().GetInput()
-##         s=self.findObjectPath(x)
-##         t+=s+'\n'
-##         self._selected+=[[s,a]]
-##         self.textMapper.SetInput(t)
-##         y=sz-self.textMapper.GetHeight(self._vtkren)-10.
-##         self.textActor.SetPosition((10.,y))
-##         self.textActor.VisibilityOn()
-##         self._vtkren.AddActor(self.textActor)
-##         a=pickAct.GetNextItem()
-##         self.setCurrentPath(s)
-##       self.fillCurrentPath()
-                             
-##   def addPicker(self):
-##     self.textMapper = vtk.vtkTextMapper()
-##     tprop = self.textMapper.GetTextProperty()  
-##     tprop.SetFontFamilyToArial()
-##     tprop.SetFontSize(10)
-##     tprop.BoldOff()
-##     tprop.ShadowOn()
-##     tprop.SetColor(0, 0, 0)
-##     self.textActor = vtk.vtkActor2D()
-##     self.textActor.VisibilityOff()
-##     self.textActor.SetMapper(self.textMapper)
-##     self.picker = vtk.vtkCellPicker()
-##     self.picker.SetTolerance(0.001)
-##     self.picker.AddObserver("EndPickEvent", self.annotatePick)   
+    self.leave() 
     
   def addAxis(self):
     self.camAxes = vtk.vtkCamera()
@@ -249,6 +208,56 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     
     return self.renAxes
 
+  def addPicker(self):
+      self.textMapper = vtk.vtkTextMapper()
+      tprop = self.textMapper.GetTextProperty()  
+      tprop.SetFontFamilyToArial()
+      tprop.SetFontSize(10)
+      tprop.BoldOff()
+      tprop.ShadowOn()
+      tprop.SetColor(0, 0, 0)
+      self.textActor = vtk.vtkActor2D()
+      self.textActor.VisibilityOff()
+      self.textActor.SetMapper(self.textMapper)
+      self.picker = vtk.vtkCellPicker()
+      self.picker.SetTolerance(0.001)
+      self.picker.AddObserver("EndPickEvent",self.annotatePick)
+
+  def annotatePick(self,object,event):
+      self._selected=[]
+      if self.picker.GetCellId()<0:
+        self.textActor.VisibilityOff()
+        self.changeCurrentActor([None,None])
+        self.fillCurrentPath()
+      else:
+        selPt = self.picker.GetSelectionPoint()
+        pickAct = self.picker.GetActors()
+        actor=pickAct.GetLastItem()
+        path=self.findObjectPath(actor.GetMapper().GetInput())
+        self.changeCurrentActor([path,actor])
+        pickAct.InitTraversal()
+        a=pickAct.GetNextItem()        
+        t=''
+        sl=[]
+        sz=self._iren.GetRenderWindow().GetSize()[1]
+        s=None
+        self.PropPicked=1
+        while a:
+          x=a.GetMapper().GetInput()
+          s=self.findObjectPath(x)
+          t+=s+'\n'
+          self._selected+=[[s,a]]
+          self.textMapper.SetInput(t)
+          y=sz-self.textMapper.GetHeight(self._vtkren)-10.
+          self.textActor.SetPosition((10.,y))
+          self.textActor.VisibilityOn()
+          self._vtkren.AddActor(self.textActor)
+          a=pickAct.GetNextItem()
+        self.fillCurrentPath()
+        if (s is not None):
+            self.setCurrentPath(s)
+        self.PropPicked=0
+
   def wCGNSTree(self,T):
 
       o=vtk.vtkObject()
@@ -260,20 +269,22 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtkren = vtk.vtkRenderer()
       
       self._waxs=self.addAxis()
-##       wpck = self.addPicker()
-
       self._vtkwin=self._vtk.GetRenderWindow()
-      self._vtkwin.SetNumberOfLayers(2)
+      self._vtkwin.SetNumberOfLayers(3)
       self._vtkren.SetLayer(0)
-      self._waxs.SetLayer(1)
+      self._waxs.SetLayer(2)
+
+      self._foreground = vtk.vtkRenderer()
+      self._foreground.InteractiveOff()
+      self._foreground.SetLayer(1)
 
       self._vtk.GetRenderWindow().AddRenderer(self._vtkren)
       self._vtk.GetRenderWindow().AddRenderer(self._waxs)
-    
+      self._vtk.GetRenderWindow().AddRenderer(self._foreground)
+      
       self._parser=Mesh(T)
       self._selected=[]
       alist=self._parser.createActors()
-      self.fillCurrentPath()
  
       if (alist!=[]):
           for a in alist:
@@ -308,33 +319,21 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._istyle=Q7InteractorStyle(self)
       self._vtk.SetInteractorStyle(self._istyle)
       self._iren=self._istyle.GetInteractor()
+      self.fillCurrentPath()
       
-##       self._iren.SetPicker(self.picker)      
-##       self._vtk.AddObserver("KeyPressEvent", self.CharCallback)
-##       self._vtk.SetPicker(self.picker)
-##       self._iren=self._vtk.GetRenderWindow().GetInteractor()
-##       self._iren.AddObserver("KeyPressEvent", self.CharCallback)
-##       self._iren.SetPicker(self.picker)
-
       self._vtkren.AddObserver("StartEvent", self.SyncCameras)
       
-##       self._bindings={ 'r' :self.b_refresh,
-##                        'c'     :self.b_shufflecolors,
-##                        'x'     :self.b_xaxis,
-##                        'y'     :self.b_yaxis,
-##                        'z'     :self.b_zaxis,
-##                        's'     :self.b_surf,
-##                        'w'     :self.b_wire }
-
       self._p_wire=True
       self.setColors(True)
 
       return self._vtk.GetRenderWindow()
 
   def b_shufflecolors(self,pos=None):
+      self.changeCurrentActor([None,None])
       self.setColors(True)
       
   def b_blackandwhite(self,pos=None):
+      self.changeCurrentActor([None,None])
       self.setColors()
       
   def getRandomColor(self):
@@ -374,45 +373,25 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       
   def b_reset(self):
       self._selected=[]
+      for i in self._hidden:
+          i[1].VisibilityOn()
+      self._hidden=[]
+      self._selected=[]
       self.textActor.VisibilityOff()
+      self.changeCurrentActor([None,None])
       self.fillCurrentPath()
       
   def b_next(self):
       if (len(self._selected)>0):        
           self._selected=self._selected[1:]+[self._selected[0]]
           self.changeCurrentActor(self._selected[0],False)
+          return self._selected[0]
       
   def b_prev(self):
       if (len(self._selected)>0):        
           self._selected=[self._selected[-1]]+self._selected[0:-1]
           self.changeCurrentActor(self._selected[0],False)
       
-##   def changeCurrentActor(self,atp,combo=True):
-##       path =atp[0]
-##       actor=atp[1]
-
-##       self.showSelectedActor(actor)
-
-##       if (actor is None): return
-      
-##       if (len(atp)<3): atp=[path,actor,self.getRandomColor()]
-##       color=atp[2]
-##       self._currentactor=[path,actor,color]
-      
-##       actor.GetProperty().SetColor(color)
-##       self._vtkwin.GetRenderers().GetFirstRenderer().RemoveActor(actor)
-##       self._vtkren.AddActor(actor)
-##       self._vtk.GetRenderWindow().Render()
-
-##       if (not combo):
-##           path=self.findObjectPath(actor.GetMapper().GetInput())
-##           self.setCurrentPath(path)
-
-##       actor.GetProperty().SetColor(1,0,0)
-##       self._vtkren.RemoveActor(actor)
-##       self._vtkwin.GetRenderers().GetFirstRenderer().AddActor(actor)
-##       self._vtkwin.Render()
-
   def b_loadview(self,name=None):
       vname=self.cViews.currentText()
       if (self._camera.has_key(vname)):
@@ -476,22 +455,31 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     
   def changeCurrentPath(self, *args):
       path=self.cCurrentPath.currentText()
-      if (path==''): return
-      actor=self.findPathObject(path)
-      self.changeCurrentActor([path,actor])
+      if (path==''):
+          if (self.PropPicked==1):
+              return
+          else:
+              self.changeCurrentActor([None,None])              
+      if (self.PropPicked==0):
+          actor=self.findPathObject(path)
+          self.changeCurrentActor([path,actor])
 
   def setCurrentPath(self,path):
       ix=self.cCurrentPath.findText(path)
-      if (ix!=-1): self.cCurrentPath.setCurrentIndex(ix)
+      if (ix!=-1):
+          self.cCurrentPath.setCurrentIndex(ix)
 
   def fillCurrentPath(self):
       self.cCurrentPath.clear()
       sel=[n[0] for n in self._selected]
+      hid=[n[0] for n in self._hidden]
       self.cCurrentPath.addItem(self._epix,'')
       for i in self._parser.getPathList():
           pix=self._npix
           if (i in sel): pix=self._spix
+          if (i in hid): pix=self._hpix
           self.cCurrentPath.addItem(pix,i)
+      self._iren.Render()
           
   def setAxis(self,pos,iaxis):
     camera=self._vtkren.GetActiveCamera()
@@ -555,13 +543,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           actor.GetProperty().SetRepresentationToWireframe()
           actor = actors.GetNextItem()
       self._vtk.GetRenderWindow().Render() 
-      
-  def CharCallback(self,obj,event):
-      keysym  = self._iren.GetKeySym()
-      pos = self._iren.GetEventPosition()
-      if (self._bindings.has_key(keysym)): self._bindings[keysym](pos)
-      return
-  
+        
   def closeEvent(self, event):
       self._control.close()
 
@@ -569,181 +551,132 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtk.GetRenderWindow().Finalize()
       QWidget.close(self)
 
+  def hideActor(self):
+      if (not self._currentactor is None):
+          if (self._currentactor[0:2] in self._selected):
+              self._currentactor[1].VisibilityOff()
+              self._selected.remove(self._currentactor[0:2])
+              self._hidden.append(self._currentactor[0:2])
+              nactor=self.b_next()
+              self.fillCurrentPath()
+              if (nactor is not None):
+                  s=self.findObjectPath(nactor[1].GetMapper().GetInput())
+                  if (s is not None):
+                      self.setCurrentPath(s)             
+
+  def revertActor(self):
+      print self._selected
+      hidden=list(self._selected)
+      self._selected=list(self._hidden)
+      self._hidden=hidden
+      if (len(self._selected)>0):
+          for i in self._selected:
+              i[1].VisibilityOn()
+      if (len(self._hidden)>0):
+          for i in self._hidden:
+              i[1].VisibilityOff()
+      self.fillCurrentPath()
+      print self._selected
+
   def changeCurrentActor(self,atp,combo=True):
       path =atp[0]
       actor=atp[1]
-      if (not combo): self.setCurrentPath(path)     
-      if (actor is None): return
-      if (not self._outlineActor is None):
-          self._vtkren.RemoveActor(self._outlineActor)
+      if (not combo):self.setCurrentPath(path)
       if (not self._currentactor is None):
           act=self._currentactor[1]
           col=self._currentactor[2]
+##           self._foreground.RemoveActor(act)
           self._vtkwin.GetRenderers().GetFirstRenderer().RemoveActor(act)
           act.GetProperty().SetColor(col)
           self._vtkren.AddActor(act)
-          
-      outline=vtk.vtkOutlineSource()
-      outlineMapper=vtk.vtkPolyDataMapper()
-      outlineMapper.SetInput(outline.GetOutput())
-      self._outlineActor=vtk.vtkActor()
-      self._outlineActor.PickableOff()
-      self._outlineActor.DragableOff()
-      self._outlineActor.SetMapper(outlineMapper)
-      self._outlineActor.GetProperty().SetColor(1,0,0)
-      self._outlineActor.GetProperty().SetAmbient(1.0)
-      self._outlineActor.GetProperty().SetDiffuse(0.0)
-      bounds=actor.GetBounds()
-      outline.SetBounds(bounds)
-      self._vtkren.AddActor(self._outlineActor)
-
-##       print self._vtk.GetCurrentRenderer()    
-
-##       self.Outline=vtk.vtkOutlineSource()
-##       self.OutlineMapper=vtk.vtkPolyDataMapper()
-##       self.OutlineMapper.SetInput(self.Outline.GetOutput())
-##       self.CurrentRenderer=self.GetCurrentRenderer()
-##       if (not self.PickedRenderer is None and not self.OutlineActor is None):
-##           self.PickedRenderer.RemoveActor(self.OutlineActor)
-##           self.PickedRenderer=None
-##           if (not actor is None):
-##               self.OutlineActor=vtk.vtkActor()
-##               self.OutlineActor.PickableOff()
-##               self.OutlineActor.DragableOff()
-##               self.OutlineActor.SetMapper(self.OutlineMapper)
-##               self.OutlineActor.GetProperty().SetColor(0,0,1)
-##               self.OutlineActor.GetProperty().SetAmbient(1.0)
-##               self.OutlineActor.GetProperty().SetDiffuse(0.0)                
-##               if (self.CurrentRenderer!=self.PickedRenderer):
-##                   if (not self.PickedRenderer is None and not self.OutlineActor is None):
-##                       self.PickedRenderer.RemoveActor(self.OutlineActor)
-##                       self.CurrentRenderer.AddActor(self.OutlineActor)
-##                   self.PickedRenderer=self.CurrentRenderer
-##               self.Outline.SetBounds(actor.GetBounds())
-##         self.GetCurrentRenderer().Render()
-##         self.GetCurrentRenderer().GetRenderWindow().Render()
-      
+      if (actor is None):
+          self.cCurrentPath.setCurrentIndex(0)
+          if (not self.PickedRenderer is None and not self.OutlineActor is None):
+              self.PickedRenderer.RemoveActor(self.OutlineActor)
+              self.PickedRenderer=None
+              self.CurrentRenderer.Render()
+              self.CurrentRenderer.GetRenderWindow().Render()
+          return
       color=actor.GetProperty().GetColor()
       actor.GetProperty().SetColor(1,0,0)
+      self.CurrentRenderer=self._istyle.GetCurrentRenderer()
+      self.Outline=vtk.vtkOutlineSource()
+      self.OutlineMapper=vtk.vtkPolyDataMapper()
+      self.OutlineMapper.SetInput(self.Outline.GetOutput())
+      if (not self.PickedRenderer is None and not self.OutlineActor is None):
+          self.PickedRenderer.RemoveActor(self.OutlineActor)
+          self.PickedRenderer=None
+      if (not actor is None):
+          self.OutlineActor=vtk.vtkActor()
+          self.OutlineActor.PickableOff()
+          self.OutlineActor.DragableOff()
+          self.OutlineActor.SetMapper(self.OutlineMapper)
+          self.OutlineActor.GetProperty().SetColor(0,1,1)
+          self.OutlineActor.GetProperty().SetAmbient(1.0)
+          self.OutlineActor.GetProperty().SetDiffuse(0.0)
+          if (self.CurrentRenderer!=self.PickedRenderer):
+              if (not self.PickedRenderer is None and not self.OutlineActor is None):
+                  self.PickedRenderer.RemoveActor(self.OutlineActor)
+              self.CurrentRenderer.AddActor(self.OutlineActor)
+              self.PickedRenderer=self.CurrentRenderer
+          self.Outline.SetBounds(actor.GetBounds())
+      self.CurrentRenderer.Render()
+      self.CurrentRenderer.GetRenderWindow().Render()
       self._vtkren.RemoveActor(actor)
-      self._vtkwin.GetRenderers().GetFirstRenderer().AddActor(actor)      
-      self._vtk.GetRenderWindow().Render() 
+      self._vtkwin.GetRenderers().GetFirstRenderer().AddActor(actor)
+##       self._foreground.AddActor(actor)
       self._vtkren.Render()
       self._waxs.Render()
+      self._foreground.Render()
+      self._vtk.GetRenderWindow().Render()
       self._iren.Render()
-      self._currentactor=[path,actor,color]  
-      
+      self._currentactor=[path,actor,color]
 
 class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
     def __init__(self,parent):
+      self._parent=parent
       self.AddObserver("KeyPressEvent",self.changeKeyCode)
       self.AddObserver("KeyReleaseEvent",self.changeKeyCode)
       self.AddObserver("CharEvent",self.changeKeyCode)
+      self.AddObserver("KeyPressEvent",self.deleteActor)
       self.PickedRenderer=None
       self.OutlineActor=None
-      self._parent=parent
-      self.addPicker()      
+      self._parent.addPicker()     
       self.rwi=None
 
+    def deleteActor(self,*args):
+      self.rwi=self.GetInteractor()
+      keycode=self.rwi.GetKeyCode()
+      if (keycode=='d'):
+          self._parent.hideActor()
+        
     def changeKeyCode(self,*args):
       self.rwi=self.GetInteractor()
       keycode=self.rwi.GetKeyCode()
       if (keycode=='p'):
         self.rwi.SetKeyCode('')
-        path=None
+        act=None
         eventPos=self.rwi.GetEventPosition()
         self.FindPokedRenderer(eventPos[0],eventPos[1])
         self.rwi.StartPickCallback()
-        self.rwi.SetPicker(self.picker)
-        if (not self.picker is None):
-          self.picker.Pick(eventPos[0],eventPos[1], 
+        self.rwi.SetPicker(self._parent.picker)
+        if (not self._parent.picker is None):
+          self._parent.picker.Pick(eventPos[0],eventPos[1], 
                        0.0,self.GetCurrentRenderer())
-          path=self.picker.GetPath()
-        if (path is None):
-          self.highlightProp(None)
-          self.PropPicked=0
-        else:
-          self.highlightProp(path.GetFirstNode().GetViewProp())
-          self.PropPicked=1
         self.rwi.EndPickCallback()
 
-    def highlightProp(self,prop):
-        self.currentProp=prop
-        if (not prop is None):
-          actor2D=vtk.vtkActor2D.SafeDownCast(prop)
-          prop3D=vtk.vtkProp3D.SafeDownCast(prop)
-          if (not prop3D is None):
-            path=self._parent.findObjectPath(prop3D)
-            self._parent.changeCurrentActor([path,prop3D])
-          else:
-            self.highlightActor(None)
-        else:
-          self.highlightActor(None)
-          
-    def highlightActor(self,actor):
-        self.Outline=vtk.vtkOutlineSource()
-        self.OutlineMapper=vtk.vtkPolyDataMapper()
-        self.OutlineMapper.SetInput(self.Outline.GetOutput())
-        self.CurrentRenderer=self.GetCurrentRenderer()
-        if (not self.PickedRenderer is None and not self.OutlineActor is None):
-          self.PickedRenderer.RemoveActor(self.OutlineActor)
-          self.PickedRenderer=None
-        if (not actor is None):
-          self.OutlineActor=vtk.vtkActor()
-          self.OutlineActor.PickableOff()
-          self.OutlineActor.DragableOff()
-          self.OutlineActor.SetMapper(self.OutlineMapper)
-          self.OutlineActor.GetProperty().SetColor(0,0,1)
-          self.OutlineActor.GetProperty().SetAmbient(1.0)
-          self.OutlineActor.GetProperty().SetDiffuse(0.0)                
-          if (self.CurrentRenderer!=self.PickedRenderer):
-            if (not self.PickedRenderer is None and not self.OutlineActor is None):
-              self.PickedRenderer.RemoveActor(self.OutlineActor)
-            self.CurrentRenderer.AddActor(self.OutlineActor)
-            self.PickedRenderer=self.CurrentRenderer
-          self.Outline.SetBounds(actor.GetBounds())
-        self.GetCurrentRenderer().Render()
-        self.GetCurrentRenderer().GetRenderWindow().Render()
+##     def highlightProp(self,prop):
+##         if (not prop is None):
+##           actor2D=vtk.vtkActor2D.SafeDownCast(prop)
+##           prop3D=vtk.vtkProp3D.SafeDownCast(prop)
+##           if (not prop3D is None):
+##             path=self._parent.findObjectPath(prop3D.GetMapper().GetInput())
+##             self._parent.changeCurrentActor([path,prop3D])
+##           else:
+##             self._parent.changeCurrentActor([None,None])
+##         else:
+##           self._parent.changeCurrentActor([None,None])
 
-    def addPicker(self):
-      self.textMapper = vtk.vtkTextMapper()
-      tprop = self.textMapper.GetTextProperty()  
-      tprop.SetFontFamilyToArial()
-      tprop.SetFontSize(10)
-      tprop.BoldOff()
-      tprop.ShadowOn()
-      tprop.SetColor(0, 0, 0)
-      self.textActor = vtk.vtkActor2D()
-      self.textActor.VisibilityOff()
-      self.textActor.SetMapper(self.textMapper)
-      self.picker = vtk.vtkCellPicker()
-      self.picker.SetTolerance(0.001)
-      self.picker.AddObserver("EndPickEvent",self.annotatePick)
 
-    def annotatePick(self,object,event):
-      self._selected=[]
-      if self.picker.GetCellId()<0:
-        self.textActor.VisibilityOff()
-        self._selected=[]
-      else:
-        selPt = self.picker.GetSelectionPoint()
-        pickAct = self.picker.GetActors()
-        a=pickAct.InitTraversal()
-        a=pickAct.GetNextItem()
-        t=''
-        sl=[]
-        sz=self.rwi.GetRenderWindow().GetSize()[1]
-        s=None
-        while a:
-          x=a.GetMapper().GetInput()
-          s=self._parent.findObjectPath(x)
-          t+=s+'\n'
-          self._selected+=[[s,a]]
-          self.textMapper.SetInput(t)
-          y=sz-self.textMapper.GetHeight(self.GetCurrentRenderer())-10.
-          self.textActor.SetPosition((10.,y))
-          self.textActor.VisibilityOn()
-          self.GetCurrentRenderer().AddActor(self.textActor)
-          a=pickAct.GetNextItem()
-        if (s is not None): self._parent.setCurrentPath(s)
-        self._parent.fillCurrentPath()
+
+

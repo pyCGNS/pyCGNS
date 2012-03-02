@@ -8,7 +8,6 @@
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU
 import CGNS.APP.probe.arrayutils as CGA
-
 import numpy as NPY
 
 cimport cython
