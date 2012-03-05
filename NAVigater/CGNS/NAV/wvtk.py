@@ -104,6 +104,19 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     self.camAxes.SetFocalPoint(0,0,0)
     self.camAxes.SetPosition(-d*x/dproj, -d*y/dproj, -d*z/dproj)
     self.renAxes.ResetCameraClippingRange()
+    
+    self.camforRen.SetViewUp(cam.GetViewUp())
+    self.camforRen.OrthogonalizeViewUp()
+    bnds = self.renforRen.ComputeVisiblePropBounds()
+    x0, x1, y0, y1, z0, z1 = self.renforRen.ComputeVisiblePropBounds()
+    self.renforRen.ResetCamera(x0, x1, y0, y1, z0, z1) 
+    pos = self.camforRen.GetPosition()
+    px, py, pz = self.camforRen.GetPosition()
+    d = NPY.sqrt(px*px + py*py + pz*pz)
+    dproj = NPY.sqrt(x*x + y*y + z*z)
+    self.camforRen.SetFocalPoint(0,0,0)
+    self.camforRen.SetPosition(-d*x/dproj, -d*y/dproj, -d*z/dproj)
+    self.renforRen.ResetCameraClippingRange()
 
   def findObjectPath(self,selected):
     return self._parser.getPathFromObject(selected)
@@ -129,7 +142,17 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                                        self._fgprint.filedir,
                                        self._fgprint.filename)
     self.leave() 
-    
+
+  def foregroundRenderer():
+    self.camforRen = vtk.vtkCamera()
+    self.camforRen.ParallelProjectionOn()
+    self.renforRen = vtk.vtkRenderer()
+    self.renforRen.InteractiveOff()
+    self.renforRen.SetActiveCamera(self.camforRen)
+    self.renforRen.SetViewport(0, 0, 0.2, 0.2)
+    self.renforRen.SetBackground(1,1,1)
+      
+
   def addAxis(self):
     self.camAxes = vtk.vtkCamera()
     self.camAxes.ParallelProjectionOn()
@@ -274,13 +297,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtkren.SetLayer(0)
       self._waxs.SetLayer(2)
 
-      self._foreground = vtk.vtkRenderer()
-      self._foreground.InteractiveOff()
-      self._foreground.SetLayer(1)
+      self.foregroundRenderer()
+      self.renforRen.SetLayer(1)
 
       self._vtk.GetRenderWindow().AddRenderer(self._vtkren)
       self._vtk.GetRenderWindow().AddRenderer(self._waxs)
-      self._vtk.GetRenderWindow().AddRenderer(self._foreground)
+      self._vtk.GetRenderWindow().AddRenderer(self.renforRen)
       
       self._parser=Mesh(T)
       self._selected=[]
@@ -565,7 +587,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                       self.setCurrentPath(s)             
 
   def revertActor(self):
-      print self._selected
       hidden=list(self._selected)
       self._selected=list(self._hidden)
       self._hidden=hidden
@@ -576,7 +597,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           for i in self._hidden:
               i[1].VisibilityOff()
       self.fillCurrentPath()
-      print self._selected
 
   def changeCurrentActor(self,atp,combo=True):
       path =atp[0]
