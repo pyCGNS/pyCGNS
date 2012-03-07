@@ -56,7 +56,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._hidden=[]
       self._cacheActor={}
       self._tmodel=tmodel
+      self.color=(0,0,0)
+      self.OutlineActor=None
       self._currentactor=None
+      self.PickedRenderer=None
+      self.PropPicked=0
+      self.controlKey=0
       self._camera={}
       self._blackonwhite=False
       self._vtktree=self.wCGNSTree(self._fgprint.tree)
@@ -85,10 +90,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                       SIGNAL("currentIndexChanged(int)"),
                       self.changeCurrentPath)
       QObject.connect(self.cRevert,SIGNAL("stateChanged(int)"),self.revertActor)
-      self.PickedRenderer=None
-      self.OutlineActor=None
-      self.PropPicked=0
-      self.controlKey=0
    
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
@@ -191,7 +192,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     xLabel.SetAttachmentPoint(0.75,0.2,0)
     xLabel.LeaderOff()
     xLabel.BorderOff()
-    xLabel.GetProperty().SetColor(0,0,0)
+##     xLabel.GetProperty().SetColor(0,0,0)
+    xLabel.GetProperty().SetColor(self.color)
     xLabel.SetPosition(0,0)
 
     yLabel = vtk.vtkCaptionActor2D()
@@ -202,7 +204,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     yLabel.SetAttachmentPoint(0.2,0.75,0)
     yLabel.LeaderOff()
     yLabel.BorderOff()
-    yLabel.GetProperty().SetColor(0,0,0)
+##     yLabel.GetProperty().SetColor(0,0,0)
+    yLabel.GetProperty().SetColor(self.color)
     yLabel.SetPosition(0,0)
 
     zLabel = vtk.vtkCaptionActor2D()
@@ -213,7 +216,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     zLabel.SetAttachmentPoint(0,0.2,0.75)
     zLabel.LeaderOff()
     zLabel.BorderOff()
-    zLabel.GetProperty().SetColor(0,0,0)
+##     zLabel.GetProperty().SetColor(0,0,0)
+    zLabel.GetProperty().SetColor(self.color)
     zLabel.SetPosition(0,0)
 
     Axes3D = vtk.vtkPropAssembly()
@@ -342,11 +346,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       return self._vtk.GetRenderWindow()
 
   def b_shufflecolors(self,pos=None):
-##       self.changeCurrentActor([None,None])
       self.setColors(True)
       
   def b_blackandwhite(self,pos=None):
- ##      self.changeCurrentActor([None,None])
       self.setColors()
       
   def getRandomColor(self):
@@ -355,12 +357,17 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       return cl
       
   def setColors(self,randcolors=False):
+      self._currentactor=None
       if (not randcolors):
           if (self._blackonwhite):
               self._vtkren.SetBackground(1,1,1)
+              self.color=(0,0,0)
+##               self._waxs=self.addAxis()
               cl=(0,0,0)
           else:
               self._vtkren.SetBackground(0,0,0)
+              self.color=(1,1,1)
+##               self._waxs=self.addAxis()
               cl=(1,1,1)
           self._blackonwhite=not self._blackonwhite
       actors = self._vtkren.GetActors()
@@ -370,7 +377,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           if (randcolors): cl=self.getRandomColor()
           actor.GetProperty().SetColor(cl)
           actor = actors.GetNextItem()
-      self._iren.GetRenderWindow().Render()
+      if (not self.OutlineActor is None):
+          self.OutlineActor.GetProperty().SetColor(0,1,1)
+      self._iren.Render()
 
   def b_update(self):
       self.busyCursor()
@@ -416,8 +425,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           camera.SetClippingRange(cr)
           camera.SetPosition(p)
           camera.SetFocalPoint(fp)
-##           self._vtkren.Render()
-##           self._waxs.Render()
           self._iren.Render()
 
   def updateViewList(self):
@@ -630,8 +637,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
               self.CurrentRenderer.AddActor(self.OutlineActor)
               self.PickedRenderer=self.CurrentRenderer
           self.Outline.SetBounds(actor.GetBounds())
-      self.CurrentRenderer.Render()
-      self.CurrentRenderer.GetRenderWindow().Render()
       self.renforRen.AddActor(actor)
       self._iren.Render()
       self._currentactor=[path,actor,color]
@@ -698,17 +703,7 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
             self._parent.setCurrentPath(path)
         self.rwi.EndPickCallback()
 
-##     def highlightProp(self,prop):
-##         if (not prop is None):
-##           actor2D=vtk.vtkActor2D.SafeDownCast(prop)
-##           prop3D=vtk.vtkProp3D.SafeDownCast(prop)
-##           if (not prop3D is None):
-##             path=self._parent.findObjectPath(prop3D.GetMapper().GetInput())
-##             self._parent.changeCurrentActor([path,prop3D])
-##           else:
-##             self._parent.changeCurrentActor([None,None])
-##         else:
-##           self._parent.changeCurrentActor([None,None])
+
 
 
 
