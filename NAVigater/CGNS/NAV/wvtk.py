@@ -342,11 +342,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       return self._vtk.GetRenderWindow()
 
   def b_shufflecolors(self,pos=None):
-      self.changeCurrentActor([None,None])
+##       self.changeCurrentActor([None,None])
       self.setColors(True)
       
   def b_blackandwhite(self,pos=None):
-      self.changeCurrentActor([None,None])
+ ##      self.changeCurrentActor([None,None])
       self.setColors()
       
   def getRandomColor(self):
@@ -404,6 +404,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def b_prev(self):
       if (len(self._selected)>0):        
           self._selected=[self._selected[-1]]+self._selected[0:-1]
+          self.PropPicked=1
           self.changeCurrentActor(self._selected[0],False)
       
   def b_loadview(self,name=None):
