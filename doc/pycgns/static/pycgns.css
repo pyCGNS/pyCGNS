@@ -130,7 +130,7 @@ div.footer a {
     text-decoration: underline;
 }
 
-/* -- body styles ----------------------------------------------------------- */
+/* -- body styles ---------------------------------------------------------- */
 
 p {    
     margin: 0.8em 0 0.5em 0;
@@ -258,10 +258,10 @@ dl.function em {
 }
 
 dl.function ul li {
-    margin-top: 0px;
+    margin-top: 1px;
     list-style-type: square;
     padding: 0;
-    height: 1em;
+    height: 0.8em;
 }
 
 tt {

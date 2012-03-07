@@ -31,14 +31,25 @@ class CGNStype:
     self.type=ntype
     self.datatype=[CK.LK]+dtype
     self.cardinality=card
-    self.enumerates=[]
+    self.enumerate=[]
     self.shape=()
     self.names=names
     self.children=[]
+    self.parents=[]
+  def hasChild(self,ctype):
+    for c in self.children:
+      if (c[0]==ctype): return True
+    return False
   def addChild(self,ctype,cname=UD,dtype=CK.MT,ccard=C_01):
     self.children.append((ctype,cname,dtype,ccard))
+  def addParent(self,parent):
+    self.parents.append(parent)
 
 types={}
+
+# --------------------------------------------------------
+t=CK.CGNSTree_ts
+types[t]=CGNStype(t,dtype=[CK.MT],card=C_1N)
 
 # --------------------------------------------------------
 t=CK.CGNSLibraryVersion_ts
@@ -151,7 +162,7 @@ t=CK.IndexArray_ts
 types[t]=CGNStype(t,dtype=[CK.I4,CK.R4,CK.R8])
 types[t].shape=(0,0)
 types[t].names=[CK.PointList_s,CK.PointListDonor_s,CK.CellListDonor_s,
-                CK.InwardNormalList_s]
+                CK.InwardNormalList_s,UD]
 
 # --------------------------------------------------------
 t=CK.ReferenceState_ts
@@ -755,4 +766,12 @@ types[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
 types[t].addChild(CK.IndexRange_ts)
 types[t].addChild(CK.UserDefinedData_ts)
 
+# --------------------------------------------------------
+tk=types.keys()
+tk.sort()
+for pk in tk:
+  for ck in tk:
+    if ((ck!=pk) and (types[pk].hasChild(ck))):
+        types[ck].addParent(pk)
+  
 # --- last line
