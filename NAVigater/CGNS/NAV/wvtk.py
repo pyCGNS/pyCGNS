@@ -45,7 +45,7 @@ class wVTKContext():
 # -----------------------------------------------------------------
 class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def __init__(self,control,node,fgprint,tmodel):
-      Q7Window.__init__(self,Q7Window.VIEW_VTK,control,node,fgprint)
+      Q7Window.__init__(self,Q7Window.VIEW_VTK,control,'/',fgprint)
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
       self._epix=QIcon(QPixmap(":/images/icons/empty.gif"))
       self._spix=QIcon(QPixmap(":/images/icons/selected.gif"))
@@ -563,9 +563,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (self._bindings.has_key(keysym)): self._bindings[keysym](pos)
       return
   
-  def closeEvent(self, event):
-      self._control.close()
-
   def close(self):
       self._vtk.GetRenderWindow().Finalize()
       QWidget.close(self)

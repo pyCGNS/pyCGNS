@@ -3,11 +3,17 @@
 .. See license.txt file in the root directory of this Python module source  
 .. -------------------------------------------------------------------------
 
-pyCGNS v4.2 documentation
+A Python package for CGNS
 +++++++++++++++++++++++++
-*pyCGNS* is a Python package for the :term:`CGNS` standard.
 
-The package gathers various tools and libraries for end-users and
+.. sidebar:: Release 4.2
+
+   - `CGNS.MAP` is now a wrapper 
+     to `CHLone <http://chlone.sourceforge.net/>`_ python module
+   - completely new `CGNS.NAV` using *Qt*, *VTK* and *Cython*
+   - new pages :ref:`CGNS How to? <topix:cgnshowto>`
+
+The package gathers various tools and libraries for CGNS end-users and
 Python application developpers. The main object of *pyCGNS* is to provide the
 application developpers with a Python interface to :term:`CGNS/SIDS`, the data
 model. The *MAP* and *PAT* modules are dedicated to this goal: map the 
@@ -19,7 +25,8 @@ and a *MLL-like* set of functions that uses the
 
 .. raw:: html
 
-  Click below for a quick access to modules.<br>
+  Click below for a quick access to modules (VAL, DAT and APP are not available
+  in this current version).<br>
   
   <div>
   <table width="100%">
@@ -34,13 +41,13 @@ and a *MLL-like* set of functions that uses the
       <img src="images/WRA-logo.jpg" height="48" alt="WRA"/></a></td>
   <td align="center" valign="middle">
     <img src="images/VAL-logo.jpg" height="48" alt="VAL"/></td>
-  <td align="center" valign="middle"><a href="DAT/readme.html">
-    <img src="images/DAT-logo.jpg" height="48" alt="DAT"/></a></td>
-  <td align="center" valign="middle"><a href="APP/readme.html">
-    <img src="images/APP-logo.jpg" height="48" alt="APP"/></a></td>
+  <td align="center" valign="middle">
+    <img src="images/DAT-logo.jpg" height="48" alt="DAT"/></td>
+  <td align="center" valign="middle">
+    <img src="images/APP-logo.jpg" height="48" alt="APP"/></td>
   </tr></table><br></div>
 
-The package uses :term:`numpy` and :term:`HDF5`
+The package uses :term:`numpy`, :term:`cython` and :term:`HDF5`
 you should install before pyCGNS. 
 The *CGNS.NAV* tools has an optional :term:`VTK` viewer which requires the
 *VTK lib* and its python interface.
@@ -58,25 +65,19 @@ instead of *CGNS/MLL* to map its :term:`CGNS/Python` trees to *HDF5*.
   `wiki <http://sourceforge.net/apps/trac/pycgns/wiki>`_ 
   and `bug tracking <http://sourceforge.net/apps/trac/pycgns/report/6>`_.
 
-Contents
-++++++++
+The listed chapters are the introduction chapters, each MAP, PAT, WRA, 
+NAV module has its own documentation which doesn't appear below.
+Click on the modules icons above to get their documentation.
+
 .. toctree::
+   :glob:
    :maxdepth: 2
    
    introduction
    install
-   test
    glossary
 
 ----
-
- * :ref:`MAP Index <mapix:map_index>`
- * :ref:`PAT Index <patix:pat_index>`
- * :ref:`NAV Index <navix:nav_index>`
- * :ref:`WRA Index <wraix:wra_index>`
- * :ref:`APP Index <appix:app_index>`
- * :ref:`DAT Index <datix:dat_index>`
- * :ref:`VAL Index <valix:val_index>`
 
 .. _download_pdf:
 
@@ -88,9 +89,5 @@ PDF Docs
   * `PAT manual <_pdf/pyCGNS_PAT.pdf>`_
   * `NAV manual <_pdf/pyCGNS_NAV.pdf>`_
   * `WRA manual <_pdf/pyCGNS_WRA.pdf>`_
-  * `VAL manual <_pdf/pyCGNS_VAL.pdf>`_
-  * `APP manual <_pdf/pyCGNS_APP.pdf>`_
-
-* :ref:`search`
 
 .. -------------------------------------------------------------------------

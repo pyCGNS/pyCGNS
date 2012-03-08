@@ -4,16 +4,21 @@
 .. -------------------------------------------------------------------------
 
 Glossary
-++++++++
+========
 
 .. glossary::
+
+ cgns.org
+   The official CGNS web site, by extension any document on this web
+   site has an *official* taste...
 
  CGNS 
    The specific purpose of the CFD General Notation System (CGNS)
    project is to provide a standard for recording and recovering
    computer data associated with the numerical solution of the
    equations of fluid dynamics. Read more
-   `here... <http://www.cgns.org>`_.
+   `here... <http://www.cgns.org>`_. See also the 
+   :ref:`How to? <topix:cgnshowto>`.
 
  CGNS/SIDS 
    The `Standard Interface Data Structure` is the
@@ -52,6 +57,10 @@ Glossary
    library should be seen as a middleware system with a lot of powerful
    features related to efficient, portable and trustable storage mean.
 
+ cython
+   A compiler tools that translate Python/Numpy into C code for
+   performance purpose.
+
  numpy
    The `numerical library <http://numpy.scipy.org>`_ for Python. *Numpy*
    is used to store the data in Python arrays which have a direct memory
@@ -61,4 +70,4 @@ Glossary
    A `visualization toolkit <http://www.vtk.org>`_ used to display
    3D objects ni *CGNS.NAV*.
 
------
+

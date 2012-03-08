@@ -339,7 +339,7 @@ def checkArray(a,dienow=False):
   """
   Check if the array value of a node is a numpy array.
 
-  Raises :ref:`cgnserror` codes 109,170 if `dienow` is True
+  Raises error codes 109,170 if `dienow` is True
   
   """
   if (type(a) != type(NPY.array((1)))):
@@ -1014,7 +1014,7 @@ def getPathNormalize(path):
    * The simplified path
 
   - Remarks:
-   * Uses :py:func:`os.path.normpath`
+   * Uses *os.path.normpath*
    
   """
   path=os.path.normpath(path)

@@ -6,6 +6,19 @@
 About pyCGNS
 ++++++++++++
 
+CGNS Standard
+-------------
+
+The purpose of these pages is not to describe the standard. There is
+the :term:`cgns.org` web site with a lot of documentation. Anyway, there is
+a set of :ref:`How to's <cgnshowto>` using *pyCGNS* you can browse and learn
+a bit about this standard.
+
+.. toctree::
+   :hidden:
+
+   ch2/cgnshowto
+
 Package contents
 ----------------
 
@@ -22,32 +35,32 @@ better consistency between them.
 
 The pyCGNS module now includes (former package names)
 
- `MAP <MAP/readme.html>`_, the Mapper, new in v4 gives basic load/save 
-  function from/to *CGNS/SIDS* and *CGNS/HDF5*. This very sinple module is
-  able to read/write GCNS/HDF5 files and translate them to CGNS/Python.
-  This is the main feature of pyCGNS v4.0.
+ - `MAP <MAP/readme.html>`_, the Mapper, new in v4 gives basic load/save 
+   function from/to *CGNS/SIDS* and *CGNS/HDF5*. This very sinple module is
+   able to read/write GCNS/HDF5 files and translate them to CGNS/Python.
+   This is the main feature of pyCGNS v4.0.
 
- `PAT <PAT/readme.html>`_, the PatterMaker, a full *CGNS/SIDS* patterns using
-  the *CGNS/Python* mapping. This is pure python module, it creates and modify
-  CGNS/Python trees without the help of any HDF5 or even ADf calls.
+ - `PAT <PAT/readme.html>`_, the PatterMaker, a full *CGNS/SIDS* patterns using
+   the *CGNS/Python* mapping. This is pure python module, it creates and modify
+   CGNS/Python trees without the help of any HDF5 or even ADf calls.
 
- `NAV <NAV/readme.html>`_, the Navigater (pyS7), a graphical browser that can
-  handle *CGNS/Python*, *CGNS/HDF5* and *CGNS/ADF* file formats. It is slightly
-  different to *adfviewer* because it actually a tree editor, you can 
-  copy/cut/paste CGNS/Python trees and quickly draft or modify your CGNS tree.
+ - `NAV <NAV/readme.html>`_, the Navigater (pyS7), a graphical browser that can
+   handle *CGNS/Python*, *CGNS/HDF5* and *CGNS/ADF* file formats. It is slightly
+   different to *cgnsviewer* because it actually is a tree editor, you can 
+   copy/cut/paste CGNS/Python trees and quickly draft or modify your CGNS tree.
 
- `WRA <WRA/readme.html>`_, the Wrapper (pyCGNS), is a *CGNS/MLL* and 
-  *CGNS/ADF* Python wrapping. All the CGNS/MLL functions are mapped to their
-  Python clone.
+ - `WRA <WRA/readme.html>`_, the Wrapper (pyCGNS), is a *CGNS/MLL* and 
+   *CGNS/ADF* Python wrapping. All the CGNS/MLL functions are mapped to their
+   Python clone.
 
- VAL,the Validater (pyC5), an XML grammar based validation of a *CGNS/Python*
- tree, for example produced using *MAP* or *PAT*. *Unsuable in v4.0*
+ - VAL,the Validater (pyC5), an XML grammar based validation of a *CGNS/Python*
+   tree, for example produced using *MAP* or *PAT*. *Unsuable in v4.0*
 
- TRA, the Translater (pyCRAB), a set of translators from/to various formats.
- *Unsuable in v4.0*
+ - DAT, the DataTracer (pyDAX), some DBMS services for *CGNS/HDF5* files.
+   *Unsuable in v4.0*
 
- DAT, the DataTracer (pyDAX), some DBMS services for *CGNS/HDF5* files.
- *Unsuable in v4.0*
+ - APP, the Applicater, a set of applications using other modules.
+   *Unsuable in v4.0*
 
 Quick start
 -----------
@@ -56,15 +69,17 @@ Loading a CGNS/HDF file with MAP
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The *CGNS.MAP* module implements the *CGNS/Python* mapping. You can 
 load/save a *CGNS/HDF5* file using the simple *MAP* functions (below, 
-the ``>>>`` string is the python interpreter prompt)::
+the ``>>>`` string is the python interpreter prompt).
 
+.. code-block:: python
+   :emphasize-lines: 1,3
 
-  >>>import CGNS.MAP
-  >>>(tree,links)=CGNS.MAP.load("./001Disk.hdf",CGNS.MAP.S2P_FOLLOWLINKS)
-  >>>print tree
-  ['CGNSTree', None, [['CGNSLibraryVersion',array([ 2.4000001],dtype=float32),
-  [], 'CGNSLibraryVersion_t'], ['Disk', array([3, 3], dtype=int32), 
- [['.Solver#Command', ...
+   >>> import CGNS.MAP
+   >>> (tree,links)=CGNS.MAP.load("./001Disk.hdf",CGNS.MAP.S2P_FOLLOWLINKS)
+   >>> print tree
+   ['CGNSTree', None, [['CGNSLibraryVersion',array([ 2.4000001],dtype=float32),
+   [], 'CGNSLibraryVersion_t'], ['Disk', array([3, 3], dtype=int32), 
+   [['.Solver#Command', ... ]
 
 Now ``tree`` is a Python list with the whole`` ./001Disk.hdf`` CGNS tree
 into, with the data structure as described 
@@ -77,9 +92,9 @@ functions and types. The *CGNS.APP* module contains utilities, we use the
 ``getNodeByPath`` function which returns a *CGNS/Python* node with the
 target tree and the target node path as parameters.::
 
-  import CGNS.APP.path_utils as U
+  import CGNS.APP.path_utils as CGU
 
-  node=U.getNodeByPath("/Disk/zone1/ZoneBC/ext1/PointRange",tree)
+  node=CGU.getNodeByPath("/Disk/zone1/ZoneBC/ext1/PointRange",tree)
 
 The returned node is a list of 4 Python values, the name (a string),
 the value of the node (a *Numpy* array), the list of children and
@@ -91,33 +106,32 @@ Using PAT to create a CGNS tree
 We want to create a *CGNS/HDF5* file with a simple *base* and a *reference 
 state*::
 
-  import CGNS.MAP
-  import CGNS.PAT
+  import CGNS.PAT.cgnslib as CGL
 
-  T=CGNS.PAT.newCGNS()
-  CGNS.PAT.newBase(T,'Test Case 01',3,3) # name, physical dim, topological dim
-  CGNS.PAT.newSimulationType(T)
-  CGNS.PAT.newReferenceState(T)
+  T=CGL.newCGNSTree()
+  CGL.newBase(T,'Test Case 01',3,3) # name, physical dim, topological dim
+  CGL.newSimulationType(T)
+  CGL.newReferenceState(T)
   
+Re-using your CGNS/MLL scripts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If you really want to use CGNS/MLL, for example if you have a large toolbox 
+with old pyCGNS scripts you have to change your
+imports from `CGNS.WRA` to {CGNS.WRA.wrapper` for functions::
+
+    import CGNS.WRA.wrapper
+
+    filesol=CGNS.WRA.wrapper.pyCGNS('testfile.cgns',CGNS.WRA.MODE_WRITE)
+    filesol.basewrite('Base',3,3)
+    filesol.close()
+
 Browsing your CGNS tree with NAV
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The CGNS.NAV tool is a CGNS tree brower. You start it typing ``CGNS.NAV``
 and you can open several views on your file. 
 
 .. image:: ../images/cgnsnav_quick_1.png
-   :width: 16cm
+   :width: 24cm
    :align: center
-
-Re-using your CGNS/MLL scripts
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-If you really want to use CGNS/MLL, for example if you have a large toolbox 
-with old pyCGNS scripts, you can import CGNS.WRA but you have to change your
-imports::
-
-    import CGNS.WRA.wrapper
-
-    filesol=CGNS.WRA.wrapper.pyCGNS(sname,CGNS.WRA.wrapper.MODE_WRITE)
-    filesol.basewrite('Base',3,3)
-    filesol.close()
 
 .. -------------------------------------------------------------------------

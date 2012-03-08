@@ -76,7 +76,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bOpenOperateView.clicked.connect(self.queryview)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
-        self.popupmenu.addAction(QAction("Open form",self))
         self.treeview.setModel(self._fgprint.model)
         self.treeview.setItemDelegate(Q7TreeItemDelegate(self))
         self.treeview.setControlWindow(self,self._fgprint.model)
@@ -104,7 +103,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.lineEdit.clear()
         self.lineEdit.insert(node.sidsPath())
     def updateMenu(self,node):
+        self.popupmenu.clear()
         self.popupmenu.addAction(QAction("About %s"%node.sidsType(),self))
+        self.popupmenu.addAction(QAction("Open form",self))
     def setLastEntered(self):
         self._lastEntered=self.treeview.currentIndex()
     def getLastEntered(self):
@@ -152,6 +153,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.treeview.refreshView()
     def formview(self):
         node=self.treeview.currentIndex().internalPointer()
+        if (node is None): return
         if (node.sidsType()==CGK.CGNSTree_ts): return
         form=Q7Form(self._control,node,self._fgprint)
         form.show()

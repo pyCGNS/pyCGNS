@@ -1,0 +1,7 @@
+.. CGNS-How-to 
+   Copyright (c) 2012 Marc Poinot, Onera The French Aerospace Lab
+
+References
+++++++++++
+
+ CGNSBase_t  `+ <http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/sids/cgnsbase.html#CGNSBase>`_ `+ <http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/filemap/figures/CGNSBase.html>`_ 

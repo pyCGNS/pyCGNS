@@ -1,0 +1,11 @@
+.. CGNS-How-to 
+   Copyright (c) 2012 Marc Poinot, Onera The French Aerospace Lab
+
+.. _crosstables:
+
+Which patterns in which example?
+++++++++++++++++++++++++++++++++
+
+The tables hereafter are giving you the relationships between the
+nodes or pattern of nodes and the corresponding examples.
+

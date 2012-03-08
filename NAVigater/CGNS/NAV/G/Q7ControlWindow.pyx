@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ControlWindow.ui'
 #
-# Created: Tue Feb 21 08:24:10 2012
+# Created: Thu Mar  8 11:37:33 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -93,7 +93,7 @@ class Ui_Q7ControlWindow(object):
         self.bClose.setObjectName("bClose")
         self.horizontalLayout.addWidget(self.bClose)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
-        self.controlTable = QtGui.QTableWidget(Q7ControlWindow)
+        self.controlTable = Q7ControlTableWidget(Q7ControlWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -101,6 +101,9 @@ class Ui_Q7ControlWindow(object):
         self.controlTable.setSizePolicy(sizePolicy)
         self.controlTable.setMinimumSize(QtCore.QSize(781, 181))
         self.controlTable.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        self.controlTable.setTabKeyNavigation(False)
+        self.controlTable.setProperty("showDropIndicator", False)
+        self.controlTable.setDragDropOverwriteMode(False)
         self.controlTable.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.controlTable.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         self.controlTable.setCornerButtonEnabled(False)
@@ -109,6 +112,7 @@ class Ui_Q7ControlWindow(object):
         self.controlTable.setObjectName("controlTable")
         self.controlTable.setColumnCount(6)
         self.controlTable.setRowCount(0)
+        self.controlTable.horizontalHeader().setStretchLastSection(True)
         self.verticalLayout_2.addWidget(self.controlTable)
 
         self.retranslateUi(Q7ControlWindow)
@@ -129,4 +133,5 @@ class Ui_Q7ControlWindow(object):
         self.bClose.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "Close all CGNS.NAV windows", None, QtGui.QApplication.UnicodeUTF8))
         self.controlTable.setSortingEnabled(True)
 
+from CGNS.NAV.mcontrol import Q7ControlTableWidget
 import Res_rc

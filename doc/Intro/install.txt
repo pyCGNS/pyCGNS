@@ -44,11 +44,8 @@ need *libcgns*.
 Optional libraries
 ~~~~~~~~~~~~~~~~~~
 The so-called `mid-level` library is not mandatory, 
-the :ref:`WRA module <wrainter:wraintro>`
+the `WRA module`
 is the only one to have dependancies on.
-The :ref:`NAV module <navinter:navintro>` also uses *CGNS/MLL* as optional
-if you want to be able to read *CGNS/ADF* files
-(see :ref:`File formats <wrainter:v3multifileformat>`)
 
  * `CGNS/MLL (libcgns) <http://www.cgns.org>`_ (starting v3.0) 
 
@@ -150,17 +147,7 @@ gives you the required modules (or optional) for each of them.
 NAV depends
 ~~~~~~~~~~~
 
-The *TkTreectrl* module is required. You first need to install *tktreectrl*
-(last version tested is *tktreectrl-2.3) and *TkinterTreectrl* to map it
-to Python (last version tested is *TkinterTreectrl-1.0*).
-
-.. warning::
-
-The usual error : `_tkinter.TclError: can't find package treectrl`
-comes from a missing search path for TK/Tcl, you have to set the
-the *tktreectrl* path into the `TCLLIBPATH` shell variable.
-
-
+VTK Qt PySide
 
 MAP depends
 ~~~~~~~~~~~
