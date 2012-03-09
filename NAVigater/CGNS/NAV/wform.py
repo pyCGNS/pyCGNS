@@ -48,6 +48,7 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
     def reset(self):
         self.eName.setText(self._node.sidsName())
         self.ePath.setText(self._node.sidsPath())
+        self.ePath.setReadOnly(True)
         self.setCurrentType(self._node.sidsType())
         dims=self._node.sidsDims()
         its=reduce(lambda x,y: x*y, dims)

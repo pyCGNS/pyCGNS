@@ -320,7 +320,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/control.gif</normaloff>:/images/icons/control.gif</iconset>
+         <normaloff>:/images/icons/top.gif</normaloff>:/images/icons/top.gif</iconset>
        </property>
       </widget>
      </item>

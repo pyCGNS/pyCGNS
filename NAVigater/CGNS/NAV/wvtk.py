@@ -44,8 +44,10 @@ class wVTKContext():
 
 # -----------------------------------------------------------------
 class Q7VTK(Q7Window,Ui_Q7VTKWindow):
-  def __init__(self,control,node,fgprint,tmodel):
-      Q7Window.__init__(self,Q7Window.VIEW_VTK,control,'/',fgprint)
+  def __init__(self,control,node,fgprint,tmodel,zlist):
+      if (not zlist): pth='/'
+      else: pth='<partial>'
+      Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,fgprint)
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
       self._epix=QIcon(QPixmap(":/images/icons/empty.gif"))
       self._spix=QIcon(QPixmap(":/images/icons/selected.gif"))
@@ -64,7 +66,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.controlKey=0
       self._camera={}
       self._blackonwhite=False
-      self._vtktree=self.wCGNSTree(self._fgprint.tree)
+      self._vtktree=self.wCGNSTree(self._fgprint.tree,zlist)
       self.display.Initialize()
       self.display.Start()
       self.display.show()
@@ -282,7 +284,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
         self.PropPicked=0
         self.controlKey=0
 
-  def wCGNSTree(self,T):
+  def wCGNSTree(self,T,zlist):
 
       o=vtk.vtkObject()
       o.SetGlobalWarningDisplay(0)
@@ -305,7 +307,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtk.GetRenderWindow().AddRenderer(self._waxs)
       self._vtk.GetRenderWindow().AddRenderer(self.renforRen)
       
-      self._parser=Mesh(T)
+      self._parser=Mesh(T,zlist)
       self._selected=[]
       alist=self._parser.createActors()
  

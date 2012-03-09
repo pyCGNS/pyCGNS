@@ -286,6 +286,25 @@ class Q7TreeModel(QAbstractItemModel):
                 t+=[(n.orderTag(),p)]
         t.sort()
         return [e[1] for e in t]
+    def getSelectedZones(self):
+        zlist=[]
+        for pth in self._selected:
+            spth=pth.split('/')
+            if (len(spth)>3):
+                zpth='/'.join(['']+spth[2:4])
+                node=CGU.getNodeByPath(self._fingerprint.tree,zpth)
+                if (    (node is not None)
+                    and (node[3]==CGK.Zone_ts)
+                    and (zpth not in zlist)):
+                    zlist+=[zpth]
+            if (len(spth)==3):
+                bpth='/'.join(['']+spth[2:])
+                for node in CGU.getChildrenByPath(self._fingerprint.tree,bpth):
+                    if (node[3] == CGK.Zone_ts):
+                        zpth=bpth+'/'+node[0]
+                        if (zpth not in zlist):
+                            zlist+=[zpth]
+        return zlist
     def getSelectedShortCut(self):
         slist=[]
         for pth in self._selected:

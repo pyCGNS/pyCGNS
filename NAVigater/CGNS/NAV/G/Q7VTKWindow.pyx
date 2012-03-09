@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Wed Mar  7 14:48:20 2012
+# Created: Fri Mar  9 15:00:46 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -209,7 +209,7 @@ class Ui_Q7VTKWindow(object):
         self.bReverse.setMaximumSize(QtCore.QSize(25, 25))
         self.bReverse.setText("")
         icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(":/images/icons/reverse.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon10.addPixmap(QtGui.QPixmap(":/images/icons/flag-revert.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bReverse.setIcon(icon10)
         self.bReverse.setObjectName("bReverse")
         self.horizontalLayout_2.addWidget(self.bReverse)

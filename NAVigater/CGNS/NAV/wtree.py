@@ -102,10 +102,29 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def updateStatus(self,node):
         self.lineEdit.clear()
         self.lineEdit.insert(node.sidsPath())
+    def pop1(self):
+        self.formview()
+    def pop2(self):
+        self.busyCursor()
+        child=Q7Tree(self._control,self.lastNodeMenu.sidsPath(),self._fgprint)
+        self.readyCursor()
+        child.show()
+    def pop0(self):
+        pass
     def updateMenu(self,node):
-        self.popupmenu.clear()
-        self.popupmenu.addAction(QAction("About %s"%node.sidsType(),self))
-        self.popupmenu.addAction(QAction("Open form",self))
+        if (node is not None):
+          self.lastNodeMenu=node
+          actlist=(("About %s"%node.sidsType(),self.pop0),
+                   None,
+                   ("Open form",self.pop1),
+                   ("Open view",self.pop2))
+          self.popupmenu.clear()
+          self.popupmenu.setTitle('Node menu')
+          for aparam in actlist:
+              if (aparam is None): self.popupmenu.addSeparator()
+              else:
+                  a=QAction(aparam[0],self,triggered=aparam[1])
+                  self.popupmenu.addAction(a)
     def setLastEntered(self):
         self._lastEntered=self.treeview.currentIndex()
     def getLastEntered(self):
@@ -158,9 +177,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         form=Q7Form(self._control,node,self._fgprint)
         form.show()
     def vtkview(self):
+        zlist=self.treeview.model().getSelectedZones()
         node=self.treeview.currentIndex().internalPointer()
         self.busyCursor()
-        vtk=Q7VTK(self._control,node,self._fgprint,self.treeview.model())
+        vtk=Q7VTK(self._control,node,self._fgprint,self.treeview.model(),zlist)
         self.readyCursor()
         vtk.show()
     def queryview(self):
