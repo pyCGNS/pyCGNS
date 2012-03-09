@@ -74,11 +74,15 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bApply.clicked.connect(self.applyquery)
         self.bVTK.clicked.connect(self.vtkview)
         self.bOpenOperateView.clicked.connect(self.queryview)
+        self.bScreenShot.clicked.connect(self.screenshot)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.treeview.setModel(self._fgprint.model)
         self.treeview.setItemDelegate(Q7TreeItemDelegate(self))
         self.treeview.setControlWindow(self,self._fgprint.model)
+    def screenshot(self):
+        sshot=QPixmap.grabWindow(self.treeview.winId())
+        sshot.save('/tmp/foo.png','png')
     def expandMinMax(self):
         if (self._depthExpanded==self._fgprint.depth-2):
             self._depthExpanded=-1

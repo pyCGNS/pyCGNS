@@ -662,7 +662,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_18">
+      <widget class="QToolButton" name="bScreenShot">
        <property name="minimumSize">
         <size>
          <width>25</width>
