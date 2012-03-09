@@ -259,6 +259,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
         self.PropPicked=0
       if (self.picker.GetCellId()<0):
         self.textActor.VisibilityOff()
+        self.CurrentActor=None
       else:
         selPt = self.picker.GetSelectionPoint()
         pickAct = self.picker.GetActors()

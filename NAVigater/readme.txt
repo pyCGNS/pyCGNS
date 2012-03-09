@@ -15,6 +15,17 @@ and the pyCGNS browser appears.
 .. image:: ../doc/images/cgnsnav_overview.png
    :width: 26cm
 
+.. image:: ../doc/images/cgnsnav_01.png
+   :width: 15cm
+.. image:: ../doc/images/cgnsnav_02.png
+   :width: 15cm
+.. image:: ../doc/images/cgnsnav_03.png
+   :width: 20cm
+.. image:: ../doc/images/cgnsnav_04.png
+   :width: 20cm
+.. image:: ../doc/images/cgnsnav_05.png
+   :width: 15cm
+
 The file format is detected using the file extension. You can give a list
 of files to ``CGNS.NAV``, it opens each file w.r.t. its type.
 The ``.cgns`` extension uses the CGNS library which can detect both
