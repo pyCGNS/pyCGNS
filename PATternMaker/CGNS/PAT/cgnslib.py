@@ -34,7 +34,7 @@ def newCGNSTree():
    T=newCGNSTree()
 
   - Return:
-   * The new `CGNSTree_t` node
+   * The new :ref:`XCGNSTree_t` node
 
   - Remarks:
    * You *should* keep the returned node in a variable or reference to it in
@@ -66,7 +66,7 @@ def newCGNSBase(tree,name,ncell,nphys):
    * `pdim`: physical dimensions (`int`)
 
   - Return:
-   * The new `CGNSBase_t` node
+   * The new :ref:`XCGNSBase_t` node
 
   - Remarks:
    * If a parent is given, the new node is added to the parent children list.
@@ -435,7 +435,7 @@ def newZone(parent,name,zsize=None,
    * `family`: zone family (`string`)
 
   - Return:
-   * The new `Zone_t` node
+   * The new :ref:`XZone_t` node
 
   - Remarks:
    * The zone size has dimensions [IndexDimensions][3]
@@ -564,7 +564,7 @@ def newElements(parent,name,
    * `eboundary`: number of boundary elements (`int`)
 
   - Return:
-   * The new `Elements_t` node
+   * The new :ref:`XElements_t` node
 
   - Remarks:
    * If a parent is given, the new node is added to the parent children list.
@@ -1358,7 +1358,7 @@ def newFamilyBC(parent,valueType=CK.UserDefined_s):
 # -----------------------------------------------------------------------------
 def newArbitraryGridMotion(parent,name,valuetype=CK.Null_s):
   """
-  Returns a **new node** representing a ``ArbitraryGridMotionType_t``
+  Returns a **new node** representing a :ref:`XArbitraryGridMotionType_t`
 
   :param parent: CGNS/Python node
   :param name: String

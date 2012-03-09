@@ -489,16 +489,28 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="cRevert">
-       <property name="text">
-        <string>Revert</string>
+      <widget class="QPushButton" name="bReverse">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="cSync">
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Switch seleted and  unselected actors</string>
+       </property>
        <property name="text">
-        <string>Sync</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/flag-revert.gif</normaloff>:/images/icons/flag-revert.gif</iconset>
        </property>
       </widget>
      </item>

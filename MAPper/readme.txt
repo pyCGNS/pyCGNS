@@ -39,11 +39,7 @@ There are two functions: the ``load`` and the ``save``. The ``load`` reads
 a *CGNS/HDF5* file and produces a *CGNS/Python* tree. The ``save`` takes a 
 *CGNS/Python* tree and writes the contents in a *CGNS/HDF5* file::
 
-<<<<<<< local
  (tree,links)=CGNS.MAP.load(filename,flags,depth,path,linkpaths,updatepaths)
-=======
- (tree,links)=CGNS.MAP.load(filename,flags,depth,path,linkpath,update)
->>>>>>> other
 
  status=CGNS.MAP.save(filename,tree,links,flags,depth,path)
 
@@ -101,21 +97,11 @@ The arguments and the return values are:
    this list: it is parsed from the first element to the last,
    the selected file is the first found in this directory list.
 
- * **update**:
-   This option is useful if you want to have the values for only one or several nodes, 
-   what allows to limit the time of data's load. The ``update`` argument is a dictionary
-   which is composed of the ``path`` where is located the node to be modified and the data of this node.
-
-   See the **very important warning** below.
-
-<<<<<<< local
  * **updatepaths**:
    A dictionnary of paths (string) as keys and CGNS/Python nodes as values.
    When the load reaches a node with the path in the keys, the numpy value
    is updated instead of creating a new array. You can pass your own array
    with an already allocated memory zone or update and already loaded numpy.
-=======
->>>>>>> other
 
 .. warning::
    The current directory is **not** in the link search path. So if your
@@ -199,21 +185,10 @@ with another flag.
       would be performed and the array and its dimensions would be stored 
       without modification even if the ``NY_FORTRAN`` flag is not there.
 
-<<<<<<< local
   (6) The file should exist, all new nodes are added, thus modifying the
       children list of their parents. Existing nodes are updated only in 
       the case of value change. There no children removal, name or label
       change.
-=======
-.. toctree::
->>>>>>> other
-
-<<<<<<< local
------
-=======
-   examples
-
->>>>>>> other
 
 SIDS-to-Python Mapping
 ----------------------
@@ -222,15 +197,12 @@ SIDS-to-Python Mapping
 
    sids-to-python
 
-<<<<<<< local
 Examples
 --------
 
 .. toctree::
 
    examples
-=======
->>>>>>> other
    
 The MAP API
 -----------

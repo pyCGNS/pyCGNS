@@ -101,90 +101,43 @@ all the data contained in the tree.
 Update a sub-tree
 ~~~~~~~~~~~~~~~~~
 
-<<<<<<< local
 An existing CGNS/Python tree is read again from a file. The *update*
 dictionnary declares the nodes you want to update instead of creating
 new ones::
-=======
-This feature is very useful when we shall be interested that in only a part of the data contained in the tree.
-We begin by loading the tree.
->>>>>>> other
 
-<<<<<<< local
   updict={}
   path='/Disk/zone1/GridCoordinates/CoordinateZ'
   updict[path]=CGU.getValueByPath(tree,path)
   path='/Disk/zone2/GridCoordinates/CoordinateX'
   updict[path]=CGU.getValueByPath(tree,path)
-=======
-::
->>>>>>> other
 
-<<<<<<< local
   (tree,lk)=CGNS.MAP.load("data/T0.cgns",CGNS.MAP.S2P_DEFAULT,0,None,[],updict)
-=======
- import CGNS.MAP
->>>>>>> other
 
-<<<<<<< local
-=======
-
- (tree,lk)=CGNS.MAP.load("001Disk.hdf", CGNS.MAP.S2P_DEFAULT, 0, '', [], None)
-
-
-Then, we modify the data contained in the node whose the label  is 'fluid' by replacing
-'ideal' instead of 'perfect'.
-
-::
+Then, we modify the data contained in the node whose the label is
+'fluid' by replacing 'ideal' instead of 'perfect'.
 
  >>> tree[2][1][2][1][2][5]
-::
-
  ['fluid',array(['I','d','e','a','l'],dtype='|S1'),[],'DataArray_t']
 
- import numpy
+ >>> import numpy
+ >>> tree[2][1][2][1][2][5][1]=numpy.array(tuple('parfait'),'|S1')
 
- tree[2][1][2][1][2][5][1]=numpy.array(tuple('parfait'),'|S1')
-
-
-We verify that our change works.
-
-::
-
- >>>  tree[2][1][2][1][2][5]
-::
-
+ >>> tree[2][1][2][1][2][5]
  ['fluid',array(['p','a','r','f','a','i','t'],dtype='|S1'),[],'DataArray_t']
 
-
-The *update* function must be specified in a dictionary which contains the *path* where 
-is located the node which interests us and this same node which contains the data which
-are to change.This feature is in the sixth position in the list of the arguments.
-
-::
-
- Update={'/Disk/.Solver#Compute/fluid':tree[2][1][2][1][2][5]}
-
- (tr,links)=CGNS.MAP.load("001Disk.hdf", CGNS.MAP.S2P_DEFAULT, 0, '', [], Update)
-
-
->>>>>>> other
 Copy a part of a tree
 ~~~~~~~~~~~~~~~~~~~~~
 
-To copy only a part of a tree, you have to use the *load* function by mentioning the *path* which
-defines the start node of the load. In our example, we load only the node whose label is 'fluid' because this
-node has no children and the nodes '.SOLVER#Compute' and 'Disk' which are parents of the node 'fluid'.
-
-::
+To copy only a part of a tree, you have to use the *load* function by
+mentioning the *path* which defines the start node of the load. In our
+example, we load only the node whose label is 'fluid' because this
+node has no children and the nodes '.SOLVER#Compute' and 'Disk' which
+are parents of the node 'fluid'.
 
  import CGNS.MAP
 
  path='/Disk/.Solver#Compute/fluid'
-
  (tree,links)=CGNS.MAP.load("001Disk.hdf",CGNS.MAP.S2P_DEFAULT,0,path,[],None)
-
-::
 
  >>> print tree
 
@@ -202,30 +155,18 @@ For example, we are looking for the link files which are in the directory 'liens
 Some usual issues
 ~~~~~~~~~~~~~~~~~
 
-<<<<<<< local
 Your load leads to an empty tree::
-=======
-::
->>>>>>> other
 
-<<<<<<< local
  >>>import CGNS.MAP
  >>>(tree,links)=CGNS.MAP.load("./T0.cgns",CGNS.MAP.S2P_FOLLOWLINKS)
  >>>tree
  ['CGNSTree', None, None, 'CGNSTree_t']
-=======
- import CGNS.MAP
->>>>>>> other
 
-<<<<<<< local
+ import CGNS.MAP
+
 your file is an ADF file, not an HDF5 file.
-=======
  (tree, links)=CGNS.MAP.load("./liens/3element_airfoll_msh_cfd.hdf", CGNS.MAP.S2P_DEFAULT,0,'',['./liens/'],None)
 
  print links
 
 
-
-
-
->>>>>>> other
