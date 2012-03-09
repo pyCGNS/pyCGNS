@@ -2,13 +2,14 @@ import sys, os
 
 extensions = ['sphinx.ext.autodoc','sphinx.ext.intersphinx']
 mapdir='%s/../build/doc/html'%os.path.abspath('.')
-intersphinx_mapping={'wraix': (mapdir+'/WRA',None),
+intersphinx_mapping={'topix': (mapdir+'/',None),
+                     'wraix': (mapdir+'/WRA',None),
                      'mapix': (mapdir+'/MAP',None),
                      'patix': (mapdir+'/PAT',None),
                      'navix': (mapdir+'/NAV',None),
-                     'appix': (mapdir+'/APP',None),
-                     'valix': (mapdir+'/VAL',None),
-                     'datix': (mapdir+'/DAT',None)
+#                     'appix': (mapdir+'/APP',None),
+#                     'valix': (mapdir+'/VAL',None),
+#                     'datix': (mapdir+'/DAT',None)
                      }
 
 #templates_path = ['_templates']
@@ -35,6 +36,7 @@ html_favicon =  'images/pyCGNS-logo-tiny.ico'
 #html_static_path = ['_static']
 html_use_index = True
 htmlhelp_basename = 'pyCGNSdoc'
+html_show_sourcelink=False
 
 latex_paper_size = 'a4'
 latex_font_size = '10pt'

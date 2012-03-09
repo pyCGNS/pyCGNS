@@ -6,6 +6,9 @@
 CGNS.VAL
 ========
 
+.. warning::
+   VAL is not up-to-date and there is no planned maintenance on it.
+
 -----
 
 .. _val_index:

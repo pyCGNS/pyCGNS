@@ -62,8 +62,35 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.signals.saveFile.connect(self.saving)
         self.getHistory()
         self.getOptions()
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.popupmenu = QMenu()
     def clickedLine(self,*args):
-        Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))
+        if (self.controlTable.lastButton==Qt.LeftButton):
+            Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))
+        if (self.controlTable.lastButton==Qt.RightButton):
+            self.updateMenu(self.controlTable.currentIndex())
+            self.popupmenu.popup(self.controlTable.lastPos)
+    def pop1(self):
+        if (self.lastView): Q7fingerPrint.getView(self.lastView).close()
+    def pop2(self):
+        if (self.lastView): Q7fingerPrint.raiseView(self.lastView)
+    def pop3(self):
+        pass
+    def updateMenu(self,idx):
+        lv=self.getIdxFromLine(idx.row())
+        if (lv is not None):
+          self.lastView=lv
+          actlist=(("View  information",self.pop3),
+                   ("Raise view",self.pop2),
+                   None,
+                   ("Close view",self.pop1))
+          self.popupmenu.clear()
+          self.popupmenu.setTitle('Control view menu')
+          for aparam in actlist:
+              if (aparam is None): self.popupmenu.addSeparator()
+              else:
+                  a=QAction(aparam[0],self,triggered=aparam[1])
+                  self.popupmenu.addAction(a)
     def option(self):
         if (self.wOption==None):
             self.wOption=Q7Option(self)
@@ -120,12 +147,15 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             tpitem=QTableWidgetItem(self.I_VTK,'')
         if (l[1]==Q7Window.VIEW_QUERY):
             tpitem=QTableWidgetItem(self.I_QUERY,'')
+        stitem.setTextAlignment(Qt.AlignCenter)
+        tpitem.setTextAlignment(Qt.AlignCenter)
         ctw.setItem(r,0,stitem)
         ctw.setItem(r,1,tpitem)
         for i in range(len(l)-2):
-            it=QTableWidgetItem('%s'%(l[i+2]))
-            if (i in [0,1]):   it.setTextAlignment(Qt.AlignCenter)
-            if (i in [2,3,4]): it.setFont(QFont("Courier"))
+            it=QTableWidgetItem('%s '%(l[i+2]))
+            if (i in [0]): it.setTextAlignment(Qt.AlignCenter)
+            else: it.setTextAlignment(Qt.AlignLeft)
+            it.setFont(QFont("Courier"))
             ctw.setItem(r,i+2,it)
         for i in (0,1,2):
             ctw.resizeColumnToContents(i)

@@ -7,9 +7,10 @@ CGNS.MAP
 ========
 
 The MAP module is one of the most important modules of *pyCGNS*.
-MAP is the translator to get *CGNS/Python* trees from 
-a *CGNS/HDF5* file and back, to save *CGNS/Python* trees
-as a *CGNS/HDF5* file.
+MAP is the translator to get :term:`CGNS/Python` trees from 
+a :term:`CGNS/HDF5` file and back, to save :term:`CGNS/Python` trees
+as a :term:`CGNS/HDF5` file. MAP uses :term:`CHLone` and has no dependancy
+to :term:`CGNS/MLL` or :term:`CGNS/ADF`.
 
 Quick start
 -----------
@@ -21,17 +22,35 @@ A simple exemple to load a *CGNS/HDF5* file as a *CGNS/Python* tree::
 
   import CGNS.MAP
 
-  (tree,links)=CGNS.MAP.load("./T0.cgns",CGNS.MAP.S2P_FOLLOWLINKS)
+  (tree,links)=CGNS.MAP.load("T0.cgns")
 
-The ``tree`` value contains the actual CGNS/Python tree with linked-to
-files included (because the ``S2P_FOLLOWLINKS`` flag is *on*) and the
+The ``tree`` value contains the actual CGNS/Python tree, 
 ``links`` value is a list of links found during the *HDF5* file parse.
+The default behavior of the load is to follow linked-to files.
+Now we can use the `CGNS.PAT` module to handle this tree. For example
+you can print the whole tree path hierarchy::
+
+  
+  import CGNS.MAP
+  import CGNS.PAT.cgnsutils as CGU
+
+  (tree,links)=CGNS.MAP.load("T0.cgns")
+
+  for p in CGU.getAllPaths(tree): print p
+
+See the `CGNS.PAT` documentation on how to browse, modify 
+such a GCNS/Python tree.
 
 User interface
 --------------
 MAP is a lightweight module, its purpose is to be as small as possible
 in order to be embedded separatly in an application 
-(see :ref:`Embbeded MAP <reference_embedded_map>`) .
+(not yet available).
+It uses the :term:`CHLone` library and its Python binding.
+`MAP` is a powerful reader/writer of CGNS/HDF5 and CGNS/Python trees. The
+use of `CGNS.PAT` and the flags combination can help to achieve complex
+operations on a CGNS tree with a fast access and a low memory footprint.
+See the :ref:`examples <mapexamples>`.  
 
 Functions
 ~~~~~~~~~
@@ -107,19 +126,8 @@ The arguments and the return values are:
    The current directory is **not** in the link search path. So if your
    linked-to file is in current directory, you should add `.` in the
    link search path list.
-
-.. warning::
    If the filename is an absolute path name (not recommended !) then
    you should add and empty path in the search path list.
-
-.. warning::
-   The ``load`` function requires the first two arguments. The ``save``
-   requires the first four arguments. If you add more arguments to these
-   functions, you should pass them by respecting the order in which are these
-   arguments. 
-   See the :ref:`examples <mapexamples>`.  
-
-
 
 .. _mapflags:
 
@@ -203,23 +211,9 @@ Examples
 .. toctree::
 
    examples
+
+.. include:: ../doc/Intro/glossary.txt
    
-The MAP API
------------
-
-The MAP module is designed so that you can re-use the lead/save function and
-put them into your own application. This allows you to create a *CGNS/HDF*
-tree from a *CGNS/Python* tree into your C code. The two function
-are very close to the Python level interface functions.
-
-.. warning::
-   The *root* node of an *HDF5* file is the ``/`` group with an attribute
-   name of ``HDF5 MotherNode``. This is an exception in the *CGNS/HDF5* tree,
-   all other nodes have the same *group name* as the value of 
-   the ``name`` attribute. Then, if you want to use ``h5dump`` on a 
-   *CGNS/HDF5* tree, keep in mind that the name ``HDF5 MotherNode`` is an
-   internal name and this should *not* be used by applications.
-
 .. _map_index:
 
 MAP Index

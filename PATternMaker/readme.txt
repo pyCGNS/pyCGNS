@@ -61,7 +61,7 @@ The list below gives an overview of publicly available functions.
    :py:func:`checkRootNode <CGNS.PAT.cgnsutils.checkRootNode>` -
    :py:func:`checkNodeType <CGNS.PAT.cgnsutils.checkNodeType>` -
    :py:func:`checkNodeName <CGNS.PAT.cgnsutils.checkNodeName>` -
-   :py:func:`checkSameNode <CGNS.PAT.cgnsutils.checkSameName>` -
+   :py:func:`checkSameNode <CGNS.PAT.cgnsutils.checkSameNode>` -
    :py:func:`checkDuplicatedName <CGNS.PAT.cgnsutils.checkDuplicatedName>` -
    :py:func:`checkPath <CGNS.PAT.cgnsutils.checkPath>` -
    :py:func:`checkLink <CGNS.PAT.cgnsutils.checkLink>`-
@@ -316,6 +316,8 @@ cgnsValueError
 +-------+--------------------------------------------------------------------+
 
 -----
+
+.. include:: ../doc/Intro/glossary.txt
 
 .. _pat_index:
 

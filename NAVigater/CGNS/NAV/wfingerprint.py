@@ -139,6 +139,13 @@ class Q7fingerPrint:
             for vtype in x.views:
                 for (v,i) in x.views[vtype]:
                     if (i==int(idx)): v.raise_()
+    @classmethod
+    def getView(cls,idx):
+        for x in cls.__extension:
+            for vtype in x.views:
+                for (v,i) in x.views[vtype]:
+                    if (i==int(idx)): return v
+        return None
     def __init__(self,control,filedir,filename,tree,links,**kw):
         self.filename=filename
         self.tree=tree

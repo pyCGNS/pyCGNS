@@ -209,7 +209,7 @@ class Ui_Q7VTKWindow(object):
         self.bReverse.setMaximumSize(QtCore.QSize(25, 25))
         self.bReverse.setText("")
         icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(":/images/icons/flag-revert.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon10.addPixmap(QtGui.QPixmap(":/images/icons/reverse.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bReverse.setIcon(icon10)
         self.bReverse.setObjectName("bReverse")
         self.horizontalLayout_2.addWidget(self.bReverse)

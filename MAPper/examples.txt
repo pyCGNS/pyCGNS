@@ -8,34 +8,34 @@
 MAP Examples
 ++++++++++++
 
-The *CGNS.MAP* provides the user with two functions ``load`` and ``save``.
+The *CGNS.MAP* provides the user with the two functions ``load`` and ``save``.
 The actual actions these functions are performing heavily depends on the
-arguments you pass to these functions. We give here some examples taken
-from usual applications of *CGNS.MAP*.
+arguments you pass to these functions, the ``load`` takes a CGNS/HDF5 tree
+and returns at least a CGNS/Python tree, while the ``save`` takes a
+CGNS/Python tree and writes (modifies) a CGNS/HDF5 tree.
+Rather than listing all options, we suggest your try to figure out how to
+use these functions reading the examples.
+
 All the examples are assuming the following imports::
 
   import CGNS.MAP
   import CGNS.PAT.cgnsutils    as CGU
   import CGNS.PAT.cgnskeywords as CGK
+  import CGNS.PAT.cgnslib      as CGL
 
+  import numpy as NPY
 
 Complete load of a *CGNS/HDF* file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The flag means we want to follow the symbolic links and then obtain
-a merged tree as if there was a single one::
+The translation of a CNS/HDF5 file into a CGNS/Python tree is
+performed with the simple line::
 
-  (tree,links)=CGNS.MAP.load("./T0.cgns",CGNS.MAP.S2P_FOLLOWLINKS)
+  (tree,links)=CGNS.MAP.load("testfile.cgns")
 
+.. code-block:: python
+   :emphasize-lines: 3,5
 
-In order to load a *CGNS/HDF* file, you have to use the *load* function which reads a CGNS/HDF5 file and produces a CGNS/Python tree. It is necessary to specify the file's name, its place and 
-the flags which are connected to the file.
-In our example, the value *tree* contains the structure of our *tree*.
-
-::
-
- import CGNS.MAP 
-
- (tree,links)=CGNS.MAP.load("001Disk.hdf", CGNS.MAP.S2P_DEFAULT)
+ (tree,links)=CGNS.MAP.load("001Disk.hdf",CGNS.MAP.S2P_DEFAULT|)
 
  print tree
 

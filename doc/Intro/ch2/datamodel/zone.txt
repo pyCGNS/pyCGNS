@@ -1,0 +1,32 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
+Tree main structure
++++++++++++++++++++
+
+A CGNS tree has a topological structure. The branches of the tree are
+representing the actual topological divisions of your computation.
+
+
+The skeleton
+============
+
+The support of your computation data is the grid (or grids). The grid
+can be structured and/or unstructured. The way your grid is cut into
+parts defines the skeleton of your tree.
+The branches that mainly holds the data are the *Base*, *Zone*, *Elements*, 
+*Connectivity* and *Boundary conditions* nodes.
+
+
+A CGNS is a tree. A tree is a node which has node has children. The top
+node of a :term:`CGNS/SIDS` tree has the CGNSBase_t type.
+
+Actual top node
+===============
+
+Node description
+================
+
+
