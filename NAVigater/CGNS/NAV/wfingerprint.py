@@ -41,7 +41,7 @@ class Q7Window(QWidget,object):
         self._control=control
         self._fgprint=fgprint
         self._index=self.addChildWindow()
-        if (self._index==0):
+        if (self._index!=0):
             tit="%s:%s%.3d"%(OCTXT._ToolName,self._vtype,self._index)
         else:
             tit="%s:Control"%(OCTXT._ToolName)            
@@ -146,6 +146,13 @@ class Q7fingerPrint:
             for vtype in x.views:
                 for (v,i) in x.views[vtype]:
                     if (i==int(idx)): v.raise_()
+    @classmethod
+    def getView(cls,idx):
+        for x in cls.__extension:
+            for vtype in x.views:
+                for (v,i) in x.views[vtype]:
+                    if (i==int(idx)): return v
+        return None
     def __init__(self,control,filedir,filename,tree,links,**kw):
         self.filename=filename
         self.tree=tree

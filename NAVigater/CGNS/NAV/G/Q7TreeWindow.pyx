@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
-# Created: Thu Feb  9 16:24:48 2012
+# Created: Fri Mar  9 16:59:09 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -206,14 +206,14 @@ class Ui_Q7TreeWindow(object):
         self.horizontalLayout.addWidget(self.bVTK)
         spacerItem6 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem6)
-        self.toolButton_18 = QtGui.QToolButton(Q7TreeWindow)
-        self.toolButton_18.setMinimumSize(QtCore.QSize(25, 25))
-        self.toolButton_18.setMaximumSize(QtCore.QSize(25, 25))
+        self.bScreenShot = QtGui.QToolButton(Q7TreeWindow)
+        self.bScreenShot.setMinimumSize(QtCore.QSize(25, 25))
+        self.bScreenShot.setMaximumSize(QtCore.QSize(25, 25))
         icon21 = QtGui.QIcon()
         icon21.addPixmap(QtGui.QPixmap(":/images/icons/snapshot.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_18.setIcon(icon21)
-        self.toolButton_18.setObjectName("toolButton_18")
-        self.horizontalLayout.addWidget(self.toolButton_18)
+        self.bScreenShot.setIcon(icon21)
+        self.bScreenShot.setObjectName("bScreenShot")
+        self.horizontalLayout.addWidget(self.bScreenShot)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -237,7 +237,7 @@ class Ui_Q7TreeWindow(object):
         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
         self.bBackControl.setText("")
         icon22 = QtGui.QIcon()
-        icon22.addPixmap(QtGui.QPixmap(":/images/icons/control.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon22.addPixmap(QtGui.QPixmap(":/images/icons/top.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bBackControl.setIcon(icon22)
         self.bBackControl.setObjectName("bBackControl")
         self.horizontalLayout_3.addWidget(self.bBackControl)
@@ -319,8 +319,8 @@ class Ui_Q7TreeWindow(object):
         self.bForm.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Open form view on selected node", None, QtGui.QApplication.UnicodeUTF8))
         self.bVTK.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Open VTK view", None, QtGui.QApplication.UnicodeUTF8))
         self.bVTK.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton_18.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Save tree view snapshot", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton_18.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.bScreenShot.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Save tree view snapshot", None, QtGui.QApplication.UnicodeUTF8))
+        self.bScreenShot.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setText(QtGui.QApplication.translate("Q7TreeWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
 
 from CGNS.NAV.mtree import Q7TreeView

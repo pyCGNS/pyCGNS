@@ -49,6 +49,8 @@ patterns and other interoperability features.
    be a bit out-dated but most of the look-and-feel of the tool would
    keep unchanged.
 
+.. include:: ../doc/Intro/glossary.txt
+
 .. _nav_index:
 
 NAV Index

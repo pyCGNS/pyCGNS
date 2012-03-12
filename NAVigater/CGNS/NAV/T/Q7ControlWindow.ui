@@ -263,7 +263,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QTableWidget" name="controlTable">
+    <widget class="Q7ControlTableWidget" name="controlTable">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -278,6 +278,15 @@
      </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="tabKeyNavigation">
+      <bool>false</bool>
+     </property>
+     <property name="showDropIndicator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="dragDropOverwriteMode">
+      <bool>false</bool>
      </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::SingleSelection</enum>
@@ -297,6 +306,9 @@
      <property name="columnCount">
       <number>6</number>
      </property>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>true</bool>
+     </attribute>
      <column/>
      <column/>
      <column/>
@@ -307,6 +319,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Q7ControlTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header>CGNS.NAV.mcontrol</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../R/Res.qrc"/>
  </resources>

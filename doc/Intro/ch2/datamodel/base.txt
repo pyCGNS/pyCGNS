@@ -1,0 +1,24 @@
+.. CGNS-How-to 
+   Copyright (c) 2012 Marc Poinot, Onera The French Aerospace Lab
+
+Data model
+++++++++++
+
+The :term:`CGNS/SIDS` is a **data model**. It describes the data you need
+to define (mandatory or optional data) the semantics of it, the way you 
+organize it and its relationships with the other data. This describes
+a logical model of your application data.
+
+Node and trees
+==============
+
+A CGNS is a tree. A tree is a node which has node has children. The top
+node of a :term:`CGNS/SIDS` tree has the CGNSBase_t type.
+
+Actual top node
+===============
+
+Node description
+================
+
+

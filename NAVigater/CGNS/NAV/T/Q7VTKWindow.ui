@@ -59,6 +59,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Add current view to view list</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -69,7 +72,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="bSaveView">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -81,6 +84,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Write view list into a file</string>
        </property>
        <property name="text">
         <string/>
@@ -105,6 +111,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Remove current view from view list</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -128,7 +137,33 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="bSnapshot">
+      <widget class="QPushButton" name="bSaveVTK">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Save VTK data into a file</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bScreenShot">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -147,35 +182,15 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Save view snapshot into a file</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
          <normaloff>:/images/icons/snapshot.gif</normaloff>:/images/icons/snapshot.gif</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bSaveVTK">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
        </property>
       </widget>
      </item>
@@ -210,6 +225,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Show Y/Z plane</string>
+       </property>
        <property name="text">
         <string>X</string>
        </property>
@@ -235,6 +253,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Show X/Z plane</string>
+       </property>
        <property name="text">
         <string>Y</string>
        </property>
@@ -259,6 +280,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Show X/Y plane</string>
        </property>
        <property name="text">
         <string>Z</string>
@@ -308,6 +332,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Change colors to random</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -337,6 +364,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Switch black/white colors</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -347,70 +377,12 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Minimum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Front</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSlider" name="horizontalSlider_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Back</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSlider" name="horizontalSlider">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Angle</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSlider" name="horizontalSlider_3">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
       <spacer name="horizontalSpacer_6">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Minimum</enum>
+        <enum>QSizePolicy::Expanding</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -452,12 +424,15 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Raise CGNS.NAV control window</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/control.gif</normaloff>:/images/icons/control.gif</iconset>
+         <normaloff>:/images/icons/top.gif</normaloff>:/images/icons/top.gif</iconset>
        </property>
       </widget>
      </item>
@@ -475,9 +450,28 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="bReset">
+      <widget class="QPushButton" name="bUpdate">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Update selected list from tree view</string>
+       </property>
        <property name="text">
-        <string>Reset</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/undo-last-modification.gif</normaloff>:/images/icons/undo-last-modification.gif</iconset>
        </property>
       </widget>
      </item>
@@ -495,16 +489,28 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="cHide">
-       <property name="text">
-        <string>Hide</string>
+      <widget class="QPushButton" name="bReverse">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="cExclusive">
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Switch seleted and  unselected actors</string>
+       </property>
        <property name="text">
-        <string>Exclusive</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/flag-revert.gif</normaloff>:/images/icons/flag-revert.gif</iconset>
        </property>
       </widget>
      </item>
@@ -535,17 +541,20 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Highlight previous selected item</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/arrow.gif</normaloff>:/images/icons/arrow.gif</iconset>
+         <normaloff>:/images/icons/control.gif</normaloff>:/images/icons/control.gif</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="bUpdate">
+      <widget class="QPushButton" name="bReset">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -558,12 +567,15 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Clear selection list</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/undo-last-modification.gif</normaloff>:/images/icons/undo-last-modification.gif</iconset>
+         <normaloff>:/images/icons/node-sids-leaf.gif</normaloff>:/images/icons/node-sids-leaf.gif</iconset>
        </property>
       </widget>
      </item>
@@ -581,12 +593,15 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Highlight next selected item</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/arrow_R.gif</normaloff>:/images/icons/arrow_R.gif</iconset>
+         <normaloff>:/images/icons/node-sids-closed.gif</normaloff>:/images/icons/node-sids-closed.gif</iconset>
        </property>
       </widget>
      </item>

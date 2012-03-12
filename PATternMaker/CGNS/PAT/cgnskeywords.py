@@ -190,6 +190,9 @@ DataClass_ts = "DataClass_t"
 DataClass_s  = "DataClass"
 
 # ------------------------------------------------------------
+GridLocation_ts= "GridLocation_t"
+GridLocation_s = "GridLocation"
+
 Vertex_s       = "Vertex"
 CellCenter_s   = "CellCenter"
 FaceCenter_s   = "FaceCenter"
@@ -198,17 +201,16 @@ JFaceCenter_s  = "JFaceCenter"
 KFaceCenter_s  = "KFaceCenter"
 EdgeCenter_s   = "EdgeCenter"
 
-GridLocation_s = "GridLocation"
-
-GridLocation_l = [CellCenter_s,Vertex_s,FaceCenter_s,
+GridLocation_l = [Null_s,UserDefined_s,Vertex_s,CellCenter_s,FaceCenter_s,
                   IFaceCenter_s,JFaceCenter_s,KFaceCenter_s,
-                  EdgeCenter_s,Null_s,UserDefined_s]
+                  EdgeCenter_s]
+GridLocation   = stringAsKeyDict(GridLocation_l)
+GridLocation_  = enumAsKeyDict(GridLocation_l)
+(Null,UserDefined,Vertex,CellCenter,FaceCenter,
+ IFaceCenter,JFaceCenter,KFaceCenter,EdgeCenter)=GridLocation_.keys()
 
 # ------------------------------------------------------------
-DirichletData_s = "DirichletData"
-NeumannData_s   = "NeumannData"
-Dirichlet_s     = "Dirichlet"
-Neumann_s       = "Neumann"
+PointSetType_ts = "PointSetType_t"
 
 PointList_s                   = "PointList"
 PointListDonor_s              = "PointListDonor"
@@ -217,6 +219,28 @@ PointRangeDonor_s             = "PointRangeDonor"
 ElementRange_s                = "ElementRange"
 ElementList_s                 = "ElementList"
 CellListDonor_s               = "CellListDonor"
+
+PointSetType_l = [Null_s,UserDefined_s,
+                  PointList_s,PointListDonor_s,PointRange_s,PointRangeDonor_s,
+                  ElementRange_s,ElementList_s,CellListDonor_s]
+PointSetType  = stringAsKeyDict(PointSetType_l)
+PointSetType_ = enumAsKeyDict(PointSetType_l)
+(Null,UserDefined,PointList,PointListDonor,PointRange,PointRangeDonor,
+ ElementRange,ElementList,CellListDonor)=PointSetType_.keys()
+
+# ------------------------------------------------------------
+BCDataType_ts = "BCDataType_t"
+BCDataType_s = "BCDataType"
+
+DirichletData_s = "DirichletData"
+NeumannData_s   = "NeumannData"
+Dirichlet_s     = "Dirichlet"
+Neumann_s       = "Neumann"
+
+BCDataType_l=[Null_s,UserDefined_s,Dirichlet_s,Neumann_s]
+BCDataType   = stringAsKeyDict(BCDataType_l)
+BCDataType_  = enumAsKeyDict(BCDataType_l)
+(Null,UserDefined,Dirichlet,Neumann)=BCDataType_.keys()
 
 FullPotential_s               = "FullPotential"
 Euler_s                       = "Euler"
@@ -683,7 +707,6 @@ GridConnectivityType_s        = "GridConnectivityType"
 GridConnectivity_ts           = "GridConnectivity_t"
 
 GridCoordinates_ts            = "GridCoordinates_t"
-GridLocation_ts               = "GridLocation_t"
 IndexArray_ts                 = "IndexArray_t"
 IndexRange_ts                 = "IndexRange_t"
 IntegralData_ts               = "IntegralData_t"

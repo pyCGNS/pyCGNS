@@ -206,6 +206,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Use selected file for load/save</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -247,6 +250,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Go back to parent directory</string>
        </property>
        <property name="text">
         <string/>

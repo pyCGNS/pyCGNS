@@ -1,5 +1,10 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/reverse.gif</file>
+    <file>icons/hidden.gif</file>
+    <file>icons/unselected.gif</file>
+    <file>icons/selected.gif</file>
+    <file>icons/top.gif</file>
     <file>icons/camera-snap.gif</file>
     <file>icons/camera-remove.gif</file>
     <file>icons/control.gif</file>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7QueryWindow.ui'
 #
-# Created: Thu Feb  9 16:24:53 2012
+# Created: Fri Mar  9 15:14:06 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -121,7 +121,7 @@ class Ui_Q7QueryWindow(object):
         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
         self.bBackControl.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/images/icons/control.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/images/icons/top.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bBackControl.setIcon(icon5)
         self.bBackControl.setObjectName("bBackControl")
         self.horizontalLayout_2.addWidget(self.bBackControl)

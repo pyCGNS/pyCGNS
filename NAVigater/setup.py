@@ -59,26 +59,13 @@ if installprocess:
       'Q7VTKWindow'
       ]
   modgenlist=[]
-  modextlist=[Extension("CGNS.NAV.mtree", ["CGNS/NAV/mtree.pyx"],
-                        include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
-                        library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
-                        libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
-                        ),
-              Extension("CGNS.NAV.mparser", ["CGNS/NAV/mparser.pyx"],
-                        include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
-                        library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
-                        libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
-                        ),
-              Extension("CGNS.NAV.mquery", ["CGNS/NAV/mquery.pyx"],
-                        include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
-                        library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
-                        libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
-                        ),
-              Extension("CGNS.NAV.mtable", ["CGNS/NAV/mtable.pyx"],
-                        include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
-                        library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
-                        libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
-                        )]
+  modextlist=[]
+  for mfile in ['mtree','mparser','mquery','mcontrol','mtable']:
+     modextlist+=[Extension("CGNS.NAV.%s"%mfile,["CGNS/NAV/%s.pyx"%mfile],
+                           include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
+                           library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
+                           libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
+                           )]
   for m in modnamelist:
      modextlist+=[Extension("CGNS.NAV.%s"%m, ["CGNS/NAV/G/%s.pyx"%m],
                             include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,

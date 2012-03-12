@@ -8,17 +8,22 @@ CGNS.APP
 
 The APP module is an informal set of tools, example, utilities, tests...
 
-.. toctree::
+.. warning::
+   APP documentation is not up-to-date, however the module contents can
+   be used. You have to look at the sources...
 
-   quickstart
+.. -----
+   .. toctree::
 
------
+      quickstart
 
-.. _app_index:
+   -----
 
-APP Index
----------
+   .. _app_index:
 
-* :ref:`genindex`
+   APP Index
+   ---------
+
+   * :ref:`genindex`
 
 .. -------------------------------------------------------------------------

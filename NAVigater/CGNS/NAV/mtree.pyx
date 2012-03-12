@@ -39,6 +39,10 @@ EDITNODE='@@NODEDIT@@'
 MARKNODE='@@NODEMARK@@'
 DOWNNODE='@@NODEDOWN@@'
 UPNODE  ='@@NODEUP@@'
+COPY='@@NODECOPY@@'
+CUT='@@NODECUT@@'
+PASTEBROTHER='@@NODEPASTEB@@'
+PASTECHILD='@@NODEPASTEC@@'
 
 ICONMAPPING={
  STLKNOLNK:":/images/icons/link-node.gif",
@@ -57,9 +61,20 @@ ICONMAPPING={
 KEYMAPPING={
  MARKNODE:   Qt.Key_Space,
  EDITNODE:   Qt.Key_Insert,
- UPNODE:     Qt.Key_Up,
+ UPNODE  :   Qt.Key_Up,
  DOWNNODE:   Qt.Key_Down,
+ COPY    :   Qt.Key_C,
+ CUT     :   Qt.Key_X,
+ PASTECHILD   :   Qt.Key_Y,
+ PASTEBROTHER :   Qt.Key_V,
 }
+
+EDITKEYMAPPINGS=[
+    KEYMAPPING[COPY],
+    KEYMAPPING[CUT],
+    KEYMAPPING[PASTECHILD],
+    KEYMAPPING[PASTEBROTHER],
+    ]
 
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
@@ -87,11 +102,28 @@ class Q7TreeView(QTreeView):
         self.lastPos=event.globalPos()
         self.lastButton=event.button()
         QTreeView.mousePressEvent(self,event)
+    def wink(self,index):
+        if (self.isExpanded(index)):
+            self.setExpanded(index,False)
+            self.setExpanded(index,True)
+        else:
+            self.setExpanded(index,True)
+            self.setExpanded(index,False)
     def keyPressEvent(self,event):
         last=self.getLastEntered()
         if (last is not None):
           kmod=event.modifiers()
           kval=event.key()
+          if (kval in EDITKEYMAPPINGS):
+              if (kmod==Qt.ControlModifier):
+                if (kval==KEYMAPPING[COPY]):
+                  self._model.copyNode(last)
+                if (kval==KEYMAPPING[CUT]):
+                  self._model.cutNode(last)
+                if (kval==KEYMAPPING[PASTECHILD]):
+                  self._model.pasteAsChild(last)
+                if (kval==KEYMAPPING[PASTEBROTHER]):
+                  self._model.pasteAsBrother(last)
           if (kval==KEYMAPPING[MARKNODE]):
               last.internalPointer().switchMarked()
               last.internalPointer()._model.updateSelected()
@@ -108,12 +140,7 @@ class Q7TreeView(QTreeView):
         self.scrollTo(self.getLastEntered())
     def refreshView(self):
         ixc=self.currentIndex()
-        row=ixc.row()
-        row1=min(0,row-20)
-        row2=min(row+20,self._model._maxrow)
-        ix1=self._model.createIndex(row1,0)
-        ix2=self._model.createIndex(row2,DATACOLUMN-1)
-        self._model.dataChanged.emit(ix1,ix2)
+        self._model.refreshModel(ixc)
     def upRowLevel(self,index):
         self.relativeMoveToRow(-1,index)
     def downRowLevel(self,index):
@@ -192,6 +219,8 @@ class Q7TreeItem(object):
         return self._path
     def sidsName(self):
         return self._itemnode[0]
+    def sidsNameSet(self,name):
+        self._itemnode[0]=name
     def sidsValue(self):
         return self._itemnode[1]
     def sidsChildren(self):
@@ -213,10 +242,26 @@ class Q7TreeItem(object):
         return (0,)
     def sidsLinkStatus(self):
         return STLKNOLNK
+    def sidsAddChild(self,node):
+        newtree=copy.deepcopy(node._itemnode)
+        name=newtree[0]
+        ntype=newtree[3]
+        parent=self._itemnode
+        count=0
+        while (not CGU.checkDuplicatedName(parent,name,dienow=False)):
+            count+=1
+            name='{%s#%.3d}'%(ntype,count)
+        newtree[0]=name
+        self._itemnode[2].append(newtree)
+        newpath=self.sidsPath()+'/%s'%name
+        return (newtree,newpath)
     def addChild(self,item):  
         self._childrenitems.append(item)  
     def child(self,row):  
-        return self._childrenitems[row]  
+        return self._childrenitems[row]
+    def hasChildren(self):
+        if (self.childCount()>0): return True
+        return False
     def childCount(self):  
         return len(self._childrenitems)  
     def columnCount(self):
@@ -268,12 +313,20 @@ class Q7TreeModel(QAbstractItemModel):
         self._slist=OCTXT._SortedTypeList
         self._count=0
         self._maxrow=0
+        self._index={}
         self.parseAndUpdate(self._rootitem, self._fingerprint.tree)
         fgprint.model=self
         for ik in ICONMAPPING:
             Q7TreeModel._icons[ik]=QIcon(QPixmap(ICONMAPPING[ik]))
         self._selected=[]
         self._selectedIndex=-1
+        self._control=self._fingerprint.control
+    def setIndex(self,path,row,col,parent):
+        self._index[path]=(row,col,parent)
+    def getIndex(self,path):
+        if (self._index.has_key(path)):
+            return self.createIndex(*self._index[path])
+        return QModelIndex()
     def nodeFromPath(self,path):
         if (path in self._extension.keys()): return self._extension[path]
         return None
@@ -286,6 +339,31 @@ class Q7TreeModel(QAbstractItemModel):
                 t+=[(n.orderTag(),p)]
         t.sort()
         return [e[1] for e in t]
+    def getSelectedZones(self):
+        zlist=[]
+        for pth in self._selected:
+            spth=pth.split('/')
+            if (len(spth)>3):
+                zpth='/'.join(['']+spth[2:4])
+                node=CGU.getNodeByPath(self._fingerprint.tree,zpth)
+                if (    (node is not None)
+                    and (node[3]==CGK.Zone_ts)
+                    and (zpth not in zlist)):
+                    zlist+=[zpth]
+            if (len(spth)==3):
+                bpth='/'.join(['']+spth[2:])
+                for node in CGU.getChildrenByPath(self._fingerprint.tree,bpth):
+                    if (node[3] == CGK.Zone_ts):
+                        zpth=bpth+'/'+node[0]
+                        if (zpth not in zlist):
+                            zlist+=[zpth]
+        return zlist
+    def getSelectedShortCut(self):
+        slist=[]
+        for pth in self._selected:
+            if (CGU.hasFirstPathItem(pth)): pth=CGU.removeFirstPathItem(pth)
+            slist+=[pth]
+        return slist
     def updateSelected(self):
         self._selected=[]
         self._selectedIndex=-1
@@ -338,11 +416,13 @@ class Q7TreeModel(QAbstractItemModel):
         return None  
     def index(self, row, column, parent):
         self._maxrow=max(row,self._maxrow)
-        if (not self.hasIndex(row, column, parent)): return QModelIndex()  
+        if (not self.hasIndex(row, column, parent)):
+            return QModelIndex()  
         if (not parent.isValid()): parentitem = self._rootitem  
         else:                      parentitem = parent.internalPointer()  
         childitem = parentitem.child(row)  
-        if (childitem): return self.createIndex(row, column, childitem)  
+        if (childitem):
+            return self.createIndex(row, column, childitem)  
         return QModelIndex()  
     def parent(self, index):  
         if (not index.isValid()): return QModelIndex()  
@@ -360,10 +440,46 @@ class Q7TreeModel(QAbstractItemModel):
         self._count+=1
         tag=parenttag+SORTTAG%self._count
         newnode=Q7TreeItem(self._fingerprint,(node),self,tag,parent)
+        row=parent.childCount()
+        self.beginInsertRows(self.getIndex(parent.sidsPath()),row,row)
         parent.addChild(newnode)
+        self.endInsertRows()
+        self.setIndex(newnode.sidsPath(),row,0,parent)
         for childnode in CGU.getNextChildSortByType(node,criteria=self._slist):
             c=self.parseAndUpdate(newnode,childnode,tag)
             self._fingerprint.depth=max(c._depth,self._fingerprint.depth)
         return newnode
+    def refreshModel(self,nodeidx):
+        row=nodeidx.row()
+        parent=nodeidx.parent()
+        row1=min(0,abs(row-10))
+        row2=min(row+10,self._maxrow)
+        if (parent is None):
+            ix1=self.createIndex(row1,0)
+            ix2=self.createIndex(row2,DATACOLUMN-1)
+        else:
+            ix1=self.createIndex(row1,0,parent)
+            ix2=self.createIndex(row2,DATACOLUMN-1,nodeidx)
+        self.dataChanged.emit(ix1,ix2)
+    def copyNode(self,nodeitem):
+        node=nodeitem.internalPointer()
+        self.copyPasteBuffer=node
+    def cutNode(self,nodeitem):
+        node=nodeitem.internalPointer()
+        self.copyPasteBuffer=node
+    def pasteAsChild(self,nodeitem):
+        node=nodeitem.internalPointer()
+        row=node.row()
+        print self.copyPasteBuffer
+        (ntree,npath)=node.sidsAddChild(self.copyPasteBuffer)
+        self.parseAndUpdate(node,ntree,node._tag)
+        child=self.getIndex(npath)
+        self.refreshModel(node.parent())
+        self.refreshModel(node)
+        self.refreshModel(child)
+    def pasteAsBrother(self,nodeitem):
+        node=nodeitem.internalPointer()
+        parentitem=nodeitem.parent()
+        self.pasteAsChild(parentitem)
 
 # -----------------------------------------------------------------

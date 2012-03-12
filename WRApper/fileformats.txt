@@ -10,6 +10,12 @@ Handling ADF and HDF5 file formats
 
 Starting with the **v3** of *CGNS/MLL*, two file formats are now managed by
 the library: *ADF* and *HDF5*.
-If you build the *CGNS/MLL* library (that is the ``libcgns.a```) with the
+If you build the *CGNS/MLL* library (that is the ``libcgns.a``) with the
 default parameters, you will obtain a library with capabilities to handle
-these two file formats.
+these two file formats. The library tries to detect the format by scanning
+the actual file.
+
+The shell variables ``HDF5_LINK_PATH`` or ``ADF_LINK_PATH`` are used to
+find the linked-to files. The syntax of these variables is the same as
+the usual ``PATH`` or ``LD_LIBRAR_PATH`` of your Unix shell.
+

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created: Thu Feb  9 16:24:51 2012
+# Created: Mon Feb 20 16:44:39 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -346,7 +346,7 @@ class Ui_Q7FormWindow(object):
         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
         self.bBackControl.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/control.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/top.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bBackControl.setIcon(icon1)
         self.bBackControl.setObjectName("bBackControl")
 

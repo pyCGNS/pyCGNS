@@ -339,7 +339,7 @@ def checkArray(a,dienow=False):
   """
   Check if the array value of a node is a numpy array.
 
-  Raises :ref:`cgnserror` codes 109,170 if `dienow` is True
+  Raises error codes 109,170 if `dienow` is True
   
   """
   if (type(a) != type(NPY.array((1)))):
@@ -494,11 +494,18 @@ def getNodeType(node):
   return '??'
 
 # --------------------------------------------------
+def hasFirstPathItem(path,sidstype=CK.CGNSTree_s):
+  if ((len(path)>0) and (path[0]=='/')): path=path[1:]
+  p=path.split('/')
+  if ((len(p)>1) and (sidstype==p[0])): return True
+  return False
+    
+# --------------------------------------------------
 def removeFirstPathItem(path):
   p=path.split('/')
   if ((p[0]=='') and (p>2)):
     return string.join(['']+p[2:],'/')
-  elif (p>1):
+  elif (len(p)>1):
     return string.join(p[1:],'/')
   else:
     return '/'
@@ -510,6 +517,14 @@ def getNodeByPath(tree,path):
 
    zbc=getNodeByPath(T,'/Base/Zone001/ZoneBC')
    bc1=getNodeByPath(zbc,'wall01')
+
+  The path is compared as a string, you should provide the exact path
+  if you have a sub-tree or a tree with its `CGNSTree` fake node. The
+  following lines are not equivalent (sic!)::
+
+   zbc=getNodeByPath(T,'/Base/Zone001/ZoneBC')
+   zbc=getNodeByPath(T,'/CGNSTree/Base/Zone001/ZoneBC')
+   
 
   Args:
    * `tree`: the target tree to parse
@@ -1007,7 +1022,7 @@ def getPathNormalize(path):
    * The simplified path
 
   - Remarks:
-   * Uses :py:func:`os.path.normpath`
+   * Uses *os.path.normpath*
    
   """
   path=os.path.normpath(path)

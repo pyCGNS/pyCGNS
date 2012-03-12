@@ -744,49 +744,6 @@ keep in mind is that *numpy* copies do *NOT* propagate *Fortran* flag.
 
 .. [PY2] Numpy http://numpy.scipy.org
 
-Glossary
-========
-
-.. glossary::
-
-   *cgns.org*
-     In this document, *cgns.org* refers to the official CGNS web site and
-     by extension to its contents. For example, the *cgns.org* documentation
-     is the official documentation found on this web site.
-     *CGNS* stands for `CFD General Notation System`.
-
-   CGNS/SIDS
-     The specification of the CGNS data model. This *cgns.org* document is 
-     the reference for the specification of a *CGNS* compliant tree at the
-     `conceptual` level. The implementation is achieved once a `mapping` has
-     been selected (e.g. CGNS/ADF, CGNS/HDF or CGNS/Python).
-     *SIDS* stands for `Standard Interface Data Structures`.
-
-   CGNS/MLL
-     The implementation of the CGNS/ADF and CGNS/HDF specifications. This
-     librarie and its C and Fortran APIs are available on *cgns.org* web site.
-     *MLL* stands for `mid-level library' (ADF and HDF5 are the 
-     `low-level libraries`).
-
-   CGNS/ADF
-     The *cgns.org* mapping document describing the implementation of SIDS
-     on the ADF storage layer. This doesn't include the C or fortran actual
-     implementation which is available only in the CGNS/MLL librarie.
-     *ADF* stands for `Advanced Data Format` developed by `Boeing` and `NASA`.
-
-   CGNS/HDF
-     The *cgns.org* mapping document describing the implementation of SIDS
-     on the HDF5 storage layer. This doesn't include the C or fortran actual
-     implementation which is available only in the CGNS/MLL librarie.
-     *HDF* stands for `Hierarchical Data Format` developed by the `hdf group`.
-
-   Python
-     Python is a programming langage. Its success comes from its easy and
-     powerful syntax and its capabilities in being extended.
-
-   numpy
-     The most used numerical library for the Python programming langage.
-
 .. -------------------------------------------------------------------------
 
 

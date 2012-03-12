@@ -1,15 +1,34 @@
 {% extends "basic/layout.html" %}
 {% set toppycgnspage1 = pathto('../index') %}
 {% set toppycgnspage2 = pathto('index') %}
+{% set indexlink = pathto('genindex') %}
+{% set glosslink = pathto('glossary') %}
+{% set toplinks = [ ['search','search','S','search'],['glossary','glossary','G','glossary']] + rellinks + [ ['index','master_doc','M','top']]%}
 
-{% block rootrellink %}
-  {% if master_doc != "index" %}
-    <li><a href={{ toppycgnspage1 }}>pyCGNS</a> &raquo;</li>
-  {% else %}
-    <li><a href={{ toppycgnspage2 }}>pyCGNS</a> &raquo;</li>
-  {% endif %}
-    {{ super() }}
-{% endblock %}
+{% macro pycgnsrelbar() %}
+    <div class="related">
+      <h3>{{ _('Navigation') }}</h3>
+      <ul>
+        {% for rellink in toplinks %}
+        <li class="right" {% if loop.first %}style="margin-right: 10px"{% endif %}>
+          <a href="{{ pathto(rellink[0]) }}" title="{{ rellink[1]|striptags|e }}"
+             {{ accesskey(rellink[2]) }}>{{ rellink[3] }}</a>
+          {% if not loop.first %}{{ reldelim2 }}{% endif %}</li>
+        {% endfor %}
+	{% block rootrellink %}
+	  {% if master_doc != "index" %}
+	    <li><a href={{ toppycgnspage1 }}>pyCGNS</a> &raquo;</li>
+	  {% else %}
+	    <li><a href={{ toppycgnspage2 }}>pyCGNS</a> &raquo;</li>
+	  {% endif %}
+	    {{ super() }}
+	{% endblock %}
+        {% for parent in parents %}
+          <li><a href="{{ parent.link|e }}" {% if loop.last %}{{ accesskey("U") }}{% endif %}>{{ parent.title }}</a>{{ reldelim1 }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+{% endmacro %}
 
 {% block sidebarlogo %}
 {% if logo %}
@@ -21,4 +40,5 @@
 
 {% block sidebar1 %}{{ sidebar() }}{% endblock %}
 {% block sidebar2 %}{% endblock %}
+{% block relbar1 %}{{ pycgnsrelbar() }}{% endblock %}
 {% block relbar2 %}{% endblock %}

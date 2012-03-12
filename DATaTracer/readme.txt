@@ -6,23 +6,24 @@
 CGNS.DAT
 ========
 
+.. warning::
+   DAT is not up-to-date and there is no planned maintenance on it.
+
 The pyCGNS module is a set of tools for database management of your
 CGNS files.
 
-.. warning::
+The actual database system used by CGNS.DAT depends on your installation.
+The default is `sqlite3` which is embedded into Python v2.6 and which is
+enough for a first try. The `mySQL` driver is also avail able but you
+have to set it as default, see the CGNS.DAT configuration page.
 
-   The actual database system used by CGNS.DAT depends on your installation.
-   The default is `sqlite3` which is embedded into Python v2.6 and which is
-   enough for a first try. The `mySQL` driver is also avail able but you
-   have to set it as default, see the CGNS.DAT configuration page.
+.. -----
 
------
+   .. _dat_index:
 
-.. _dat_index:
+   DAT Index
+   ---------
 
-DAT Index
----------
-
-* :ref:`genindex`
+   * :ref:`genindex`
 
 .. -------------------------------------------------------------------------

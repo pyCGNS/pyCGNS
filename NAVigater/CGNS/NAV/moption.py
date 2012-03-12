@@ -51,6 +51,12 @@ import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils as CGU
 """
 
+Q_FILE_PRE="""
+import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils as CGU
+import CGNS.NAV.moption as CGO
+"""
+
 Q_SCRIPT_POST="""
 %s[0]=%s
 """%(Q_VAR_RESULT_LIST,Q_VAR_RESULT)
@@ -113,26 +119,21 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     'lamp_black':                  (0.1800, 0.2800, 0.2300),
     'alizarin_crimson':            (0.8900, 0.1500, 0.2100),
     'brick':                       (0.6100, 0.4000, 0.1200),
-    'cadmium_red_deep':            (0.8900, 0.0900, 0.0500),
     'coral':                       (1.0000, 0.4980, 0.3137),
     'coral_light':                 (0.9412, 0.5020, 0.5020),
     'deep_pink':                   (1.0000, 0.0784, 0.5765),
-    'english_red':                 (0.8300, 0.2400, 0.1000),
     'firebrick':                   (0.6980, 0.1333, 0.1333),
     'geranium_lake':               (0.8900, 0.0700, 0.1900),
     'hot_pink':                    (1.0000, 0.4118, 0.7059),
-    'indian_red':                  (0.6900, 0.0900, 0.1200),
     'light_salmon':                (1.0000, 0.6275, 0.4784),
     'madder_lake_deep':            (0.8900, 0.1800, 0.1900),
     'maroon':                      (0.6902, 0.1882, 0.3765),
     'pink':                        (1.0000, 0.7529, 0.7961),
     'pink_light':                  (1.0000, 0.7137, 0.7569),
     'raspberry':                   (0.5300, 0.1500, 0.3400),
-    'red':                         (1.0000, 0.0000, 0.0000),
     'rose_madder':                 (0.8900, 0.2100, 0.2200),
     'salmon':                      (0.9804, 0.5020, 0.4471),
     'tomato':                      (1.0000, 0.3882, 0.2784),
-    'venetian_red':                (0.8300, 0.1000, 0.1200),
     'beige':                       (0.6400, 0.5800, 0.5000),
     'brown':                       (0.5000, 0.1647, 0.1647),
     'brown_madder':                (0.8600, 0.1600, 0.1600),
@@ -160,7 +161,6 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     'tan':                         (0.8235, 0.7059, 0.5490),
     'van_dyke_brown':              (0.3700, 0.1500, 0.0200),
     'cadmium_orange':              (1.0000, 0.3800, 0.0100),
-    'cadmium_red_light':           (1.0000, 0.0100, 0.0500),
     'carrot':                      (0.9300, 0.5700, 0.1300),
     'dark_orange':                 (1.0000, 0.5490, 0.0000),
     'mars_orange':                 (0.5900, 0.2700, 0.0800),
@@ -362,48 +362,38 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     CGK.CGNSLibraryVersion_ts,
     ]
 
-    _UsualQueries=[
-    {'name':'Families','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.Family_ts)
-        ]},
-    {'name':'Family names','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.FamilyName_ts)
-        ]},
-    {'name':'BCs','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.BC_ts)
-        ]},
-    {'name':'QUADs','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
-        (Q_AND, Q_NODE, Q_SCRIPT,
-         'RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)')
-        ]},
-    {'name':'TRIs','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
-        (Q_AND, Q_NODE, Q_SCRIPT,
-         'RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)')
-        ]},
+    _UsualQueriesText=[
+    ['Families',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.Family_ts)]],
+    ['Family names',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.FamilyName_ts)]],
+    ['BCs',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.BC_ts)]],
+    ['QUADs',[(Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
+              (Q_AND, Q_NODE, Q_SCRIPT,
+               'RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)')]],
+    ['TRIs',[(Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
+             (Q_AND, Q_NODE, Q_SCRIPT,
+              'RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)')]],
     ]
     # -----------------------------------------------------------------
     @classmethod
     def _setOption(cls,name,value):
         setattr(cls,name,value)
     @classmethod
-    def _writeFile(cls,tag,name,udata,filename):
+    def _writeFile(cls,tag,name,udata,filename,prefix=""):
       gdate=strftime("%Y-%m-%d %H:%M:%S", gmtime())
-      s="""# %s - %s file - Generated %s\n%s="""%\
-         (cls._ToolName,tag,gdate,name)
+      s="""# %s - %s file - Generated %s\n%s\n%s="""%\
+         (cls._ToolName,tag,gdate,prefix,name)
       if (type(udata)==dict):
         s+="""{\n"""
         for k in udata:
           val=str(udata[k])
           if (type(udata[k]) in [unicode, str]): val="'%s'"%str(udata[k])
           s+="""'%s':%s,\n"""%(k,val)
-        s+="""} # --- last line\n"""
+        s+="""}\n\n# --- last line\n"""
       elif (type(udata)==list):
         s+="""[\n"""
         for k in udata:
           s+="""%s,\n"""%(k)
-        s+="""] # --- last line\n"""
+        s+="""]\n\n# --- last line\n"""
       cls._crpath(filename)
       f=open(filename,'w+')
       f.write(s)
@@ -464,9 +454,9 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
       if (m is None): return None
       return m.options
     @classmethod
-    def _writeQueries(cls,control):
+    def _writeQueries(cls,control,q):
       filename=cls._trpath(cls.QueriesFilename)
-      cls._writeFile('User queries','queries',control._queries,filename)
+      cls._writeFile('User queries','queries',q,filename,Q_FILE_PRE)
     @classmethod
     def _readQueries(cls,control):
       filename=cls._trpath(cls.QueriesFilename)
