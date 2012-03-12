@@ -21,20 +21,20 @@ import CGNS.PAT.cgnskeywords as CGK
 # -----------------------------------------------------------------
 class Q7TreeItemDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
-        if ((index.column()==0) and
-            (index.internalPointer().sidsName() not in OCTXT._ReservedNames)):
+        if (index.column()==0):
+          if (index.internalPointer().sidsName() not in OCTXT._ReservedNames):
             option.font.setWeight(QFont.Bold)
-            QStyledItemDelegate.paint(self, painter, option, index)
-            option.font.setWeight(QFont.Light)
+          QStyledItemDelegate.paint(self, painter, option, index)
+          option.font.setWeight(QFont.Light)
         elif (index.column()==8):
-            option.font.setFamily(OCTXT.FixedFontTable)
-            QStyledItemDelegate.paint(self, painter, option, index)
+          option.font.setFamily(OCTXT.FixedFontTable)
+          QStyledItemDelegate.paint(self, painter, option, index)
         elif (index.column() in [2,4,5,6,7]):
-            option.decorationPosition=QStyleOptionViewItem.Top
-            QStyledItemDelegate.paint(self, painter, option, index)
-            option.decorationPosition=QStyleOptionViewItem.Left
+          option.decorationPosition=QStyleOptionViewItem.Top
+          QStyledItemDelegate.paint(self, painter, option, index)
+          option.decorationPosition=QStyleOptionViewItem.Left
         else:
-            QStyledItemDelegate.paint(self, painter, option, index)
+          QStyledItemDelegate.paint(self, painter, option, index)
 
 # -----------------------------------------------------------------
 class Q7Tree(Q7Window,Ui_Q7TreeWindow):
@@ -110,24 +110,43 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.formview()
     def pop2(self):
         self.busyCursor()
-        child=Q7Tree(self._control,self.lastNodeMenu.sidsPath(),self._fgprint)
+        node=self.lastNodeMenu.internalPointer().sidsPath()
+        child=Q7Tree(self._control,node,self._fgprint)
         self.readyCursor()
         child.show()
     def pop0(self):
         pass
-    def updateMenu(self,node):
-        if (node is not None):
-          self.lastNodeMenu=node
-          actlist=(("About %s"%node.sidsType(),self.pop0),
+    def mcopy(self):
+        self._fgprint.model.copyNode(self.lastNodeMenu)
+    def mcut(self):
+        self._fgprint.model.cutNode(self.lastNodeMenu)
+    def mpasteasbrother(self):
+        self._fgprint.model.pasteAsBrother(self.lastNodeMenu)
+        idx=self.treeview.model().getIndex(node.sidsPath())
+        self._fgprint.model.dataChanged.emit(idx,idx)
+    def mpasteaschild(self):
+        self._fgprint.model.pasteAsChild(self.lastNodeMenu)
+    def updateMenu(self,nodeidx):
+        self.lastNodeMenu=nodeidx
+        if (nodeidx != -1):
+          node=nodeidx.internalPointer()
+          actlist=(("About %s"%node.sidsType(),self.pop0,None),
                    None,
-                   ("Open form",self.pop1),
-                   ("Open view",self.pop2))
+                   ("Open form",self.pop1,'Ctrl+F'),
+                   ("Open view",self.pop2,'Ctrl+W'),
+                   None,
+                   ("Copy",self.mcopy,'Ctrl+C'),
+                   ("Cut",self.mcut,'Ctrl+X'),
+                   ("Paste as brother",self.mpasteasbrother,'Ctrl+V'),
+                   ("Paste as child",self.mpasteaschild,'Ctrl+Y'),
+                   )
           self.popupmenu.clear()
           self.popupmenu.setTitle('Node menu')
           for aparam in actlist:
               if (aparam is None): self.popupmenu.addSeparator()
               else:
                   a=QAction(aparam[0],self,triggered=aparam[1])
+                  if (aparam[2] is not None): a.setShortcut(aparam[2])
                   self.popupmenu.addAction(a)
     def setLastEntered(self):
         self._lastEntered=self.treeview.currentIndex()
@@ -136,7 +155,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def clickedNode(self,index):
         self.setLastEntered()
         if (self.treeview.lastButton==Qt.RightButton):
-            self.updateMenu(self.treeview.currentIndex().internalPointer())
+            self.updateMenu(self.treeview.currentIndex())
             self.popupmenu.popup(self.treeview.lastPos)
     def expandNode(self,*args):
         self.resizeAll()
