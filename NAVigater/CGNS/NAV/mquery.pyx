@@ -10,66 +10,13 @@ import numpy
 from PySide.QtCore    import *
 from PySide.QtGui     import *
 
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+import CGNS.NAV.moption as OCST
+
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-Q_OR    ='or'
-Q_AND   ='and'
-Q_ORNOT ='or not'
-Q_ANDNOT='and not'
-
-Q_OPERATOR=(Q_OR,Q_AND,Q_ORNOT,Q_ANDNOT)
-
-Q_PARENT  ='Parent'
-Q_NODE    ='Node'
-Q_CHILDREN='Children'
-
-Q_TARGET=(Q_PARENT,Q_NODE,Q_CHILDREN)
-
-Q_CGNSTYPE='CGNS type'
-Q_VALUETYPE='Value type'
-Q_NAME='Name'
-Q_VALUE='Value'
-Q_SCRIPT='Python script'
-
-Q_ATTRIBUTE=(Q_CGNSTYPE,Q_VALUETYPE,Q_NAME,Q_VALUE,Q_SCRIPT)
-
-Q_VAR_NAME='NAME'
-Q_VAR_VALUE='VALUE'
-Q_VAR_CGNSTYPE='CGNSTYPE'
-Q_VAR_CHILDREN='CHILDREN'
-Q_VAR_TREE='TREE'
-Q_VAR_PATH='PATH'
-Q_VAR_RESULT='RESULT'
-Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
-
-Q_SCRIPT_PRE="""
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.cgnsutils as CGU
-"""
-
-Q_SCRIPT_POST="""
-%s[0]=%s
-"""%(Q_VAR_RESULT_LIST,Q_VAR_RESULT)
-
-DEFAULTQUERIES=[
-    {'name':'Families','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.Family_ts)
-        ]},
-    {'name':'Family names','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.FamilyName_ts)
-        ]},
-    {'name':'BCs','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.BC_ts)
-        ]},
-    {'name':'QUADs','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
-        (Q_AND, Q_NODE, Q_SCRIPT, 'RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)')
-        ]},
-    {'name':'TRIs','clauses':[
-        (Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
-        (Q_AND, Q_NODE, Q_SCRIPT, """RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)""")
-        ]},
+BLANKQUERY=[
     {'name':' ','clauses':[
         (' '*8,' '*16,' '*16,' '),
         (' ',' ',' ',' '),
@@ -95,19 +42,19 @@ def sameValType(n,v):
 # -----------------------------------------------------------------
 def evalScript(node,parent,tree,path,val):
     l=locals()
-    l[Q_VAR_RESULT_LIST]=[False]
-    l[Q_VAR_NAME]=node[0]
-    l[Q_VAR_VALUE]=node[1]
-    l[Q_VAR_CGNSTYPE]=node[3]
-    l[Q_VAR_CHILDREN]=node[2]
-    l[Q_VAR_TREE]=tree
-    l[Q_VAR_PATH]=path
-    pre=Q_SCRIPT_PRE+val+Q_SCRIPT_POST
+    l[OCST.Q_VAR_RESULT_LIST]=[False]
+    l[OCST.Q_VAR_NAME]=node[0]
+    l[OCST.Q_VAR_VALUE]=node[1]
+    l[OCST.Q_VAR_CGNSTYPE]=node[3]
+    l[OCST.Q_VAR_CHILDREN]=node[2]
+    l[OCST.Q_VAR_TREE]=tree
+    l[OCST.Q_VAR_PATH]=path
+    pre=OCST.Q_SCRIPT_PRE+val+OCST.Q_SCRIPT_POST
     try:
       eval(compile(pre,'<string>','exec'),globals(),l)
     except:
       RESULT=False
-    RESULT=l[Q_VAR_RESULT_LIST][0]
+    RESULT=l[OCST.Q_VAR_RESULT_LIST][0]
     return RESULT
 # -----------------------------------------------------------------
 def parseAndSelect(tree,node,parent,path,clause):
@@ -116,24 +63,26 @@ def parseAndSelect(tree,node,parent,path,clause):
     for (opr,tgt,att,val) in clause:
       P=False
       
-      N=(tgt==Q_PARENT)      
-      P|=(N and(att==Q_CGNSTYPE)  and (parent[3]==val))
-      P|=(N and(att==Q_NAME)      and (parent[0]==val))
-      P|=(N and(att==Q_VALUE)     and (sameVal(parent[1],val)))
-      P|=(N and(att==Q_VALUETYPE) and (sameValType(parent[1],val)))
-      P|=(N and(att==Q_SCRIPT)    and (evalScript(node,parent,tree,path,val)))
+      N=(tgt==OCST.Q_PARENT)      
+      P|=(N and(att==OCST.Q_CGNSTYPE)  and (parent[3]==val))
+      P|=(N and(att==OCST.Q_NAME)      and (parent[0]==val))
+      P|=(N and(att==OCST.Q_VALUE)     and (sameVal(parent[1],val)))
+      P|=(N and(att==OCST.Q_VALUETYPE) and (sameValType(parent[1],val)))
+      P|=(N and(att==OCST.Q_SCRIPT)    and (evalScript(node,parent,tree,
+                                                        path,val)))
 
-      N=(tgt==Q_NODE)      
-      P|=(N and(att==Q_CGNSTYPE)  and (node[3]==val))
-      P|=(N and(att==Q_NAME)      and (node[0]==val))
-      P|=(N and(att==Q_VALUE)     and (sameVal(node[1],val)))
-      P|=(N and(att==Q_VALUETYPE) and (sameValType(node[1],val)))
-      P|=(N and(att==Q_SCRIPT)    and (evalScript(node,parent,tree,path,val)))
+      N=(tgt==OCST.Q_NODE)      
+      P|=(N and(att==OCST.Q_CGNSTYPE)  and (node[3]==val))
+      P|=(N and(att==OCST.Q_NAME)      and (node[0]==val))
+      P|=(N and(att==OCST.Q_VALUE)     and (sameVal(node[1],val)))
+      P|=(N and(att==OCST.Q_VALUETYPE) and (sameValType(node[1],val)))
+      P|=(N and(att==OCST.Q_SCRIPT)    and (evalScript(node,parent,tree,
+                                                        path,val)))
 
-      if (opr==Q_OR):     Q|= P
-      if (opr==Q_AND):    Q&= P
-      if (opr==Q_ORNOT):  Q|=~P
-      if (opr==Q_ANDNOT): Q&=~P
+      if (opr==OCST.Q_OR):     Q|= P
+      if (opr==OCST.Q_AND):    Q&= P
+      if (opr==OCST.Q_ORNOT):  Q|=~P
+      if (opr==OCST.Q_ANDNOT): Q&=~P
       
     R=[]
     if (Q): R=[path]
@@ -162,9 +111,9 @@ class Q7QueryEntry(object):
     def __str__(self):
         s="{'name':'%s','clauses':["%self.name
         for c in self.clause:
-            c0=Q_ENUMSTRINGS[c[0]]
-            c1=Q_ENUMSTRINGS[c[1]]
-            c2=Q_ENUMSTRINGS[c[2]]
+            c0=OCST.Q_ENUMSTRINGS[c[0]]
+            c1=OCST.Q_ENUMSTRINGS[c[1]]
+            c2=OCST.Q_ENUMSTRINGS[c[2]]
             s+='(%s,%s,%s,"""%s"""),'%(c0,c1,c2,c[3])
         s+="]},"
         return s
@@ -231,18 +180,18 @@ class Q7ComboBoxDelegate(QItemDelegate):
 
 # -----------------------------------------------------------------
 class Q7QueryTableModel(QAbstractTableModel):  
-    def __init__(self,parent):  
+    def __init__(self,parent):
         QAbstractTableModel.__init__(self,parent)
+    def setup(self,parent):
         self._queries={}
+        self._userQueries=[]
         self._cols=4
         self._parent=parent
         self._previousrows=0
         self.currentQuery=None
         self.fillQueries()
         self.defaultQueriesList=self._queries.keys()
-        self.setDefaultQuery()
-    def setDefaultQuery(self):
-        self.setCurrentQuery(self.defaultQueriesList[0])
+        self.setCurrentQuery(self.defaultQueriesList[0]) 
     def getCurrentQuery(self):
         return self.currentQuery
     def setCurrentQuery(self,name):
@@ -294,7 +243,8 @@ class Q7QueryTableModel(QAbstractTableModel):
             self._queries[self.currentQuery].clauseChange(r,c,value)
         return value
     def fillQueries(self):
-        for qe in DEFAULTQUERIES:
+        allqueries=self._userQueries+OCTXT._UsualQueries+BLANKQUERY
+        for qe in allqueries:
             q=Q7QueryEntry(qe['name'])
             for c in qe['clauses']:
                 q.addClause(*c)
@@ -302,9 +252,9 @@ class Q7QueryTableModel(QAbstractTableModel):
     def queries(self):
         return self._queries
     def setDelegates(self,tableview,editframe):
-        opd=Q7ComboBoxDelegate(self,Q_OPERATOR)
-        tgd=Q7ComboBoxDelegate(self,Q_TARGET)
-        atd=Q7ComboBoxDelegate(self,Q_ATTRIBUTE)
+        opd=Q7ComboBoxDelegate(self,OCST.Q_OPERATOR)
+        tgd=Q7ComboBoxDelegate(self,OCST.Q_TARGET)
+        atd=Q7ComboBoxDelegate(self,OCST.Q_ATTRIBUTE)
         scd=Q7EditBoxDelegate(self,editframe)
         tableview.setItemDelegateForColumn(0,opd)
         tableview.setItemDelegateForColumn(1,tgd)

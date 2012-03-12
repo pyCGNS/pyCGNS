@@ -31,11 +31,14 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.querytableview.viewport().installEventFilter(self)
         self.querytablemodel.setDelegates(self.querytableview,self.editFrame)
         self.bClose.clicked.connect(self.reject)
+        self.bSave.clicked.connect(self.queriessave)
         QObject.connect(self.cQueryName,
                         SIGNAL("currentIndexChanged(int)"),
                         self.changeCurrentQuery)
         self.resizeAll()
         self.showQuery(self.querytablemodel.currentQuery)
+    def queriessave(self):
+        self._control.setQueries()
     def changeCurrentQuery(self,*args):
         qtm=self.querytablemodel
         qtm.setCurrentQuery(self.cQueryName.currentText())
