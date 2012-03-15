@@ -149,7 +149,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                   if (aparam[2] is not None): a.setShortcut(aparam[2])
                   self.popupmenu.addAction(a)
     def setLastEntered(self):
-        self._lastEntered=self.treeview.currentIndex()
+        nix=self.treeview.currentIndex()
+        if (nix.isValid()):
+            self._lastEntered=nix.internalPointer()
     def getLastEntered(self):
         return self._lastEntered
     def clickedNode(self,index):

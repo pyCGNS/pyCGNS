@@ -59,14 +59,14 @@ ICONMAPPING={
 }
 
 KEYMAPPING={
- MARKNODE:   Qt.Key_Space,
- EDITNODE:   Qt.Key_Insert,
- UPNODE  :   Qt.Key_Up,
- DOWNNODE:   Qt.Key_Down,
- COPY    :   Qt.Key_C,
- CUT     :   Qt.Key_X,
- PASTECHILD   :   Qt.Key_Y,
- PASTEBROTHER :   Qt.Key_V,
+ MARKNODE:      Qt.Key_Space,
+ EDITNODE:      Qt.Key_Insert,
+ UPNODE  :      Qt.Key_Up,
+ DOWNNODE:      Qt.Key_Down,
+ COPY    :      Qt.Key_C,
+ CUT     :      Qt.Key_X,
+ PASTECHILD   : Qt.Key_Y,
+ PASTEBROTHER : Qt.Key_V,
 }
 
 EDITKEYMAPPINGS=[
@@ -75,6 +75,8 @@ EDITKEYMAPPINGS=[
     KEYMAPPING[PASTECHILD],
     KEYMAPPING[PASTEBROTHER],
     ]
+
+ALLKEYMAPPINGS=[KEYMAPPING[v] for v in KEYMAPPING]
 
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
@@ -110,10 +112,13 @@ class Q7TreeView(QTreeView):
             self.setExpanded(index,True)
             self.setExpanded(index,False)
     def keyPressEvent(self,event):
+        kmod=event.modifiers()
+        kval=event.key()
+        if (kval not in ALLKEYMAPPINGS): return
         last=self.getLastEntered()
         if (last is not None):
-          kmod=event.modifiers()
-          kval=event.key()
+          nix=self._model.indexByPath(last.sidsPath())
+          if (not nix.isValid()): return
           if (kval in EDITKEYMAPPINGS):
               if (kmod==Qt.ControlModifier):
                 if (kval==KEYMAPPING[COPY]):
@@ -124,20 +129,20 @@ class Q7TreeView(QTreeView):
                   self._model.pasteAsChild(last)
                 if (kval==KEYMAPPING[PASTEBROTHER]):
                   self._model.pasteAsBrother(last)
-          if (kval==KEYMAPPING[MARKNODE]):
-              last.internalPointer().switchMarked()
-              last.internalPointer()._model.updateSelected()
+          elif (kval==KEYMAPPING[MARKNODE]):
+              last.switchMarked()
+              last._model.updateSelected()
               self.changeRow(last.row())
-          if (kval==KEYMAPPING[UPNODE]):
-              if   (kmod==Qt.ControlModifier): self.upRowLevel(last)
+          elif (kval==KEYMAPPING[UPNODE]):
+              if   (kmod==Qt.ControlModifier): self.upRowLevel(nix)
               elif (kmod==Qt.ShiftModifier):   self.upRowMarked()
               else: QTreeView.keyPressEvent(self,event)
-          if (kval==KEYMAPPING[DOWNNODE]):
-              if (kmod==Qt.ControlModifier): self.downRowLevel(last)
+          elif (kval==KEYMAPPING[DOWNNODE]):
+              if (kmod==Qt.ControlModifier): self.downRowLevel(nix)
               elif (kmod==Qt.ShiftModifier): self.downRowMarked()
               else: QTreeView.keyPressEvent(self,event)
-        self.setLastEntered()
-        self.scrollTo(self.getLastEntered())
+          self.setLastEntered()
+          self.scrollTo(nix)
     def refreshView(self):
         ixc=self.currentIndex()
         self._model.refreshModel(ixc)
@@ -156,9 +161,11 @@ class Q7TreeView(QTreeView):
         parent=index.parent()
         nix=self.model().index(row+shift,col,parent)
         self.exclusiveSelectRow(nix)
-    def changeRow(self,row):
-        ix1=self._model.createIndex(row,0)
-        ix2=self._model.createIndex(row,DATACOLUMN-1)
+    def changeRow(self,nodeitem):
+        pix=self.indexByPath(last.sidsPath()).parent()
+        row=pix.row()
+        ix1=self._model.createIndex(row,0,nodeitem)
+        ix2=self._model.createIndex(row,DATACOLUMN-1,nodeitem)
         self._model.dataChanged.emit(ix1,ix2)
     def exclusiveSelectRow(self,index):
         row=index.row()
@@ -255,8 +262,8 @@ class Q7TreeItem(object):
         self._itemnode[2].append(newtree)
         newpath=self.sidsPath()+'/%s'%name
         return (newtree,newpath)
-    def addChild(self,item):  
-        self._childrenitems.append(item)  
+    def addChild(self,item,idx):
+        self._childrenitems.insert(idx,item)  
     def child(self,row):  
         return self._childrenitems[row]
     def hasChildren(self):
@@ -312,9 +319,9 @@ class Q7TreeModel(QAbstractItemModel):
         self._fingerprint=fgprint
         self._slist=OCTXT._SortedTypeList
         self._count=0
-        self._maxrow=0
-        self._index={}
-        self.parseAndUpdate(self._rootitem, self._fingerprint.tree)
+        self.parseAndUpdate(self._rootitem,
+                            self._fingerprint.tree,
+                            QModelIndex(),0)
         fgprint.model=self
         for ik in ICONMAPPING:
             Q7TreeModel._icons[ik]=QIcon(QPixmap(ICONMAPPING[ik]))
@@ -322,12 +329,6 @@ class Q7TreeModel(QAbstractItemModel):
         self._selectedIndex=-1
         self.copyPasteBuffer=None
         self._control=self._fingerprint.control
-    def setIndex(self,path,row,col,parent):
-        self._index[path]=(row,col,parent)
-    def getIndex(self,path):
-        if (self._index.has_key(path)):
-            return self.createIndex(*self._index[path])
-        return QModelIndex()
     def nodeFromPath(self,path):
         if (path in self._extension.keys()): return self._extension[path]
         return None
@@ -414,9 +415,14 @@ class Q7TreeModel(QAbstractItemModel):
     def headerData(self, section, orientation, role):  
         if ((orientation == Qt.Horizontal) and (role == Qt.DisplayRole)):  
             return self._rootitem.data(section)  
-        return None  
+        return None
+    def indexByPath(self, path):
+        row=self.getSortedChildRow(path)
+        col=0
+        ix=self.createIndex(row, col, self.nodeFromPath(path))
+        if (not ix.isValid()): return QModelIndex()
+        return ix
     def index(self, row, column, parent):
-        self._maxrow=max(row,self._maxrow)
         if (not self.hasIndex(row, column, parent)):
             return QModelIndex()  
         if (not parent.isValid()): parentitem = self._rootitem  
@@ -428,55 +434,71 @@ class Q7TreeModel(QAbstractItemModel):
     def parent(self, index):  
         if (not index.isValid()): return QModelIndex()
         childitem = index.internalPointer()
-        if (type(childitem)==type(QModelIndex())): return QModelIndex()
-        if (childitem is None): return QModelIndex()  
-        parentitem = childitem.parentItem()  
-        if (parentitem == self._rootitem): return QModelIndex()  
+        if (childitem is None): return QModelIndex()
+        parentitem = childitem.parentItem()
+        if (parentitem is None): return QModelIndex()
         return self.createIndex(parentitem.row(), 0, parentitem)  
     def rowCount(self, parent):  
         if (parent.column() > 0): return 0  
         if (not parent.isValid()): parentitem = self._rootitem  
         else:                      parentitem = parent.internalPointer()  
+        if (type(parentitem)==type(QModelIndex())): return 0
         return parentitem.childCount()  
-    def parseAndUpdate(self,parentItem,node,parenttag=""):
+    def getSortedChildRow(self,path):
+        npath=CGU.getPathNoRoot(path)
+        if (npath=='/'): return -1
+        targetname=CGU.getPathLeaf(path)
+        parentpath=CGU.getPathAncestor(path)
+        node=CGU.getNodeByPath(self._fingerprint.tree,parentpath)
+        if (node is None): node=self._fingerprint.tree
+        row=0
+        for childnode in CGU.getNextChildSortByType(node,criteria=self._slist):
+            if (childnode[0]==targetname): return row
+            row+=1
+        return -1
+    def parseAndUpdate(self,parentItem,node,parentIndex,row,parenttag=""):
         self._count+=1
         tag=parenttag+SORTTAG%self._count
         newItem=Q7TreeItem(self._fingerprint,(node),self,tag,parentItem)
-        row=parentItem.childCount()
-        self.beginInsertRows(self.getIndex(parentItem.sidsPath()),row,row)
-        parentItem.addChild(newItem)
+        self.beginInsertRows(parentIndex,row,row)
+        parentItem.addChild(newItem,row)
         self.endInsertRows()
-        self.setIndex(newItem.sidsPath(),row,0,parentItem)
+        newIndex=self.createIndex(row,0,parentItem)
+        crow=0
         for childnode in CGU.getNextChildSortByType(node,criteria=self._slist):
-            c=self.parseAndUpdate(newItem,childnode,tag)
+            c=self.parseAndUpdate(newItem,childnode,newIndex,crow,tag)
             self._fingerprint.depth=max(c._depth,self._fingerprint.depth)
+            crow+=1
         return newItem
     def refreshModel(self,nodeidx):
         row=nodeidx.row()
-        dlt=5
+        dlt=2
         parentidx=nodeidx.parent()
+        maxrow=self.rowCount(parentidx)
         row1=min(0,abs(row-dlt))
-        row2=min(row+dlt,self._maxrow)
-        ix1=self.createIndex(row1,0,parentidx)
-        ix2=self.createIndex(row2,DATACOLUMN-1,parentidx)
-        self.dataChanged.emit(ix1,ix2)
-    def copyNode(self,nodeidx):
-        nodeitem=nodeidx.internalPointer()
+        row2=min(row+dlt,maxrow)
+        ix1=self.createIndex(row1,0,parentidx.internalPointer())
+        ix2=self.createIndex(row2,DATACOLUMN-1,parentidx.internalPointer())
+        if (ix1.isValid() and ix2.isValid()):
+            self.dataChanged.emit(ix1,ix2)
+    def copyNode(self,nodeitem):
         self.copyPasteBuffer=nodeitem
-    def cutNode(self,nodeidx):
-        nodeitem=nodeidx.internalPointer()
+    def cutNode(self,nodeitem):
         self.copyPasteBuffer=nodeitem
-    def pasteAsChild(self,nodeidx):
+    def pasteAsChild(self,nodeitem):
         if (self.copyPasteBuffer is None): return
-        nodeitem=nodeidx.internalPointer()
         row=nodeitem.row()
+        nix=self.indexByPath(nodeitem.sidsPath())
         (ntree,npath)=nodeitem.sidsAddChild(self.copyPasteBuffer)
-        self.parseAndUpdate(nodeitem,ntree,nodeitem._tag)
-        child=self.getIndex(npath)
-        self.refreshModel(nodeidx.parent())
-        self.refreshModel(nodeidx)
-        self.refreshModel(child)
-    def pasteAsBrother(self,nodeidx):
-        self.pasteAsChild(nodeidx.parent())
+        self.parseAndUpdate(nodeitem,ntree,nix,0,nodeitem._tag)
+        nix=self.indexByPath(nodeitem.sidsPath())
+        pix=self.indexByPath(CGU.getPathAncestor(npath))
+        cix=self.indexByPath(npath)
+        self.refreshModel(pix)
+        self.refreshModel(nix)
+        self.refreshModel(cix)
+    def pasteAsBrother(self,nodeitem):
+        nix=self.indexByPath(nodeitem.sidsPath())
+        self.pasteAsChild(nix.parent().internalPointer())
 
 # -----------------------------------------------------------------
