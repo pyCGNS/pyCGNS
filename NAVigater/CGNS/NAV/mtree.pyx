@@ -132,7 +132,7 @@ class Q7TreeView(QTreeView):
           elif (kval==KEYMAPPING[MARKNODE]):
               last.switchMarked()
               last._model.updateSelected()
-              self.changeRow(last.row())
+              self.changeRow(last)
           elif (kval==KEYMAPPING[UPNODE]):
               if   (kmod==Qt.ControlModifier): self.upRowLevel(nix)
               elif (kmod==Qt.ShiftModifier):   self.upRowMarked()
@@ -162,7 +162,7 @@ class Q7TreeView(QTreeView):
         nix=self.model().index(row+shift,col,parent)
         self.exclusiveSelectRow(nix)
     def changeRow(self,nodeitem):
-        pix=self.indexByPath(last.sidsPath()).parent()
+        pix=self._model.indexByPath(nodeitem.sidsPath()).parent()
         row=pix.row()
         ix1=self._model.createIndex(row,0,nodeitem)
         ix2=self._model.createIndex(row,DATACOLUMN-1,nodeitem)
@@ -249,8 +249,16 @@ class Q7TreeItem(object):
         return (0,)
     def sidsLinkStatus(self):
         return STLKNOLNK
+    def sidsRemoveChild(self,node):
+        children=self.sidsChildren()
+        idx=0
+        while (idx<len(children)):
+            childnode=children[idx]
+            if ((childnode[0]==node[0]) and (childnode[3]==node[3])): break
+            idx+=1
+        if (idx<len(children)): children.pop(idx)
     def sidsAddChild(self,node):
-        newtree=copy.deepcopy(node._itemnode)
+        newtree=copy.deepcopy(node)
         name=newtree[0]
         ntype=newtree[3]
         parent=self._itemnode
@@ -264,12 +272,28 @@ class Q7TreeItem(object):
         return (newtree,newpath)
     def addChild(self,item,idx):
         self._childrenitems.insert(idx,item)  
+    def delChild(self,item):
+        idx=0
+        while (idx<self.childrenCount()):
+            if (item==self._childrenitems[idx]): break
+            idx+=1
+        if (idx<self.childrenCount()): self._childrenitems.pop(idx)
+    def children(self):  
+        return self._childrenitems
     def child(self,row):  
         return self._childrenitems[row]
+    def childRow(self):
+        pth=self.sidsPath()
+        parentitem=self.parentItem()
+        row=0
+        for child in parentitem.children():
+            if (child.sidsPath()==pth): return row
+            row+=1
+        return -1
     def hasChildren(self):
-        if (self.childCount()>0): return True
+        if (self.childrenCount()>0): return True
         return False
-    def childCount(self):  
+    def childrenCount(self):  
         return len(self._childrenitems)  
     def columnCount(self):
         return 9
@@ -443,7 +467,7 @@ class Q7TreeModel(QAbstractItemModel):
         if (not parent.isValid()): parentitem = self._rootitem  
         else:                      parentitem = parent.internalPointer()  
         if (type(parentitem)==type(QModelIndex())): return 0
-        return parentitem.childCount()  
+        return parentitem.childrenCount()  
     def getSortedChildRow(self,path):
         npath=CGU.getPathNoRoot(path)
         if (npath=='/'): return -1
@@ -456,6 +480,25 @@ class Q7TreeModel(QAbstractItemModel):
             if (childnode[0]==targetname): return row
             row+=1
         return -1
+    def removeItem(self,parentitem,targetitem,row):
+        parentindex=self.indexByPath(parentitem.sidsPath())
+        self.beginRemoveRows(parentindex,row,row)
+        path=targetitem.sidsPath()
+        print 'REMOVE ',path
+        parentitem.delChild(targetitem)
+        del self._extension[path]
+        del targetitem
+        self.endRemoveRows()
+    def removeItemTree(self,nodeitem):
+        self.parseAndRemove(nodeitem)
+        row=nodeitem.childRow()
+        self.removeItem(nodeitem.parentItem(),nodeitem,row)
+    def parseAndRemove(self,parentitem):
+        if (not parentitem.hasChildren()): return
+        while (parentitem.childrenCount()!=0):
+            child=parentitem.child(0)
+            self.parseAndRemove(child)
+            self.removeItem(parentitem,child,0)
     def parseAndUpdate(self,parentItem,node,parentIndex,row,parenttag=""):
         self._count+=1
         tag=parenttag+SORTTAG%self._count
@@ -482,9 +525,16 @@ class Q7TreeModel(QAbstractItemModel):
         if (ix1.isValid() and ix2.isValid()):
             self.dataChanged.emit(ix1,ix2)
     def copyNode(self,nodeitem):
-        self.copyPasteBuffer=nodeitem
+        self.copyPasteBuffer=nodeitem._itemnode
     def cutNode(self,nodeitem):
-        self.copyPasteBuffer=nodeitem
+        return
+        self.copyPasteBuffer=nodeitem._itemnode
+        parentitem=nodeitem.parentItem()
+        path=CGU.getPathAncestor(nodeitem.sidsPath())
+        self.removeItemTree(nodeitem)
+        pix=self.indexByPath(path)
+        parentitem.sidsRemoveChild(self.copyPasteBuffer)
+        self.refreshModel(pix)
     def pasteAsChild(self,nodeitem):
         if (self.copyPasteBuffer is None): return
         row=nodeitem.row()
