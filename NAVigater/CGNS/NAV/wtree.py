@@ -18,8 +18,54 @@ from CGNS.NAV.wfingerprint import Q7Window
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import CGNS.PAT.cgnskeywords as CGK
 
+(CELLCOMBO,CELLTEXT)=range(2)
+CELLEDITMODE=(CELLCOMBO,CELLTEXT)
+
 # -----------------------------------------------------------------
 class Q7TreeItemDelegate(QStyledItemDelegate):
+    def __init__(self, owner):
+        QStyledItemDelegate.__init__(self, owner)
+        self._parent=owner
+        self._mode=CELLTEXT
+    def createEditor(self, parent, option, index):
+        ws=option.rect.width()
+        hs=option.rect.height()+4
+        xs=option.rect.x()
+        ys=option.rect.y()-2
+        if (index.column() in [0,8]):
+          self._mode=CELLTEXT
+          editor=QLineEdit(parent)
+          editor.transgeometry=(xs,ys,ws,hs)
+          editor.installEventFilter(self)
+          self.setEditorData(editor,index)
+          return editor
+        if (index.column()==1):
+          self._mode=CELLCOMBO
+          editor=QComboBox(parent)
+          editor.transgeometry=(xs,ys,ws,hs)
+          itemslist=index.internalPointer().sidsTypeList()
+          editor.addItems(itemslist)
+          editor.setCurrentIndex(0)
+          editor.installEventFilter(self)
+          self.setEditorData(editor,index)
+          return editor
+        return None
+    def setEditorData(self, editor, index):
+        if (self._mode==CELLTEXT):
+            value=index.data()
+            editor.clear()
+            editor.insert(value)
+        elif (self._mode==CELLCOMBO):
+            value = index.data()
+            ix=editor.findText(value)
+            if (ix!=-1): editor.setCurrentIndex(ix)
+        else:
+            pass
+    def setModelData(self,editor,model,index):
+        value=editor.toPlainText()
+        model.setData(index,value,role=Qt.EditRole)
+    def updateEditorGeometry(self, editor, option, index):
+        editor.setGeometry(*editor.transgeometry)
     def paint(self, painter, option, index):
         if (index.column()==0):
           if (index.internalPointer().sidsName() not in OCTXT._ReservedNames):
@@ -78,7 +124,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.treeview.setModel(self._fgprint.model)
-        self.treeview.setItemDelegate(Q7TreeItemDelegate(self))
+        self.treeview.setItemDelegate(Q7TreeItemDelegate(self.treeview))
         self.treeview.setControlWindow(self,self._fgprint.model)
     def screenshot(self):
         sshot=QPixmap.grabWindow(self.treeview.winId())

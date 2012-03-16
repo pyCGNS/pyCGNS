@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
-# Created: Fri Mar  9 16:59:09 2012
+# Created: Fri Mar 16 16:05:39 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -220,13 +220,12 @@ class Ui_Q7TreeWindow(object):
         self.treeview = Q7TreeView(Q7TreeWindow)
         self.treeview.setProperty("cursor", QtCore.Qt.CrossCursor)
         self.treeview.setAutoScroll(False)
-        self.treeview.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         self.treeview.setProperty("showDropIndicator", False)
         self.treeview.setHorizontalScrollMode(QtGui.QAbstractItemView.ScrollPerItem)
         self.treeview.setIndentation(16)
         self.treeview.setRootIsDecorated(True)
         self.treeview.setUniformRowHeights(True)
-        self.treeview.setExpandsOnDoubleClick(True)
+        self.treeview.setExpandsOnDoubleClick(False)
         self.treeview.setObjectName("treeview")
         self.horizontalLayout_2.addWidget(self.treeview)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)

@@ -129,6 +129,17 @@ class Q7TreeView(QTreeView):
                   self._model.pasteAsChild(last)
                 if (kval==KEYMAPPING[PASTEBROTHER]):
                   self._model.pasteAsBrother(last)
+          elif (kval==KEYMAPPING[EDITNODE]):
+              if (kmod==Qt.ControlModifier):
+                  eix=self._model.createIndex(nix.row(),1,
+                                              nix.internalPointer())
+                  self.edit(eix)
+              elif (kmod==Qt.ShiftModifier):
+                  eix=self._model.createIndex(nix.row(),8,
+                                              nix.internalPointer())
+                  self.edit(eix)
+              else:
+                  self.edit(nix)
           elif (kval==KEYMAPPING[MARKNODE]):
               last.switchMarked()
               last._model.updateSelected()
@@ -201,7 +212,7 @@ class Q7TreeView(QTreeView):
 class Q7TreeItem(object):
     dtype=['MT','I4','I8','R4','R8','C1','LK']
     stype={'MT':0,'I4':4,'I8':8,'R4':4,'R8':8,'C1':1,'LK':0}
-    def __init__(self,fgprint,data,model,tag="",parent=None):  
+    def __init__(self,fgprint,data,model,tag="",parent=None):
         self._parentitem=parent  
         self._itemnode=data  
         self._childrenitems=[]
@@ -435,7 +446,7 @@ class Q7TreeModel(QAbstractItemModel):
         return disp
     def flags(self, index):  
         if (not index.isValid()):  return Qt.NoItemFlags  
-        return Qt.ItemIsEnabled | Qt.ItemIsSelectable  
+        return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable
     def headerData(self, section, orientation, role):  
         if ((orientation == Qt.Horizontal) and (role == Qt.DisplayRole)):  
             return self._rootitem.data(section)  

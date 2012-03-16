@@ -699,9 +699,6 @@
        <property name="autoScroll">
         <bool>false</bool>
        </property>
-       <property name="editTriggers">
-        <set>QAbstractItemView::NoEditTriggers</set>
-       </property>
        <property name="showDropIndicator" stdset="0">
         <bool>false</bool>
        </property>
@@ -718,7 +715,7 @@
         <bool>true</bool>
        </property>
        <property name="expandsOnDoubleClick">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>
