@@ -11,8 +11,8 @@ import glob
 import os
 import sys
 
-cui='/home/tools/local/tiamat/bin/pyside-uic'
-crc='/home/tools/local/tiamat/bin/pyside-rcc'
+cui='pyside-uic'
+crc='pyside-rcc'
 ccy='cython'
 
 try:
