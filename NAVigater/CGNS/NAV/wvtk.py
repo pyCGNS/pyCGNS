@@ -44,8 +44,10 @@ class wVTKContext():
 
 # -----------------------------------------------------------------
 class Q7VTK(Q7Window,Ui_Q7VTKWindow):
-  def __init__(self,control,node,fgprint,tmodel):
-      Q7Window.__init__(self,Q7Window.VIEW_VTK,control,'/',fgprint)
+  def __init__(self,control,node,fgprint,tmodel,zlist):
+      if (not zlist): pth='/'
+      else: pth='<partial>'
+      Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,fgprint)
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
       self._epix=QIcon(QPixmap(":/images/icons/empty.gif"))
       self._spix=QIcon(QPixmap(":/images/icons/selected.gif"))
@@ -62,9 +64,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.PickedRenderer=None
       self.PropPicked=0
       self.controlKey=0
+      self.highlightProp=None
       self._camera={}
       self._blackonwhite=False
-      self._vtktree=self.wCGNSTree(self._fgprint.tree)
+      self._vtktree=self.wCGNSTree(self._fgprint.tree,zlist)
       self.display.Initialize()
       self.display.Start()
       self.display.show()
@@ -259,7 +262,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
         self.PropPicked=0
       if (self.picker.GetCellId()<0):
         self.textActor.VisibilityOff()
-        self.CurrentActor=None
+        self.highlightProp=0
       else:
         selPt = self.picker.GetSelectionPoint()
         pickAct = self.picker.GetActors()
@@ -282,8 +285,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           a=pickAct.GetNextItem()
         self.PropPicked=0
         self.controlKey=0
+        self.highlightProp=1
+        
 
-  def wCGNSTree(self,T):
+  def wCGNSTree(self,T,zlist):
 
       o=vtk.vtkObject()
       o.SetGlobalWarningDisplay(0)
@@ -306,7 +311,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtk.GetRenderWindow().AddRenderer(self._waxs)
       self._vtk.GetRenderWindow().AddRenderer(self.renforRen)
       
-      self._parser=Mesh(T)
+      self._parser=Mesh(T,zlist)
       self._selected=[]
       alist=self._parser.createActors()
  
@@ -393,8 +398,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           actor = actors.GetNextItem()
       if (not self.OutlineActor is None):
           self.OutlineActor.GetProperty().SetColor(0,1,1)
-      if (not self._currentactor is None):
-          self._currentactor[1].GetProperty().SetColor(1,0,0)    
+      if (self.highlightProp==1):
+          color=self._currentactor[1].GetProperty().GetColor()
+          self._currentactor[1].GetProperty().SetColor(1,0,0)
+          self._currentactor[2]=color
+      else:
+          self._currentactor=None
       self._iren.Render()
 
   def b_update(self):
@@ -435,19 +444,24 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def b_loadview(self,name=None):
       vname=self.cViews.currentText()
       if (self._camera.has_key(vname)):
-          (vu,cr,p,fp)=self._camera[vname]
+          (vu,cr,p,fp,va,ps,pj)=self._camera[vname]
           camera=self._vtkren.GetActiveCamera()
           camera.SetViewUp(vu)
           camera.SetClippingRange(cr)
           camera.SetPosition(p)
           camera.SetFocalPoint(fp)
+          camera.SetViewAngle(va)
+          camera.SetParallelScale(ps)
+          camera.SetParallelProjection(pj)
           self._iren.Render()
 
   def updateViewList(self):
     k=self._camera.keys()
     k.sort()
     self.cViews.clear()
+    self.cViews.addItem("")
     for i in k: self.cViews.addItem(i)
+    self.cViews.setCurrentIndex(0)
         
   def b_delview(self,name=None):
     name=str(self.cViews.currentText())
@@ -456,13 +470,17 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     self.updateViewList()
     
   def b_saveview(self,name=None):
-    camera = self._vtkren.GetActiveCamera()
+    camera=self._vtkren.GetActiveCamera()
     name=str(self.cViews.currentText())
     if ((name=="") or (self._camera.has_key(name))): return
     self._camera[name]=(camera.GetViewUp(),
                         camera.GetClippingRange(),
                         camera.GetPosition(),
-                        camera.GetFocalPoint())
+                        camera.GetFocalPoint(),
+                        camera.GetViewAngle(),
+                        camera.GetParallelScale(),
+                        camera.GetParallelProjection()
+                        )
     self.updateViewList()
 
   def b_refresh(self,pos):
@@ -670,38 +688,36 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
     def __init__(self,parent):
       self._parent=parent
-      self.AddObserver("KeyPressEvent", self.CharCallback)
-      self.AddObserver("KeyPressEvent",self.setPicker)
-      self.AddObserver("KeyReleaseEvent",self.setPicker)
-      self.AddObserver("CharEvent",self.setPicker)
+##       self.AddObserver("KeyPressEvent", self.CharCallback)
+##       self.AddObserver("KeyPressEvent",self.setPicker)
+##       self.AddObserver("KeyReleaseEvent",self.setPicker)
+##       self.AddObserver("CharEvent",self.setPicker)
+      self.AddObserver("CharEvent",self.keycode)      
       self.PickedRenderer=None
       self.OutlineActor=None
       self._parent.addPicker()     
-      self.rwi=None
+      self.rwi=None  
 
-    def CharCallback(self,obj,event):
-      iren=self.GetInteractor()      
-      keycode=iren.GetKeyCode()
-      control=self.rwi.GetControlKey()
-      pos=iren.GetEventPosition()
-      if (self._parent._bindings.has_key(keycode)): self._parent._bindings[keycode](pos)
-      if (control==1): self._parent.controlKey=1     
-      return
-                
-    def setPicker(self,*args):
-      self.rwi=self.GetInteractor()
-      keycode=self.rwi.GetKeyCode()
-      if (keycode=='p'):
-        self.rwi.SetKeyCode('')
+    def keycode(self,*args):
+        self.rwi=self.GetInteractor()      
+        keycode=self.rwi.GetKeyCode()
+        control=self.rwi.GetControlKey()
+        vtkkeys=['f','F','s','S','w','W','r','R']
+        if keycode in vtkkeys:
+            self.OnChar()
+        keys={'p':self.setPick,'d':self.CharCallback}
+        if (keys.has_key(keycode)):
+            keys[keycode]()
+        if (control==1): self._parent.controlKey=1
+               
+    def setPick(self):
         act=None
         path=None
         eventPos=self.rwi.GetEventPosition()
-        self.FindPokedRenderer(eventPos[0],eventPos[1])
-        self.rwi.StartPickCallback()
         self.rwi.SetPicker(self._parent.picker)
         if (not self._parent.picker is None):
           self._parent.picker.Pick(eventPos[0],eventPos[1], 
-                       0.0,self.GetCurrentRenderer())
+                       0.0,self._parent._vtkren)
           p=self._parent.picker.GetPath()
           if (p is None):
               self._parent.changeCurrentActor([None,None])
@@ -714,7 +730,43 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
           self._parent.fillCurrentPath()
           if (path is not None):
             self._parent.setCurrentPath(path)
-        self.rwi.EndPickCallback()
+
+    def CharCallback(self,*args):   
+      keycode=self.rwi.GetKeyCode()
+      control=self.rwi.GetControlKey()
+      pos=self.rwi.GetEventPosition()
+      if (self._parent._bindings.has_key(keycode)): self._parent._bindings[keycode](pos)
+      if (control==1): self._parent.controlKey=1     
+      return
+    
+##     def setPicker(self,*args):
+##       self.rwi=self.GetInteractor()
+##       keycode=self.rwi.GetKeyCode()
+##       if (keycode=='p'):
+##         self.rwi.SetKeyCode('')
+##         act=None
+##         path=None
+##         eventPos=self.rwi.GetEventPosition()
+##         self.FindPokedRenderer(eventPos[0],eventPos[1])
+##         self.rwi.StartPickCallback()
+##         self.rwi.SetPicker(self._parent.picker)
+##         if (not self._parent.picker is None):
+##           self._parent.picker.Pick(eventPos[0],eventPos[1], 
+##                        0.0,self.GetCurrentRenderer())
+##           p=self._parent.picker.GetPath()
+##           if (p is None):
+##               self._parent.changeCurrentActor([None,None])
+##               self._parent.PropPicked=0
+##           else:
+##               actor=p.GetFirstNode().GetViewProp()
+##               path=self._parent.findObjectPath(actor.GetMapper().GetInput())
+##               self._parent.changeCurrentActor([path,actor])
+##               self._parent.PropPicked=1
+##           self._parent.fillCurrentPath()
+##           if (path is not None):
+##             self._parent.setCurrentPath(path)
+##         self.rwi.EndPickCallback()
+        
 
 
 

@@ -518,6 +518,14 @@ def getNodeByPath(tree,path):
    zbc=getNodeByPath(T,'/Base/Zone001/ZoneBC')
    bc1=getNodeByPath(zbc,'wall01')
 
+  The path is compared as a string, you should provide the exact path
+  if you have a sub-tree or a tree with its `CGNSTree` fake node. The
+  following lines are not equivalent (sic!)::
+
+   zbc=getNodeByPath(T,'/Base/Zone001/ZoneBC')
+   zbc=getNodeByPath(T,'/CGNSTree/Base/Zone001/ZoneBC')
+   
+
   Args:
    * `tree`: the target tree to parse
    * `path`: a string representing an absolute or relative path
