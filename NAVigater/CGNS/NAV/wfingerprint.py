@@ -34,6 +34,7 @@ class Q7Window(QWidget,object):
             self._stylesheet=Q7CONTROLVIEWSTYLESHEET
         self.setupUi(self)
         if (self._stylesheet is not None): self.setStyleSheet(self._stylesheet)
+        self._busyx=QCursor(QPixmap(":/images/icons/cgSpy.gif"))
         self.getOptions()
         self._timercount=0
         self._vtype=vtype
@@ -112,9 +113,12 @@ class Q7Window(QWidget,object):
     def backcontrol(self):
         self._fgprint.raiseControlView()
     def busyCursor(self):
-        QApplication.setOverrideCursor(QCursor(QPixmap(":/images/icons/cgSpy.gif")))
+        QApplication.setOverrideCursor(self._busyx)
     def readyCursor(self):
         QApplication.restoreOverrideCursor()
+    def _T(self,msg):
+        if (self.getOptionValue('NAVTrace')):
+            print '### CGNS.NAV:', msg
 
 # -----------------------------------------------------------------
 class Q7fingerPrint:

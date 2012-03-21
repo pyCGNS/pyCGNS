@@ -64,6 +64,7 @@ Q_SCRIPT_POST="""
 # -----------------------------------------------------------------
 class Q7OptionContext(object):
     CHLoneTrace=False
+    NAVTrace=False
     RecursiveTreeDisplay=False
     OneViewPerTreeNode=False
     ShowTableIndex=True
@@ -84,7 +85,7 @@ class Q7OptionContext(object):
     TransposeArrayForView=True
     Show1DAsPlain=True
     SelectionListDirectory='~/.CGNS.NAV/selectionlist'
-    QueriesFilename='~/.CGNS.NAV/queriesfile.py'
+    _QueriesFilename='~/.CGNS.NAV/queriesfile.py'
     SnapShotDirectory='~/.CGNS.NAV/snapshots'
     _HistoryFileName='~/.CGNS.NAV/historyfile.py'
     _OptionsFileName='~/.CGNS.NAV/optionsfile.py'
@@ -472,7 +473,8 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
       if (name[0]!='_'): setattr(Q7OptionContext,name,value)
       return None
     def __iter__(self):
-      return self._nextName
+      for o in dir(self):
+        if (o[0]!='_'): yield o
     def _nextName(self):
       for o in dir(self):
         if (o[0]!='_'): yield o

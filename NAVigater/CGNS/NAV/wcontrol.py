@@ -64,6 +64,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.getOptions()
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
+        self.transientRecurse=False
     def clickedLine(self,*args):
         if (self.controlTable.lastButton==Qt.LeftButton):
             Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))
@@ -175,6 +176,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             if (int(idx)==int(self.controlTable.item(n,2).text())):found=n
         return found
     def loading(self,*args):
+        self._T('loading: [%s]'%self.signals.buffer)
         self.busyCursor()
         fgprint=Q7fingerPrint.treeLoad(self,self.signals.buffer)
         if (fgprint is None): return
@@ -193,6 +195,9 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.signals.buffer=self.getLastFile()[0]+'/'+self.getLastFile()[1]
         if (self.signals.buffer is None): self.load()
         else: self.signals.loadFile.emit()
+    def loadfile(self,name):
+        self.signals.buffer=name
+        self.signals.loadFile.emit()
     def save(self):
         self.fdialog=Q7File(self,1)
         self.fdialog.show()
