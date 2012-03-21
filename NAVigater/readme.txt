@@ -10,7 +10,7 @@ If you want to browse your CGNS file, just type::
 
   CGNS.NAV
 
-and the following control view appears:
+and the following ``control view`` appears:
 
 .. image:: ../doc/images/cgnsnav_im01.png
    :width: 18cm
@@ -24,7 +24,7 @@ and the following control view appears:
 
 To load a new CGNS file, you must click the |logo1|, select the wanted CGNS file by typing its name and by
 clicking the |logo1b| icon.  But you can also reload the last used CGNS file by clicking on the icon |logo2|,
-and the tree view appears:
+and the ``tree view`` appears:
 
 .. image:: ../doc/images/cgnsnav_im04b.png
    :width: 14cm
@@ -52,19 +52,19 @@ and the tree view appears:
 .. |logo11b| image:: ../doc/images/cgnsnav_im52.png
 
 
-As you can observe it, there is only one entry in the tree view. This is the root of our CGNS file
+As you can observe it, there is only one entry in the ``tree view``. This is the root of our CGNS file
 which can contain one or several bases.The opening of the CGNS tree occurs in a recursive way.
 If you want to expand this node one level up in order to display the entries corresponding to the base 
 contained in the ``CGNSTree`` node, click the |logo4b| icon.  
 
-If you perform this operation again with the ``base1`` node, you obtain the following tree view:
+If you perform this operation again with the ``base1`` node, you obtain the following ``tree view``:
 
 .. image:: ../doc/images/cgnsnav_im54.png
 
 You can repeat the operation for the nodes of the different zones which are under the ``base1`` node.
 And so on...
 
-In order to expand the tree view one level down, click the |logo2b| icon.
+In order to expand the ``tree view`` one level down, click the |logo2b| icon.
 
 To expand all the loaded CGNS/tree, you must click |logo3|.
 
@@ -77,8 +77,7 @@ If you only want to expand or collapse individual nodes in the tree, you double-
 the desired node.
 
 
-
-*To deal with the tree view*
+*To deal with the ``tree view``*
 
 +-----------------+---------------------------------------------------------------------------+
 |   Icon          | Action								      |
@@ -109,13 +108,14 @@ the desired node.
 To display the mesh, element sets, connectivities and boundary conditions contained in the CGNS file, 
 click on |logo4|.
 
-and the mesh is dispayed in this window:
+and the mesh is dispayed in the ``VTK view``:
 
 .. image:: ../doc/images/cgnsnav_im08.png 
-    :width: 20cm
+    :width: 16cm
 
 The view can be translated, rotated and scaled by using the mouse. The three axis x,y,z are displayed in the 
-lower left corner of the window. The x-axis is coloured in red, the y-axis in yellow and the z-axis in green.
+bottom left-hand corner of the window. The x-axis is coloured in red, the y-axis in yellow and the z-axis in 
+green.
 
  *Mouse Bindings*
 
@@ -138,14 +138,38 @@ To select an element of the CGNS/tree, you perform a pick operation by positioni
 cursor on the place of your choice and by pressing on the ``p`` key.
 
 .. image:: ../doc/images/cgnsnav_im11.png 
-    :width: 17cm
+    :width: 16cm
+
+*Key Bindings* 
+
+The following keys and the corresponding actions are:
+
+ +----------+----------------------------------------------------------------------------------+
+ |  Key     | Action                                                                           |
+ +==========+==================================================================================+
+ | ``f``    | Fly to the picked point.                                                         |
+ +----------+----------------------------------------------------------------------------------+
+ | ``p``    | Perform a pick operation.                                                        |
+ +----------+----------------------------------------------------------------------------------+
+ | ``r``    | The elements are centered and the camera moves along the current                 |
+ |          | view direction so that all elements are visible in the window  .                 |
+ +----------+----------------------------------------------------------------------------------+
+ | ``s``    | Modify the representation of all elements so that they are surfaces.             |
+ +----------+----------------------------------------------------------------------------------+
+ | ``w``    | Modify the representation of all elements so that they are wireframes.           |              
+ +----------+----------------------------------------------------------------------------------+
+ | ``d``    | Hide the current element selected by performing a pick operation.                |
+ +----------+----------------------------------------------------------------------------------+
+ | ``Ctrl`` | Add the elements selected by a pick operation to the previous selection.         |
+ +----------+----------------------------------------------------------------------------------+
+
 
 The pick operation shoots a ray into the 3D scene and returns information about the objects that 
 the ray hits. The first element hited by the ray is highlighted in red and a blue wireframe outlines
-the bounding box of the selected object.In the left upper corner, the list of the paths of elements
-hited by the ray appears. In our case, there is only one path because only one object was hited by the shot ray. 
-The path of the selected element also appears in the box. In this example, the object's path is 
-``dom1/PENTA_6{TRI}``.
+the bounding box of the selected object.In the top left-hand corner of the ``VTK view``, the list of 
+the paths of elements hited by the ray appears. In our case, there is only one path because only one 
+object was hited by the shot ray. The path of the selected element also appears in the box. 
+In this example, the object's path is ``dom1/PENTA_6{TRI}``.
 
 .. image:: ../doc/images/cgnsnav_im12.png 
 
@@ -188,10 +212,10 @@ If you want to set the viewing position to view the data along -Z axis, just cli
 To display the view along the opposite direction, +Z axis, check |logo10| and click on |logo9|.
 
 .. image:: ../doc/images/cgnsnav_im21.png 
-   :width: 10cm
+   :width: 8cm
 
 .. image:: ../doc/images/cgnsnav_im22.png 
-   :width: 11cm
+   :width: 8.8cm
  
 To display the other elements of the CGNS file, you have to handle the view with the mouse.
 By using the ``Button 1`` of the mouse to rotate the view, the ``Button 2`` to tranlate it and
@@ -199,14 +223,14 @@ the ``Button 3`` with a motion of the mouse from bottom to up to scale up the el
 adjusted like that:
 
 .. image:: ../doc/images/cgnsnav_im55.png 
-    :width: 17cm
+    :width: 13cm
 
 and you perform a pick operation by pressing the ``p`` key:
 
 .. image:: ../doc/images/cgnsnav_im56.png 
-    :width: 17cm
+    :width: 13.5cm
 
-All the paths of the selected objects are displayed in the left upper corner of the window and
+All the paths of the selected objects are displayed in the top left-hand corner of the window and
 they are marked with the |logo5| in the list below. As you can see, the current selected object 
 is the same as previously, namely ``dom1/PENTA_6{TRI}`` because it's the closest object to the camera.
  
@@ -229,7 +253,7 @@ Know, you want to have an overall view of the tree. To do that, press on the ``r
 .. image:: ../doc/images/cgnsnav_im57.png 
     :width: 16cm
 
-When you pressed the ``r`` key, the size of the objects changed to fit in the vtk view, the objects
+When you pressed the ``r`` key, the size of the objects changed to fit in the ``VTK view``, the objects
 are centered while the camera keeps the current view direction.
 
 To restore a saved view, choose the view's name in the list, like below: 
@@ -257,10 +281,15 @@ To delete an unwanted view, select the view's name and click the |logo13| icon.
 
 .. |logo16| image:: ../doc/images/cgnsnav_im33.png 
 
-You can change the colours randomly by clicking the |logo16| icon and by clicking the |logo15| icon, 
-you switch between a black background and a white background, like below:
+You can change the colours randomly by clicking the |logo16| icon and if you click the |logo15| icon, 
+the ``VTK view`` switch between a black background and a white background, like below:
 
-.. image:: ../doc/images/cgnsnav_im34.png 
+.. image:: ../doc/images/cgnsnav_im34.png    
+   :width: 16cm  
+
+When you changed the foreground of the ``VTK view``, the current selected object remained selected
+because it still appears outlined by the blue wireframe bounding box and it is highlighted in red. 
+It's also the case when you change the colors of objects.
 
 *To change colours*
 
@@ -280,15 +309,17 @@ you switch between a black background and a white background, like below:
 
 .. |logo20| image:: ../doc/images/cgnsnav_im41.png
 
-You can also modify the selected object by using the |logo17| icon and the |logo18| icon.
+You can also modify the current selected object by using the |logo17| icon and the |logo18| icon.
 
 
 .. image:: ../doc/images/cgnsnav_im38.png
+   :width: 16cm  
 
+The current selected object is here ``/base1/dom2``.
 
 When you perform this operation, the next element |logo17| or the previous element |logo18| of the 
 list which contains the objects picked becomes the current selected object. After the last element 
-of the selection is reached, the first object of the list is again selected as current selected element. 
+of the selection is reached, the first object of the list is again selected as current selected object. 
  
 To unselect all elements, click the |logo19| icon.
 
@@ -306,57 +337,62 @@ To unselect all elements, click the |logo19| icon.
 
 To see better a part of the view, you can remove visible elements of the tree. Once you performed 
 a pick operation to select objects, press the ``d`` key to hide the current selected element. After the objet
-is hidden, the next element located in the selection list becomes the current selected element. You can repeat 
-the operation as long as list of the selected objects isn't empty.
+is hidden, the next element located in the selected objects list becomes the current selected element. 
+You can repeat the operation as long as list of the selected objects isn't empty.
 
-.. image:: ../doc/images/cgnsnav_im39.png 
-
+.. image:: ../doc/images/cgnsnav_im39.png    
+   :width: 16cm  
 
 As you can observe it, the hidden objects are marked with the |logo20| icon.
 
 .. image:: ../doc/images/cgnsnav_im40.png 
 
+.. |logo23| image:: ../doc/images/cgnsnav_im65.png
+
+If you click the |logo23| button, you switch between the selected objects and the unselected objects.
+The hidden objects remain unchanged.
+
+.. image:: ../doc/images/cgnsnav_im64.png
+
 When you click the |logo19| icon, all elements become unselected and the objects which are hidden
 become again visible. Consequently, all elements of the list are marked with |logo6| icon.
 
 
+.. |logo21| image:: ../doc/images/cgnsnav_im60.png
 
-*Key Bindings* 
+.. |logo22| image:: ../doc/images/cgnsnav_im63.png
 
-The following keys and the corresponding actions are:
+*To display only a part of the CGNS tree*
 
- +----------+----------------------------------------------------------------------------------+
- |  Key     | Action                                                                           |
- +==========+==================================================================================+
- | ``f``    | Fly to the picked point.                                                         |
- +----------+----------------------------------------------------------------------------------+
- | ``p``    | Perform a pick operation.                                                        |
- +----------+----------------------------------------------------------------------------------+
- | ``r``    | The elements are centered and the camera moves along the current                 |
- |          | view direction so that all elements are visible in the window  .                 |
- +----------+----------------------------------------------------------------------------------+
- | ``s``    | Modify the representation of all elements so that they are surfaces.             |
- +----------+----------------------------------------------------------------------------------+
- | ``w``    | Modify the representation of all elements so that they are wireframes.           |              
- +----------+----------------------------------------------------------------------------------+
- | ``d``    | Hide the current element selected by performing a pick operation.                |
- +----------+----------------------------------------------------------------------------------+
- | ``Ctrl`` | Add the elements selected by a pick operation to the previous selection.         |
- +----------+----------------------------------------------------------------------------------+
+The CGNS/tree of our example displayed in the ``VTK view`` is composed of several zones, namely five zones. 
+You can choose to visualize only a part of the tree by marcking the nodes which you want to display. 
+To select a node, click on its name and press on the ``Enter`` key. 
 
+.. image:: ../doc/images/cgnsnav_im59.png
 
-The file format is detected using the file extension. You can give a list
-of files to ``CGNS.NAV``, it opens each file w.r.t. its type.
-The ``.cgns`` extension uses the CGNS library which can detect both
-CGNS/ADF and CGNS/HDF formats::
+As you can observe it, the selected node is marked with the |logo21| flag.
+Then, all you have to do is click the |logo11b| icon and the following ``VTK view`` appears:
 
-  CGNS.NAV wing.cgns plane.adf helicopter.hdf cror.py
+.. image:: ../doc/images/cgnsnav_im61.png
+   :width: 16cm
 
-It can load/save CGNS files with
-the HDF5/ADF and Python formats, parse and display the contents,
-edit the contents using simple edit and copy/paste commands, select
-nodes using complex queries, use already defined patterns such as the *SIDS*
-patterns and other interoperability features.
+Only the ``dom2`` zone is dispayed in the ``VTK view``. You can add the other zones to be visualized by 
+performing the same operation. The zones which contain at least one marked node will be displayed.
+
+The ``tree view`` allows you to choice all the elements which have the same ``SIDS type``.
+For example, if you want to choose all the elements whose ``SIDS type`` is ``BC_t``, select this
+type in the list of the box located in the bottom right-hand corner of the ``tree view`` and click the |logo22|
+icon in order to apply the selection.
+
+.. image:: ../doc/images/cgnsnav_im62.png
+
+The ``tree view`` allows you to browse all the marked nodes by using the |logo6b| icon to select the next marked
+node and the |logo5b| icon to select the previous marked node. 
+
+To unmark all the nodes, click the |logo8b| icon while to mark all the nodes, click the |logo9b| icon.
+
+You can also switch between the marked nodes and the unmarked nodes by using the |logo7b| button.
+  
 
 -----
 
