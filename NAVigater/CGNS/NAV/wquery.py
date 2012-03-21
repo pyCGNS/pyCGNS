@@ -8,11 +8,17 @@ import sys
 from PySide.QtCore  import *
 from PySide.QtGui   import *
 from CGNS.NAV.Q7QueryWindow import Ui_Q7QueryWindow
+from CGNS.NAV.Q7SelectionWindow import Ui_Q7SelectionWindow
 from CGNS.NAV.mquery import Q7QueryTableModel,Q7ComboBoxDelegate
 from CGNS.NAV.wfingerprint import Q7Window
 
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
+
+# -----------------------------------------------------------------
+class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
+    def __init__(self,control,fgprint):
+        Q7Window.__init__(self,Q7Window.VIEW_SELECT,control,'/',fgprint)
 
 # -----------------------------------------------------------------
 class Q7QueryTableItemDelegate(QStyledItemDelegate):

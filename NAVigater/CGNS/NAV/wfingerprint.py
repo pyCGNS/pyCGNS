@@ -22,6 +22,7 @@ class Q7Window(QWidget,object):
     VIEW_VTK='G'
     VIEW_FORM='F'
     VIEW_QUERY='Q'
+    VIEW_SELECT='S'
     STATUS_UNCHANGED='U'
     STATUS_MODIFIED='M'
     HISTORYLASTKEY='///LAST///'

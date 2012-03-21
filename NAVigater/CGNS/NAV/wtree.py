@@ -11,7 +11,7 @@ from PySide.QtGui  import *
 from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.wform import Q7Form
 from CGNS.NAV.wvtk import Q7VTK
-from CGNS.NAV.wquery import Q7Query
+from CGNS.NAV.wquery import Q7Query, Q7SelectionList
 from CGNS.NAV.mquery import Q7QueryTableModel
 from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem
 from CGNS.NAV.wfingerprint import Q7Window
@@ -117,6 +117,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bPreviousMark.clicked.connect(self.previousmark)
         self.bNextMark.clicked.connect(self.nextmark)
         self.bSwapMarks.clicked.connect(self.swapmarks)
+        self.bMarkAsList.clicked.connect(self.selectionlist)
         self.bApply.clicked.connect(self.applyquery)
         self.bVTK.clicked.connect(self.vtkview)
         self.bOpenOperateView.clicked.connect(self.queryview)
@@ -225,6 +226,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.treeview.model().markExtendToList(sl)
             self.treeview.model().updateSelected()
         self.treeview.refreshView()
+    def selectionlist(self):
+        slist=Q7SelectionList(self._control,self._fgprint)
+        slist.show()
     def previousmark(self):
         self.treeview.changeSelectedMark(-1)
     def nextmark(self):

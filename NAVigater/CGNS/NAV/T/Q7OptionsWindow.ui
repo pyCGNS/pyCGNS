@@ -650,6 +650,19 @@
       <string>CHLone trace</string>
      </property>
     </widget>
+    <widget class="QCheckBox" name="__O_navtrace">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>240</y>
+       <width>131</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>CGSN.NAV trace</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QPushButton" name="bClose">
