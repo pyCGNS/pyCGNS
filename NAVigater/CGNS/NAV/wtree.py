@@ -62,12 +62,12 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         else:
             pass
     def setModelData(self,editor,model,index):
+        value=None
         if (self._mode==CELLCOMBO):
             value=editor.currentText()
         if (self._mode==CELLTEXT):
             value=editor.text()
-        #model.setData(index,value,role=Qt.EditRole)
-        print 'UPDATE ',value,index.row(),index.column(),index.parent()
+        model.setData(index,value,role=Qt.EditRole)
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(*editor.transgeometry)
     def paint(self, painter, option, index):

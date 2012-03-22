@@ -14,8 +14,13 @@ from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 HIDEVALUE='@@HIDE@@'
+
+COLUMN_NAME=0
+COLUMN_SIDS=1
+COLUMN_VALUE=8
 COLUMNICO=[2,4,5,6,7,8]
-DATACOLUMN=8
+DATACOLUMN=COLUMN_VALUE
+COLUMNEDIT=[COLUMN_NAME,COLUMN_SIDS,COLUMN_VALUE]
 
 STLKTOPOK='@@LTOPOK@@' # top link entry ok
 STLKCHDOK='@@LCHDOK@@' # child link entry ok
@@ -45,7 +50,11 @@ PASTEBROTHER='@@NODEPASTEB@@'
 PASTECHILD='@@NODEPASTEC@@'
 
 ICONMAPPING={
- STLKNOLNK:":/images/icons/link-node.gif",
+ STLKNOLNK:":/images/icons/empty.gif",
+ STLKTOPOK:":/images/icons/link.gif",
+ STLKCHDOK:":/images/icons/link.gif",
+ STLKTOPBK:":/images/icons/link-break.gif",
+ STLKTOPNF:":/images/icons/link-error.gif",
 
  STCHKUNKN:":/images/icons/empty.gif",
  STCHKGOOD:":/images/icons/subtree-sids-ok.gif",
@@ -238,13 +247,27 @@ class Q7TreeItem(object):
     def sidsName(self):
         return self._itemnode[0]
     def sidsNameSet(self,name):
+        if (type(name) not in [str,unicode]):
+            return
+        name=str(name)
+        if (not CGU.checkNodeName(name)):
+            return
+        if (not CGU.checkDuplicatedName(self.sidsParent(),name,dienow=False)):
+            return
         self._itemnode[0]=name
     def sidsValue(self):
         return self._itemnode[1]
+    def sidsValueSet(self,value):
+        self._itemnode[1]=value
     def sidsChildren(self):
         return self._itemnode[2]
     def sidsType(self):
         return self._itemnode[3]
+    def sidsTypeSet(self,value):
+        if (type(value) not in [str,unicode]): return
+        value=str(value)
+        if (value not in self.sidsTypeList()): return
+        self._itemnode[3]=value
     def sidsDataType(self,all=False):
         if (all): return Q7TreeItem.dtype
         return CGU.getValueDataType(self._itemnode)
@@ -252,7 +275,7 @@ class Q7TreeItem(object):
         return Q7TreeItem.stype[CGU.getValueDataType(self._itemnode)]
     def sidsTypeList(self):
         tlist=CGU.getNodeAllowedChildrenTypes(self._parentitem._itemnode,
-                                             self._itemnode)
+                                              self._itemnode)
         return tlist
     def sidsDims(self):
         if (type(self.sidsValue())==numpy.ndarray):
@@ -329,7 +352,17 @@ class Q7TreeItem(object):
                 if (vsize>OCTXT.MaxLengthDataDisplay):
                     return HIDEVALUE
                 if (self.sidsValue().dtype.char in ['S','c']):
-                    return self.sidsValue().tostring()
+                    if (len(self.sidsValue().shape)==1):
+                        return self.sidsValue().tostring()
+                    if (len(self.sidsValue().shape)>2):
+                        return HIDEVALUE
+                    #v=self.sidsValue().T
+                    #v=numpy.append(v,numpy.array([['\n']]*v.shape[0]),1)
+                    #v=v.tostring()
+                    #return v
+                    return HIDEVALUE
+                if ((self.sidsValue().shape==(1,)) and OCTXT.Show1DAsPlain):
+                    return str(self.sidsValue()[0])
             return str(self.sidsValue().tolist())
         return None
     def parentItem(self):  
@@ -491,6 +524,16 @@ class Q7TreeModel(QAbstractItemModel):
             if (childnode[0]==targetname): return row
             row+=1
         return -1
+    def setData(self,index,value,role):
+        if (   (value is None)
+            or (role!=Qt.EditRole)
+            or (not index.isValid())
+            or (index.column() not in COLUMNEDIT)):
+            return
+        node=index.internalPointer()
+        if (index.column()==COLUMN_NAME): node.sidsNameSet(value)
+        if (index.column()==COLUMN_SIDS): node.sidsTypeSet(value)
+        if (index.column()==COLUMN_VALUE):node.sidsValueSet(value)
     def removeItem(self,parentitem,targetitem,row):
         parentindex=self.indexByPath(parentitem.sidsPath())
         self.beginRemoveRows(parentindex,row,row)
@@ -537,7 +580,6 @@ class Q7TreeModel(QAbstractItemModel):
     def copyNode(self,nodeitem):
         self.copyPasteBuffer=nodeitem._itemnode
     def cutNode(self,nodeitem):
-        return
         self.copyPasteBuffer=nodeitem._itemnode
         parentitem=nodeitem.parentItem()
         path=CGU.getPathAncestor(nodeitem.sidsPath())

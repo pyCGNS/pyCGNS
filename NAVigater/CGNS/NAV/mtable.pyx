@@ -25,8 +25,8 @@ class Q7TableView(QTableView):
        
 # -----------------------------------------------------------------
 class Q7TableModel(QAbstractTableModel):  
-    def __init__(self,node,showparams,parent=None):  
-        super(Q7TableModel, self).__init__(parent)
+    def __init__(self,node,showparams,parent=None):
+        QAbstractTableModel.__init__(self,parent)
         self.node=node
         self.showmode=showparams['mode']
         self.cs=showparams['cs']
