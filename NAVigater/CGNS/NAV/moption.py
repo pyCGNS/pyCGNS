@@ -84,11 +84,12 @@ class Q7OptionContext(object):
     FilterHDFFiles=True
     TransposeArrayForView=True
     Show1DAsPlain=True
-    SelectionListDirectory='~/.CGNS.NAV/selectionlist'
-    _QueriesFilename='~/.CGNS.NAV/queriesfile.py'
+    SelectionListDirectory='~/.CGNS.NAV/selections'
+    QueriesDirectory='~/.CGNS.NAV/queries'
     SnapShotDirectory='~/.CGNS.NAV/snapshots'
     _HistoryFileName='~/.CGNS.NAV/historyfile.py'
     _OptionsFileName='~/.CGNS.NAV/optionsfile.py'
+    _QueriesDefaultFile='defaultqueries.py'
     LinkSearchPathList=[]
     ProfileSearchPathList=[]
     CGNSFileExtension=['.cgns','.cg']
@@ -456,11 +457,11 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
       return m.options
     @classmethod
     def _writeQueries(cls,control,q):
-      filename=cls._trpath(cls.QueriesFilename)
+      filename=cls._trpath(cls.QueriesDirectory+'/'+cls._QueriesDefaultFile)
       cls._writeFile('User queries','queries',q,filename,Q_FILE_PRE)
     @classmethod
     def _readQueries(cls,control):
-      filename=cls._trpath(cls.QueriesFilename)
+      filename=cls._trpath(cls.QueriesDirectory+'/'+cls._QueriesDefaultFile)
       m=cls._readFile('queries',filename)
       if (m is None): return None
       return m.queries

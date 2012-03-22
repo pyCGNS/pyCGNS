@@ -65,6 +65,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.transientRecurse=False
+        self.transientVTK=False
     def clickedLine(self,*args):
         if (self.controlTable.lastButton==Qt.LeftButton):
             Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))

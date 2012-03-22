@@ -660,7 +660,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>CGSN.NAV trace</string>
+      <string>CGNS.NAV trace</string>
      </property>
     </widget>
    </widget>

@@ -85,9 +85,9 @@ for o, a in opts:
   if (o == "-g"): wvtk=True
   if (o in ("-h", "--help")): usage()
 
-flags=(recurse,last,verbose,vtk)
+flags=(recurse,last,verbose,wvtk)
 
 import CGNS.NAV.script
-CGNS.NAV.script.run(sys.argv,args,flags,wvtk,ppath)
+CGNS.NAV.script.run(sys.argv,args,flags,ppath)
 
 # --------------------------------------------------------------------

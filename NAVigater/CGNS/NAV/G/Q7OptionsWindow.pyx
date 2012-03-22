@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Wed Mar 21 15:30:21 2012
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Thu Mar 22 09:00:50 2012
+#      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -244,7 +244,7 @@ class Ui_Q7OptionsWindow(object):
         self.label_5.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Snapshot directory", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Selection list directory", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_chlonetrace.setText(QtGui.QApplication.translate("Q7OptionsWindow", "CHLone trace", None, QtGui.QApplication.UnicodeUTF8))
-        self.__O_navtrace.setText(QtGui.QApplication.translate("Q7OptionsWindow", "CGSN.NAV trace", None, QtGui.QApplication.UnicodeUTF8))
+        self.__O_navtrace.setText(QtGui.QApplication.translate("Q7OptionsWindow", "CGNS.NAV trace", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.tab_5), QtGui.QApplication.translate("Q7OptionsWindow", "Other", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
         self.bApply.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Apply", None, QtGui.QApplication.UnicodeUTF8))

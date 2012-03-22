@@ -62,8 +62,12 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         else:
             pass
     def setModelData(self,editor,model,index):
-        value=editor.toPlainText()
-        model.setData(index,value,role=Qt.EditRole)
+        if (self._mode==CELLCOMBO):
+            value=editor.currentText()
+        if (self._mode==CELLTEXT):
+            value=editor.text()
+        #model.setData(index,value,role=Qt.EditRole)
+        print 'UPDATE ',value,index.row(),index.column(),index.parent()
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(*editor.transgeometry)
     def paint(self, painter, option, index):
@@ -117,7 +121,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bPreviousMark.clicked.connect(self.previousmark)
         self.bNextMark.clicked.connect(self.nextmark)
         self.bSwapMarks.clicked.connect(self.swapmarks)
-        self.bMarkAsList.clicked.connect(self.selectionlist)
+        self.bMarksAsList.clicked.connect(self.selectionlist)
         self.bApply.clicked.connect(self.applyquery)
         self.bVTK.clicked.connect(self.vtkview)
         self.bOpenOperateView.clicked.connect(self.queryview)
@@ -127,6 +131,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.treeview.setModel(self._fgprint.model)
         self.treeview.setItemDelegate(Q7TreeItemDelegate(self.treeview))
         self.treeview.setControlWindow(self,self._fgprint.model)
+        if (self._control.transientRecurse): self.expandMinMax()
+        if (self._control.transientVTK):     self.vtkview()
     def screenshot(self):
         sshot=QPixmap.grabWindow(self.treeview.winId())
         sshot.save('/tmp/foo.png','png')
