@@ -76,10 +76,11 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
             option.font.setWeight(QFont.Bold)
           QStyledItemDelegate.paint(self, painter, option, index)
           option.font.setWeight(QFont.Light)
-        elif (index.column()==8):
+        elif (index.column() in [8,5]):
           option.font.setFamily(OCTXT.FixedFontTable)
+          if (index.column() == 5): option.font.setPointSize(8)
           QStyledItemDelegate.paint(self, painter, option, index)
-        elif (index.column() in [2,4,5,6,7]):
+        elif (index.column() in [2,4,6,7]):
           option.decorationPosition=QStyleOptionViewItem.Top
           QStyledItemDelegate.paint(self, painter, option, index)
           option.decorationPosition=QStyleOptionViewItem.Left
@@ -170,15 +171,24 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def pop0(self):
         pass
     def mcopy(self):
-        self._fgprint.model.copyNode(self.lastNodeMenu)
+        if (self.lastNodeMenu.isValid()):
+            nodeitem=self.lastNodeMenu.internalPointer()
+            self._fgprint.model.copyNode(nodeitem)
     def mcut(self):
-        self._fgprint.model.cutNode(self.lastNodeMenu)
+        if (self.lastNodeMenu.isValid()):
+            nodeitem=self.lastNodeMenu.internalPointer()
+            self.lastNodeMenu=self.lastNodeMenu.parent()
+            self._fgprint.model.cutNode(nodeitem)
     def mpasteasbrother(self):
-        self._fgprint.model.pasteAsBrother(self.lastNodeMenu)
-        idx=self.treeview.model().getIndex(node.sidsPath())
-        self._fgprint.model.dataChanged.emit(idx,idx)
+        if (self.lastNodeMenu.isValid()):
+            nodeitem=self.lastNodeMenu.internalPointer()
+            self._fgprint.model.pasteAsBrother(nodeitem)
+            self._fgprint.model.dataChanged.emit(self.lastNodeMenu,
+                                                 self.lastNodeMenu)
     def mpasteaschild(self):
-        self._fgprint.model.pasteAsChild(self.lastNodeMenu)
+        if (self.lastNodeMenu.isValid()):
+            nodeitem=self.lastNodeMenu.internalPointer()
+            self._fgprint.model.pasteAsChild(nodeitem)
     def updateMenu(self,nodeidx):
         self.lastNodeMenu=nodeidx
         if (nodeidx != -1):

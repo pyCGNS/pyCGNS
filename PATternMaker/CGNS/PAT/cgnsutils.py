@@ -424,7 +424,7 @@ def setStringAsArray(a):
   if ((type(a)==type(NPY.array((1))))
       and (a.shape != ()) and (a.dtype.char=='S')):
     return a
-  if ((type(a)==type("")) or (type(a)==type(NPY.array((1))))):
+  if ((type(a) in [str, unicode]) or (type(a)==type(NPY.array((1))))):
     return NPY.array(tuple(a),dtype='|S',order='Fortran')
   return None
 

@@ -56,6 +56,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.I_VTK=QIcon(QPixmap(":/images/icons/vtk.gif"))
         self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.gif"))
         self.I_FORM=QIcon(QPixmap(":/images/icons/form-open.gif"))
+        self.I_SELECT=QIcon(QPixmap(":/images/icons/operate-list.gif"))
         self.controlTable.setItemDelegate(Q7ControlItemDelegate(self))
         self.signals=Q7SignalPool()
         self.signals.loadFile.connect(self.loading)     
@@ -66,6 +67,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.popupmenu = QMenu()
         self.transientRecurse=False
         self.transientVTK=False
+        self.copyPasteBuffer=None
     def clickedLine(self,*args):
         if (self.controlTable.lastButton==Qt.LeftButton):
             Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))
@@ -149,6 +151,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             tpitem=QTableWidgetItem(self.I_VTK,'')
         if (l[1]==Q7Window.VIEW_QUERY):
             tpitem=QTableWidgetItem(self.I_QUERY,'')
+        if (l[1]==Q7Window.VIEW_SELECT):
+            tpitem=QTableWidgetItem(self.I_SELECT,'')
         stitem.setTextAlignment(Qt.AlignCenter)
         tpitem.setTextAlignment(Qt.AlignCenter)
         ctw.setItem(r,0,stitem)

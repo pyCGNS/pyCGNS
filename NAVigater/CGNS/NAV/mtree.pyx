@@ -18,7 +18,7 @@ HIDEVALUE='@@HIDE@@'
 COLUMN_NAME=0
 COLUMN_SIDS=1
 COLUMN_VALUE=8
-COLUMNICO=[2,4,5,6,7,8]
+COLUMNICO=[2,4,6,7,8]
 DATACOLUMN=COLUMN_VALUE
 COLUMNEDIT=[COLUMN_NAME,COLUMN_SIDS,COLUMN_VALUE]
 
@@ -225,7 +225,7 @@ class Q7TreeItem(object):
         self._parentitem=parent  
         self._itemnode=data  
         self._childrenitems=[]
-        self._title=['Name','SIDS type','L','Shape','M','S','C','F','Value']
+        self._title=['Name','SIDS type','L','Shape','M','D','C','F','Value']
         if (parent is not None): self._path=parent.sidsPath()+'/'+data[0]
         else:                    self._path=''
         self._depth=self._path.count('/')
@@ -258,7 +258,14 @@ class Q7TreeItem(object):
     def sidsValue(self):
         return self._itemnode[1]
     def sidsValueSet(self,value):
-        self._itemnode[1]=value
+        try:
+            aval=numpy.array([float(value)])
+        except ValueError:
+            try:
+                aval=numpy.array([int(value)])
+            except ValueError:
+                aval=CGU.setStringAsArray(value)
+        self._itemnode[1]=aval
     def sidsChildren(self):
         return self._itemnode[2]
     def sidsType(self):
@@ -342,7 +349,7 @@ class Q7TreeItem(object):
             if (self.sidsValue() is None): return None
             return str(self.sidsValue().shape)
         if (column==4): return self._states['mark']
-        if (column==5): return self._states['shared']
+        if (column==5): return self.sidsDataType()
         if (column==6): return self._states['check']
         if (column==7): return self._states['fortran']
         if (column==8):
@@ -356,6 +363,7 @@ class Q7TreeItem(object):
                         return self.sidsValue().tostring()
                     if (len(self.sidsValue().shape)>2):
                         return HIDEVALUE
+                    # TODO: use qtextedit for multiple lines
                     #v=self.sidsValue().T
                     #v=numpy.append(v,numpy.array([['\n']]*v.shape[0]),1)
                     #v=v.tostring()
@@ -395,7 +403,6 @@ class Q7TreeModel(QAbstractItemModel):
             Q7TreeModel._icons[ik]=QIcon(QPixmap(ICONMAPPING[ik]))
         self._selected=[]
         self._selectedIndex=-1
-        self.copyPasteBuffer=None
         self._control=self._fingerprint.control
     def nodeFromPath(self,path):
         if (path in self._extension.keys()): return self._extension[path]
@@ -538,7 +545,6 @@ class Q7TreeModel(QAbstractItemModel):
         parentindex=self.indexByPath(parentitem.sidsPath())
         self.beginRemoveRows(parentindex,row,row)
         path=targetitem.sidsPath()
-        print 'REMOVE ',path
         parentitem.delChild(targetitem)
         del self._extension[path]
         self.endRemoveRows()
@@ -549,9 +555,10 @@ class Q7TreeModel(QAbstractItemModel):
     def parseAndRemove(self,parentitem):
         if (not parentitem.hasChildren()): return
         while (parentitem.childrenCount()!=0):
-            child=parentitem.child(0)
+            r=parentitem.childrenCount()
+            child=parentitem.child(r-1)
             self.parseAndRemove(child)
-            self.removeItem(parentitem,child,0)
+            self.removeItem(parentitem,child,r-1)
     def parseAndUpdate(self,parentItem,node,parentIndex,row,parenttag=""):
         self._count+=1
         tag=parenttag+SORTTAG%self._count
@@ -578,20 +585,20 @@ class Q7TreeModel(QAbstractItemModel):
         if (ix1.isValid() and ix2.isValid()):
             self.dataChanged.emit(ix1,ix2)
     def copyNode(self,nodeitem):
-        self.copyPasteBuffer=nodeitem._itemnode
+        self._control.copyPasteBuffer=nodeitem._itemnode
     def cutNode(self,nodeitem):
-        self.copyPasteBuffer=nodeitem._itemnode
+        self._control.copyPasteBuffer=nodeitem._itemnode
         parentitem=nodeitem.parentItem()
         path=CGU.getPathAncestor(nodeitem.sidsPath())
         self.removeItemTree(nodeitem)
         pix=self.indexByPath(path)
-        parentitem.sidsRemoveChild(self.copyPasteBuffer)
+        parentitem.sidsRemoveChild(self._control.copyPasteBuffer)
         self.refreshModel(pix)
     def pasteAsChild(self,nodeitem):
-        if (self.copyPasteBuffer is None): return
+        if (self._control.copyPasteBuffer is None): return
         row=nodeitem.row()
         nix=self.indexByPath(nodeitem.sidsPath())
-        (ntree,npath)=nodeitem.sidsAddChild(self.copyPasteBuffer)
+        (ntree,npath)=nodeitem.sidsAddChild(self._control.copyPasteBuffer)
         self.parseAndUpdate(nodeitem,ntree,nix,0,nodeitem._tag)
         nix=self.indexByPath(nodeitem.sidsPath())
         pix=self.indexByPath(CGU.getPathAncestor(npath))
