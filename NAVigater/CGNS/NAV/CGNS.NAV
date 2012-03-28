@@ -43,10 +43,12 @@ if (ppref not in sys.path):
 
 def usage():
   print """%s v%s
+  -R : recurse on all tree
+  -l : open last file used
+  -g : open VTK view
+
   -P <profiles-paths> : override CGNSPROFILEPATH variable for profile search
                         path variable. It is a ':' separated list of paths.
-
-  -R : recurse on all tree
   -h : help
   -v : verbose (trace)
   """%(OCTXT._ToolName,OCTXT._ToolVersion)
@@ -64,22 +66,28 @@ except KeyError:
   ppath=""
   
 try:
- opts, args = getopt.getopt(sys.argv[1:], "RhvP:")
+ opts, args = getopt.getopt(sys.argv[1:], "lgRhvP:")
 except getopt.GetoptError:
  usage()
 
 output=None
 verbose=False
+last=False
 recurse=False
+wvtk=False
 olist=[]
 
 for o, a in opts:
   if (o == "-R"): recurse=True
+  if (o == "-l"): last=True
   if (o == "-P"): ppath=a
   if (o == "-v"): verbose=True
+  if (o == "-g"): wvtk=True
   if (o in ("-h", "--help")): usage()
 
+flags=(recurse,last,verbose,wvtk)
+
 import CGNS.NAV.script
-CGNS.NAV.script.run(sys.argv,args,recurse,ppath,verbose)
+CGNS.NAV.script.run(sys.argv,args,flags,ppath)
 
 # --------------------------------------------------------------------

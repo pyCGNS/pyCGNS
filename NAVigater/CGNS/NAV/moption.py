@@ -64,6 +64,7 @@ Q_SCRIPT_POST="""
 # -----------------------------------------------------------------
 class Q7OptionContext(object):
     CHLoneTrace=False
+    NAVTrace=False
     RecursiveTreeDisplay=False
     OneViewPerTreeNode=False
     ShowTableIndex=True
@@ -83,17 +84,21 @@ class Q7OptionContext(object):
     FilterHDFFiles=True
     TransposeArrayForView=True
     Show1DAsPlain=True
-    SelectionListDirectory='~/.CGNS.NAV/selectionlist'
-    QueriesFilename='~/.CGNS.NAV/queriesfile.py'
+    SelectionListDirectory='~/.CGNS.NAV/selections'
+    QueriesDirectory='~/.CGNS.NAV/queries'
     SnapShotDirectory='~/.CGNS.NAV/snapshots'
     _HistoryFileName='~/.CGNS.NAV/historyfile.py'
     _OptionsFileName='~/.CGNS.NAV/optionsfile.py'
+    _QueriesDefaultFile='defaultqueries.py'
     LinkSearchPathList=[]
     ProfileSearchPathList=[]
     CGNSFileExtension=['.cgns','.cg']
     HDFFileExtension=['.hdf','.hdf5']
     MaxLengthDataDisplay=700
     MaxRecursionLevel=7
+    ADFConversionCom='cgnsconvert'
+    TemporaryDirectory='/tmp'
+    ConvertADFFiles=True
     _ToolName='CGNS.NAV'
     _ToolVersion='v%s'%__vid__
     
@@ -455,11 +460,11 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
       return m.options
     @classmethod
     def _writeQueries(cls,control,q):
-      filename=cls._trpath(cls.QueriesFilename)
+      filename=cls._trpath(cls.QueriesDirectory+'/'+cls._QueriesDefaultFile)
       cls._writeFile('User queries','queries',q,filename,Q_FILE_PRE)
     @classmethod
     def _readQueries(cls,control):
-      filename=cls._trpath(cls.QueriesFilename)
+      filename=cls._trpath(cls.QueriesDirectory+'/'+cls._QueriesDefaultFile)
       m=cls._readFile('queries',filename)
       if (m is None): return None
       return m.queries
@@ -472,7 +477,8 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
       if (name[0]!='_'): setattr(Q7OptionContext,name,value)
       return None
     def __iter__(self):
-      return self._nextName
+      for o in dir(self):
+        if (o[0]!='_'): yield o
     def _nextName(self):
       for o in dir(self):
         if (o[0]!='_'): yield o

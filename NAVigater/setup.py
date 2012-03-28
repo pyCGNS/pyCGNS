@@ -11,8 +11,8 @@ import glob
 import os
 import sys
 
-cui='/home/tools/local/tiamat/bin/pyside-uic'
-crc='/home/tools/local/tiamat/bin/pyside-rcc'
+cui='pyside-uic'
+crc='pyside-rcc'
 ccy='cython'
 
 try:
@@ -56,6 +56,7 @@ if installprocess:
       'Q7FormWindow',
       'Q7FileWindow',
       'Q7QueryWindow',
+      'Q7SelectionWindow',
       'Q7VTKWindow'
       ]
   modgenlist=[]
@@ -73,7 +74,8 @@ if installprocess:
                             libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
                             )]
      g=("CGNS/NAV/T/%s.ui"%m,"CGNS/NAV/G/%s.pyx"%m)
-     if (os.path.getmtime(g[0])>os.path.getmtime(g[1])): modgenlist+=[m]
+     if (not os.path.exists(g[1])
+         or os.path.getmtime(g[0])>os.path.getmtime(g[1])): modgenlist+=[m]
                   
   for m in modgenlist:
       print 'Generate from updated GUI templates: ',m
@@ -89,7 +91,8 @@ else:
   cmdclassdict={'clean':setuputils.clean}
   modextlist=[]
 
-print pyCGNSconfig.NUMPY_PATH_LIBRARIES
+# print pyCGNSconfig.NUMPY_PATH_LIBRARIES
+
 setup (
 name         = "CGNS.NAV",
 version      = pyCGNSconfig.NAV_VERSION,

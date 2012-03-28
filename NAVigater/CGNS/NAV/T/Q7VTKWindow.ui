@@ -137,7 +137,33 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="bSnapshot">
+      <widget class="QPushButton" name="bSaveVTK">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Save VTK data into a file</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bScreenShot">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -165,32 +191,6 @@
        <property name="icon">
         <iconset resource="../R/Res.qrc">
          <normaloff>:/images/icons/snapshot.gif</normaloff>:/images/icons/snapshot.gif</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bSaveVTK">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Save VTK data into a file</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
        </property>
       </widget>
      </item>

@@ -84,6 +84,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bPrevious.clicked.connect(self.b_prev)
       self.bReset.clicked.connect(self.b_reset)
       self.bUpdate.clicked.connect(self.b_update)
+      self.bScreenShot.clicked.connect(self.screenshot)
       QObject.connect(self.cViews,
                       SIGNAL("currentIndexChanged(int)"),
                       self.b_loadview)
@@ -94,6 +95,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                       SIGNAL("currentIndexChanged(int)"),
                       self.changeCurrentPath)
    
+  def screenshot(self):
+    sshot=QPixmap.grabWindow(self.display.winId())
+    sshot.save('/tmp/foo.png','png')
+
   def SyncCameras(self,ren,event):
     cam = ren.GetActiveCamera()
     self.camAxes.SetViewUp(cam.GetViewUp())

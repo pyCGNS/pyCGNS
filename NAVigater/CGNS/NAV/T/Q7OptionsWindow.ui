@@ -52,8 +52,8 @@
     <widget class="QCheckBox" name="__O_recursivesidspatternsload">
      <property name="geometry">
       <rect>
-       <x>320</x>
-       <y>10</y>
+       <x>10</x>
+       <y>230</y>
        <width>274</width>
        <height>22</height>
       </rect>
@@ -189,7 +189,7 @@
      <property name="geometry">
       <rect>
        <x>320</x>
-       <y>60</y>
+       <y>10</y>
        <width>274</width>
        <height>22</height>
       </rect>
@@ -202,7 +202,7 @@
      <property name="geometry">
       <rect>
        <x>320</x>
-       <y>140</y>
+       <y>80</y>
        <width>274</width>
        <height>22</height>
       </rect>
@@ -228,7 +228,7 @@
      <property name="geometry">
       <rect>
        <x>340</x>
-       <y>80</y>
+       <y>30</y>
        <width>211</width>
        <height>41</height>
       </rect>
@@ -238,7 +238,7 @@
      <property name="geometry">
       <rect>
        <x>340</x>
-       <y>160</y>
+       <y>100</y>
        <width>211</width>
        <height>41</height>
       </rect>
@@ -599,7 +599,7 @@
       <rect>
        <x>160</x>
        <y>70</y>
-       <width>396</width>
+       <width>391</width>
        <height>27</height>
       </rect>
      </property>
@@ -609,7 +609,7 @@
       <rect>
        <x>160</x>
        <y>40</y>
-       <width>396</width>
+       <width>391</width>
        <height>27</height>
       </rect>
      </property>
@@ -632,7 +632,7 @@
       <rect>
        <x>160</x>
        <y>100</y>
-       <width>396</width>
+       <width>391</width>
        <height>27</height>
       </rect>
      </property>
@@ -648,6 +648,65 @@
      </property>
      <property name="text">
       <string>CHLone trace</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="__O_navtrace">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>240</y>
+       <width>131</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>CGNS.NAV trace</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>160</y>
+       <width>147</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>ADF conversion</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="__O_adfconversioncom">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>160</y>
+       <width>391</width>
+       <height>27</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>200</y>
+       <width>151</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Temporary directory</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="__O_temporarydirectory">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>200</y>
+       <width>391</width>
+       <height>27</height>
+      </rect>
      </property>
     </widget>
    </widget>

@@ -424,7 +424,7 @@ def setStringAsArray(a):
   if ((type(a)==type(NPY.array((1))))
       and (a.shape != ()) and (a.dtype.char=='S')):
     return a
-  if ((type(a)==type("")) or (type(a)==type(NPY.array((1))))):
+  if ((type(a) in [str, unicode]) or (type(a)==type(NPY.array((1))))):
     return NPY.array(tuple(a),dtype='|S',order='Fortran')
   return None
 
@@ -896,6 +896,7 @@ def getPathToList(path,nofirst=False,noroot=True):
    
   """
   lp=[]
+  if (path is None): return []
   if (len(path)>0):
     path=getPathNormalize(path)
     if (noroot): path=getPathNoRoot(path)
@@ -966,12 +967,16 @@ def getPathNoRoot(path):
    * The path is processed by :py:func:`getPathNormalize`
    
   """
-  lp=[]
-  if (len(path)>0):
-    path=getPathNormalize(path)
-    lp=path.split('/')
-    if (lp[0]==CK.CGNSHDF5ROOT_s): lp=lp[1:]
-    '/'.join(lp)
+  if (path is None): return '/'
+  if (path == ''):   return '/'
+  path=getPathNormalize(path)
+  if (path=='/'): return path
+  lp=path.split('/')
+  if (lp[0] in [CK.CGNSHDF5ROOT_s, CK.CGNSTree_s]): lp=lp[1:]
+  if ((lp[0]=='')
+      and (len(lp)>1)
+      and (lp[1] in [CK.CGNSHDF5ROOT_s, CK.CGNSTree_s])): lp=[lp[0]]+lp[2:]
+  path='/'.join(lp)
   return path
 
 # --------------------------------------------------   

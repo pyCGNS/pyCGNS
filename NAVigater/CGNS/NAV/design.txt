@@ -9,3 +9,12 @@ The Q7fingerPrint is the actual class with all CGNS tree info,
 including the list of views and selections. It is more or less
 the model itself but with some of local stuff and I want two
 separate classes.
+
+
+todo:
+
+- copy/paste/cut on selected nodes
+- selected list (clear, merge, add, operate something on)
+- add patterns
+- call cgnsconvert if found (?)
+- load straight CGNS/Python + run-time update
