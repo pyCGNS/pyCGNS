@@ -6,28 +6,153 @@
 CGNS.NAV
 ========
 
+The CGNS.NAV program allows to browse, to view and to edit CGNS files.
+
+This program provides 3 graphical user interfaces.
+Firstly, the ``control view`` allows to load a CGNS file and to find out the views you have and
+on which CGNS tree they refer to.
+Then, the ``tree view`` allows to browse and to modify the CGNS tree.
+Finally, the ``VTK view`` displays the mesh, element sets, connectivities and boundary 
+conditions written in the loaded CGNS file.
+
+
+Control view
+------------
+
 If you want to browse your CGNS file, just type::
 
   CGNS.NAV
 
-and the following ``control view`` appears:
+``CGNS.NAV`` *options*
+
+You can use several options to launch the ``CGNS.NAV`` program.
+
+If you type ``CGNS.NAV -R file.cgns`` , the ``control view`` containing the file.cgns file is opened 
+and the ``tree view`` of the file is also opened. When the ``-R`` option is used, all the nodes of the tree 
+displayed in the ``tree view`` are expanded. If you don't enter a file name after the ``-R`` option, 
+only the ``control view`` without loaded CGNS file appears. But when you choose your CGNS file, 
+you obtain a tree whose all the nodes are expanded in the ``tree view`` which is then opened.
+
+If you type ``CGNS.NAV -l`` , you launch the ``control view`` and the ``tree view`` of the last used CGNS file.
+In the ``tree view``, the nodes are not expanded  unlike the previous ``-R`` option. If you enter a file name after
+the ``-l`` option, you open two additional views, namely the ``control view`` and the ``tree view`` of the loaded file.
+
+You can use the ``-g`` option by entering ``CGNS.NAV -g file.cgns`` . The ``control view`` , the ``tree view`` and 
+the ``VTK view`` of the file.cgns file are displayed on the screen. In the ``tree view`` , the nodes of the tree aren't expanded.
+In the ``control view`` are listed the two views, namely the ``tree view`` and the ``VTK view`` . If you don't type 
+a file name after the ``-g`` option, only the empty ``control view`` is opened. The two anothers views will be launched, when 
+you will select the CGNS filed to load in the ``control view``.  
+
+After the program's launching, the ``control view`` appears:
 
 .. image:: ../doc/images/cgnsnav_im01.png
    :width: 18cm
+
+This view helps you to find out the views you deal with and to which CGNS tree they correspond. 
 
 .. |logo1| image:: ../doc/images/cgnsnav_im02.png 
 
 .. |logo2| image:: ../doc/images/cgnsnav_im03.png 
 
+.. |logo1b| image:: ../doc/images/cgnsnav_im53.png
 
-.. |logo1b| image:: ../doc/images/cgnsnav_im53.png 
+.. |logo23| image:: ../doc/images/cgnsnav_im66.png
 
-To load a new CGNS file, you must click the |logo1|, select the wanted CGNS file by typing its name and by
-clicking the |logo1b| icon.  But you can also reload the last used CGNS file by clicking on the icon |logo2|,
-and the ``tree view`` appears:
+.. |logo24| image:: ../doc/images/cgnsnav_im67.png
+
+.. |logo25| image:: ../doc/images/cgnsnav_im68.png
+
+.. |logo26| image:: ../doc/images/cgnsnav_im69.png
+
+.. |logo27| image:: ../doc/images/cgnsnav_im70.png
+
+.. |logo29| image:: ../doc/images/cgnsnav_im72.png
+
+You have an example of several views listed in the ``control view`` below:
+
+.. image:: ../doc/images/cgnsnav_im71.png
+
+If you select the line of an existing view, this view will be raised on your screen. You can find
+back the ``control view`` from any other view just by clicking the |logo29| button located in the 
+bottom left-hand corner of the view.
+ 
+Each time you open a view, the ``control view`` keeps track of it.
+
+The columns of the lines which you see in this ``control view`` are:
+
++-----------------+---------------------------------------------------------------------------+
+|  Column         | Definition								      |
++=================+===========================================================================+
+|  ``S``          | Status flag, says if the tree has been modified and needs a save.         |
++-----------------+---------------------------------------------------------------------------+
+|  ``T``          | Type of view. The ``tree views`` are marked with |logo1|,                 |
+|                 | the ``VTK view`` with |logo11b|, the ``form view`` with |logo13b| and the |
+|                 | ``queries view`` with |logo12b|.					      |
++-----------------+---------------------------------------------------------------------------+
+| ``View``        | The number of views which you opened.                                     |
++-----------------+---------------------------------------------------------------------------+
+| ``Dir``         | The directory where you loaded the file.                                  |
++-----------------+---------------------------------------------------------------------------+
+| ``File``        | The file name.                                                            |
++-----------------+---------------------------------------------------------------------------+
+| ``Node``        | Status flag, says if the entire tree is displayed ``/`` or if only a part |
+|                 | of the tree is visualized ``<partial>``.                                  |
++-----------------+---------------------------------------------------------------------------+
+
+If you click the |logo1| button, this window appears:
+ 
+.. image:: ../doc/images/cgnsnav_im73.png
+
+.. |logo30| image:: ../doc/images/cgnsnav_im75.png
+
+.. |logo31| image:: ../doc/images/cgnsnav_im76.png
+
+
+Know, you must select an existing CGNS file by typing its directory's path in the box
+located to the right of the |logo30| icon and by entering its name in the box located to the right 
+of the |logo31| icon. You must click the |logo31| button to valid your choice.
+
+If you choose an unexisting file name, the following error message is returned to you:
+
+.. image:: ../doc/images/cgnsnav_im74.png
+
+The options of the ``Load/Save`` window are shown below: 
+
+.. image:: ../doc/images/cgnsnav_im83.png
+
+
+*To deal with a CGNS file*
+
++-----------------+---------------------------------------------------------------------------+
+|   Icon          | Action								      |
++=================+===========================================================================+
+| |logo1|         | Load a new CGNS file.                                                     |
++-----------------+---------------------------------------------------------------------------+
+| |logo2|         | Load the last used CGNS file.                                             |
++-----------------+---------------------------------------------------------------------------+
+| |logo23|        | Create a new CGNS file from scratch.                                      |
++-----------------+---------------------------------------------------------------------------+
+| |logo24|        | Open the CGNS/SIDS sub-trees database.                                    |
++-----------------+---------------------------------------------------------------------------+
+| |logo25|        | Set the user defined options.                                             |
++-----------------+---------------------------------------------------------------------------+
+| |logo26|        | About.                                                                    |
++-----------------+---------------------------------------------------------------------------+
+| |logo27|        | Close all the CGNS.NAV windows.                                           |
++-----------------+---------------------------------------------------------------------------+
+
+You can also reload the last used CGNS file by clicking on the icon |logo2|.
+
+Tree view
+--------- 
+
+When you open a new CGNS file or if you load again the last used CGNS file, the ``tree view`` appears:
 
 .. image:: ../doc/images/cgnsnav_im04b.png
    :width: 14cm
+
+The ``tree view`` displays the nodes for the loaded CGNS file. It is the main view of the tree. 
+You can browse or perform modifications of the loaded CGNS tree in this view.
 
 .. |logo3| image:: ../doc/images/cgnsnav_im05.png 
 
@@ -51,9 +176,10 @@ and the ``tree view`` appears:
 
 .. |logo11b| image:: ../doc/images/cgnsnav_im52.png
 
-
 As you can observe it, there is only one entry in the ``tree view``. This is the root of our CGNS file
-which can contain one or several bases.The opening of the CGNS tree occurs in a recursive way.
+which can contain one or several bases. All the nodes are arranged in a tree structure.
+The opening of the CGNS tree occurs in a recursive way. A node is selected by clicking the mouse ``Button 1`` 
+on the wanted node. The path of the selected node is displayed in the box at the bottom of the window.
 If you want to expand this node one level up in order to display the entries corresponding to the base 
 contained in the ``CGNSTree`` node, click the |logo4b| icon.  
 
@@ -64,20 +190,83 @@ If you perform this operation again with the ``base1`` node, you obtain the foll
 You can repeat the operation for the nodes of the different zones which are under the ``base1`` node.
 And so on...
 
+
 In order to expand the ``tree view`` one level down, click the |logo2b| icon.
 
 To expand all the loaded CGNS/tree, you must click |logo3|.
 
-You can then see the expanded CGNS/tree:
+You can see the expanded CGNS tree shown below:
 
 .. image:: ../doc/images/cgnsnav_im06b.png 
-    :width: 17cm
 
-If you only want to expand or collapse individual nodes in the tree, you double-click on the name of
-the desired node.
+.. |logo32| image:: ../doc/images/cgnsnav_im77.png
 
 
-*To deal with the ``tree view``*
+If you want to open the child sub-tree of the selected node, you click on the |logo32| icon 
+located before any node. When you perform this operation, this |logo32| icon disappears.
+You can collapse all the nodes below a node by clicking near to the name of the desired node 
+at the place where was the |logo32| icon.
+
+When you use the |logo4b| icon, you expand all the nodes one level up while when you click on 
+the |logo32| icon, you expand only the wanted node one level up.
+
+.. image:: ../doc/images/cgnsnav_im84.png 
+
+A mouse right button simple click on a selected node allows you to open the popup menu displayed below: 
+
+.. image:: ../doc/images/cgnsnav_im78.png
+
+This menu gives you access to some function such as ``Open a view`` and ``Copy`` , ``Cut`` , ``Paste`` a node.
+These functions have keyboards shortcuts listed below.
+ 
+
+*Key bindings*
+
+ +-------------------+---------------------------------------------------------------------------+
+ |   Button          | Action								         |
+ +===================+===========================================================================+
+ | ``Ctrl`` + ``F``  | Open the form.                                                            |
+ +-------------------+---------------------------------------------------------------------------+
+ | ``Ctrl`` + ``W``  | Open a new view of the tree.                                              |
+ +-------------------+---------------------------------------------------------------------------+
+ | ``Ctrl`` + ``C``  | Copy the selected node.                                                   |
+ +-------------------+---------------------------------------------------------------------------+
+ | ``Ctrl`` + ``X``  | Cut the selected node.                                                    |
+ +-------------------+---------------------------------------------------------------------------+
+ | ``Ctrl`` + ``V``  | Paste the copied node as brother node of the selected node.               |
+ +-------------------+---------------------------------------------------------------------------+
+ | ``Ctrl`` + ``Y``  | Paste the copied node as child node of the selected node.                 |
+ +-------------------+---------------------------------------------------------------------------+
+
+*Modify the CGNS tree*
+
+The ``tree view`` allows to perform modifications in the CGNS trees. It supports the
+``Copy``, ``Cut``, ``Paste`` functions. You can copy a sub-tree of a view and paste it into 
+the same view or into another view which can belong to a different CGNS tree.
+You press ``Ctrl`` + ``C`` on the selected node or you choose ``Copy`` in the popup menu opened 
+by a mouse right button simple click on the wanted node to copy it into a buffer.
+You paste the copied node by pressing ``Ctrl`` + ``V`` or by selecting ``Paste as brother`` in the popup
+menu. The new node becomes the brother node of the selected node. By contrast, if you select ``Paste as child`` 
+in the popup menu, the new node becomes the child node of the selected node. 
+
+.. image:: ../doc/images/cgnsnav_im79.png
+
+In this example, the ``dom1`` and ``dom2`` nodes are copied and pasted into the same view. Here, their copies
+are automatically named ``{Zone_t#002}`` and  ``{Zone_t#001}`` . Indeed, these copied nodes have the same content as their
+origin nodes.   
+
+You can modify these new nodes by a double left-click on their names, their types and their values.
+Type then just the new name and the new value. You must select the new ``SIDS type`` from the drop-down list 
+opened by clicking in the entry field to change the node type, like below:
+
+.. image:: ../doc/images/cgnsnav_im80.png 
+
+.. |logo12b| image:: ../doc/images/cgnsnav_im81.png
+
+.. |logo13b| image:: ../doc/images/cgnsnav_im82.png
+
+
+*To deal with the CGNS tree*
 
 +-----------------+---------------------------------------------------------------------------+
 |   Icon          | Action								      |
@@ -92,19 +281,57 @@ the desired node.
 +-----------------+---------------------------------------------------------------------------+
 | |logo6b|        | Select the next marked node.                                              |
 +-----------------+---------------------------------------------------------------------------+
-| |logo7b|        | Switch between the marked nodes and the unmarked nodes.                   |
+| |logo7b|        | Unselect the marked nodes and flag the unmarked nodes.                    |
 +-----------------+---------------------------------------------------------------------------+
 | |logo8b|        | Unmark all the nodes.                                                     |
 +-----------------+---------------------------------------------------------------------------+
-| |logo9b|        | Mark all the nodes.                     .                                 |
+| |logo9b|        | Mark all the nodes.                                                       |
 +-----------------+---------------------------------------------------------------------------+
 | |logo10b|       | Open the selected nodes list.                                             |
 +-----------------+---------------------------------------------------------------------------+
-| |logo11b|       | Display the mesh of the tree.                                             |
+| |logo12b|       | Open the queries window.                                                  |
++-----------------+---------------------------------------------------------------------------+
+| |logo13b|       | Open the form view of the selected node.                                  |
++-----------------+---------------------------------------------------------------------------+
+| |logo11b|       | Display the mesh of the tree in the ``VTK view``.                         |
 +-----------------+---------------------------------------------------------------------------+
 
+*Mouse bindings*
+
+The mouse bindings and the corresponding actions are:
+
+ +-----------------+---------------------------------------------------------------------------+
+ |   Button        | Action								       |
+ +=================+===========================================================================+
+ | ``Button 1``    | Select a node by a simple click on the wanted node.                       |
+ +-----------------+---------------------------------------------------------------------------+
+ | ``Button 1``    | Expand/Collapse all the nodes below the selected node by clicking on the  |
+ |                 | |logo32| icon.                                                            |
+ +-----------------+---------------------------------------------------------------------------+
+ | ``Button 1``    | Modify the name of the selected node, its ``SIDS type`` or its value by a |
+ |                 | double-click on the desired column of the node.			       |	
+ +-----------------+---------------------------------------------------------------------------+
+
+The ``tree view`` allows you to choose all the elements which have the same ``SIDS type``.
+For example, if you want to select all the elements whose ``SIDS type`` is ``BC_t``, select this
+type in the list of the box located in the bottom right-hand corner of the ``tree view`` and click the |logo22|
+icon in order to apply the selection.
+
+.. image:: ../doc/images/cgnsnav_im62.png
+
+The ``tree view`` allows you to browse all the marked nodes by using the |logo6b| icon to select the next marked
+node and the |logo5b| icon to select the previous marked node. 
+
+Click the |logo8b| icon while to mark all the nodes, click the |logo9b| icon to unselect all the nodes.
+
+You can also invert the selection by using the |logo7b| button. The marked nodes become unselected and vice versa
+for the unmarked nodes.
+
+VTK view
+--------
+
 .. |logo4| image:: ../doc/images/cgnsnav_im07.png
- 
+
 To display the mesh, element sets, connectivities and boundary conditions contained in the CGNS file, 
 click on |logo4|.
 
@@ -165,10 +392,10 @@ The following keys and the corresponding actions are:
 
 
 The pick operation shoots a ray into the 3D scene and returns information about the objects that 
-the ray hits. The first element hited by the ray is highlighted in red and a blue wireframe outlines
+the ray hits. The first element hit by the ray is highlighted in red and a blue wireframe outlines
 the bounding box of the selected object.In the top left-hand corner of the ``VTK view``, the list of 
-the paths of elements hited by the ray appears. In our case, there is only one path because only one 
-object was hited by the shot ray. The path of the selected element also appears in the box. 
+the paths of elements hit by the ray appears. In our case, there is only one path because only one 
+object was hit by the shot ray. The path of the selected element also appears in the box. 
 In this example, the object's path is ``dom1/PENTA_6{TRI}``.
 
 .. image:: ../doc/images/cgnsnav_im12.png 
@@ -347,9 +574,9 @@ As you can observe it, the hidden objects are marked with the |logo20| icon.
 
 .. image:: ../doc/images/cgnsnav_im40.png 
 
-.. |logo23| image:: ../doc/images/cgnsnav_im65.png
+.. |logo28| image:: ../doc/images/cgnsnav_im65.png
 
-If you click the |logo23| button, you switch between the selected objects and the unselected objects.
+If you click the |logo28| button, you switch between the selected objects and the unselected objects.
 The hidden objects remain unchanged.
 
 .. image:: ../doc/images/cgnsnav_im64.png
@@ -366,7 +593,7 @@ become again visible. Consequently, all elements of the list are marked with |lo
 
 The CGNS/tree of our example displayed in the ``VTK view`` is composed of several zones, namely five zones. 
 You can choose to visualize only a part of the tree by marcking the nodes which you want to display. 
-To select a node, click on its name and press on the ``Enter`` key. 
+Click on its name and press on the ``Space`` key to select a node.
 
 .. image:: ../doc/images/cgnsnav_im59.png
 
@@ -377,22 +604,7 @@ Then, all you have to do is click the |logo11b| icon and the following ``VTK vie
    :width: 16cm
 
 Only the ``dom2`` zone is dispayed in the ``VTK view``. You can add the other zones to be visualized by 
-performing the same operation. The zones which contain at least one marked node will be displayed.
-
-The ``tree view`` allows you to choice all the elements which have the same ``SIDS type``.
-For example, if you want to choose all the elements whose ``SIDS type`` is ``BC_t``, select this
-type in the list of the box located in the bottom right-hand corner of the ``tree view`` and click the |logo22|
-icon in order to apply the selection.
-
-.. image:: ../doc/images/cgnsnav_im62.png
-
-The ``tree view`` allows you to browse all the marked nodes by using the |logo6b| icon to select the next marked
-node and the |logo5b| icon to select the previous marked node. 
-
-To unmark all the nodes, click the |logo8b| icon while to mark all the nodes, click the |logo9b| icon.
-
-You can also switch between the marked nodes and the unmarked nodes by using the |logo7b| button.
-  
+performing the same operation. The zones which contain at least one marked node will be displayed.  
 
 -----
 
