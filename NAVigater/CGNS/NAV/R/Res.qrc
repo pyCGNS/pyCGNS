@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/save-converted.gif</file>
     <file>icons/reverse.gif</file>
     <file>icons/hidden.gif</file>
     <file>icons/unselected.gif</file>

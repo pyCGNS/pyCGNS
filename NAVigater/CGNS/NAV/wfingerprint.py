@@ -6,6 +6,7 @@
 #  -------------------------------------------------------------------------
 from PySide.QtCore       import *
 from PySide.QtGui        import *
+import os
 import os.path
 import CGNS.MAP
 
@@ -25,6 +26,7 @@ class Q7Window(QWidget,object):
     VIEW_SELECT='S'
     STATUS_UNCHANGED='U'
     STATUS_MODIFIED='M'
+    STATUS_CONVERTED='C'
     HISTORYLASTKEY='///LAST///'
     def __init__(self,vtype,control,path,fgprint):
         QWidget.__init__(self,None)
@@ -104,7 +106,10 @@ class Q7Window(QWidget,object):
     def addChildWindow(self):
         if (self._fgprint is None): return 0
         self._index=self._fgprint.addChild(self._vtype,self)
-        l=[Q7Window.STATUS_UNCHANGED,self._vtype,'%.3d'%self._index]
+        if self._fgprint.converted:
+            l=[Q7Window.STATUS_CONVERTED,self._vtype,'%.3d'%self._index]
+        else:
+            l=[Q7Window.STATUS_UNCHANGED,self._vtype,'%.3d'%self._index]
         l+=[self._fgprint.filedir,self._fgprint.filename,self._path]
         self._control.addLine(l)
         return self._index
@@ -126,12 +131,27 @@ class Q7fingerPrint:
     __viewscounter=0
     __extension=[]
     @classmethod
+    def fileconversion(cls,fdir,filein):
+        fileout=OCTXT.TemporaryDirectory+'/'+filein+'.hdf'
+        count=1
+        while (os.path.exists(fileout)):
+            fileout=OCTXT.TemporaryDirectory+'/'+filein+'.%.3d.hdf'%count
+            count+=1
+        com='(cd %s; %s -h %s %s)'%(fdir,OCTXT.ADFConversionCom,filein,fileout)
+        os.system(com)
+        return fileout
+    @classmethod
     def treeLoad(cls,control,selectedfile):
+        kw={}
         f=selectedfile
         (filedir,filename)=(os.path.normpath(os.path.dirname(f)),
                             os.path.basename(f))
         slp=OCTXT.LinkSearchPathList
         slp+=[filedir]
+        if (   (os.path.splitext(filename)[1]=='.cgns')
+            and OCTXT.ConvertADFFiles):
+            f=cls.fileconversion(filedir,filename)
+            kw['converted']=True
         flags=CGNS.MAP.S2P_DEFAULT
         if (OCTXT.CHLoneTrace): flags|=CGNS.MAP.S2P_TRACE
         try:
@@ -141,7 +161,7 @@ class Q7fingerPrint:
             txt="""The current operation has been aborted, while trying to load a file, the following error occurs:"""
             MSG.wError(e[0],txt,e[1])
             return None
-        return Q7fingerPrint(control,filedir,filename,tree,links)
+        return Q7fingerPrint(control,filedir,filename,tree,links,**kw)
     @classmethod
     def closeAllTrees(cls):
         for x in cls.__extension: x.closeAllViews()
@@ -167,6 +187,8 @@ class Q7fingerPrint:
         self.depth=0
         self.views={}
         self.control=control
+        self.converted=False
+        if (kw.has_key('converted')): self.converted=kw['converted']
         Q7fingerPrint.__extension.append(self)
     def raiseControlView(self):
         self.control.raise_()

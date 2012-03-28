@@ -96,6 +96,9 @@ class Q7OptionContext(object):
     HDFFileExtension=['.hdf','.hdf5']
     MaxLengthDataDisplay=700
     MaxRecursionLevel=7
+    ADFConversionCom='cgnsconvert'
+    TemporaryDirectory='/tmp'
+    ConvertADFFiles=True
     _ToolName='CGNS.NAV'
     _ToolVersion='v%s'%__vid__
     

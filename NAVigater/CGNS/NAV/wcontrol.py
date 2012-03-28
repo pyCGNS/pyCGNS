@@ -52,6 +52,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.initControlTable()
         self.I_UNCHANGED=QIcon(QPixmap(":/images/icons/save-done.gif"))
         self.I_MODIFIED=QIcon(QPixmap(":/images/icons/save.gif"))
+        self.I_CONVERTED=QIcon(QPixmap(":/images/icons/save-converted.gif"))
         self.I_TREE=QIcon(QPixmap(":/images/icons/tree-load.gif"))
         self.I_VTK=QIcon(QPixmap(":/images/icons/vtk.gif"))
         self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.gif"))
@@ -80,6 +81,14 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         if (self.lastView): Q7fingerPrint.raiseView(self.lastView)
     def pop3(self):
         pass
+    def pop4(self):
+        pass
+    def pop5(self):
+        pass
+    def pop6(self):
+        pass
+    def pop7(self):
+        pass
     def updateMenu(self,idx):
         lv=self.getIdxFromLine(idx.row())
         if (lv is not None):
@@ -87,6 +96,11 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
           actlist=(("View  information",self.pop3),
                    ("Raise view",self.pop2),
                    None,
+                   ("Close tree",self.pop4),
+                   ("Close all but this tree",self.pop5),
+                   ("Close all but this view",self.pop6),
+                   None,
+                   ("Close all views",self.pop7),
                    ("Close view",self.pop1))
           self.popupmenu.clear()
           self.popupmenu.setTitle('Control view menu')
@@ -143,6 +157,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             stitem=QTableWidgetItem(self.I_UNCHANGED,'')
         if (l[0]==Q7Window.STATUS_MODIFIED):
             stitem=QTableWidgetItem(self.I_MODIFIED,'')
+        if (l[0]==Q7Window.STATUS_CONVERTED):
+            stitem=QTableWidgetItem(self.I_CONVERTED,'')
         if (l[1]==Q7Window.VIEW_TREE):
             tpitem=QTableWidgetItem(self.I_TREE,'')
         if (l[1]==Q7Window.VIEW_FORM):
