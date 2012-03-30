@@ -48,6 +48,8 @@ COPY='@@NODECOPY@@'
 CUT='@@NODECUT@@'
 PASTEBROTHER='@@NODEPASTEB@@'
 PASTECHILD='@@NODEPASTEC@@'
+OPENFORM='@@OPENFORM@@'
+OPENVIEW='@@OPENVIEW@@'
 
 ICONMAPPING={
  STLKNOLNK:":/images/icons/empty.gif",
@@ -76,6 +78,8 @@ KEYMAPPING={
  CUT     :      Qt.Key_X,
  PASTECHILD   : Qt.Key_Y,
  PASTEBROTHER : Qt.Key_V,
+ OPENFORM     : Qt.Key_F,
+ OPENVIEW     : Qt.Key_W,
 }
 
 EDITKEYMAPPINGS=[
@@ -150,9 +154,7 @@ class Q7TreeView(QTreeView):
               else:
                   self.edit(nix)
           elif (kval==KEYMAPPING[MARKNODE]):
-              last.switchMarked()
-              last._model.updateSelected()
-              self.changeRow(last)
+              self.markNode(last)
           elif (kval==KEYMAPPING[UPNODE]):
               if   (kmod==Qt.ControlModifier): self.upRowLevel(nix)
               elif (kmod==Qt.ShiftModifier):   self.upRowMarked()
@@ -161,11 +163,19 @@ class Q7TreeView(QTreeView):
               if (kmod==Qt.ControlModifier): self.downRowLevel(nix)
               elif (kmod==Qt.ShiftModifier): self.downRowMarked()
               else: QTreeView.keyPressEvent(self,event)
+          elif (kval==KEYMAPPING[OPENFORM]):
+              self._parent.formview()
+          elif (kval==KEYMAPPING[OPENVIEW]):
+              self._parent.vtkview()
           self.setLastEntered()
           self.scrollTo(nix)
     def refreshView(self):
         ixc=self.currentIndex()
         self._model.refreshModel(ixc)
+    def markNode(self,node):
+        node.switchMarked()
+        node._model.updateSelected()
+        self.changeRow(node)
     def upRowLevel(self,index):
         self.relativeMoveToRow(-1,index)
     def downRowLevel(self,index):
@@ -257,6 +267,13 @@ class Q7TreeItem(object):
         self._itemnode[0]=name
     def sidsValue(self):
         return self._itemnode[1]
+    def sidsValueArray(self):
+        if (type(self._itemnode[1])==numpy.ndarray): return True
+        return False
+    def sidsValueFortranOrder(self):
+        if (self.sidsValueArray()):
+            return numpy.isfortran(self.sidsValue())
+        return False
     def sidsValueSet(self,value):
         try:
             aval=numpy.array([float(value)])
@@ -289,6 +306,9 @@ class Q7TreeItem(object):
             return self.sidsValue().shape
         return (0,)
     def sidsLinkStatus(self):
+        pth=CGU.getPathNoRoot(self.sidsPath())
+        if (pth in [lk[-1] for lk in self._fingerprint.links]):
+            return STLKTOPOK
         return STLKNOLNK
     def sidsRemoveChild(self,node):
         children=self.sidsChildren()

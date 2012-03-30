@@ -116,7 +116,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bZoomIn.clicked.connect(self.expandLevel)
         self.bZoomOut.clicked.connect(self.collapseLevel)
         self.bZoomAll.clicked.connect(self.expandMinMax)
-        self.bForm.clicked.connect(self.formview)
+        self.bFormView.clicked.connect(self.formview)
         self.bMarkAll.clicked.connect(self.markall)
         self.bUnmarkAll.clicked.connect(self.unmarkall)
         self.bPreviousMark.clicked.connect(self.previousmark)
@@ -124,8 +124,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bSwapMarks.clicked.connect(self.swapmarks)
         self.bMarksAsList.clicked.connect(self.selectionlist)
         self.bApply.clicked.connect(self.applyquery)
-        self.bVTK.clicked.connect(self.vtkview)
-        self.bOpenOperateView.clicked.connect(self.queryview)
+        self.bVTKView.clicked.connect(self.vtkview)
+        self.bQueryView.clicked.connect(self.queryview)
         self.bScreenShot.clicked.connect(self.screenshot)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
@@ -170,6 +170,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         child.show()
     def pop0(self):
         pass
+    def marknode(self):
+        if (self.lastNodeMenu.isValid()):
+             nodeitem=self.lastNodeMenu.internalPointer()
+             self.treeview.markNode(nodeitem)
     def mcopy(self):
         if (self.lastNodeMenu.isValid()):
             nodeitem=self.lastNodeMenu.internalPointer()
@@ -194,6 +198,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (nodeidx != -1):
           node=nodeidx.internalPointer()
           actlist=(("About %s"%node.sidsType(),self.pop0,None),
+                   None,
+                   ("Mark/unmark node",self.marknode,'Space'),
                    None,
                    ("Open form",self.pop1,'Ctrl+F'),
                    ("Open view",self.pop2,'Ctrl+W'),

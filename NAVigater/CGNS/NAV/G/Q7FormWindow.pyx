@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created: Mon Mar 19 09:58:51 2012
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Fri Mar 30 13:38:31 2012
+#      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -49,18 +49,6 @@ class Ui_Q7FormWindow(object):
         self.eItems = QtGui.QLineEdit(self.tData)
         self.eItems.setGeometry(QtCore.QRect(50, 32, 171, 20))
         self.eItems.setObjectName("eItems")
-        self.label_22 = QtGui.QLabel(self.tData)
-        self.label_22.setGeometry(QtCore.QRect(234, 10, 47, 16))
-        self.label_22.setObjectName("label_22")
-        self.cShowAs = QtGui.QComboBox(self.tData)
-        self.cShowAs.setGeometry(QtCore.QRect(270, 10, 121, 20))
-        self.cShowAs.setObjectName("cShowAs")
-        self.spinBox_3 = QtGui.QSpinBox(self.tData)
-        self.spinBox_3.setGeometry(QtCore.QRect(346, 33, 61, 20))
-        self.spinBox_3.setObjectName("spinBox_3")
-        self.spinBox_2 = QtGui.QSpinBox(self.tData)
-        self.spinBox_2.setGeometry(QtCore.QRect(416, 33, 61, 20))
-        self.spinBox_2.setObjectName("spinBox_2")
         self.verticalLayoutWidget = QtGui.QWidget(self.tData)
         self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 60, 471, 361))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
@@ -79,11 +67,8 @@ class Ui_Q7FormWindow(object):
         self.label_24 = QtGui.QLabel(self.tData)
         self.label_24.setGeometry(QtCore.QRect(234, 36, 47, 16))
         self.label_24.setObjectName("label_24")
-        self.cPlane = QtGui.QComboBox(self.tData)
-        self.cPlane.setGeometry(QtCore.QRect(270, 33, 71, 20))
-        self.cPlane.setObjectName("cPlane")
         self.cMinimize = QtGui.QCheckBox(self.tData)
-        self.cMinimize.setGeometry(QtCore.QRect(400, 9, 81, 22))
+        self.cMinimize.setGeometry(QtCore.QRect(400, 5, 81, 22))
         self.cMinimize.setObjectName("cMinimize")
         self.cEnumType = QtGui.QComboBox(self.tData)
         self.cEnumType.setGeometry(QtCore.QRect(50, 426, 211, 22))
@@ -94,6 +79,12 @@ class Ui_Q7FormWindow(object):
         self.cEnumValue = QtGui.QComboBox(self.tData)
         self.cEnumValue.setGeometry(QtCore.QRect(270, 426, 211, 22))
         self.cEnumValue.setObjectName("cEnumValue")
+        self.checkBox_18 = QtGui.QCheckBox(self.tData)
+        self.checkBox_18.setGeometry(QtCore.QRect(237, 5, 151, 22))
+        self.checkBox_18.setObjectName("checkBox_18")
+        self.cRowColSize = QtGui.QComboBox(self.tData)
+        self.cRowColSize.setGeometry(QtCore.QRect(266, 32, 212, 22))
+        self.cRowColSize.setObjectName("cRowColSize")
         self.tabWidget.addTab(self.tData, "")
         self.tFiles = QtGui.QWidget()
         self.tFiles.setObjectName("tFiles")
@@ -331,9 +322,6 @@ class Ui_Q7FormWindow(object):
         self.ePath = QtGui.QLineEdit(Q7FormWindow)
         self.ePath.setGeometry(QtCore.QRect(50, 40, 441, 27))
         self.ePath.setObjectName("ePath")
-        self.checkBox_18 = QtGui.QCheckBox(Q7FormWindow)
-        self.checkBox_18.setGeometry(QtCore.QRect(240, 70, 151, 22))
-        self.checkBox_18.setObjectName("checkBox_18")
         self.bClose = QtGui.QPushButton(Q7FormWindow)
         self.bClose.setGeometry(QtCore.QRect(400, 560, 88, 27))
         self.bClose.setObjectName("bClose")
@@ -358,10 +346,10 @@ class Ui_Q7FormWindow(object):
         Q7FormWindow.setWindowTitle(QtGui.QApplication.translate("Q7FormWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7FormWindow", "Data", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("Q7FormWindow", "Items", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_22.setText(QtGui.QApplication.translate("Q7FormWindow", "As", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_24.setText(QtGui.QApplication.translate("Q7FormWindow", "Plane", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_24.setText(QtGui.QApplication.translate("Q7FormWindow", "Size", None, QtGui.QApplication.UnicodeUTF8))
         self.cMinimize.setText(QtGui.QApplication.translate("Q7FormWindow", "Minimize", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("Q7FormWindow", "Enum", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkBox_18.setText(QtGui.QApplication.translate("Q7FormWindow", "Node status OK", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tData), QtGui.QApplication.translate("Q7FormWindow", "Data", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("Q7FormWindow", "Destination", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("Q7FormWindow", "Path", None, QtGui.QApplication.UnicodeUTF8))
@@ -415,7 +403,6 @@ class Ui_Q7FormWindow(object):
         self.label_2.setText(QtGui.QApplication.translate("Q7FormWindow", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("Q7FormWindow", "Label", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("Q7FormWindow", "Path", None, QtGui.QApplication.UnicodeUTF8))
-        self.checkBox_18.setText(QtGui.QApplication.translate("Q7FormWindow", "Node status OK", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setText(QtGui.QApplication.translate("Q7FormWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
         self.bApply.setText(QtGui.QApplication.translate("Q7FormWindow", "Apply", None, QtGui.QApplication.UnicodeUTF8))
 

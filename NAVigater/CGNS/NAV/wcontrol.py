@@ -56,7 +56,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.I_TREE=QIcon(QPixmap(":/images/icons/tree-load.gif"))
         self.I_VTK=QIcon(QPixmap(":/images/icons/vtk.gif"))
         self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.gif"))
-        self.I_FORM=QIcon(QPixmap(":/images/icons/form-open.gif"))
+        self.I_FORM=QIcon(QPixmap(":/images/icons/form.gif"))
         self.I_SELECT=QIcon(QPixmap(":/images/icons/operate-list.gif"))
         self.controlTable.setItemDelegate(Q7ControlItemDelegate(self))
         self.signals=Q7SignalPool()
@@ -71,7 +71,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.copyPasteBuffer=None
     def clickedLine(self,*args):
         if (self.controlTable.lastButton==Qt.LeftButton):
-            Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))
+            #Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))
+            pass
         if (self.controlTable.lastButton==Qt.RightButton):
             self.updateMenu(self.controlTable.currentIndex())
             self.popupmenu.popup(self.controlTable.lastPos)

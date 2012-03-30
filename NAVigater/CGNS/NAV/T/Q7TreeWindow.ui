@@ -231,7 +231,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="bPreviousMark">
+      <widget class="QToolButton" name="bMarkAll">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -245,40 +245,14 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Select previous marked node</string>
+        <string>Mark all nodes</string>
        </property>
        <property name="text">
         <string>...</string>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/flag-bwd.gif</normaloff>:/images/icons/flag-bwd.gif</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="bNextMark">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Select next marked node</string>
-       </property>
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/flag-fwd.gif</normaloff>:/images/icons/flag-fwd.gif</iconset>
+         <normaloff>:/images/icons/flag-all.gif</normaloff>:/images/icons/flag-all.gif</iconset>
        </property>
       </widget>
      </item>
@@ -335,32 +309,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="bMarkAll">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Mark all nodes</string>
-       </property>
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/flag-all.gif</normaloff>:/images/icons/flag-all.gif</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QToolButton" name="bMarksAsList">
        <property name="minimumSize">
         <size>
@@ -403,7 +351,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_12">
+      <widget class="QToolButton" name="bCheck">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -429,7 +377,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_14">
+      <widget class="QToolButton" name="bClearChecks">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -455,7 +403,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_13">
+      <widget class="QToolButton" name="bCheckList">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -469,14 +417,14 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Save check diagnostics</string>
+        <string>Open diagnostics list</string>
        </property>
        <property name="text">
         <string>...</string>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/check-save.gif</normaloff>:/images/icons/check-save.gif</iconset>
+         <normaloff>:/images/icons/check-list.gif</normaloff>:/images/icons/check-list.gif</iconset>
        </property>
       </widget>
      </item>
@@ -486,7 +434,7 @@
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
+        <enum>QSizePolicy::Expanding</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -497,7 +445,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_15">
+      <widget class="QPushButton" name="bPatternView">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -511,7 +459,33 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Open links window</string>
+        <string>Open Patterns view</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/pattern-view.gif</normaloff>:/images/icons/pattern-view.gif</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="bLinkView">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Open Links view</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -523,7 +497,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="bOpenOperateView">
+      <widget class="QToolButton" name="bQueryView">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -537,7 +511,7 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Open queries window</string>
+        <string>Open Queries view</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -549,7 +523,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_17">
+      <widget class="QToolButton" name="bCheckView">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -563,7 +537,7 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Open check window</string>
+        <string>Open Check view</string>
        </property>
        <property name="text">
         <string>...</string>
@@ -575,23 +549,7 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_6">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bForm">
+      <widget class="QPushButton" name="bFormView">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -611,7 +569,7 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Open form view on selected node</string>
+        <string>Open Form view on selected node</string>
        </property>
        <property name="text">
         <string/>
@@ -623,7 +581,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="bVTK">
+      <widget class="QToolButton" name="bVTKView">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -649,9 +607,38 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="bToolsView">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Open Tools view</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/tools.gif</normaloff>:/images/icons/tools.gif</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer_7">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Minimum</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -779,6 +766,58 @@
       </spacer>
      </item>
      <item>
+      <widget class="QToolButton" name="bPreviousMark">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Select previous marked node</string>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/node-sids-opened.gif</normaloff>:/images/icons/node-sids-opened.gif</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="bNextMark">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Select next marked node</string>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/node-sids-closed.gif</normaloff>:/images/icons/node-sids-closed.gif</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QComboBox" name="cQuery">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -802,12 +841,15 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Run Query</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/undo-last-modification.gif</normaloff>:/images/icons/undo-last-modification.gif</iconset>
+         <normaloff>:/images/icons/operate-execute.gif</normaloff>:/images/icons/operate-execute.gif</iconset>
        </property>
       </widget>
      </item>
