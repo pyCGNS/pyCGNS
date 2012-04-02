@@ -55,7 +55,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._hpix=QIcon(QPixmap(":/images/icons/hidden.gif"))
       self._T=self._fgprint.tree
       self._selected=[]
+      self._picked=None
       self._hidden=[]
+      self.wact=None
       self._cacheActor={}
       self._tmodel=tmodel
       self.color=(0,0,0)
@@ -115,15 +117,15 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     self.camAxes.SetPosition(-d*x/dproj, -d*y/dproj, -d*z/dproj)
     self.renAxes.ResetCameraClippingRange()
 
-  def SyncCameras2(self,ren,event):
-    cam=ren.GetActiveCamera()
-    self.camforRen.SetViewUp(cam.GetViewUp())
-    self.camforRen.SetFocalPoint(cam.GetFocalPoint())
-    self.camforRen.SetPosition(cam.GetPosition())
-    self.camforRen.SetClippingRange(cam.GetClippingRange())
-    self.camforRen.SetParallelScale(cam.GetParallelScale())
-    self.camforRen.SetViewAngle(cam.GetViewAngle())
-    self.camforRen.SetParallelProjection(cam.GetParallelProjection())
+##   def SyncCameras2(self,ren,event):
+##     cam=ren.GetActiveCamera()
+##     self.camforRen.SetViewUp(cam.GetViewUp())
+##     self.camforRen.SetFocalPoint(cam.GetFocalPoint())
+##     self.camforRen.SetPosition(cam.GetPosition())
+##     self.camforRen.SetClippingRange(cam.GetClippingRange())
+##     self.camforRen.SetParallelScale(cam.GetParallelScale())
+##     self.camforRen.SetViewAngle(cam.GetViewAngle())
+##     self.camforRen.SetParallelProjection(cam.GetParallelProjection())
 
   def findObjectPath(self,selected):
     return self._parser.getPathFromObject(selected)
@@ -150,14 +152,15 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                                        self._fgprint.filename)
     self.leave() 
 
-  def foregroundRenderer(self):
-    self.camforRen = vtk.vtkCamera()
-    self.camforRen.ParallelProjectionOn()
-    self.renforRen = vtk.vtkRenderer()
-    self.renforRen.InteractiveOff()
-    self.renforRen.SetActiveCamera(self.camforRen)
-    self.renforRen.SetViewport(0, 0, 1, 1)
-    self.renforRen.SetBackground(1,1,1)      
+##   def foregroundRenderer(self):
+##     self.camforRen = vtk.vtkCamera()
+##     self.camforRen.ParallelProjectionOn()
+##     self.renforRen = vtk.vtkRenderer()
+##     self.renforRen.InteractiveOff()
+##     self.renforRen.SetActiveCamera(self.camforRen)
+##     self.renforRen.SetViewport(0, 0, 1, 1)
+##     self.renforRen.SetBackground(1,1,1) 
+    
 
   def addAxis(self):
     self.camAxes = vtk.vtkCamera()
@@ -245,6 +248,14 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.xLabel.GetProperty().SetColor(self.color)
       self.yLabel.GetProperty().SetColor(self.color)
       self.zLabel.GetProperty().SetColor(self.color)
+
+  def wire(self):
+      actors=self._vtkren.GetActors() 
+      actors.InitTraversal()
+      actor=actors.GetNextItem()
+      while actor:
+        actor.GetProperty().SetRepresentationToWireframe()
+        actor = actors.GetNextItem()
     
   def addPicker(self):
       self.textMapper = vtk.vtkTextMapper()
@@ -262,6 +273,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.picker.AddObserver("EndPickEvent",self.annotatePick)
 
   def annotatePick(self,object,event):
+      if (self.wact==1):
+          self.wire()
+          self.wact=0
       if (self.controlKey!=1):
         self._selected=[]
         self.PropPicked=0
@@ -290,8 +304,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           a=pickAct.GetNextItem()
         self.PropPicked=0
         self.controlKey=0
-        self.highlightProp=1
-        
+        self.highlightProp=1   
 
   def wCGNSTree(self,T,zlist):
 
@@ -305,16 +318,16 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       
       self._waxs=self.addAxis()
       self._vtkwin=self._vtk.GetRenderWindow()
-      self._vtkwin.SetNumberOfLayers(3)
+      self._vtkwin.SetNumberOfLayers(2)
       self._vtkren.SetLayer(0)
-      self._waxs.SetLayer(2)
+      self._waxs.SetLayer(1)
 
-      self.foregroundRenderer()
-      self.renforRen.SetLayer(1)
+##       self.foregroundRenderer()
+##       self.renforRen.SetLayer(1)
 
       self._vtk.GetRenderWindow().AddRenderer(self._vtkren)
       self._vtk.GetRenderWindow().AddRenderer(self._waxs)
-      self._vtk.GetRenderWindow().AddRenderer(self.renforRen)
+##       self._vtk.GetRenderWindow().AddRenderer(self.renforRen)
       
       self._parser=Mesh(T,zlist)
       self._selected=[]
@@ -337,8 +350,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtkren.GetActiveCamera().Elevation(0.0)
       self._vtkren.GetActiveCamera().Azimuth(90.0)
       self._vtkren.GetActiveCamera().Zoom(1.0)
-##       self._vtkren.GetActiveCamera().OrthogonalizeViewUp()
-##       self._vtkren.GetActiveCamera().SetViewAngle(0)
       self._vtkren.ResetCamera()
                         
       (self.vx,self.vy,self.vz)=self._vtkren.GetActiveCamera().GetViewUp()
@@ -358,12 +369,14 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.fillCurrentPath()
       
       self._vtkren.AddObserver("StartEvent", self.SyncCameras)
-      self._vtkren.AddObserver("StartEvent", self.SyncCameras2)
+##       self._vtkren.AddObserver("StartEvent", self.SyncCameras2)
       
       self._p_wire=True
       self.setColors(True)
 
       self._bindings={ 's'     :self.b_surf,
+                       'q'     :self.b_surfwire,
+                       'a'     :self.wireActor,
                        'w'     :self.b_wire,
                        'r'     :self.resetCam,
                        'd'     :self.hideActor}
@@ -586,7 +599,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       (px,py,pz)=(fp[0],fp[1],fp[2]-distance)
     camera.SetViewUp(vx,vy,vz)
     camera.SetPosition(px,py,pz)
-    camera.SetViewAngle(0)
     self._vtkren.ResetCameraClippingRange()
     self._vtkren.Render()
     self._waxs.Render()
@@ -606,7 +618,24 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       actor = actors.GetNextItem()
       while actor:
           actor.GetProperty().SetRepresentationToSurface()
+          actor.GetProperty().EdgeVisibilityOff()
           actor = actors.GetNextItem()
+      self._vtk.GetRenderWindow().Render()
+
+  def b_surfwire(self,pos):       
+      if (not self._p_wire):
+          self.b_wire(pos)
+          return
+      self._p_wire=False
+      actors = self._vtkren.GetActors()
+      actors.InitTraversal()
+      actor = actors.GetNextItem()
+      while actor:
+          actor.GetProperty().SetRepresentationToSurface()
+          actor.GetProperty().EdgeVisibilityOn()
+          actor = actors.GetNextItem()
+      if (not self.OutlineActor is None):
+          self.OutlineActor.GetProperty().SetRepresentationToWireframe()
       self._vtk.GetRenderWindow().Render()
       
   def b_wire(self,pos):  
@@ -622,10 +651,20 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           actor = actors.GetNextItem()
       self._vtk.GetRenderWindow().Render()
 
+  def wireActor(self,pos):
+      if (self._selected==[]): return
+      self.wire()
+      for i in self._selected:
+          i[1].GetProperty().SetRepresentationToSurface()
+          i[1].GetProperty().EdgeVisibilityOff()
+      self._vtk.GetRenderWindow().Render()
+      self.wact=1
+
   def hideActor(self,pos):
       if (not self._currentactor is None):
           if (self._currentactor[0:2] in self._selected):
               self._currentactor[1].VisibilityOff()
+              self._currentactor[3].VisibilityOff()
               self._selected.remove(self._currentactor[0:2])
               self._hidden.append(self._currentactor[0:2])
               actor=self.b_next()
@@ -648,11 +687,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def changeCurrentActor(self,atp,combo=True):
       path =atp[0]
       actor=atp[1]
-      if (not combo):self.setCurrentPath(path)
+      if (not combo):self.setCurrentPath(path)         
       if (not self._currentactor is None):
-          act=self._currentactor[1]
+          act=self._currentactor[3]
           col=self._currentactor[2]
-          self.renforRen.RemoveActor(act)
+          self._vtkren.RemoveActor(act)
           act.GetProperty().SetColor(col)
       if (actor is None):
           self.cCurrentPath.setCurrentIndex(0)
@@ -661,11 +700,15 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
               self.PickedRenderer=None
               self.CurrentRenderer.Render()
               self.CurrentRenderer.GetRenderWindow().Render()
-          return
+          return      
       color=actor.GetProperty().GetColor()
-      actor.GetProperty().SetColor(1,0,0)
-      self.renforRen.AddActor(actor)
-      self.CurrentRenderer=self.renforRen
+      actor2=vtk.vtkActor()
+      actor2.ShallowCopy(actor)
+      actor2.PickableOff()
+      actor2.DragableOff()
+      actor2.GetProperty().SetColor(1,0,0)
+      self._vtkren.AddActor(actor2)
+      self.CurrentRenderer=self._vtkren
       self.Outline=vtk.vtkOutlineSource()
       self.OutlineMapper=vtk.vtkPolyDataMapper()
       self.OutlineMapper.SetInput(self.Outline.GetOutput())
@@ -688,15 +731,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
               self.PickedRenderer=self.CurrentRenderer
           self.Outline.SetBounds(actor.GetBounds())
       self._iren.Render()
-      self._currentactor=[path,actor,color]
-
+      self._currentactor=[path,actor,color,actor2]
+      
 class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
     def __init__(self,parent):
       self._parent=parent
-##       self.AddObserver("KeyPressEvent", self.CharCallback)
-##       self.AddObserver("KeyPressEvent",self.setPicker)
-##       self.AddObserver("KeyReleaseEvent",self.setPicker)
-##       self.AddObserver("CharEvent",self.setPicker)
       self.AddObserver("CharEvent",self.keycode)      
       self.PickedRenderer=None
       self.OutlineActor=None
@@ -707,10 +746,10 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
         self.rwi=self.GetInteractor()      
         keycode=self.rwi.GetKeyCode()
         control=self.rwi.GetControlKey()
-        vtkkeys=['f','F','s','S','w','W','r','R']
+        vtkkeys=['f','F','r','R']
         if keycode in vtkkeys:
             self.OnChar()
-        keys={'p':self.setPick,'d':self.CharCallback}
+        keys={'p':self.setPick,'d':self.CharCallback,'s':self.CharCallback,'q':self.CharCallback,'a':self.CharCallback}
         if (keys.has_key(keycode)):
             keys[keycode]()
         if (control==1): self._parent.controlKey=1
@@ -744,33 +783,6 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
       if (control==1): self._parent.controlKey=1     
       return
     
-##     def setPicker(self,*args):
-##       self.rwi=self.GetInteractor()
-##       keycode=self.rwi.GetKeyCode()
-##       if (keycode=='p'):
-##         self.rwi.SetKeyCode('')
-##         act=None
-##         path=None
-##         eventPos=self.rwi.GetEventPosition()
-##         self.FindPokedRenderer(eventPos[0],eventPos[1])
-##         self.rwi.StartPickCallback()
-##         self.rwi.SetPicker(self._parent.picker)
-##         if (not self._parent.picker is None):
-##           self._parent.picker.Pick(eventPos[0],eventPos[1], 
-##                        0.0,self.GetCurrentRenderer())
-##           p=self._parent.picker.GetPath()
-##           if (p is None):
-##               self._parent.changeCurrentActor([None,None])
-##               self._parent.PropPicked=0
-##           else:
-##               actor=p.GetFirstNode().GetViewProp()
-##               path=self._parent.findObjectPath(actor.GetMapper().GetInput())
-##               self._parent.changeCurrentActor([path,actor])
-##               self._parent.PropPicked=1
-##           self._parent.fillCurrentPath()
-##           if (path is not None):
-##             self._parent.setCurrentPath(path)
-##         self.rwi.EndPickCallback()
         
 
 

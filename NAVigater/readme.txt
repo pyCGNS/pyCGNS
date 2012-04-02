@@ -210,7 +210,27 @@ at the place where was the |logo32| icon.
 When you use the |logo4b| icon, you expand all the nodes one level up while when you click on 
 the |logo32| icon, you expand only the wanted node one level up.
 
-.. image:: ../doc/images/cgnsnav_im84.png 
+If you click on the |logo13b| icon, the ``form view`` of the selected node appears on the screen:
+
+.. image:: ../doc/images/cgnsnav_im85.png 
+   :width: 19cm
+
+
+.. |logo16b| image:: ../doc/images/cgnsnav_im86.png
+
+As you can observe it, the node name, the node type, the node path, the node data, the node shape and the values
+defined in the selected node are displayed in the ``form view`` . You can also resize the table by checking
+|logo16b| the case. The table's dimensions are adjusted so that the column's length is equal to the string's length displayed,
+like below:
+
+.. image:: ../doc/images/cgnsnav_im87.png  
+
+You can open the ``queries view`` by clicking on the |logo12b| icon and this view appears:
+
+.. image:: ../doc/images/cgnsnav_im88.png
+
+
+*Modify the CGNS tree*
 
 A mouse right button simple click on a selected node allows you to open the popup menu displayed below: 
 
@@ -218,7 +238,6 @@ A mouse right button simple click on a selected node allows you to open the popu
 
 This menu gives you access to some function such as ``Open a view`` and ``Copy`` , ``Cut`` , ``Paste`` a node.
 These functions have keyboards shortcuts listed below.
- 
 
 *Key bindings*
 
@@ -237,8 +256,6 @@ These functions have keyboards shortcuts listed below.
  +-------------------+---------------------------------------------------------------------------+
  | ``Ctrl`` + ``Y``  | Paste the copied node as child node of the selected node.                 |
  +-------------------+---------------------------------------------------------------------------+
-
-*Modify the CGNS tree*
 
 The ``tree view`` allows to perform modifications in the CGNS trees. It supports the
 ``Copy``, ``Cut``, ``Paste`` functions. You can copy a sub-tree of a view and paste it into 
@@ -265,6 +282,7 @@ opened by clicking in the entry field to change the node type, like below:
 
 .. |logo13b| image:: ../doc/images/cgnsnav_im82.png
 
+The ``Cut`` function acts as the ``Copy`` function with the difference that the selected node is removed from the ``tree view``.
 
 *To deal with the CGNS tree*
 
@@ -314,7 +332,7 @@ The mouse bindings and the corresponding actions are:
 
 The ``tree view`` allows you to choose all the elements which have the same ``SIDS type``.
 For example, if you want to select all the elements whose ``SIDS type`` is ``BC_t``, select this
-type in the list of the box located in the bottom right-hand corner of the ``tree view`` and click the |logo22|
+type in the drop-down list located in the bottom right-hand corner of the ``tree view`` and click the |logo22|
 icon in order to apply the selection.
 
 .. image:: ../doc/images/cgnsnav_im62.png
