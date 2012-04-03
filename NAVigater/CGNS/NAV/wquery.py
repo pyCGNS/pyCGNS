@@ -19,6 +19,9 @@ import CGNS.PAT.cgnskeywords as CGK
 class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
     def __init__(self,control,fgprint):
         Q7Window.__init__(self,Q7Window.VIEW_SELECT,control,'/',fgprint)
+    def updateTreeStatus(self):
+        print 'sel up'
+        
 
 # -----------------------------------------------------------------
 class Q7QueryTableItemDelegate(QStyledItemDelegate):
@@ -43,6 +46,8 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
                         self.changeCurrentQuery)
         self.resizeAll()
         self.showQuery(self.querytablemodel.getCurrentQuery())
+    def updateTreeStatus(self):
+        print 'query up'
     def queriessave(self):
         self.querytablemodel.saveUserQueries()
     def changeCurrentQuery(self,*args):

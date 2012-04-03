@@ -46,6 +46,8 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.bClose.clicked.connect(self.reject)
         for dt in node.sidsDataType(all=True):
             self.cDataType.addItem(dt)
+    def updateTreeStatus(self):
+        print 'form up'
     def accept(self):
         pass
     def reject(self):

@@ -25,7 +25,7 @@ CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater',
 
 modList=CGNSmodList[:]
 modList.remove('DATaTracer')
-modList.remove('VALidater')
+#modList.remove('VALidater')
 
 solist='m:'
 lolist=["without-mod=","single-mod=","prefix="]

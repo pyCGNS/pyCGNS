@@ -14,7 +14,7 @@ from CGNS.NAV.wvtk import Q7VTK
 from CGNS.NAV.wquery import Q7Query, Q7SelectionList
 from CGNS.NAV.mquery import Q7QueryTableModel
 from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem
-from CGNS.NAV.wfingerprint import Q7Window
+from CGNS.NAV.wfingerprint import Q7Window,Q7fingerPrint
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import CGNS.PAT.cgnskeywords as CGK
 
@@ -44,6 +44,16 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           editor=QComboBox(parent)
           editor.transgeometry=(xs,ys,ws,hs)
           itemslist=index.internalPointer().sidsTypeList()
+          editor.addItems(itemslist)
+          editor.setCurrentIndex(0)
+          editor.installEventFilter(self)
+          self.setEditorData(editor,index)
+          return editor
+        if (index.column()==5):
+          self._mode=CELLCOMBO
+          editor=QComboBox(parent)
+          editor.transgeometry=(xs,ys,ws,hs)
+          itemslist=index.internalPointer().sidsDataTypeList()
           editor.addItems(itemslist)
           editor.setCurrentIndex(0)
           editor.installEventFilter(self)
@@ -111,6 +121,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         for q in qlist: self.cQuery.addItem(q)
         ix=self.cQuery.findText(self.querymodel.getCurrentQuery())
         if (ix!=-1): self.cQuery.setCurrentIndex(ix)
+        self.bSave.clicked.connect(self.savetree)
         self.bApply.clicked.connect(self.forceapply)
         self.bClose.clicked.connect(self.leave)
         self.bZoomIn.clicked.connect(self.expandLevel)
@@ -127,6 +138,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bVTKView.clicked.connect(self.vtkview)
         self.bQueryView.clicked.connect(self.queryview)
         self.bScreenShot.clicked.connect(self.screenshot)
+        self.bCheck.clicked.connect(self.check)
+        self.bCheckList.clicked.connect(self.checklist)
+        self.bClearChecks.clicked.connect(self.clearchecks)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.treeview.setModel(self._fgprint.model)
@@ -134,6 +148,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.treeview.setControlWindow(self,self._fgprint.model)
         if (self._control.transientRecurse): self.expandMinMax()
         if (self._control.transientVTK):     self.vtkview()
+    def savetree(self):
+        if ((self._fgprint.converted) or
+            not (self._fgprint.isModified())): return
+        self._fgprint.modifiedTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
+        self.updateTreeStatus()
     def screenshot(self):
         sshot=QPixmap.grabWindow(self.treeview.winId())
         sshot.save('/tmp/foo.png','png')
@@ -248,6 +267,14 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.treeview.model().markExtendToList(sl)
             self.treeview.model().updateSelected()
         self.treeview.refreshView()
+    def check(self):
+        self.treeview.model().checkSelected()
+        self.treeview.refreshView()
+    def checklist(self):
+        pass
+    def clearchecks(self):
+        self.treeview.model().checkClear()
+        self.treeview.refreshView()
     def selectionlist(self):
         slist=Q7SelectionList(self._control,self._fgprint)
         slist.show()
@@ -292,5 +319,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         pass
     def leave(self):
         self.close()
+    def updateTreeStatus(self):
+        if (self._fgprint.converted): return
+        if (self._fgprint._status==Q7fingerPrint.STATUS_MODIFIED):
+            self.bSave.setIcon(self.I_MODIFIED)
+        else:
+            self.bSave.setIcon(self.I_UNCHANGED)
         
 # -----------------------------------------------------------------

@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/check-fail.gif</file>
+    <file>icons/check-warn.gif</file>
+    <file>icons/check-ok.gif</file>
     <file>icons/form.gif</file>
     <file>icons/tools.gif</file>
     <file>icons/check-list.gif</file>
