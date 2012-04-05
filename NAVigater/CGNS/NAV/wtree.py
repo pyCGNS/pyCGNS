@@ -181,7 +181,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.lineEdit.insert(node.sidsPath())
     def pop1(self):
         self.formview()
-    def pop2(self):
+    def openSubTree(self):
         self.busyCursor()
         node=self.lastNodeMenu.internalPointer().sidsPath()
         child=Q7Tree(self._control,node,self._fgprint)
@@ -221,7 +221,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                    ("Mark/unmark node",self.marknode,'Space'),
                    None,
                    ("Open form",self.pop1,'Ctrl+F'),
-                   ("Open view",self.pop2,'Ctrl+W'),
+                   ("Open view",self.openSubTree,'Ctrl+W'),
                    None,
                    ("Copy",self.mcopy,'Ctrl+C'),
                    ("Cut",self.mcut,'Ctrl+X'),

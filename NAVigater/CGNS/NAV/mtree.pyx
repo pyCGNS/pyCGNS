@@ -172,7 +172,7 @@ class Q7TreeView(QTreeView):
           elif (kval==KEYMAPPING[OPENFORM]):
               self._parent.formview()
           elif (kval==KEYMAPPING[OPENVIEW]):
-              self._parent.vtkview()
+              self._parent.openSubTree()
           self.setLastEntered()
           self.scrollTo(nix)
     def refreshView(self):

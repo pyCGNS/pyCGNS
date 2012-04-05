@@ -77,9 +77,7 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.model=Q7TableModel(self._node,self.showparams)
         self.tableView.setModel(self.model)
         self.tableView.setStyleSheet(self._stylesheet)
-        QObject.connect(self.cMinimize,
-                        SIGNAL("stateChanged(int)"),
-                        self.minimizeCells)
+        self.bMinimize.clicked.connect(self.minimizeCells)
         QObject.connect(self.tableView,
                         SIGNAL("clicked(QModelIndex)"),
                         self.clickedNode)
@@ -99,9 +97,8 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         tp=self.model.getEnumeratedValueIfPossible(index)
         if (tp): self.setEnumerateValue(*tp)
     def minimizeCells(self,*args):
-        if (self.cMinimize.isChecked()):
-            self.tableView.resizeColumnsToContents()
-            self.tableView.resizeRowsToContents()
+        self.tableView.resizeColumnsToContents()
+        self.tableView.resizeRowsToContents()
     def setCurrentType(self,ntype):
         idx=self.eType.findText(ntype)
         self.eType.setCurrentIndex(idx)

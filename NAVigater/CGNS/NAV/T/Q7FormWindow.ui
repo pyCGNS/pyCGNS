@@ -52,14 +52,14 @@
      <bool>true</bool>
     </property>
     <attribute name="title">
-     <string>Data</string>
+     <string>Table</string>
     </attribute>
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
        <x>9</x>
        <y>9</y>
-       <width>27</width>
+       <width>32</width>
        <height>16</height>
       </rect>
      </property>
@@ -116,9 +116,9 @@
     <widget class="QLineEdit" name="eItems">
      <property name="geometry">
       <rect>
-       <x>50</x>
+       <x>49</x>
        <y>32</y>
-       <width>171</width>
+       <width>172</width>
        <height>20</height>
       </rect>
      </property>
@@ -159,19 +159,6 @@
      </property>
      <property name="text">
       <string>Size</string>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="cMinimize">
-     <property name="geometry">
-      <rect>
-       <x>400</x>
-       <y>5</y>
-       <width>81</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Minimize</string>
      </property>
     </widget>
     <widget class="QComboBox" name="cEnumType">
@@ -225,9 +212,34 @@
       <rect>
        <x>266</x>
        <y>32</y>
-       <width>212</width>
+       <width>180</width>
        <height>22</height>
       </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="bMinimize">
+     <property name="geometry">
+      <rect>
+       <x>453</x>
+       <y>30</y>
+       <width>25</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>25</width>
+       <height>25</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>25</width>
+       <height>25</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>fit</string>
      </property>
     </widget>
    </widget>

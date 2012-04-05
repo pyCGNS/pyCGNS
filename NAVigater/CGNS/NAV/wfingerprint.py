@@ -28,11 +28,11 @@ class Q7Window(QWidget,object):
     def __init__(self,vtype,control,path,fgprint):
         QWidget.__init__(self,None)
         self._stylesheet=None
-        self.I_UNCHANGED=QIcon(QPixmap(":/images/icons/save-done.gif"))
+        self.I_UNCHANGED=QIcon(QPixmap(":/images/icons/save-inactive.gif"))
         self.I_MODIFIED=QIcon(QPixmap(":/images/icons/save.gif"))
         self.I_CONVERTED=QIcon(QPixmap(":/images/icons/save-converted.gif"))
         self.I_TREE=QIcon(QPixmap(":/images/icons/tree-load.gif"))
-        self.I_VTK=QIcon(QPixmap(":/images/icons/vtk.gif"))
+        self.I_VTK=QIcon(QPixmap(":/images/icons/vtkview.gif"))
         self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.gif"))
         self.I_FORM=QIcon(QPixmap(":/images/icons/form.gif"))
         self.I_SELECT=QIcon(QPixmap(":/images/icons/operate-list.gif"))

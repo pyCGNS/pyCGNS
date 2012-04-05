@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
-# Created: Fri Mar 30 11:44:58 2012
+# Created: Wed Apr  4 11:27:30 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -24,7 +24,7 @@ class Ui_Q7TreeWindow(object):
         self.bSave.setMinimumSize(QtCore.QSize(25, 25))
         self.bSave.setMaximumSize(QtCore.QSize(25, 25))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/save-done.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/save-inactive.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bSave.setIcon(icon1)
         self.bSave.setObjectName("bSave")
         self.horizontalLayout.addWidget(self.bSave)
