@@ -24,13 +24,18 @@ class Q7Window(QWidget,object):
     VIEW_FORM='F'
     VIEW_QUERY='Q'
     VIEW_SELECT='S'
-    STATUS_UNCHANGED='U'
-    STATUS_MODIFIED='M'
-    STATUS_CONVERTED='C'
     HISTORYLASTKEY='///LAST///'
     def __init__(self,vtype,control,path,fgprint):
         QWidget.__init__(self,None)
         self._stylesheet=None
+        self.I_UNCHANGED=QIcon(QPixmap(":/images/icons/save-inactive.gif"))
+        self.I_MODIFIED=QIcon(QPixmap(":/images/icons/save.gif"))
+        self.I_CONVERTED=QIcon(QPixmap(":/images/icons/save-converted.gif"))
+        self.I_TREE=QIcon(QPixmap(":/images/icons/tree-load.gif"))
+        self.I_VTK=QIcon(QPixmap(":/images/icons/vtkview.gif"))
+        self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.gif"))
+        self.I_FORM=QIcon(QPixmap(":/images/icons/form.gif"))
+        self.I_SELECT=QIcon(QPixmap(":/images/icons/operate-list.gif"))
         if (vtype==Q7Window.VIEW_TREE): self._stylesheet=Q7TREEVIEWSTYLESHEET
         if (vtype==Q7Window.VIEW_FORM): self._stylesheet=Q7TABLEVIEWSTYLESHEET
         if (vtype==Q7Window.VIEW_CONTROL):
@@ -54,11 +59,19 @@ class Q7Window(QWidget,object):
             self.bBackControl.clicked.connect(self.backcontrol)
         except AttributeError:
             pass
+        self._readonly=False
     def validateOption(self,name,value):
+        #if (name[0]=='_'): return False
         return True
     def getOptions(self):
-        self._options=OCTXT._readOptions(self)
-        if (self._options is None): self._options=OCTXT()
+        try:
+            if (self._options is None): self._options={}
+        except AttributeError:
+            self._options={}
+        user_options=OCTXT._readOptions(self)
+        for k in dir(OCTXT):   self.setOptionValue(k,getattr(OCTXT,k))
+        if (user_options is not None):
+            for k in user_options: self.setOptionValue(k,user_options[k])
         return self._options
     def setOptions(self):
         OCTXT._writeOptions(self)
@@ -106,10 +119,7 @@ class Q7Window(QWidget,object):
     def addChildWindow(self):
         if (self._fgprint is None): return 0
         self._index=self._fgprint.addChild(self._vtype,self)
-        if self._fgprint.converted:
-            l=[Q7Window.STATUS_CONVERTED,self._vtype,'%.3d'%self._index]
-        else:
-            l=[Q7Window.STATUS_UNCHANGED,self._vtype,'%.3d'%self._index]
+        l=[self._fgprint._status,self._vtype,'%.3d'%self._index]
         l+=[self._fgprint.filedir,self._fgprint.filename,self._path]
         self._control.addLine(l)
         return self._index
@@ -125,19 +135,25 @@ class Q7Window(QWidget,object):
     def _T(self,msg):
         if (self.getOptionValue('NAVTrace')):
             print '### CGNS.NAV:', msg
-
 # -----------------------------------------------------------------
 class Q7fingerPrint:
     __viewscounter=0
     __extension=[]
+    STATUS_UNCHANGED='U'
+    STATUS_MODIFIED='M'
+    STATUS_CONVERTED='C'
+    STATUS_LIST=(STATUS_UNCHANGED,STATUS_MODIFIED,STATUS_CONVERTED)
     @classmethod
-    def fileconversion(cls,fdir,filein):
-        fileout=OCTXT.TemporaryDirectory+'/'+filein+'.hdf'
+    def fileconversion(cls,fdir,filein,control):
+        fileout=control.getOptionValue('TemporaryDirectory')+'/'+filein+'.hdf'
         count=1
         while (os.path.exists(fileout)):
-            fileout=OCTXT.TemporaryDirectory+'/'+filein+'.%.3d.hdf'%count
+            fileout=control.getOptionValue('TemporaryDirectory')+\
+                     '/'+filein+'.%.3d.hdf'%count
             count+=1
-        com='(cd %s; %s -h %s %s)'%(fdir,OCTXT.ADFConversionCom,filein,fileout)
+        com='(cd %s; %s -h %s %s)'%(fdir,
+                                    control.getOptionValue('ADFConversionCom'),
+                                    filein,fileout)
         os.system(com)
         return fileout
     @classmethod
@@ -146,14 +162,14 @@ class Q7fingerPrint:
         f=selectedfile
         (filedir,filename)=(os.path.normpath(os.path.dirname(f)),
                             os.path.basename(f))
-        slp=OCTXT.LinkSearchPathList
+        slp=control.getOptionValue('LinkSearchPathList')
         slp+=[filedir]
         if (   (os.path.splitext(filename)[1]=='.cgns')
-            and OCTXT.ConvertADFFiles):
-            f=cls.fileconversion(filedir,filename)
+            and control.getOptionValue('_ConvertADFFiles')):
+            f=cls.fileconversion(filedir,filename,control)
             kw['converted']=True
         flags=CGNS.MAP.S2P_DEFAULT
-        if (OCTXT.CHLoneTrace): flags|=CGNS.MAP.S2P_TRACE
+        if (control.getOptionValue('CHLoneTrace')): flags|=CGNS.MAP.S2P_TRACE
         try:
             (tree,links)=CGNS.MAP.load(f,flags,lksearch=slp)
         except CGNS.MAP.error,e:
@@ -178,6 +194,13 @@ class Q7fingerPrint:
                 for (v,i) in x.views[vtype]:
                     if (i==int(idx)): return v
         return None
+    @classmethod
+    def getFingerPrint(cls,idx):
+        for x in cls.__extension:
+            for vtype in x.views:
+                for (v,i) in x.views[vtype]:
+                    if (i==int(idx)): return x
+        return None
     def __init__(self,control,filedir,filename,tree,links,**kw):
         self.filename=filename
         self.tree=tree
@@ -188,7 +211,11 @@ class Q7fingerPrint:
         self.views={}
         self.control=control
         self.converted=False
-        if (kw.has_key('converted')): self.converted=kw['converted']
+        self._status=Q7fingerPrint.STATUS_UNCHANGED
+        if (kw.has_key('converted')):
+            self.converted=kw['converted']
+            if (self.converted):
+                self._status=Q7fingerPrint.STATUS_CONVERTED
         Q7fingerPrint.__extension.append(self)
     def raiseControlView(self):
         self.control.raise_()
@@ -201,5 +228,18 @@ class Q7fingerPrint:
     def closeAllViews(self):
         for vtype in self.views:
             for (v,i) in self.views[vtype]: v.close()
-        
+    def isModified(self):
+        return (self._status==Q7fingerPrint.STATUS_MODIFIED)
+    def modifiedTreeStatus(self,status=None):
+        if (status not in Q7fingerPrint.STATUS_LIST): return
+        if (status is not None): self._status=status
+        elif (self._status==Q7fingerPrint.STATUS_UNCHANGED):
+            self._status=Q7fingerPrint.STATUS_MODIFIED
+        elif (self._status==Q7fingerPrint.STATUS_MODIFIED):
+            self._status=Q7fingerPrint.STATUS_UNCHANGED
+        elif (self._status==Q7fingerPrint.STATUS_CONVERTED):
+            self._status=Q7fingerPrint.STATUS_MODIFIED
+        else:
+            pass
+        self.control.updateViews()
 # -----------------------------------------------------------------

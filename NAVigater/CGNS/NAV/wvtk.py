@@ -96,7 +96,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       QObject.connect(self.cCurrentPath,
                       SIGNAL("currentIndexChanged(int)"),
                       self.changeCurrentPath)
-   
+
+  def updateTreeStatus(self):
+      print 'vtk up'
+     
   def screenshot(self):
     sshot=QPixmap.grabWindow(self.display.winId())
     sshot.save('/tmp/foo.png','png')

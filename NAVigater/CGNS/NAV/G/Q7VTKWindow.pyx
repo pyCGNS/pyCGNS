@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Thu Mar 29 11:18:21 2012
+# Created: Thu Apr  5 15:21:16 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -215,6 +215,11 @@ class Ui_Q7VTKWindow(object):
         self.horizontalLayout_2.addWidget(self.bReverse)
         spacerItem4 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem4)
+        self.tPointIndex = QtGui.QLineEdit(Q7VTKWindow)
+        self.tPointIndex.setObjectName("tPointIndex")
+        self.horizontalLayout_2.addWidget(self.tPointIndex)
+        spacerItem5 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem5)
         self.bPrevious = QtGui.QPushButton(Q7VTKWindow)
         self.bPrevious.setMinimumSize(QtCore.QSize(25, 25))
         self.bPrevious.setMaximumSize(QtCore.QSize(25, 25))

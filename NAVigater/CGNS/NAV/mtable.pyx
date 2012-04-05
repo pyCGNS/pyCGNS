@@ -34,10 +34,18 @@ class Q7TableModel(QAbstractTableModel):
         self.fmt="%-s"
         if (self.node.sidsDataType() in ['R4','R8']): self.fmt="% 0.12e"
         if (self.node.sidsDataType() in ['I4','I8']): self.fmt="%12d"
-        if (self.node.sidsDataType() not in ['MT','LK8']):
+        if (self.node.sidsDataType() not in ['MT','LK']):
+            if (self.node.sidsValueFortranOrder()):
+                self.flatindex=self.flatindex_F
+            else:
+                self.flatindex=self.flatindex_C
             self.flatarray=self.node.sidsValue().flat
         else:
             self.flatarray=None
+    def flatindex_C(self,index):
+        return index.row()*self.cs+index.column()
+    def flatindex_F(self,index):
+        return index.row()+index.column()*self.ls
     def columnCount(self, parent):
         return self.cs
     def rowCount(self, parent):
@@ -47,19 +55,19 @@ class Q7TableModel(QAbstractTableModel):
     def data(self, index, role):
         if (role!=Qt.DisplayRole): return None
         if (self.flatarray is None): return None
-        return self.fmt%self.flatarray[index.row()*self.cs+index.column()]
+        return self.fmt%self.flatarray[self.flatindex(index)]
     def flags(self, index):  
         if (not index.isValid()):  return Qt.NoItemFlags  
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable
     def getValue(self,index):
-        return self.flatarray[index.row()*self.cs+index.column()]
+        return self.flatarray[self.flatindex(index)]
     def getEnumeratedValueIfPossible(self,index):
         if (self.node.sidsType()==CGK.Elements_ts):
             if ((index.row()==0) and (index.column()==0)):
                 ev=CGK.ElementType_l
                 et=[s[:-1]+'t' for s in CGK.cgnsenums]
                 eti=et.index(CGK.ElementType_ts)
-                evi=self.flatarray[index.row()*self.cs+index.column()]
+                evi=self.flatarray[self.flatindex(index)]
                 return (et,ev,eti,evi)
         return None
 

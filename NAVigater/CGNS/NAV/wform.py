@@ -16,6 +16,17 @@ import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
+def divpairs(n):
+    d=n
+    l=[]
+    while (d != 0):
+        m=n//d
+        r=n%d
+        if (r==0): l+=[(d,m)]
+        d-=1
+    return l
+
+# -----------------------------------------------------------------
 class Q7TableItemDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         t=index.data(Qt.DisplayRole)
@@ -25,19 +36,18 @@ class Q7TableItemDelegate(QStyledItemDelegate):
 
 # -----------------------------------------------------------------
 class Q7Form(Q7Window,Ui_Q7FormWindow):
-    showas=['Array','Text','Python']
     def __init__(self,control,node,fgprint):
         Q7Window.__init__(self,Q7Window.VIEW_FORM,control,
                           node.sidsPath(),fgprint)
         self._node=node
         for t in self._node.sidsTypeList():
             self.eType.addItem(t)
-        for t in Q7Form.showas:
-            self.cShowAs.addItem(t)
         self.bApply.clicked.connect(self.accept)
         self.bClose.clicked.connect(self.reject)
         for dt in node.sidsDataType(all=True):
             self.cDataType.addItem(dt)
+    def updateTreeStatus(self):
+        print 'form up'
     def accept(self):
         pass
     def reject(self):
@@ -56,27 +66,39 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.eDims.setText(str(dims))
         self.setDataType(self._node)
         self.eItems.setText(str(its))
-        self.ls=dims[0]
-        self.cs=1
-        if (len(dims)>1): self.cs=reduce(lambda x,y: x*y, dims[1:])
-        showparams={'cs':self.cs,'ls':self.ls,'mode':'IJ'}
-        self.model=Q7TableModel(self._node,showparams)
+        self.ls=1
+        self.cs=dims[0]
+        if (len(dims)>1): self.ls=reduce(lambda x,y: x*y, dims[1:])
+        self.showparams={'cs':self.cs,'ls':self.ls,'mode':'IJ'}
+        for dp in divpairs(self.cs*self.ls):
+           self.cRowColSize.addItem("%d x %d"%dp)
+        ix=self.cRowColSize.findText("%d x %d"%(self.cs,self.ls))
+        self.cRowColSize.setCurrentIndex(ix)
+        self.model=Q7TableModel(self._node,self.showparams)
         self.tableView.setModel(self.model)
         self.tableView.setStyleSheet(self._stylesheet)
-        QObject.connect(self.cMinimize,
-                        SIGNAL("stateChanged(int)"),
-                        self.minimizeCells)
+        self.bMinimize.clicked.connect(self.minimizeCells)
         QObject.connect(self.tableView,
                         SIGNAL("clicked(QModelIndex)"),
                         self.clickedNode)
-        #self.tableView.setItemDelegate(Q7TableItemDelegate(self))
+        QObject.connect(self.cRowColSize,
+                        SIGNAL("currentIndexChanged(int)"),
+                        self.resizeTable)
+    def resizeTable(self):
+        s=self.cRowColSize.currentText()
+        (r,c)=s.split('x')
+        self.cs=int(r)
+        self.ls=int(c)
+        self.showparams={'cs':self.cs,'ls':self.ls,'mode':'IJ'}
+        self.model=Q7TableModel(self._node,self.showparams)
+        self.tableView.setModel(self.model)
+        self.tableView.setStyleSheet(self._stylesheet)
     def clickedNode(self,index):
         tp=self.model.getEnumeratedValueIfPossible(index)
         if (tp): self.setEnumerateValue(*tp)
     def minimizeCells(self,*args):
-        if (self.cMinimize.isChecked()):
-            self.tableView.resizeColumnsToContents()
-            self.tableView.resizeRowsToContents()
+        self.tableView.resizeColumnsToContents()
+        self.tableView.resizeRowsToContents()
     def setCurrentType(self,ntype):
         idx=self.eType.findText(ntype)
         self.eType.setCurrentIndex(idx)

@@ -1,5 +1,17 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/toolsview.gif</file>
+    <file>icons/vtkview.gif</file>
+    <file>icons/save-inactive.gif</file>
+    <file>icons/check-fail.gif</file>
+    <file>icons/check-warn.gif</file>
+    <file>icons/check-ok.gif</file>
+    <file>icons/form.gif</file>
+    <file>icons/tools.gif</file>
+    <file>icons/check-list.gif</file>
+    <file>icons/diff-add.gif</file>
+    <file>icons/diff-changed.gif</file>
+    <file>icons/diff-del.gif</file>
     <file>icons/save-converted.gif</file>
     <file>icons/reverse.gif</file>
     <file>icons/hidden.gif</file>

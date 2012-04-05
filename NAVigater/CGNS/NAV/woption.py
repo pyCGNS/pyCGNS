@@ -20,29 +20,32 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
         self.bReset.clicked.connect(self.reset)
         self.getOptions()
     def getopt(self,name):
+        if (name[0]=='_'): return None
         return getattr(self,'__O_'+string.lower(name))
     def reset(self):
         self.getOptions()
         data=self._options
         for k in data:
-          if (type(data[k]) is bool):
-            if (data[k]): self.getopt(k).setCheckState(Qt.Checked)
-            else: self.getopt(k).setCheckState(Qt.Unchecked)
-          if (type(data[k]) is int):
-            self.getopt(k).setValue(data[k])
-          if (type(data[k]) is str):
-            self.getopt(k).setText(data[k])
-          if (type(data[k]) is list):
-            s=''
-            for l in data[k]:
-                s+='%s\n'%l
-            self.getopt(k).setPlainText(s)
+          if (k[0]!='_'):
+            if (type(data[k]) is bool):
+              if (data[k]): self.getopt(k).setCheckState(Qt.Checked)
+              else: self.getopt(k).setCheckState(Qt.Unchecked)
+            if (type(data[k]) is int):
+              self.getopt(k).setValue(data[k])
+            if (type(data[k]) is str):
+              self.getopt(k).setText(data[k])
+            if (type(data[k]) is list):
+              s=''
+              for l in data[k]:
+                  s+='%s\n'%l
+              self.getopt(k).setPlainText(s)
     def show(self):
         self.reset()
         super(Q7Option, self).show()
     def accept(self):
         data=self._options
         for k in data:
+          if (k[0]!='_'):
             if (type(data[k]) is bool):
                 if (self.getopt(k).isChecked()): data[k]=True
                 else: data[k]=False

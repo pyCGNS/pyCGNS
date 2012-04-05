@@ -98,7 +98,7 @@ class Q7OptionContext(object):
     MaxRecursionLevel=7
     ADFConversionCom='cgnsconvert'
     TemporaryDirectory='/tmp'
-    ConvertADFFiles=True
+    _ConvertADFFiles=True
     _ToolName='CGNS.NAV'
     _ToolVersion='v%s'%__vid__
     

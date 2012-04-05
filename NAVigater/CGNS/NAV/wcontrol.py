@@ -38,6 +38,7 @@ class Q7ControlItemDelegate(QStyledItemDelegate):
 class Q7Main(Q7Window, Ui_Q7ControlWindow):
     def __init__(self, parent=None):
         Q7Window.__init__(self,Q7Window.VIEW_CONTROL,self,None,None)
+        self.getHistory()
         self.bAbout.clicked.connect(self.about)
         self.bOptionView.clicked.connect(self.option)
         self.bTreeLoadLast.clicked.connect(self.loadlast)
@@ -48,30 +49,21 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         QObject.connect(self.controlTable,
                         SIGNAL("cellClicked(int,int)"),
                         self.clickedLine)
-        self.wOption=None
         self.initControlTable()
-        self.I_UNCHANGED=QIcon(QPixmap(":/images/icons/save-done.gif"))
-        self.I_MODIFIED=QIcon(QPixmap(":/images/icons/save.gif"))
-        self.I_CONVERTED=QIcon(QPixmap(":/images/icons/save-converted.gif"))
-        self.I_TREE=QIcon(QPixmap(":/images/icons/tree-load.gif"))
-        self.I_VTK=QIcon(QPixmap(":/images/icons/vtk.gif"))
-        self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.gif"))
-        self.I_FORM=QIcon(QPixmap(":/images/icons/form-open.gif"))
-        self.I_SELECT=QIcon(QPixmap(":/images/icons/operate-list.gif"))
         self.controlTable.setItemDelegate(Q7ControlItemDelegate(self))
         self.signals=Q7SignalPool()
         self.signals.loadFile.connect(self.loading)     
         self.signals.saveFile.connect(self.saving)
-        self.getHistory()
-        self.getOptions()
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.transientRecurse=False
         self.transientVTK=False
         self.copyPasteBuffer=None
+        self.wOption=None
     def clickedLine(self,*args):
         if (self.controlTable.lastButton==Qt.LeftButton):
-            Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))
+            #Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))
+            pass
         if (self.controlTable.lastButton==Qt.RightButton):
             self.updateMenu(self.controlTable.currentIndex())
             self.popupmenu.popup(self.controlTable.lastPos)
@@ -149,16 +141,26 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             ctw.setHorizontalHeaderItem(i,hi)
             cth.setResizeMode(i,QHeaderView.ResizeToContents)
         cth.setResizeMode(len(h)-1,QHeaderView.Stretch)
+    def updateViews(self):
+        for i in self.getAllIdx():
+            f=Q7fingerPrint.getFingerPrint(i)
+            v=Q7fingerPrint.getView(i)
+            l=self.getLineFromIdx(i)
+            self.modifiedLine(l,f._status)
+            v.updateTreeStatus()
+    def modifiedLine(self,n,stat):
+        if   (stat==Q7fingerPrint.STATUS_MODIFIED):
+            stitem=QTableWidgetItem(self.I_MODIFIED,'')
+        elif (stat==Q7fingerPrint.STATUS_CONVERTED):
+            stitem=QTableWidgetItem(self.I_CONVERTED,'')
+        else:
+            stitem=QTableWidgetItem(self.I_UNCHANGED,'')
+        stitem.setTextAlignment(Qt.AlignCenter)
+        self.controlTable.setItem(n,0,stitem)
     def addLine(self,l):
         ctw=self.controlTable
         ctw.setRowCount(ctw.rowCount()+1)
         r=ctw.rowCount()-1
-        if (l[0]==Q7Window.STATUS_UNCHANGED):
-            stitem=QTableWidgetItem(self.I_UNCHANGED,'')
-        if (l[0]==Q7Window.STATUS_MODIFIED):
-            stitem=QTableWidgetItem(self.I_MODIFIED,'')
-        if (l[0]==Q7Window.STATUS_CONVERTED):
-            stitem=QTableWidgetItem(self.I_CONVERTED,'')
         if (l[1]==Q7Window.VIEW_TREE):
             tpitem=QTableWidgetItem(self.I_TREE,'')
         if (l[1]==Q7Window.VIEW_FORM):
@@ -169,10 +171,9 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             tpitem=QTableWidgetItem(self.I_QUERY,'')
         if (l[1]==Q7Window.VIEW_SELECT):
             tpitem=QTableWidgetItem(self.I_SELECT,'')
-        stitem.setTextAlignment(Qt.AlignCenter)
         tpitem.setTextAlignment(Qt.AlignCenter)
-        ctw.setItem(r,0,stitem)
         ctw.setItem(r,1,tpitem)
+        self.modifiedLine(r,l[0])
         for i in range(len(l)-2):
             it=QTableWidgetItem('%s '%(l[i+2]))
             if (i in [0]): it.setTextAlignment(Qt.AlignCenter)
@@ -196,6 +197,11 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         for n in range(self.controlTable.rowCount()):
             if (int(idx)==int(self.controlTable.item(n,2).text())):found=n
         return found
+    def getAllIdx(self):
+        all=[]
+        for n in range(self.controlTable.rowCount()):
+            all.append(self.controlTable.item(n,2).text())
+        return all
     def loading(self,*args):
         self._T('loading: [%s]'%self.signals.buffer)
         self.busyCursor()
