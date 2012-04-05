@@ -217,6 +217,7 @@ class Ui_Q7VTKWindow(object):
         self.horizontalLayout_2.addItem(spacerItem4)
         self.tPointIndex = QtGui.QLineEdit(Q7VTKWindow)
         self.tPointIndex.setObjectName("tPointIndex")
+	self.tPointIndex.setText("munier")
         self.horizontalLayout_2.addWidget(self.tPointIndex)
         spacerItem5 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem5)
