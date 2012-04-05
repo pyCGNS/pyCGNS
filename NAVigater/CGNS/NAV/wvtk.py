@@ -235,6 +235,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       actor=actors.GetNextItem()
       while actor:
         actor.GetProperty().SetRepresentationToWireframe()
+        actor.GetProperty().EdgeVisibilityOff()
         actor = actors.GetNextItem()
     
   def addPicker(self):
@@ -252,6 +253,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.picker.SetTolerance(0.001)
       self.picker.AddObserver("EndPickEvent",self.annotatePick)
 
+  def addAreaPicker(self):
+      self.picker=vtk.vtkAreaPicker()
+
   def annotatePick(self,object,event):
       if (self.wact==1):
           self.wire()
@@ -263,6 +267,16 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
         self.textActor.VisibilityOff()
         self.highlightProp=0
       else:
+        ids=vtk.vtkIdTypeArray()
+        ids.SetNumberOfComponents(1)
+        ids.InsertNextValue(self.picker.GetCellId())
+        selectionNode=vtk.vtkSelectionNode()
+        selectionNode.SetFieldType(vtk.vtkSelectionNode.CELL)
+        selectionNode.SetContentType(vtk.vtkSelectionNode.INDICES)
+        selectionNode.SetSelectionList(ids)
+        selection=vtk.vtkSelection()
+        
+                        
         selPt = self.picker.GetSelectionPoint()
         pickAct = self.picker.GetActors()
         pickAct.InitTraversal()
@@ -287,7 +301,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
         self.highlightProp=1   
 
   def wCGNSTree(self,T,zlist):
-
       o=vtk.vtkObject()
       o.SetGlobalWarningDisplay(0)
       del o
@@ -308,7 +321,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._parser=Mesh(T,zlist)
       self._selected=[]
       alist=self._parser.createActors()
- 
       if (alist!=[]):
           for a in alist:
               self._vtkren.AddActor(a[0])
@@ -320,7 +332,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                 if (self._xmax<a[1][1]):self._xmax=a[1][1]
                 if (self._ymax<a[1][3]):self._ymax=a[1][3]
                 if (self._zmax<a[1][5]):self._zmax=a[1][5]
-                
+      
       self._vtkren.SetBackground(1,1,1)
       self._vtkren.ResetCamera()
       self._vtkren.GetActiveCamera().Elevation(0.0)
@@ -340,6 +352,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._ctxt.setPosition(self.px,self.py,self.pz)
                 
       self._istyle=Q7InteractorStyle(self)
+      
       self._vtk.SetInteractorStyle(self._istyle)
       self._iren=self._istyle.GetInteractor()
       self.fillCurrentPath()
@@ -619,7 +632,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self.OutlineActor.GetProperty().EdgeVisibilityOff()
       self._vtk.GetRenderWindow().Render()
       
-  def b_wire(self,pos):  
+  def b_wire(self,pos):
       if (self._p_wire):
           self.b_surf(pos)
           return
@@ -713,6 +726,18 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self.Outline.SetBounds(actor.GetBounds())
       self._iren.Render()
       self._currentactor=[path,actor,color,actor2]
+
+  def points(self,pts):
+      selected=vtk.vtkPolyData()
+      selected.SetPoints(pts)
+      selectedMapper=vtk.vtkPolyDataMapper()
+      selectedMapper.SetInput(selected)
+      selectedActor=vtk.vtkActor()
+      selectedActor.SetMapper(selectedMapper)
+      selectedActor.GetProperty().SetColor(0,1,0)
+      selectedActor.GetProperty().SetPointSize(10)
+      self._vtkren.AddActor(selectedActor)
+      self._iren.Render()
       
 class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
     def __init__(self,parent):
@@ -720,15 +745,18 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
       self.AddObserver("CharEvent",self.keycode)      
       self.PickedRenderer=None
       self.OutlineActor=None
-      self._parent.addPicker()     
-      self.rwi=None  
+      self._parent.addPicker()
+      self.rwi=None      
+      self.SelectedMapper = vtk.vtkDataSetMapper()
+      self.SelectedActor = vtk.vtkActor()
+      self.SelectedActor.SetMapper(self.SelectedMapper)
 
-    def keycode(self,*args):
+    def keycode(self,*args):        
         self.rwi=self.GetInteractor()      
         keycode=self.rwi.GetKeyCode()
-        control=self.rwi.GetControlKey()
+        control=self.rwi.GetControlKey()        
         vtkkeys=['f','F','r','R']
-        keys=['d','D','s','S','q','Q','a','A']
+        keys=['d','D','s','S','w','W','q','Q','a','A']
         if (keycode in vtkkeys):
             self.OnChar()
         if (keycode in keys):
@@ -752,6 +780,14 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
           else:
               actor=p.GetFirstNode().GetViewProp()
               path=self._parent.findObjectPath(actor.GetMapper().GetInput())
+              id=self._parent.picker.GetPointId()
+              pt=actor.GetMapper().GetInput()##.GetPoint(id)
+              print [pt]
+              print self._parent.picker.GetPointId()
+              array=actor.GetMapper().GetInput().GetPointData().GetArray(0).GetTuple3(self._parent.picker.GetPointId())
+              print array
+##               pts=actor.GetMapper().GetInput().GetCell(self._parent.picker.GetCellId()).GetPoints()
+##               p=self._parent.points(pts)
               self._parent.changeCurrentActor([path,actor])
               self._parent.PropPicked=1
           self._parent.fillCurrentPath()
@@ -765,6 +801,59 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
       if (self._parent._bindings.has_key(keycode)): self._parent._bindings[keycode](pos)
       if (control==1): self._parent.controlKey=1     
       return
+
+## class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
+  
+##     def __init__(self,parent):
+##       self._parent=parent
+##       self.AddObserver("CharEvent",self.keycode)      
+##       self.PickedRenderer=None
+##       self.OutlineActor=None
+##       self._parent.addPicker()     
+##       self.rwi=None  
+
+##     def keycode(self,*args):
+##         self.rwi=self.GetInteractor()      
+##         keycode=self.rwi.GetKeyCode()
+##         control=self.rwi.GetControlKey()
+##         vtkkeys=['f','F','r','R']
+##         keys=['d','D','s','S','w','W','q','Q','a','A']
+##         if (keycode in vtkkeys):
+##             self.OnChar()
+##         if (keycode in keys):
+##             self.CharCallback()
+##         if (keycode=='p' or keycode=='P'):
+##             self.setPick()
+##         if (control==1): self._parent.controlKey=1
+               
+##     def setPick(self):
+##         act=None
+##         path=None
+##         eventPos=self.rwi.GetEventPosition()
+##         self.rwi.SetPicker(self._parent.picker)
+##         if (not self._parent.picker is None):
+##           self._parent.picker.Pick(eventPos[0],eventPos[1], 
+##                        0.0,self._parent._vtkren)
+##           p=self._parent.picker.GetPath()
+##           if (p is None):
+##               self._parent.changeCurrentActor([None,None])
+##               self._parent.PropPicked=0
+##           else:
+##               actor=p.GetFirstNode().GetViewProp()
+##               path=self._parent.findObjectPath(actor.GetMapper().GetInput())
+##               self._parent.changeCurrentActor([path,actor])
+##               self._parent.PropPicked=1
+##           self._parent.fillCurrentPath()
+##           if (path is not None):
+##             self._parent.setCurrentPath(path)
+
+##     def CharCallback(self,*args):   
+##       keycode=self.rwi.GetKeyCode()
+##       control=self.rwi.GetControlKey()
+##       pos=self.rwi.GetEventPosition()
+##       if (self._parent._bindings.has_key(keycode)): self._parent._bindings[keycode](pos)
+##       if (control==1): self._parent.controlKey=1     
+##       return
     
         
 
