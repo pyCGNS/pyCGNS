@@ -248,7 +248,7 @@ class Q7TreeItem(object):
         self._size=None
         self._fingerprint=fgprint
         self._control=self._fingerprint.control
-        self._states={'mark':STMARKOFF,'check':STCHKGOOD,
+        self._states={'mark':STMARKOFF,'check':STCHKUNKN,
                       'fortran':STFORUNKN,'shared':STSHRUNKN}
         self._model=model
         self._tag=tag

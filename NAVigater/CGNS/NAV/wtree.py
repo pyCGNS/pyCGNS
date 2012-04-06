@@ -268,7 +268,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.treeview.model().updateSelected()
         self.treeview.refreshView()
     def check(self):
+        self.busyCursor()
         self.treeview.model().checkSelected()
+        self.readyCursor()
         self.treeview.refreshView()
     def checklist(self):
         pass

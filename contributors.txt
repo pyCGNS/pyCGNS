@@ -8,6 +8,7 @@
 # Informal list of people that gave some contributions in patches, demos,
 # remarks, testing, etc...
 #
+Grégory Laheurte   - ONERA (DSNA/CS2A)
 Benoit Rodriguez   - ONERA (DAAP/H2T)
 Loic Hauchard      - ONERA (Student INSA Rouen, France)
 Elise Hénaux       - ONERA (Student FIIFO Orsay, France)
