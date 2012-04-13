@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Thu Apr  5 15:21:16 2012
+# Created: Wed Apr 11 17:10:31 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -215,10 +215,15 @@ class Ui_Q7VTKWindow(object):
         self.horizontalLayout_2.addWidget(self.bReverse)
         spacerItem4 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem4)
-        self.tPointIndex = QtGui.QLineEdit(Q7VTKWindow)
-        self.tPointIndex.setObjectName("tPointIndex")
-	self.tPointIndex.setText("munier")
-        self.horizontalLayout_2.addWidget(self.tPointIndex)
+        self.sIndex1 = QtGui.QSpinBox(Q7VTKWindow)
+        self.sIndex1.setObjectName("sIndex1")
+        self.horizontalLayout_2.addWidget(self.sIndex1)
+        self.sIndex2 = QtGui.QSpinBox(Q7VTKWindow)
+        self.sIndex2.setObjectName("sIndex2")
+        self.horizontalLayout_2.addWidget(self.sIndex2)
+        self.sIndex3 = QtGui.QSpinBox(Q7VTKWindow)
+        self.sIndex3.setObjectName("sIndex3")
+        self.horizontalLayout_2.addWidget(self.sIndex3)
         spacerItem5 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem5)
         self.bPrevious = QtGui.QPushButton(Q7VTKWindow)
@@ -272,6 +277,7 @@ class Ui_Q7VTKWindow(object):
         self.bBackControl.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Raise CGNS.NAV control window", None, QtGui.QApplication.UnicodeUTF8))
         self.bUpdate.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Update selected list from tree view", None, QtGui.QApplication.UnicodeUTF8))
         self.bReverse.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Switch seleted and  unselected actors", None, QtGui.QApplication.UnicodeUTF8))
+        self.sIndex3.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Get/Set index for third dim", None, QtGui.QApplication.UnicodeUTF8))
         self.bPrevious.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Highlight previous selected item", None, QtGui.QApplication.UnicodeUTF8))
         self.bReset.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Clear selection list", None, QtGui.QApplication.UnicodeUTF8))
         self.bNext.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Highlight next selected item", None, QtGui.QApplication.UnicodeUTF8))

@@ -57,6 +57,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._selected=[]
       self._picked=None
       self._hidden=[]
+      self.actorpt=None
       self.wact=None
       self._cacheActor={}
       self._tmodel=tmodel
@@ -96,10 +97,13 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       QObject.connect(self.cCurrentPath,
                       SIGNAL("currentIndexChanged(int)"),
                       self.changeCurrentPath)
-
-  def updateTreeStatus(self):
-      print 'vtk up'
-     
+      QObject.connect(self.sIndex1, SIGNAL("valueChanged(int)"),
+                      self.highlightPoint)
+      QObject.connect(self.sIndex2, SIGNAL("valueChanged(int)"),
+                      self.highlightPoint)
+      QObject.connect(self.sIndex3, SIGNAL("valueChanged(int)"),
+                      self.highlightPoint)
+   
   def screenshot(self):
     sshot=QPixmap.grabWindow(self.display.winId())
     sshot.save('/tmp/foo.png','png')
@@ -256,9 +260,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.picker.SetTolerance(0.001)
       self.picker.AddObserver("EndPickEvent",self.annotatePick)
 
-  def addAreaPicker(self):
-      self.picker=vtk.vtkAreaPicker()
-
   def annotatePick(self,object,event):
       if (self.wact==1):
           self.wire()
@@ -269,17 +270,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (self.picker.GetCellId()<0):
         self.textActor.VisibilityOff()
         self.highlightProp=0
-      else:
-        ids=vtk.vtkIdTypeArray()
-        ids.SetNumberOfComponents(1)
-        ids.InsertNextValue(self.picker.GetCellId())
-        selectionNode=vtk.vtkSelectionNode()
-        selectionNode.SetFieldType(vtk.vtkSelectionNode.CELL)
-        selectionNode.SetContentType(vtk.vtkSelectionNode.INDICES)
-        selectionNode.SetSelectionList(ids)
-        selection=vtk.vtkSelection()
-        
-                        
+      else:                  
         selPt = self.picker.GetSelectionPoint()
         pickAct = self.picker.GetActors()
         pickAct.InitTraversal()
@@ -301,7 +292,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           a=pickAct.GetNextItem()
         self.PropPicked=0
         self.controlKey=0
-        self.highlightProp=1   
+        self.highlightProp=1
 
   def wCGNSTree(self,T,zlist):
       o=vtk.vtkObject()
@@ -682,6 +673,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       QWidget.close(self)
 
   def changeCurrentActor(self,atp,combo=True):
+      if (not self.actorpt is None):
+          self._vtkren.RemoveActor(self.actorpt)
       path =atp[0]
       actor=atp[1]
       if (not combo):self.setCurrentPath(path)         
@@ -730,18 +723,147 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._iren.Render()
       self._currentactor=[path,actor,color,actor2]
 
-  def points(self,pts):
-      selected=vtk.vtkPolyData()
-      selected.SetPoints(pts)
-      selectedMapper=vtk.vtkPolyDataMapper()
-      selectedMapper.SetInput(selected)
-      selectedActor=vtk.vtkActor()
-      selectedActor.SetMapper(selectedMapper)
-      selectedActor.GetProperty().SetColor(0,1,0)
-      selectedActor.GetProperty().SetPointSize(10)
-      self._vtkren.AddActor(selectedActor)
-      self._iren.Render()
+  def highlightPoint(self,*args):
+      actor=self._currentactor[1]
+      if (actor is None): return
+      grid=actor.GetMapper().GetInput()
+      if (vtk.vtkStructuredGrid().SafeDownCast(grid)):
+          i=self.sIndex1.value()
+          j=self.sIndex2.value()
+          k=self.sIndex3.value()
+          dim=grid.GetPointData().GetArray(1).GetTuple3(0)
+          self.s_highlightPoint(grid,(i,j,k),dim)
+      if (vtk.vtkUnstructuredGrid().SafeDownCast(grid)):
+          i=self.sIndex1.value()
+          self.uns_highlightPoint(grid,i)
       
+
+  def s_highlightPoint(self,grid,index,dim):
+      if (not self.actorpt is None):
+          self._vtkren.RemoveActor(self.actorpt)
+      if (grid is None):
+##           self.setPickableOn()
+          return
+      (i,j,k)=index
+      filter=vtk.vtkStructuredGridGeometryFilter()
+      filter.SetInputConnection(grid.GetProducerPort())
+      filter.SetExtent(i-1,i-1,j-1,j-1,k-1,k-1)
+      mapper=vtk.vtkPolyDataMapper()
+      mapper.SetInputConnection(filter.GetOutputPort())
+      self.actorpt=vtk.vtkActor()
+      self.actorpt.SetMapper(mapper)
+      self.actorpt.GetProperty().SetColor(1,0,0)
+      self.actorpt.GetProperty().SetPointSize(5)
+      self.actorpt.PickableOff()
+      self.actorpt.DragableOff()
+      self._vtkren.AddActor(self.actorpt)
+      self._iren.Render()
+
+  def getIndexPoint3(self,grid,index,dim):
+      (i,j,k)=index
+      (idim,jdim,kdim)=dim
+      self.sIndex1.setRange(1,idim)
+      self.sIndex1.setSingleStep(1)
+      self.sIndex2.setRange(1,jdim)
+      self.sIndex2.setSingleStep(1)
+      self.sIndex3.setRange(1,kdim)
+      self.sIndex3.setSingleStep(1)
+      self.sIndex1.blockSignals(True)
+      self.sIndex2.blockSignals(True)
+      self.sIndex3.blockSignals(True)
+      self.sIndex1.setValue(i)
+      self.sIndex2.setValue(j)
+      self.sIndex3.setValue(k)
+      self.sIndex1.blockSignals(False)
+      self.sIndex2.blockSignals(False)
+      self.sIndex3.blockSignals(False)
+      self.s_highlightPoint(grid,index,dim)
+
+  def getIndexPoint1(self,grid,index):
+      self.sIndex1.setRange(1,100000)
+      self.sIndex1.setSingleStep(1)
+      self.sIndex1.setValue(index)
+      self.uns_highlightPoint(grid,index)
+      
+  def selectionCellId(self,grid,id):
+      ids = vtk.vtkIdTypeArray()
+      ids.SetNumberOfComponents(1)
+      ids.InsertNextValue(id)
+
+      selectionNode = vtk.vtkSelectionNode()
+      selectionNode.SetFieldType(0)
+      selectionNode.SetContentType(4)
+      selectionNode.SetSelectionList(ids)
+      
+      selection=vtk.vtkSelection()
+      selection.AddNode(selectionNode)
+ 
+      extractSelection = vtk.vtkExtractSelection()
+      extractSelection.SetInputConnection(0,grid.GetProducerPort())
+      extractSelection.SetInput(1,selection)
+      extractSelection.Update()
+
+      selected=vtk.vtkUnstructuredGrid()
+      selected.ShallowCopy(extractSelection.GetOutput())
+
+      selectedMapper=vtk.vtkDataSetMapper()
+      selectedMapper.SetInputConnection(selected.GetProducerPort())
+      self.actorpt=vtk.vtkActor()
+      self.actorpt.SetMapper(selectedMapper)
+      self.actorpt.GetProperty().SetColor(1,0,0)
+      self.actorpt.GetProperty().SetPointSize(5)
+      self.actorpt.PickableOff()
+      self.actorpt.DragableOff()
+      self._vtkren.AddActor(self.actorpt)
+      
+      self._iren.Render()      
+
+  def uns_highlightPoint(self,grid,cellid):
+      if (not self.actorpt is None):
+          self._vtkren.RemoveActor(self.actorpt)
+      if (grid is None): return
+##           self._iren.Render()
+##           self.setPickableOn()
+
+      filter=vtk.vtkUnstructuredGridGeometryFilter()
+      filter.SetInputConnection(grid.GetProducerPort())
+      filter.CellClippingOn()
+      filter.SetCellMinimum(cellid)
+      filter.SetCellMaximum(cellid)
+##       filter.PointClippingOn()
+##       filter.SetPointMinimum(cellid)
+##       filter.SetPointMaximum(cellid)
+      mapper=vtk.vtkDataSetMapper()
+      mapper.SetInputConnection(filter.GetOutputPort())
+      self.actorpt=vtk.vtkActor()
+      self.actorpt.SetMapper(mapper)
+      self.actorpt.GetProperty().SetColor(0,1,0)
+      self.actorpt.GetProperty().SetLineWidth(3)
+      self.actorpt.GetProperty().SetRepresentationToWireframe()
+      self.actorpt.PickableOff()
+      self.actorpt.DragableOff()
+      self._vtkren.AddActor(self.actorpt)
+      self._iren.Render()
+
+  def setPickableOff(self):
+      actors=self._vtkren.GetActors()
+      actors.InitTraversal()
+      a=actors.GetNextActor()
+      a.PickableOff()
+      while a:
+          a.PickableOff()
+          a=actors.GetNextActor()
+      self._currentactor[1].PickableOn()
+
+  def setPickableOn(self):
+      actors=self._vtkren.GetActors()
+      actors.InitTraversal()
+      a=actors.GetNextActor()
+      a.PickableOn()
+      while a:
+          a.PickableOn()
+          a=actors.GetNextActor()
+           
 class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
     def __init__(self,parent):
       self._parent=parent
@@ -749,13 +871,11 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
       self.PickedRenderer=None
       self.OutlineActor=None
       self._parent.addPicker()
-      self.rwi=None      
-      self.SelectedMapper = vtk.vtkDataSetMapper()
-      self.SelectedActor = vtk.vtkActor()
-      self.SelectedActor.SetMapper(self.SelectedMapper)
-
+      self.rwi=None
+      self.pickable=0
+        
     def keycode(self,*args):        
-        self.rwi=self.GetInteractor()      
+        self.rwi=self.GetInteractor()         
         keycode=self.rwi.GetKeyCode()
         control=self.rwi.GetControlKey()        
         vtkkeys=['f','F','r','R']
@@ -764,38 +884,66 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
             self.OnChar()
         if (keycode in keys):
             self.CharCallback()
-        if (keycode=='p' or keycode=='P'):
+        if (keycode=='z' or keycode=='Z'):
             self.setPick()
         if (control==1): self._parent.controlKey=1
-               
+        if (keycode=='p' or keycode=='P'):
+            self.pointPicker()
+
+    def pointPicker(self):
+        if (self._parent._selected==[]): return
+        grid=self._parent._currentactor[1].GetMapper().GetInput()
+        eventPos=self.rwi.GetEventPosition()
+        if (vtk.vtkStructuredGrid().SafeDownCast(grid)):
+            picker=vtk.vtkPointPicker()
+            picker.SetTolerance(0.005)            
+            self.rwi.SetPicker(picker)
+            self._parent.setPickableOff()
+            picker.Pick(eventPos[0],eventPos[1], 0.0,self._parent._vtkren)
+            id=picker.GetPointId()
+            array=grid.GetPointData().GetArray(0).GetTuple3(id)
+            dim=grid.GetPointData().GetArray(1).GetTuple3(0)
+            self._parent.getIndexPoint3(grid,array,dim)
+        if (vtk.vtkUnstructuredGrid().SafeDownCast(grid)):
+            if (grid.GetCellData().GetNumberOfArrays()>0):
+                picker=vtk.vtkCellPicker()
+                picker.SetTolerance(0.001) 
+                self.rwi.SetPicker(picker)
+                self._parent.setPickableOff()
+                picker.Pick(eventPos[0],eventPos[1], 0.0,self._parent._vtkren)
+                cellid=picker.GetCellId()
+                array=grid.GetCellData().GetArray(0).GetTuple1(cellid)
+                self._parent.getIndexPoint1(grid,cellid)
+            if (grid.GetPointData().GetNumberOfArrays()>0):
+                picker=vtk.vtkPointPicker()
+                picker.SetTolerance(0.001) 
+                self.rwi.SetPicker(picker)
+                self._parent.setPickableOff()
+                picker.Pick(eventPos[0],eventPos[1], 0.0,self._parent._vtkren)
+                pointid=picker.GetPointId()
+                array=grid.GetPointData().GetArray(0).GetTuple1(pointid)
+                self._parent.getIndexPoint1(grid,pointid)
+                
     def setPick(self):
+        self._parent.setPickableOn()
         act=None
         path=None
         eventPos=self.rwi.GetEventPosition()
         self.rwi.SetPicker(self._parent.picker)
         if (not self._parent.picker is None):
-          self._parent.picker.Pick(eventPos[0],eventPos[1], 
-                       0.0,self._parent._vtkren)
-          p=self._parent.picker.GetPath()
-          if (p is None):
+          self._parent.picker.Pick(eventPos[0],eventPos[1],0.0,self._parent._vtkren)
+          pathpick=self._parent.picker.GetPath()
+          if (pathpick is None):
               self._parent.changeCurrentActor([None,None])
               self._parent.PropPicked=0
           else:
-              actor=p.GetFirstNode().GetViewProp()
+              actor=pathpick.GetFirstNode().GetViewProp()
               path=self._parent.findObjectPath(actor.GetMapper().GetInput())
-              id=self._parent.picker.GetPointId()
-              pt=actor.GetMapper().GetInput()##.GetPoint(id)
-              print [pt]
-              print self._parent.picker.GetPointId()
-              array=actor.GetMapper().GetInput().GetPointData().GetArray(0).GetTuple3(self._parent.picker.GetPointId())
-              print array
-##               pts=actor.GetMapper().GetInput().GetCell(self._parent.picker.GetCellId()).GetPoints()
-##               p=self._parent.points(pts)
               self._parent.changeCurrentActor([path,actor])
               self._parent.PropPicked=1
           self._parent.fillCurrentPath()
           if (path is not None):
-            self._parent.setCurrentPath(path)
+            self._parent.setCurrentPath(path)        
 
     def CharCallback(self,*args):   
       keycode=self.rwi.GetKeyCode()
@@ -805,59 +953,7 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
       if (control==1): self._parent.controlKey=1     
       return
 
-## class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
-  
-##     def __init__(self,parent):
-##       self._parent=parent
-##       self.AddObserver("CharEvent",self.keycode)      
-##       self.PickedRenderer=None
-##       self.OutlineActor=None
-##       self._parent.addPicker()     
-##       self.rwi=None  
 
-##     def keycode(self,*args):
-##         self.rwi=self.GetInteractor()      
-##         keycode=self.rwi.GetKeyCode()
-##         control=self.rwi.GetControlKey()
-##         vtkkeys=['f','F','r','R']
-##         keys=['d','D','s','S','w','W','q','Q','a','A']
-##         if (keycode in vtkkeys):
-##             self.OnChar()
-##         if (keycode in keys):
-##             self.CharCallback()
-##         if (keycode=='p' or keycode=='P'):
-##             self.setPick()
-##         if (control==1): self._parent.controlKey=1
-               
-##     def setPick(self):
-##         act=None
-##         path=None
-##         eventPos=self.rwi.GetEventPosition()
-##         self.rwi.SetPicker(self._parent.picker)
-##         if (not self._parent.picker is None):
-##           self._parent.picker.Pick(eventPos[0],eventPos[1], 
-##                        0.0,self._parent._vtkren)
-##           p=self._parent.picker.GetPath()
-##           if (p is None):
-##               self._parent.changeCurrentActor([None,None])
-##               self._parent.PropPicked=0
-##           else:
-##               actor=p.GetFirstNode().GetViewProp()
-##               path=self._parent.findObjectPath(actor.GetMapper().GetInput())
-##               self._parent.changeCurrentActor([path,actor])
-##               self._parent.PropPicked=1
-##           self._parent.fillCurrentPath()
-##           if (path is not None):
-##             self._parent.setCurrentPath(path)
-
-##     def CharCallback(self,*args):   
-##       keycode=self.rwi.GetKeyCode()
-##       control=self.rwi.GetControlKey()
-##       pos=self.rwi.GetEventPosition()
-##       if (self._parent._bindings.has_key(keycode)): self._parent._bindings[keycode](pos)
-##       if (control==1): self._parent.controlKey=1     
-##       return
-    
         
 
 
