@@ -631,9 +631,9 @@ class Q7TreeModel(QAbstractItemModel):
         if (ix1.isValid() and ix2.isValid()):
             self.dataChanged.emit(ix1,ix2)
     def copyNode(self,nodeitem):
-        self._control.copyPasteBuffer=nodeitem._itemnode
+        self._control.copyPasteBuffer=copy.deepcopy(nodeitem._itemnode)
     def cutNode(self,nodeitem):
-        self._control.copyPasteBuffer=nodeitem._itemnode
+        self._control.copyPasteBuffer=copy.deepcopy(nodeitem._itemnode)
         parentitem=nodeitem.parentItem()
         path=CGU.getPathAncestor(nodeitem.sidsPath())
         self.removeItemTree(nodeitem)

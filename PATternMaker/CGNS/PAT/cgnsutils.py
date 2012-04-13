@@ -84,7 +84,8 @@ def nodeDelete(tree,node,legacy=False):
     z1=CL.newZone(b1,'Zone1')
     z2=CL.newZone(b1,'Zone2')
     print getPathFullTree(T)
-    # ['/CGNSLibraryVersion', '/Base', '/Base/Zone1', '/Base/Zone1/ZoneType', '/Base/Zone2', '/Base/Zone2/ZoneType']
+    # ['/CGNSLibraryVersion', '/Base', '/Base/Zone1',
+    #  '/Base/Zone1/ZoneType', '/Base/Zone2', '/Base/Zone2/ZoneType']
     nodeDelete(T,z1)
     print getPathFullTree(T)
     # ['/CGNSLibraryVersion', '/Base', '/Base/Zone2', '/Base/Zone2/ZoneType']
@@ -101,7 +102,8 @@ def nodeDelete(tree,node,legacy=False):
    * The actual memory of the node only if no other reference to this node is found by Python.
    
   """
-  path=getPathFromNode(tree,node)
+  if (type(node)==str): path=node
+  else: path=getPathFromNode(tree,node)
   if (path is not None):
     pp=getPathAncestor(path)
     pc=getPathLeaf(path)
@@ -328,6 +330,10 @@ def sameNode(nodeA,nodeB,dienow=False):
   elif (nodeA[0] != nodeB[0]):                      same=False
   elif (nodeA[3] != nodeB[3]):                      same=False
   elif (type(nodeA[1]) != type(nodeB[1])):          same=False
+  elif ((nodeA[1] is None) or (nodeB[1] is None)):
+    if   ((nodeA[1] is None) and (nodeB[1] is not None)): same=False
+    elif ((nodeA[1] is not None) and (nodeB[1] is None)): same=False
+    else: pass
   elif (len(nodeA[1])  != len(nodeB[1])):           same=False
   elif (len(nodeA[2])  != len(nodeB[2])):           same=False
   if (not same and dienow):
@@ -779,7 +785,7 @@ def getPathFromNode(tree,node,path=''):
    * Returns None if not found
    
   """
-  if (node == tree): return path
+  if (sameNode(node,tree)): return path
   for c in tree[2]:
     p=getPathFromNode(c,node,path+'/'+c[0])
     if (p): return p
