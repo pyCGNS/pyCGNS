@@ -439,6 +439,13 @@
       <widget class="QComboBox" name="cVariables"/>
      </item>
      <item>
+      <widget class="QComboBox" name="cColorSpace">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer_6">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

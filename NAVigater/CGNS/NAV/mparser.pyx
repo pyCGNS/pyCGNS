@@ -146,15 +146,17 @@ class Mesh(CGNSparser):
     for (o,p) in [(a[2],a[3]) for a in self._actors]:                  
         if (selectedpath==p): return o
     return ''
+
+  def getDimsFromObject(self,selectedobject):
+    for (o,p) in [(a[2],a[4]) for a in self._actors]:
+      if (selectedobject==o): return p
+    return ''
     
 #  @cython.boundscheck(False)
   def do_volume(self,path,dx,dy,dz):
     data=vtk.vtkIntArray()
     data.SetNumberOfComponents(3)
     data.SetName("index volume")
-    dim=vtk.vtkIntArray()
-    dim.SetNumberOfComponents(3)
-    dim.SetName("dims")
     cdef int p, i, j, k, idim, jdim, kdim
     cdef double x,y,z
     idim = dx.shape[0]
@@ -162,7 +164,6 @@ class Mesh(CGNSparser):
     kdim = dx.shape[2]
     pts=vtk.vtkPoints()
     pts.SetNumberOfPoints(idim*jdim*kdim)
-    dim.InsertNextTuple3(idim,jdim,kdim)
     for k in range(kdim):
      for j in range(jdim):
       for i in range(idim):
@@ -181,14 +182,10 @@ class Mesh(CGNSparser):
     a.SetMapper(d)
     a.GetProperty().SetRepresentationToWireframe()
     g.GetPointData().AddArray(data)
-    g.GetPointData().AddArray(dim)
-    return (a,a.GetBounds(),g,path)
+    return (a,a.GetBounds(),g,path,(0,(idim,jdim,kdim)))
 
 #  @cython.boundscheck(False)
   def do_surface(self,surf,path):
-    data=vtk.vtkIntArray()
-    data.SetNumberOfComponents(1)
-    data.SetName("index surface")
     cdef int i, j, imax, jmax, p1, p2, p3, p4
     imax=surf[0].shape[0]
     jmax=surf[0].shape[1]
@@ -205,10 +202,6 @@ class Mesh(CGNSparser):
       p2=j+      i*jmax +1
       p3=j+jmax+ i*jmax +1
       p4=j+jmax+ i*jmax +0
-      data.InsertNextTuple1(p1+1)
-      data.InsertNextTuple1(p2+1)
-      data.InsertNextTuple1(p3+1)
-      data.InsertNextTuple1(p4+1)
       qp.InsertPoint(n*4+0,tx[p1],ty[p1],tz[p1])
       qp.InsertPoint(n*4+1,tx[p2],ty[p2],tz[p2])
       qp.InsertPoint(n*4+2,tx[p3],ty[p3],tz[p3])
@@ -226,13 +219,9 @@ class Mesh(CGNSparser):
     a = vtk.vtkActor()
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
-    sg.GetPointData().AddArray(data)
-    return (a,None,sg,path)
+    return (a,None,sg,path,(1,None))
 
   def do_boundaries(self,bnd,path):
-    data=vtk.vtkIntArray()
-    data.SetNumberOfComponents(1)
-    data.SetName("index boundaries")
     cdef int i, j, imax, jmax, p1, p2, p3, p4    
     max=[x for x in bnd[0].shape if x!=1]
     imax=max[0]
@@ -250,10 +239,6 @@ class Mesh(CGNSparser):
       p2=j+      i*jmax +1
       p3=j+jmax+ i*jmax +1
       p4=j+jmax+ i*jmax +0
-      data.InsertNextTuple1(p1+1)
-      data.InsertNextTuple1(p2+1)
-      data.InsertNextTuple1(p3+1)
-      data.InsertNextTuple1(p4+1)
       qp.InsertPoint(n*4+0,tx[p1],ty[p1],tz[p1])
       qp.InsertPoint(n*4+1,tx[p2],ty[p2],tz[p2])
       qp.InsertPoint(n*4+2,tx[p3],ty[p3],tz[p3])
@@ -271,8 +256,7 @@ class Mesh(CGNSparser):
     a = vtk.vtkActor()
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
-    sg.GetPointData().AddArray(data)
-    return (a,None,sg,path)
+    return (a,None,sg,path,1,None)
 
   def do_vtk(self,z):
       self._actors+=[self.do_volume(z[3],z[0][0],z[0][1],z[0][2])]
@@ -322,7 +306,7 @@ class Mesh(CGNSparser):
         a = vtk.vtkActor()
         a.SetMapper(am)
         a.GetProperty().SetRepresentationToWireframe()
-        actors+=[(a,a.GetBounds(),sg,path)]
+        actors+=[(a,a.GetBounds(),sg,path,(2,None))]
         sg.GetCellData().AddArray(data)
     return actors
 
