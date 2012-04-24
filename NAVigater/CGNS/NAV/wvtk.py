@@ -17,6 +17,7 @@ import numpy as NPY
 import random
 import vtk
 
+
 # ----------------------------------------------------------------------------
 class wVTKContext():
     def __init__(self,cm):
