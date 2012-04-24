@@ -129,23 +129,62 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.ColorMapMax.show()
 
   def getColorMapMin(self,*args):
-      color=self.ColorMapMin.currentColor().getRgbF()
-      self.maxcolor=color
-      if (self.lut.GetSize()==2):
-          self.lut.RemovePoint(0)                              
-      self.lut.AddRGBPoint(0,color[0],color[1],color[2])
+      self.maxcolor=self.ColorMapMin.currentColor().getRgbF()
 
   def getColorMapMax(self,*args):
-      color=self.ColorMapMax.currentColor().getRgbF()
-      self.mincolor=color
-      if (self.lut.GetSize()==2):
-          self.lut.RemovePoint(1)
-      self.lut.AddRGBPoint(1,color[0],color[1],color[2])
+      self.mincolor=self.ColorMapMax.currentColor().getRgbF()
 
-  def displayLut(self):
-      if ((not self.mincolor is None) and (not self.maxcolor is None)):
-          self._vtkren.AddActor(self.scalarbar)
-          
+  def setVariable(self,variable=None):
+      self.cVariables.clear()
+      self.cVariables.addItem("")
+      if (variable!=[]):
+          for i in variable:
+              self.cVariables.addItem(i)
+      QObject.connect(self.cVariables,
+                      SIGNAL("currentIndexChanged(int)"),
+                      self.getVariable)
+      
+  def getVariable(self,*args):
+      if ((self.mincolor is None) or (self.maxcolor is None)): return
+      variable=self.cVariables.currentText()
+      index=self.cVariables.currentIndex()
+      self.scalarbar.SetTitle(variable)
+      if (index==0):
+          if (not self.scalarbar is None):
+              self.scalarbar.SetVisibility(0)
+              self.setScalarVisibilityOff()
+          return
+      else :
+          a=self._vtkren.GetActors()
+          a.InitTraversal()
+          s=a.GetNextItem()
+          minrange=[]
+          maxrange=[]
+          while s:
+              grid=s.GetMapper().GetInput()
+              if (vtk.vtkStructuredGrid.SafeDownCast(grid)):
+                  grid.GetCellData().SetActiveScalars(variable)
+                  minrange+=[grid.GetScalarRange()[0]]
+                  maxrange+=[grid.GetScalarRange()[1]]
+                  s.GetMapper().SetScalarModeToUseCellData()
+                  s.GetMapper().ScalarVisibilityOn()
+                  if (not self.lut is None):
+                      s.GetMapper().SetLookupTable(self.lut)
+                      self.lut.RemoveAllPoints()
+                      self.lut.AddRGBPoint(min(minrange),self.mincolor[0],self.mincolor[1],self.mincolor[2])
+                      self.lut.AddRGBPoint(max(maxrange),self.maxcolor[0],self.maxcolor[1],self.maxcolor[2])
+              s=a.GetNextItem()
+      self.scalarbar.SetVisibility(1)
+      self._iren.Render()
+
+  def setScalarVisibilityOff(self):
+      a=self._vtkren.GetActors()
+      a.InitTraversal()
+      s=a.GetNextItem()
+      while s:
+          s.GetMapper().ScalarVisibilityOff()
+          s=a.GetNextItem()              
+                              
   def setColorSpace(self):
       self.cColorSpace.clear()
       self.cColorSpace.addItem("")
@@ -158,25 +197,29 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def getColorSpace(self):
       index=self.cColorSpace.currentIndex()
-      if (index==0):
-          if (not self.scalarbar is None):
-              self._vtkren.RemoveActor(self.scalarbar)
-          return
+      if (index==0): return
       colorspaces={1:self.lut.SetColorSpaceToRGB,2:self.lut.SetColorSpaceToHSV,
               3:self.lut.SetColorSpaceToDiverging}
       colorspaces[index]()
-      self.displayLut()
       
   def LookupTable(self):
       self.lut=vtk.vtkColorTransferFunction()
       self.lut.SetColorSpaceToRGB()
+      self.lut.SetScaleToLinear()
+      text=vtk.vtkTextProperty()
+      text.SetFontFamilyToArial()
+      text.SetFontSize(12)
       self.scalarbar=vtk.vtkScalarBarActor()
-      self.scalarbar.PickableOff()
+##       self.scalarbar.PickableOff()
+      self.scalarbar.PickableOn()
+      self.scalarbar.DragableOn()
       self.scalarbar.SetOrientationToVertical()
+##       self.scalarbar.SetLabelTextProperty(text)
       self.scalarbar.SetLookupTable(self.lut)
       self.scalarbar.SetWidth(0.08)
       self.scalarbar.SetHeight(0.8)
-      self.scalarbar.SetTitle('Grandeur')
+      self.scalarbar.SetVisibility(0)
+      self._vtkren.AddActor(self.scalarbar)
                
   def screenshot(self):
     sshot=QPixmap.grabWindow(self.display.winId())
@@ -232,6 +275,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
     self.renAxes = vtk.vtkRenderer()
     self.renAxes.InteractiveOff()
+##     self.renAxes.InteractiveOn()
     self.renAxes.SetActiveCamera(self.camAxes)
     self.renAxes.SetViewport(0, 0, 0.2, 0.2)
     self.renAxes.SetBackground(1,1,1)
@@ -392,10 +436,14 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._parser=Mesh(T,zlist)
       self._selected=[]
       alist=self._parser.createActors()
+      variables=[]
       if (alist!=[]):
+          grid=vtk.vtkStructuredGrid.SafeDownCast(alist[0][2])
+          if grid:
+             for i in range(grid.GetCellData().GetNumberOfArrays()):
+                 variables+=[grid.GetCellData().GetArray(i).GetName()]
           for a in alist:
               self._vtkren.AddActor(a[0])
-
               if (a[1] is not None):
                 if (self._xmin>a[1][0]):self._xmin=a[1][0]
                 if (self._ymin>a[1][2]):self._ymin=a[1][2]
@@ -403,12 +451,13 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                 if (self._xmax<a[1][1]):self._xmax=a[1][1]
                 if (self._ymax<a[1][3]):self._ymax=a[1][3]
                 if (self._zmax<a[1][5]):self._zmax=a[1][5]
-      
+      self.setVariable(variables)
       self._vtkren.SetBackground(1,1,1)
-      self._vtkren.ResetCamera()
-      self._vtkren.GetActiveCamera().Elevation(0.0)
-      self._vtkren.GetActiveCamera().Azimuth(90.0)
-      self._vtkren.GetActiveCamera().Zoom(1.0)
+##       self._vtkren.ResetCamera()
+      self._vtkren.GetActiveCamera().ParallelProjectionOn()
+##       self._vtkren.GetActiveCamera().Elevation(0.0)
+##       self._vtkren.GetActiveCamera().Azimuth(90.0)
+##       self._vtkren.GetActiveCamera().Zoom(1.0)
       self._vtkren.ResetCamera()
                         
       (self.vx,self.vy,self.vz)=self._vtkren.GetActiveCamera().GetViewUp()
@@ -754,7 +803,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self._vtkren.RemoveActor(self.actorpt)
       path =atp[0]
       actor=atp[1]
-      self.grid_dims=self.findObjectDims(actor.GetMapper().GetInput())
       if (not combo):self.setCurrentPath(path)         
       if (not self._currentactor is None):
           act=self._currentactor[3]
@@ -768,7 +816,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
               self.PickedRenderer=None
               self.CurrentRenderer.Render()
               self.CurrentRenderer.GetRenderWindow().Render()
-          return      
+          return
+      self.grid_dims=self.findObjectDims(actor.GetMapper().GetInput())
+##       actor.GetMapper().ScalarVisibilityOff()
       color=actor.GetProperty().GetColor()
       actor2=vtk.vtkActor()
       actor2.ShallowCopy(actor)
@@ -1035,7 +1085,7 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
         cellid=picker.GetCellId()
         return cellid       
                        
-    def setPick(self):       
+    def setPick(self):
         self._parent.setPickableOn()
         path=None
         eventPos=self.rwi.GetEventPosition()

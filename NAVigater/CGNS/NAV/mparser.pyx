@@ -15,6 +15,7 @@ cimport cpython
 cimport numpy as CNPY
 
 import vtk
+from vtk.util import numpy_support
 
 # ----------------------------------------------------------------------------
 
@@ -58,6 +59,12 @@ class CGNSparser:
                      zp+' {kmin}',zp+' {kmax}']
           bndlist=[]
           bcpaths=[]
+          solutions=[]
+          for sol in CGU.getAllNodesByTypeSet(zT,[CGK.FlowSolution_ts]):
+            zsol=CGU.nodeByPath(sol,zT)
+            for data in CGU.getAllNodesByTypeSet(zsol,[CGK.DataArray_ts]):
+              dsol=CGU.nodeByPath(data,zsol)
+              solutions+=[dsol]
           for nzbc in CGU.getAllNodesByTypeSet(zT,[CGK.ZoneBC_ts]):
             zbcT=CGU.nodeByPath(nzbc,zT)
             for nbc in CGU.getAllNodesByTypeSet(zbcT,[CGK.BC_ts]):
@@ -71,7 +78,7 @@ class CGNSparser:
                 bndlist+=[brg]
           self._zones[z]=([cx[1],cy[1],cz[1]],
                           [simin,simax,sjmin,sjmax,skmin,skmax],bndlist,
-                          meshpath,surfpaths,bcpaths)
+                          meshpath,surfpaths,bcpaths,solutions)
         elif (ztype[1].tostring()==CGK.Unstructured_s):
           volume={}
           surface={}
@@ -153,7 +160,7 @@ class Mesh(CGNSparser):
     return ''
     
 #  @cython.boundscheck(False)
-  def do_volume(self,path,dx,dy,dz):
+  def do_volume(self,path,dx,dy,dz,solution):
     data=vtk.vtkIntArray()
     data.SetNumberOfComponents(3)
     data.SetName("index volume")
@@ -182,6 +189,14 @@ class Mesh(CGNSparser):
     a.SetMapper(d)
     a.GetProperty().SetRepresentationToWireframe()
     g.GetPointData().AddArray(data)
+    for s in solution:
+      array=vtk.vtkFloatArray()
+      array.SetName(s[0])
+      for k in range(kdim-1):
+        for j in range(jdim-1):
+          for i in range(idim-1):
+            array.InsertNextTuple1(s[1][i][j][k])
+      g.GetCellData().AddArray(array)
     return (a,a.GetBounds(),g,path,(0,(idim,jdim,kdim)))
 
 #  @cython.boundscheck(False)
@@ -259,7 +274,7 @@ class Mesh(CGNSparser):
     return (a,None,sg,path,1,None)
 
   def do_vtk(self,z):
-      self._actors+=[self.do_volume(z[3],z[0][0],z[0][1],z[0][2])]
+      self._actors+=[self.do_volume(z[3],z[0][0],z[0][1],z[0][2],z[6])]
       for (s,sp) in zip(z[1],z[4]):
         self._actors+=[self.do_surface(s,sp)]
       for (b,sb) in zip(z[2],z[5]):
@@ -268,9 +283,6 @@ class Mesh(CGNSparser):
 
 #  @cython.boundscheck(False)
   def do_surface_ns(self,zones):
-    data=vtk.vtkIntArray()
-    data.SetNumberOfComponents(1)
-    data.SetName("Cell Ids")
     cdef int e,elts,n,npe,idg,idx
     actors=[]
     for zn in zones:
@@ -298,7 +310,6 @@ class Mesh(CGNSparser):
             aq.GetPointIds().SetId(n,idg)
             n+=1
           sg.InsertNextCell(aq.GetCellType(),aq.GetPointIds())
-          data.InsertNextTuple1(e)
           e+=1
         sg.SetPoints(qp)    
         am = vtk.vtkDataSetMapper()
@@ -307,7 +318,6 @@ class Mesh(CGNSparser):
         a.SetMapper(am)
         a.GetProperty().SetRepresentationToWireframe()
         actors+=[(a,a.GetBounds(),sg,path,(2,None))]
-        sg.GetCellData().AddArray(data)
     return actors
 
   def def_volume(self,n):
