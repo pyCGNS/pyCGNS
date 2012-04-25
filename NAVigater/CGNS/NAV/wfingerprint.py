@@ -8,6 +8,10 @@ from PySide.QtCore       import *
 from PySide.QtGui        import *
 import os
 import os.path
+import pwd
+import grp
+import time
+import stat
 import CGNS.MAP
 
 import CGNS.NAV.wmessages as MSG
@@ -24,6 +28,7 @@ class Q7Window(QWidget,object):
     VIEW_FORM='F'
     VIEW_QUERY='Q'
     VIEW_SELECT='S'
+    VIEW_INFO='I'
     HISTORYLASTKEY='///LAST///'
     def __init__(self,vtype,control,path,fgprint):
         QWidget.__init__(self,None)
@@ -128,6 +133,7 @@ class Q7Window(QWidget,object):
         event.accept()
     def backcontrol(self):
         self._fgprint.raiseControlView()
+        self._control.selectLine('%.3d'%self._index)
     def busyCursor(self):
         QApplication.setOverrideCursor(self._busyx)
     def readyCursor(self):
@@ -168,6 +174,7 @@ class Q7fingerPrint:
             and control.getOptionValue('_ConvertADFFiles')):
             f=cls.fileconversion(filedir,filename,control)
             kw['converted']=True
+            kw['convertedAs']=f
         flags=CGNS.MAP.S2P_DEFAULT
         if (control.getOptionValue('CHLoneTrace')): flags|=CGNS.MAP.S2P_TRACE
         try:
@@ -187,6 +194,12 @@ class Q7fingerPrint:
             for vtype in x.views:
                 for (v,i) in x.views[vtype]:
                     if (i==int(idx)): v.raise_()
+    @classmethod
+    def infoView(cls,idx):
+        f=cls.getFingerPrint(idx)
+        v=cls.getView(idx)
+        if (f is None): return
+        return (f,v,f.getInfo(v))
     @classmethod
     def getView(cls,idx):
         for x in cls.__extension:
@@ -208,15 +221,70 @@ class Q7fingerPrint:
         self.links=links
         self.model=None
         self.depth=0
+        self.nodes=0
         self.views={}
         self.control=control
         self.converted=False
+        self.tmpfile=''
         self._status=Q7fingerPrint.STATUS_UNCHANGED
         if (kw.has_key('converted')):
             self.converted=kw['converted']
+            self.tmpfile=kw['convertedAs']
             if (self.converted):
                 self._status=Q7fingerPrint.STATUS_CONVERTED
         Q7fingerPrint.__extension.append(self)
+    def getInfo(self,view):
+        d={}
+        f='%s/%s'%(self.filedir,self.filename)
+        d['eFilename']=f
+        d['eTmpFile']=self.tmpfile
+        d['eDepth']=self.depth
+        d['eNodes']=self.nodes
+        d['eVersion']=str(self.version)
+        d['eVersionHDF5']='???'
+        st=os.stat(f)
+        d['eFileSize']="%.3f Mb"%(1.0*st[6]/(1024*1024))
+        d['eMergeSize']="%.3f Mb"%(1.0*st[6]/(1024*1024))
+        dfmt="%Y-%m-%d %H:%M"
+        d['eLastDate']=time.strftime(dfmt,time.localtime(int(st[7])))
+        d['eModifDate']=time.strftime(dfmt,time.localtime(int(st[8])))
+        e=pwd.getpwuid(st[4])
+        g=grp.getgrgid(st[5])
+        d['eOwner']=e[0]
+        d['eGroup']=g[0]
+        d['cNoFollow']=False
+        d['cHasLinks']=False
+        d['cSameFS']=False
+        d['cBadLinks']=False
+        d['cModeProp']=False
+        m=""
+        if (st[0] & stat.S_IRUSR):m+="r"
+        else: m+="-"
+        if (st[0] & stat.S_IWUSR):m+="w"
+        else: m+="-"
+        if (st[0] & stat.S_IXUSR):m+="x"
+        else: m+="-"
+        if (st[0] & stat.S_IRGRP):m+="r"
+        else: m+="-"
+        if (st[0] & stat.S_IWGRP):m+="w"
+        else: m+="-"
+        if (st[0] & stat.S_IXGRP):m+="x"
+        else: m+="-"
+        if (st[0] & stat.S_IROTH):m+="r"
+        else: m+="-"
+        if (st[0] & stat.S_IWOTH):m+="w"
+        else: m+="-"
+        if (st[0] & stat.S_IXOTH):m+="x"
+        else: m+="-"
+        d['eRights']=m
+        d['cConverted']=self.converted
+        d['cADF']=self.converted
+        d['cHDF5']=not self.converted
+        d['cREAD']=self.converted
+        d['cMODIFY']=False
+        d['cNODATA']=False
+        d['cHasInt64']=False
+        return d
     def raiseControlView(self):
         self.control.raise_()
     def addChild(self,viewtype,view):

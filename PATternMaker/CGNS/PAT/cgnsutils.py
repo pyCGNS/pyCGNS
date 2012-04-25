@@ -286,7 +286,7 @@ def checkRootNode(node,legacy=False,dienow=False):
   """
   return isRootNode(node,legacy,dienow)
 
-def isRootNode(node,legacy=False,dienow=False):
+def isRootNode(node,legacy=False,version=False,dienow=False):
   if (node in [ [], None ]):
     if (dienow): raise CE.cgnsNodeError(90)
     return False
@@ -294,6 +294,7 @@ def isRootNode(node,legacy=False,dienow=False):
   if (not checkNode(node,dienow)): return False
   start=[None,None,[node],None]
   if ((not legacy) and (node[3] != CK.CGNSTree_ts)): return False
+  if ((not legacy) and (node[3] == CK.CGNSTree_ts)): start=node
   if (legacy): start=node
   for n in start[2]:
      if (not checkNode(n,dienow)): return False 
@@ -303,12 +304,18 @@ def isRootNode(node,legacy=False,dienow=False):
            raise CE.cgnsNodeError(99)
            return False
          versionfound=1
+         if (version): return n[1][0]
      elif ( n[3] != CK.CGNSBase_ts ):
        if (dienow): raise CE.cgnsNodeError(91)
        return False
   if (versionfound): return True
   else:              return True
-       
+
+def getVersion(tree):
+  v=isRootNode(tree,version=True)
+  if (v): return v
+  return 0.0
+
 # -----------------------------------------------------------------------------
 # Arbitrary and incomplete node comparison (lazy evaluation)
 def checkSameNode(nodeA,nodeB,dienow=False):

@@ -254,6 +254,9 @@ class Q7TreeItem(object):
         self._tag=tag
         if ((parent is not None) and (model is not None)):
             self._model._extension[self._path]=self
+            self._nodes=len(self._model._extension)
+        else:
+            self._nodes=0
     def orderTag(self):
         return self._tag+"0"*(self._fingerprint.depth*4-len(self._tag))
     def sidsParent(self):
@@ -432,6 +435,7 @@ class Q7TreeModel(QAbstractItemModel):
         self._fingerprint=fgprint
         self._slist=OCTXT._SortedTypeList
         self._count=0
+        self._fingerprint.version=CGU.getVersion(self._fingerprint.tree)
         self.parseAndUpdate(self._rootitem,
                             self._fingerprint.tree,
                             QModelIndex(),0)
@@ -617,6 +621,7 @@ class Q7TreeModel(QAbstractItemModel):
         for childnode in CGU.getNextChildSortByType(node,criteria=self._slist):
             c=self.parseAndUpdate(newItem,childnode,newIndex,crow,tag)
             self._fingerprint.depth=max(c._depth,self._fingerprint.depth)
+            self._fingerprint.nodes=max(c._nodes,self._fingerprint.nodes)
             crow+=1
         return newItem
     def refreshModel(self,nodeidx):

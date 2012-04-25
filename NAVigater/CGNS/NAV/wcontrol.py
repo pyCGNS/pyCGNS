@@ -11,6 +11,7 @@ from PySide.QtGui import *
 
 from CGNS.NAV.Q7ControlWindow import Ui_Q7ControlWindow
 from CGNS.NAV.wfile import Q7File
+from CGNS.NAV.winfo import Q7Info
 from CGNS.NAV.woption import Q7Option
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wtree import Q7Tree
@@ -67,12 +68,17 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         if (self.controlTable.lastButton==Qt.RightButton):
             self.updateMenu(self.controlTable.currentIndex())
             self.popupmenu.popup(self.controlTable.lastPos)
-    def pop1(self):
+    def closeView(self):
+        self.updateLastView()
         if (self.lastView): Q7fingerPrint.getView(self.lastView).close()
-    def pop2(self):
+    def raiseView(self):
+        self.updateLastView()
         if (self.lastView): Q7fingerPrint.raiseView(self.lastView)
-    def pop3(self):
-        pass
+    def info(self):
+        self.updateLastView()
+        (f,v,d)=Q7fingerPrint.infoView(self.lastView)
+        self.w=Q7Info(self,d,f)
+        self.w.show()
     def pop4(self):
         pass
     def pop5(self):
@@ -81,19 +87,21 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         pass
     def pop7(self):
         pass
+    def updateLastView(self):
+        r=self.controlTable.currentItem().row()
+        self.lastView=self.getIdxFromLine(r)
+        return self.lastView
     def updateMenu(self,idx):
         lv=self.getIdxFromLine(idx.row())
         if (lv is not None):
           self.lastView=lv
-          actlist=(("View  information",self.pop3),
-                   ("Raise view",self.pop2),
+          actlist=(("View  information",self.info),
+                   None,
+                   ("Raise view",self.raiseView),
+                   ("Update tree",self.pop5),
                    None,
                    ("Close tree",self.pop4),
-                   ("Close all but this tree",self.pop5),
-                   ("Close all but this view",self.pop6),
-                   None,
-                   ("Close all views",self.pop7),
-                   ("Close view",self.pop1))
+                   ("Close view",self.closeView))
           self.popupmenu.clear()
           self.popupmenu.setTitle('Control view menu')
           for aparam in actlist:
@@ -133,6 +141,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.controlTable.horizontalScrollBar().setSliderPosition(0)
     def initControlTable(self):
         ctw=self.controlTable
+        ctw.control=self
         cth=ctw.horizontalHeader()
         ctw.verticalHeader().hide()
         h=['S','T','View','Dir','File','Node']
@@ -184,6 +193,10 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             ctw.resizeColumnToContents(i)
         for i in range(self.controlTable.rowCount()):
             ctw.resizeRowToContents(i)
+    def selectLine(self,idx):
+        i=int(self.getLineFromIdx(idx))
+        if (i!=-1):
+            self.controlTable.setCurrentCell(i,2)
     def delLine(self,idx):
         i=int(self.getLineFromIdx(idx))
         if (i!=-1):
