@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7InfoWindow.ui'
 #
-# Created: Wed Apr 25 16:33:53 2012
+# Created: Wed Apr 25 16:40:27 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -59,6 +59,7 @@ class Ui_Q7InfoWindow(object):
         self.label_14.setObjectName("label_14")
         self.eVersionHDF5 = QtGui.QLineEdit(self.groupBox_4)
         self.eVersionHDF5.setGeometry(QtCore.QRect(100, 50, 71, 22))
+        self.eVersionHDF5.setReadOnly(True)
         self.eVersionHDF5.setObjectName("eVersionHDF5")
         self.label_4 = QtGui.QLabel(self.groupBox_2)
         self.label_4.setGeometry(QtCore.QRect(40, 20, 58, 16))

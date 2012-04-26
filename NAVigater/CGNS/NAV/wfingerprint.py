@@ -22,8 +22,9 @@ from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
 # -----------------------------------------------------------------
 class Q7Window(QWidget,object):
     VIEW_CONTROL='C'
-    VIEW_OPTION='O'
+    VIEW_DIAG='D'
     VIEW_TREE='T'
+    VIEW_OPTION='O'
     VIEW_VTK='G'
     VIEW_FORM='F'
     VIEW_QUERY='Q'
@@ -41,6 +42,9 @@ class Q7Window(QWidget,object):
         self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.gif"))
         self.I_FORM=QIcon(QPixmap(":/images/icons/form.gif"))
         self.I_SELECT=QIcon(QPixmap(":/images/icons/operate-list.gif"))
+        self.I_DIAG=QIcon(QPixmap(":/images/icons/check-all.gif"))
+        self.I_D_INF=QIcon(QPixmap(":/images/icons/subtree-sids-warning.gif"))
+        self.I_D_ERR=QIcon(QPixmap(":/images/icons/subtree-sids-failed.gif"))
         if (vtype==Q7Window.VIEW_TREE): self._stylesheet=Q7TREEVIEWSTYLESHEET
         if (vtype==Q7Window.VIEW_FORM): self._stylesheet=Q7TABLEVIEWSTYLESHEET
         if (vtype==Q7Window.VIEW_CONTROL):

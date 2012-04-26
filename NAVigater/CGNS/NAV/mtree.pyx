@@ -248,7 +248,7 @@ class Q7TreeItem(object):
         self._size=None
         self._fingerprint=fgprint
         self._control=self._fingerprint.control
-        self._states={'mark':STMARKOFF,'check':STCHKGOOD,
+        self._states={'mark':STMARKOFF,'check':STCHKUNKN,
                       'fortran':STFORUNKN,'shared':STSHRUNKN}
         self._model=model
         self._tag=tag
@@ -490,7 +490,7 @@ class Q7TreeModel(QAbstractItemModel):
                self._selected+=[self._extension[k].sidsPath()]
         self._selected=self.sortNamesAndTypes(self._selected)
     def checkSelected(self):
-        self.checkTree(self._fingerprint.tree,self._selected)
+        return self.checkTree(self._fingerprint.tree,self._selected)
     def checkClear(self):
         for k in self._extension:
            self._extension[k]._states['check']=STCHKUNKN
@@ -675,5 +675,6 @@ class Q7TreeModel(QAbstractItemModel):
                 if (stat==CGV.CHECK_FAIL): item.setCheck(STCHKFAIL)
                 if (stat==CGV.CHECK_WARN): item.setCheck(STCHKWARN)
                 if (stat==CGV.CHECK_USER): item.setCheck(STCHKUSER)
+        return checkdiag
 
 # -----------------------------------------------------------------

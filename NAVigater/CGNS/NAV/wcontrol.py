@@ -180,6 +180,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             tpitem=QTableWidgetItem(self.I_QUERY,'')
         if (l[1]==Q7Window.VIEW_SELECT):
             tpitem=QTableWidgetItem(self.I_SELECT,'')
+        if (l[1]==Q7Window.VIEW_DIAG):
+            tpitem=QTableWidgetItem(self.I_DIAG,'')
         tpitem.setTextAlignment(Qt.AlignCenter)
         ctw.setItem(r,1,tpitem)
         self.modifiedLine(r,l[0])

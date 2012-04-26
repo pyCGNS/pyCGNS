@@ -12,6 +12,7 @@ from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.wform import Q7Form
 from CGNS.NAV.wvtk import Q7VTK
 from CGNS.NAV.wquery import Q7Query, Q7SelectionList
+from CGNS.NAV.wdiag import Q7CheckList
 from CGNS.NAV.mquery import Q7QueryTableModel
 from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem
 from CGNS.NAV.wfingerprint import Q7Window,Q7fingerPrint
@@ -148,6 +149,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.treeview.setControlWindow(self,self._fgprint.model)
         if (self._control.transientRecurse): self.expandMinMax()
         if (self._control.transientVTK):     self.vtkview()
+        self.clearchecks()
     def savetree(self):
         if ((self._fgprint.converted) or
             not (self._fgprint.isModified())): return
@@ -268,15 +270,21 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.treeview.model().updateSelected()
         self.treeview.refreshView()
     def check(self):
-        self.treeview.model().checkSelected()
+        self.busyCursor()
+        self.lastdiag=self.treeview.model().checkSelected()
+        self.readyCursor()
         self.treeview.refreshView()
     def checklist(self):
-        pass
+        if (self.lastdiag is None): return
+        self.diagview=Q7CheckList(self._control,self.lastdiag,self._fgprint)
+        self.diagview.show()
     def clearchecks(self):
         self.treeview.model().checkClear()
         self.treeview.refreshView()
+        self.lastdiag=None
     def selectionlist(self):
-        slist=Q7SelectionList(self._control,self._fgprint)
+        slist=Q7SelectionList(self._control,self.treeview.model()._selected,
+                              self._fgprint)
         slist.show()
     def previousmark(self):
         self.treeview.changeSelectedMark(-1)
