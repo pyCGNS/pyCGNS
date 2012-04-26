@@ -15,6 +15,7 @@ import CGNS.NAV.wmessages as MSG
 import os.path
 import stat
 import string
+import time
 
 LOADBUTTON='Load'
 SAVEBUTTON='Save'
@@ -29,6 +30,8 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         self.control=parent.parent
         self.wparent=parent
         self.setDynamicSortFilter(True)
+        import locale
+        locale.setlocale(locale.LC_ALL, 'C')
     def filterAcceptsRow(self,row,parentindex):
         idx=self.model.index(row,1,parentindex)
         p=self.model.filePath(idx)
@@ -60,6 +63,27 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         if (m & stat.S_IWOTH): w=True
         if (write and not w): return False
         return True
+    def lessThan(self,left,right):
+        c=self.sortColumn()
+        a=self.model.data(left)
+        b=self.model.data(right)
+        if (c in (0,2)): return a<b
+        if (c==3):
+            fmtr="%d %b %Y %H:%M:%S"
+            fmtw="%Y-%m-%d %H:%M:%S"
+            ad=time.strptime(str(a),fmtr)
+            bd=time.strptime(str(b),fmtr)
+            af=time.strftime(fmtw,ad)
+            bf=time.strftime(fmtw,bd)
+            return af<bf
+        if (c==1):
+            wg={'MB':1e3,'GB':1e6,'KB':1}
+            (av,au)=a.split()
+            (bv,bu)=b.split()
+            av=float(string.replace(av,',','.'))*wg[au]
+            bv=float(string.replace(bv,',','.'))*wg[bu]
+            return av<bv
+        return 1
    
 # -----------------------------------------------------------------
 class Q7FileIconProvider(QFileIconProvider):

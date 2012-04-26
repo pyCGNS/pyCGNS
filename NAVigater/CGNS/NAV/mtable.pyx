@@ -42,6 +42,19 @@ class Q7TableModel(QAbstractTableModel):
             self.flatarray=self.node.sidsValue().flat
         else:
             self.flatarray=None
+        self.hmin=1
+        self.vmin=1
+    def setRange(self,minh,minv):
+        self.hmin=minh
+        self.vmin=minv
+    def headerData(self, section, orientation, role):  
+        if ((orientation == Qt.Horizontal) and (role == Qt.DisplayRole)):
+            hix=section+self.hmin
+            return hix
+        if ((orientation == Qt.Vertical) and (role == Qt.DisplayRole)):
+            vix=section+self.vmin
+            return vix
+        return None
     def flatindex_C(self,index):
         return index.row()*self.cs+index.column()
     def flatindex_F(self,index):

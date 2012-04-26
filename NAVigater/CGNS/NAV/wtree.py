@@ -199,17 +199,23 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (self.lastNodeMenu.isValid()):
             nodeitem=self.lastNodeMenu.internalPointer()
             self._fgprint.model.copyNode(nodeitem)
+    def mcutselected(self):
+        self._fgprint.model.cutAllSelectedNodes()
     def mcut(self):
         if (self.lastNodeMenu.isValid()):
             nodeitem=self.lastNodeMenu.internalPointer()
             self.lastNodeMenu=self.lastNodeMenu.parent()
             self._fgprint.model.cutNode(nodeitem)
+    def mpasteasbrotherselected(self):
+        self._fgprint.model.pasteAsBrotherAllSelectedNodes()
     def mpasteasbrother(self):
         if (self.lastNodeMenu.isValid()):
             nodeitem=self.lastNodeMenu.internalPointer()
             self._fgprint.model.pasteAsBrother(nodeitem)
             self._fgprint.model.dataChanged.emit(self.lastNodeMenu,
                                                  self.lastNodeMenu)
+    def mpasteaschildselected(self):
+        self._fgprint.model.pasteAsChildAllSelectedNodes()
     def mpasteaschild(self):
         if (self.lastNodeMenu.isValid()):
             nodeitem=self.lastNodeMenu.internalPointer()
@@ -229,6 +235,12 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                    ("Cut",self.mcut,'Ctrl+X'),
                    ("Paste as brother",self.mpasteasbrother,'Ctrl+V'),
                    ("Paste as child",self.mpasteaschild,'Ctrl+Y'),
+                   None,
+                   ("Cut all selected",self.mcutselected,'Ctrl+O'),
+                   ("Paste as brother for each selected",
+                    self.mpasteasbrotherselected,'Ctrl+K'),
+                   ("Paste as child for each selected",
+                    self.mpasteaschildselected,'Ctrl+I'),
                    )
           self.popupmenu.clear()
           self.popupmenu.setTitle('Node menu')
@@ -260,12 +272,13 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         super(Q7Tree, self).show()
     def applyquery(self):
         q=self.cQuery.currentText()
+        v=self.eUserVariable.text()
         if (q in ['',' ']):
             self.unmarkall()
             return
         qry=self.querymodel
         if (q in qry.queriesNamesList()):
-            sl=qry.getQuery(q).run(self._fgprint.tree)
+            sl=qry.getQuery(q).run(self._fgprint.tree,v)
             self.treeview.model().markExtendToList(sl)
             self.treeview.model().updateSelected()
         self.treeview.refreshView()

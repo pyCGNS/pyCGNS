@@ -637,6 +637,10 @@ class Q7TreeModel(QAbstractItemModel):
             self.dataChanged.emit(ix1,ix2)
     def copyNode(self,nodeitem):
         self._control.copyPasteBuffer=copy.deepcopy(nodeitem._itemnode)
+    def cutAllSelectedNodes(self):
+        for pth in self._selected:
+            nodeitem=self.nodeFromPath(pth)
+            self.cutNode(nodeitem)
     def cutNode(self,nodeitem):
         self._control.copyPasteBuffer=copy.deepcopy(nodeitem._itemnode)
         parentitem=nodeitem.parentItem()
@@ -646,6 +650,10 @@ class Q7TreeModel(QAbstractItemModel):
         parentitem.sidsRemoveChild(self._control.copyPasteBuffer)
         self.refreshModel(pix)
         self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+    def pasteAsChildAllSelectedNodes(self):
+        for pth in self._selected:
+            nodeitem=self.nodeFromPath(pth)
+            self.pasteAsChild(nodeitem)
     def pasteAsChild(self,nodeitem):
         if (self._control.copyPasteBuffer is None): return
         row=nodeitem.row()
@@ -659,6 +667,10 @@ class Q7TreeModel(QAbstractItemModel):
         self.refreshModel(nix)
         self.refreshModel(cix)
         self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+    def pasteAsBrotherAllSelectedNodes(self):
+        for pth in self._selected:
+            nodeitem=self.nodeFromPath(pth)
+            self.pasteAsBrother(nodeitem)
     def pasteAsBrother(self,nodeitem):
         nix=self.indexByPath(nodeitem.sidsPath())
         self.pasteAsChild(nix.parent().internalPointer())

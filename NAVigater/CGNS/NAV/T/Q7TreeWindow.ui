@@ -283,32 +283,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="bUnmarkAll">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Unmark all nodes</string>
-       </property>
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/flag-none.gif</normaloff>:/images/icons/flag-none.gif</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QToolButton" name="bMarksAsList">
        <property name="minimumSize">
         <size>
@@ -792,6 +766,32 @@
       </widget>
      </item>
      <item>
+      <widget class="QToolButton" name="bUnmarkAll">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Unmark all nodes</string>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/node-sids-leaf.gif</normaloff>:/images/icons/node-sids-leaf.gif</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QToolButton" name="bNextMark">
        <property name="minimumSize">
         <size>
@@ -821,6 +821,16 @@
       <widget class="QComboBox" name="cQuery">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="eUserVariable">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
