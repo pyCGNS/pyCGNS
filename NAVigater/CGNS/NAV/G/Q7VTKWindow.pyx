@@ -8,6 +8,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PySide import QtCore, QtGui
+from CGNS.NAV.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 
 class Ui_Q7VTKWindow(object):
     def setupUi(self, Q7VTKWindow):
@@ -305,5 +306,5 @@ class Ui_Q7VTKWindow(object):
         self.bReset.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Clear selection list", None, QtGui.QApplication.UnicodeUTF8))
         self.bNext.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Highlight next selected item", None, QtGui.QApplication.UnicodeUTF8))
 
-from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
+## from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import Res_rc

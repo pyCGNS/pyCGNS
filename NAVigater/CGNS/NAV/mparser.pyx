@@ -157,7 +157,7 @@ class Mesh(CGNSparser):
   def getDimsFromObject(self,selectedobject):
     for (o,p) in [(a[2],a[4]) for a in self._actors]:
       if (selectedobject==o): return p
-    return ''
+    return (1,None)
     
 #  @cython.boundscheck(False)
   def do_volume(self,path,dx,dy,dz,solution):
@@ -271,7 +271,7 @@ class Mesh(CGNSparser):
     a = vtk.vtkActor()
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
-    return (a,None,sg,path,1,None)
+    return (a,None,sg,path,(1,None))
 
   def do_vtk(self,z):
       self._actors+=[self.do_volume(z[3],z[0][0],z[0][1],z[0][2],z[6])]
