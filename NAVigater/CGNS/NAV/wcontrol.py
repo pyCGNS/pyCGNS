@@ -79,10 +79,22 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         (f,v,d)=Q7fingerPrint.infoView(self.lastView)
         self.w=Q7Info(self,d,f)
         self.w.show()
-    def pop4(self):
-        pass
-    def pop5(self):
-        pass
+    def closeTree(self):
+        self.updateLastView()
+        (f,v,d)=Q7fingerPrint.infoView(self.lastView)
+        reply = MSG.message('Double check...',
+                            """Do you want to close the tree and all its views,<br>
+                            and <b>forget unsaved</b> modifications?""",
+                            MSG.YESNO)
+        if (reply == QMessageBox.Yes):
+            f.closeAllViews()
+    def closeAllViews(self):
+        reply = MSG.message('Double check...',
+                            """Do you want to close all the views,<br>
+                            and <b>forget unsaved</b> modifications?""",
+                            MSG.YESNO)
+        if (reply == QMessageBox.Yes):
+            Q7fingerPrint.closeAllTrees()
     def pop6(self):
         pass
     def pop7(self):
@@ -95,13 +107,14 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         lv=self.getIdxFromLine(idx.row())
         if (lv is not None):
           self.lastView=lv
-          actlist=(("View  information",self.info),
+          actlist=(("View information (Enter)",self.info),
                    None,
-                   ("Raise view",self.raiseView),
-                   ("Update tree",self.pop5),
+                   ("Raise view (Space)",self.raiseView),
+                   ("Update tree",self.pop6),
                    None,
-                   ("Close tree",self.pop4),
-                   ("Close view",self.closeView))
+                   ("Close tree",self.closeTree),
+                   ("Close all views",self.closeAllViews),
+                   ("Close view (Del)",self.closeView))
           self.popupmenu.clear()
           self.popupmenu.setTitle('Control view menu')
           for aparam in actlist:

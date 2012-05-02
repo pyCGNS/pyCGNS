@@ -54,6 +54,9 @@ COPY='@@NODECOPY@@'
 CUT='@@NODECUT@@'
 PASTEBROTHER='@@NODEPASTEB@@'
 PASTECHILD='@@NODEPASTEC@@'
+CUTSELECTED='@@NODECUTS@@'
+PASTEBROTHERSELECTED='@@NODEPASTEBS@@'
+PASTECHILDSELECTED='@@NODEPASTECS@@'
 OPENFORM='@@OPENFORM@@'
 OPENVIEW='@@OPENVIEW@@'
 
@@ -86,6 +89,9 @@ KEYMAPPING={
  PASTEBROTHER : Qt.Key_V,
  OPENFORM     : Qt.Key_F,
  OPENVIEW     : Qt.Key_W,
+ CUTSELECTED  : Qt.Key_O,
+ PASTECHILDSELECTED   : Qt.Key_I,
+ PASTEBROTHERSELECTED : Qt.Key_K,
 }
 
 EDITKEYMAPPINGS=[
@@ -148,6 +154,12 @@ class Q7TreeView(QTreeView):
                   self._model.pasteAsChild(last)
                 if (kval==KEYMAPPING[PASTEBROTHER]):
                   self._model.pasteAsBrother(last)
+                if (kval==KEYMAPPING[CUTSELECTED]):
+                  self._model.cutAllSelectedNodes()
+                if (kval==KEYMAPPING[PASTECHILDSELECTED]):
+                  self._model.pasteAsChildAllSelectedNodes()
+                if (kval==KEYMAPPING[PASTEBROTHERSELECTED]):
+                  self._model.pasteAsBrotherAllSelectedNodes()
           elif (kval==KEYMAPPING[EDITNODE]):
               if (kmod==Qt.ControlModifier):
                   eix=self._model.createIndex(nix.row(),1,
