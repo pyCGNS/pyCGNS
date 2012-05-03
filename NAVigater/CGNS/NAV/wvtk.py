@@ -829,23 +829,26 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           actor.GetProperty().EdgeVisibilityOff()
           actor = actors.GetNextItem()
       self._vtk.GetRenderWindow().Render()
-
-##   def resizeEvent(self,*args):
-##       sz=self._iren.GetRenderWindow().GetSize()
-##       if (self.scalarbarwidget.GetEnabled()==1):
-##           self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.07*781/sz[0],0.6*554/sz[1])
-##       self.widget.SetViewport(0,0,0.3*781/sz[0],0.3*554/sz[1])
-      
+     
   def posWidgets(self,*args):
       sz=self._iren.GetRenderWindow().GetSize()
+      self.posScalarBar(sz)
+      self.widget.SetViewport(0,0,0.3*781/sz[0],0.3*554/sz[1])
+
+  def posScalarBar(self,sz):
       if (self.scalarbarwidget.GetEnabled()==1):
           if (self.scalarbarwidget.GetScalarBarActor().GetOrientation()==1):
               self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.07*781/sz[0],0.6*554/sz[1])
           elif (self.hscalarbar is None):
-              self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.6*781/sz[0],0.07*554/sz[1])
-##           if ((self.scalarbarwidget.GetScalarBarRepresentation().GetPosition2()[1]+
-##               self.scalarbarwidget.GetScalarBarRepresentation().GetPosition()[1])>1):
-      self.widget.SetViewport(0,0,0.3*781/sz[0],0.3*554/sz[1])
+                    self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.6*781/sz[0],0.07*554/sz[1])
+          pos2=self.scalarbarwidget.GetScalarBarRepresentation().GetPosition2()
+          pos=self.scalarbarwidget.GetScalarBarRepresentation().GetPosition()
+          if ((pos2[1]+pos[1])>1.2):
+              self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(pos[0],1.2-pos2[1])
+          if ((pos2[0]+pos[0])>1.02):
+              self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(1.02-pos2[0],pos[1])
+      
+      
       
      
   def b_surfwire(self,pos):       
