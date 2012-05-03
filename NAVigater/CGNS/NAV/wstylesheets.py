@@ -26,20 +26,20 @@ Q7CONTROLVIEWSTYLESHEET="""
 """%colordict
 
 Q7TABLEVIEWSTYLESHEET="""
- QTableView {
+ Q7TableView {
  show-decoration-selected: 1;
  }
 
- QTableView::item:selected {
+ Q7TableView::item:selected {
  background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 %(high)s,stop:1 %(low)s);
  color:black;
  border: 1px solid #bfcde4;
  }
 
- QTableView::item
+ Q7TableView::item
  {
  border: 0px;
- padding: 0px;
+ padding: 10px;
  }
 """%colordict
 

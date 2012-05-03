@@ -371,6 +371,12 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     _UsualQueriesText=[
     ['Search by node name',[(Q_OR,  Q_NODE, Q_SCRIPT,
                              'RESULT=(NAME==USERPARAMETER[0])')]],
+    ['Search by wildcard nodename',[(Q_OR,  Q_NODE, Q_SCRIPT,
+"""
+import fnmatch
+RESULT=fnmatch.fnmatchcase(NAME,USERPARAMETER[0])
+"""
+    )]],
     ['Search by node type',[(Q_OR,  Q_NODE, Q_SCRIPT,
                              'RESULT=(CGNSTYPE==USERPARAMETER[0])')]],
     ['Families',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.Family_ts)]],

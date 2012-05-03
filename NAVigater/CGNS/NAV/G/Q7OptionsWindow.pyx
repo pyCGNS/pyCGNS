@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Wed Apr 25 16:40:18 2012
+# Created: Thu May  3 09:15:46 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -122,11 +122,14 @@ class Ui_Q7OptionsWindow(object):
         self.label.setGeometry(QtCore.QRect(10, 20, 201, 17))
         self.label.setObjectName("label")
         self.label_3 = QtGui.QLabel(self.tab_3)
-        self.label_3.setGeometry(QtCore.QRect(20, 60, 58, 16))
+        self.label_3.setGeometry(QtCore.QRect(20, 60, 161, 16))
         self.label_3.setObjectName("label_3")
         self.__O_fixedfonttable = QtGui.QLineEdit(self.tab_3)
-        self.__O_fixedfonttable.setGeometry(QtCore.QRect(90, 60, 113, 22))
+        self.__O_fixedfonttable.setGeometry(QtCore.QRect(190, 60, 113, 22))
         self.__O_fixedfonttable.setObjectName("__O_fixedfonttable")
+        self.label_12 = QtGui.QLabel(self.tab_3)
+        self.label_12.setGeometry(QtCore.QRect(20, 90, 58, 16))
+        self.label_12.setObjectName("label_12")
         self.tabs.addTab(self.tab_3, "")
         self.tab_4 = QtGui.QWidget()
         self.tab_4.setObjectName("tab_4")
@@ -240,7 +243,8 @@ class Ui_Q7OptionsWindow(object):
         self.__O_forcefortranflag.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Force fortran flag in numpy arrays", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.tab_6), QtGui.QApplication.translate("Q7OptionsWindow", "Checks", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Tree view node name", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Table", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Form view Table contents", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_12.setText(QtGui.QApplication.translate("Q7OptionsWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.tab_3), QtGui.QApplication.translate("Q7OptionsWindow", "Fonts", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_showtableindex.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Show table index", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_oneviewpertreenode.setText(QtGui.QApplication.translate("Q7OptionsWindow", "One view per tree/node", None, QtGui.QApplication.UnicodeUTF8))

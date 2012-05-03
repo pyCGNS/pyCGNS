@@ -93,6 +93,7 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         QObject.connect(self.sMinV,
                         SIGNAL("valueChanged(int)"),
                         self.resetIndex)
+        self.minimizeCells()
     def resizeTable(self):
         s=self.cRowColSize.currentText()
         (r,c)=s.split('x')

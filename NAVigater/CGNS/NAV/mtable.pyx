@@ -44,6 +44,7 @@ class Q7TableModel(QAbstractTableModel):
             self.flatarray=None
         self.hmin=1
         self.vmin=1
+        self.font=QFont("Courier")
     def setRange(self,minh,minv):
         self.hmin=minh
         self.vmin=minv
@@ -66,8 +67,9 @@ class Q7TableModel(QAbstractTableModel):
     def index(self, row, column, parent):
         return self.createIndex(row, column, 0)  
     def data(self, index, role):
-        if (role!=Qt.DisplayRole): return None
+        if (role not in [Qt.DisplayRole,Qt.FontRole]): return None
         if (self.flatarray is None): return None
+        if (role==Qt.FontRole): return self.font
         return self.fmt%self.flatarray[self.flatindex(index)]
     def flags(self, index):  
         if (not index.isValid()):  return Qt.NoItemFlags  
