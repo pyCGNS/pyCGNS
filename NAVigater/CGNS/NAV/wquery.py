@@ -17,11 +17,37 @@ import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
 class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
-    def __init__(self,control,fgprint):
-        Q7Window.__init__(self,Q7Window.VIEW_SELECT,control,'/',fgprint)
-    def updateTreeStatus(self):
-        print 'sel up'
-        
+    def __init__(self,control,data,fgprint):
+        Q7Window.__init__(self,Q7Window.VIEW_SELECT,control,None,fgprint)
+        self.bClose.clicked.connect(self.reject)
+        self._data=data
+        self._fgprint=fgprint
+    def show(self):
+        self.reset()
+        super(Q7SelectionList, self).show()
+    def reset(self):
+        v=self.diagTable
+        v.setColumnCount(self._fgprint.depth)
+        lh=v.horizontalHeader()
+        lv=v.verticalHeader()
+        h=['-']*self._fgprint.depth
+        for i in range(len(h)):
+            hi=QTableWidgetItem(h[i])
+            v.setHorizontalHeaderItem(i,hi)
+            lh.setResizeMode(i,QHeaderView.ResizeToContents)
+        lh.setResizeMode(len(h)-1,QHeaderView.Stretch)
+        for path in self._data:
+            v.setRowCount(v.rowCount()+1)
+            r=v.rowCount()-1
+            plist=path.split('/')[1:]
+            for i in range(len(plist)):
+                v.setItem(r,i,QTableWidgetItem('%s '%plist[i]))
+        for i in range(len(plist)):
+            v.resizeColumnToContents(i)
+        for i in range(v.rowCount()):
+            v.resizeRowToContents(i)
+    def reject(self):
+        self.close()
 
 # -----------------------------------------------------------------
 class Q7QueryTableItemDelegate(QStyledItemDelegate):

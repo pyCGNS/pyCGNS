@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/save-log.gif</file>
+    <file>icons/colors-first.gif</file>
+    <file>icons/colors-last.gif</file>
     <file>icons/toolsview.gif</file>
     <file>icons/vtkview.gif</file>
     <file>icons/save-inactive.gif</file>

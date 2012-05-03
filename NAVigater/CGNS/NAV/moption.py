@@ -44,6 +44,7 @@ Q_VAR_CHILDREN='CHILDREN'
 Q_VAR_TREE='TREE'
 Q_VAR_PATH='PATH'
 Q_VAR_RESULT='RESULT'
+Q_VAR_USER='USERPARAMETER'
 Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
 
 Q_SCRIPT_PRE="""
@@ -368,6 +369,16 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     ]
 
     _UsualQueriesText=[
+    ['Search by node name',[(Q_OR,  Q_NODE, Q_SCRIPT,
+                             'RESULT=(NAME==USERPARAMETER[0])')]],
+    ['Search by wildcard nodename',[(Q_OR,  Q_NODE, Q_SCRIPT,
+"""
+import fnmatch
+RESULT=fnmatch.fnmatchcase(NAME,USERPARAMETER[0])
+"""
+    )]],
+    ['Search by node type',[(Q_OR,  Q_NODE, Q_SCRIPT,
+                             'RESULT=(CGNSTYPE==USERPARAMETER[0])')]],
     ['Families',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.Family_ts)]],
     ['Family names',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.FamilyName_ts)]],
     ['BCs',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.BC_ts)]],

@@ -42,12 +42,11 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self._node=node
         for t in self._node.sidsTypeList():
             self.eType.addItem(t)
-        self.bApply.clicked.connect(self.accept)
         self.bClose.clicked.connect(self.reject)
         for dt in node.sidsDataType(all=True):
             self.cDataType.addItem(dt)
     def updateTreeStatus(self):
-        print 'form up'
+        pass
     def accept(self):
         pass
     def reject(self):
@@ -59,6 +58,10 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.eName.setText(self._node.sidsName())
         self.ePath.setText(self._node.sidsPath())
         self.ePath.setReadOnly(True)
+        self.sMinH.setRange(1,999999999)
+        self.sMinV.setRange(1,999999999)
+        self.sMinH.setValue(1)
+        self.sMinV.setValue(1)
         self.setCurrentType(self._node.sidsType())
         dims=self._node.sidsDims()
         its=reduce(lambda x,y: x*y, dims)
@@ -84,6 +87,13 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         QObject.connect(self.cRowColSize,
                         SIGNAL("currentIndexChanged(int)"),
                         self.resizeTable)
+        QObject.connect(self.sMinH,
+                        SIGNAL("valueChanged(int)"),
+                        self.resetIndex)
+        QObject.connect(self.sMinV,
+                        SIGNAL("valueChanged(int)"),
+                        self.resetIndex)
+        self.minimizeCells()
     def resizeTable(self):
         s=self.cRowColSize.currentText()
         (r,c)=s.split('x')
@@ -107,6 +117,12 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         ix=self.cDataType.findText(dt)
         if (ix==-1): return
         self.cDataType.setCurrentIndex(ix)
+    def resetIndex(self):
+        hm=self.sMinH.value()
+        vm=self.sMinV.value()
+        self.model.setRange(hm,vm)
+        self.model.headerDataChanged.emit(Qt.Vertical, 1, 1)
+        self.model.headerDataChanged.emit(Qt.Horizontal, 1, 1)
     def addControlLine(self):
         pass
     def setEnumerateValue(self,etype,evalue,etypeidx,evalueidx):

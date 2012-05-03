@@ -2,13 +2,12 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Tue Apr 17 13:34:48 2012
+# Created: Thu May  3 08:38:13 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 
 from PySide import QtCore, QtGui
-from CGNS.NAV.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 
 class Ui_Q7VTKWindow(object):
     def setupUi(self, Q7VTKWindow):
@@ -166,14 +165,18 @@ class Ui_Q7VTKWindow(object):
         self.bColorMapMin.setMinimumSize(QtCore.QSize(25, 25))
         self.bColorMapMin.setMaximumSize(QtCore.QSize(25, 25))
         self.bColorMapMin.setText("")
-        self.bColorMapMin.setIcon(icon6)
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap(":/images/icons/colors-first.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bColorMapMin.setIcon(icon8)
         self.bColorMapMin.setObjectName("bColorMapMin")
         self.horizontalLayout_3.addWidget(self.bColorMapMin)
         self.bColorMapMax = QtGui.QPushButton(Q7VTKWindow)
         self.bColorMapMax.setMinimumSize(QtCore.QSize(25, 25))
         self.bColorMapMax.setMaximumSize(QtCore.QSize(25, 25))
         self.bColorMapMax.setText("")
-        self.bColorMapMax.setIcon(icon6)
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap(":/images/icons/colors-last.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bColorMapMax.setIcon(icon9)
         self.bColorMapMax.setObjectName("bColorMapMax")
         self.horizontalLayout_3.addWidget(self.bColorMapMax)
         self.cVariables = QtGui.QComboBox(Q7VTKWindow)
@@ -203,9 +206,9 @@ class Ui_Q7VTKWindow(object):
         self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))
         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
         self.bBackControl.setText("")
-        icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(":/images/icons/top.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bBackControl.setIcon(icon8)
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap(":/images/icons/top.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bBackControl.setIcon(icon10)
         self.bBackControl.setObjectName("bBackControl")
         self.horizontalLayout_2.addWidget(self.bBackControl)
         spacerItem4 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
@@ -214,9 +217,9 @@ class Ui_Q7VTKWindow(object):
         self.bUpdate.setMinimumSize(QtCore.QSize(25, 25))
         self.bUpdate.setMaximumSize(QtCore.QSize(25, 25))
         self.bUpdate.setText("")
-        icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(":/images/icons/undo-last-modification.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bUpdate.setIcon(icon9)
+        icon11 = QtGui.QIcon()
+        icon11.addPixmap(QtGui.QPixmap(":/images/icons/undo-last-modification.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bUpdate.setIcon(icon11)
         self.bUpdate.setObjectName("bUpdate")
         self.horizontalLayout_2.addWidget(self.bUpdate)
         self.cCurrentPath = QtGui.QComboBox(Q7VTKWindow)
@@ -232,9 +235,9 @@ class Ui_Q7VTKWindow(object):
         self.bReverse.setMinimumSize(QtCore.QSize(25, 25))
         self.bReverse.setMaximumSize(QtCore.QSize(25, 25))
         self.bReverse.setText("")
-        icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(":/images/icons/flag-revert.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bReverse.setIcon(icon10)
+        icon12 = QtGui.QIcon()
+        icon12.addPixmap(QtGui.QPixmap(":/images/icons/flag-revert.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bReverse.setIcon(icon12)
         self.bReverse.setObjectName("bReverse")
         self.horizontalLayout_2.addWidget(self.bReverse)
         spacerItem5 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
@@ -254,27 +257,27 @@ class Ui_Q7VTKWindow(object):
         self.bPrevious.setMinimumSize(QtCore.QSize(25, 25))
         self.bPrevious.setMaximumSize(QtCore.QSize(25, 25))
         self.bPrevious.setText("")
-        icon11 = QtGui.QIcon()
-        icon11.addPixmap(QtGui.QPixmap(":/images/icons/control.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bPrevious.setIcon(icon11)
+        icon13 = QtGui.QIcon()
+        icon13.addPixmap(QtGui.QPixmap(":/images/icons/control.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bPrevious.setIcon(icon13)
         self.bPrevious.setObjectName("bPrevious")
         self.horizontalLayout_2.addWidget(self.bPrevious)
         self.bReset = QtGui.QPushButton(Q7VTKWindow)
         self.bReset.setMinimumSize(QtCore.QSize(25, 25))
         self.bReset.setMaximumSize(QtCore.QSize(25, 25))
         self.bReset.setText("")
-        icon12 = QtGui.QIcon()
-        icon12.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-leaf.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bReset.setIcon(icon12)
+        icon14 = QtGui.QIcon()
+        icon14.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-leaf.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bReset.setIcon(icon14)
         self.bReset.setObjectName("bReset")
         self.horizontalLayout_2.addWidget(self.bReset)
         self.bNext = QtGui.QPushButton(Q7VTKWindow)
         self.bNext.setMinimumSize(QtCore.QSize(25, 25))
         self.bNext.setMaximumSize(QtCore.QSize(25, 25))
         self.bNext.setText("")
-        icon13 = QtGui.QIcon()
-        icon13.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-closed.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bNext.setIcon(icon13)
+        icon15 = QtGui.QIcon()
+        icon15.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-closed.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bNext.setIcon(icon15)
         self.bNext.setObjectName("bNext")
         self.horizontalLayout_2.addWidget(self.bNext)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
@@ -306,5 +309,5 @@ class Ui_Q7VTKWindow(object):
         self.bReset.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Clear selection list", None, QtGui.QApplication.UnicodeUTF8))
         self.bNext.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Highlight next selected item", None, QtGui.QApplication.UnicodeUTF8))
 
-## from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
+from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import Res_rc

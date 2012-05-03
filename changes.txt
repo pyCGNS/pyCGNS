@@ -5,6 +5,12 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 
+# v4.2 -
+- Move MAP to CHLone
+
+# v4.1 -
+- Change pyS7 into CGNS.NAV, use Qt
+
 # v3.2 -
 - Update to CGNS v3.x lib
 - Add CHLONE mapping HDF5 compliant without CGNS/MLL

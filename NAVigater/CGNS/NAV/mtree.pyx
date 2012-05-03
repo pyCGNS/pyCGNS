@@ -54,6 +54,9 @@ COPY='@@NODECOPY@@'
 CUT='@@NODECUT@@'
 PASTEBROTHER='@@NODEPASTEB@@'
 PASTECHILD='@@NODEPASTEC@@'
+CUTSELECTED='@@NODECUTS@@'
+PASTEBROTHERSELECTED='@@NODEPASTEBS@@'
+PASTECHILDSELECTED='@@NODEPASTECS@@'
 OPENFORM='@@OPENFORM@@'
 OPENVIEW='@@OPENVIEW@@'
 
@@ -86,6 +89,9 @@ KEYMAPPING={
  PASTEBROTHER : Qt.Key_V,
  OPENFORM     : Qt.Key_F,
  OPENVIEW     : Qt.Key_W,
+ CUTSELECTED  : Qt.Key_O,
+ PASTECHILDSELECTED   : Qt.Key_I,
+ PASTEBROTHERSELECTED : Qt.Key_K,
 }
 
 EDITKEYMAPPINGS=[
@@ -148,6 +154,12 @@ class Q7TreeView(QTreeView):
                   self._model.pasteAsChild(last)
                 if (kval==KEYMAPPING[PASTEBROTHER]):
                   self._model.pasteAsBrother(last)
+                if (kval==KEYMAPPING[CUTSELECTED]):
+                  self._model.cutAllSelectedNodes()
+                if (kval==KEYMAPPING[PASTECHILDSELECTED]):
+                  self._model.pasteAsChildAllSelectedNodes()
+                if (kval==KEYMAPPING[PASTEBROTHERSELECTED]):
+                  self._model.pasteAsBrotherAllSelectedNodes()
           elif (kval==KEYMAPPING[EDITNODE]):
               if (kmod==Qt.ControlModifier):
                   eix=self._model.createIndex(nix.row(),1,
@@ -248,12 +260,15 @@ class Q7TreeItem(object):
         self._size=None
         self._fingerprint=fgprint
         self._control=self._fingerprint.control
-        self._states={'mark':STMARKOFF,'check':STCHKGOOD,
+        self._states={'mark':STMARKOFF,'check':STCHKUNKN,
                       'fortran':STFORUNKN,'shared':STSHRUNKN}
         self._model=model
         self._tag=tag
         if ((parent is not None) and (model is not None)):
             self._model._extension[self._path]=self
+            self._nodes=len(self._model._extension)
+        else:
+            self._nodes=0
     def orderTag(self):
         return self._tag+"0"*(self._fingerprint.depth*4-len(self._tag))
     def sidsParent(self):
@@ -432,6 +447,7 @@ class Q7TreeModel(QAbstractItemModel):
         self._fingerprint=fgprint
         self._slist=OCTXT._SortedTypeList
         self._count=0
+        self._fingerprint.version=CGU.getVersion(self._fingerprint.tree)
         self.parseAndUpdate(self._rootitem,
                             self._fingerprint.tree,
                             QModelIndex(),0)
@@ -486,7 +502,7 @@ class Q7TreeModel(QAbstractItemModel):
                self._selected+=[self._extension[k].sidsPath()]
         self._selected=self.sortNamesAndTypes(self._selected)
     def checkSelected(self):
-        self.checkTree(self._fingerprint.tree,self._selected)
+        return self.checkTree(self._fingerprint.tree,self._selected)
     def checkClear(self):
         for k in self._extension:
            self._extension[k]._states['check']=STCHKUNKN
@@ -617,6 +633,7 @@ class Q7TreeModel(QAbstractItemModel):
         for childnode in CGU.getNextChildSortByType(node,criteria=self._slist):
             c=self.parseAndUpdate(newItem,childnode,newIndex,crow,tag)
             self._fingerprint.depth=max(c._depth,self._fingerprint.depth)
+            self._fingerprint.nodes=max(c._nodes,self._fingerprint.nodes)
             crow+=1
         return newItem
     def refreshModel(self,nodeidx):
@@ -631,9 +648,13 @@ class Q7TreeModel(QAbstractItemModel):
         if (ix1.isValid() and ix2.isValid()):
             self.dataChanged.emit(ix1,ix2)
     def copyNode(self,nodeitem):
-        self._control.copyPasteBuffer=nodeitem._itemnode
+        self._control.copyPasteBuffer=copy.deepcopy(nodeitem._itemnode)
+    def cutAllSelectedNodes(self):
+        for pth in self._selected:
+            nodeitem=self.nodeFromPath(pth)
+            self.cutNode(nodeitem)
     def cutNode(self,nodeitem):
-        self._control.copyPasteBuffer=nodeitem._itemnode
+        self._control.copyPasteBuffer=copy.deepcopy(nodeitem._itemnode)
         parentitem=nodeitem.parentItem()
         path=CGU.getPathAncestor(nodeitem.sidsPath())
         self.removeItemTree(nodeitem)
@@ -641,6 +662,10 @@ class Q7TreeModel(QAbstractItemModel):
         parentitem.sidsRemoveChild(self._control.copyPasteBuffer)
         self.refreshModel(pix)
         self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+    def pasteAsChildAllSelectedNodes(self):
+        for pth in self._selected:
+            nodeitem=self.nodeFromPath(pth)
+            self.pasteAsChild(nodeitem)
     def pasteAsChild(self,nodeitem):
         if (self._control.copyPasteBuffer is None): return
         row=nodeitem.row()
@@ -654,6 +679,10 @@ class Q7TreeModel(QAbstractItemModel):
         self.refreshModel(nix)
         self.refreshModel(cix)
         self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+    def pasteAsBrotherAllSelectedNodes(self):
+        for pth in self._selected:
+            nodeitem=self.nodeFromPath(pth)
+            self.pasteAsBrother(nodeitem)
     def pasteAsBrother(self,nodeitem):
         nix=self.indexByPath(nodeitem.sidsPath())
         self.pasteAsChild(nix.parent().internalPointer())
@@ -670,5 +699,6 @@ class Q7TreeModel(QAbstractItemModel):
                 if (stat==CGV.CHECK_FAIL): item.setCheck(STCHKFAIL)
                 if (stat==CGV.CHECK_WARN): item.setCheck(STCHKWARN)
                 if (stat==CGV.CHECK_USER): item.setCheck(STCHKUSER)
+        return checkdiag
 
 # -----------------------------------------------------------------

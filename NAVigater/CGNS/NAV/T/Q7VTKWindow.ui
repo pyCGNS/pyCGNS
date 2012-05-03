@@ -408,7 +408,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/colors.gif</normaloff>:/images/icons/colors.gif</iconset>
+         <normaloff>:/images/icons/colors-first.gif</normaloff>:/images/icons/colors-first.gif</iconset>
        </property>
       </widget>
      </item>
@@ -431,7 +431,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/colors.gif</normaloff>:/images/icons/colors.gif</iconset>
+         <normaloff>:/images/icons/colors-last.gif</normaloff>:/images/icons/colors-last.gif</iconset>
        </property>
       </widget>
      </item>

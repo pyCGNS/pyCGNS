@@ -45,7 +45,7 @@ def sameValType(n,v):
     if (n.dtype.char==v): return True
     return False
 # -----------------------------------------------------------------
-def evalScript(node,parent,tree,path,val):
+def evalScript(node,parent,tree,path,val,args):
     l=locals()
     l[OCST.Q_VAR_RESULT_LIST]=[False]
     l[OCST.Q_VAR_NAME]=node[0]
@@ -54,15 +54,16 @@ def evalScript(node,parent,tree,path,val):
     l[OCST.Q_VAR_CHILDREN]=node[2]
     l[OCST.Q_VAR_TREE]=tree
     l[OCST.Q_VAR_PATH]=path
+    l[OCST.Q_VAR_USER]=args
     pre=OCST.Q_SCRIPT_PRE+val+OCST.Q_SCRIPT_POST
     try:
       eval(compile(pre,'<string>','exec'),globals(),l)
-    except:
+    except IndexError:
       RESULT=False
     RESULT=l[OCST.Q_VAR_RESULT_LIST][0]
     return RESULT
 # -----------------------------------------------------------------
-def parseAndSelect(tree,node,parent,path,clause):
+def parseAndSelect(tree,node,parent,path,clause,args):
     Q=False
     path=path+'/'+node[0]
     for (opr,tgt,att,val) in clause:
@@ -74,7 +75,7 @@ def parseAndSelect(tree,node,parent,path,clause):
       P|=(N and(att==OCST.Q_VALUE)     and (sameVal(parent[1],val)))
       P|=(N and(att==OCST.Q_VALUETYPE) and (sameValType(parent[1],val)))
       P|=(N and(att==OCST.Q_SCRIPT)    and (evalScript(node,parent,tree,
-                                                        path,val)))
+                                                       path,val,args)))
 
       N=(tgt==OCST.Q_NODE)      
       P|=(N and(att==OCST.Q_CGNSTYPE)  and (node[3]==val))
@@ -82,7 +83,7 @@ def parseAndSelect(tree,node,parent,path,clause):
       P|=(N and(att==OCST.Q_VALUE)     and (sameVal(node[1],val)))
       P|=(N and(att==OCST.Q_VALUETYPE) and (sameValType(node[1],val)))
       P|=(N and(att==OCST.Q_SCRIPT)    and (evalScript(node,parent,tree,
-                                                        path,val)))
+                                                       path,val,args)))
 
       if (opr==OCST.Q_OR):     Q|= P
       if (opr==OCST.Q_AND):    Q&= P
@@ -92,7 +93,7 @@ def parseAndSelect(tree,node,parent,path,clause):
     R=[]
     if (Q): R=[path]
     for C in node[2]:
-        R+=parseAndSelect(tree,C,node,path,clause)
+        R+=parseAndSelect(tree,C,node,path,clause,args)
     return R
 
 # -----------------------------------------------------------------
@@ -131,8 +132,10 @@ class Q7QueryEntry(object):
             s+='(%s,%s,%s,"""%s"""),'%(c0,c1,c2,c[3])
         s+="]]"
         return s
-    def run(self,tree):
-        result=parseAndSelect(tree,tree,[None,None,[],None],'',self.clause)
+    def run(self,tree,*args):
+        self.args=args
+        result=parseAndSelect(tree,tree,[None,None,[],None],'',
+                              self.clause,self.args)
         return result
     
 # -----------------------------------------------------------------
