@@ -75,6 +75,9 @@ STUSR_7='@@USR_7@@'
 STUSR_8='@@USR_8@@'
 STUSR_9='@@USR_9@@'
 
+USERSTATES=[STUSR_0,STUSR_1,STUSR_2,STUSR_3,STUSR_4,
+            STUSR_5,STUSR_6,STUSR_7,STUSR_8,STUSR_9]
+
 STMARK_ON='@@MARK_ON@@'
 STMARKOFF='@@MARKOFF@@'
 
@@ -106,6 +109,9 @@ USERFLAG_6='@@USER6@@'
 USERFLAG_7='@@USER7@@'
 USERFLAG_8='@@USER8@@'
 USERFLAG_9='@@USER9@@'
+
+USERFLAGS=[USERFLAG_0,USERFLAG_1,USERFLAG_2,USERFLAG_3,USERFLAG_4,
+           USERFLAG_5,USERFLAG_6,USERFLAG_7,USERFLAG_8,USERFLAG_9]
 
 ICONMAPPING={
  STLKNOLNK:":/images/icons/empty.gif",
@@ -240,6 +246,7 @@ class Q7TreeView(QTreeView):
                   self._model.pasteAsBrotherAllSelectedNodes()
           elif (kval in USERKEYMAPPINGS):
               last.setUserState(kval-48)
+              self._model.refreshModel(nix)
           elif (kval==KEYMAPPING[EDITNODE]):
               if (kmod==Qt.ControlModifier):
                   eix=self._model.createIndex(nix.row(),COLUMN_SIDS,
@@ -430,7 +437,9 @@ class Q7TreeItem(object):
         if (idx<len(children)): children.pop(idx)
     def sidsAddChild(self,node):
         if (node is None):
-          newtree=CGU.newNode('NEW NODE',None,[],CGK.UserDefinedData_ts)
+          ntype=CGK.UserDefinedData_ts
+          name='{%s#%.3d}'%(ntype,0)
+          newtree=CGU.newNode('NEW NODE',None,[],ntype)
         else:
           newtree=copy.deepcopy(node)
         name=newtree[0]
@@ -550,6 +559,8 @@ class Q7TreeModel(QAbstractItemModel):
     def nodeFromPath(self,path):
         if (path in self._extension.keys()): return self._extension[path]
         return None
+    def modifiedPaths(self):
+        pass
     def sortNamesAndTypes(self,paths):
         t=[]
         if (paths is None): return []
@@ -689,10 +700,12 @@ class Q7TreeModel(QAbstractItemModel):
             return
         node=index.internalPointer()
         st=False
-        if (index.column()==COLUMN_NAME):    st=node.sidsNameSet(value)
-        if (index.column()==COLUMN_SIDS):    st=node.sidsTypeSet(value)
-        if (index.column()==COLUMN_VALUE):   st=node.sidsValueSet(value)
-        if (index.column()==COLUMN_DATATYPE):st=node.sidsDataTypeSet(value)
+        if (index.column()==COLUMN_NAME):
+            st=node.sidsNameSet(value)
+            self.modifiedPaths(node)
+        if (index.column()==COLUMN_SIDS):     st=node.sidsTypeSet(value)
+        if (index.column()==COLUMN_VALUE):    st=node.sidsValueSet(value)
+        if (index.column()==COLUMN_DATATYPE): st=node.sidsDataTypeSet(value)
         if (st):
             self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
     def removeItem(self,parentitem,targetitem,row):
@@ -814,5 +827,15 @@ class Q7TreeModel(QAbstractItemModel):
                 if (stat==CGV.CHECK_WARN): item.setCheck(STCHKWARN)
                 if (stat==CGV.CHECK_USER): item.setCheck(STCHKUSER)
         return checkdiag
+    def hasUserColor(self,k):
+        cl=OCTXT.UserColors
+        c=k[-3]
+        if (cl[int(c)] is None): return False
+        return True
+    def getUserColor(self,k):
+        cb=Qt.black
+        cl=OCTXT.UserColors
+        c=int(k[-3])
+        return QColor(cl[c])
 
 # -----------------------------------------------------------------

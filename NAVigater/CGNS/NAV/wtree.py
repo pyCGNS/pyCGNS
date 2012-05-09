@@ -25,10 +25,11 @@ CELLEDITMODE=(CELLCOMBO,CELLTEXT)
 
 # -----------------------------------------------------------------
 class Q7TreeItemDelegate(QStyledItemDelegate):
-    def __init__(self, owner):
+    def __init__(self, owner, model):
         QStyledItemDelegate.__init__(self, owner)
         self._parent=owner
         self._mode=CELLTEXT
+        self._model=model
     def createEditor(self, parent, option, index):
         ws=option.rect.width()
         hs=option.rect.height()+4
@@ -86,8 +87,13 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         if (index.column()==NMT.COLUMN_NAME):
           if (index.internalPointer().sidsName() not in OCTXT._ReservedNames):
             option.font.setWeight(QFont.Bold)
-          if (index.internalPointer().userState()in NMT.STUSR_1):
-            pass
+          uf=index.internalPointer().userState()
+          if (uf in NMT.USERSTATES):
+            if (self._model.hasUserColor(uf)):
+                br=QBrush(self._model.getUserColor(uf))
+                cg=option.palette.ColorGroup()
+                option.palette.setBrush(cg,QPalette.Text,br)
+                option.palette.setBrush(cg,QPalette.HighlightedText,br)
           QStyledItemDelegate.paint(self, painter, option, index)
           option.font.setWeight(QFont.Light)
         elif (index.column() in [NMT.COLUMN_VALUE,NMT.COLUMN_DATATYPE]):
@@ -149,7 +155,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.treeview.setModel(self._fgprint.model)
-        self.treeview.setItemDelegate(Q7TreeItemDelegate(self.treeview))
+        self.treeview.setItemDelegate(Q7TreeItemDelegate(self.treeview,
+                                                         self._fgprint.model))
         self.treeview.setControlWindow(self,self._fgprint.model)
         if (self._control.transientRecurse): self.expandMinMax()
         if (self._control.transientVTK):     self.vtkview()

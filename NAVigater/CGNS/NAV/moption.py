@@ -111,6 +111,19 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
 """
     FixedFontTable='fixed'
 
+    UserColors=[
+        'gray',
+        'red',
+        'green',
+        'blue',
+        'orange',
+        None,
+        None,
+        None,
+        None,
+        None,
+        ]
+    
     _ColorList={\
     'cold_grey':                   (0.5000, 0.5400, 0.5300),
     'dim_grey':                    (0.4118, 0.4118, 0.4118),
