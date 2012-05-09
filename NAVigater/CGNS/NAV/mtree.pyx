@@ -17,13 +17,36 @@ import CGNS.VAL.simplecheck as CGV
 
 HIDEVALUE='@@HIDE@@'
 
-COLUMN_NAME=0
-COLUMN_SIDS=1
-COLUMN_DATATYPE=5
-COLUMN_VALUE=8
-COLUMNICO=[2,4,6,7,8]
-DATACOLUMN=COLUMN_VALUE
-COLUMNEDIT=[COLUMN_NAME,COLUMN_SIDS,COLUMN_DATATYPE,COLUMN_VALUE]
+(COLUMN_NAME,\
+ COLUMN_SIDS,\
+ COLUMN_FLAG_LINK,\
+ COLUMN_FLAG_SELECT,\
+ COLUMN_FLAG_CHECK,\
+ COLUMN_FLAG_USER,\
+ COLUMN_SHAPE,\
+ COLUMN_DATATYPE,\
+ COLUMN_VALUE)=range(9)
+
+COLUMN_LAST=COLUMN_VALUE
+
+COLUMN_ICO  =[COLUMN_FLAG_LINK,COLUMN_FLAG_SELECT,COLUMN_FLAG_CHECK,
+              COLUMN_FLAG_USER,COLUMN_VALUE]
+COLUMN_FLAGS=[COLUMN_FLAG_LINK,COLUMN_FLAG_SELECT,COLUMN_FLAG_CHECK,
+              COLUMN_FLAG_USER]
+
+COLUMN_EDIT=[COLUMN_NAME,COLUMN_SIDS,COLUMN_DATATYPE,COLUMN_VALUE]
+
+COLUMN_TITLE=['-']*(COLUMN_LAST+1)
+
+COLUMN_TITLE[COLUMN_NAME]='Name'
+COLUMN_TITLE[COLUMN_SIDS]='SIDS type'
+COLUMN_TITLE[COLUMN_FLAG_LINK]='L'
+COLUMN_TITLE[COLUMN_SHAPE]='Shape'
+COLUMN_TITLE[COLUMN_FLAG_SELECT]='M'
+COLUMN_TITLE[COLUMN_FLAG_CHECK]='C'
+COLUMN_TITLE[COLUMN_FLAG_USER]='U'
+COLUMN_TITLE[COLUMN_DATATYPE]='D'
+COLUMN_TITLE[COLUMN_VALUE]='Value'
 
 STLKTOPOK='@@LTOPOK@@' # top link entry ok
 STLKCHDOK='@@LCHDOK@@' # child link entry ok
@@ -39,7 +62,18 @@ STCHKUSER='@@CKUSER@@' # user condition
 
 STCHKLIST=(STCHKUNKN,STCHKGOOD,STCHKWARN,STCHKFAIL,STCHKUSER)
 
-STFORUNKN='@@FORUNK@@'
+STUSR_P='@@USR_%d@@'
+STUSR_X='@@USR_X@@'
+STUSR_0='@@USR_0@@'
+STUSR_1='@@USR_1@@'
+STUSR_2='@@USR_2@@'
+STUSR_3='@@USR_3@@'
+STUSR_4='@@USR_4@@'
+STUSR_5='@@USR_5@@'
+STUSR_6='@@USR_6@@'
+STUSR_7='@@USR_7@@'
+STUSR_8='@@USR_8@@'
+STUSR_9='@@USR_9@@'
 
 STMARK_ON='@@MARK_ON@@'
 STMARKOFF='@@MARKOFF@@'
@@ -47,6 +81,8 @@ STMARKOFF='@@MARKOFF@@'
 STSHRUNKN='@@SHRUNKN@@'
 
 EDITNODE='@@NODEDIT@@'
+NEWCHILDNODE='@@NODENEWC@@'
+NEWBROTHERNODE='@@NODENEWB@@'
 MARKNODE='@@NODEMARK@@'
 DOWNNODE='@@NODEDOWN@@'
 UPNODE  ='@@NODEUP@@'
@@ -60,6 +96,17 @@ PASTECHILDSELECTED='@@NODEPASTECS@@'
 OPENFORM='@@OPENFORM@@'
 OPENVIEW='@@OPENVIEW@@'
 
+USERFLAG_0='@@USER0@@'
+USERFLAG_1='@@USER1@@'
+USERFLAG_2='@@USER2@@'
+USERFLAG_3='@@USER3@@'
+USERFLAG_4='@@USER4@@'
+USERFLAG_5='@@USER5@@'
+USERFLAG_6='@@USER6@@'
+USERFLAG_7='@@USER7@@'
+USERFLAG_8='@@USER8@@'
+USERFLAG_9='@@USER9@@'
+
 ICONMAPPING={
  STLKNOLNK:":/images/icons/empty.gif",
  STLKTOPOK:":/images/icons/link.gif",
@@ -72,34 +119,61 @@ ICONMAPPING={
  STCHKFAIL:":/images/icons/check-fail.gif",
  STCHKWARN:":/images/icons/check-warn.gif",
 
- STFORUNKN:":/images/icons/empty.gif",   
+ STUSR_X:  ":/images/icons/empty.gif",   
+ STUSR_0:  ":/images/icons/empty.gif",   
  STSHRUNKN:":/images/icons/empty.gif",   
  STMARKOFF:":/images/icons/empty.gif",
  STMARK_ON:":/images/icons/mark-node.gif",   
 }
 
 KEYMAPPING={
- MARKNODE:      Qt.Key_Space,
- EDITNODE:      Qt.Key_Insert,
- UPNODE  :      Qt.Key_Up,
- DOWNNODE:      Qt.Key_Down,
- COPY    :      Qt.Key_C,
- CUT     :      Qt.Key_X,
- PASTECHILD   : Qt.Key_Y,
- PASTEBROTHER : Qt.Key_V,
- OPENFORM     : Qt.Key_F,
- OPENVIEW     : Qt.Key_W,
- CUTSELECTED  : Qt.Key_O,
+ MARKNODE:              Qt.Key_Space,
+ UPNODE  :              Qt.Key_Up,
+ DOWNNODE:              Qt.Key_Down,
+ OPENFORM     :         Qt.Key_F,
+ OPENVIEW     :         Qt.Key_W,
+
+ NEWCHILDNODE:          Qt.Key_A,
+ NEWBROTHERNODE:        Qt.Key_Z,
+ EDITNODE:              Qt.Key_Insert,
+ COPY    :              Qt.Key_C,
+ CUT     :              Qt.Key_X,
+ PASTECHILD   :         Qt.Key_Y,
+ PASTEBROTHER :         Qt.Key_V,
+ CUTSELECTED  :         Qt.Key_O,
  PASTECHILDSELECTED   : Qt.Key_I,
  PASTEBROTHERSELECTED : Qt.Key_K,
+
+ USERFLAG_0:            Qt.Key_0,
+ USERFLAG_1:            Qt.Key_1,
+ USERFLAG_2:            Qt.Key_2,
+ USERFLAG_3:            Qt.Key_3,
+ USERFLAG_4:            Qt.Key_4,
+ USERFLAG_5:            Qt.Key_5,
+ USERFLAG_6:            Qt.Key_6,
+ USERFLAG_7:            Qt.Key_7,
+ USERFLAG_8:            Qt.Key_8,
+ USERFLAG_9:            Qt.Key_9,  
+    
 }
 
 EDITKEYMAPPINGS=[
+    KEYMAPPING[NEWCHILDNODE],
+    KEYMAPPING[NEWBROTHERNODE],
     KEYMAPPING[COPY],
     KEYMAPPING[CUT],
     KEYMAPPING[PASTECHILD],
     KEYMAPPING[PASTEBROTHER],
+    KEYMAPPING[CUTSELECTED],
+    KEYMAPPING[PASTECHILDSELECTED],
+    KEYMAPPING[PASTEBROTHERSELECTED],
     ]
+
+USERKEYMAPPINGS=[ KEYMAPPING[USERFLAG_0],KEYMAPPING[USERFLAG_1],
+                  KEYMAPPING[USERFLAG_2],KEYMAPPING[USERFLAG_3],
+                  KEYMAPPING[USERFLAG_4],KEYMAPPING[USERFLAG_5],
+                  KEYMAPPING[USERFLAG_6],KEYMAPPING[USERFLAG_7],
+                  KEYMAPPING[USERFLAG_8],KEYMAPPING[USERFLAG_9] ]
 
 ALLKEYMAPPINGS=[KEYMAPPING[v] for v in KEYMAPPING]
 
@@ -146,6 +220,10 @@ class Q7TreeView(QTreeView):
           if (not nix.isValid()): return
           if (kval in EDITKEYMAPPINGS):
               if (kmod==Qt.ControlModifier):
+                if (kval==KEYMAPPING[NEWCHILDNODE]):
+                  self._model.newNodeChild(last)
+                if (kval==KEYMAPPING[NEWBROTHERNODE]):
+                  self._model.newNodeBrother(last)
                 if (kval==KEYMAPPING[COPY]):
                   self._model.copyNode(last)
                 if (kval==KEYMAPPING[CUT]):
@@ -160,13 +238,15 @@ class Q7TreeView(QTreeView):
                   self._model.pasteAsChildAllSelectedNodes()
                 if (kval==KEYMAPPING[PASTEBROTHERSELECTED]):
                   self._model.pasteAsBrotherAllSelectedNodes()
+          elif (kval in USERKEYMAPPINGS):
+              last.setUserState(kval-48)
           elif (kval==KEYMAPPING[EDITNODE]):
               if (kmod==Qt.ControlModifier):
-                  eix=self._model.createIndex(nix.row(),1,
+                  eix=self._model.createIndex(nix.row(),COLUMN_SIDS,
                                               nix.internalPointer())
                   self.edit(eix)
               elif (kmod==Qt.ShiftModifier):
-                  eix=self._model.createIndex(nix.row(),8,
+                  eix=self._model.createIndex(nix.row(),COLUMN_VALUE,
                                               nix.internalPointer())
                   self.edit(eix)
               else:
@@ -213,7 +293,7 @@ class Q7TreeView(QTreeView):
         pix=self._model.indexByPath(nodeitem.sidsPath()).parent()
         row=pix.row()
         ix1=self._model.createIndex(row,0,nodeitem)
-        ix2=self._model.createIndex(row,DATACOLUMN-1,nodeitem)
+        ix2=self._model.createIndex(row,COLUMN_LAST,nodeitem)
         self._model.dataChanged.emit(ix1,ix2)
     def exclusiveSelectRow(self,index):
         row=index.row()
@@ -253,7 +333,7 @@ class Q7TreeItem(object):
         self._parentitem=parent  
         self._itemnode=data  
         self._childrenitems=[]
-        self._title=['Name','SIDS type','L','Shape','M','D','C','F','Value']
+        self._title=COLUMN_TITLE
         if (parent is not None): self._path=parent.sidsPath()+'/'+data[0]
         else:                    self._path=''
         self._depth=self._path.count('/')
@@ -261,7 +341,7 @@ class Q7TreeItem(object):
         self._fingerprint=fgprint
         self._control=self._fingerprint.control
         self._states={'mark':STMARKOFF,'check':STCHKUNKN,
-                      'fortran':STFORUNKN,'shared':STSHRUNKN}
+                      'user':STUSR_X,'shared':STSHRUNKN}
         self._model=model
         self._tag=tag
         if ((parent is not None) and (model is not None)):
@@ -349,7 +429,10 @@ class Q7TreeItem(object):
             idx+=1
         if (idx<len(children)): children.pop(idx)
     def sidsAddChild(self,node):
-        newtree=copy.deepcopy(node)
+        if (node is None):
+          newtree=CGU.newNode('NEW NODE',None,[],CGK.UserDefinedData_ts)
+        else:
+          newtree=copy.deepcopy(node)
         name=newtree[0]
         ntype=newtree[3]
         parent=self._itemnode
@@ -387,22 +470,20 @@ class Q7TreeItem(object):
     def childrenCount(self):  
         return len(self._childrenitems)  
     def columnCount(self):
-        return 9
+        return COLUMN_LAST+1
     def data(self,column):
-        if (self._itemnode==None): return self._title[column]
-        if (column==0):
-            return self.sidsName()
-        if (column==1): return self.sidsType()
-        if (column==2):
-            return self.sidsLinkStatus()
-        if (column==3):
+        if (self._itemnode==None):     return self._title[column]
+        if (column==COLUMN_NAME):      return self.sidsName()
+        if (column==COLUMN_SIDS):      return self.sidsType()
+        if (column==COLUMN_FLAG_LINK): return self.sidsLinkStatus()
+        if (column==COLUMN_SHAPE):
             if (self.sidsValue() is None): return None
             return str(self.sidsValue().shape)
-        if (column==4): return self._states['mark']
-        if (column==5): return self.sidsDataType()
-        if (column==6): return self._states['check']
-        if (column==7): return self._states['fortran']
-        if (column==8):
+        if (column==COLUMN_FLAG_SELECT): return self._states['mark']
+        if (column==COLUMN_DATATYPE):    return self.sidsDataType()
+        if (column==COLUMN_FLAG_CHECK):  return self._states['check']
+        if (column==COLUMN_FLAG_USER):   return self._states['user']
+        if (column==COLUMN_VALUE):
             if (self.sidsValue() is None): return None
             if (type(self.sidsValue())==numpy.ndarray):
                 vsize=reduce(lambda x,y: x*y, self.sidsValue().shape)
@@ -421,7 +502,7 @@ class Q7TreeItem(object):
                     return HIDEVALUE
                 if ((self.sidsValue().shape==(1,)) and OCTXT.Show1DAsPlain):
                     return str(self.sidsValue()[0])
-            return str(self.sidsValue().tolist())
+            return str(self.sidsValue().tolist())[:100]
         return None
     def parentItem(self):  
         return self._parentitem  
@@ -434,6 +515,15 @@ class Q7TreeItem(object):
         else:                                 self._states['mark']=STMARK_ON
     def setCheck(self,check):
         if (check in STCHKLIST): self._states['check']=check
+    def userState(self):
+        return self._states['user']
+    def setUserState(self,s):
+        try:
+            if (int(s) not in range(10)): return
+        except ValueError: return
+        state=STUSR_P%int(s)
+        if (self._states['user'] == state): self._states['user']=STUSR_X
+        else: self._states['user']=state
 
 SORTTAG="%.4x"
 
@@ -528,17 +618,19 @@ class Q7TreeModel(QAbstractItemModel):
         if (role not in [Qt.EditRole,Qt.DisplayRole,Qt.DecorationRole]):
             return None
         if ((role == Qt.DecorationRole)
-            and (index.column() not in COLUMNICO)): return None
+            and (index.column() not in COLUMN_ICO)): return None
         item = index.internalPointer()
         disp = item.data(index.column())
-        if ((index.column()==DATACOLUMN) and (role == Qt.DecorationRole)):
+        if ((index.column()==COLUMN_VALUE) and (role == Qt.DecorationRole)):
             if (disp == HIDEVALUE):
                 disp=QIcon(QPixmap(":/images/icons/data-array-large.gif"))
             else:
                 return None
-        if ((index.column()==DATACOLUMN) and (role == Qt.DisplayRole)):
+        if ((index.column()==COLUMN_VALUE) and (role == Qt.DisplayRole)):
             if (disp == HIDEVALUE):
                 return None
+        if ((index.column()==COLUMN_FLAG_USER) and (role == Qt.DisplayRole)):
+             return None
         if (disp in ICONMAPPING.keys()):
             disp=Q7TreeModel._icons[disp]
         return disp
@@ -551,7 +643,7 @@ class Q7TreeModel(QAbstractItemModel):
         return None
     def indexByPath(self, path):
         row=self.getSortedChildRow(path)
-        col=0
+        col=COLUMN_NAME
         ix=self.createIndex(row, col, self.nodeFromPath(path))
         if (not ix.isValid()): return QModelIndex()
         return ix
@@ -593,7 +685,7 @@ class Q7TreeModel(QAbstractItemModel):
         if (   (value is None)
             or (role!=Qt.EditRole)
             or (not index.isValid())
-            or (index.column() not in COLUMNEDIT)):
+            or (index.column() not in COLUMN_EDIT)):
             return
         node=index.internalPointer()
         st=False
@@ -644,16 +736,36 @@ class Q7TreeModel(QAbstractItemModel):
         row1=min(0,abs(row-dlt))
         row2=min(row+dlt,maxrow)
         ix1=self.createIndex(row1,0,parentidx.internalPointer())
-        ix2=self.createIndex(row2,DATACOLUMN-1,parentidx.internalPointer())
+        ix2=self.createIndex(row2,COLUMN_LAST,parentidx.internalPointer())
         if (ix1.isValid() and ix2.isValid()):
             self.dataChanged.emit(ix1,ix2)
+    def newNodeChild(self,nodeitem):
+        if (nodeitem is None): return
+        row=nodeitem.row()
+        nix=self.indexByPath(nodeitem.sidsPath())
+        (ntree,npath)=nodeitem.sidsAddChild(None)
+        self.parseAndUpdate(nodeitem,ntree,nix,0,nodeitem._tag)
+        nix=self.indexByPath(nodeitem.sidsPath())
+        pix=self.indexByPath(CGU.getPathAncestor(npath))
+        cix=self.indexByPath(npath)
+        self.refreshModel(pix)
+        self.refreshModel(nix)
+        self.refreshModel(cix)
+        self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+    def newNodeBrother(self,nodeitem):
+        if (nodeitem is None): return
+        nix=self.indexByPath(nodeitem.sidsPath())
+        self.newNodeChild(nix.parent().internalPointer())
+        self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
     def copyNode(self,nodeitem):
+        if (nodeitem is None): return
         self._control.copyPasteBuffer=copy.deepcopy(nodeitem._itemnode)
     def cutAllSelectedNodes(self):
         for pth in self._selected:
             nodeitem=self.nodeFromPath(pth)
             self.cutNode(nodeitem)
     def cutNode(self,nodeitem):
+        if (nodeitem is None): return
         self._control.copyPasteBuffer=copy.deepcopy(nodeitem._itemnode)
         parentitem=nodeitem.parentItem()
         path=CGU.getPathAncestor(nodeitem.sidsPath())
@@ -667,6 +779,7 @@ class Q7TreeModel(QAbstractItemModel):
             nodeitem=self.nodeFromPath(pth)
             self.pasteAsChild(nodeitem)
     def pasteAsChild(self,nodeitem):
+        if (nodeitem is None): return
         if (self._control.copyPasteBuffer is None): return
         row=nodeitem.row()
         nix=self.indexByPath(nodeitem.sidsPath())
@@ -684,6 +797,7 @@ class Q7TreeModel(QAbstractItemModel):
             nodeitem=self.nodeFromPath(pth)
             self.pasteAsBrother(nodeitem)
     def pasteAsBrother(self,nodeitem):
+        if (nodeitem is None): return
         nix=self.indexByPath(nodeitem.sidsPath())
         self.pasteAsChild(nix.parent().internalPointer())
         self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)

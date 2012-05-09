@@ -1,5 +1,28 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/user-Q.gif</file>
+    <file>icons/user-R.gif</file>
+    <file>icons/user-S.gif</file>
+    <file>icons/user-T.gif</file>
+    <file>icons/user-U.gif</file>
+    <file>icons/user-V.gif</file>
+    <file>icons/user-W.gif</file>
+    <file>icons/user-A.gif</file>
+    <file>icons/user-B.gif</file>
+    <file>icons/user-C.gif</file>
+    <file>icons/user-D.gif</file>
+    <file>icons/user-E.gif</file>
+    <file>icons/user-F.gif</file>
+    <file>icons/user-G.gif</file>
+    <file>icons/user-H.gif</file>
+    <file>icons/user-J.gif</file>
+    <file>icons/user-K.gif</file>
+    <file>icons/user-L.gif</file>
+    <file>icons/user-M.gif</file>
+    <file>icons/user-N.gif</file>
+    <file>icons/user-P.gif</file>
+    <file>icons/user-Q.gif</file>
+    <file>icons/user-R.gif</file>
     <file>icons/save-log.gif</file>
     <file>icons/colors-first.gif</file>
     <file>icons/colors-last.gif</file>

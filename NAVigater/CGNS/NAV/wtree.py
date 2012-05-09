@@ -15,6 +15,7 @@ from CGNS.NAV.wquery import Q7Query, Q7SelectionList
 from CGNS.NAV.wdiag import Q7CheckList
 from CGNS.NAV.mquery import Q7QueryTableModel
 from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem
+import CGNS.NAV.mtree as NMT
 from CGNS.NAV.wfingerprint import Q7Window,Q7fingerPrint
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import CGNS.PAT.cgnskeywords as CGK
@@ -33,14 +34,14 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         hs=option.rect.height()+4
         xs=option.rect.x()
         ys=option.rect.y()-2
-        if (index.column() in [0,8]):
+        if (index.column() in [NMT.COLUMN_NAME,NMT.COLUMN_VALUE]):
           self._mode=CELLTEXT
           editor=QLineEdit(parent)
           editor.transgeometry=(xs,ys,ws,hs)
           editor.installEventFilter(self)
           self.setEditorData(editor,index)
           return editor
-        if (index.column()==1):
+        if (index.column()==NMT.COLUMN_SIDS):
           self._mode=CELLCOMBO
           editor=QComboBox(parent)
           editor.transgeometry=(xs,ys,ws,hs)
@@ -50,7 +51,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           editor.installEventFilter(self)
           self.setEditorData(editor,index)
           return editor
-        if (index.column()==5):
+        if (index.column()==NMT.COLUMN_DATATYPE):
           self._mode=CELLCOMBO
           editor=QComboBox(parent)
           editor.transgeometry=(xs,ys,ws,hs)
@@ -82,16 +83,19 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(*editor.transgeometry)
     def paint(self, painter, option, index):
-        if (index.column()==0):
+        if (index.column()==NMT.COLUMN_NAME):
           if (index.internalPointer().sidsName() not in OCTXT._ReservedNames):
             option.font.setWeight(QFont.Bold)
+          if (index.internalPointer().userState()in NMT.STUSR_1):
+            pass
           QStyledItemDelegate.paint(self, painter, option, index)
           option.font.setWeight(QFont.Light)
-        elif (index.column() in [8,5]):
+        elif (index.column() in [NMT.COLUMN_VALUE,NMT.COLUMN_DATATYPE]):
           option.font.setFamily(OCTXT.FixedFontTable)
-          if (index.column() == 5): option.font.setPointSize(8)
+          if (index.column() == NMT.COLUMN_DATATYPE):
+              option.font.setPointSize(8)
           QStyledItemDelegate.paint(self, painter, option, index)
-        elif (index.column() in [2,4,6,7]):
+        elif (index.column() in NMT.COLUMN_FLAGS):
           option.decorationPosition=QStyleOptionViewItem.Top
           QStyledItemDelegate.paint(self, painter, option, index)
           option.decorationPosition=QStyleOptionViewItem.Left
@@ -181,7 +185,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def updateStatus(self,node):
         self.lineEdit.clear()
         self.lineEdit.insert(node.sidsPath())
-    def pop1(self):
+    def popform(self):
         self.formview()
     def openSubTree(self):
         self.busyCursor()
@@ -191,6 +195,14 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         child.show()
     def pop0(self):
         pass
+    def newnodebrother(self):
+        if (self.lastNodeMenu.isValid()):
+            nodeitem=self.lastNodeMenu.internalPointer()
+            self._fgprint.model.newNodeBrother(nodeitem)
+    def newnodechild(self):
+        if (self.lastNodeMenu.isValid()):
+            nodeitem=self.lastNodeMenu.internalPointer()
+            self._fgprint.model.newNodeChild(nodeitem)
     def marknode(self):
         if (self.lastNodeMenu.isValid()):
              nodeitem=self.lastNodeMenu.internalPointer()
@@ -227,8 +239,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
           actlist=(("About %s"%node.sidsType(),self.pop0,None),
                    None,
                    ("Mark/unmark node",self.marknode,'Space'),
+                   ("Add new child node",self.newnodechild,'Ctrl+A'),
+                   ("Add new brother node",self.newnodebrother,'Ctrl+Z'),
                    None,
-                   ("Open form",self.pop1,'Ctrl+F'),
+                   ("Open form",self.popform,'Ctrl+F'),
                    ("Open view",self.openSubTree,'Ctrl+W'),
                    None,
                    ("Copy",self.mcopy,'Ctrl+C'),
@@ -266,7 +280,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def collapseNode(self,*args):
         pass
     def resizeAll(self):
-        for n in range(9):
+        for n in range(NMT.COLUMN_LAST+1):
             self.treeview.resizeColumnToContents(n)
     def show(self):
         super(Q7Tree, self).show()

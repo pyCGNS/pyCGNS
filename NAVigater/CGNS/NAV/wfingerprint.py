@@ -45,8 +45,8 @@ class Q7Window(QWidget,object):
         self.I_DIAG=QIcon(QPixmap(":/images/icons/check-all.gif"))
         self.I_D_INF=QIcon(QPixmap(":/images/icons/subtree-sids-warning.gif"))
         self.I_D_ERR=QIcon(QPixmap(":/images/icons/subtree-sids-failed.gif"))
-        if (vtype==Q7Window.VIEW_TREE): self._stylesheet=Q7TREEVIEWSTYLESHEET
-        if (vtype==Q7Window.VIEW_FORM): self._stylesheet=Q7TABLEVIEWSTYLESHEET
+        if (vtype==Q7Window.VIEW_TREE):
+            self._stylesheet=Q7TREEVIEWSTYLESHEET
         if (vtype==Q7Window.VIEW_CONTROL):
             self._stylesheet=Q7CONTROLVIEWSTYLESHEET
         self.setupUi(self)

@@ -78,8 +78,11 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
             return af<bf
         if (c==1):
             wg={'MB':1e3,'GB':1e6,'KB':1}
-            (av,au)=a.split()
-            (bv,bu)=b.split()
+            try:
+                (av,au)=a.split()
+                (bv,bu)=b.split()
+            except ValueError:
+                return a<b
             av=float(string.replace(av,',','.'))*wg[au]
             bv=float(string.replace(bv,',','.'))*wg[bu]
             return av<bv
