@@ -141,7 +141,8 @@ class Q7File(QWidget,Ui_Q7FileWindow):
             QObject.connect(o,SIGNAL(s),f)
         self.bClose.clicked.connect(self.close)
         self.bBack.clicked.connect(self.backDir)
-        self.setMode()
+        if (mode==SAVEMODE): self.setMode(False)
+        else:                self.setMode(True)
         self.setBoxes()
         if (self.parent.getHistoryLastKey() in hlist.keys()):
             self.selecteddir=hlist[self.parent.getHistoryLastKey()][0]

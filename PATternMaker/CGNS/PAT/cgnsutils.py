@@ -958,6 +958,35 @@ def hasValueDataType(node,flags):
   return path
 
 # --------------------------------------------------   
+def hasSameRootPath(pathroot,pathtocompare):
+  """
+  Compares two paths::
+
+    >>>hasSameRootPath('/Base/Zone/ZoneBC','/Base/ZoneBC/BC#2/Data')
+    True
+    >>>hasSameRootPath('/Base/Zone/ZoneBC','/Base/ZoneBC#2')
+    False
+
+  - Args:
+   * `pathroot`: root path to compare
+   * `pathtocompare`: path which is supposed to have rootpath as substring
+
+  - Return:
+   * Ture if 'rootpath' is a prefix of 'pathtocompare'
+
+  - Remarks:
+   * Each node name is a token, see example below: the second example
+     doesn't match as a path while it matches as a string.
+   
+  """
+  l1=getPathToList(pathroot)
+  l2=getPathToList(pathtocompare)
+  if (len(l1) > len(l2)): return False
+  for i in range(len(l1)):
+    if (l1[i]!=l2[i]): return False
+  return True
+
+# --------------------------------------------------   
 def getPathToList(path,nofirst=False,noroot=True):
   """
   Return the path as a list of node names::

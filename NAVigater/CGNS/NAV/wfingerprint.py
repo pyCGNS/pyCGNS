@@ -13,6 +13,7 @@ import grp
 import time
 import stat
 import CGNS.MAP
+import CGNS.PAT.cgnsutils as CGU
 
 import CGNS.NAV.wmessages as MSG
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
@@ -188,7 +189,17 @@ class Q7fingerPrint:
             txt="""The current operation has been aborted, while trying to load a file, the following error occurs:"""
             MSG.wError(e[0],txt,e[1])
             return None
+        #for p in CGU.getAllPaths(tree): print p
+        kw['isfile']=True
         return Q7fingerPrint(control,filedir,filename,tree,links,**kw)
+    @classmethod
+    def treeSave(cls,control,fgprint,f):
+        flags=CGNS.MAP.S2P_DEFAULT
+        if (control.getOptionValue('CHLoneTrace')): flags|=CGNS.MAP.S2P_TRACE
+        tree=fgprint.tree
+        #for p in CGU.getAllPaths(tree): print p
+        lk=[]
+        CGNS.MAP.save(f,tree,lk,flags)
     @classmethod
     def closeAllTrees(cls):
         for x in cls.__extension: x.closeAllViews()
@@ -202,7 +213,8 @@ class Q7fingerPrint:
     def infoView(cls,idx):
         f=cls.getFingerPrint(idx)
         v=cls.getView(idx)
-        if (f is None): return
+        if (f is None): return (None,None,None)
+        if (not f.isfile): return (f,None,None)
         return (f,v,f.getInfo(v))
     @classmethod
     def getView(cls,idx):
@@ -229,14 +241,19 @@ class Q7fingerPrint:
         self.views={}
         self.control=control
         self.converted=False
+        self.isfile=False
         self.tmpfile=''
         self._status=Q7fingerPrint.STATUS_UNCHANGED
+        if (kw.has_key('isfile')):
+            self.isfile=True
         if (kw.has_key('converted')):
             self.converted=kw['converted']
             self.tmpfile=kw['convertedAs']
             if (self.converted):
                 self._status=Q7fingerPrint.STATUS_CONVERTED
         Q7fingerPrint.__extension.append(self)
+    def isFile(self):
+        return self.isfile
     def getInfo(self,view):
         d={}
         f='%s/%s'%(self.filedir,self.filename)

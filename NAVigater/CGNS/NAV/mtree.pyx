@@ -360,6 +360,10 @@ class Q7TreeItem(object):
         return self._tag+"0"*(self._fingerprint.depth*4-len(self._tag))
     def sidsParent(self):
         return self._parentitem._itemnode
+    def sidsPathSet(self,path):
+        del self._model._extension[self._path]
+        self._path=path
+        self._model._extension[self._path]=self
     def sidsPath(self):
         return self._path
     def sidsName(self):
@@ -439,7 +443,7 @@ class Q7TreeItem(object):
         if (node is None):
           ntype=CGK.UserDefinedData_ts
           name='{%s#%.3d}'%(ntype,0)
-          newtree=CGU.newNode('NEW NODE',None,[],ntype)
+          newtree=CGU.newNode(name,None,[],ntype)
         else:
           newtree=copy.deepcopy(node)
         name=newtree[0]
@@ -559,8 +563,21 @@ class Q7TreeModel(QAbstractItemModel):
     def nodeFromPath(self,path):
         if (path in self._extension.keys()): return self._extension[path]
         return None
-    def modifiedPaths(self):
-        pass
+    def modifiedPaths(self,node,parentpath,newname,oldname):
+        newpath=parentpath+'/'+newname
+        oldpath=parentpath+'/'+oldname
+        oldplen=len(oldpath)
+        node.sidsPathSet(newpath)
+        plist=list(self._selected)
+        for p in plist:
+            if (CGU.hasSameRootPath(oldpath,p)):
+                self._selected.remove(p)
+                self._selected+=[str(newpath+p[oldplen:])]
+        for p in self._extension:
+            if (CGU.hasSameRootPath(oldpath,p)):
+                pn=str(newpath+p[oldplen:])
+                nd=self._extension[p]
+                nd.sidsPathSet(pn)
     def sortNamesAndTypes(self,paths):
         t=[]
         if (paths is None): return []
@@ -701,8 +718,11 @@ class Q7TreeModel(QAbstractItemModel):
         node=index.internalPointer()
         st=False
         if (index.column()==COLUMN_NAME):
+            oldname=node.sidsName()
+            newname=value
+            parentpath=node.parentItem().sidsPath()
             st=node.sidsNameSet(value)
-            self.modifiedPaths(node)
+            if (st): self.modifiedPaths(node,parentpath,newname,oldname)
         if (index.column()==COLUMN_SIDS):     st=node.sidsTypeSet(value)
         if (index.column()==COLUMN_VALUE):    st=node.sidsValueSet(value)
         if (index.column()==COLUMN_DATATYPE): st=node.sidsDataTypeSet(value)
