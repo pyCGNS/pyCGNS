@@ -390,11 +390,23 @@ class Q7TreeItem(object):
     def sidsValueSet(self,value):
         try:
             aval=numpy.array([float(value)])
+            self._itemnode[1]=aval
+            return True
         except ValueError:
-            try:
-                aval=numpy.array([int(value)])
-            except ValueError:
-                aval=CGU.setStringAsArray(value)
+            pass
+        try:
+            aval=numpy.array([int(value)])
+            self._itemnode[1]=aval
+            return True
+        except ValueError:
+            pass
+        try:
+            aval=numpy.array(eval(value))
+            self._itemnode[1]=aval
+            return True
+        except (ValueError, SyntaxError):
+            pass
+        aval=CGU.setStringAsArray(value)
         self._itemnode[1]=aval
         return True
     def sidsChildren(self):

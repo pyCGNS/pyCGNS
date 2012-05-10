@@ -91,7 +91,6 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           if (uf in NMT.USERSTATES):
             if (self._model.hasUserColor(uf)):
                 br=QBrush(self._model.getUserColor(uf))
-                print 'COLOR ',self._model.getUserColor(uf)
                 cg=option.palette.ColorGroup()
                 option.palette.setBrush(cg,QPalette.Text,br)
                 option.palette.setBrush(cg,QPalette.HighlightedText,br)
