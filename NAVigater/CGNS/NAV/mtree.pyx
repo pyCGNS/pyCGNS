@@ -223,7 +223,13 @@ class Q7TreeView(QTreeView):
         last=self.getLastEntered()
         if (last is not None):
           nix=self._model.indexByPath(last.sidsPath())
-          if (not nix.isValid()): return
+          if (not nix.isValid()):
+              if (last.sidsType()==CGK.CGNSTree_ts):
+                 if (kval==KEYMAPPING[PASTECHILD]):
+                     self._model.pasteAsChild(last)
+                 if (kval==KEYMAPPING[NEWCHILDNODE]):
+                     self._model.newNodeChild(last)
+              return
           if (kval in EDITKEYMAPPINGS):
               if (kmod==Qt.ControlModifier):
                 if (kval==KEYMAPPING[NEWCHILDNODE]):
@@ -273,7 +279,7 @@ class Q7TreeView(QTreeView):
           elif (kval==KEYMAPPING[OPENVIEW]):
               self._parent.openSubTree()
           self.setLastEntered()
-          self.scrollTo(nix)
+          if (nix.isValid()): self.scrollTo(nix)
     def refreshView(self):
         ixc=self.currentIndex()
         self._model.refreshModel(ixc)
@@ -333,9 +339,17 @@ class Q7TreeView(QTreeView):
             if (idx[0].isValid()): self.exclusiveSelectRow(idx[0])
        
 # -----------------------------------------------------------------
+def __sortItems(i1,i2):
+    c1=i1._model.getSortedChildRow(i1.sidsPath())
+    c2=i2._model.getSortedChildRow(i2.sidsPath())
+    return c1 - c2
+
+# -----------------------------------------------------------------
 class Q7TreeItem(object):
     dtype=['MT','I4','I8','R4','R8','C1','LK']
     stype={'MT':0,'I4':4,'I8':8,'R4':4,'R8':8,'C1':1,'LK':0}
+    atype={'I4':numpy.int32,'I8':numpy.int64,
+           'R4':numpy.float32,'R8':numpy.float64}
     def __init__(self,fgprint,data,model,tag="",parent=None):
         self._parentitem=parent  
         self._itemnode=data  
@@ -424,7 +438,11 @@ class Q7TreeItem(object):
         if (all): return Q7TreeItem.dtype
         return CGU.getValueDataType(self._itemnode)
     def sidsDataTypeSet(self,value):
-        print value
+        if (value not in Q7TreeItem.atype): return False
+        ndt=Q7TreeItem.atype[value]
+        oval=self._itemnode[1]
+        nval=numpy.array(oval,dtype=ndt)
+        self._itemnode[1]=nval
         return True
     def sidsDataTypeList(self,all=False):
         return Q7TreeItem.dtype
@@ -469,8 +487,11 @@ class Q7TreeItem(object):
         self._itemnode[2].append(newtree)
         newpath=self.sidsPath()+'/%s'%name
         return (newtree,newpath)
+    def sortChildrenInPlace(self):
+        self._childrenitems.sort(__sortItems)
     def addChild(self,item,idx):
-        self._childrenitems.insert(idx,item)  
+        self._childrenitems.insert(idx,item)
+        self.sortChildrenInPlace()
     def delChild(self,item):
         idx=0
         while (idx<self.childrenCount()):
@@ -590,6 +611,7 @@ class Q7TreeModel(QAbstractItemModel):
                 pn=str(newpath+p[oldplen:])
                 nd=self._extension[p]
                 nd.sidsPathSet(pn)
+        node.parentItem().sortChildrenInPlace()
     def sortNamesAndTypes(self,paths):
         t=[]
         if (paths is None): return []
@@ -685,16 +707,19 @@ class Q7TreeModel(QAbstractItemModel):
         row=self.getSortedChildRow(path)
         col=COLUMN_NAME
         ix=self.createIndex(row, col, self.nodeFromPath(path))
-        if (not ix.isValid()): return QModelIndex()
+        if (not ix.isValid()):
+            return QModelIndex()
         return ix
     def index(self, row, column, parent):
         if (not self.hasIndex(row, column, parent)):
             return QModelIndex()  
-        if (not parent.isValid()): parentitem = self._rootitem  
-        else:                      parentitem = parent.internalPointer()  
+        if (not parent.isValid()):
+            parentitem = self._rootitem
+        else:
+            parentitem = parent.internalPointer()
         childitem = parentitem.child(row)  
         if (childitem):
-            return self.createIndex(row, column, childitem)  
+            return self.createIndex(row, column, childitem)
         return QModelIndex()  
     def parent(self, index):  
         if (not index.isValid()): return QModelIndex()
@@ -762,6 +787,8 @@ class Q7TreeModel(QAbstractItemModel):
         self._count+=1
         tag=parenttag+SORTTAG%self._count
         newItem=Q7TreeItem(self._fingerprint,(node),self,tag,parentItem)
+        self._fingerprint.depth=max(newItem._depth,self._fingerprint.depth)
+        self._fingerprint.nodes=max(newItem._nodes,self._fingerprint.nodes)
         self.beginInsertRows(parentIndex,row,row)
         parentItem.addChild(newItem,row)
         self.endInsertRows()
@@ -793,7 +820,7 @@ class Q7TreeModel(QAbstractItemModel):
         nix=self.indexByPath(nodeitem.sidsPath())
         pix=self.indexByPath(CGU.getPathAncestor(npath))
         cix=self.indexByPath(npath)
-        self.refreshModel(pix)
+        if (pix.isValid()): self.refreshModel(pix)
         self.refreshModel(nix)
         self.refreshModel(cix)
         self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
@@ -833,7 +860,7 @@ class Q7TreeModel(QAbstractItemModel):
         nix=self.indexByPath(nodeitem.sidsPath())
         pix=self.indexByPath(CGU.getPathAncestor(npath))
         cix=self.indexByPath(npath)
-        self.refreshModel(pix)
+        if (pix.isValid()): self.refreshModel(pix)
         self.refreshModel(nix)
         self.refreshModel(cix)
         self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)

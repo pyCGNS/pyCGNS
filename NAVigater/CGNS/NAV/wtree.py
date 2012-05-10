@@ -178,6 +178,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self._depthExpanded=self._fgprint.depth-2
             self.treeview.expandAll()
         self.resizeAll()
+    def resetOptions(self):
+        if (OCTXT.AutoExpand): self.treeview.setAutoExpandDelay(1000)
+        else:                  self.treeview.setAutoExpandDelay(-1)
     def expandLevel(self):
         if (self._depthExpanded<self._fgprint.depth-2):
             self._depthExpanded+=1
@@ -272,8 +275,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                   a=QAction(aparam[0],self,triggered=aparam[1])
                   if (aparam[2] is not None): a.setShortcut(aparam[2])
                   self.popupmenu.addAction(a)
-    def setLastEntered(self):
-        nix=self.treeview.currentIndex()
+    def setLastEntered(self,nix=None):
+        if ((nix is None) or (not nix.isValid())):
+            nix=self.treeview.currentIndex()
         if (nix.isValid()):
             self._lastEntered=nix.internalPointer()
     def getLastEntered(self):

@@ -66,6 +66,7 @@ Q_SCRIPT_POST="""
 class Q7OptionContext(object):
     CHLoneTrace=False
     NAVTrace=False
+    AutoExpand=False
     RecursiveTreeDisplay=False
     OneViewPerTreeNode=False
     ShowTableIndex=True
