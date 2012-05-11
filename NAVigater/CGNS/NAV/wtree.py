@@ -80,7 +80,11 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
             value=editor.currentText()
         if (self._mode==CELLTEXT):
             value=editor.text()
+        pth=index.internalPointer().sidsPath()
         model.setData(index,value,role=Qt.EditRole)
+        nindex=model.indexByPath(pth)
+        self._parent.clearLastEntered()
+        self._parent.setLastEntered(nindex)
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(*editor.transgeometry)
     def paint(self, painter, option, index):
@@ -200,51 +204,43 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.formview()
     def openSubTree(self):
         self.busyCursor()
-        node=self.lastNodeMenu.internalPointer().sidsPath()
+        node=self.getLastEntered().sidsPath()
         child=Q7Tree(self._control,node,self._fgprint)
         self.readyCursor()
         child.show()
     def pop0(self):
         pass
     def newnodebrother(self):
-        if (self.lastNodeMenu.isValid()):
-            nodeitem=self.lastNodeMenu.internalPointer()
-            self._fgprint.model.newNodeBrother(nodeitem)
+        if (self.getLastEntered() is not None):
+            self._fgprint.model.newNodeBrother(self.getLastEntered())
     def newnodechild(self):
-        if (self.lastNodeMenu.isValid()):
-            nodeitem=self.lastNodeMenu.internalPointer()
-            self._fgprint.model.newNodeChild(nodeitem)
+        if (self.getLastEntered() is not None):
+            self._fgprint.model.newNodeChild(self.getLastEntered())
     def marknode(self):
-        if (self.lastNodeMenu.isValid()):
-             nodeitem=self.lastNodeMenu.internalPointer()
-             self.treeview.markNode(nodeitem)
+        if (self.getLastEntered() is not None):
+             self.treeview.markNode(self.getLastEntered())
     def mcopy(self):
-        if (self.lastNodeMenu.isValid()):
-            nodeitem=self.lastNodeMenu.internalPointer()
-            self._fgprint.model.copyNode(nodeitem)
+        if (self.getLastEntered() is not None):
+            self._fgprint.model.copyNode(self.getLastEntered())
     def mcutselected(self):
         self._fgprint.model.cutAllSelectedNodes()
+        self.clearLastEntered()
     def mcut(self):
-        if (self.lastNodeMenu.isValid()):
-            nodeitem=self.lastNodeMenu.internalPointer()
-            self.lastNodeMenu=self.lastNodeMenu.parent()
-            self._fgprint.model.cutNode(nodeitem)
+        if (self.getLastEntered() is not None):
+            self._fgprint.model.cutNode(self.getLastEntered())
+            self.clearLastEntered()
     def mpasteasbrotherselected(self):
         self._fgprint.model.pasteAsBrotherAllSelectedNodes()
     def mpasteasbrother(self):
-        if (self.lastNodeMenu.isValid()):
-            nodeitem=self.lastNodeMenu.internalPointer()
-            self._fgprint.model.pasteAsBrother(nodeitem)
-            self._fgprint.model.dataChanged.emit(self.lastNodeMenu,
-                                                 self.lastNodeMenu)
+        if (self.getLastEntered() is not None):
+            self._fgprint.model.pasteAsBrother(nself.getLastEntered())
     def mpasteaschildselected(self):
         self._fgprint.model.pasteAsChildAllSelectedNodes()
     def mpasteaschild(self):
-        if (self.lastNodeMenu.isValid()):
-            nodeitem=self.lastNodeMenu.internalPointer()
-            self._fgprint.model.pasteAsChild(nodeitem)
+        if (self.getLastEntered() is not None):
+            self._fgprint.model.pasteAsChild(self.getLastEntered())
     def updateMenu(self,nodeidx):
-        self.lastNodeMenu=nodeidx
+        self.setLastEntered(nodeidx)
         if (nodeidx != -1):
           node=nodeidx.internalPointer()
           actlist=(("About %s"%node.sidsType(),self.pop0,None),
@@ -278,14 +274,20 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def setLastEntered(self,nix=None):
         if ((nix is None) or (not nix.isValid())):
             nix=self.treeview.currentIndex()
+        self._lastEntered=None
         if (nix.isValid()):
+            self.treeview.exclusiveSelectRow(nix,False)
             self._lastEntered=nix.internalPointer()
     def getLastEntered(self):
         return self._lastEntered
+    def clearLastEntered(self):
+        self._lastEntered=None
+        self.treeview.selectionModel().clearSelection()
+        return None
     def clickedNode(self,index):
-        self.setLastEntered()
+        self.setLastEntered(index)
         if (self.treeview.lastButton==Qt.RightButton):
-            self.updateMenu(self.treeview.currentIndex())
+            self.updateMenu(index)
             self.popupmenu.popup(self.treeview.lastPos)
     def expandNode(self,*args):
         self.resizeAll()
