@@ -795,10 +795,10 @@ class Q7TreeModel(QAbstractItemModel):
                 nindex=self.indexByPath(parentpath+'/'+newname)
                 self.rowsMoved.emit(index.parent(),index.row(),index.row(),
                                     nindex,nindex.row())
-                sindex=self.mapFromSource(index)
-                snindex=self.mapFromSource(nindex)
-                self.rowsMoved.emit(sindex.parent(),sindex.row(),sindex.row(),
-                                    snindex,snindex.row())
+                #sindex=self.mapFromSource(index)
+                #snindex=self.mapFromSource(nindex)
+                #self.rowsMoved.emit(sindex.parent(),sindex.row(),sindex.row(),
+                #                    snindex,snindex.row())
                 self.refreshModel(nindex.parent())
                 self.refreshModel(nindex)
         if (index.column()==COLUMN_SIDS):     st=node.sidsTypeSet(value)
