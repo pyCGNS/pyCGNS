@@ -182,6 +182,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._fgprint.modifiedTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
         self.updateTreeStatus()
     def screenshot(self):
+        self.treeview.model().sort(0)
         sshot=QPixmap.grabWindow(self.treeview.winId())
         sshot.save('/tmp/foo.png','png')
     def expandMinMax(self):

@@ -198,7 +198,7 @@ class Q7TreeFilterProxy(QSortFilterProxyModel):
         fsort=self.sourceModel().getSortedChildRow
         c1=fsort(i1.internalPointer().sidsPath())
         c2=fsort(i2.internalPointer().sidsPath())
-        return c2<c1
+        return c2>c1
     
 # -----------------------------------------------------------------
 class Q7TreeView(QTreeView):
@@ -795,7 +795,10 @@ class Q7TreeModel(QAbstractItemModel):
                 nindex=self.indexByPath(parentpath+'/'+newname)
                 self.rowsMoved.emit(index.parent(),index.row(),index.row(),
                                     nindex,nindex.row())
-                print 'HERE',index.parent(),index.row(),nindex.row()
+                sindex=self.mapFromSource(index)
+                snindex=self.mapFromSource(nindex)
+                self.rowsMoved.emit(sindex.parent(),sindex.row(),sindex.row(),
+                                    snindex,snindex.row())
                 self.refreshModel(nindex.parent())
                 self.refreshModel(nindex)
         if (index.column()==COLUMN_SIDS):     st=node.sidsTypeSet(value)
@@ -840,7 +843,6 @@ class Q7TreeModel(QAbstractItemModel):
             crow+=1
         return newItem
     def refreshModel(self,nodeidx):
-        return
         if (not nodeidx.isValid()): return
         row=nodeidx.row()
         dlt=2
