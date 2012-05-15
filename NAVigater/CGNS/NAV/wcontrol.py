@@ -21,11 +21,15 @@ from CGNS.NAV.wfingerprint import Q7fingerPrint, Q7Window
 
 import CGNS.NAV.wmessages as MSG
 
+import CGNS.PAT.cgnslib   as CGL
+import CGNS.PAT.cgnsutils as CGU
+
 # -----------------------------------------------------------------
 class Q7SignalPool(QObject):
     loadFile=Signal()
     saveFile=Signal()
     buffer=None
+    fgprint=None
 
 # -----------------------------------------------------------------
 class Q7ControlItemDelegate(QStyledItemDelegate):
@@ -78,6 +82,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
     def info(self):
         self.updateLastView()
         (f,v,d)=Q7fingerPrint.infoView(self.lastView)
+        if (not f.isFile()): return
         self.w=Q7Info(self,d,f)
         self.w.show()
     def closeTree(self):
@@ -242,7 +247,10 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         child.show()
         self.setHistory(fgprint.filedir,fgprint.filename)
     def saving(self,*args):
-        print 'SAVING ...', self.signals.buffer
+        self._T('saving as: [%s]'%self.signals.buffer)
+        self.busyCursor()
+        Q7fingerPrint.treeSave(self,self.signals.fgprint,self.signals.buffer)
+        self.readyCursor()
     def load(self):
         self.fdialog=Q7File(self)
         self.fdialog.show()
@@ -254,10 +262,18 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
     def loadfile(self,name):
         self.signals.buffer=name
         self.signals.loadFile.emit()
-    def save(self):
+    def save(self,fgprint):
+        self.signals.fgprint=fgprint
         self.fdialog=Q7File(self,1)
         self.fdialog.show()
     def edit(self):
-        pass
+        self._T('edit new')
+        tree=CGL.newCGNSTree()
+        self.busyCursor()
+        fgprint=Q7fingerPrint(self,'.','NEW TREE',tree,[])
+        Q7TreeModel(fgprint)
+        child=Q7Tree(self,'/',fgprint)
+        self.readyCursor()
+        child.show()
 
 # -----------------------------------------------------------------

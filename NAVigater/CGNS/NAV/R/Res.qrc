@@ -1,56 +1,51 @@
 <RCC>
   <qresource prefix="/images">
-    <file>icons/save-log.gif</file>
-    <file>icons/colors-first.gif</file>
-    <file>icons/colors-last.gif</file>
-    <file>icons/toolsview.gif</file>
-    <file>icons/vtkview.gif</file>
-    <file>icons/save-inactive.gif</file>
-    <file>icons/check-fail.gif</file>
-    <file>icons/check-warn.gif</file>
-    <file>icons/check-ok.gif</file>
-    <file>icons/form.gif</file>
-    <file>icons/tools.gif</file>
-    <file>icons/check-list.gif</file>
-    <file>icons/diff-add.gif</file>
-    <file>icons/diff-changed.gif</file>
-    <file>icons/diff-del.gif</file>
-    <file>icons/save-converted.gif</file>
-    <file>icons/reverse.gif</file>
-    <file>icons/hidden.gif</file>
-    <file>icons/unselected.gif</file>
-    <file>icons/selected.gif</file>
-    <file>icons/top.gif</file>
-    <file>icons/camera-snap.gif</file>
-    <file>icons/camera-remove.gif</file>
-    <file>icons/control.gif</file>
-    <file>icons/merge.gif</file>
-    <file>icons/camera-add.gif</file>
-    <file>icons/colors-bw.gif</file>
-    <file>icons/folder.gif</file>
+    <file>icons/plot.gif</file>
     <file>Res.qrc</file>
     <file>icons/add.gif</file>
     <file>icons/arrow.gif</file>
     <file>icons/arrow_R.gif</file>
+    <file>icons/branch-end-p.gif</file>
+    <file>icons/branch-end.gif</file>
+    <file>icons/branch-more-p.gif</file>
+    <file>icons/branch-more.gif</file>
     <file>icons/bullet_star.gif</file>
+    <file>icons/camera-add.gif</file>
+    <file>icons/camera-remove.gif</file>
+    <file>icons/camera-snap.gif</file>
+    <file>icons/cgSpy.gif</file>
     <file>icons/check-all.gif</file>
     <file>icons/check-bwd.gif</file>
     <file>icons/check-clear.gif</file>
+    <file>icons/check-fail.gif</file>
     <file>icons/check-fwd.gif</file>
     <file>icons/check-go.gif</file>
+    <file>icons/check-list.gif</file>
+    <file>icons/check-ok.gif</file>
     <file>icons/check-save.gif</file>
     <file>icons/check-view.gif</file>
+    <file>icons/check-warn.gif</file>
     <file>icons/close-view.gif</file>
+    <file>icons/colors-bw.gif</file>
+    <file>icons/colors-first.gif</file>
+    <file>icons/colors-last.gif</file>
     <file>icons/colors.gif</file>
+    <file>icons/control.gif</file>
     <file>icons/data-array-large.gif</file>
     <file>icons/delete.gif</file>
+    <file>icons/diff-add.gif</file>
+    <file>icons/diff-changed.gif</file>
+    <file>icons/diff-del.gif</file>
     <file>icons/flag-all.gif</file>
     <file>icons/flag-bwd.gif</file>
     <file>icons/flag-fwd.gif</file>
     <file>icons/flag-none.gif</file>
     <file>icons/flag-revert.gif</file>
+    <file>icons/folder.gif</file>
     <file>icons/form-open.gif</file>
+    <file>icons/form.gif</file>
     <file>icons/help-view.gif</file>
+    <file>icons/hidden.gif</file>
     <file>icons/level-all.gif</file>
     <file>icons/level-in.gif</file>
     <file>icons/level-out.gif</file>
@@ -67,6 +62,7 @@
     <file>icons/mandatory-profile-node.gif</file>
     <file>icons/mandatory-sids-node.gif</file>
     <file>icons/mark-node.gif</file>
+    <file>icons/merge.gif</file>
     <file>icons/node-sids-closed.gif</file>
     <file>icons/node-sids-leaf.gif</file>
     <file>icons/node-sids-modified.gif</file>
@@ -88,8 +84,11 @@
     <file>icons/pattern-view.gif</file>
     <file>icons/pattern.gif</file>
     <file>icons/print-view.gif</file>
-    <file>icons/cgSpy.gif</file>
+    <file>icons/reverse.gif</file>
+    <file>icons/save-converted.gif</file>
     <file>icons/save-done.gif</file>
+    <file>icons/save-inactive.gif</file>
+    <file>icons/save-log.gif</file>
     <file>icons/save-tree.gif</file>
     <file>icons/save.gif</file>
     <file>icons/select-add.gif</file>
@@ -98,10 +97,14 @@
     <file>icons/select-operate.gif</file>
     <file>icons/select-save.gif</file>
     <file>icons/select-update.gif</file>
+    <file>icons/selected.gif</file>
     <file>icons/snapshot.gif</file>
     <file>icons/subtree-sids-failed.gif</file>
     <file>icons/subtree-sids-ok.gif</file>
     <file>icons/subtree-sids-warning.gif</file>
+    <file>icons/tools.gif</file>
+    <file>icons/toolsview.gif</file>
+    <file>icons/top.gif</file>
     <file>icons/tree-add.gif</file>
     <file>icons/tree-del.gif</file>
     <file>icons/tree-load-g.gif</file>
@@ -109,12 +112,31 @@
     <file>icons/tree-new.gif</file>
     <file>icons/tree-save.gif</file>
     <file>icons/undo-last-modification.gif</file>
+    <file>icons/unselected.gif</file>
+    <file>icons/user-A.gif</file>
+    <file>icons/user-B.gif</file>
+    <file>icons/user-C.gif</file>
+    <file>icons/user-D.gif</file>
+    <file>icons/user-E.gif</file>
+    <file>icons/user-F.gif</file>
+    <file>icons/user-G.gif</file>
+    <file>icons/user-H.gif</file>
+    <file>icons/user-J.gif</file>
+    <file>icons/user-K.gif</file>
+    <file>icons/user-L.gif</file>
+    <file>icons/user-M.gif</file>
+    <file>icons/user-N.gif</file>
+    <file>icons/user-P.gif</file>
+    <file>icons/user-Q.gif</file>
+    <file>icons/user-R.gif</file>
+    <file>icons/user-S.gif</file>
+    <file>icons/user-T.gif</file>
+    <file>icons/user-U.gif</file>
+    <file>icons/user-V.gif</file>
+    <file>icons/user-W.gif</file>
     <file>icons/view-help.gif</file>
-    <file>icons/vtk.gif</file>
     <file>icons/vline.gif</file>
-    <file>icons/branch-end.gif</file>
-    <file>icons/branch-more.gif</file>
-    <file>icons/branch-end-p.gif</file>
-    <file>icons/branch-more-p.gif</file>
+    <file>icons/vtk.gif</file>
+    <file>icons/vtkview.gif</file>
   </qresource>
 </RCC>

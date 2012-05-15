@@ -58,8 +58,8 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.eName.setText(self._node.sidsName())
         self.ePath.setText(self._node.sidsPath())
         self.ePath.setReadOnly(True)
-        self.sMinH.setRange(1,999999999)
-        self.sMinV.setRange(1,999999999)
+        self.sMinH.setRange(-999999999,999999999)
+        self.sMinV.setRange(-999999999,999999999)
         self.sMinH.setValue(1)
         self.sMinV.setValue(1)
         self.setCurrentType(self._node.sidsType())
@@ -93,7 +93,8 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         QObject.connect(self.sMinV,
                         SIGNAL("valueChanged(int)"),
                         self.resetIndex)
-        self.minimizeCells()
+        #for n in range(self.cs):
+        #    self.tableView.setColumnWidth(n,self.model.colwidth)
     def resizeTable(self):
         s=self.cRowColSize.currentText()
         (r,c)=s.split('x')

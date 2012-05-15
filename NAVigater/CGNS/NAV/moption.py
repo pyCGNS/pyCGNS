@@ -66,6 +66,7 @@ Q_SCRIPT_POST="""
 class Q7OptionContext(object):
     CHLoneTrace=False
     NAVTrace=False
+    AutoExpand=False
     RecursiveTreeDisplay=False
     OneViewPerTreeNode=False
     ShowTableIndex=True
@@ -111,6 +112,19 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
 """
     FixedFontTable='fixed'
 
+    UserColors=[
+        'gray',
+        'red',
+        'green',
+        'blue',
+        'orange',
+        None,
+        None,
+        None,
+        None,
+        None,
+        ]
+    
     _ColorList={\
     'cold_grey':                   (0.5000, 0.5400, 0.5300),
     'dim_grey':                    (0.4118, 0.4118, 0.4118),
@@ -369,23 +383,23 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     ]
 
     _UsualQueriesText=[
-    ['Search by node name',[(Q_OR,  Q_NODE, Q_SCRIPT,
+    ['+Search by node name',[(Q_OR,  Q_NODE, Q_SCRIPT,
                              'RESULT=(NAME==USERPARAMETER[0])')]],
-    ['Search by wildcard nodename',[(Q_OR,  Q_NODE, Q_SCRIPT,
+    ['+Search by wildcard nodename',[(Q_OR,  Q_NODE, Q_SCRIPT,
 """
 import fnmatch
 RESULT=fnmatch.fnmatchcase(NAME,USERPARAMETER[0])
 """
     )]],
-    ['Search by node type',[(Q_OR,  Q_NODE, Q_SCRIPT,
+    ['+Search by node type',[(Q_OR,  Q_NODE, Q_SCRIPT,
                              'RESULT=(CGNSTYPE==USERPARAMETER[0])')]],
-    ['Families',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.Family_ts)]],
-    ['Family names',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.FamilyName_ts)]],
-    ['BCs',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.BC_ts)]],
-    ['QUADs',[(Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
+    ['+Families',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.Family_ts)]],
+    ['+Family names',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.FamilyName_ts)]],
+    ['+BCs',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.BC_ts)]],
+    ['+QUADs',[(Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
               (Q_AND, Q_NODE, Q_SCRIPT,
                'RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)')]],
-    ['TRIs',[(Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
+    ['+TRIs',[(Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
              (Q_AND, Q_NODE, Q_SCRIPT,
               'RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)')]],
     ]
@@ -401,9 +415,10 @@ RESULT=fnmatch.fnmatchcase(NAME,USERPARAMETER[0])
       if (type(udata)==dict):
         s+="""{\n"""
         for k in udata:
-          val=str(udata[k])
-          if (type(udata[k]) in [unicode, str]): val="'%s'"%str(udata[k])
-          s+="""'%s':%s,\n"""%(k,val)
+          if (k[0]!='_'):
+            val=str(udata[k])
+            if (type(udata[k]) in [unicode, str]): val="'%s'"%str(udata[k])
+            s+="""'%s':%s,\n"""%(k,val)
         s+="""}\n\n# --- last line\n"""
       elif (type(udata)==list):
         s+="""[\n"""

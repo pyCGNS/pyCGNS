@@ -32,8 +32,16 @@ class Q7TableModel(QAbstractTableModel):
         self.cs=showparams['cs']
         self.ls=showparams['ls']
         self.fmt="%-s"
-        if (self.node.sidsDataType() in ['R4','R8']): self.fmt="% 0.12e"
-        if (self.node.sidsDataType() in ['I4','I8']): self.fmt="%12d"
+        tx=self.fmt%'w'*16
+        if (self.node.sidsDataType() in ['R4','R8']):
+            self.fmt="% 0.8e"
+            tx=self.fmt%9.9999999999999
+        if (self.node.sidsDataType() in ['I4','I8']):
+            self.fmt="%8d"
+            tx=self.fmt%999999999
+        if (self.node.sidsDataType() in ['C1']):
+            self.fmt="%1s"
+            tx=self.fmt%'w'
         if (self.node.sidsDataType() not in ['MT','LK']):
             if (self.node.sidsValueFortranOrder()):
                 self.flatindex=self.flatindex_F
@@ -44,8 +52,10 @@ class Q7TableModel(QAbstractTableModel):
             self.flatarray=None
         self.hmin=1
         self.vmin=1
-        self.font=QFont("Courier")
-    def setRange(self,minh,minv):
+        self.font=QFont("Courier new",10)
+        fm=QFontMetrics(self.font)
+        self.colwidth=fm.width(tx)
+    def setRange(self,minh,minv): 
         self.hmin=minh
         self.vmin=minv
     def headerData(self, section, orientation, role):  
@@ -66,7 +76,7 @@ class Q7TableModel(QAbstractTableModel):
         return self.ls
     def index(self, row, column, parent):
         return self.createIndex(row, column, 0)  
-    def data(self, index, role):
+    def data(self, index, role=Qt.DisplayRole):
         if (role not in [Qt.DisplayRole,Qt.FontRole]): return None
         if (self.flatarray is None): return None
         if (role==Qt.FontRole): return self.font

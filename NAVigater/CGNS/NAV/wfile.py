@@ -78,8 +78,11 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
             return af<bf
         if (c==1):
             wg={'MB':1e3,'GB':1e6,'KB':1}
-            (av,au)=a.split()
-            (bv,bu)=b.split()
+            try:
+                (av,au)=a.split()
+                (bv,bu)=b.split()
+            except ValueError:
+                return a<b
             av=float(string.replace(av,',','.'))*wg[au]
             bv=float(string.replace(bv,',','.'))*wg[bu]
             return av<bv
@@ -138,7 +141,8 @@ class Q7File(QWidget,Ui_Q7FileWindow):
             QObject.connect(o,SIGNAL(s),f)
         self.bClose.clicked.connect(self.close)
         self.bBack.clicked.connect(self.backDir)
-        self.setMode()
+        if (mode==SAVEMODE): self.setMode(False)
+        else:                self.setMode(True)
         self.setBoxes()
         if (self.parent.getHistoryLastKey() in hlist.keys()):
             self.selecteddir=hlist[self.parent.getHistoryLastKey()][0]

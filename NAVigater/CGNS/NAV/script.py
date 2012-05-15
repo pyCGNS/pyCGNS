@@ -10,7 +10,7 @@ from PySide.QtGui import QApplication
 from CGNS.NAV.wcontrol import Q7Main
 
 # -----------------------------------------------------------------
-def run(args,files,flags,ppath):
+def run(args=[],files=[],flags=(False,False,False,False),ppath=None):
   app=QApplication(args)
   wcontrol=Q7Main()
   wcontrol.setOptionValue('NAVTrace',flags[2])

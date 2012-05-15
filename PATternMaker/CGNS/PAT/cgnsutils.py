@@ -220,7 +220,7 @@ def checkDuplicatedName(parent,name,dienow=False):
 # -----------------------------------------------------------------------------
 def checkHasChildName(parent,name,dienow=False):
   """
-  Checks if the name is not already in the children list of the parent::
+  Checks if the name is in the children list of the parent::
 
     count=1
     while (checkHasChildName(node,'solution#%.3d'%count)): count+=1
@@ -236,7 +236,7 @@ def checkHasChildName(parent,name,dienow=False):
    * Raises :ref:`cgnsnameerror` code 102 if `dienow` is True
   
   """
-  return not checkDuplicatedChildName(parent,name,dienow)
+  return not checkDuplicatedName(parent,name,dienow)
 
 # -----------------------------------------------------------------------------
 def checkNodeType(node,cgnstype=[],dienow=False):
@@ -958,6 +958,35 @@ def hasValueDataType(node,flags):
   return path
 
 # --------------------------------------------------   
+def hasSameRootPath(pathroot,pathtocompare):
+  """
+  Compares two paths::
+
+    >>>hasSameRootPath('/Base/Zone/ZoneBC','/Base/ZoneBC/BC#2/Data')
+    True
+    >>>hasSameRootPath('/Base/Zone/ZoneBC','/Base/ZoneBC#2')
+    False
+
+  - Args:
+   * `pathroot`: root path to compare
+   * `pathtocompare`: path which is supposed to have rootpath as substring
+
+  - Return:
+   * Ture if 'rootpath' is a prefix of 'pathtocompare'
+
+  - Remarks:
+   * Each node name is a token, see example below: the second example
+     doesn't match as a path while it matches as a string.
+   
+  """
+  l1=getPathToList(pathroot)
+  l2=getPathToList(pathtocompare)
+  if (len(l1) > len(l2)): return False
+  for i in range(len(l1)):
+    if (l1[i]!=l2[i]): return False
+  return True
+
+# --------------------------------------------------   
 def getPathToList(path,nofirst=False,noroot=True):
   """
   Return the path as a list of node names::
@@ -1258,10 +1287,31 @@ def hasChildLink(child):
 # -----------------------------------------------------------------------------
 def hasChildName(parent,name,dienow=False):
   """
-  Same as :py:func:`checkHasChildName`
+  Checks if the name is in the children list of the parent::
 
+    node=hasChildName(parent,CGK.ZoneGridConnectivity_s)
+    if (node is None):
+       node=CGL.newZoneGridConnectivity(parent)
+
+  - Args:
+   * `parent`: the parent node
+   * `name`:   the child name to look for
+
+  - Return:
+   * the actual child node if the child exists
+   * None if the child is not found
+
+  - Remarks:
+   * Raises :ref:`cgnsnameerror` code 102 if `dienow` is True
+  
   """
-  return checkHasChildName(parent,name,dienow)
+  if (not parent): return None
+  if (parent[2] == None): return None
+  for nc in parent[2]:
+    if (nc[0] == name):
+      if (dienow): raise CE.cgnsNameError(102,(name,parent[0]))
+      return nc
+  return None
 
 # --------------------------------------------------
 def hasChildNodeOfType(node,ntype):

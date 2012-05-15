@@ -21,12 +21,16 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
         self.getOptions()
     def getopt(self,name):
         if (name[0]=='_'): return None
-        return getattr(self,'__O_'+string.lower(name))
+        try:
+            a=getattr(self,'__O_'+string.lower(name))
+        except AttributeError:
+            return None
+        return a
     def reset(self):
         self.getOptions()
         data=self._options
         for k in data:
-          if (k[0]!='_'):
+          if ((k[0]!='_') and (self.getopt(k) is not None)):
             if (type(data[k]) is bool):
               if (data[k]): self.getopt(k).setCheckState(Qt.Checked)
               else: self.getopt(k).setCheckState(Qt.Unchecked)
@@ -45,7 +49,7 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
     def accept(self):
         data=self._options
         for k in data:
-          if (k[0]!='_'):
+          if ((k[0]!='_') and (self.getopt(k) is not None)):
             if (type(data[k]) is bool):
                 if (self.getopt(k).isChecked()): data[k]=True
                 else: data[k]=False

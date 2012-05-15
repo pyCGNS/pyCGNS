@@ -10,11 +10,12 @@ from PySide.QtCore import *
 from PySide.QtGui  import *
 from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.wform import Q7Form
-from CGNS.NAV.wvtk import Q7VTK
+from CGNS.NAV.wvtk import Q7VTK, Q7VTKPlot
 from CGNS.NAV.wquery import Q7Query, Q7SelectionList
 from CGNS.NAV.wdiag import Q7CheckList
 from CGNS.NAV.mquery import Q7QueryTableModel
-from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem
+from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem, Q7TreeFilterProxy
+import CGNS.NAV.mtree as NMT
 from CGNS.NAV.wfingerprint import Q7Window,Q7fingerPrint
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import CGNS.PAT.cgnskeywords as CGK
@@ -24,37 +25,38 @@ CELLEDITMODE=(CELLCOMBO,CELLTEXT)
 
 # -----------------------------------------------------------------
 class Q7TreeItemDelegate(QStyledItemDelegate):
-    def __init__(self, owner):
+    def __init__(self, owner, model):
         QStyledItemDelegate.__init__(self, owner)
         self._parent=owner
         self._mode=CELLTEXT
+        self._model=model
     def createEditor(self, parent, option, index):
         ws=option.rect.width()
         hs=option.rect.height()+4
         xs=option.rect.x()
         ys=option.rect.y()-2
-        if (index.column() in [0,8]):
+        if (index.column() in [NMT.COLUMN_NAME,NMT.COLUMN_VALUE]):
           self._mode=CELLTEXT
           editor=QLineEdit(parent)
           editor.transgeometry=(xs,ys,ws,hs)
           editor.installEventFilter(self)
           self.setEditorData(editor,index)
           return editor
-        if (index.column()==1):
+        if (index.column()==NMT.COLUMN_SIDS):
           self._mode=CELLCOMBO
           editor=QComboBox(parent)
           editor.transgeometry=(xs,ys,ws,hs)
-          itemslist=index.internalPointer().sidsTypeList()
+          itemslist=self.modelData(index).sidsTypeList()
           editor.addItems(itemslist)
           editor.setCurrentIndex(0)
           editor.installEventFilter(self)
           self.setEditorData(editor,index)
           return editor
-        if (index.column()==5):
+        if (index.column()==NMT.COLUMN_DATATYPE):
           self._mode=CELLCOMBO
           editor=QComboBox(parent)
           editor.transgeometry=(xs,ys,ws,hs)
-          itemslist=index.internalPointer().sidsDataTypeList()
+          itemslist=self.modelData(index).sidsDataTypeList()
           editor.addItems(itemslist)
           editor.setCurrentIndex(0)
           editor.installEventFilter(self)
@@ -78,20 +80,31 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
             value=editor.currentText()
         if (self._mode==CELLTEXT):
             value=editor.text()
+        pth=self._parent.modelData(index).sidsPath()
         model.setData(index,value,role=Qt.EditRole)
+        #self._parent.setLastEntered(nindex)
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(*editor.transgeometry)
     def paint(self, painter, option, index):
-        if (index.column()==0):
-          if (index.internalPointer().sidsName() not in OCTXT._ReservedNames):
+        if (self._parent.modelIndex(index).column()==NMT.COLUMN_NAME):
+          if (self._parent.modelData(index).sidsName()
+              not in OCTXT._ReservedNames):
             option.font.setWeight(QFont.Bold)
+          uf=self._parent.modelData(index).userState()
+          if (uf in NMT.USERSTATES):
+            if (self._model.hasUserColor(uf)):
+                br=QBrush(self._model.getUserColor(uf))
+                cg=option.palette.ColorGroup()
+                option.palette.setBrush(cg,QPalette.Text,br)
+                option.palette.setBrush(cg,QPalette.HighlightedText,br)
           QStyledItemDelegate.paint(self, painter, option, index)
           option.font.setWeight(QFont.Light)
-        elif (index.column() in [8,5]):
+        elif (index.column() in [NMT.COLUMN_VALUE,NMT.COLUMN_DATATYPE]):
           option.font.setFamily(OCTXT.FixedFontTable)
-          if (index.column() == 5): option.font.setPointSize(8)
+          if (index.column() == NMT.COLUMN_DATATYPE):
+              option.font.setPointSize(8)
           QStyledItemDelegate.paint(self, painter, option, index)
-        elif (index.column() in [2,4,6,7]):
+        elif (index.column() in NMT.COLUMN_FLAGS):
           option.decorationPosition=QStyleOptionViewItem.Top
           QStyledItemDelegate.paint(self, painter, option, index)
           option.decorationPosition=QStyleOptionViewItem.Left
@@ -137,6 +150,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bMarksAsList.clicked.connect(self.selectionlist)
         self.bApply.clicked.connect(self.applyquery)
         self.bVTKView.clicked.connect(self.vtkview)
+        self.bPlotView.clicked.connect(self.plotview)
         self.bQueryView.clicked.connect(self.queryview)
         self.bScreenShot.clicked.connect(self.screenshot)
         self.bCheck.clicked.connect(self.check)
@@ -144,15 +158,27 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bClearChecks.clicked.connect(self.clearchecks)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
-        self.treeview.setModel(self._fgprint.model)
-        self.treeview.setItemDelegate(Q7TreeItemDelegate(self.treeview))
+        self.proxy = Q7TreeFilterProxy(self)
+        self.proxy.setSourceModel(self._fgprint.model)
+        self.treeview.setModel(self.proxy)
+        self.treeview.setItemDelegate(Q7TreeItemDelegate(self.treeview,
+                                                         self._fgprint.model))
         self.treeview.setControlWindow(self,self._fgprint.model)
         if (self._control.transientRecurse): self.expandMinMax()
         if (self._control.transientVTK):     self.vtkview()
         self.clearchecks()
+    def model(self):
+        return self._fgprint.model
+    def modelIndex(self,idx):
+        if (not idx.isValid()): return -1
+        return self.treeview.model().mapToSource(idx)
+    def modelData(self,idx):
+        if (not idx.isValid()): return None
+        return self.modelIndex(idx).internalPointer()
     def savetree(self):
         if ((self._fgprint.converted) or
             not (self._fgprint.isModified())): return
+        self._control.save(self._fgprint)
         self._fgprint.modifiedTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
         self.updateTreeStatus()
     def screenshot(self):
@@ -166,6 +192,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self._depthExpanded=self._fgprint.depth-2
             self.treeview.expandAll()
         self.resizeAll()
+    def resetOptions(self):
+        if (OCTXT.AutoExpand): self.treeview.setAutoExpandDelay(1000)
+        else:                  self.treeview.setAutoExpandDelay(-1)
     def expandLevel(self):
         if (self._depthExpanded<self._fgprint.depth-2):
             self._depthExpanded+=1
@@ -181,54 +210,57 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def updateStatus(self,node):
         self.lineEdit.clear()
         self.lineEdit.insert(node.sidsPath())
-    def pop1(self):
+    def popform(self):
         self.formview()
     def openSubTree(self):
         self.busyCursor()
-        node=self.lastNodeMenu.internalPointer().sidsPath()
+        node=self.getLastEntered().sidsPath()
         child=Q7Tree(self._control,node,self._fgprint)
         self.readyCursor()
         child.show()
     def pop0(self):
         pass
+    def newnodebrother(self):
+        if (self.getLastEntered() is not None):
+            self.model().newNodeBrother(self.getLastEntered())
+    def newnodechild(self):
+        if (self.getLastEntered() is not None):
+            self.model().newNodeChild(self.getLastEntered())
     def marknode(self):
-        if (self.lastNodeMenu.isValid()):
-             nodeitem=self.lastNodeMenu.internalPointer()
-             self.treeview.markNode(nodeitem)
+        if (self.getLastEntered() is not None):
+             self.treeview.markNode(self.getLastEntered())
     def mcopy(self):
-        if (self.lastNodeMenu.isValid()):
-            nodeitem=self.lastNodeMenu.internalPointer()
-            self._fgprint.model.copyNode(nodeitem)
+        if (self.getLastEntered() is not None):
+            self.model().copyNode(self.getLastEntered())
     def mcutselected(self):
-        self._fgprint.model.cutAllSelectedNodes()
+        self.model().cutAllSelectedNodes()
+        self.clearLastEntered()
     def mcut(self):
-        if (self.lastNodeMenu.isValid()):
-            nodeitem=self.lastNodeMenu.internalPointer()
-            self.lastNodeMenu=self.lastNodeMenu.parent()
-            self._fgprint.model.cutNode(nodeitem)
+        if (self.getLastEntered() is not None):
+            self.model().cutNode(self.getLastEntered())
+            self.clearLastEntered()
     def mpasteasbrotherselected(self):
-        self._fgprint.model.pasteAsBrotherAllSelectedNodes()
+        self.model().pasteAsBrotherAllSelectedNodes()
     def mpasteasbrother(self):
-        if (self.lastNodeMenu.isValid()):
-            nodeitem=self.lastNodeMenu.internalPointer()
-            self._fgprint.model.pasteAsBrother(nodeitem)
-            self._fgprint.model.dataChanged.emit(self.lastNodeMenu,
-                                                 self.lastNodeMenu)
+        if (self.getLastEntered() is not None):
+            self.model().pasteAsBrother(nself.getLastEntered())
     def mpasteaschildselected(self):
-        self._fgprint.model.pasteAsChildAllSelectedNodes()
+        self.model().pasteAsChildAllSelectedNodes()
     def mpasteaschild(self):
-        if (self.lastNodeMenu.isValid()):
-            nodeitem=self.lastNodeMenu.internalPointer()
-            self._fgprint.model.pasteAsChild(nodeitem)
-    def updateMenu(self,nodeidx):
-        self.lastNodeMenu=nodeidx
+        if (self.getLastEntered() is not None):
+            self.model().pasteAsChild(self.getLastEntered())
+    def updateMenu(self,nodeidxs):
+        nodeidx=self.modelIndex(nodeidxs)
+        self.setLastEntered(nodeidxs)
         if (nodeidx != -1):
           node=nodeidx.internalPointer()
           actlist=(("About %s"%node.sidsType(),self.pop0,None),
                    None,
                    ("Mark/unmark node",self.marknode,'Space'),
+                   ("Add new child node",self.newnodechild,'Ctrl+A'),
+                   ("Add new brother node",self.newnodebrother,'Ctrl+Z'),
                    None,
-                   ("Open form",self.pop1,'Ctrl+F'),
+                   ("Open form",self.popform,'Ctrl+F'),
                    ("Open view",self.openSubTree,'Ctrl+W'),
                    None,
                    ("Copy",self.mcopy,'Ctrl+C'),
@@ -250,23 +282,30 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                   a=QAction(aparam[0],self,triggered=aparam[1])
                   if (aparam[2] is not None): a.setShortcut(aparam[2])
                   self.popupmenu.addAction(a)
-    def setLastEntered(self):
-        nix=self.treeview.currentIndex()
+    def setLastEntered(self,nix=None):
+        if ((nix is None) or (not nix.isValid())):
+            nix=self.treeview.currentIndex()
+        self._lastEntered=None
         if (nix.isValid()):
-            self._lastEntered=nix.internalPointer()
+            self.treeview.exclusiveSelectRow(nix,False)
+            self._lastEntered=self.modelData(nix)
     def getLastEntered(self):
         return self._lastEntered
+    def clearLastEntered(self):
+        self._lastEntered=None
+        self.treeview.selectionModel().clearSelection()
+        return None
     def clickedNode(self,index):
-        self.setLastEntered()
+        self.setLastEntered(index)
         if (self.treeview.lastButton==Qt.RightButton):
-            self.updateMenu(self.treeview.currentIndex())
+            self.updateMenu(index)
             self.popupmenu.popup(self.treeview.lastPos)
     def expandNode(self,*args):
         self.resizeAll()
     def collapseNode(self,*args):
         pass
     def resizeAll(self):
-        for n in range(9):
+        for n in range(NMT.COLUMN_LAST+1):
             self.treeview.resizeColumnToContents(n)
     def show(self):
         super(Q7Tree, self).show()
@@ -279,12 +318,12 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         qry=self.querymodel
         if (q in qry.queriesNamesList()):
             sl=qry.getQuery(q).run(self._fgprint.tree,v)
-            self.treeview.model().markExtendToList(sl)
-            self.treeview.model().updateSelected()
+            self.model().markExtendToList(sl)
+            self.model().updateSelected()
         self.treeview.refreshView()
     def check(self):
         self.busyCursor()
-        self.lastdiag=self.treeview.model().checkSelected()
+        self.lastdiag=self.model().checkSelected()
         self.readyCursor()
         self.treeview.refreshView()
     def checklist(self):
@@ -292,11 +331,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.diagview=Q7CheckList(self._control,self.lastdiag,self._fgprint)
         self.diagview.show()
     def clearchecks(self):
-        self.treeview.model().checkClear()
+        self.model().checkClear()
         self.treeview.refreshView()
         self.lastdiag=None
     def selectionlist(self):
-        slist=Q7SelectionList(self._control,self.treeview.model()._selected,
+        slist=Q7SelectionList(self._control,self.model()._selected,
                               self._fgprint)
         slist.show()
     def previousmark(self):
@@ -304,30 +343,40 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def nextmark(self):
         self.treeview.changeSelectedMark(+1)
     def markall(self):
-        self.treeview.model().markAll()
-        self.treeview.model().updateSelected()
+        self.model().markAll()
+        self.model().updateSelected()
         self.treeview.refreshView()
     def unmarkall(self):
-        self.treeview.model().unmarkAll()
-        self.treeview.model().updateSelected()
+        self.model().unmarkAll()
+        self.model().updateSelected()
         self.treeview.refreshView()
     def swapmarks(self):
-        self.treeview.model().swapMarks()
-        self.treeview.model().updateSelected()
+        self.model().swapMarks()
+        self.model().updateSelected()
         self.treeview.refreshView()
     def formview(self):
-        node=self.treeview.currentIndex().internalPointer()
+        ix=self.treeview.currentIndex()
+        node=self.modelData(ix)
         if (node is None): return
         if (node.sidsType()==CGK.CGNSTree_ts): return
         form=Q7Form(self._control,node,self._fgprint)
         form.show()
     def vtkview(self):
-        zlist=self.treeview.model().getSelectedZones()
-        node=self.treeview.currentIndex().internalPointer()
+        ix=self.treeview.currentIndex()
+        zlist=self.model().getSelectedZones()
+        node=self.modelData(ix)
         self.busyCursor()
-        vtk=Q7VTK(self._control,node,self._fgprint,self.treeview.model(),zlist)
+        vtk=Q7VTK(self._control,node,self._fgprint,self.model(),zlist)
         self.readyCursor()
         vtk.show()
+    def plotview(self):
+        ix=self.treeview.currentIndex()
+        zlist=self.model().getSelectedZones()
+        node=self.modelData(ix)
+        self.busyCursor()
+        plot=Q7VTKPlot(self._control,node,self._fgprint,self.model(),zlist)
+        self.readyCursor()
+        plot.show()
     def queryview(self):
         q=self.querymodel.getCurrentQuery()
         self.querymodel.setCurrentQuery(' ')
