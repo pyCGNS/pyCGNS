@@ -297,6 +297,31 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="selectable">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="cursor">
+        <cursorShape>OpenHandCursor</cursorShape>
+       </property>
+       <property name="text">
+        <string>S</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer_3">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -408,7 +433,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/colors-first.gif</normaloff>:/images/icons/colors-first.gif</iconset>
+         <normaloff>:/images/icons/colors.gif</normaloff>:/images/icons/colors.gif</iconset>
        </property>
       </widget>
      </item>
@@ -431,7 +456,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/colors-last.gif</normaloff>:/images/icons/colors-last.gif</iconset>
+         <normaloff>:/images/icons/colors.gif</normaloff>:/images/icons/colors.gif</iconset>
        </property>
       </widget>
      </item>

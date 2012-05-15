@@ -15,6 +15,8 @@ from CGNS.NAV.wfile import Q7File
 from CGNS.NAV.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import numpy as NPY
 
+import math as M
+
 import random
 import vtk
 
@@ -81,6 +83,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.maxColorMap=None
       self._camera={}
       self._blackonwhite=False
+      self.widgets=False
       self._vtktree=self.wCGNSTree(self._fgprint.tree,zlist)
       self.resetSpinBox()
       self.display.Initialize()
@@ -100,6 +103,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bReset.clicked.connect(self.b_reset)
       self.bUpdate.clicked.connect(self.b_update)
       self.bScreenShot.clicked.connect(self.screenshot)
+      self.selectable.clicked.connect(self.setInteractive)
       self.ColorMapMin=QColorDialog(self)
       self.ColorMapMax=QColorDialog(self)      
       QObject.connect(self.ColorMapMin, SIGNAL("colorSelected(QColor)"), self.getColorMapMin)
@@ -124,8 +128,24 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                       self.highlightPoint)
 ##       self.setCursor(Qt.WaitCursor)
 ##       self.unsetCursor()
-      self.hscalarbar=None
 
+  def setInteractive(self,*args):
+      if (self.selectable.isChecked()):
+          if (not self.scalarbarwidget is None):
+              self.scalarbarwidget.RepositionableOn()
+              self.scalarbarwidget.ResizableOn()
+          self.widget.InteractiveOn()
+          self.textActor.VisibilityOff()
+          self.textwidget.On()
+
+      else:
+          if (not self.scalarbarwidget is None):
+             self.scalarbarwidget.RepositionableOff()
+             self.scalarbarwidget.ResizableOff()
+          self.widget.InteractiveOff()
+          self.textActor.VisibilityOn()
+          self.textwidget.Off()
+          
   def displayColorMapMin(self,*args):
       self.ColorMapMin.show()
 
@@ -242,7 +262,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.scalarbar.SetTitleTextProperty(text)
       self.scalarbarwidget=vtk.vtkScalarBarWidget()
       self.scalarbarwidget.ResizableOff()      
-      self.scalarbarwidget.RepositionableOn()
+      self.scalarbarwidget.RepositionableOff()
       self.scalarbarwidget.GetScalarBarRepresentation().SetScalarBarActor(self.scalarbar)
       self.scalarbarwidget.GetScalarBarRepresentation().PickableOff()
       self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(0.9,0.4)
@@ -304,6 +324,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
     self.widget=vtk.vtkOrientationMarkerWidget()
     self.widget.SetOutlineColor(0.93,0.57,0.13)
     self.widget.SetOrientationMarker(axes)
+    self.widget.SetViewport(0,0,0.25,0.25)
     
     xLabel=axes.GetXAxisCaptionActor2D()
     xLabel.SetCaption("X")
@@ -431,7 +452,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.scalarbar.GetLabelTextProperty().SetColor(self.color)
       self.scalarbar.GetTitleTextProperty().SetColor(self.color)
       self.textwidget.GetTextActor().GetTextProperty().SetColor(self.color)
-      self.textwidget.On()
+      self.plot.GetTitleTextProperty().SetColor(self.color)
+      self.plot.GetAxisLabelTextProperty().SetColor(self.color)
 
   def wire(self):
       actors=self._vtkren.GetActors() 
@@ -440,7 +462,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       while actor:
         actor.GetProperty().SetRepresentationToWireframe()
         actor.GetProperty().EdgeVisibilityOff()
-        actor = actors.GetNextItem()
+        actor=actors.GetNextItem()
     
   def addPicker(self):
       txtActor=vtk.vtkActor2D()
@@ -449,12 +471,13 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.textActor=vtk.vtkTextActor()
       self.textActor.VisibilityOff()
       self.textActor.PickableOff()
-      tprop=self.textActor.GetTextProperty()
+      tprop=vtk.vtkTextProperty()
       tprop.SetFontFamilyToArial()
       tprop.SetFontSize(10)
       tprop.BoldOff()
       tprop.ShadowOff()
       tprop.SetColor(self.color)
+      self.textActor.SetTextProperty(tprop)
       self.picker = vtk.vtkCellPicker()
       self.picker.SetTolerance(0.001)
       self.picker.AddObserver("EndPickEvent",self.annotatePick)
@@ -475,7 +498,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
         self.PropPicked=0
       if (self.picker.GetCellId()<0):
         self.textActor.VisibilityOff()
-        self.textwidget.Off()
         self.highlightProp=0
       else:                  
         pickAct = self.picker.GetActors()
@@ -494,12 +516,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
         y=sz-self.txtMapper.GetHeight(self._vtkren)-10.
         h=y/sz
         self.textActor.VisibilityOn()
-        self.textwidget.On()
+##         self.textActor.SetPosition(20,20)
         self.textActor.SetInput(t)
         self.textActor.SetTextScaleModeToNone()
         self.textActor.GetTextProperty().SetJustificationToLeft()
         self.textrepresentation.SetPosition(0.02,h)
-        self._vtkren.AddActor(self.textActor)
+        self.textActor.SetDisplayPosition(90, 50)
         self.PropPicked=0
         self.controlKey=0
         self.highlightProp=1
@@ -516,8 +538,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 ##       self._waxs=self.addAxis()
       self.addMarker()
       self._vtkwin=self._vtk.GetRenderWindow()
-      self._vtkwin.SetNumberOfLayers(2)
-      self._vtkren.SetLayer(0)
+      self._vtkwin.SetNumberOfLayers(1)
+##       self._vtkren.SetLayer(0)
 ##       self._waxs.SetLayer(1)
 
       self._vtk.GetRenderWindow().AddRenderer(self._vtkren)
@@ -526,6 +548,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._parser=Mesh(T,zlist)
       self._selected=[]
       alist=self._parser.createActors()
+      rsd=self._parser.getResidus()
       variables=[]
       if (alist!=[]):
           grid=vtk.vtkStructuredGrid.SafeDownCast(alist[0][2])
@@ -569,9 +592,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.widget.On()
       self.widget.InteractiveOff()
       self.fillCurrentPath()
+##       self.selectable.setChecked(1)
+##       self.selectable.setChecked(0)
       
 ##       self._vtkren.AddObserver("StartEvent", self.SyncCameras)
       self._vtkren.AddObserver("StartEvent", self.posWidgets)
+      self._vtkren.AddActor2D(self.textActor)
       
       self._p_wire=True
       self.setColors(True)
@@ -588,6 +614,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                        'R'     :self.resetCam,
                        'd'     :self.hideActor,
                        'D'     :self.hideActor }
+      
+
+      self.plotXY(rsd,0,6)
       
       return self._vtk.GetRenderWindow()
 
@@ -832,37 +861,43 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
      
   def posWidgets(self,*args):
       sz=self._iren.GetRenderWindow().GetSize()
+##       if (sz==(300,300)): return
       self.posScalarBar(sz)
-      self.widget.SetViewport(0,0,0.3*781/sz[0],0.3*554/sz[1])
+##       vpt=self.ViewPort()
+##       self.widget.SetViewport(vpt[0]*781/sz[0],vpt[1]*554/sz[1],vpt[2]*781/sz[0],vpt[3]*554/sz[1])
 
   def posScalarBar(self,sz):
       if (self.scalarbarwidget.GetEnabled()==1):
           if (self.scalarbarwidget.GetScalarBarActor().GetOrientation()==1):
               self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.07*781/sz[0],0.6*554/sz[1])
-          elif (self.hscalarbar is None):
-                    self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.6*781/sz[0],0.07*554/sz[1])
+          else:
+              self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.6*781/sz[0],0.07*554/sz[1])
           pos2=self.scalarbarwidget.GetScalarBarRepresentation().GetPosition2()
           pos=self.scalarbarwidget.GetScalarBarRepresentation().GetPosition()
-          if ((pos2[1]+pos[1])>1.2):
+          pos=list(pos)
+          if (pos[0]<=0):
+              pos[0]=0          
+          if (pos[1]<=0):
+              pos[1]=0
+          if ((pos2[1]+pos[1])>=1):
+              pos[1]=1-pos2[1]
               self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(pos[0],1.2-pos2[1])
-          if ((pos2[0]+pos[0])>1.02):
-              self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(1.02-pos2[0],pos[1])
-      
-      
-      
-     
+          if ((pos2[0]+pos[0])>=1.01):
+              pos[0]=1.01-pos2[0]  
+          self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(pos[0],pos[1])
+                 
   def b_surfwire(self,pos):       
       if (not self._p_wire):
           self.b_wire(pos)
           return
       self._p_wire=False
-      actors = self._vtkren.GetActors()
+      actors=self._vtkren.GetActors()
       actors.InitTraversal()
-      actor = actors.GetNextItem()
+      actor=actors.GetNextItem()
       while actor:
           actor.GetProperty().SetRepresentationToSurface()
           actor.GetProperty().EdgeVisibilityOn()
-          actor = actors.GetNextItem()
+          actor=actors.GetNextItem()
       if (not self.OutlineActor is None):
           self.OutlineActor.GetProperty().EdgeVisibilityOff()
       self._vtk.GetRenderWindow().Render()
@@ -912,6 +947,69 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def close(self):
       self._vtk.GetRenderWindow().Finalize()
       QWidget.close(self)
+
+  def plotXY(self,rsd,val1,val2):
+
+      if ((val1)>=len(rsd[2])) or ((val2)>=len(rsd[2])):
+          print 'error'
+          return
+
+      value1=rsd[2][val1]
+      value2=rsd[2][val2]
+      
+      ar1=vtk.vtkIntArray()
+      ar1.SetNumberOfComponents(1)
+      l1=value1[1].shape[0]
+      for i in range(l1):
+          ar1.InsertNextTuple1(value1[1][i])
+
+      ar2=vtk.vtkFloatArray()
+      ar2.SetNumberOfComponents(1)
+      l2=value2[1].shape[0]
+      for i in range(l2):
+          ar2.InsertNextTuple1(value2[1][i])
+
+      fieldData=vtk.vtkFieldData()
+      fieldData.AllocateArrays(2)
+      fieldData.AddArray(ar1)
+      fieldData.AddArray(ar2)
+
+      dataObject=vtk.vtkDataObject()
+      dataObject.SetFieldData(fieldData)
+      
+      text=vtk.vtkTextProperty()
+      text.SetFontFamilyToArial()
+      text.SetFontSize(12)
+      text.SetColor(self.color)
+
+      textaxis=vtk.vtkTextProperty()
+      textaxis.SetFontFamilyToArial()
+      textaxis.SetFontSize(8)
+      textaxis.SetColor(self.color)
+      
+      plot = vtk.vtkXYPlotActor()
+      plot.AddDataObjectInput(dataObject)
+      plot.SetTitle("Convergence")
+      plot.SetTitleTextProperty(text)
+      plot.SetXTitle(value1[0])
+      plot.SetYTitle(value2[0][0:5])
+      plot.SetAxisTitleTextProperty(textaxis)
+      plot.SetAxisLabelTextProperty(textaxis)
+      plot.SetXValuesToValue()
+      plot.SetWidth(0.9)
+      plot.SetHeight(0.9)
+      plot.SetPosition(0.05, 0.05)
+      plot.SetXRange(400,500)
+      plot.LegendOn()
+      plot.PickableOff()
+
+      plot.SetDataObjectXComponent(0, 0)
+      plot.SetDataObjectYComponent(0, 1)
+      plot.SetPlotColor(0,1.0,0.0,0.0)
+      plot.SetPlotLabel(0,"Convergence")
+      plot.GetProperty().SetColor(0.0,0.0,0.0)
+      self._vtkren.AddActor2D(plot)
+      self.plot=plot
 
   def changeCurrentActor(self,atp,combo=True):
       self.resetSpinBox()
@@ -1130,7 +1228,16 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (self.actorpt is None): return
       self._vtkren.RemoveActor(self.actorpt)
       self._iren.Render()
-      self.resetSpinBox()  
+      self.resetSpinBox()
+
+  def ViewPort(self):
+      ren=self._iren.GetRenderWindow().GetRenderers()
+      ren.InitTraversal()
+      a=ren.GetNextItem()
+      while a:
+          if (a.GetLayer()==1):
+              return a.GetViewport()
+          a=ren.GetNextItem()     
                  
 class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
     def __init__(self,parent):

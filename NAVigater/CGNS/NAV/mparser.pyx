@@ -25,12 +25,15 @@ class CGNSparser:
     self._zones={}
     self._zones_ns={}
     self._tree=T
+    self._rsd=None
     
   def parseZones(self,zlist=[]):
     T=self._tree
     if (T[0]==None):
       T[0]=CGK.CGNSTree_s
-      T[3]=CGK.CGNSTree_ts   
+      T[3]=CGK.CGNSTree_ts
+    for r in CGU.getAllNodesByTypeSet(T,[CGK.ConvergenceHistory_ts]):
+      self._rsd=CGU.nodeByPath(r,T)
     for z in CGU.getAllNodesByTypeSet(T,[CGK.Zone_ts]):
       zT=CGU.nodeByPath(z,T)
       if ((zlist==[]) or (z in zlist)):
@@ -127,6 +130,9 @@ class Mesh(CGNSparser):
                    CGK.HEXA_20: (vtk.vtkHexahedron,(8,20)),
                    CGK.HEXA_27: (vtk.vtkHexahedron,(8,27))}
     self.parseZones(zlist)
+
+  def getResidus(self):
+    return self._rsd
 
   def createActors(self):
     for z in self._zones.values():      
@@ -234,7 +240,7 @@ class Mesh(CGNSparser):
     a = vtk.vtkActor()
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
-    return (a,None,sg,path,(1,None))
+    return (a,None,sg,path,(1,None),None)
 
   def do_boundaries(self,bnd,path):
     cdef int i, j, imax, jmax, p1, p2, p3, p4    
@@ -271,7 +277,7 @@ class Mesh(CGNSparser):
     a = vtk.vtkActor()
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
-    return (a,None,sg,path,(1,None))
+    return (a,None,sg,path,(1,None),None)
 
   def do_vtk(self,z):
       self._actors+=[self.do_volume(z[3],z[0][0],z[0][1],z[0][2],z[6])]
