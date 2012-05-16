@@ -194,11 +194,12 @@ class Q7TreeFilterProxy(QSortFilterProxyModel):
         self._control=parent.parent
         self._wparent=parent
         self.setDynamicSortFilter(True)
+        self.setFilterRole( Qt.EditRole | Qt.DisplayRole )
     def lessThan(self,i1,i2):
         fsort=self.sourceModel().getSortedChildRow
         c1=fsort(i1.internalPointer().sidsPath())
         c2=fsort(i2.internalPointer().sidsPath())
-        return c2>c1
+        return c2<c1
     
 # -----------------------------------------------------------------
 class Q7TreeView(QTreeView):
@@ -217,9 +218,7 @@ class Q7TreeView(QTreeView):
         if (self._control is not None): return self._control.getLastEntered()
         return None
     def setLastEntered(self,ix=None):
-        if (self._control is not None):
-            ixs=self.mapSelectionToSource(ix)
-            self._control.setLastEntered(ixs)
+        if (self._control is not None): self._control.setLastEntered(ix)
     def selectionChanged(self,old,new):
         QTreeView.selectionChanged(self,old,new)
         if (old.count()):
@@ -249,62 +248,85 @@ class Q7TreeView(QTreeView):
         last=self.getLastEntered()
         if (last is not None):
           nix=self._model.indexByPath(last.sidsPath())
+          pix=self._model.indexByPath(last.parentItem().sidsPath())
           if (not nix.isValid()):
               if (last.sidsType()==CGK.CGNSTree_ts):
                  if (kval==KEYMAPPING[PASTECHILD]):
                      self._model.pasteAsChild(last)
+                     self.exclusiveSelectRow(nix)
                  if (kval==KEYMAPPING[NEWCHILDNODE]):
                      self._model.newNodeChild(last)
+                     self.exclusiveSelectRow(nix)
               return
           if (kval in EDITKEYMAPPINGS):
               if (kmod==Qt.ControlModifier):
                 if (kval==KEYMAPPING[NEWCHILDNODE]):
                   self._model.newNodeChild(last)
+                  self.exclusiveSelectRow(nix)
                 if (kval==KEYMAPPING[NEWBROTHERNODE]):
                   self._model.newNodeBrother(last)
+                  self.exclusiveSelectRow(nix)
                 if (kval==KEYMAPPING[COPY]):
                   self._model.copyNode(last)
+                  self.exclusiveSelectRow(nix)
                 if (kval==KEYMAPPING[CUT]):
                   self._model.cutNode(last)
+                  self.exclusiveSelectRow(pix)
                 if (kval==KEYMAPPING[PASTECHILD]):
                   self._model.pasteAsChild(last)
+                  self.exclusiveSelectRow(nix)
                 if (kval==KEYMAPPING[PASTEBROTHER]):
                   self._model.pasteAsBrother(last)
+                  self.exclusiveSelectRow(nix)
                 if (kval==KEYMAPPING[CUTSELECTED]):
                   self._model.cutAllSelectedNodes()
+                  self.exclusiveSelectRow()
                 if (kval==KEYMAPPING[PASTECHILDSELECTED]):
                   self._model.pasteAsChildAllSelectedNodes()
+                  self.exclusiveSelectRow()
                 if (kval==KEYMAPPING[PASTEBROTHERSELECTED]):
                   self._model.pasteAsBrotherAllSelectedNodes()
+                  self.exclusiveSelectRow()
           elif (kval in USERKEYMAPPINGS):
               last.setUserState(kval-48)
-              self._model.refreshModel(nix)
+              self.exclusiveSelectRow(nix)
           elif (kval==KEYMAPPING[EDITNODE]):
               if (kmod==Qt.ControlModifier):
                   eix=self._model.createIndex(nix.row(),COLUMN_SIDS,
                                               nix.internalPointer())
                   self.edit(eix)
+                  self.exclusiveSelectRow(eix)
               elif (kmod==Qt.ShiftModifier):
                   eix=self._model.createIndex(nix.row(),COLUMN_VALUE,
                                               nix.internalPointer())
                   self.edit(eix)
+                  self.exclusiveSelectRow(eix)
               else:
                   self.edit(nix)
+                  self.exclusiveSelectRow(nix)
           elif (kval==KEYMAPPING[MARKNODE]):
               self.markNode(last)
+              self.exclusiveSelectRow(nix)
           elif (kval==KEYMAPPING[UPNODE]):
               if   (kmod==Qt.ControlModifier): self.upRowLevel(nix)
               elif (kmod==Qt.ShiftModifier):   self.upRowMarked()
-              else: QTreeView.keyPressEvent(self,event)
+              else:
+                  QTreeView.keyPressEvent(self,event)
+                  lix=self.currentIndex()
+                  self.exclusiveSelectRow(lix)
           elif (kval==KEYMAPPING[DOWNNODE]):
               if (kmod==Qt.ControlModifier): self.downRowLevel(nix)
               elif (kmod==Qt.ShiftModifier): self.downRowMarked()
-              else: QTreeView.keyPressEvent(self,event)
+              else:
+                  QTreeView.keyPressEvent(self,event)
+                  lix=self.currentIndex()
+                  self.exclusiveSelectRow(lix)
           elif (kval==KEYMAPPING[OPENFORM]):
               self._parent.formview()
+              self.exclusiveSelectRow(nix)
           elif (kval==KEYMAPPING[OPENVIEW]):
               self._parent.openSubTree()
-          if (nix.isValid()): self.scrollTo(nix)
+              self.exclusiveSelectRow(nix)
     def refreshView(self):
         ixc=self.currentIndex()
         self._model.refreshModel(ixc)
@@ -321,6 +343,9 @@ class Q7TreeView(QTreeView):
     def downRowMarked(self):
         self.changeSelectedMark(+1)
     def relativeMoveToRow(self,shift,index):
+        if ((index==-1) or (not index.isValid())): index=QModelIndex()
+        if (index.model() != self.model()):
+            index=self.model().mapFromSource(index)
         row=index.row()
         col=index.column()
         if (not index.sibling(row+shift,col).isValid()): return
@@ -333,7 +358,12 @@ class Q7TreeView(QTreeView):
         ix1=self._model.createIndex(row,0,nodeitem)
         ix2=self._model.createIndex(row,COLUMN_LAST,nodeitem)
         self._model.dataChanged.emit(ix1,ix2)
-    def exclusiveSelectRow(self,index,setlast=True):
+    def M(self):
+        return self.model().sourceModel()
+    def exclusiveSelectRow(self,index=-1,setlast=True):
+        if ((index==-1) or (not index.isValid())): index=QModelIndex()
+        if (index.model() != self.model()):
+            index=self.model().mapFromSource(index)
         row=index.row()
         col=index.column()
         parent=index.parent()
@@ -345,24 +375,24 @@ class Q7TreeView(QTreeView):
             self.setLastEntered(index)
         self.scrollTo(index)
     def changeSelectedMark(self,delta):
-        if (self.model()._selected==[]): return
-        sidx=self.model()._selectedIndex
-        if (self.model()._selectedIndex==-1): self.model()._selectedIndex=0
+        if (self.M()._selected==[]): return
+        sidx=self.M()._selectedIndex
+        if (self.M()._selectedIndex==-1): self.M()._selectedIndex=0
         elif ((delta==-1) and (sidx==0)):
-            self.model()._selectedIndex=len(self.model()._selected)-1
+            self.M()._selectedIndex=len(self.M()._selected)-1
         elif (delta==-1):
-            self.model()._selectedIndex-=1
-        elif ((delta==+1) and (sidx==len(self.model()._selected)-1)):
-            self.model()._selectedIndex=0
+            self.M()._selectedIndex-=1
+        elif ((delta==+1) and (sidx==len(self.M()._selected)-1)):
+            self.M()._selectedIndex=0
         elif (delta==+1):
-            self.model()._selectedIndex+=1
-        if ((self.model()._selectedIndex!=-1)
-             and (self.model()._selectedIndex<len(self.model()._selected))):
-            path=self.model()._selected[self.model()._selectedIndex]
-            idx=self.model().match(self.model().index(0,0,QModelIndex()),
-                                   Qt.UserRole,
-                                   path,
-                                   flags=Qt.MatchExactly|Qt.MatchRecursive)
+            self.M()._selectedIndex+=1
+        if ((self.M()._selectedIndex!=-1)
+             and (self.M()._selectedIndex<len(self.M()._selected))):
+            path=self.M()._selected[self.M()._selectedIndex]
+            idx=self.M().match(self.M().index(0,0,QModelIndex()),
+                               Qt.UserRole,
+                               path,
+                               flags=Qt.MatchExactly|Qt.MatchRecursive)
             if (idx[0].isValid()): self.exclusiveSelectRow(idx[0])
        
 # -----------------------------------------------------------------
@@ -696,7 +726,7 @@ class Q7TreeModel(QAbstractItemModel):
            self._extension[k]._states['mark']=STMARKOFF
     def swapMarks(self):
         for k in self._extension:
-           self._extension[k].switchMarked()
+            self._extension[k].switchMarked()
     def columnCount(self, parent):  
         if (parent.isValid()): return parent.internalPointer().columnCount()  
         else:                  return self._rootitem.columnCount()  
@@ -795,10 +825,6 @@ class Q7TreeModel(QAbstractItemModel):
                 nindex=self.indexByPath(parentpath+'/'+newname)
                 self.rowsMoved.emit(index.parent(),index.row(),index.row(),
                                     nindex,nindex.row())
-                #sindex=self.mapFromSource(index)
-                #snindex=self.mapFromSource(nindex)
-                #self.rowsMoved.emit(sindex.parent(),sindex.row(),sindex.row(),
-                #                    snindex,snindex.row())
                 self.refreshModel(nindex.parent())
                 self.refreshModel(nindex)
         if (index.column()==COLUMN_SIDS):     st=node.sidsTypeSet(value)
@@ -844,6 +870,8 @@ class Q7TreeModel(QAbstractItemModel):
         return newItem
     def refreshModel(self,nodeidx):
         if (not nodeidx.isValid()): return
+        if (nodeidx.model() != self):
+            nodeidx=nodeidx.model().mapToSource(nodeidx)
         row=nodeidx.row()
         dlt=2
         parentidx=nodeidx.parent()
