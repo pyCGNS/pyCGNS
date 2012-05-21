@@ -211,6 +211,7 @@ class Q7TreeView(QTreeView):
     def setControlWindow(self,control,model):
         self._control=control
         self._model=model
+        self._proxy=self.model()
     def clearLastEntered(self):
         if (self._control is not None): return self._control.clearLastEntered()
         return None
@@ -247,6 +248,7 @@ class Q7TreeView(QTreeView):
         if (kval not in ALLKEYMAPPINGS): return
         last=self.getLastEntered()
         if (last is not None):
+          lastpath=last.sidsPath()
           nix=self._model.indexByPath(last.sidsPath())
           pix=self._model.indexByPath(last.parentItem().sidsPath())
           if (not nix.isValid()):
@@ -312,14 +314,14 @@ class Q7TreeView(QTreeView):
               elif (kmod==Qt.ShiftModifier):   self.upRowMarked()
               else:
                   QTreeView.keyPressEvent(self,event)
-                  lix=self.currentIndex()
+                  lix=self.modelCurrentIndex()
                   self.exclusiveSelectRow(lix)
           elif (kval==KEYMAPPING[DOWNNODE]):
               if (kmod==Qt.ControlModifier): self.downRowLevel(nix)
               elif (kmod==Qt.ShiftModifier): self.downRowMarked()
               else:
                   QTreeView.keyPressEvent(self,event)
-                  lix=self.currentIndex()
+                  lix=self.modelCurrentIndex()
                   self.exclusiveSelectRow(lix)
           elif (kval==KEYMAPPING[OPENFORM]):
               self._parent.formview()
@@ -327,8 +329,16 @@ class Q7TreeView(QTreeView):
           elif (kval==KEYMAPPING[OPENVIEW]):
               self._parent.openSubTree()
               self.exclusiveSelectRow(nix)
+    def modelCurrentIndex(self):
+        idx=self.currentIndex()
+        if (idx.model() != self.M()): idx=self.model().mapToSource(idx)
+        return idx
     def refreshView(self):
-        ixc=self.currentIndex()
+        ixc=self.modelCurrentIndex()
+        if (ixc.isValid()):
+            self._model.refreshModel(ixc)
+            return
+        ixc=self._model.createIndex(0,0,None)
         self._model.refreshModel(ixc)
     def markNode(self,node):
         node.switchMarked()
@@ -362,18 +372,17 @@ class Q7TreeView(QTreeView):
         return self.model().sourceModel()
     def exclusiveSelectRow(self,index=-1,setlast=True):
         if ((index==-1) or (not index.isValid())): index=QModelIndex()
-        if (index.model() != self.model()):
-            index=self.model().mapFromSource(index)
-        row=index.row()
-        col=index.column()
-        parent=index.parent()
-        nix=self.model().index(row,col,parent)
+        if (index.model() != self.M()):
+            index=self.model().mapToSource(index)
+        pth=index.internalPointer().sidsPath()
+        nix=self._model.indexByPath(pth)
+        qix=self.model().mapFromSource(nix)
         mod=QItemSelectionModel.SelectCurrent|QItemSelectionModel.Rows
-        self.selectionModel().setCurrentIndex(nix,mod)
+        self.selectionModel().setCurrentIndex(qix,mod)
         if (setlast):
             self.clearLastEntered()
-            self.setLastEntered(index)
-        self.scrollTo(index)
+            self.setLastEntered(qix)
+        self.scrollTo(qix)
     def changeSelectedMark(self,delta):
         if (self.M()._selected==[]): return
         sidx=self.M()._selectedIndex
@@ -759,26 +768,21 @@ class Q7TreeModel(QAbstractItemModel):
         if ((orientation == Qt.Horizontal) and (role == Qt.DisplayRole)):  
             return self._rootitem.data(section)  
         return None
-    def indexByPath(self, path):
+    def indexByPath(self,path,nosort=True):
         if (path in self._movedPaths):
             npath=self._movedPaths[path]
             path=npath
-        row=self.getSortedChildRow(path)
+        row=self.getSortedChildRow(path,nosort)
         col=COLUMN_NAME
         ix=self.createIndex(row, col, self.nodeFromPath(path))
-        if (not ix.isValid()):
-            return QModelIndex()
+        if (not ix.isValid()): return QModelIndex()
         return ix
     def index(self, row, column, parent):
-        if (not self.hasIndex(row, column, parent)):
-            return QModelIndex()  
-        if (not parent.isValid()):
-            parentitem = self._rootitem
-        else:
-            parentitem = parent.internalPointer()
+        if (not self.hasIndex(row, column, parent)): return QModelIndex()  
+        if (not parent.isValid()): parentitem = self._rootitem
+        else: parentitem = parent.internalPointer()
         childitem = parentitem.child(row)  
-        if (childitem):
-            return self.createIndex(row, column, childitem)
+        if (childitem): return self.createIndex(row, column, childitem)
         return QModelIndex()  
     def parent(self, index):  
         if (not index.isValid()): return QModelIndex()
@@ -793,7 +797,7 @@ class Q7TreeModel(QAbstractItemModel):
         else:                      parentitem = parent.internalPointer()  
         if (type(parentitem)==type(QModelIndex())): return 0
         return parentitem.childrenCount()  
-    def getSortedChildRow(self,path):
+    def getSortedChildRow(self,path,nosort=False):
         npath=CGU.getPathNoRoot(path)
         if (npath=='/'): return -1
         targetname=CGU.getPathLeaf(path)
@@ -802,6 +806,12 @@ class Q7TreeModel(QAbstractItemModel):
         if (node is None):
             node=self._fingerprint.tree
         row=0
+        if (nosort):
+            for childnode in node[2]:
+                if (childnode[0]==targetname):
+                    return row
+                row+=1
+            return -1
         for childnode in CGU.getNextChildSortByType(node,criteria=self._slist):
             if (childnode[0]==targetname):
                 return row
@@ -862,7 +872,7 @@ class Q7TreeModel(QAbstractItemModel):
         self.endInsertRows()
         newIndex=self.createIndex(row,0,newItem)
         crow=0
-        for childnode in CGU.getNextChildSortByType(node,criteria=self._slist):
+        for childnode in node[2]: # CGU.getNextChildSortByType(node,criteria=self._slist):
             c=self.parseAndUpdate(newItem,childnode,newIndex,crow,tag)
             self._fingerprint.depth=max(c._depth,self._fingerprint.depth)
             self._fingerprint.nodes=max(c._nodes,self._fingerprint.nodes)
@@ -929,7 +939,8 @@ class Q7TreeModel(QAbstractItemModel):
         (ntree,npath)=nodeitem.sidsAddChild(self._control.copyPasteBuffer)
         self.parseAndUpdate(nodeitem,ntree,nix,0,nodeitem._tag)
         nix=self.indexByPath(nodeitem.sidsPath())
-        pix=self.indexByPath(CGU.getPathAncestor(npath))
+        # to fix in CGNS.PAT
+        pix=self.indexByPath('/CGNSTree'+CGU.getPathAncestor(npath))
         cix=self.indexByPath(npath)
         self.refreshModel(pix)
         self.refreshModel(nix)

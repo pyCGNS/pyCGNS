@@ -46,7 +46,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           self._mode=CELLCOMBO
           editor=QComboBox(parent)
           editor.transgeometry=(xs,ys,ws,hs)
-          itemslist=self.modelData(index).sidsTypeList()
+          itemslist=self._parent.modelData(index).sidsTypeList()
           editor.addItems(itemslist)
           editor.setCurrentIndex(0)
           editor.installEventFilter(self)
@@ -56,7 +56,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           self._mode=CELLCOMBO
           editor=QComboBox(parent)
           editor.transgeometry=(xs,ys,ws,hs)
-          itemslist=self.modelData(index).sidsDataTypeList()
+          itemslist=self._parent.modelData(index).sidsDataTypeList()
           editor.addItems(itemslist)
           editor.setCurrentIndex(0)
           editor.installEventFilter(self)
@@ -171,7 +171,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         return self._fgprint.model
     def modelIndex(self,idx):
         if (not idx.isValid()): return -1
-        return self.treeview.model().mapToSource(idx)
+        midx=idx
+        if (idx.model() != self.treeview.M()):
+            midx=self.treeview.model().mapToSource(idx)
+        return midx
     def modelData(self,idx):
         if (not idx.isValid()): return None
         return self.modelIndex(idx).internalPointer()
@@ -285,7 +288,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                   self.popupmenu.addAction(a)
     def setLastEntered(self,nix=None):
         if ((nix is None) or (not nix.isValid())):
-            nix=self.treeview.currentIndex()
+            nix=self.treeview.modelCurrentIndex()
         self._lastEntered=None
         if (nix.isValid()):
             self.treeview.exclusiveSelectRow(nix,False)
@@ -356,14 +359,14 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.model().updateSelected()
         self.treeview.refreshView()
     def formview(self):
-        ix=self.treeview.currentIndex()
+        ix=self.treeview.modelCurrentIndex()
         node=self.modelData(ix)
         if (node is None): return
         if (node.sidsType()==CGK.CGNSTree_ts): return
         form=Q7Form(self._control,node,self._fgprint)
         form.show()
     def vtkview(self):
-        ix=self.treeview.currentIndex()
+        ix=self.treeview.modelCurrentIndex()
         zlist=self.model().getSelectedZones()
         node=self.modelData(ix)
         self.busyCursor()
@@ -371,7 +374,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.readyCursor()
         vtk.show()
     def plotview(self):
-        ix=self.treeview.currentIndex()
+        return 
+        ix=self.treeview.modelCurrentIndex()
         zlist=self.model().getSelectedZones()
         node=self.modelData(ix)
         self.busyCursor()

@@ -616,8 +616,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                        'D'     :self.hideActor }
       
 
-      self.plotXY(rsd,0,6)
-      
       return self._vtk.GetRenderWindow()
 
   def b_shufflecolors(self,pos=None):
