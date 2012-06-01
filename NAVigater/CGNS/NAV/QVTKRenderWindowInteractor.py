@@ -271,9 +271,9 @@ class QVTKRenderWindowInteractor(QtGui.QWidget):
                                             ctrl, shift, chr(0), repeat, None)
 
         self._ActiveButton = ev.button()
-
         if self._ActiveButton == QtCore.Qt.LeftButton:
             self._Iren.LeftButtonPressEvent()
+##             self._Iren.LeaveEvent()
         elif self._ActiveButton == QtCore.Qt.RightButton:
             self._Iren.RightButtonPressEvent()
         elif self._ActiveButton == QtCore.Qt.MidButton:
@@ -283,7 +283,6 @@ class QVTKRenderWindowInteractor(QtGui.QWidget):
         ctrl, shift = self._GetCtrlShift(ev)
         self._Iren.SetEventInformationFlipY(ev.x(), ev.y(),
                                             ctrl, shift, chr(0), 0, None)
-
         if self._ActiveButton == QtCore.Qt.LeftButton:
             self._Iren.LeftButtonReleaseEvent()
         elif self._ActiveButton == QtCore.Qt.RightButton:

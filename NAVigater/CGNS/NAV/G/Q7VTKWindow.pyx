@@ -2,12 +2,13 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Tue May 15 11:20:22 2012
+# Created: Tue May 22 09:29:00 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 
 from PySide import QtCore, QtGui
+from CGNS.NAV.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 
 class Ui_Q7VTKWindow(object):
     def setupUi(self, Q7VTKWindow):
@@ -191,10 +192,32 @@ class Ui_Q7VTKWindow(object):
         self.horizontalLayout_3.addWidget(self.cColorSpace)
         spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem3)
+        self.ClippingRange = QtGui.QPushButton(Q7VTKWindow)
+        self.ClippingRange.setMinimumSize(QtCore.QSize(25, 25))
+        self.ClippingRange.setMaximumSize(QtCore.QSize(25, 25))
+        self.ClippingRange.setObjectName("ClippingRange")
+        self.horizontalLayout_3.addWidget(self.ClippingRange)
+        self.bResetCamera = QtGui.QPushButton(Q7VTKWindow)
+        self.bResetCamera.setMinimumSize(QtCore.QSize(25, 25))
+        self.bResetCamera.setMaximumSize(QtCore.QSize(25, 25))
+        self.bResetCamera.setObjectName("bResetCamera")
+        self.horizontalLayout_3.addWidget(self.bResetCamera)
+        self.bZoom = QtGui.QPushButton(Q7VTKWindow)
+        self.bZoom.setMinimumSize(QtCore.QSize(25, 25))
+        self.bZoom.setMaximumSize(QtCore.QSize(25, 25))
+        self.bZoom.setCheckable(True)
+        self.bZoom.setObjectName("bZoom")
+        self.horizontalLayout_3.addWidget(self.bZoom)
+        self.bLabeledMesh = QtGui.QPushButton(Q7VTKWindow)
+        self.bLabeledMesh.setMinimumSize(QtCore.QSize(25, 25))
+        self.bLabeledMesh.setMaximumSize(QtCore.QSize(25, 25))
+        self.bLabeledMesh.setCheckable(True)
+        self.bLabeledMesh.setObjectName("bLabeledMesh")
+        self.horizontalLayout_3.addWidget(self.bLabeledMesh)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.verticalLayout_2 = QtGui.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.display = Q7VTKRenderWindowInteractor(Q7VTKWindow)
+        self.display = QVTKRenderWindowInteractor(Q7VTKWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -305,6 +328,10 @@ class Ui_Q7VTKWindow(object):
         self.selectable.setText(QtGui.QApplication.translate("Q7VTKWindow", "S", None, QtGui.QApplication.UnicodeUTF8))
         self.bSuffleColors.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Change colors to random", None, QtGui.QApplication.UnicodeUTF8))
         self.bBlackColor.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Switch black/white colors", None, QtGui.QApplication.UnicodeUTF8))
+        self.ClippingRange.setText(QtGui.QApplication.translate("Q7VTKWindow", "C", None, QtGui.QApplication.UnicodeUTF8))
+        self.bResetCamera.setText(QtGui.QApplication.translate("Q7VTKWindow", "R", None, QtGui.QApplication.UnicodeUTF8))
+        self.bZoom.setText(QtGui.QApplication.translate("Q7VTKWindow", "Z", None, QtGui.QApplication.UnicodeUTF8))
+        self.bLabeledMesh.setText(QtGui.QApplication.translate("Q7VTKWindow", "L", None, QtGui.QApplication.UnicodeUTF8))
         self.bBackControl.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Raise CGNS.NAV control window", None, QtGui.QApplication.UnicodeUTF8))
         self.bUpdate.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Update selected list from tree view", None, QtGui.QApplication.UnicodeUTF8))
         self.bReverse.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Switch seleted and  unselected actors", None, QtGui.QApplication.UnicodeUTF8))
@@ -313,5 +340,5 @@ class Ui_Q7VTKWindow(object):
         self.bReset.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Clear selection list", None, QtGui.QApplication.UnicodeUTF8))
         self.bNext.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Highlight next selected item", None, QtGui.QApplication.UnicodeUTF8))
 
-from CGNS.NAV.Q7VTKRenderWindowInteractor import Q7VTKRenderWindowInteractor
+## from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import Res_rc

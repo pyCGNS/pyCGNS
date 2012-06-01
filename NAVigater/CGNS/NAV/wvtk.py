@@ -108,6 +108,14 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.ColorMapMax=QColorDialog(self)      
       QObject.connect(self.ColorMapMin, SIGNAL("colorSelected(QColor)"), self.getColorMapMin)
       QObject.connect(self.ColorMapMax, SIGNAL("colorSelected(QColor)"), self.getColorMapMax)
+##       self.bLabeledMesh.clicked.connect(self.labeledMesh)
+##       self.bLabeledMesh.clicked.connect(self.Clipping)
+      self.bLabeledMesh.clicked.connect(self.TrackballRotate)
+      self.bZoom.clicked.connect(self.RubberbandZoom)
+  ##     self.ClippingRange.clicked.connect(self.Clipping)
+##       self.ClippingRange.clicked.connect(self.ResetCam)
+      self.ClippingRange.clicked.connect(self.ComputeDisplayCenter)
+      self.bResetCamera.clicked.connect(self.ResetCameraZoom)
       self.bColorMapMin.clicked.connect(self.displayColorMapMin)
       self.bColorMapMax.clicked.connect(self.displayColorMapMax)
       self.setColorSpace()
@@ -126,8 +134,215 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                       self.highlightPoint)
       QObject.connect(self.sIndex3, SIGNAL("valueChanged(int)"),
                       self.highlightPoint)
+      self.rot=None
 ##       self.setCursor(Qt.WaitCursor)
 ##       self.unsetCursor()
+
+  def TrackballRotate(self,*args):
+      if (self.bLabeledMesh.isChecked()):
+          self._iren.AddObserver("LeftButtonPressEvent", self.ButtonEvent)
+##           self._iren.AddObserver("RightButtonPressEvent", self.ButtonEvent)
+##           self._iren.AddObserver("RightButtonReleaseEvent", self.ButtonEvent)
+          self._iren.AddObserver("LeftButtonReleaseEvent",self.ButtonEvent)
+          self._iren.AddObserver("MouseMoveEvent", self.MouseMove)
+          self.Rotating=0
+      else:
+          self._iren.RemoveObserver(self.ButtonEvent)
+          self._iren.RemoveObserver(self.ButtonEvent)
+          self._iren.RemoveObserver(self.MouseMove)
+          self.Rotating=0      
+      
+  def ButtonEvent(self,obj, event):
+      if (event == "LeftButtonPressEvent"):
+          if (self.Rotating):
+              self.Rotating=0
+          else:
+             self.Rotating=1 
+##       elif (event == "LeftButtonReleaseEvent"):
+##           self.Rotating=0
+      if self.Rotating:
+        self.OnMouseMove()
+
+  def MouseMove(self, obj, event):
+      if self.Rotating:
+        self.OnMouseMove()
+
+  def ComputeDisplayCenter(self):
+      if (self.OutlineActor is None): return
+      bounds=self.OutlineActor.GetBounds()
+      center=[0,0,0]
+      center[0]=(bounds[0]+bounds[1])/2.0
+      center[1]=(bounds[2]+bounds[3])/2.0
+      center[2]=(bounds[4]+bounds[5])/2.0
+      self._vtkren.SetWorldPoint(center[0],center[1],center[2],1.0)
+      self._vtkren.WorldToDisplay()
+      pt=self._vtkren.GetDisplayPoint()
+      return pt,center
+
+  def OnMouseMove(self):
+      camera=self._vtkren.GetActiveCamera()
+      transform=vtk.vtkTransform()
+      transform.Identity()
+      (pt,center)=self.ComputeDisplayCenter()     
+      transform.Translate(center[0],center[1],center[2])
+      dx=self._iren.GetLastEventPosition()[0]-self._iren.GetEventPosition()[0]
+      dy=self._iren.GetLastEventPosition()[1]-self._iren.GetEventPosition()[1]
+      camera.OrthogonalizeViewUp()
+      size=self._vtkren.GetSize()
+      viewUp=[0.0,0.0,1.0]
+      if (self.rot is None):
+          if (((dx>0) and (dy>0)) or ((dx<0) and (dy<0))):
+              self.rot=1       
+          elif (((dx>0) and (dy<0)) or ((dx>0) and (dy<0))):
+              self.rot=0
+      dx=NPY.abs(dx)
+      dy=NPY.abs(dy)
+      if (self.rot==1):
+          dx=-dx
+          dy=-dy
+      transform.RotateWXYZ(360.0*dx/size[0],viewUp[0],viewUp[1],viewUp[2])
+      v2=[0.0,0.0,1.0]
+      transform.RotateWXYZ(360.0*dy/size[1],v2[0],v2[1],v2[2])
+      transform.Translate(-center[0],-center[1],-center[2])
+      camera.ApplyTransform(transform)
+      camera.OrthogonalizeViewUp()
+      self._vtkren.ResetCameraClippingRange()
+      self._vtkren.GetRenderWindow().Render()
+
+##   def OnMouseMove(self):
+##       camera=self._vtkren.GetActiveCamera()
+##       transform=vtk.vtkTransform()
+##       transform.Identity()
+##       (pt,center)=self.ComputeDisplayCenter()     
+##       transform.Translate(center[0],center[1],center[2])
+##       dx=self._iren.GetLastEventPosition()[0]-self._iren.GetEventPosition()[0]
+##       dy=self._iren.GetLastEventPosition()[1]-self._iren.GetEventPosition()[1]
+##       camera.OrthogonalizeViewUp()
+##       viewUp=camera.GetViewUp()
+##       size=self._vtkren.GetSize()          
+##       transform.RotateWXYZ(360.0*dx/size[0],viewUp[0],viewUp[1],viewUp[2])
+##       vtk.vtkMath().Cross(camera.GetDirectionOfProjection(),viewUp,v2)
+##       transform.RotateWXYZ(-360.0*dy/size[1],v2[0],v2[1],v2[2])
+##       transform.Translate(-center[0],-center[1],-center[2])
+##       camera.ApplyTransform(transform)
+##       camera.OrthogonalizeViewUp()
+##       self._vtkren.ResetCameraClippingRange()
+##       self._vtkren.GetRenderWindow().Render()
+
+  def mousePressEvent(self, ev):
+      ctrl, shift = self._GetCtrlShift(ev)
+      self._Iren.SetEventInformationFlipY(ev.x(), ev.y(),
+                                            ctrl, shift, chr(0), 0, None)
+      if self._ActiveButton == QtCore.Qt.LeftButton:
+          self._Iren.LeftButtonReleaseEvent()
+      elif self._ActiveButton == QtCore.Qt.RightButton:
+          self._Iren.RightButtonReleaseEvent()
+      elif self._ActiveButton == QtCore.Qt.MidButton:
+          self._Iren.MiddleButtonReleaseEvent()
+
+##   def OnMouseMove(self):
+##       camera=self._vtkren.GetActiveCamera()
+##       transform=vtk.vtkTransform()
+##       pos=camera.GetPosition()
+##       fp=camera.GetFocalPoint()
+##       axis=[fp[i]-pos[i] for i in range(3)]
+##       (pt,center)=self.ComputeDisplayCenter()
+##       (x,y)=self._iren.GetEventPosition()
+##       x1=self._iren.GetLastEventPosition()[0]-pt[0]
+##       x2=x-pt[0]
+##       y1=self._iren.GetLastEventPosition()[1]-pt[1]
+##       y2=y-pt[1]
+##       angle=vtk.vtkMath.DegreesFromRadians((x1*y*2-y1*x2)/(NPY.sqrt(x1*x1+y1*y1)*
+##                                                            NPY.sqrt(x2*x2+y2*y2)))
+##       transform.Identity()
+##       transform.Translate(center[0],center[1],center[2])
+##       transform.RotateWXYZ(angle,axis[0],axis[1],axis[2])
+##       transform.Translate(-center[0],-center[1],-center[2])
+##       camera.ApplyTransform(transform)
+##       camera.OrthogonalizeViewUp()
+##       self._vtkren.ResetCameraClippingRange()
+##       self._vtkren.GetRenderWindow().Render() 
+      
+      
+     
+  def ResetCam(self,*args):
+  ##     bds=self._vtkren.ComputeVisiblePropBounds()
+      if (self.OutlineActor is None): return
+      bounds=self.OutlineActor.GetBounds()
+      camera=self._vtkren.GetActiveCamera()
+      vn=camera.GetViewPlaneNormal()
+      center=[0,0,0]
+      center[0]=(bounds[0]+bounds[1])/2.0
+      center[1]=(bounds[2]+bounds[3])/2.0
+      center[2]=(bounds[4]+bounds[5])/2.0
+      w1=bounds[1]-bounds[0]
+      w2=bounds[3]-bounds[2]
+      w3=bounds[5]-bounds[4]
+      radius=w1+w2+w3
+##       if (radius==0): radius=1
+      radius=NPY.sqrt(radius)*0.5
+      distance=radius/NPY.sin(camera.GetViewAngle()*vtk.vtkMath().Pi()/360.0)
+      vup=camera.GetViewUp()
+      if (NPY.fabs(vtk.vtkMath().Dot(vup,vn))>0.999):
+          camera.SetViewUp(-vup[2],vup[0],vup[1])
+      camera.SetFocalPoint(center[0],center[1],center[2])
+      camera.SetPosition(center[0]+distance*vn[0],
+                                  center[1]+distance*vn[1],
+                                  center[2]+distance*vn[2])
+##       self._vtkren.ResetCameraClippingRange(bounds)
+##       camera.SetParallelScale(radius)
+      self._vtkren.Render()
+      self._vtkren.GetRenderWindow().Render()
+      self._iren.Render()
+
+
+##   def Clipping(self,*args):
+##       camera=self._vtkren.GetActiveCamera()
+##       bounds=self.OutlineActor.GetBounds()
+##       center=[0,0,0]
+##       center[0]=(bounds[0]+bounds[1])/2.0
+##       center[1]=(bounds[2]+bounds[3])/2.0
+## ##       center[2]=(bounds[4]+bounds[5])/2.0
+##  ##      camera.SetWindowCenter(center[0],center[1])
+##       camera.SetWindowCenter(-1,-1)
+##       self._iren.Render()
+
+## ##       self._vtkren.ResetCameraClippingRange()
+      
+
+  def ResetCameraZoom(self,*args):
+##       if (self.actorpt is not None):
+          self.ClippRange=self._vtkren.GetActiveCamera().GetClippingRange()
+##           self._vtkren.ResetCamera(self.actorpt.GetBounds())
+          self._vtkren.ResetCamera(self.actorpt.GetBounds())
+          self._vtkren.ResetCameraClippingRange(self.OutlineActor.GetBounds())
+           ##self._vtkren.GetActiveCamera().SetClippingRange(self.ClippRange[0],self.ClippRange[1])
+          self._iren.Render()
+
+  def RubberbandZoom(self,*args):
+      if (self.bZoom.isChecked()):
+          self._istyle=vtk.vtkInteractorStyleRubberBandZoom()
+          self._vtk.SetInteractorStyle(self._istyle)
+      else:
+          self._istyle=Q7InteractorStyle(self)
+          self._vtk.SetInteractorStyle(self._istyle)         
+
+  def labeledMesh(self,*args):
+      if ((self.cVariables.currentIndex()==0) or (self.mincolor is None)
+          or (self.maxcolor is None)):
+          self.bLabeledMesh.setChecked(0)
+          return
+      if (self.bLabeledMesh.isChecked()):
+          self._vtkren.AddObserver("StartEvent", self.displayScalars)
+
+##   def displayScalars(self,*args):
+##       self._vtkren.ResetCameraClippingRange()
+##       if ((self.cVariables.currentIndex()==0) or (self.mincolor is None)
+##           or (self.maxcolor is None)):
+##           self.bLabeledMesh.setChecked(0)
+##           return
+##       if (self.bLabeledMesh.isChecked()):
+##           print 'display'
 
   def setInteractive(self,*args):
       if (self.selectable.isChecked()):
@@ -548,7 +763,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._parser=Mesh(T,zlist)
       self._selected=[]
       alist=self._parser.createActors()
-      rsd=self._parser.getResidus()
       variables=[]
       if (alist!=[]):
           grid=vtk.vtkStructuredGrid.SafeDownCast(alist[0][2])
@@ -597,8 +811,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       
 ##       self._vtkren.AddObserver("StartEvent", self.SyncCameras)
       self._vtkren.AddObserver("StartEvent", self.posWidgets)
-      self._vtkren.AddActor2D(self.textActor)
-      
+##       self._iren.AddObserver("MouseMoveEvent", self.displayScalars)
       self._p_wire=True
       self.setColors(True)
 
@@ -615,8 +828,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                        'd'     :self.hideActor,
                        'D'     :self.hideActor }
       
-
-      self.plotXY(rsd,0,6)
       
       return self._vtk.GetRenderWindow()
 
@@ -948,68 +1159,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtk.GetRenderWindow().Finalize()
       QWidget.close(self)
 
-  def plotXY(self,rsd,val1,val2):
-
-      if ((val1)>=len(rsd[2])) or ((val2)>=len(rsd[2])):
-          print 'error'
-          return
-
-      value1=rsd[2][val1]
-      value2=rsd[2][val2]
-      
-      ar1=vtk.vtkIntArray()
-      ar1.SetNumberOfComponents(1)
-      l1=value1[1].shape[0]
-      for i in range(l1):
-          ar1.InsertNextTuple1(value1[1][i])
-
-      ar2=vtk.vtkFloatArray()
-      ar2.SetNumberOfComponents(1)
-      l2=value2[1].shape[0]
-      for i in range(l2):
-          ar2.InsertNextTuple1(value2[1][i])
-
-      fieldData=vtk.vtkFieldData()
-      fieldData.AllocateArrays(2)
-      fieldData.AddArray(ar1)
-      fieldData.AddArray(ar2)
-
-      dataObject=vtk.vtkDataObject()
-      dataObject.SetFieldData(fieldData)
-      
-      text=vtk.vtkTextProperty()
-      text.SetFontFamilyToArial()
-      text.SetFontSize(12)
-      text.SetColor(self.color)
-
-      textaxis=vtk.vtkTextProperty()
-      textaxis.SetFontFamilyToArial()
-      textaxis.SetFontSize(8)
-      textaxis.SetColor(self.color)
-      
-      plot = vtk.vtkXYPlotActor()
-      plot.AddDataObjectInput(dataObject)
-      plot.SetTitle("Convergence")
-      plot.SetTitleTextProperty(text)
-      plot.SetXTitle(value1[0])
-      plot.SetYTitle(value2[0][0:5])
-      plot.SetAxisTitleTextProperty(textaxis)
-      plot.SetAxisLabelTextProperty(textaxis)
-      plot.SetXValuesToValue()
-      plot.SetWidth(0.9)
-      plot.SetHeight(0.9)
-      plot.SetPosition(0.05, 0.05)
-      plot.SetXRange(400,500)
-      plot.LegendOn()
-      plot.PickableOff()
-
-      plot.SetDataObjectXComponent(0, 0)
-      plot.SetDataObjectYComponent(0, 1)
-      plot.SetPlotColor(0,1.0,0.0,0.0)
-      plot.SetPlotLabel(0,"Convergence")
-      plot.GetProperty().SetColor(0.0,0.0,0.0)
-      self._vtkren.AddActor2D(plot)
-      self.plot=plot
 
   def changeCurrentActor(self,atp,combo=True):
       self.resetSpinBox()
@@ -1148,7 +1297,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.actorpt.GetProperty().SetPointSize(6)
       self.actorpt.PickableOff()
       self.actorpt.DragableOff()
-      self._vtkren.AddActor(self.actorpt)      
+      self._vtkren.AddActor(self.actorpt)
       self._iren.Render()
       
   def setIndexPoint3(self,grid,index):
@@ -1246,10 +1395,10 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
       self.rwi=None    
       self.PickedRenderer=None
       self.OutlineActor=None
-      self._parent.addPicker()
+      self._parent.addPicker()      
         
     def keycode(self,*args):
-        self.rwi=self.GetInteractor() 
+        self.rwi=self.GetInteractor()
         keycode=self.rwi.GetKeyCode()
         control=self.rwi.GetControlKey()        
         vtkkeys=['f','F','r','R']
@@ -1341,239 +1490,138 @@ class Q7VTKPlot(Q7Window,Ui_Q7VTKPlotWindow):
       if (not zlist): pth='/'
       else: pth='<partial>'
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,fgprint)
-      self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
-      self._epix=QIcon(QPixmap(":/images/icons/empty.gif"))
-      self._spix=QIcon(QPixmap(":/images/icons/selected.gif"))
-      self._npix=QIcon(QPixmap(":/images/icons/unselected.gif"))
-      self._hpix=QIcon(QPixmap(":/images/icons/hidden.gif"))
       self._T=self._fgprint.tree
-      self.lut=None
-      self.grid_dims=None
-      self.mincolor=None
-      self.maxcolor=None
-      self.scalarbar=None
-      self.scalarbarwidget=None
-      self._selected=[]
-      self._picked=None
-      self._hidden=[]
-      self.actorpt=None
-      self.wact=None
-      self._cacheActor={}
-      self._tmodel=tmodel
-      self.color=(0,0,0)
-      self.OutlineActor=None
-      self._currentactor=None
-      self.PickedRenderer=None
-      self.PropPicked=0
-      self.controlKey=0
-      self.highlightProp=None
-      self.maxColorMap=None
-      self._camera={}
-      self._blackonwhite=False
+##       self._camera={}
       self._vtktree=self.wCGNSTree(self._fgprint.tree,zlist)
-      self.resetSpinBox()
       self.display.Initialize()
       self.display.Start()
       self.display.show()
-      self.bX.clicked.connect(self.b_xaxis)
-      self.bY.clicked.connect(self.b_yaxis)
-      self.bZ.clicked.connect(self.b_zaxis)
-      self.bReverse.clicked.connect(self.reverseSelection)
-      self.bSaveVTK.clicked.connect(self.b_saveVTK)
-      self.bSuffleColors.clicked.connect(self.b_shufflecolors)
-      self.bBlackColor.clicked.connect(self.b_blackandwhite)
-      self.bAddView.clicked.connect(self.b_saveview)
-      self.bRemoveView.clicked.connect(self.b_delview)
-      self.bNext.clicked.connect(self.b_next)
-      self.bPrevious.clicked.connect(self.b_prev)
-      self.bReset.clicked.connect(self.b_reset)
-      self.bUpdate.clicked.connect(self.b_update)
-      self.bScreenShot.clicked.connect(self.screenshot)
-      self.ColorMapMin=QColorDialog(self)
-      self.ColorMapMax=QColorDialog(self)      
-      QObject.connect(self.ColorMapMin, SIGNAL("colorSelected(QColor)"), self.getColorMapMin)
-      QObject.connect(self.ColorMapMax, SIGNAL("colorSelected(QColor)"), self.getColorMapMax)
-      self.bColorMapMin.clicked.connect(self.displayColorMapMin)
-      self.bColorMapMax.clicked.connect(self.displayColorMapMax)
-      self.setColorSpace()
-      QObject.connect(self.cViews,
-                      SIGNAL("currentIndexChanged(int)"),
-                      self.b_loadview)
-      QObject.connect(self.cViews.lineEdit(),
-                      SIGNAL("editingFinished()"),
-                      self.b_saveview)
-      QObject.connect(self.cCurrentPath,
-                      SIGNAL("currentIndexChanged(int)"),
-                      self.changeCurrentPath)
+      self._plot=None
+      self._X=None
+      self._Y=None
+      self._XRangeMin=None
+      self._XRangeMax=None
+      self.bX.clicked.connect(self.reverseAxis)
       QObject.connect(self.sIndex1, SIGNAL("valueChanged(int)"),
-                      self.highlightPoint)
+                      self.setXRangeMin)
       QObject.connect(self.sIndex2, SIGNAL("valueChanged(int)"),
-                      self.highlightPoint)
-      QObject.connect(self.sIndex3, SIGNAL("valueChanged(int)"),
-                      self.highlightPoint)
-##       self.setCursor(Qt.WaitCursor)
-##       self.unsetCursor()
-      self.hscalarbar=None
+                      self.setXRangeMax)
+      self.bSaveVTK.clicked.connect(self.b_saveVTK)
 
-  def displayColorMapMin(self,*args):
-      self.ColorMapMin.show()
+  def setXRangeMin(self,*args):
+      self._XRangeMin=self.sIndex1.value()
+      if ((self._XRangeMin is not None) and (self._XRangeMax is not None)): 
+          self._plot.SetXRange(self._XRangeMin,self._XRangeMax)
 
-  def displayColorMapMax(self,*args):
-      self.ColorMapMax.show()
+  def setXRangeMax(self,*args):
+      self._XRangeMax=self.sIndex2.value()
+      if ((self._XRangeMin is not None) and (self._XRangeMax is not None)): 
+          self._plot.SetXRange(self._XRangeMin,self._XRangeMax)
 
-  def getColorMapMin(self,*args):
-      self.maxcolor=self.ColorMapMin.currentColor().getRgbF()
-      self.getVariable()
-
-  def getColorMapMax(self,*args):
-      self.mincolor=self.ColorMapMax.currentColor().getRgbF()
-      self.getVariable()
-
-  def setVariable(self,variable=[]):
-      self.cVariables.clear()
-      self.cVariables.addItem("")
-      if (variable!=[]):
-          for i in variable:
-              self.cVariables.addItem(i)
-      QObject.connect(self.cVariables,
-                      SIGNAL("currentIndexChanged(int)"),
-                      self.getVariable)
+  def plotXY(self):
+      if (self._plot is not None):
+          self._vtkren.RemoveActor(self._plot)
+          self._vtk.Render()
       
-  def getVariable(self,*args):
-      if ((self.mincolor is None) or (self.maxcolor is None)): return          
-      variable=self.cVariables.currentText()
-      index=self.cVariables.currentIndex()
-      name=variable[0:10]
-      self.scalarbar.SetTitle(name)
-      if (index==0):
-          self.setVisibilityGrids(1)
-          if (not self.scalarbarwidget is None):
-              self.scalarbarwidget.Off()
-              self.setScalarVisibilityOff()
-              self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(0.9,0.4)
-      else :
-          a=self._vtkren.GetActors()
-          a.InitTraversal()
-          s=a.GetNextItem()
-          minrange=[]
-          maxrange=[]
-          while s:
-              grid=s.GetMapper().GetInput()
-              tgrid=self.findObjectDims(grid)[0]
-              if (tgrid==0):                        
-                  grid.GetCellData().SetActiveScalars(variable)
-                  minrange+=[grid.GetScalarRange()[0]]
-                  maxrange+=[grid.GetScalarRange()[1]]
-                  s.GetMapper().SetScalarModeToUseCellData()
-                  s.GetMapper().ScalarVisibilityOn()
-                  if (not self.lut is None):
-                      s.GetMapper().SetLookupTable(self.lut)
-                      self.lut.RemoveAllPoints()
-                      self.lut.AddRGBPoint(min(minrange),self.mincolor[0],self.mincolor[1],self.mincolor[2])
-                      self.lut.AddRGBPoint(max(maxrange),self.maxcolor[0],self.maxcolor[1],self.maxcolor[2])
-              if (tgrid==1):
-                  s.VisibilityOff()               
-              s=a.GetNextItem()
-          if (self.scalarbarwidget.GetEnabled()==0):
-              sz=self._iren.GetRenderWindow().GetSize()
-              self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.07*781/sz[0],0.6*554/sz[1])
-              self.scalarbarwidget.On()
-      self._iren.Render()
-
-  def setVisibilityGrids(self,n):
-      a=self._vtkren.GetActors()
-      a.InitTraversal()
-      s=a.GetNextItem()
-      while s:
-          grid=s.GetMapper().GetInput()
-          if (vtk.vtkUnstructuredGrid.SafeDownCast(grid)):
-              s.SetVisibility(n)
-          s=a.GetNextItem()      
-            
-  def setScalarVisibilityOff(self):
-      a=self._vtkren.GetActors()
-      a.InitTraversal()
-      s=a.GetNextItem()
-      while s:
-          s.GetMapper().ScalarVisibilityOff()
-          s=a.GetNextItem()              
-                              
-  def setColorSpace(self):
-      self.cColorSpace.clear()
-      self.cColorSpace.addItem("")
-      self.cColorSpace.addItem("RGB")
-      self.cColorSpace.addItem("HSV")
-      self.cColorSpace.addItem("Diverging")
-      QObject.connect(self.cColorSpace,
-                      SIGNAL("currentIndexChanged(int)"),
-                      self.getColorSpace)
-
-  def getColorSpace(self):
-      index=self.cColorSpace.currentIndex()
-      if (index==0): return
-      colorspaces={1:self.lut.SetColorSpaceToRGB,2:self.lut.SetColorSpaceToHSV,
-              3:self.lut.SetColorSpaceToDiverging}
-      colorspaces[index]()
-      self._iren.Render()
+      value1=self._rsd[2][self.index[self._X]]
+      value2=self._rsd[2][self.index[self._Y]]
       
-  def LookupTable(self):
-      self.lut=vtk.vtkColorTransferFunction()
-      self.lut.SetColorSpaceToRGB()
-      self.lut.SetScaleToLinear()
+      ar1=vtk.vtkFloatArray()
+      ar1.SetNumberOfComponents(1)
+      l1=value1[1].shape[0]
+      for i in range(l1):
+          ar1.InsertNextTuple1(value1[1][i])
+
+      ar2=vtk.vtkFloatArray()
+      ar2.SetNumberOfComponents(1)
+      l2=value2[1].shape[0]
+      for i in range(l2):
+          ar2.InsertNextTuple1(value2[1][i])
+
+      fieldData=vtk.vtkFieldData()
+      fieldData.AllocateArrays(2)
+      fieldData.AddArray(ar1)
+      fieldData.AddArray(ar2)
+
+      dataObject=vtk.vtkDataObject()
+      dataObject.SetFieldData(fieldData)
+      
       text=vtk.vtkTextProperty()
       text.SetFontFamilyToArial()
       text.SetFontSize(12)
-      text.SetColor(self.color)
-      self.scalarbar=vtk.vtkScalarBarActor()
-      self.scalarbar.SetLookupTable(self.lut)
-      self.scalarbar.SetNumberOfLabels(5)
-      self.scalarbar.SetLabelTextProperty(text)
-      self.scalarbar.SetTitleTextProperty(text)
-      self.scalarbarwidget=vtk.vtkScalarBarWidget()
-      self.scalarbarwidget.ResizableOff()      
-      self.scalarbarwidget.RepositionableOn()
-      self.scalarbarwidget.GetScalarBarRepresentation().SetScalarBarActor(self.scalarbar)
-      self.scalarbarwidget.GetScalarBarRepresentation().PickableOff()
-      self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(0.9,0.4)
-      self.scalarbarwidget.GetScalarBarRepresentation().SetOrientation(1)
+      text.SetColor(0,0,0)
+
+      textaxis=vtk.vtkTextProperty()
+      textaxis.SetFontFamilyToArial()
+      textaxis.SetFontSize(8)
+      textaxis.SetColor(0,0,0)
       
+      self._plot = vtk.vtkXYPlotActor()
+      self._plot.AddDataObjectInput(dataObject)
+      self._plot.SetTitle("Convergence")
+      self._plot.SetTitleTextProperty(text)
+      self._plot.SetXTitle(value1[0])
+      self._plot.SetYTitle(value2[0][0:5])
+      self._plot.SetAxisTitleTextProperty(textaxis)
+      self._plot.SetAxisLabelTextProperty(textaxis)
+      self._plot.SetXValuesToValue()
+      self._plot.SetWidth(0.9)
+      self._plot.SetHeight(0.9)
+      self._plot.SetPosition(0.05, 0.05)
+##       self._plot.PlotCurvePointsOn()
+##       self._plot.PlotCurveLinesOff()
+
+      self._plot.LegendOn()
+      self._plot.PickableOff()
+
+      self._plot.SetDataObjectXComponent(0, 0)
+      self._plot.SetDataObjectYComponent(0, 1)
+      self._plot.SetPlotColor(0,1.0,0.0,0.0)
+      self._plot.SetPlotLabel(0,"Convergence")
+      self._plot.GetProperty().SetColor(0.0,0.0,0.0)
+      self._vtkren.AddActor2D(self._plot)
+      self._vtk.Render()
+      
+  def reverseAxis(self,*args):
+      if ((self._X is not None) and (self._Y is not None)):
+          X=self._X
+          self._X=self._Y
+          self._Y=X
+          self.plotXY()
+
+  def setVariableX(self,variable=[]):
+      self.cVariableX.clear()
+      self.cVariableX.addItem("")
+      if (variable!=[]):
+          for i in variable:
+              self.cVariableX.addItem(i)
+      QObject.connect(self.cVariableX,
+                      SIGNAL("currentIndexChanged(int)"),
+                      self.getVariableX)
+      
+  def setVariableY(self,variable=[]):
+      self.cVariableY.clear()
+      self.cVariableY.addItem("")
+      if (variable!=[]):
+          for i in variable:
+              self.cVariableY.addItem(i)
+      QObject.connect(self.cVariableY,
+                      SIGNAL("currentIndexChanged(int)"),
+                      self.getVariableY)
+
+  def getVariableX(self,*args):
+      self._X=self.cVariableX.currentText()
+      if ((self._X is not None) and (self._Y is not None)):
+          self.plotXY()
+
+  def getVariableY(self,*args):
+      self._Y=self.cVariableY.currentText()
+      if ((self._X is not None) and (self._Y is not None)):
+          self.plotXY()      
+          
   def screenshot(self):
     sshot=QPixmap.grabWindow(self.display.winId())
     sshot.save('/tmp/foo.png','png')
-
-  def SyncCameras(self,ren,event):
-    cam = ren.GetActiveCamera()
-    self.camAxes.SetViewUp(cam.GetViewUp())
-    self.camAxes.OrthogonalizeViewUp()
-    x, y, z = cam.GetDirectionOfProjection()
-    bnds = self.renAxes.ComputeVisiblePropBounds()
-    x0, x1, y0, y1, z0, z1 = self.renAxes.ComputeVisiblePropBounds()
-    self.renAxes.ResetCamera(x0, x1, y0, y1, z0, z1) 
-    pos = self.camAxes.GetPosition()
-    px, py, pz = self.camAxes.GetPosition()
-    d = NPY.sqrt(px*px + py*py + pz*pz)
-    dproj = NPY.sqrt(x*x + y*y + z*z)
-    self.camAxes.SetFocalPoint(0,0,0)
-    self.camAxes.SetPosition(-d*x/dproj, -d*y/dproj, -d*z/dproj)
-    self.renAxes.ResetCameraClippingRange()
-
-  def findObjectPath(self,selected):
-    return self._parser.getPathFromObject(selected)
-    
-  def findPathObject(self,path):
-    if (self._cacheActor.has_key(path)): return self._cacheActor[path]
-    alist=self._vtkren.GetActors()
-    alist.InitTraversal()
-    a=alist.GetNextItem()
-    while a:
-        if (path==self.findObjectPath(a.GetMapper().GetInput())):
-            self._cacheActor[path]=a
-            return a
-        a=alist.GetNextItem()
-    return None
-
-  def findObjectDims(self,selected):
-      return self._parser.getDimsFromObject(selected)
         
   def leave(self):
     self._wtop.destroy()
@@ -1584,215 +1632,7 @@ class Q7VTKPlot(Q7Window,Ui_Q7VTKPlotWindow):
                                        self._fgprint.filedir,
                                        self._fgprint.filename)
     self.leave()     
-
-  def addMarker(self):
-    axes=vtk.vtkAxesActor()
-    axes.SetShaftTypeToLine()
-    axes.SetTotalLength(1,1,1)
-    
-    self.widget=vtk.vtkOrientationMarkerWidget()
-    self.widget.SetOutlineColor(0.93,0.57,0.13)
-    self.widget.SetOrientationMarker(axes)
-    
-    xLabel=axes.GetXAxisCaptionActor2D()
-    xLabel.SetCaption("X")
-    xprop=vtk.vtkTextProperty()
-    xprop.SetFontSize(3)
-    xLabel.SetCaptionTextProperty(xprop)
-    xLabel.SetAttachmentPoint(0.75,0.2,0)
-    xLabel.LeaderOff()
-    xLabel.BorderOff()
-    xLabel.GetProperty().SetColor(self.color)
-    xLabel.SetPosition(0,0)
-
-    yLabel=axes.GetYAxisCaptionActor2D()
-    yLabel.SetCaption("Y")
-    yprop=vtk.vtkTextProperty()
-    yprop.SetFontSize(3)
-    yLabel.SetCaptionTextProperty(yprop)
-    yLabel.SetAttachmentPoint(0.2,0.75,0)
-    yLabel.LeaderOff()
-    yLabel.BorderOff()
-    yLabel.GetProperty().SetColor(self.color)
-    yLabel.SetPosition(0,0)
-
-    zLabel=axes.GetZAxisCaptionActor2D() 
-    zLabel.SetCaption("Z")
-    zprop=vtk.vtkTextProperty()
-    zprop.SetFontSize(3)
-    zLabel.SetCaptionTextProperty(zprop)
-    zLabel.SetAttachmentPoint(0,0.2,0.75)
-    zLabel.LeaderOff()
-    zLabel.BorderOff()
-    zLabel.GetProperty().SetColor(self.color)
-    zLabel.SetPosition(0,0)
-
-    self.xLabel=xLabel
-    self.yLabel=yLabel
-    self.zLabel=zLabel
-    
-  def addAxis(self):
-    self.camAxes = vtk.vtkCamera()
-    self.camAxes.ParallelProjectionOn()
-
-    self.renAxes = vtk.vtkRenderer()
-    self.renAxes.InteractiveOff()
-    self.renAxes.SetActiveCamera(self.camAxes)
-    self.renAxes.SetViewport(0, 0, 0.2, 0.2)
-    self.renAxes.SetBackground(1,1,1)
-
-    xAxis = vtk.vtkArrowSource()
-    xAxisMapper = vtk.vtkPolyDataMapper()
-    xAxisMapper.SetInput(xAxis.GetOutput())
-    xAxisActor = vtk.vtkActor()
-    xAxisActor.SetMapper(xAxisMapper)
-    xAxisActor.GetProperty().SetColor(1,0,0)
-
-    yAxis = vtk.vtkArrowSource()
-    yAxisMapper = vtk.vtkPolyDataMapper()
-    yAxisMapper.SetInput(yAxis.GetOutput())
-    yAxisActor = vtk.vtkActor()
-    yAxisActor.SetMapper(yAxisMapper)
-    yAxisActor.GetProperty().SetColor(1,1,0)
-    yAxisActor.RotateZ(90)
-
-    zAxis = vtk.vtkArrowSource()
-    zAxisMapper = vtk.vtkPolyDataMapper()
-    zAxisMapper.SetInput(zAxis.GetOutput())
-    zAxisActor = vtk.vtkActor()
-    zAxisActor.SetMapper(zAxisMapper)
-    zAxisActor.GetProperty().SetColor(0,1,0)
-    zAxisActor.RotateY(-90)
-
-    xLabel = vtk.vtkCaptionActor2D()
-    xLabel.SetCaption("X")
-    xprop=vtk.vtkTextProperty()
-    xprop.SetFontSize(3)
-    xLabel.SetCaptionTextProperty(xprop)
-    xLabel.SetAttachmentPoint(0.75,0.2,0)
-    xLabel.LeaderOff()
-    xLabel.BorderOff()
-    xLabel.GetProperty().SetColor(self.color)
-    xLabel.SetPosition(0,0)
-
-    yLabel = vtk.vtkCaptionActor2D()
-    yLabel.SetCaption("Y")
-    yprop=vtk.vtkTextProperty()
-    yprop.SetFontSize(3)
-    yLabel.SetCaptionTextProperty(yprop)
-    yLabel.SetAttachmentPoint(0.2,0.75,0)
-    yLabel.LeaderOff()
-    yLabel.BorderOff()
-    yLabel.GetProperty().SetColor(self.color)
-    yLabel.SetPosition(0,0)
-
-    zLabel = vtk.vtkCaptionActor2D()
-    zLabel.SetCaption("Z")
-    zprop=vtk.vtkTextProperty()
-    zprop.SetFontSize(3)
-    zLabel.SetCaptionTextProperty(zprop)
-    zLabel.SetAttachmentPoint(0,0.2,0.75)
-    zLabel.LeaderOff()
-    zLabel.BorderOff()
-    zLabel.GetProperty().SetColor(self.color)
-    zLabel.SetPosition(0,0)
-
-    Axes3D = vtk.vtkPropAssembly()
-    Axes3D.AddPart(xAxisActor)
-    Axes3D.AddPart(yAxisActor)
-    Axes3D.AddPart(zAxisActor)
-    Axes3D.AddPart(xLabel)
-    Axes3D.AddPart(yLabel)
-    Axes3D.AddPart(zLabel)
-
-    self.renAxes.AddActor(Axes3D)
-
-    self.xLabel=xLabel
-    self.yLabel=yLabel
-    self.zLabel=zLabel
-    
-    return self.renAxes
-
-  def colourLabel(self):
-      self.xLabel.GetProperty().SetColor(self.color)
-      self.yLabel.GetProperty().SetColor(self.color)
-      self.zLabel.GetProperty().SetColor(self.color)
-      self.scalarbar.GetLabelTextProperty().SetColor(self.color)
-      self.scalarbar.GetTitleTextProperty().SetColor(self.color)
-      self.textwidget.GetTextActor().GetTextProperty().SetColor(self.color)
-      self.textwidget.On()
-
-  def wire(self):
-      actors=self._vtkren.GetActors() 
-      actors.InitTraversal()
-      actor=actors.GetNextItem()
-      while actor:
-        actor.GetProperty().SetRepresentationToWireframe()
-        actor.GetProperty().EdgeVisibilityOff()
-        actor = actors.GetNextItem()
-    
-  def addPicker(self):
-      txtActor=vtk.vtkActor2D()
-      self.txtMapper=vtk.vtkTextMapper()
-      txtActor.SetMapper(self.txtMapper)
-      self.textActor=vtk.vtkTextActor()
-      self.textActor.VisibilityOff()
-      self.textActor.PickableOff()
-      tprop=self.textActor.GetTextProperty()
-      tprop.SetFontFamilyToArial()
-      tprop.SetFontSize(10)
-      tprop.BoldOff()
-      tprop.ShadowOff()
-      tprop.SetColor(self.color)
-      self.picker = vtk.vtkCellPicker()
-      self.picker.SetTolerance(0.001)
-      self.picker.AddObserver("EndPickEvent",self.annotatePick)
-      self.textrepresentation=vtk.vtkTextRepresentation()
-      self.textrepresentation.GetPositionCoordinate().SetCoordinateSystem(3)
-      self.textwidget=vtk.vtkTextWidget()
-      self.textwidget.SetRepresentation(self.textrepresentation)
-      self.textwidget.SetTextActor(self.textActor)
-      self.textwidget.SelectableOff()
-      self.textwidget.ResizableOff()
-
-  def annotatePick(self,object,event):
-      if (self.wact==1):
-          self.wire()
-          self.wact=0
-      if (self.controlKey!=1):
-        self._selected=[]
-        self.PropPicked=0
-      if (self.picker.GetCellId()<0):
-        self.textActor.VisibilityOff()
-        self.textwidget.Off()
-        self.highlightProp=0
-      else:                  
-        pickAct = self.picker.GetActors()
-        pickAct.InitTraversal()
-        a=pickAct.GetNextItem()        
-        t=''
-        s=None
-        while a:
-          x=a.GetMapper().GetInput()
-          s=self.findObjectPath(x)
-          t+=s+'\n'
-          self._selected+=[[s,a]]
-          a=pickAct.GetNextItem()
-        self.txtMapper.SetInput(t)
-        sz=self._iren.GetRenderWindow().GetSize()[1]
-        y=sz-self.txtMapper.GetHeight(self._vtkren)-10.
-        h=y/sz
-        self.textActor.VisibilityOn()
-        self.textwidget.On()
-        self.textActor.SetInput(t)
-        self.textActor.SetTextScaleModeToNone()
-        self.textActor.GetTextProperty().SetJustificationToLeft()
-        self.textrepresentation.SetPosition(0.02,h)
-        self._vtkren.AddActor(self.textActor)
-        self.PropPicked=0
-        self.controlKey=0
-        self.highlightProp=1
-        
+            
   def wCGNSTree(self,T,zlist):
       o=vtk.vtkObject()
       o.SetGlobalWarningDisplay(0)
@@ -1800,161 +1640,46 @@ class Q7VTKPlot(Q7Window,Ui_Q7VTKPlotWindow):
       
       self._vtk=self.display
       self._vtk.setParent(self)
-      self._vtkren = vtk.vtkRenderer()
-      
-##       self._waxs=self.addAxis()
-      self.addMarker()
+      self._vtkren = vtk.vtkRenderer()      
       self._vtkwin=self._vtk.GetRenderWindow()
-      self._vtkwin.SetNumberOfLayers(2)
-      self._vtkren.SetLayer(0)
-##       self._waxs.SetLayer(1)
-
+      self._vtkwin.SetNumberOfLayers(1)
       self._vtk.GetRenderWindow().AddRenderer(self._vtkren)
-##       self._vtk.GetRenderWindow().AddRenderer(self._waxs)
       
       self._parser=Mesh(T,zlist)
-      self._selected=[]
-      alist=self._parser.createActors()
+      self._rsd=self._parser.getResidus()
       variables=[]
-      if (alist!=[]):
-          grid=vtk.vtkStructuredGrid.SafeDownCast(alist[0][2])
-          if grid:
-             for i in range(grid.GetCellData().GetNumberOfArrays()):
-                 variables+=[grid.GetCellData().GetArray(i).GetName()]
-          for a in alist:
-              self._vtkren.AddActor(a[0])
-              if (a[1] is not None):
-                if (self._xmin>a[1][0]):self._xmin=a[1][0]
-                if (self._ymin>a[1][2]):self._ymin=a[1][2]
-                if (self._zmin>a[1][4]):self._zmin=a[1][4]
-                if (self._xmax<a[1][1]):self._xmax=a[1][1]
-                if (self._ymax<a[1][3]):self._ymax=a[1][3]
-                if (self._zmax<a[1][5]):self._zmax=a[1][5]
-      self.setVariable(variables)
+      self.index={}
+      k=0
+      for i in self._rsd[2]:
+          variables+=[i[0]]
+          self.index[i[0]]=k
+          k+=1
+
+      self.setVariableX(variables)
+      self.setVariableY(variables)
+      style=vtk.vtkInteractorStyleRubberBandZoom()
+      self._vtk.SetInteractorStyle(style)
+
       self._vtkren.SetBackground(1,1,1)
       self._vtkren.GetActiveCamera().ParallelProjectionOn()
-##       self._vtkren.GetActiveCamera().Elevation(0.0)
-##       self._vtkren.GetActiveCamera().Azimuth(90.0)
-##       self._vtkren.GetActiveCamera().Zoom(1.0)
       self._vtkren.ResetCamera()
-                        
-      (self.vx,self.vy,self.vz)=self._vtkren.GetActiveCamera().GetViewUp()
-      (self.cx,self.cy,self.cz)=self._vtkren.GetActiveCamera().GetFocalPoint()
-      (self.px,self.py,self.pz)=self._vtkren.GetActiveCamera().GetPosition()
-      (self.sx,self.sy,self.sz)=(0.,0.,0.)
-      (self.ox,self.oy,self.oz)=(0.,0.,0.)
 
-      self._ctxt=wVTKContext(self._vtkren.GetActiveCamera())
-      self._ctxt.setViewUp(self.vx,self.vy,self.vz)
-      self._ctxt.setFocalPoint(self.cx,self.cy,self.cz)
-      self._ctxt.setPosition(self.px,self.py,self.pz)
-      self.LookupTable()
-      self._istyle=Q7InteractorStyle(self)
-      self._vtk.SetInteractorStyle(self._istyle)
-      self._iren=self._istyle.GetInteractor()
-      self.scalarbarwidget.SetInteractor(self._iren)
-      self.textwidget.SetInteractor(self._iren)
-      self.widget.SetInteractor(self._iren)
-      self.widget.On()
-      self.widget.InteractiveOff()
-      self.fillCurrentPath()
-      
-##       self._vtkren.AddObserver("StartEvent", self.SyncCameras)
-      self._vtkren.AddObserver("StartEvent", self.posWidgets)
-      
-      self._p_wire=True
-      self.setColors(True)
+##      self._bindings={ 's'     :self.b_surf,
+##                        'S'     :self.b_surf,
+##                        'q'     :self.b_surfwire,
+##                        'Q'     :self.b_surfwire,
+##                        'a'     :self.wireActor,
+##                        'A'     :self.wireActor,
+##                        'w'     :self.b_wire,
+##                        'W'     :self.b_wire,
+##                        'r'     :self.resetCam,
+##                        'R'     :self.resetCam,
+##                        'd'     :self.hideActor,
+##                        'D'     :self.hideActor }
 
-      self._bindings={ 's'     :self.b_surf,
-                       'S'     :self.b_surf,
-                       'q'     :self.b_surfwire,
-                       'Q'     :self.b_surfwire,
-                       'a'     :self.wireActor,
-                       'A'     :self.wireActor,
-                       'w'     :self.b_wire,
-                       'W'     :self.b_wire,
-                       'r'     :self.resetCam,
-                       'R'     :self.resetCam,
-                       'd'     :self.hideActor,
-                       'D'     :self.hideActor }
       
       return self._vtk.GetRenderWindow()
-
-  def b_shufflecolors(self,pos=None):
-      self.setColors(True)
-      
-  def b_blackandwhite(self,pos=None):
-      self.setColors()
-      
-  def getRandomColor(self):
-      clst=OCTXT._ColorList
-      cl=clst[clst.keys()[random.randrange(len(clst.keys()))]]
-      return cl
-      
-  def setColors(self,randcolors=False):
-      if (not randcolors):
-          if (self._blackonwhite):
-              self._vtkren.SetBackground(1,1,1)
-              self.color=(0,0,0)
-              self.colourLabel()
-              cl=(0,0,0)
-          else:
-              self._vtkren.SetBackground(0,0,0)
-              self.color=(1,1,1)
-              self.colourLabel()
-              cl=(1,1,1)
-          self._blackonwhite=not self._blackonwhite
-      actors = self._vtkren.GetActors()
-      actors.InitTraversal()
-      actor = actors.GetNextItem()
-      while actor:
-          if (randcolors): cl=self.getRandomColor()
-          actor.GetProperty().SetColor(cl)
-          actor = actors.GetNextItem()
-      if (not self.OutlineActor is None):
-          self.OutlineActor.GetProperty().SetColor(0,1,1)
-      if (self.highlightProp==1):
-          color=self._currentactor[1].GetProperty().GetColor()
-          self._currentactor[1].GetProperty().SetColor(1,0,0)
-          self._currentactor[2]=color
-      else:
-          self._currentactor=None
-      self._iren.Render()
-
-  def b_update(self):
-      self.busyCursor()
-      self._selected=[]
-      self.textActor.VisibilityOff()
-      tlist=self._tmodel.getSelectedShortCut()
-      slist=self._parser.getPathList()
-      for i in tlist:
-          if (i in slist):
-              self._selected+=[[i,self.findPathObject(i)]]
-      self.fillCurrentPath()
-      self.readyCursor()
-      
-  def b_reset(self):
-      self._selected=[]
-      for i in self._hidden:
-          i[1].VisibilityOn()
-      self._hidden=[]
-      self._selected=[]
-      self.textActor.VisibilityOff()
-      self.changeCurrentActor([None,None])
-      self.fillCurrentPath()
-      
-  def b_next(self):
-      if (len(self._selected)>0):        
-          self._selected=self._selected[1:]+[self._selected[0]]
-          self.PropPicked=1
-          self.changeCurrentActor(self._selected[0],False)
-          return self._selected[0]
-      
-  def b_prev(self):
-      if (len(self._selected)>0):        
-          self._selected=[self._selected[-1]]+self._selected[0:-1]
-          self.PropPicked=1
-          self.changeCurrentActor(self._selected[0],False)
+     
       
   def b_loadview(self,name=None):
       vname=self.cViews.currentText()
@@ -1968,15 +1693,7 @@ class Q7VTKPlot(Q7Window,Ui_Q7VTKPlotWindow):
           camera.SetViewAngle(va)
           camera.SetParallelScale(ps)
           camera.SetParallelProjection(pj)
-          self._iren.Render()
-
-  def updateViewList(self):
-    k=self._camera.keys()
-    k.sort()
-    self.cViews.clear()
-    self.cViews.addItem("")
-    for i in k: self.cViews.addItem(i)
-    self.cViews.setCurrentIndex(0)
+          ## self._iren.Render()
         
   def b_delview(self,name=None):
     name=str(self.cViews.currentText())
@@ -2010,508 +1727,31 @@ class Q7VTKPlot(Q7Window,Ui_Q7VTKPlotWindow):
       while actor:
           w.SetInput(actor.GetMapper().GetInput())
           actor = actors.GetNextItem()
-      w.Write()
-
-  def b_xaxis(self,pos=None):
-      if (self.cMirror.isChecked()): self.setAxis(pos,-1)
-      else: self.setAxis(pos,1)
-    
-  def b_yaxis(self,pos=None):
-      if (self.cMirror.isChecked()): self.setAxis(pos,-2)
-      else: self.setAxis(pos,2)
-   
-  def b_zaxis(self,pos=None):
-      if (self.cMirror.isChecked()): self.setAxis(pos,-3)
-      else: self.setAxis(pos,3)
-    
-  def changeCurrentPath(self, *args):
-      path=self.cCurrentPath.currentText()
-      if (path==''):
-          return
-      if (self.PropPicked==1):
-          self.PropPicked=0
-          return
-      actor=self.findPathObject(path)
-      self.changeCurrentActor([path,actor])
-      
-  def setCurrentPath(self,path):
-      ix=self.cCurrentPath.findText(path)
-      if (ix!=-1):
-          self.cCurrentPath.setCurrentIndex(ix)
-
-  def fillCurrentPath(self):
-      self.cCurrentPath.clear()
-      sel=[n[0] for n in self._selected]
-      hid=[n[0] for n in self._hidden]
-      self.cCurrentPath.addItem(self._epix,'')
-      for i in self._parser.getPathList():
-          pix=self._npix
-          if (i in sel): pix=self._spix
-          if (i in hid): pix=self._hpix
-          self.cCurrentPath.addItem(pix,i)
-      self._iren.Render()
-
-  def reverseSelection(self):
-      selected=[]
-      selection=[]
-      hidden=[]
-      for i in self._selected:
-          selected.append(i[0])
-      for i in self._hidden:
-          hidden.append(i[0])
-      for i in self._parser.getPathList():
-          if ((not i in selected) and (not i in hidden)):
-              selection.append([i,self.findPathObject(i)])
-      self._selected=selection
-      actor=self.b_next()
-      path=actor[0]
-      self.fillCurrentPath()
-      if (path is not None):
-          self.setCurrentPath(path)
-
-  def setAxis(self,pos,iaxis):
-    camera=self._vtkren.GetActiveCamera()
-    fp=camera.GetFocalPoint()
-    pos=camera.GetPosition()
-    distance=NPY.sqrt((fp[0]-pos[0])*(fp[0]-pos[0])
-                      +(fp[1]-pos[1])*(fp[1]-pos[1])
-                      +(fp[2]-pos[2])*(fp[2]-pos[2]))
-    if iaxis == 1:
-      (vx,vy,vz)=(0.,0.,1.)
-      (px,py,pz)=(fp[0]+distance,fp[1],fp[2])
-    elif iaxis == 2:
-      (vx,vy,vz)=(0.,0.,1.)
-      (px,py,pz)=(fp[0],fp[1]+distance,fp[2])
-    elif iaxis == 3:
-      (vx,vy,vz)=(0.,1.,0.)
-      (px,py,pz)=(fp[0],fp[1],fp[2]+distance)
-    elif iaxis == -1:
-      (vx,vy,vz)=(0.,0.,1.)
-      (px,py,pz)=(fp[0]-distance,fp[1],fp[2])
-    elif iaxis == -2:
-      (vx,vy,vz)=(0.,0.,1.)
-      (px,py,pz)=(fp[0],fp[1]-distance,fp[2])
-    elif iaxis == -3:
-      (vx,vy,vz)=(0.,1.,0.)
-      (px,py,pz)=(fp[0],fp[1],fp[2]-distance)
-    camera.SetViewUp(vx,vy,vz)
-    camera.SetPosition(px,py,pz)
-    self._vtkren.ResetCameraClippingRange()
-    self._vtkren.Render()
-##     self._waxs.Render()
-    self._vtkren.ResetCamera()
-    self._iren.Render()
-    self._ctxt=wVTKContext(camera)
-    self._ctxt.setViewUp(vx,vy,vz)
-    self._ctxt.setPosition(px,py,pz)
-          
-  def b_surf(self,pos):
-      if (not self._p_wire):
-          self.b_wire(pos)
-          return
-      self._p_wire=False
-      actors = self._vtkren.GetActors()
-      actors.InitTraversal()
-      actor = actors.GetNextItem()
-      while actor:
-          actor.GetProperty().SetRepresentationToSurface()
-          actor.GetProperty().EdgeVisibilityOff()
-          actor = actors.GetNextItem()
-      self._vtk.GetRenderWindow().Render()
-
-##   def resizeEvent(self,*args):
-##       sz=self._iren.GetRenderWindow().GetSize()
-##       if (self.scalarbarwidget.GetEnabled()==1):
-##           self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.07*781/sz[0],0.6*554/sz[1])
-##       self.widget.SetViewport(0,0,0.3*781/sz[0],0.3*554/sz[1])
-      
-  def posWidgets(self,*args):
-      sz=self._iren.GetRenderWindow().GetSize()
-      if (self.scalarbarwidget.GetEnabled()==1):
-          if (self.scalarbarwidget.GetScalarBarActor().GetOrientation()==1):
-              self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.07*781/sz[0],0.6*554/sz[1])
-          elif (self.hscalarbar is None):
-              self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.6*781/sz[0],0.07*554/sz[1])
-##           if ((self.scalarbarwidget.GetScalarBarRepresentation().GetPosition2()[1]+
-##               self.scalarbarwidget.GetScalarBarRepresentation().GetPosition()[1])>1):
-      self.widget.SetViewport(0,0,0.3*781/sz[0],0.3*554/sz[1])
-      
+      w.Write()   
+                           
      
-  def b_surfwire(self,pos):       
-      if (not self._p_wire):
-          self.b_wire(pos)
-          return
-      self._p_wire=False
-      actors = self._vtkren.GetActors()
-      actors.InitTraversal()
-      actor = actors.GetNextItem()
-      while actor:
-          actor.GetProperty().SetRepresentationToSurface()
-          actor.GetProperty().EdgeVisibilityOn()
-          actor = actors.GetNextItem()
-      if (not self.OutlineActor is None):
-          self.OutlineActor.GetProperty().EdgeVisibilityOff()
-      self._vtk.GetRenderWindow().Render()
-      
-  def b_wire(self,pos):
-      if (self._p_wire):
-          self.b_surf(pos)
-          return
-      self._p_wire=True
-      actors = self._vtkren.GetActors() 
-      actors.InitTraversal()
-      actor = actors.GetNextItem()
-      while actor:
-          actor.GetProperty().SetRepresentationToWireframe()
-          actor = actors.GetNextItem()
-      self._vtk.GetRenderWindow().Render()
-
-  def wireActor(self,pos):
-      if (self._selected==[]): return
-      self.wire()
-      for i in self._selected:
-          i[1].GetProperty().SetRepresentationToSurface()
-          i[1].GetProperty().EdgeVisibilityOff()
-      self._vtk.GetRenderWindow().Render()
-      self.wact=1
-
-  def hideActor(self,pos):
-      if (not self._currentactor is None):
-          if (self._currentactor[0:2] in self._selected):
-              self._currentactor[1].VisibilityOff()
-              self._currentactor[3].VisibilityOff()
-              self._selected.remove(self._currentactor[0:2])
-              self._hidden.append(self._currentactor[0:2])
-              actor=self.b_next()
-              self.fillCurrentPath()
-              if (actor is not None):
-                  s=self.findObjectPath(actor[1].GetMapper().GetInput())
-                  if (s is not None):
-                      self.setCurrentPath(s)
-              else:
-                  self.changeCurrentActor([None,None])
-
   def resetCam(self,pos):
       self._vtkren.ResetCamera()
-      self._iren.Render()
+      ## self._iren.Render()
         
   def close(self):
       self._vtk.GetRenderWindow().Finalize()
       QWidget.close(self)
 
-  def changeCurrentActor(self,atp,combo=True):
-      self.resetSpinBox()
-      if (not self.actorpt is None):
-          self._vtkren.RemoveActor(self.actorpt)
-      path =atp[0]
-      actor=atp[1]
-      if (not combo):self.setCurrentPath(path)         
-      if (not self._currentactor is None):
-          act=self._currentactor[3]
-          col=self._currentactor[2]
-          self._vtkren.RemoveActor(act)
-          act.GetProperty().SetColor(col)
-      if (actor is None):
-          self.cCurrentPath.setCurrentIndex(0)
-          if (not self.PickedRenderer is None and not self.OutlineActor is None):
-              self.PickedRenderer.RemoveActor(self.OutlineActor)
-              self.PickedRenderer=None
-              self.CurrentRenderer.Render()
-              self.CurrentRenderer.GetRenderWindow().Render()
-          return
-      self.grid_dims=self.findObjectDims(actor.GetMapper().GetInput())
-      color=actor.GetProperty().GetColor()
-      actor2=vtk.vtkActor()
-      actor2.ShallowCopy(actor)
-      actor2.PickableOff()
-      actor2.DragableOff()
-      actor2.GetProperty().SetColor(1,0,0)
-      self._vtkren.AddActor(actor2)
-      self.CurrentRenderer=self._vtkren
-      self.Outline=vtk.vtkOutlineSource()
-      self.OutlineMapper=vtk.vtkPolyDataMapper()
-      self.OutlineMapper.SetInput(self.Outline.GetOutput())
-      if (not self.PickedRenderer is None and not self.OutlineActor is None):
-          self.PickedRenderer.RemoveActor(self.OutlineActor)
-          self.PickedRenderer=None
-      if (not actor is None):
-          self.OutlineActor=vtk.vtkActor()
-          self.OutlineActor.PickableOff()
-          self.OutlineActor.DragableOff()
-          self.OutlineActor.SetMapper(self.OutlineMapper)
-          self.OutlineActor.GetProperty().SetColor(0,1,1)
-          self.OutlineActor.GetProperty().SetAmbient(1.0)
-          self.OutlineActor.GetProperty().SetDiffuse(0.0)
-          self.OutlineActor.GetProperty().SetLineWidth(1.2)
-          if (self.CurrentRenderer!=self.PickedRenderer):
-              if (not self.PickedRenderer is None and not self.OutlineActor is None):
-                  self.PickedRenderer.RemoveActor(self.OutlineActor)
-              self.CurrentRenderer.AddActor(self.OutlineActor)
-              self.PickedRenderer=self.CurrentRenderer
-          self.Outline.SetBounds(actor.GetBounds())
-      self._iren.Render()
-      self._currentactor=[path,actor,color,actor2]
+##   def resetSpinBox(self):  
+##       self.sIndex1.blockSignals(True)
+##       self.sIndex2.blockSignals(True)
+##       self.sIndex3.blockSignals(True)
+##       self.sIndex1.setRange(0,0)
+##       self.sIndex2.setRange(0,0)
+##       self.sIndex3.setRange(0,0)    
+##       self.sIndex1.setValue(0)
+##       self.sIndex2.setValue(0)
+##       self.sIndex3.setValue(0)
+##       self.sIndex1.blockSignals(False)
+##       self.sIndex2.blockSignals(False)
+##       self.sIndex3.blockSignals(False)
 
-  def highlightPoint(self,*args):
-      actor=self._currentactor[1]
-      if (actor is None): return
-      grid=actor.GetMapper().GetInput()
-      tgrid=self.grid_dims[0]
-      if (tgrid==0):
-          i=self.sIndex1.value()
-          j=self.sIndex2.value()
-          k=self.sIndex3.value()
-          self.s_highlightPoint(grid,(i,j,k))
-      if (tgrid==2):
-          i=self.sIndex1.value()
-          self.uns_highlightPoint(grid,i)
-      if (tgrid==1):
-          ptid=self.sIndex1.value()-1
-          self.selectionPointId(grid,ptid)
-      
-  def s_highlightPoint(self,grid,index):
-      if (not self.actorpt is None):
-          self._vtkren.RemoveActor(self.actorpt)
-      if (grid is None): return
-      (i,j,k)=index
-      filter=vtk.vtkStructuredGridGeometryFilter()
-      filter.SetInputConnection(grid.GetProducerPort())
-      filter.SetExtent(i-1,i-1,j-1,j-1,k-1,k-1)
-      mapper=vtk.vtkPolyDataMapper()
-      mapper.SetInputConnection(filter.GetOutputPort())
-      self.actorpt=vtk.vtkActor()
-      self.actorpt.SetMapper(mapper)
-      self.actorpt.GetProperty().SetColor(0,1,0)
-      self.actorpt.GetProperty().SetPointSize(6)
-      self.actorpt.PickableOff()
-      self.actorpt.DragableOff()
-      self._vtkren.AddActor(self.actorpt)
-      self._iren.Render()
-
-  def uns_highlightPoint(self,grid,cellid):
-      if (not self.actorpt is None):
-          self._vtkren.RemoveActor(self.actorpt)
-      if (grid is None): return
-      filter=vtk.vtkUnstructuredGridGeometryFilter()
-      filter.SetInputConnection(grid.GetProducerPort())
-      filter.CellClippingOn()
-      filter.SetCellMinimum(cellid)
-      filter.SetCellMaximum(cellid)
-      mapper=vtk.vtkDataSetMapper()
-      mapper.SetInputConnection(filter.GetOutputPort())
-      self.actorpt=vtk.vtkActor()
-      self.actorpt.SetMapper(mapper)
-      self.actorpt.GetProperty().SetColor(0,1,0)
-      self.actorpt.GetProperty().SetLineWidth(2)
-      self.actorpt.GetProperty().SetRepresentationToWireframe()
-      self.actorpt.PickableOff()
-      self.actorpt.DragableOff()
-      self._vtkren.AddActor(self.actorpt)
-      self._iren.Render()
-      
-  def selectionPointId(self,grid,ptid):
-      if (not self.actorpt is None):
-          self._vtkren.RemoveActor(self.actorpt)
-      if (grid is None): return      
-      ids=vtk.vtkIdTypeArray()
-      ids.SetNumberOfComponents(1)
-      ids.InsertNextValue(ptid)
-      selectionNode = vtk.vtkSelectionNode()
-      selectionNode.SetFieldType(1)
-      selectionNode.SetContentType(4)
-      selectionNode.SetSelectionList(ids)      
-      selection=vtk.vtkSelection()
-      selection.AddNode(selectionNode) 
-      extractSelection = vtk.vtkExtractSelection()
-      extractSelection.SetInputConnection(0,grid.GetProducerPort())
-      extractSelection.SetInput(1,selection)
-      extractSelection.Update()
-      selected=vtk.vtkUnstructuredGrid()
-      selected.ShallowCopy(extractSelection.GetOutput())
-      selectedMapper=vtk.vtkDataSetMapper()
-      selectedMapper.SetInputConnection(selected.GetProducerPort())
-      self.actorpt=vtk.vtkActor()
-      self.actorpt.SetMapper(selectedMapper)
-      self.actorpt.GetProperty().SetColor(0,1,0)
-      self.actorpt.GetProperty().SetPointSize(6)
-      self.actorpt.PickableOff()
-      self.actorpt.DragableOff()
-      self._vtkren.AddActor(self.actorpt)      
-      self._iren.Render()
-      
-  def setIndexPoint3(self,grid,index):
-      (i,j,k)=index
-      (idim,jdim,kdim)=self.grid_dims[1]
-      self.sIndex1.blockSignals(True)
-      self.sIndex2.blockSignals(True)
-      self.sIndex3.blockSignals(True)
-      self.sIndex1.setRange(1,idim)
-      self.sIndex1.setSingleStep(1)
-      self.sIndex2.setRange(1,jdim)
-      self.sIndex2.setSingleStep(1)
-      self.sIndex3.setRange(1,kdim)
-      self.sIndex3.setSingleStep(1)
-      self.sIndex1.setValue(i)
-      self.sIndex2.setValue(j)
-      self.sIndex3.setValue(k)
-      self.sIndex1.blockSignals(False)
-      self.sIndex2.blockSignals(False)
-      self.sIndex3.blockSignals(False)
-      self.s_highlightPoint(grid,index)
-      
-  def setIndexCell1(self,grid,index):
-      idmax=grid.GetNumberOfCells()
-      self.sIndex1.blockSignals(True)
-      self.sIndex1.setRange(1,idmax)
-      self.sIndex1.setSingleStep(1)
-      self.sIndex1.setValue(index)
-      self.sIndex1.blockSignals(False)
-      self.uns_highlightPoint(grid,index)
-
-  def setIndexPoint1(self,grid,index):
-      idmax=grid.GetNumberOfPoints()
-      self.sIndex1.blockSignals(True)
-      self.sIndex1.setRange(1,idmax)
-      self.sIndex1.setSingleStep(1)
-      self.sIndex1.setValue(index+1)
-      self.sIndex1.blockSignals(False)
-      self.selectionPointId(grid,index)
-      
-  def setPickableOff(self):
-      actors=self._vtkren.GetActors()
-      actors.InitTraversal()
-      a=actors.GetNextActor()
-      a.PickableOff()
-      while a:
-          a.PickableOff()
-          a=actors.GetNextActor()
-      self._currentactor[1].PickableOn()
-
-  def setPickableOn(self):
-      actors=self._vtkren.GetActors()
-      actors.InitTraversal()
-      a=actors.GetNextActor()
-      a.PickableOn()
-      while a:
-          a.PickableOn()
-          a=actors.GetNextActor()
-      if (not self._currentactor is None):
-          self._currentactor[3].PickableOff()
-
-  def resetSpinBox(self):  
-      self.sIndex1.blockSignals(True)
-      self.sIndex2.blockSignals(True)
-      self.sIndex3.blockSignals(True)
-      self.sIndex1.setRange(0,0)
-      self.sIndex2.setRange(0,0)
-      self.sIndex3.setRange(0,0)    
-      self.sIndex1.setValue(0)
-      self.sIndex2.setValue(0)
-      self.sIndex3.setValue(0)
-      self.sIndex1.blockSignals(False)
-      self.sIndex2.blockSignals(False)
-      self.sIndex3.blockSignals(False)
-
-  def removeElement(self):
-      if (self.actorpt is None): return
-      self._vtkren.RemoveActor(self.actorpt)
-      self._iren.Render()
-      self.resetSpinBox()  
                  
-class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
-    def __init__(self,parent):
-      self._parent=parent
-      self.AddObserver("CharEvent",self.keycode)
-      self.rwi=None    
-      self.PickedRenderer=None
-      self.OutlineActor=None
-      self._parent.addPicker()
-        
-    def keycode(self,*args):
-        self.rwi=self.GetInteractor() 
-        keycode=self.rwi.GetKeyCode()
-        control=self.rwi.GetControlKey()        
-        vtkkeys=['f','F','r','R']
-        keys=['d','D','s','S','w','W','q','Q','a','A']
-        if (keycode in vtkkeys):
-            self.OnChar()
-        if (keycode in keys):
-            self.CharCallback()
-        if (keycode=='z' or keycode=='Z'):
-            self.setPick()
-        if (keycode=='p' or keycode=='P'):
-            self.pickElement()
-        if (control==1): self._parent.controlKey=1
-
-    def pickElement(self):
-        if (self._parent._selected==[]): return
-        grid=self._parent._currentactor[1].GetMapper().GetInput()
-        tgrid=self._parent.grid_dims[0]
-        eventPos=self.rwi.GetEventPosition()
-        if (tgrid==0):
-            pointid=self.getPointId(eventPos)
-            if (pointid>-1):
-                array=grid.GetPointData().GetArray(0).GetTuple3(pointid)
-                self._parent.setIndexPoint3(grid,array)
-            else:
-                self._parent.removeElement()
-        if (tgrid==2):
-            cellid=self.getCellId(eventPos)
-            if (cellid>-1):
-                self._parent.setIndexCell1(grid,cellid)
-            else:
-                self._parent.removeElement()
-        if (tgrid==1):
-            pointid=self.getPointId(eventPos)
-            if (pointid>-1):
-                self._parent.setIndexPoint1(grid,pointid)
-            else:
-                self._parent.removeElement()
-                           
-    def getPointId(self,eventPos):
-        picker=vtk.vtkPointPicker()
-        picker.SetTolerance(0.005)            
-        self.rwi.SetPicker(picker)
-        self._parent.setPickableOff()
-        picker.Pick(eventPos[0],eventPos[1], 0.0,self._parent._vtkren)
-        pointid=picker.GetPointId()
-        return pointid
-        
-    def getCellId(self,eventPos):
-        picker=vtk.vtkCellPicker()
-        picker.SetTolerance(0.001) 
-        self.rwi.SetPicker(picker)
-        self._parent.setPickableOff()
-        picker.Pick(eventPos[0],eventPos[1], 0.0,self._parent._vtkren)
-        cellid=picker.GetCellId()
-        return cellid       
-                       
-    def setPick(self):
-        self._parent.setPickableOn()
-        path=None
-        eventPos=self.rwi.GetEventPosition()
-        self.rwi.SetPicker(self._parent.picker)
-        if (not self._parent.picker is None):
-          self._parent.picker.Pick(eventPos[0],eventPos[1],0.0,self._parent._vtkren)
-          pathpick=self._parent.picker.GetPath()
-          if (pathpick is None):
-              self._parent.changeCurrentActor([None,None])
-              self._parent.PropPicked=0
-          else:
-              actor=pathpick.GetFirstNode().GetViewProp()
-              path=self._parent.findObjectPath(actor.GetMapper().GetInput())
-              self._parent.changeCurrentActor([path,actor])
-              self._parent.PropPicked=1
-          self._parent.fillCurrentPath()
-          if (path is not None):
-            self._parent.setCurrentPath(path)        
-
-    def CharCallback(self,*args):   
-      keycode=self.rwi.GetKeyCode()
-      control=self.rwi.GetControlKey()
-      pos=self.rwi.GetEventPosition()
-      if (self._parent._bindings.has_key(keycode)): self._parent._bindings[keycode](pos)
-      if (control==1): self._parent.controlKey=1     
-      return
 
 
