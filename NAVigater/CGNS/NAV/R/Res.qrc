@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/value.gif</file>
+    <file>icons/zoompoint.gif</file>
+    <file>icons/move-actor.gif</file>
     <file>icons/plot.gif</file>
     <file>Res.qrc</file>
     <file>icons/add.gif</file>
