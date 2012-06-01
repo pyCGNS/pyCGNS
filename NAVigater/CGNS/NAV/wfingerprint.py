@@ -164,9 +164,9 @@ class Q7fingerPrint:
             fileout=control.getOptionValue('TemporaryDirectory')+\
                      '/'+filein+'.%.3d.hdf'%count
             count+=1
-        com='(cd %s; %s -h %s %s)'%(fdir,
-                                    control.getOptionValue('ADFConversionCom'),
-                                    filein,fileout)
+        com='(cd %s; %s -f -h %s %s)'%(fdir,
+                                       control.getOptionValue('ADFConversionCom'),
+                                       filein,fileout)
         os.system(com)
         return fileout
     @classmethod
@@ -185,13 +185,16 @@ class Q7fingerPrint:
         flags=CGNS.MAP.S2P_DEFAULT
         if (control.getOptionValue('CHLoneTrace')): flags|=CGNS.MAP.S2P_TRACE
         try:
-            (tree,links)=CGNS.MAP.load(f,flags,lksearch=slp)
-        except CGNS.MAP.error,e:
+            (tree,links,diag)=CGNS.MAP.load2(f,flags,lksearch=slp)
+            if (diag is not None):
+                txt="""Loading process returns:"""
+                control.readyCursor()
+                MSG.wError(diag[0],txt,diag[1])
+        except Exception, e:
+            txt="""The current operation has been aborted: %s"""%e
             control.readyCursor()
-            txt="""The current operation has been aborted, while trying to load a file, the following error occurs:"""
-            MSG.wError(e[0],txt,e[1])
+            MSG.wError(0,txt,'')
             return None
-        #for p in CGU.getAllPaths(tree): print p
         kw['isfile']=True
         return Q7fingerPrint(control,filedir,filename,tree,links,**kw)
     @classmethod
