@@ -446,8 +446,9 @@ def newZone(parent,name,zsize=None,
   """
   asize=None
   if (ztype not in CK.ZoneType_l): raise CE.cgnsException(206,ztype)
-  if (zsize == None): raise CE.cgnsException(999) 
+  if (zsize == None): raise CE.cgnsException(300) 
   CU.checkDuplicatedName(parent,name)
+  CU.checkArray(zsize,dienow=True)
   znode=CU.newNode(name,zsize,[],CK.Zone_ts,parent)
   CU.newNode(CK.ZoneType_s,CU.setStringAsArray(ztype),[],CK.ZoneType_ts,znode)
   if (family):

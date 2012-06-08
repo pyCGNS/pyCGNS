@@ -872,7 +872,7 @@ class Q7TreeModel(QAbstractItemModel):
         self.endInsertRows()
         newIndex=self.createIndex(row,0,newItem)
         crow=0
-        for childnode in node[2]: # CGU.getNextChildSortByType(node,criteria=self._slist):
+        for childnode in node[2]:
             c=self.parseAndUpdate(newItem,childnode,newIndex,crow,tag)
             self._fingerprint.depth=max(c._depth,self._fingerprint.depth)
             self._fingerprint.nodes=max(c._nodes,self._fingerprint.nodes)

@@ -136,6 +136,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         ix=self.cQuery.findText(self.querymodel.getCurrentQuery())
         if (ix!=-1): self.cQuery.setCurrentIndex(ix)
         self.bSave.clicked.connect(self.savetree)
+        self.bSaveAs.clicked.connect(self.savetreeas)
         self.bApply.clicked.connect(self.forceapply)
         self.bClose.clicked.connect(self.leave)
         self.bZoomIn.clicked.connect(self.expandLevel)
@@ -181,6 +182,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def savetree(self):
         if ((self._fgprint.converted) or
             not (self._fgprint.isModified())): return
+        self._control.savedirect(self._fgprint)
+        self._fgprint.modifiedTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
+        self.updateTreeStatus()
+    def savetreeas(self):
+        print 'SAVE AS'
         self._control.save(self._fgprint)
         self._fgprint.modifiedTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
         self.updateTreeStatus()

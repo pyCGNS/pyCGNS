@@ -266,6 +266,11 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.signals.fgprint=fgprint
         self.fdialog=Q7File(self,1)
         self.fdialog.show()
+    def savedirect(self,fgprint):
+        return
+        self.signals.fgprint=fgprint
+        self.signals.buffer=fgprint.filedir+'/'+fgprint.filename
+        self.signals.saveFile.emit()
     def edit(self):
         self._T('edit new')
         tree=CGL.newCGNSTree()

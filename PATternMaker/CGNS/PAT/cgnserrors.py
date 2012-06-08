@@ -176,6 +176,8 @@ errorTable={
   294 : "Parent node should be FamilyBC_t",
   295 : "FamilyBCType is missing sub-node",
 
+  300 : "Zone creation requires a dimension tuple",
+    
   710 : "Numpy array should have a 'Fortran' order",
 
   800 : "adf.database_open No such open status [%s]",

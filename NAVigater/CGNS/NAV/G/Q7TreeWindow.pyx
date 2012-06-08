@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
-# Created: Sun May 20 11:28:31 2012
+# Created: Mon May 21 21:44:22 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -30,14 +30,14 @@ class Ui_Q7TreeWindow(object):
         self.horizontalLayout.addWidget(self.bSave)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.toolButton_2 = QtGui.QToolButton(Q7TreeWindow)
-        self.toolButton_2.setMinimumSize(QtCore.QSize(25, 25))
-        self.toolButton_2.setMaximumSize(QtCore.QSize(25, 25))
+        self.bSaveAs = QtGui.QToolButton(Q7TreeWindow)
+        self.bSaveAs.setMinimumSize(QtCore.QSize(25, 25))
+        self.bSaveAs.setMaximumSize(QtCore.QSize(25, 25))
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/images/icons/tree-save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_2.setIcon(icon2)
-        self.toolButton_2.setObjectName("toolButton_2")
-        self.horizontalLayout.addWidget(self.toolButton_2)
+        self.bSaveAs.setIcon(icon2)
+        self.bSaveAs.setObjectName("bSaveAs")
+        self.horizontalLayout.addWidget(self.bSaveAs)
         self.toolButton_3 = QtGui.QToolButton(Q7TreeWindow)
         self.toolButton_3.setMinimumSize(QtCore.QSize(25, 25))
         self.toolButton_3.setMaximumSize(QtCore.QSize(25, 25))
@@ -332,8 +332,8 @@ class Ui_Q7TreeWindow(object):
         Q7TreeWindow.setWindowTitle(QtGui.QApplication.translate("Q7TreeWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.bSave.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Save tree (overwrite existing file)", None, QtGui.QApplication.UnicodeUTF8))
         self.bSave.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton_2.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Save tree as (creates a new file)", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton_2.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.bSaveAs.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Save tree as (creates a new file)", None, QtGui.QApplication.UnicodeUTF8))
+        self.bSaveAs.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton_3.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Save tree as profile", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton_3.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bZoomOut.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Collapse lowest tree level", None, QtGui.QApplication.UnicodeUTF8))
