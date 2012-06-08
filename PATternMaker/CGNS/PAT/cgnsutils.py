@@ -83,8 +83,8 @@ def nodeDelete(tree,node,legacy=False):
         
     T =CL.newCGNSTree()
     b1=CL.newBase(T,'Base',3,3)
-    z1=CL.newZone(b1,'Zone1')
-    z2=CL.newZone(b1,'Zone2')
+    z1=CL.newZone(b1,'Zone1',numpy.array([1,2,3]))
+    z2=CL.newZone(b1,'Zone2',numpy.array([1,2,3]))
     print getPathFullTree(T)
     # ['/CGNSLibraryVersion', '/Base', '/Base/Zone1', '/Base/Zone1/ZoneType', '/Base/Zone2', '/Base/Zone2/ZoneType']
     nodeDelete(T,z1)
@@ -93,7 +93,7 @@ def nodeDelete(tree,node,legacy=False):
 
   - Args:
    * `tree`: target tree where to find the node to remove
-   * `node`: node to remove
+   * `node`: node to remove (actual CGNS/Python node or node name as absolute path)
 
   - Return:
    * The tree argument (without the deleted node)
