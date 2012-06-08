@@ -185,7 +185,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="ClippingRange">
+      <widget class="QPushButton" name="cShowValue">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -204,6 +204,9 @@
        <property name="icon">
         <iconset resource="../R/Res.qrc">
          <normaloff>:/images/icons/value.gif</normaloff>:/images/icons/value.gif</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -594,28 +597,6 @@
        </property>
        <property name="text">
         <string>Z</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bLabeledMesh">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>L</string>
        </property>
        <property name="checkable">
         <bool>true</bool>

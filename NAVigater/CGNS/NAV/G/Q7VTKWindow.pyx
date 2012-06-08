@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Fri Jun  1 11:38:59 2012
+# Created: Wed Jun  6 17:05:56 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -78,15 +78,16 @@ class Ui_Q7VTKWindow(object):
         self.horizontalLayout.addWidget(self.selectable)
         spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem1)
-        self.ClippingRange = QtGui.QPushButton(Q7VTKWindow)
-        self.ClippingRange.setMinimumSize(QtCore.QSize(25, 25))
-        self.ClippingRange.setMaximumSize(QtCore.QSize(25, 25))
-        self.ClippingRange.setText("")
+        self.cShowValue = QtGui.QPushButton(Q7VTKWindow)
+        self.cShowValue.setMinimumSize(QtCore.QSize(25, 25))
+        self.cShowValue.setMaximumSize(QtCore.QSize(25, 25))
+        self.cShowValue.setText("")
         icon5 = QtGui.QIcon()
         icon5.addPixmap(QtGui.QPixmap(":/images/icons/value.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.ClippingRange.setIcon(icon5)
-        self.ClippingRange.setObjectName("ClippingRange")
-        self.horizontalLayout.addWidget(self.ClippingRange)
+        self.cShowValue.setIcon(icon5)
+        self.cShowValue.setCheckable(True)
+        self.cShowValue.setObjectName("cShowValue")
+        self.horizontalLayout.addWidget(self.cShowValue)
         self.bResetCamera = QtGui.QPushButton(Q7VTKWindow)
         self.bResetCamera.setMinimumSize(QtCore.QSize(25, 25))
         self.bResetCamera.setMaximumSize(QtCore.QSize(25, 25))
@@ -230,16 +231,10 @@ class Ui_Q7VTKWindow(object):
         self.bZoom.setCheckable(True)
         self.bZoom.setObjectName("bZoom")
         self.horizontalLayout_3.addWidget(self.bZoom)
-        self.bLabeledMesh = QtGui.QPushButton(Q7VTKWindow)
-        self.bLabeledMesh.setMinimumSize(QtCore.QSize(25, 25))
-        self.bLabeledMesh.setMaximumSize(QtCore.QSize(25, 25))
-        self.bLabeledMesh.setCheckable(True)
-        self.bLabeledMesh.setObjectName("bLabeledMesh")
-        self.horizontalLayout_3.addWidget(self.bLabeledMesh)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.verticalLayout_2 = QtGui.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.display = QVTKRenderWindowInteractor(Q7VTKWindow)
+        self.display = Q7VTKRenderWindowInteractor(Q7VTKWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -354,7 +349,6 @@ class Ui_Q7VTKWindow(object):
         self.bSuffleColors.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Change colors to random", None, QtGui.QApplication.UnicodeUTF8))
         self.bBlackColor.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Switch black/white colors", None, QtGui.QApplication.UnicodeUTF8))
         self.bZoom.setText(QtGui.QApplication.translate("Q7VTKWindow", "Z", None, QtGui.QApplication.UnicodeUTF8))
-        self.bLabeledMesh.setText(QtGui.QApplication.translate("Q7VTKWindow", "L", None, QtGui.QApplication.UnicodeUTF8))
         self.bBackControl.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Raise CGNS.NAV control window", None, QtGui.QApplication.UnicodeUTF8))
         self.bUpdate.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Update selected list from tree view", None, QtGui.QApplication.UnicodeUTF8))
         self.bReverse.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Switch seleted and  unselected actors", None, QtGui.QApplication.UnicodeUTF8))
@@ -363,5 +357,5 @@ class Ui_Q7VTKWindow(object):
         self.bReset.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Clear selection list", None, QtGui.QApplication.UnicodeUTF8))
         self.bNext.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Highlight next selected item", None, QtGui.QApplication.UnicodeUTF8))
 
-from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
+from CGNS.NAV.Q7VTKRenderWindowInteractor import Q7VTKRenderWindowInteractor
 import Res_rc

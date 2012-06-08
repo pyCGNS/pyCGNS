@@ -271,25 +271,24 @@ class Q7VTKRenderWindowInteractor(QtGui.QWidget):
                                             ctrl, shift, chr(0), repeat, None)
 
         self._ActiveButton = ev.button()
-
         if self._ActiveButton == QtCore.Qt.LeftButton:
             self._Iren.LeftButtonPressEvent()
+##             self._Iren.LeaveEvent()
         elif self._ActiveButton == QtCore.Qt.RightButton:
             self._Iren.RightButtonPressEvent()
         elif self._ActiveButton == QtCore.Qt.MidButton:
             self._Iren.MiddleButtonPressEvent()
 
-    def mouseReleaseEvent(self, ev):
-        ctrl, shift = self._GetCtrlShift(ev)
-        self._Iren.SetEventInformationFlipY(ev.x(), ev.y(),
-                                            ctrl, shift, chr(0), 0, None)
-
-        if self._ActiveButton == QtCore.Qt.LeftButton:
-            self._Iren.LeftButtonReleaseEvent()
-        elif self._ActiveButton == QtCore.Qt.RightButton:
-            self._Iren.RightButtonReleaseEvent()
-        elif self._ActiveButton == QtCore.Qt.MidButton:
-            self._Iren.MiddleButtonReleaseEvent()
+##     def mouseReleaseEvent(self, ev):
+##         ctrl, shift = self._GetCtrlShift(ev)
+##         self._Iren.SetEventInformationFlipY(ev.x(), ev.y(),
+##                                             ctrl, shift, chr(0), 0, None)
+##         if self._ActiveButton == QtCore.Qt.LeftButton:
+##             self._Iren.LeftButtonReleaseEvent()
+##         elif self._ActiveButton == QtCore.Qt.RightButton:
+##             self._Iren.RightButtonReleaseEvent()
+##         elif self._ActiveButton == QtCore.Qt.MidButton:
+##             self._Iren.MiddleButtonReleaseEvent()
 
     def mouseMoveEvent(self, ev):
         self.__saveModifiers = ev.modifiers()
@@ -308,7 +307,7 @@ class Q7VTKRenderWindowInteractor(QtGui.QWidget):
             key = str(ev.text())
         else:
             key = chr(0)
-
+        key=key[0]
         self._Iren.SetEventInformationFlipY(self.__saveX, self.__saveY,
                                             ctrl, shift, key, 0, None)
         self._Iren.KeyPressEvent()
@@ -320,7 +319,7 @@ class Q7VTKRenderWindowInteractor(QtGui.QWidget):
             key = chr(ev.key())
         else:
             key = chr(0)
-
+        key=key[0]
         self._Iren.SetEventInformationFlipY(self.__saveX, self.__saveY,
                                             ctrl, shift, key, 0, None)
         self._Iren.KeyReleaseEvent()
