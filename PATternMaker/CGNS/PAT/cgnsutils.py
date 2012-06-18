@@ -161,6 +161,9 @@ def checkName(name,dienow=False):
   if (name in ['.','..']):
     if (dienow): raise CE.cgnsNameError(29)
     return False
+  if (name.count(' ')==len(name)):
+    if (dienow): raise CE.cgnsNameError(31)
+    return False
   return True
 
 # --------------------------------------------------
@@ -253,12 +256,21 @@ def checkNodeType(node,cgnstype=[],dienow=False):
 
 def checkType(parent,ltype,name,dienow=False):
   if (parent == None): return None
-  if ((ltype==[]) and (parent[3] not in CK.cgnstypes)): 
+  if ((ltype==[]) and (parent[3] in CK.cgnstypes)):
+    return True
+  if ((type(ltype)==list) and (parent[3] in ltype)):
+    return True
+  if (parent[3] == ltype): 
+    return True
+  if ((ltype==[]) and (parent[3] not in CK.cgnstypes)):
     if (dienow): raise CE.cgnsTypeError(40,(parent,parent[3]))
-  elif ((type(ltype )==list()) and (parent[3] not in ltype)): 
-    if (dienow): raise CE.cgnsTypeError(104,(parent,ltype))
-  elif (parent[3] != ltype): 
+    return False
+  if (parent[3] != ltype): 
     if (dienow): raise CE.cgnsTypeError(103,(parent,ltype))
+    return False
+  if ((type(ltype)==list) and (parent[3] not in ltype)): 
+    if (dienow): raise CE.cgnsTypeError(104,(parent,ltype))
+    return False
   return True
 
 # -----------------------------------------------------------------------------
@@ -1360,19 +1372,4 @@ def checkLink(tree,node):
   """
   return node
 
-# --------------------------------------------------
-# should not be documented with docstrings
-def test():
-  p='/Base/Zone/ZoneBC'
-  print getPathNoRoot(p)
-  print getPathNormalize(p)
-  print getPathToList(p)
-  print getPathToList(p,True)
-  import CGNS.PAT.cgnslib as CGLB
-  T=CGLB.newCGNSTree()
-  b=CGLB.newBase(T,'Base',3,3)
-  z=CGLB.newZone(b,'Zone')
-  x=CGLB.newBoundary(z,'Bnd01',((1,1,1),(1,1,1)))
-  print getPathAsTypes(T,'/Base/Zone/ZoneBC')
-  
 # ----

@@ -30,8 +30,8 @@ setuputils.installConfigFiles()
 if HAS_CYTHON:
   cmdclassdict={'clean':setuputils.clean,'build_ext':build_ext}
   extmods=[ Extension('CGNS.PAT.cgnsutils',
-                           ['CGNS/PAT/cgnsutils.pyx'],
-                           include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES) ]
+                      ['CGNS/PAT/cgnsutils.pyx'],
+                      include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES) ]
 else:
   cmdclassdict={'clean':setuputils.clean}
   extmods=[]
@@ -43,7 +43,7 @@ description  = "pyCGNS PATternMaker - CGNS/Python patterns for SIDS and other",
 author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",
-packages=['CGNS.PAT','CGNS.PAT.SIDS'],
+packages=['CGNS.PAT','CGNS.PAT.SIDS','CGNS.PAT.tests'],
 ext_modules  = extmods,
 cmdclass     = cmdclassdict
 )

@@ -64,6 +64,7 @@ errorTable={
    28 : "Node [%s] should have no child",
    29 : "Node name cannot be '.' or '..'",
    30 : "Nodes [%s] and [%s] are different",
+   31 : "Node name cannot be only ' '",
    40 : "Node [%s] has type [%s] which is not a CGNS/SIDS type",
    90 : "Node is None!",
    91 : "Root node can have only CGNSBase_t or CGNSLibraryVersion_t children",
