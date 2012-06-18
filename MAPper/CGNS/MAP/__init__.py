@@ -8,6 +8,7 @@
 # now all the code is in CHLone and its CGNS/Python interface
 #
 from CHLone import load
+from CHLone import load2
 from CHLone import save
 from CHLone import CHLoneException as error
 #
