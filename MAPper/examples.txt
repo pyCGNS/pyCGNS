@@ -35,9 +35,9 @@ performed with the simple line::
 .. code-block:: python
    :emphasize-lines: 3,5
 
- (tree,links)=CGNS.MAP.load("001Disk.hdf",CGNS.MAP.S2P_DEFAULT|)
+   (tree,links)=CGNS.MAP.load("001Disk.hdf",CGNS.MAP.S2P_DEFAULT|)
 
- print tree
+   print tree
 
 
 To be more precise, you can add the *depth*, the *path* and the *linkpath* of the file. In our case, the *depth* is worth 0 and the 
