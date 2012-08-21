@@ -3269,8 +3269,8 @@ cdef class pyCGNS(object):
     return name
 
   # ------------------------------------------------------------------------------------------
-##   cpdef multifam_write(self, char * name, char * fam):
-##       self._error=cgnslib.cg_multifam_write(name,fam)
+  cpdef multifam_write(self, char * name, char * fam):
+      self._error=cgnslib.cg_multifam_write(name,fam)
     
 ##   cpdef family_name_write(self, int B, int F, char * name, char * family):
 ##     self._error=cgnslib.cg_family_name_write(self._root,B,F,name,family)

@@ -497,7 +497,7 @@ cdef extern from "cgnslib.h":
 ##   int cg_family_name_write(int fn, int B, int F, char *name, char *family)
   int cg_famname_write(char * family_name)
   int cg_famname_read(char *family_name)
-  int cg_multifam_write(char *name, char *family)
+ ##  int cg_multifam_write(char *name, char *family)
   char *cg_get_error()
   int cg_gopath(int fn, char *path)
   
