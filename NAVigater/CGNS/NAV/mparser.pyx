@@ -36,6 +36,7 @@ class CGNSparser:
       self._rsd=CGU.nodeByPath(r,T)
     for z in CGU.getAllNodesByTypeSet(T,[CGK.Zone_ts]):
       zT=CGU.nodeByPath(z,T)
+      print zT[1]
       if ((zlist==[]) or (z in zlist)):
         meshpath=z
         g=CGU.getAllNodesByTypeSet(zT,[CGK.GridCoordinates_ts])[0]
@@ -44,7 +45,7 @@ class CGNSparser:
         cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
         cz=CGU.nodeByPath("%s/CoordinateZ"%gT[0],gT)
         zonetype=CGU.getAllNodesByTypeSet(zT,[CGK.ZoneType_ts])
-        ztype=CGU.nodeByPath(zonetype[0],zT)      
+        ztype=CGU.nodeByPath(zonetype[0],zT)
         if (ztype[1].tostring()==CGK.Structured_s):          
           shx=cx[1].shape
           scx=cx[1].reshape(shx)
@@ -182,6 +183,9 @@ class Mesh(CGNSparser):
       for i in range(idim):
        data.InsertNextTuple3(i+1,j+1,k+1)
        p=i+j*idim+k*idim*jdim
+##        x = (<float*>CNPY.PyArray_GETPTR1(dx,p))[0]
+##        y = (<float*>CNPY.PyArray_GETPTR1(dy,p))[0]
+##        z = (<float*>CNPY.PyArray_GETPTR1(dz,p))[0]
        x = (<double*>CNPY.PyArray_GETPTR1(dx,p))[0]
        y = (<double*>CNPY.PyArray_GETPTR1(dy,p))[0]
        z = (<double*>CNPY.PyArray_GETPTR1(dz,p))[0]
@@ -196,13 +200,14 @@ class Mesh(CGNSparser):
     a.GetProperty().SetRepresentationToWireframe()
     g.GetPointData().AddArray(data)
     for s in solution:
-      array=vtk.vtkFloatArray()
-      array.SetName(s[0])
-      for k in range(kdim-1):
-        for j in range(jdim-1):
-          for i in range(idim-1):
-            array.InsertNextTuple1(s[1][i][j][k])
-      g.GetCellData().AddArray(array)
+      if (s[1].shape==(idim-1,jdim-1,kdim-1)):
+        array=vtk.vtkFloatArray()
+        array.SetName(s[0])
+        for k in range(kdim-1):
+          for j in range(jdim-1):
+            for i in range(idim-1):
+              array.InsertNextTuple1(s[1][i][j][k])
+        g.GetCellData().AddArray(array)
     return (a,a.GetBounds(),g,path,(0,(idim,jdim,kdim)))
 
 #  @cython.boundscheck(False)

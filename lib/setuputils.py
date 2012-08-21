@@ -271,7 +271,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
   notfound=1
   vers=''
   cgnsversion='3130'
-  libs=['cgns','hdf5']
+  libs=['cgns','hdf5']+libs
   extraargs=[]#'-DCG_BUILD_SCOPE']
   for pth in pincs:
     if (os.path.exists(pth+'/cgnslib.h')):
@@ -315,6 +315,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
     print pfx,"Warning: ADFH.h not found, using pyCGNS own headers"
     extraargs+=['-U__ADF_IN_SOURCES__']
 
+  libs=list(set(libs))
   return (cgnsversion,pincs,plibs,libs,extraargs)
 
 # --------------------------------------------------------------------
