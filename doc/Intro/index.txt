@@ -10,15 +10,17 @@ A Python package for CGNS
 
    - `CGNS.MAP` is now a wrapper 
      to `CHLone <http://chlone.sourceforge.net/>`_ python module
+   - `CGNS.WRA` re-coding using cython
    - completely new `CGNS.NAV` using *Qt*, *VTK* and *Cython*
-   - new pages :ref:`CGNS How to? <topix:cgnshowto>`
+   - YouTube demos `here <http://www.youtube.com/user/pyCGNS?feature=watch>`_
+
+..    - new pages `CGNS How to? <ch2/cgnshowto.html>`_
 
 The package gathers various tools and libraries for CGNS end-users and
 Python application developpers. The main object of *pyCGNS* is to provide the
 application developpers with a Python interface to :term:`CGNS/SIDS`, the data
 model. The *MAP* and *PAT* modules are dedicated to this goal: map the 
-*CGNS/SIDS* data model 
-to a :ref:`Python implementation <mapix:reference_sids_to_python>`. 
+:term:`CGNS/SIDS` data model the :term:`CGNS/Python` implementation. 
 The *WRA* module contains wrapper on :term:`CGNS/MLL`
 and a *MLL-like* set of functions that uses the
 :term:`CGNS/Python` mapping as implementation.

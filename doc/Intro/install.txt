@@ -13,28 +13,47 @@ Build and Install
    pair: Installation; hdf5
    pair: Installation; CHLone
 
+The installation described here is for UNIX platforms only.
+
+The installation process is easy in the case you already have the required
+libraries and a standard configuration.
+
 Required libraries
 ~~~~~~~~~~~~~~~~~~
 
 The first step of the installation is to make sure you have the required
-libraries. The mandatory libs are *Python*, *numpy*, *HDF5* and *CHLone*. 
-Then, if you wan to build *CGNS.WRA* (we recommend to do so), you 
+libraries. We have now a quite large set of libraries, we are trying hard to
+use well known and easy to install libraries but we must admit this could
+be a difficult task to install all by yourself...
+
+The mandatory libs are *Python*, *numpy*, *HDF5* and *CHLone*, *VTK*
+and *Qt*. The *cython* compiler and *scons* (for CHLone) are also required.
+Then, if you want to build *CGNS.WRA* (we recommend to do so), you 
 need *libcgns*.
 
 .. warning::
 
-  **OUPS !** you mean I don't need *libcgns* for the *CGNS/Python* mapping ?
+  The *libcgns* (:term:`CGNS/MLL`) is **NOT** required for pyCGNS.
+  You need it if you want the **WRA** module, all other pyCGNS tools
+  are using :term:`CHLone`.
 
-  **NO** you don't, *CGNS* is a data model (so-called *CGNS/SIDS*) and some
-  mapping definitions of this model (such as *CGNS/HDF* for example).
-  *pyCGNS* uses *`CHLone <http://chlone.sourceforge.net>`_*
-  which is another *CGNS/HDF5* compliant implementation.
+The complete set of required tools/modules/libraries contains Python, HDF5
+and other graphical toolkits:
 
 * `Python <http://www.python.org>`_ (starting from v2.4)
 * `numpy <http://numpy.scipy.org>`_ (v1.1 +)
+* `cython <http://www.cython.org>`_ (v0.16 +)
 * `hdf5 <http://www.hdfgroup.org>`_ (v1.8.5 +)
 * `CHLone <http://chlone.sourceforge.net>`_ (v0.4 +)
-* `tktreectrl <http://sourceforge.net/projects/tktreectrl>`_ (v2.2 +)
+* `VTK <http://www.vtk.org>`_ (v5.8 +)
+* `Qt <http://qt.nokia.com/products>`_ (v4.7 +)
+* `pySide <http://www.pyside.org>`_ (v4.7 +)
+
+The *VTK* and the *Qt* graphical toolkits need to have a Python binding.
+The important point is to use the **native** Python binding of these toolkits,
+not any other (see installation details hereafter). 
+
+No Python binding is required for HDF5.
 
 .. index::
    single: CGNS/MLL
@@ -121,17 +140,10 @@ To avoid overwriting, use Python to update the config::
   HDF5_PATH_LIBRARIES   = ['/home/myself/hdf5/lib']
   #HDF5_LINK_LIBRARIES   = []
   HDF5_EXTRA_ARGS       = HDF5_EXTRA_ARGS + ['-DMYFLAG']
+
+You do not have to specify the VTK nor the Qt libraries, there is no direct
+link to these libraries: the Python modules will do that.
   
-Release Notes
--------------
-
- Many changes in this v4 release, you can only use MAP, WRA, PAT and NAV.
- The other modules, VAL, TRA and DAT are present for archival/development
- purpose but you should NOT use them.
-
- Please go to `http://www.python-science.org/projects/pyCGNS` to have the
- version/tickets list.
-
 Module dependancies
 -------------------
 
@@ -146,8 +158,33 @@ gives you the required modules (or optional) for each of them.
 
 NAV depends
 ~~~~~~~~~~~
+The CGNS.NAV tool uses two graphical toolkits, one for the GUI (Qt) and another
+one for the graphical view window (VTK). The VTK toolkit must have its
+Python binding installed. You should not use `pyVTK` but the native Python
+binding of VTK. To do so, edit the VTK configuration file to set the Python
+wrapping and all associated paths. And example of production could be::
 
-VTK Qt PySide
+  cd VTK
+  mkdir B
+  cd B
+  cmake ..
+
+Then edit the `CMakeCache.txt` file::
+
+  //Wrap VTK classes into the Python language.
+  VTK_WRAP_PYTHON:BOOL=ON
+
+And build/install...
+
+The Qt toolkit is used with the PySide Python binding, which is its official
+bindingwith this langage. We do not use pyQt. You can check you have the 
+correct bindings by typing::
+
+  python
+  >>>import vtk
+  >>>import PySide
+
+Both should not fail...
 
 MAP depends
 ~~~~~~~~~~~
@@ -160,14 +197,29 @@ WRA depends
 *CGNS/MLL* and *CGNS/ADF* libraries are required.
 You should build the CGNS libraries with the ``CG_BUILD_SCOPE`` 
 set to ``True``. To do so, edit your ``CMakeCache.txt`` file
-and set the following variable to ``ON``.
+and set the following variable to ``ON``::
 
-.. highlight:: c
-
-.. code-block:: c
- 
  //Enable or disable scoping of enumeration values
  ENABLE_SCOPING:BOOL=ON
  
+ //Build the CGNSTools package
+ BUILD_CGNSTOOLS:BOOL=ON
+
+ //Build a shared version of the library
+ CGNS_BUILD_SHARED:BOOL=ON
+
+ //Enable or disable the use of Fortran
+ ENABLE_FORTRAN:BOOL=ON
+
+ //Enable or disable HDF5 interface
+ ENABLE_HDF5:BOOL=ON
+
+The WRA and NAV modules (and CHLone by the way) are using cython. You can
+check your cython is present using::
+
+   cython --version
+
+That should not fail...
+
 
 .. -------------------------------------------------------------------------

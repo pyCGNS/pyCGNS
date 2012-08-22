@@ -7,14 +7,18 @@ CGNS.PAT
 ========
 
 The *PATtern* module provides the user with functions dedicated to
-:ref:`CGNS/Python <mapix:reference_sids_to_python>` trees.
+:term:`CGNS/Python` trees.
 The :ref:`PAT.cgnslib <pat_cgnslib>` module uses the *SIDS* compliant data 
 structures, you
 can create, read, check, modify some 
-:ref:`CGNS/Python <mapix:reference_sids_to_python>` sub-trees related to a
+:term:`CGNS/Python` sub-trees related to a
 *SIDS* type.
+With this module you are working with a Python data structure, all function
+are using plain Python/Numpy objects. Thus, the  *PAT* module is not required
+for your applications, as you can write your own function to handle these
+Python objects.
 The :ref:`PAT.cgnsutils <pat_cgnsutils>` provides utility fonctions 
-for raw :ref:`CGNS/Python <mapix:reference_sids_to_python>` trees or nodes.
+for raw :term:`CGNS/Python` trees or nodes.
 The *PAT* defines also constant modules such as 
 :ref:`PAT.cgnskeywords <pat_cgnskeywords>` for all
 *SIDS* names or constant strings, 
@@ -34,11 +38,10 @@ Utilities
 ---------
 
 The `CGNS.PAT.cgnsutils` has a large set of utility functions using
-the :ref:`CGNS/Python <mapix:reference_sids_to_python>` nodes,
+the :term:`CGNS/Python` nodes,
 sub-trees or trees as arguments, you can manipulate tree paths, links,
 values.  Functions are not gathered into a class because we want them
-to proceed on standard 
-:ref:`CGNS/Python <mapix:reference_sids_to_python>` trees. Most functions have an
+to proceed on standard :term:`CGNS/Python` trees. Most functions have an
 optional error management, you can ask them to raise an exception or
 to return None. The `dienow` argument is set to `False` as default,
 which means a error would return a `None`. A `dienow` set to `True`
@@ -55,7 +58,6 @@ The list below gives an overview of publicly available functions.
  * Node life cycle: :py:func:`nodeCreate <CGNS.PAT.cgnsutils.nodeCreate>` -
    :py:func:`nodeCopy <CGNS.PAT.cgnsutils.nodeCopy>` -
    :py:func:`nodeDelete <CGNS.PAT.cgnsutils.nodeDelete>` -
-   :py:func:`nodeLink <CGNS.PAT.cgnsutils.nodeLink>`
 
  * Check functions: :py:func:`checkNode <CGNS.PAT.cgnsutils.checkNode>` -
    :py:func:`checkRootNode <CGNS.PAT.cgnsutils.checkRootNode>` -
@@ -64,7 +66,6 @@ The list below gives an overview of publicly available functions.
    :py:func:`checkSameNode <CGNS.PAT.cgnsutils.checkSameNode>` -
    :py:func:`checkDuplicatedName <CGNS.PAT.cgnsutils.checkDuplicatedName>` -
    :py:func:`checkPath <CGNS.PAT.cgnsutils.checkPath>` -
-   :py:func:`checkLink <CGNS.PAT.cgnsutils.checkLink>`-
 
  * Node true/false tests: :py:func:`hasChildType <CGNS.PAT.cgnsutils.hasChildType>` -
    :py:func:`hasAncestorType <CGNS.PAT.cgnsutils.hasAncestorType>` -
@@ -72,8 +73,6 @@ The list below gives an overview of publicly available functions.
    :py:func:`hasAncestorName <CGNS.PAT.cgnsutils.hasAncestorName>` -
    :py:func:`hasValue <CGNS.PAT.cgnsutils.hasValue>` -
    :py:func:`hasValueDataType <CGNS.PAT.cgnsutils.hasValueDataType>` -
-   :py:func:`hasChildLink <CGNS.PAT.cgnsutils.hasChildLink>` -
-   :py:func:`hasAncestorLink <CGNS.PAT.cgnsutils.hasAncestorLink>` -
    :py:func:`hasValueFlags <CGNS.PAT.cgnsutils.hasValueFlags>` -	
 
  * Data retrieval simple functions: :py:func:`getNodeByPath <CGNS.PAT.cgnsutils.getNodeByPath>` -
@@ -103,15 +102,6 @@ The list below gives an overview of publicly available functions.
    :py:func:`getPathNoRoot <CGNS.PAT.cgnsutils.getPathNoRoot>` -
    :py:func:`getPathAsTypes <CGNS.PAT.cgnsutils.getPathAsTypes>` -
    :py:func:`getPathNormalize <CGNS.PAT.cgnsutils.getPathNormalize>` -
-
- * Link manipulation:
-
-.. note:
-
-   The functions are not gathered into one or more classes because we want these to
-   
-
-
 
 .. automodule:: CGNS.PAT.cgnsutils
    :members:
@@ -146,7 +136,7 @@ the `data` variable::
 
  import BaseIterativeData_t.data as mysubtree
 
-The pattern is a :ref:`CGNS/Python <mapix:reference_sids_to_python>` list and
+The pattern is a :term:`CGNS/Python` list and
 thus it should be copied before any modification:: 
 
  import BaseIterativeData_t

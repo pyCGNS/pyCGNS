@@ -15,10 +15,10 @@ to :term:`CGNS/MLL` or :term:`CGNS/ADF`.
 Quick start
 -----------
 The MAPper is a module implementing 
-the :ref:`SIDS-to-Python <mapix:reference_sids_to_python>` mapping.
+the :term:`CGNS/Python` mapping.
 There are only two functions in the module: the **load** and the **save**.
 
-A simple exemple to load a *CGNS/HDF5* file as a *CGNS/Python* tree::
+A simple exemple to load a *CGNS/HDF5* file as a :term:`CGNS/Python` tree::
 
   import CGNS.MAP
 

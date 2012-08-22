@@ -22,10 +22,10 @@ do_mod()
 
 do_mod intro index doc/Intro intro ' '
 do_mod PAT readme PATternMaker PAT /PAT
-do_mod NAV readme NAVigater NAV /NAV
-do_mod MAP readme MAPper MAP /MAP
+#do_mod NAV readme NAVigater NAV /NAV
+#do_mod MAP readme MAPper MAP /MAP
 #do_mod DAT readme DATaTracer DAT /DAT
-do_mod WRA readme WRApper WRA /WRA
+#do_mod WRA readme WRApper WRA /WRA
 #do_mod APP readme APPlicater APP /APP
 #do_mod VAL readme VALidater VAL /VAL
 
@@ -39,7 +39,7 @@ cp build/doc/pdf/* ./build/doc/html/_pdf
 fi
 mkdir build/doc/html/images 2>/dev/null
 cp doc/images/* build/doc/html/images
-(cd build/doc/html; tar cvf ../pyCGNS-html.tar .)
+#(cd build/doc/html; tar cvf ../pyCGNS-html.tar .)
 
 # --- web site update
 #
