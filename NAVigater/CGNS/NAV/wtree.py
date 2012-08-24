@@ -253,7 +253,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.model().pasteAsBrotherAllSelectedNodes()
     def mpasteasbrother(self):
         if (self.getLastEntered() is not None):
-            self.model().pasteAsBrother(nself.getLastEntered())
+            self.model().pasteAsBrother(self.getLastEntered())
     def mpasteaschildselected(self):
         self.model().pasteAsChildAllSelectedNodes()
     def mpasteaschild(self):

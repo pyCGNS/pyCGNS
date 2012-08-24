@@ -146,8 +146,68 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.InteractorIndex=0
       self.txt=None
       self.observer=None
-      self.actorval=None
+      self.actorval=None      
+      self.planeActor=None
 
+  def setCutPlane(self):
+      if (self._currentactor is None): return
+      if (not vtk.vtkStructuredGrid().SafeDownCast(self._currentactor[1].GetMapper().GetInput())):
+          return
+      bounds=self._currentactor[1].GetBounds()
+      bds=[0,0,0]
+      bds[0]=(bounds[0]+bounds[1])/2.0
+      bds[1]=(bounds[3]+bounds[2])/2.0
+      bds[2]=(bounds[5]+bounds[4])/2.0
+      grid=self._currentactor[1].GetMapper().GetInput()
+      filter=vtk.vtkStructuredGridGeometryFilter()
+      filter.SetInputConnection(grid.GetProducerPort())
+      self.planeWidget.SetPlaceFactor(1.0)
+      self.planeWidget.GetOutlineProperty().SetColor(0,1,1)
+      self.planeWidget.OutlineTranslationOff()
+      self.planeWidget.SetInput(filter.GetOutput())
+      self.planeWidget.PlaceWidget()
+      self.planeWidget.SetOrigin(bds[0],bds[1],bds[2])
+      self.planeWidget.SetNormal(1,0,0)
+      self.planeWidget.On()
+      self.planeWidget.AddObserver("InteractionEvent",self.myCallback)
+      self._iren.Render()
+
+  def myCallback(self,*args):
+      if (self.planeWidget.GetDrawPlane()==0):
+          self.planeWidget.DrawPlaneOn()
+
+  def cutting(self):
+      if ((self._currentactor is None) or (self.planeWidget.GetEnabled()==0)): return
+      if (self.planeActor is not None):
+          self._vtkren.RemoveActor(self.planeActor)
+      variable=self.cVariables.currentText()
+      origin=self.planeWidget.GetOrigin()
+      normal=self.planeWidget.GetNormal()
+      plane=vtk.vtkPlane()
+      plane.SetOrigin(origin)
+      plane.SetNormal(normal)
+      grid=self._currentactor[1].GetMapper().GetInput()
+      filter=vtk.vtkStructuredGridGeometryFilter()
+      filter.SetInputConnection(grid.GetProducerPort())
+      cutter=vtk.vtkCutter()
+      cutter.SetCutFunction(plane)
+      cutter.SetInput(grid)
+      cutter.Update()
+      cutterMapper=vtk.vtkPolyDataMapper()
+      cutterMapper.SetInputConnection(cutter.GetOutputPort())
+      cutterMapper.SetScalarModeToUseCellData()
+      cutterMapper.ScalarVisibilityOn()
+      cutterMapper.SetLookupTable(self.lut)
+      self.planeActor=vtk.vtkActor()
+      self.planeActor.GetProperty().SetColor(1,1,0)
+      self.planeActor.GetProperty().SetLineWidth(15)
+      self.planeActor.GetProperty().SetRepresentationToSurface()
+      self.planeActor.SetMapper(cutterMapper)
+      self.planeActor.GetMapper().GetInput().GetCellData().SetActiveScalars(variable)
+      self.planeWidget.DrawPlaneOff()
+      self._vtkren.AddActor(self.planeActor)
+      self._iren.Render()
+            
   def mouseReleaseEvent(self, ev):
         self._ActiveButton=ev.button()
         ctrl=self._iren.GetControlKey()
@@ -209,7 +269,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (self.cShowValue.isChecked()):
         self.observer=self._iren.AddObserver("MouseMoveEvent",self.displayScalars)
       elif (self.observer is not None):
-          self._iren.RemoveObserver(self.observer)
+        self._iren.RemoveObserver(self.observer)
           
   def displayScalars(self,*args):
       self.setPickableOff()
@@ -278,8 +338,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
               self.cVariables.addItem(i)
       
   def getVariable(self,*args):
+      if (self.planeWidget.GetEnabled()==1):
+          self.planeWidget.Off()
       index=self.cVariables.currentIndex()
-      if (index==0):
+      if ((index==0) or (not self.cShowValue.isChecked())):
           if (self.observer is not None):
               self._iren.RemoveObserver(self.observer)
           self.cShowValue.setChecked(0)
@@ -595,6 +657,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.widget.SetInteractor(self._iren)
       self.widget.On()
       self.widget.InteractiveOff()
+      self.planeWidget=vtk.vtkImplicitPlaneWidget()
+      self.planeWidget.SetInteractor(self._iren)
       self.fillCurrentPath()
       
       self._vtkren.AddObserver("StartEvent", self.posWidgets)
@@ -947,6 +1011,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def changeCurrentActor(self,atp,combo=True):
       self.resetSpinBox()
+      if (self.planeWidget is not None):
+          if (self.planeWidget.GetEnabled()==1):
+              self.planeWidget.Off()
+          if (self.planeActor is not None):
+              self._vtkren.RemoveActor(self.planeActor)
       if (not self.actorpt is None):
           self._vtkren.RemoveActor(self.actorpt)
       path =atp[0]
@@ -989,6 +1058,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self.OutlineActor.GetProperty().SetAmbient(1.0)
           self.OutlineActor.GetProperty().SetDiffuse(0.0)
           self.OutlineActor.GetProperty().SetLineWidth(1.2)
+          self.OutlineActor.SetScale(1.01,1.01,1.01)
           if (self.CurrentRenderer!=self.PickedRenderer):
               if (not self.PickedRenderer is None and not self.OutlineActor is None):
                   self.PickedRenderer.RemoveActor(self.OutlineActor)
@@ -1300,9 +1370,10 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
           self._parent.setPick()
       if (keycode=='p' or keycode=='P'):
           self._parent.pickElement()
-          if (self._parent.actorpt is not None):
-              print 'toto'
-              print self._parent.actorpt.GetProperty().GetColor()
+      if (keycode=='o' or keycode=='O'):
+          self._parent.setCutPlane()
+      if (keycode=='t' or keycode=='T'):
+          self._parent.cutting()      
       if (control==1): self._parent.controlKey=1
 
 # --------------------------------------------------------------------------------------------------------
@@ -1804,23 +1875,24 @@ class Q7VTKPlot(Q7Window,Ui_Q7VTKPlotWindow):
       
       self._parser=Mesh(T,zlist)
       self._rsd=self._parser.getResidus()
-      variables=[]
-      self.index={}
-      k=0
-      for i in self._rsd[2]:
-          variables+=[i[0]]
-          self.index[i[0]]=k
-          k+=1
+      if (self._rsd is not None):
+          variables=[]
+          self.index={}
+          k=0
+          for i in self._rsd[2]:
+              variables+=[i[0]]
+              self.index[i[0]]=k
+              k+=1
 
-      self.setVariableX(variables)
-      self.setVariableY(variables)
+          self.setVariableX(variables)
+          self.setVariableY(variables)
+          
       self._vtkren.SetBackground(1,1,1)
       self._vtkren.GetActiveCamera().ParallelProjectionOn()
       self._vtkren.ResetCamera()
       
       return self._vtk.GetRenderWindow()
-     
-      
+           
   def b_loadview(self,name=None):
       vname=self.cViews.currentText()
       if (self._camera.has_key(vname)):

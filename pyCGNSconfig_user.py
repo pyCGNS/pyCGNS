@@ -60,7 +60,7 @@ NUMPY_LINK_LIBRARIES  = []#'irc']
 
 MLL_INSTALL=mllroot
 HAS_MLL               = True 
-MLL_PATH_LIBRARIES    = [MLL_INSTALL+'/lib']
+MLL_PATH_LIBRARIES    = [MLL_INSTALL+'/lib','/opt/intel/Compiler/11.1/072/lib/intel64']
 MLL_LINK_LIBRARIES    = []#'irc']
 MLL_PATH_INCLUDES     = [MLL_INSTALL+'/include'] 
 #MLL_VERSION           = '' 
