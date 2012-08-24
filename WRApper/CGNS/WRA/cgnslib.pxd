@@ -489,7 +489,7 @@ cdef extern from "cgnslib.h":
   int cg_dataclass_read(DataClass_t *dataclass)
   int cg_gridlocation_write(GridLocation_t GridLocation)
   int cg_gridlocation_read(GridLocation_t *GridLocation)
-  int cg_delete_node(char *node_name)
+##   int cg_delete_node(char *node_name)
   int cg_ordinal_read(int *Ordinal)
   int cg_ordinal_write(int Ordinal)
   int cg_ptset_info(PointSetType_t *ptset_type, cgsize_t *npnts)
@@ -498,6 +498,40 @@ cdef extern from "cgnslib.h":
   int cg_famname_write(char * family_name)
   int cg_famname_read(char *family_name)
  ##  int cg_multifam_write(char *name, char *family)
+  int cg_field_write(int fn, int B, int Z, int S, DataType_t type, char * fieldname,
+                     void * field_ptr, int *F)
+  int cg_nfields(int fn, int B, int Z, int S, int *nfields)
+  int cg_field_info(int fn,int B,int Z,int S, int F, DataType_t *type, char *fieldname)
+  int cg_field_read(int fn, int B, int Z, int S, char *fieldname, DataType_t type, cgsize_t *rmin,
+                    cgsize_t *rmax, void *field_ptr)
+  int cg_field_id(int fn, int B, int Z, int S, int F, double *field_id)
+  int cg_field_partial_write(int fn, int B, int Z, int S, DataType_t type, char * fieldname,
+                             cgsize_t *rmin, cgsize_t *rmax, void * field_ptr, int *F)
+  int cg_sol_ptset_write(int fn, int B, int Z, char *solname, GridLocation_t location,
+                         PointSetType_t ptset_type, cgsize_t npnts, cgsize_t *pnts, int *S)
+  int cg_sol_ptset_info(int fn, int B, int Z, int S, PointSetType_t *ptset_type, cgsize_t *npnts)
+  int cg_sol_ptset_read(int fn, int B, int Z, int S, cgsize_t *pnts)
+  int cg_subreg_ptset_write(int fn, int B, int Z, char *regname, int dimension, GridLocation_t location,
+                            PointSetType_t ptset_type, cgsize_t npnts, cgsize_t *pnts, int *S)
+  int cg_subreg_bcname_write(int fn, int B, int Z, char *regname, int dimension, char *bcname, int *S)
+  int cg_subreg_gcname_write(int fn, int B, int Z, char *regname, int dimension, char *gcname, int *S)
+  int cg_nsubregs(int fn, int B, int Z, int *nsubreg)
+  int cg_subreg_info(int fn, int B, int Z, int S, char *regname, int *dimension, GridLocation_t *location,
+                     PointSetType_t *ptset_type, cgsize_t *npnts, int *bcname_len, int *gcname_len)
+  int cg_subreg_ptset_read(int fn, int B, int Z, int S, cgsize_t *pnts)
+  int cg_subreg_bcname_read(int fn, int B, int Z, int S, char *bcname)
+  int cg_subreg_gcname_read(int fn, int B, int Z, int S, char *gcname)
+  int cg_nholes(int fn, int B, int Z, int *nholes)
+  int cg_hole_write(int fn, int B, int Z, char * holename, GridLocation_t location,
+                    PointSetType_t ptset_type, int nptsets, cgsize_t npnts, cgsize_t * pnts, int *I)
+  int cg_hole_read(int fn, int B, int Z, int I, cgsize_t *pnts)
+  int cg_hole_info(int fn, int B, int Z, int I, char *holename, GridLocation_t *location,
+                   PointSetType_t *ptset_type, int *nptsets, cgsize_t *npnts)
+  int cg_hole_id(int fn, int B, int Z, int I, double *hole_id)
+  int cg_rigid_motion_write(int fn, int B, int Z, char * name, RigidGridMotionType_t type, int *R)
+  int cg_n_rigid_motions(int fn, int B, int Z, int *n_rigid_motions)
+  int cg_rigid_motion_read(int fn, int B, int Z, int R, char *name, RigidGridMotionType_t *type)
+  int cg_arbitrary_motion_read(int fn, int B, int Z, int A, char *name, ArbitraryGridMotionType_t *type)
   char *cg_get_error()
   int cg_gopath(int fn, char *path)
   
@@ -587,3 +621,54 @@ cdef extern from "cgnslib.h":
 ## CGNSDLL int cg_nmultifam(int *nfams);
 ## CGNSDLL int cg_multifam_read(int N, char *name, char *family);
 ## CGNSDLL int cg_multifam_write(const char *name, const char *family);
+  
+## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
+##  *      Read and write OversetHoles_t Nodes  				 *
+## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+## CGNSDLL int cg_nholes(int fn, int B, int Z, int *nholes);
+## CGNSDLL int cg_hole_info(int fn, int B, int Z, int I, char *holename,
+## 	CGNS_ENUMT(GridLocation_t) *location,  CGNS_ENUMT(PointSetType_t) *ptset_type,
+## 	int *nptsets, cgsize_t *npnts);
+## CGNSDLL int cg_hole_read(int fn, int B, int Z, int I, cgsize_t *pnts);
+## CGNSDLL int cg_hole_id(int fn, int B, int Z, int I, double *hole_id);
+## CGNSDLL int cg_hole_write(int fn, int B, int Z, const char * holename,
+## 	CGNS_ENUMT(GridLocation_t) location, CGNS_ENUMT(PointSetType_t) ptset_type,
+## 	int nptsets, cgsize_t npnts, const cgsize_t * pnts, int *I);
+  
+## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
+##  *      Read and write RigidGridMotion_t Nodes				 *
+## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+## CGNSDLL int cg_n_rigid_motions(int file_number, int B, int Z,
+## 	int *n_rigid_motions);
+## CGNSDLL int cg_rigid_motion_read(int file_number, int B, int Z, int R,
+## 	char *name, CGNS_ENUMT(RigidGridMotionType_t) *type);
+
+## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
+##  *      Read and write ArbitraryGridMotion_t Nodes                       *
+## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+## CGNSDLL int cg_n_arbitrary_motions(int file_number, int B, int Z,
+## 	int *n_arbitrary_motions);
+## CGNSDLL int cg_arbitrary_motion_read(int file_number, int B, int Z, int A,
+## 	char *name, CGNS_ENUMT(ArbitraryGridMotionType_t) *type);
+## CGNSDLL int cg_arbitrary_motion_write(int file_number, int B, int Z,
+## 	const char * amotionname, CGNS_ENUMT(ArbitraryGridMotionType_t) type,
+##         int *A);
+
+## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
+##  *      Read and write SimulationType_t Node                             *
+## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+## CGNSDLL int cg_simulation_type_read(int file_number, int B,
+## 	CGNS_ENUMT(SimulationType_t) *type);
+## CGNSDLL int cg_simulation_type_write(int file_number, int B,
+## 	CGNS_ENUMT(SimulationType_t) type);
+
+## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
+##  *      Read and write BaseIterativeData_t Node                          *
+## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+## CGNSDLL int cg_biter_read(int file_number, int B, char *bitername, int *nsteps);
+## CGNSDLL int cg_biter_write(int file_number, int B, const char * bitername, int nsteps);

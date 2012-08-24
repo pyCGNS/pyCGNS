@@ -3269,8 +3269,292 @@ cdef class pyCGNS(object):
     return name
 
   # ------------------------------------------------------------------------------------------
-  cpdef multifam_write(self, char * name, char * fam):
-      self._error=cgnslib.cg_multifam_write(name,fam)
+  cpdef field_write(self, int B, int Z, int S, cgnslib.DataType_t dt, char * name, array):
+    cdef int F = -1
+    cdef int * iptr
+    cdef float * sptr
+    cdef double * dptr
+    
+    if (dt==RealSingle):
+      sarray=PNY.float32(array)
+      sptr=<float *>CNY.PyArray_DATA(sarray)
+      self._error=cgnslib.cg_field_write(self._root,B,Z,S,dt,name,sptr,&F)
+    elif (dt==RealDouble):
+      darray=PNY.float64(array)
+      dptr=<double *>CNY.PyArray_DATA(darray)
+      self._error=cgnslib.cg_field_write(self._root,B,Z,S,dt,name,dptr,&F)
+    elif (dt==Integer):
+      iarray=PNY.int32(array)
+      iptr=<int *>CNY.PyArray_DATA(iarray)
+      self._error=cgnslib.cg_field_write(self._root,B,Z,S,dt,name,iptr,&F)
+    else:
+      print "Fourth arg should be CG_RealDouble, CG_RealSingle or CG_Integer"
+      return
+    return F
+
+  # ------------------------------------------------------------------------------------------
+  cpdef nfields(self, int B, int Z, int S):
+    cdef int n = -1
+    self._error=cgnslib.cg_nfields(self._root,B,Z,S,&n)
+    return n
+  
+  # ------------------------------------------------------------------------------------------
+  cpdef field_info(self, int B, int Z, int S, int F):
+    cdef cgnslib.DataType_t dt
+    cdef char * name = " "
+    self._error=cgnslib.cg_field_info(self._root,B,Z,S,F,&dt,name)
+    return (dt,name)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef field_read(self, int B, int Z, int S, char * name, cgnslib.DataType_t dt,
+                   rmin, rmax):
+    cdef cgnslib.cgsize_t * rminptr
+    cdef cgnslib.cgsize_t * rmaxptr
+    cdef int * iptr
+    cdef float * sptr
+    cdef double * dptr
+    
+    ndim=self.base_read(B)[2]
+    rminarray=PNY.int32(rmin)
+    rmaxarray=PNY.int32(rmax)
+    rminptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(rminarray) 
+    rmaxptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(rmaxarray)
+    irng=[rmaxarray[i]-rminarray[i]+1 for i in range(ndim)]
+    array=PNY.ones((irng[0],irng[1],irng[2]))    
+
+    if (dt==RealSingle):
+      sarray=PNY.float32(array)
+      sptr=<float *>CNY.PyArray_DATA(sarray)
+      self._error=cgnslib.cg_field_read(self._root,B,Z,S,name,dt, rminptr,rmaxptr,sptr)
+      return sarray
+    elif (dt==RealDouble):
+      darray=PNY.float64(array)
+      dptr=<double *>CNY.PyArray_DATA(darray)
+      self._error=cgnslib.cg_field_read(self._root,B,Z,S,name,dt,rminptr,rmaxptr,dptr)
+      return darray
+    elif (dt==Integer):
+      iarray=PNY.int32(array)
+      iptr=<int *>CNY.PyArray_DATA(iarray)
+      self._error=cgnslib.cg_field_read(self._root,B,Z,S,name,dt,rminptr,rmaxptr,iptr)
+      return iarray
+    else:
+      print "Fourth arg should be CG_RealDouble, CG_RealSingle or CG_Integer"
+      return       
+     
+  # ------------------------------------------------------------------------------------------
+  cpdef field_id(self, int B, int Z, int S, int F):
+    cdef double fid = -1
+    self._error=cgnslib.cg_field_id(self._root,B,Z,S,F,&fid)
+    return fid
+
+  # ------------------------------------------------------------------------------------------
+  cpdef field_partial_write(self, int B, int Z, int S, cgnslib.DataType_t dt, char * name,
+                            rmin, rmax, array):
+
+    cdef int F = -1
+    cdef int * iptr
+    cdef float * sptr
+    cdef double * dptr
+    ndim=self.base_read(B)[2]
+    rminarray=PNY.int32(rmin)
+    rmaxarray=PNY.int32(rmax)
+    rminptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(rminarray) 
+    rmaxptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(rmaxarray)
+    if (dt==RealSingle):
+      sarray=PNY.float32(array)
+      sptr=<float *>CNY.PyArray_DATA(sarray)
+      self._error=cgnslib.cg_field_partial_write(self._root,B,Z,S,dt,name,rminptr,rmaxptr,sptr,&F)
+    elif (dt==RealDouble):
+      darray=PNY.float64(array)
+      dptr=<double *>CNY.PyArray_DATA(darray)
+      self._error=cgnslib.cg_field_partial_write(self._root,B,Z,S,dt,name,rminptr,rmaxptr,dptr,&F)
+    elif (dt==Integer):
+      iarray=PNY.int32(array)
+      iptr=<int *>CNY.PyArray_DATA(iarray)
+      self._error=cgnslib.cg_field_partial_write(self._root,B,Z,S,dt,name,rminptr,rmaxptr,iptr,&F)
+    else:
+      print "Fourth arg should be CG_RealDouble, CG_RealSingle or CG_Integer"
+      return
+    return F
+
+  # ------------------------------------------------------------------------------------------
+  cpdef sol_ptset_write(self, int B, int Z, char * name, cgnslib.GridLocation_t loc,
+                        cgnslib.PointSetType_t pst, cgnslib.cgsize_t npnts, pnts):
+      
+    cdef int S = -1
+    cdef cgnslib.cgsize_t * pntsptr
+    array=PNY.int32(pnts)
+    pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(array)
+    self._error=cgnslib.cg_sol_ptset_write(self._root,B,Z,name,loc,pst,npnts,pntsptr,&S)
+    return S
+
+  # ------------------------------------------------------------------------------------------
+  cpdef sol_ptset_info(self, int B, int Z, int S):
+      
+    cdef cgnslib.PointSetType_t pst
+    cdef cgnslib.cgsize_t npnts
+    self._error=cgnslib.cg_sol_ptset_info(self._root,B,Z,S,&pst,&npnts)
+    return (pst,npnts)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef sol_ptset_read(self, int B, int Z, int S):
+    cdef cgnslib.cgsize_t * pntsptr
+      
+    ndim=self.base_read(B)[2]
+    npnts=self.sol_ptset_info(B,Z,S)[1]
+    pnts=PNY.ones((npnts,ndim),dtype=PNY.int32)
+    pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(pnts)
+    self._error=cgnslib.cg_sol_ptset_read(self._root,B,Z,S,pntsptr)
+    return pnts
+
+  # ------------------------------------------------------------------------------------------
+  cpdef subreg_ptset_write(self, int  B, int Z, char * regname, int dim, cgnslib.GridLocation_t loc,
+                           cgnslib.PointSetType_t pst, cgnslib.cgsize_t npnts,pnts):
+    cdef int S = -1
+    cdef cgnslib.cgsize_t * pntsptr
+    array=PNY.int32(pnts)
+    pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(array)
+    self._error=cgnslib.cg_subreg_ptset_write(self._root,B,Z,regname,dim,loc,pst,npnts,pntsptr,&S)
+    return S
+
+  # ------------------------------------------------------------------------------------------
+  cpdef subreg_bcname_write(self, int B, int Z, char * regname, int dim, char * bcname):
+    cdef int S = -1
+    self._error=cgnslib.cg_subreg_bcname_write(self._root,B,Z,regname,dim,bcname,&S)
+    return S
+
+  # ------------------------------------------------------------------------------------------
+  cpdef subreg_gcname_write(self, int B, int Z, char *regname, int dim, char * gcname):
+    cdef int S = -1
+    self._error=cgnslib.cg_subreg_gcname_write(self._root,B,Z,regname,dim,gcname,&S)
+    return S
+
+  # ------------------------------------------------------------------------------------------
+  cpdef nsubregs(self, int B, int Z):
+    cdef int n = -1
+    self._error=cgnslib.cg_nsubregs(self._root,B,Z,&n)
+    return n
+
+  # ------------------------------------------------------------------------------------------
+  cpdef subreg_info(self, int B, int Z, int S):
+    cdef char * regname = " "
+    cdef int dim = -1
+    cdef cgnslib.GridLocation_t loc
+    cdef cgnslib.PointSetType_t pst
+    cdef cgnslib.cgsize_t npnts
+    cdef int bcl = -1
+    cdef int gcl = -1
+
+    self._error=cgnslib.cg_subreg_info(self._root,B,Z,S,regname,&dim,&loc,&pst,&npnts,&bcl,&gcl)
+    return (regname,dim,loc,pst,npnts,bcl,gcl)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef subreg_ptset_read(self, int B, int Z, int S):
+    cdef cgnslib.cgsize_t * pntsptr
+    npnts=self.subreg_info(B,Z,S)[4]
+    ndim=self.base_read(B)[2]
+    pnts=PNY.ones((npnts,ndim),dtype=PNY.int32)
+    pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(pnts)
+
+    self._error=cgnslib.cg_subreg_ptset_read(self._root,B,Z,S,pntsptr)
+    return pnts
+
+  # ------------------------------------------------------------------------------------------
+  cpdef subreg_bcname_read(self, int B, int Z, int S):
+    cdef char * bcname = " "
+
+    self._error=cgnslib.cg_subreg_bcname_read(self._root,B,Z,S,bcname)
+    return bcname
+
+  # ------------------------------------------------------------------------------------------
+  cpdef subreg_gcname_read(self, int B, int Z, int S):
+    cdef char * gcname = " "
+
+    self._error=cgnslib.cg_subreg_gcname_read(self._root,B,Z,S,gcname)
+    return gcname
+
+  # ------------------------------------------------------------------------------------------
+  cpdef hole_write(self, int B, int Z, char * name, cgnslib.GridLocation_t loc,
+                   cgnslib.PointSetType_t pst, int nptsets, cgnslib.cgsize_t npnts,
+                   pnts):
+    cdef int I = -1
+    cdef cgnslib.cgsize_t * pntsptr
+
+    array=PNY.int32(pnts)
+    pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(array)
+    self._error=cgnslib.cg_hole_write(self._root,B,Z,name,loc,pst,nptsets,npnts,pntsptr,&I)
+    return I
+
+  # ------------------------------------------------------------------------------------------
+  cpdef nholes(self, int B, int Z):
+    cdef int n = -1
+
+    self._error=cgnslib.cg_nholes(self._root,B,Z,&n)
+    return n
+
+  # ------------------------------------------------------------------------------------------
+  cpdef hole_info(self, int B, int Z, int I):
+    cdef char * name = " "
+    cdef cgnslib.GridLocation_t loc
+    cdef cgnslib.PointSetType_t pst
+    cdef int nptsets = -1
+    cdef cgnslib.cgsize_t npnts
+
+    self._error=cgnslib.cg_hole_info(self._root,B,Z,I,name,&loc,&pst,&nptsets,&npnts)
+    return (name,loc,pst,nptsets,npnts)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef hole_read(self, int B, int Z, int I):
+
+    cdef cgnslib.cgsize_t * pntsptr 
+
+    npnts=self.hole_info(B,Z,I)[4]
+    ndim=self.base_read(B)[2]
+    pnts=PNY.ones((npnts,ndim),dtype=PNY.int32)
+    pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(pnts)
+
+    self._error=cgnslib.cg_hole_read(self._root,B,Z,I,pntsptr)
+    return pnts
+
+  # ------------------------------------------------------------------------------------------
+  cpdef hole_id(self, int B, int Z, int I):
+    cdef double hid
+    self._error=cgnslib.cg_hole_id(self._root,B,Z,I,&hid)
+    return hid
+
+
+  # ------------------------------------------------------------------------------------------
+  cpdef rigid_motion_write(self, int B, int Z, char * name, cgnslib.RigidGridMotionType_t rgmt):
+    cdef int R = -1
+    self._error=cgnslib.cg_rigid_motion_write(self._root,B,Z,name,rgmt,&R)
+    print cgnslib.cg_get_error()
+    return R
+
+  # ------------------------------------------------------------------------------------------
+  cpdef n_rigid_motions(self, int B, int Z):
+    cdef int nrm = -1
+    self._error=cgnslib.cg_n_rigid_motions(self._root,B,Z,&nrm)
+    return nrm
+
+  # ------------------------------------------------------------------------------------------
+  cpdef rigid_motion_read(self, int B, int Z, int R):
+    cdef char * name = " "
+    cdef cgnslib.RigidGridMotionType_t rgmt
+    self._error=cgnslib.cg_rigid_motion_read(self._root,B,Z,R,name,&rgmt)
+    print cgnslib.cg_get_error()
+    return (name,rgmt)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef arbitrary_motion_read(self, int B, int Z, int A):
+    cdef char * name = " "
+    cdef cgnslib.ArbitraryGridMotionType_t agmt 
+    self._error=cgnslib.cg_arbitrary_motion_read(self._root,B,Z,A,name,&agmt)    
+    print cgnslib.cg_get_error()
+    return (name,agmt)
+    
+  
+##   cpdef multifam_write(self, char * name, char * fam):
+##       self._error=cgnslib.cg_multifam_write(name,fam)
     
 ##   cpdef family_name_write(self, int B, int F, char * name, char * family):
 ##     self._error=cgnslib.cg_family_name_write(self._root,B,F,name,family)
