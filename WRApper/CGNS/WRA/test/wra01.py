@@ -1,5 +1,6 @@
 import CGNS.WRA.mll as Mll
 import numpy as N
+import CGNS.PAT.cgnskeywords as CK
 
 # ----------------------------------------------------------------------
 

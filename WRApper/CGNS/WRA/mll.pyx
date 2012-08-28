@@ -10,7 +10,7 @@ which performs the `cg_open` and holds the opened file descriptor for
 subsequent calls.
 
 CGNS.WRA.mll is using a Cython wrapping, it replaces the CGNS.WRA._mll which
-was an old self-coded wrapper, difficult to maintain.
+was an old hand-coded wrapper, difficult to maintain.
 """
 import os.path
 import CGNS.PAT.cgnskeywords as CK
@@ -19,24 +19,24 @@ import numpy as PNY
 cimport cgnslib
 cimport numpy as CNY
 
-MODE_READ=0
-MODE_WRITE=1
-MODE_CLOSED=2
-MODE_MODIFY=3
-Structured=cgnslib.Structured
-Unstructured=cgnslib.Unstructured
-Integer=cgnslib.Integer
-RealSingle=cgnslib.RealSingle
-RealDouble=cgnslib.RealDouble
-Character=cgnslib.Character
-LongInteger=cgnslib.LongInteger
-CoordinateX='CoordinateX'
-CoordinateY='CoordinateY'
-CoordinateZ='CoordinateZ'
-CellCenter=cgnslib.CellCenter
-PENTA_6=14
-MAXDIMVALS=12
-CGNSMAXNAMESIZE=256
+MODE_READ   = 0
+MODE_WRITE  = 1
+MODE_CLOSED = 2
+MODE_MODIFY = 3
+
+CG_OK             = 0
+CG_ERROR          = 1
+CG_NODE_NOT_FOUND = 2
+CG_INCORRECT_PATH = 3
+CG_NO_INDEX_DIM   = 4
+
+Null              = 0
+UserDefined       = 1
+
+CG_FILE_NONE      = 0
+CG_FILE_ADF       = 1
+CG_FILE_HDF5      = 2
+CG_FILE_XML       = 3    
 
 # ------------------------------------------------------------
 cdef cg_open_(char *filename, int mode):
@@ -124,7 +124,7 @@ cdef class pyCGNS(object):
     function with it. The `__del__` of the Python object calls the `close`.
     """
     cgnslib.cg_close(self._root)
-    return CK.CG_OK
+    return CG_OK
   # ---------------------------------------------------------------------------
   cpdef float version(self):
     """
@@ -979,7 +979,7 @@ cdef class pyCGNS(object):
     """
     
     cdef int data_dim
-    dim_vals=PNY.ones((MAXDIMVALS,),dtype=PNY.int32)
+    dim_vals=PNY.ones((CK.ADF_MAX_DIMENSIONS,),dtype=PNY.int32)
     dim_valsptr=<int *>CNY.PyArray_DATA(dim_vals)
     self._error=cgnslib.cg_sol_size(self._root,B,Z,S,&data_dim,dim_valsptr)
     return (data_dim,dim_vals[0:data_dim])
@@ -1403,7 +1403,7 @@ cdef class pyCGNS(object):
     nixptr=<int *>CNY.PyArray_DATA(NormalIndex)
     if (NormalListFlag==1):
       ndt=<cgnslib.DataType_t>NormalDataType
-      if (ndt==RealDouble):
+      if (ndt==CK.RealDouble):
         nl=PNY.float64(NormalList)
         nlptrD=<double *>CNY.PyArray_DATA(nl)
         self._error=cgnslib.cg_boco_normal_write(self._root,B,Z,BC,nixptr,
@@ -1446,16 +1446,16 @@ cdef class pyCGNS(object):
     datatype=self.boco_info(B,Z,BC)[6]
     ztype=self.zone_type(B,Z)
     pdim=self.base_read(B)[3]
-    if (ztype==Unstructured):
+    if (ztype==CK.Unstructured):
       dim=1
-    elif (ztype==Structured):
+    elif (ztype==CK.Structured):
       dim=self.base_read(B)[2]  
     pnts=PNY.zeros((npnts,dim),dtype=PNY.int32)
     pntsptr=<int *>CNY.PyArray_DATA(pnts)
     if (nls==0):
       nl=PNY.zeros((3,))
     else:
-      if (datatype==RealDouble):
+      if (datatype==CK.RealDouble):
         nl=PNY.ones((nls/pdim,pdim),dtype=PNY.float64)
         nlptrD=<double *>CNY.PyArray_DATA(nl)
         self._error=cgnslib.cg_boco_read(self._root,B,Z,BC,pntsptr,nlptrD)
@@ -1598,7 +1598,7 @@ cdef class pyCGNS(object):
     cdef cgnslib.DataType_t dt
     cdef int dd = -1
     cdef cgnslib.cgsize_t * dvptr
-    dv = PNY.ones((MAXDIMVALS,),dtype=PNY.int32)
+    dv = PNY.ones((CK.ADF_MAX_DIMENSIONS,),dtype=PNY.int32)
     dvptr = <cgnslib.cgsize_t *>CNY.PyArray_DATA(dv)
     self._error=cgnslib.cg_array_info(A,aname,&dt,&dd,dvptr)
     return (aname,dt,dd,dv[0:dd])
@@ -1627,23 +1627,23 @@ cdef class pyCGNS(object):
     dt=self.array_info(A)[1]
     dv=self.array_info(A)[3]
     
-    if (dt==Integer):
+    if (dt==CK.Integer):
       data=PNY.ones(dv,dtype=PNY.int32)
       dataptrI=<int *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_read(A,dataptrI)
-    if (dt==LongInteger):
+    if (dt==CK.LongInteger):
       data=PNY.ones(dv,dtype=PNY.int64)
       dataptrI=<int *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_read(A,dataptrI)
-    if (dt==RealSingle):
+    if (dt==CK.RealSingle):
       data=PNY.ones(dv,dtype=PNY.float32)
       dataptrF=<float *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_read(A,dataptrF)
-    if (dt==RealDouble):
+    if (dt==CK.RealDouble):
       data=PNY.ones(dv,dtype=PNY.float64)
       dataptrD=<double *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_read(A,dataptrD)
-    if (dt==Character):
+    if (dt==CK.Character):
       data=PNY.array((""))
       dataptrC=<char *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_read(A,dataptrC)
@@ -1678,23 +1678,23 @@ cdef class pyCGNS(object):
     
     dv=self.array_info(A)[3]
 
-    if (type==Integer):
+    if (type==CK.Integer):
       data=PNY.ones(dv,dtype=PNY.int32)
       dataptrI=<int *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_read_as(A,type,dataptrI)
-    if (type==LongInteger):
+    if (type==CK.LongInteger):
       data=PNY.ones(dv,dtype=PNY.int64)
       dataptrI=<int *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_read_as(A,type,dataptrI)
-    if (type==RealSingle):
+    if (type==CK.RealSingle):
       data=PNY.ones(dv,dtype=PNY.float32)
       dataptrF=<float *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_read_as(A,type,dataptrF)
-    if (type==RealDouble):
+    if (type==CK.RealDouble):
       data=PNY.ones(dv,dtype=PNY.float64)
       dataptrD=<double *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_read_as(A,type,dataptrD)
-    if (type==Character):
+    if (type==CK.Character):
       data=PNY.array((""))
       dataptrC=<char *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_read_as(A,type,dataptrC)
@@ -1728,23 +1728,23 @@ cdef class pyCGNS(object):
     div=PNY.int32(dimv)
     dv=<cgnslib.cgsize_t *>CNY.PyArray_DATA(div)
         
-    if (dt==Integer):
+    if (dt==CK.Integer):
       data=PNY.int32(adata)
       dataptrI=<int *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_write(aname,dt,dd,dv,dataptrI)
-    if (dt==LongInteger):
+    if (dt==CK.LongInteger):
       data=PNY.int64(adata)
       dataptrI=<int *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_write(aname,dt,dd,dv,dataptrI)
-    if (dt==RealSingle):
+    if (dt==CK.RealSingle):
       data=PNY.float32(adata)
       dataptrF=<float *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_write(aname,dt,dd,dv,dataptrF)
-    if (dt==RealDouble):
+    if (dt==CK.RealDouble):
       data=PNY.float64(adata)
       dataptrD=<double *>CNY.PyArray_DATA(data)
       self._error=cgnslib.cg_array_write(aname,dt,dd,dv,dataptrD)
-    if (dt==Character):
+    if (dt==CK.Character):
       dataptrC=<char *>CNY.PyArray_DATA(adata)
       self._error=cgnslib.cg_array_write(aname,dt,dd,dv,dataptrC)
 
@@ -1885,7 +1885,7 @@ cdef class pyCGNS(object):
     
     cdef int dd = -1
     cdef cgnslib.cgsize_t * dvptr
-    dv=PNY.ones((MAXDIMVALS,),dtype=PNY.int32)    
+    dv=PNY.ones((CK.ADF_MAX_DIMENSIONS,),dtype=PNY.int32)    
     dvptr = <cgnslib.cgsize_t *>CNY.PyArray_DATA(dv)
     self._error=cgnslib.cg_discrete_size(self._root,B,Z,D,&dd,dvptr)
     return (dd,dv[0:dd])
@@ -1934,9 +1934,9 @@ cdef class pyCGNS(object):
     npnts=self.discrete_ptset_info(B,Z,D)[1]    
     ztype=self.zone_type(B,Z)
     pdim=self.base_read(B)[3]
-    if (ztype==Unstructured):
+    if (ztype==CK.Unstructured):
       dim=1
-    elif (ztype==Structured):
+    elif (ztype==CK.Structured):
       dim=self.base_read(B)[2]  
     pnts=PNY.zeros((npnts,dim),dtype=PNY.int32)
     pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(pnts)
@@ -2912,11 +2912,11 @@ cdef class pyCGNS(object):
     if (e.shape!=(5,)):
       print "Bad 2nd arg size: should be 5"
       return 
-    if (dt==RealSingle):
+    if (dt==CK.RealSingle):
       exp=PNY.float32(e)
       sexptr=<float *>CNY.PyArray_DATA(exp)
       self._error=cgnslib.cg_exponents_write(dt,sexptr)
-    elif (dt==RealDouble):
+    elif (dt==CK.RealDouble):
       exp=PNY.float64(e)
       dexptr=<double *>CNY.PyArray_DATA(exp)
       self._error=cgnslib.cg_exponents_write(dt,dexptr)
@@ -2979,7 +2979,7 @@ cdef class pyCGNS(object):
     cdef double * dexptr
     e=PNY.ones((5,))
     dt=self.exponents_info()
-    if (dt==RealSingle):
+    if (dt==CK.RealSingle):
       exp=PNY.float32(e)
       sexptr=<float *>CNY.PyArray_DATA(exp)
       self._error=cgnslib.cg_exponents_read(sexptr)
@@ -3011,11 +3011,11 @@ cdef class pyCGNS(object):
     if (e.shape!=(8,)):
       print "Bad 2nd arg size: should be 8"
       return 
-    if (dt==RealSingle):
+    if (dt==CK.RealSingle):
       exp=PNY.float32(e)
       sexptr=<float *>CNY.PyArray_DATA(exp)
       self._error=cgnslib.cg_expfull_write(dt,sexptr)
-    elif (dt==RealDouble):
+    elif (dt==CK.RealDouble):
       exp=PNY.float64(e)
       dexptr=<double *>CNY.PyArray_DATA(exp)
       self._error=cgnslib.cg_expfull_write(dt,dexptr)
@@ -3042,7 +3042,7 @@ cdef class pyCGNS(object):
     cdef double * dexptr
     e=PNY.ones((8,))
     dt=self.exponents_info()
-    if (dt==RealSingle):
+    if (dt==CK.RealSingle):
       exp=PNY.float32(e)
       sexptr=<float *>CNY.PyArray_DATA(exp)
       self._error=cgnslib.cg_expfull_read(sexptr)
@@ -3070,11 +3070,11 @@ cdef class pyCGNS(object):
 
     cdef float * sfactptr
     cdef double * dfactptr
-    if (dt==RealSingle):
+    if (dt==CK.RealSingle):
       cfact=PNY.float32(fact)
       sfactptr=<float *>CNY.PyArray_DATA(cfact)
       self._error=cgnslib.cg_conversion_write(dt,sfactptr)
-    elif (dt==RealDouble):
+    elif (dt==CK.RealDouble):
       cfact=PNY.float64(fact)
       dfactptr=<double *>CNY.PyArray_DATA(cfact)
       self._error=cgnslib.cg_conversion_write(dt,dfactptr)
@@ -3118,7 +3118,7 @@ cdef class pyCGNS(object):
     cdef double * dfactptr
     fact=PNY.ones((2,))
     dt=self.conversion_info()
-    if (dt==RealSingle):
+    if (dt==CK.RealSingle):
       cfact=PNY.float32(fact)
       sfactptr=<float *>CNY.PyArray_DATA(cfact)
       self._error=cgnslib.cg_conversion_read(sfactptr)
@@ -3275,15 +3275,15 @@ cdef class pyCGNS(object):
     cdef float * sptr
     cdef double * dptr
     
-    if (dt==RealSingle):
+    if (dt==CK.RealSingle):
       sarray=PNY.float32(array)
       sptr=<float *>CNY.PyArray_DATA(sarray)
       self._error=cgnslib.cg_field_write(self._root,B,Z,S,dt,name,sptr,&F)
-    elif (dt==RealDouble):
+    elif (dt==CK.RealDouble):
       darray=PNY.float64(array)
       dptr=<double *>CNY.PyArray_DATA(darray)
       self._error=cgnslib.cg_field_write(self._root,B,Z,S,dt,name,dptr,&F)
-    elif (dt==Integer):
+    elif (dt==CK.Integer):
       iarray=PNY.int32(array)
       iptr=<int *>CNY.PyArray_DATA(iarray)
       self._error=cgnslib.cg_field_write(self._root,B,Z,S,dt,name,iptr,&F)
@@ -3322,17 +3322,17 @@ cdef class pyCGNS(object):
     irng=[rmaxarray[i]-rminarray[i]+1 for i in range(ndim)]
     array=PNY.ones((irng[0],irng[1],irng[2]))    
 
-    if (dt==RealSingle):
+    if (dt==CK.RealSingle):
       sarray=PNY.float32(array)
       sptr=<float *>CNY.PyArray_DATA(sarray)
       self._error=cgnslib.cg_field_read(self._root,B,Z,S,name,dt, rminptr,rmaxptr,sptr)
       return sarray
-    elif (dt==RealDouble):
+    elif (dt==CK.RealDouble):
       darray=PNY.float64(array)
       dptr=<double *>CNY.PyArray_DATA(darray)
       self._error=cgnslib.cg_field_read(self._root,B,Z,S,name,dt,rminptr,rmaxptr,dptr)
       return darray
-    elif (dt==Integer):
+    elif (dt==CK.Integer):
       iarray=PNY.int32(array)
       iptr=<int *>CNY.PyArray_DATA(iarray)
       self._error=cgnslib.cg_field_read(self._root,B,Z,S,name,dt,rminptr,rmaxptr,iptr)
@@ -3360,15 +3360,15 @@ cdef class pyCGNS(object):
     rmaxarray=PNY.int32(rmax)
     rminptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(rminarray) 
     rmaxptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(rmaxarray)
-    if (dt==RealSingle):
+    if (dt==CK.RealSingle):
       sarray=PNY.float32(array)
       sptr=<float *>CNY.PyArray_DATA(sarray)
       self._error=cgnslib.cg_field_partial_write(self._root,B,Z,S,dt,name,rminptr,rmaxptr,sptr,&F)
-    elif (dt==RealDouble):
+    elif (dt==CK.RealDouble):
       darray=PNY.float64(array)
       dptr=<double *>CNY.PyArray_DATA(darray)
       self._error=cgnslib.cg_field_partial_write(self._root,B,Z,S,dt,name,rminptr,rmaxptr,dptr,&F)
-    elif (dt==Integer):
+    elif (dt==CK.Integer):
       iarray=PNY.int32(array)
       iptr=<int *>CNY.PyArray_DATA(iarray)
       self._error=cgnslib.cg_field_partial_write(self._root,B,Z,S,dt,name,rminptr,rmaxptr,iptr,&F)
@@ -3546,12 +3546,62 @@ cdef class pyCGNS(object):
 
   # ------------------------------------------------------------------------------------------
   cpdef arbitrary_motion_read(self, int B, int Z, int A):
-    cdef char * name = " "
+    cdef char * name = ""
     cdef cgnslib.ArbitraryGridMotionType_t agmt 
     self._error=cgnslib.cg_arbitrary_motion_read(self._root,B,Z,A,name,&agmt)    
-    print cgnslib.cg_get_error()
     return (name,agmt)
-    
+
+  # ------------------------------------------------------------------------------------------
+  cpdef arbitrary_motion_write(self, int B, int Z, char * name,
+                               cgnslib.ArbitraryGridMotionType_t agmt):
+    cdef int A = -1
+    self._error=cgnslib.cg_arbitrary_motion_write(self._root,B,Z,name,agmt,&A)
+    return A
+
+  # ------------------------------------------------------------------------------------------
+  cpdef n_arbitrary_motions(self, int B, int Z):
+    cdef int n = -1
+    self._error=cgnslib.cg_n_arbitrary_motions(self._root,B,Z,&n)
+    return n
+
+  # ------------------------------------------------------------------------------------------
+  cpdef simulation_type_write(self, int B, cgnslib.SimulationType_t st):
+    self._error=cgnslib.cg_simulation_type_write(self._root,B,st)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef simulation_type_read(self, int B):
+    cdef cgnslib.SimulationType_t st
+    self._error=cgnslib.cg_simulation_type_read(self._root,B,&st)
+    return st
+
+  # ------------------------------------------------------------------------------------------
+  cpdef biter_write(self, int B, char * name, int nsteps):
+    self._error=cgnslib.cg_biter_write(self._root,B,name,nsteps)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef biter_read(self, int B):
+    cdef char * name = ""
+    cdef int nsteps = -1
+    self._error=cgnslib.cg_biter_read(self._root,B,name,&nsteps)
+    return nsteps
+
+  # ------------------------------------------------------------------------------------------
+  cpdef ziter_write(self, int B, int Z, char * zname):
+    self._error=cgnslib.cg_ziter_write(self._root,B,Z,zname)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef ziter_read(self, int B, int Z):  
+    cdef char * zname = ""
+    biter=self.biter_read(B)
+    if (biter<0):
+      print 'error'
+    else:
+      self._error=cgnslib.cg_ziter_read(self._root,B,Z,zname)
+      return zname
+  
+##   # ------------------------------------------------------------------------------------------
+##   cpdef gravity_write(self, B, gvector):
+##     gravity_vector=PNY.float32(gvector)
   
 ##   cpdef multifam_write(self, char * name, char * fam):
 ##       self._error=cgnslib.cg_multifam_write(name,fam)

@@ -7,8 +7,11 @@ a=Mll.pyCGNS('tmp/testmll36.hdf',Mll.MODE_READ)
 t=a.n_rigid_motions(1,1)
 print t
 
-for i in range(t):
-    p=a.rigid_motion_read(1,1,i+1)
-    print p
+p=a.rigid_motion_read(1,1,1)
+print p
+
+## for i in range(t):
+##     p=a.rigid_motion_read(1,1,i+1)
+##     print p
 
 a.close()

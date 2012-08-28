@@ -2,15 +2,15 @@ import sys, os
 
 extensions = ['sphinx.ext.autodoc','sphinx.ext.intersphinx']
 mapdir='%s/../build/doc/html'%os.path.abspath('.')
-intersphinx_mapping={'topix': (mapdir+'/',None),
-                     'wraix': (mapdir+'/WRA',None),
-                     'mapix': (mapdir+'/MAP',None),
-                     'patix': (mapdir+'/PAT',None),
-                     'navix': (mapdir+'/NAV',None),
+#intersphinx_mapping={'topix': (mapdir+'/',None),
+#                     'wraix': (mapdir+'/WRA',None),
+#                     'mapix': (mapdir+'/MAP',None),
+#                     'patix': (mapdir+'/PAT',None),
+#                     'navix': (mapdir+'/NAV',None),
 #                     'appix': (mapdir+'/APP',None),
 #                     'valix': (mapdir+'/VAL',None),
 #                     'datix': (mapdir+'/DAT',None)
-                     }
+#                     }
 
 #templates_path = ['_templates']
 html_theme_path = ['.']
@@ -19,9 +19,9 @@ source_suffix = '.txt'
 import os
 master_doc=os.environ['PYCGNSDOC']
 project = u'pyCGNS'
-copyright = u'2010, Marc Poinot'
+copyright = u'2001-2012, Marc Poinot'
 version = '4'
-release = '4.0.1'
+release = '4.2.0'
 unused_docs = ['license.txt']
 exclude_trees = ['VALidater','TRAnslater','DATaTracer','APPlicater',
                  'build','doc','lib','.hg']

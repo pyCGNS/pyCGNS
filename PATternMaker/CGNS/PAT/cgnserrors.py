@@ -64,6 +64,7 @@ errorTable={
    28 : "Node [%s] should have no child",
    29 : "Node name cannot be '.' or '..'",
    30 : "Nodes [%s] and [%s] are different",
+   31 : "Node name cannot be only ' '",
    40 : "Node [%s] has type [%s] which is not a CGNS/SIDS type",
    90 : "Node is None!",
    91 : "Root node can have only CGNSBase_t or CGNSLibraryVersion_t children",
@@ -176,6 +177,8 @@ errorTable={
   294 : "Parent node should be FamilyBC_t",
   295 : "FamilyBCType is missing sub-node",
 
+  300 : "Zone creation requires a dimension tuple",
+    
   710 : "Numpy array should have a 'Fortran' order",
 
   800 : "adf.database_open No such open status [%s]",

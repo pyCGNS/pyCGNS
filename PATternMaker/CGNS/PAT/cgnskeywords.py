@@ -12,7 +12,7 @@
  [1] A CGNS/SIDS string constant is postfixed with _s
  'ZoneType' is ZoneType_s
 
- [2] A CGNS/SIDS string constant repersenting a type has _ts
+ [2] A CGNS/SIDS string constant naming a type has _ts
  'ZoneType_t' is ZoneType_ts
 
  [3] A list of possible values for a given type has _l
@@ -29,6 +29,10 @@
  [6] The variables are declared with an integer value (not enumerates)
  wrt their position in the _l list, for example:
  (Null,UserDefined,Structured,Unstructured)=ZoneType_.keys()
+
+ [7] The _t type names are reserved for Cython, enums are then used as int:
+ ctypedef int DataType_t
+ int cg_array_read_as(int A, DataType_t type, void *Data)
  
 """
 
@@ -41,44 +45,29 @@ def stringAsKeyDict(l):
 def enumAsKeyDict(l):
   return dict(zip(range(len(l)),l))
 
-# -------------------------------------------------- MLL numeric constants
-try:
-  CGNS_VERSION = int(float(CGNS.pyCGNSconfig.MLL_VERSION))
-  CGNS_DOTVERS = CGNS_VERSION/1000.
-except (TypeError,ValueError):
-  CGNS_VERSION = 3130
-  CGNS_DOTVERS = '3.1.3'
-
-MODE_READ  = 0
-MODE_WRITE = 1
-
-if (CGNS_VERSION<3000):
-  MODE_MODIFY = 3
-  MODE_CLOSED = 2
-else:
-  MODE_MODIFY = 2
-  MODE_CLOSED = 3
-
-CG_OK             = 0
-CG_ERROR          = 1
-CG_NODE_NOT_FOUND = 2
-CG_INCORRECT_PATH = 3
-CG_NO_INDEX_DIM   = 4
-
-Null              = 0
-UserDefined       = 1
-
-CG_FILE_NONE      = 0
-CG_FILE_ADF       = 1
-CG_FILE_HDF5      = 2
-CG_FILE_XML       = 3    
-
-CGNSHDF5ROOT_s = "HDF5 MotherNode"
-
 # --------------------------------------------------
-# --- ADF Datatypes
+# --- ADF-level Datatypes
 #
 (C1,I4,I8,R4,R8,MT,LK)=('C1','I4','I8','R4','R8','MT','LK')
+
+# --------------------------------------------------
+# --- ADF-level Constants
+#
+ADF_DATA_TYPE_LENGTH     =   32
+ADF_DATE_LENGTH          =   32
+ADF_FILENAME_LENGTH      = 1024
+ADF_FORMAT_LENGTH        =   20
+ADF_LABEL_LENGTH         =   32
+ADF_MAXIMUM_LINK_DEPTH   =  100
+ADF_MAX_DIMENSIONS       =   12
+ADF_MAX_ERROR_STR_LENGTH =   80
+ADF_MAX_LINK_DATA_SIZE   = 4096
+ADF_NAME_LENGTH          =   32
+ADF_STATUS_LENGTH        =   32
+ADF_VERSION_LENGTH       =   32
+
+ADF_ROOT_NODE_NAME  = "HDF5 MotherNode"
+ADF_ROOT_NODE_LABEL = "Root Node of HDF5 File"
 
 # -------------------------------------------------- (NOT SIDS)
 # --- CGNS/Python mapping extensions
@@ -103,7 +92,7 @@ InwardNormalIndex_ts2 = '"int[IndexDimension]"'
 # -------------------------------------------------- (SIDS)
 # SIDS
 #
-Null_s = "Null"
+Null_s        = "Null"
 UserDefined_s = "UserDefined"
 
 # --------------------------------------------------
@@ -111,8 +100,13 @@ Kilogram_s  = "Kilogram"
 Gram_s      = "Gram"
 Slug_s      = "Slug"
 PoundMass_s = "PoundMass"
-MassUnits_l = [Kilogram_s,Gram_s,Slug_s,PoundMass_s,
-               Null_s,UserDefined_s]
+MassUnits_l = [Null_s,UserDefined_s,
+               Kilogram_s,Gram_s,Slug_s,PoundMass_s]
+
+MassUnits   = stringAsKeyDict(MassUnits_l)
+MassUnits_  = enumAsKeyDict(MassUnits_l)
+(MassUnitsNull,MassUnitsUserDefined,
+ Kilogram,Gram,Slug,PoundMass)=MassUnits_.keys()
 
 # --------------------------------------------------
 Meter_s       = "Meter"
@@ -120,25 +114,43 @@ Centimeter_s  = "Centimeter"
 Millimeter_s  = "Millimeter"
 Foot_s        = "Foot"
 Inch_s        = "Inch"
-LengthUnits_l = [Meter_s,Centimeter_s,Millimeter_s,Foot_s,Inch_s,
-                 Null_s,UserDefined_s]
+LengthUnits_l = [Null_s,UserDefined_s,
+                 Meter_s,Centimeter_s,Millimeter_s,Foot_s,Inch_s]
+
+LengthUnits   = stringAsKeyDict(LengthUnits_l)
+LengthUnits_  = enumAsKeyDict(LengthUnits_l)
+(LengthUnitsNull,LengthUnitsUserDefined,
+ Meter,Centimeter,Millimeter,Foot,Inch)=LengthUnits_.keys()
 
 # --------------------------------------------------
 Second_s    = "Second"
-TimeUnits_l = [Second_s,Null_s,UserDefined_s]
+TimeUnits_l = [Null_s,UserDefined_s,Second_s]
+
+TimeUnits   = stringAsKeyDict(TimeUnits_l)
+TimeUnits_  = enumAsKeyDict(TimeUnits_l)
+(TimeUnitsNull,TimeUnitsUserDefined,Seconds)=TimeUnits_.keys()
 
 # --------------------------------------------------
 Kelvin_s           = "Kelvin"
 Celcius_s          = "Celcius"
 Rankine_s          = "Rankine"
 Fahrenheit_s       = "Fahrenheit"
-TemperatureUnits_l = [Kelvin_s,Celcius_s,Rankine_s,Fahrenheit_s,
-                      Null_s,UserDefined_s]
+TemperatureUnits_l = [Null_s,UserDefined_s,
+                      Kelvin_s,Celcius_s,Rankine_s,Fahrenheit_s]
+
+TemperatureUnits   = stringAsKeyDict(TemperatureUnits_l)
+TemperatureUnits_  = enumAsKeyDict(TemperatureUnits_l)
+(TemperatureUnitsNull,TemperatureUnitsUserDefined,
+ Kelvin,Celcius,Rankine,Fahrenheit)=TemperatureUnits_.keys()
 
 # --------------------------------------------------
 Degree_s     = "Degree"
 Radian_s     = "Radian"
-AngleUnits_l = [Degree_s,Radian_s,Null_s,UserDefined_s]
+AngleUnits_l = [Null_s,UserDefined_s,Degree_s,Radian_s]
+
+AngleUnits   = stringAsKeyDict(AngleUnits_l)
+AngleUnits_  = enumAsKeyDict(AngleUnits_l)
+(AngleUnitsNull,AngleUnitsUserDefined,Degree,Radian)=AngleUnits_.keys()
 
 # --------------------------------------------------
 Ampere_s               = "Ampere"
@@ -146,26 +158,47 @@ Abampere_s             = "Abampere"
 Statampere_s           = "Statampere"
 Edison_s               = "Edison"
 auCurrent_s            = "auCurrent"
-ElectricCurrentUnits_l = [Ampere_s,Abampere_s,Statampere_s,Edison_s,auCurrent_s,
-                          Null_s,UserDefined_s]
+ElectricCurrentUnits_l = [Null_s,UserDefined_s,
+                          Ampere_s,Abampere_s,Statampere_s,
+                          Edison_s,auCurrent_s]
+
+ElectricCurrentUnits   = stringAsKeyDict(ElectricCurrentUnits_l)
+ElectricCurrentUnits_  = enumAsKeyDict(ElectricCurrentUnits_l)
+(ElectricCurrentUnitsNull,ElectricCurrentUnitsUserDefined,
+ Ampere,Abampere,Statampere,
+ Edison,auCurrent)=ElectricCurrentUnits_.keys()
 
 # --------------------------------------------------
 Mole_s                 = "Mole"
 Entities_s             = "Entities"
 StandardCubicFoot_s    = "StandardCubicFoot"
 StandardCubicMeter_s   = "StandardCubicMeter"
-SubstanceAmountUnits_l =[Mole_s,Entities_s,StandardCubicFoot_s,StandardCubicMeter_s,
-                         Null_s,UserDefined_s]
+SubstanceAmountUnits_l =[Null_s,UserDefined_s,
+                         Mole_s,Entities_s,
+                         StandardCubicFoot_s,StandardCubicMeter_s]
+
+SubstanceAmountUnits   = stringAsKeyDict(SubstanceAmountUnits_l)
+SubstanceAmountUnits_  = enumAsKeyDict(SubstanceAmountUnits_l)
+(SubstanceAmountUnitsNull,SubstanceAmountUnitsUserDefined,
+ Mole,Entities,
+ StandardCubicFoot,StandardCubicMeter)=SubstanceAmountUnits_.keys()
 
 # --------------------------------------------------
-Candela_s                = "Candela"
-Candle_s                 = "Candle"
-Carcel_s                 = "Carcel"
-Hefner_s                 = "Hefner"
-Violle_s                 = "Violle"     
-LuminousIntensityUnits_l = [Candela_s,Candle_s,Carcel_s,Hefner_s,Violle_s,
-                            Null_s,UserDefined_s]
+Candela_s = "Candela"
+Candle_s  = "Candle"
+Carcel_s  = "Carcel"
+Hefner_s  = "Hefner"
+Violle_s  = "Violle"     
+LuminousIntensityUnits_l = [Null_s,UserDefined_s,
+                            Candela_s,Candle_s,Carcel_s,Hefner_s,Violle_s]
 
+LuminousIntensityUnits   = stringAsKeyDict(LuminousIntensityUnits_l)
+LuminousIntensityUnits_  = enumAsKeyDict(LuminousIntensityUnits_l)
+(LuminousIntensityUnitsNull,LuminousIntensityUnitsUserDefined,
+ Candela,Candle,Carcel,Hefner,Violle)=LuminousIntensityUnits_.keys()
+
+
+# --------------------------------------------------
 DimensionalUnits_s    = "DimensionalUnits"
 AdditionalUnits_s     = "AdditionalUnits"
 AdditionalExponents_s = "AdditionalExponents"
@@ -212,13 +245,13 @@ GridLocation_  = enumAsKeyDict(GridLocation_l)
 # ------------------------------------------------------------
 PointSetType_ts = "PointSetType_t"
 
-PointList_s                   = "PointList"
-PointListDonor_s              = "PointListDonor"
-PointRange_s                  = "PointRange"
-PointRangeDonor_s             = "PointRangeDonor"
-ElementRange_s                = "ElementRange"
-ElementList_s                 = "ElementList"
-CellListDonor_s               = "CellListDonor"
+PointList_s       = "PointList"
+PointListDonor_s  = "PointListDonor"
+PointRange_s      = "PointRange"
+PointRangeDonor_s = "PointRangeDonor"
+ElementRange_s    = "ElementRange"
+ElementList_s     = "ElementList"
+CellListDonor_s   = "CellListDonor"
 
 PointSetType_l = [Null_s,UserDefined_s,
                   PointList_s,PointListDonor_s,PointRange_s,PointRangeDonor_s,
@@ -230,7 +263,7 @@ PointSetType_ = enumAsKeyDict(PointSetType_l)
 
 # ------------------------------------------------------------
 BCDataType_ts = "BCDataType_t"
-BCDataType_s = "BCDataType"
+BCDataType_s  = "BCDataType"
 
 DirichletData_s = "DirichletData"
 NeumannData_s   = "NeumannData"
@@ -240,7 +273,7 @@ Neumann_s       = "Neumann"
 BCDataType_l=[Null_s,UserDefined_s,Dirichlet_s,Neumann_s]
 BCDataType   = stringAsKeyDict(BCDataType_l)
 BCDataType_  = enumAsKeyDict(BCDataType_l)
-(Null,UserDefined,Dirichlet,Neumann)=BCDataType_.keys()
+(BCDataTypeNull,BCDataTypeUserDefined,Dirichlet,Neumann)=BCDataType_.keys()
 
 FullPotential_s               = "FullPotential"
 Euler_s                       = "Euler"
@@ -303,16 +336,27 @@ DataType_l = [Null_s,UserDefined_s,
 DataType   = stringAsKeyDict(DataType_l)
 DataType_  = enumAsKeyDict(DataType_l)
 
-(Null,UserDefined,\
+(DataTypeNull,DataTypeUserDefined,\
  Integer,RealSingle,RealDouble,Character,LongInteger)=DataType_.keys()
 
 # --------------------------------------------------
+GridConnectivityType_ts = "GridConnectivityType_t"
+GridConnectivityType_s  = "GridConnectivityType"
+GridConnectivity_ts     = "GridConnectivity_t"
+ZoneGridConnectivity_ts = "ZoneGridConnectivity_t"
+ZoneGridConnectivity_s  = "ZoneGridConnectivity"
+
 Overset_s       = "Overset"
 Abutting_s      = "Abutting"
 Abutting1to1_s  = "Abutting1to1"
 
-GridConnectivityType_l = [Overset_s,Abutting_s,Abutting1to1_s,
-                          Null_s,UserDefined_s]
+GridConnectivityType_l = [Null_s,UserDefined_s,
+                          Overset_s,Abutting_s,Abutting1to1_s]
+GridConnectivityType   = stringAsKeyDict(GridConnectivityType_l)
+GridConnectivityType_  = enumAsKeyDict(GridConnectivityType_l)
+
+(Null_s,UserDefined_s,
+ Overset_s,Abutting_s,Abutting1to1_s)=GridConnectivityType_.keys()
 
 # --------------------------------------------------
 ZoneType_ts    = "ZoneType_t"
@@ -326,7 +370,7 @@ ZoneType_l     = [Null_s,UserDefined_s,Structured_s,Unstructured_s]
 ZoneType       = stringAsKeyDict(ZoneType_l)
 ZoneType_      = enumAsKeyDict(ZoneType_l)
 
-(Null,Userdefined,Structured,Unstructured)=ZoneType_.keys()
+(ZoneTypeNull,ZoneTypeUserdefined,Structured,Unstructured)=ZoneType_.keys()
 
 # --------------------------------------------------
 SimulationType_ts = "SimulationType_t"
@@ -362,7 +406,6 @@ AverageJ_s                    = "AverageJ"
 AverageK_s                    = "AverageK"
 CGNSLibraryVersion_s          = "CGNSLibraryVersion"
 GridCoordinates_s             = "GridCoordinates"
-ZoneGridConnectivity_s        = "ZoneGridConnectivity"
 CoordinateNames_s             = "CoordinateNames"
 CoordinateX_s                 = "CoordinateX"
 CoordinateY_s                 = "CoordinateY"
@@ -638,7 +681,6 @@ BaseIterativeData_s           = "BaseIterativeData"
 CGNSBase_ts                   = "CGNSBase_t"
 CGNSLibraryVersion_ts         = "CGNSLibraryVersion_t"
 
-
 # --------------------------------------------------
 ConvergenceHistory_ts         = "ConvergenceHistory_t"
 ZoneConvergenceHistory_s      = "ZoneConvergenceHistory"
@@ -675,25 +717,25 @@ FlowEquationSet_s             = "FlowEquationSet"
 FlowSolution_ts               = "FlowSolution_t"
 GasModel_ts                   = "GasModel_t"
 GasModel_s                    = "GasModel"
-#
+
 GeometryEntity_ts             = "GeometryEntity_t"
 GeometryFile_ts               = "GeometryFile_t"
 GeometryFile_s                = "GeometryFile"
 
-#chapter 12.7
 GeometryFormat_s              = "GeometryFormat"
 GeometryFormat_ts             = "GeometryFormat_t"
+
 # not supported '-'
 NASAIGES_s                    ="NASA-IGES"
+ICEMCFD_s                     ="ICEM-CFD"
+
 SDRC_s                        ="SDRC"
 Unigraphics_s                 ="Unigraphics"
 ProEngineer_s                 ="ProEngineer"
-ICEMCFD_s                     ="ICEM-CFD"
 GeometryFormat_l              =[Null_s,NASAIGES_s,SDRC_s,Unigraphics_s,
                                 ProEngineer_s,ICEMCFD_s,UserDefined_s]
 GeometryReference_ts          = "GeometryReference_t"
 GeometryReference_s           = "GeometryReference"
-
 
 Gravity_ts                    = "Gravity_t"
 Gravity_s                     = "Gravity"
@@ -702,9 +744,6 @@ GravityVector_s               = "GravityVector"
 GridConnectivity1to1_ts       = "GridConnectivity1to1_t"
 GridConnectivityProperty_ts   = "GridConnectivityProperty_t"
 GridConnectivityProperty_s    = "GridConnectivityProperty"
-GridConnectivityType_ts       = "GridConnectivityType_t"
-GridConnectivityType_s        = "GridConnectivityType"
-GridConnectivity_ts           = "GridConnectivity_t"
 
 GridCoordinates_ts            = "GridCoordinates_t"
 IndexArray_ts                 = "IndexArray_t"
@@ -997,7 +1036,6 @@ WallFunctionType_ts           = "WallFunctionType_t"
 WallFunctionType_s            = "WallFunctionType"
 ZoneBC_ts                     = "ZoneBC_t"
 ZoneBC_s                      = "ZoneBC"
-ZoneGridConnectivity_ts       = "ZoneGridConnectivity_t"
 ZoneIterativeData_ts          = "ZoneIterativeData_t"
 ZoneIterativeData_s           = "ZoneIterativeData"
 

@@ -3,15 +3,14 @@
 
 Welcome, you are now on '**CGNS How to?**', 
 the `Onera <http://www.onera.fr/english.php>`_ 
-CGNS users web site. If you don't kown about CGNS or if you want an exhaustive
+CGNS users web site.
+If you don't kown about CGNS or if you want an exhaustive
 information about it, you should see first
 the `official CGNS web site <http://www.cgns.org>`_
 (we refer to it as *cgns.org* in these pages).
 
 * You are just looking for a practical :term:`CGNS/SIDS` node use?  
 * Jump to :ref:`cross tables <crosstables>`.
-
-You want to browse the whole site, then click on **NEXT** tab above...
 
 .. _cgnshowto:
 
@@ -21,7 +20,6 @@ You want to browse the whole site, then click on **NEXT** tab above...
 The CGNS standard has been specified to cover a large part of the CFD data
 usage, a newcomer can be lost with all the possibilities CGNS offers.
 We have gathered here some practices of the Onera users of CGNS.
-
 Like a programming language, it is often useful to start by cloning
 existing simple examples, or finding out a pattern and copy it into
 another piece of code. The purpose of this site is to provide CGNS users
@@ -29,9 +27,7 @@ with materials taken from our CGNS experience.
 You obviously have to change the examples to fit with your own applications 
 parameters and requirements.
 
-.. note::
-   This is not the way you should do it, but the way we have done it.
-   Send feedback, remarks to *marc (dot) poinot (at) onera (dot) fr*
+Of course, all code examples are in CGNS/Python...
 
 .. toctree::
    :maxdepth: 2

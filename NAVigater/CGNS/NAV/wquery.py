@@ -36,6 +36,7 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
             v.setHorizontalHeaderItem(i,hi)
             lh.setResizeMode(i,QHeaderView.ResizeToContents)
         lh.setResizeMode(len(h)-1,QHeaderView.Stretch)
+        plist=[]
         for path in self._data:
             v.setRowCount(v.rowCount()+1)
             r=v.rowCount()-1

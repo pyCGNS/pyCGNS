@@ -18,8 +18,7 @@ replaced by the class itself which holds the required connection information.
 .. warning::
 
    The so-called *ADF* calls of the **v3** version of *CGNS* libraries 
-   can read/write *ADF* as well as *HDF5* 
-   files (see :ref:`File formats <wraix:v3multifileformat>`).
+   can read/write *ADF* as well as *HDF5* files.
 
 MLL Examples
 ------------

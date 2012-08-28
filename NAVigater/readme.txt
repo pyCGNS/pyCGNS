@@ -6,15 +6,20 @@
 CGNS.NAV
 ========
 
-The CGNS.NAV program allows to browse, to view and to edit CGNS files.
+The CGNS.NAV tool is a CGNS tree browser.
 
-This program provides 3 graphical user interfaces.
-Firstly, the ``control view`` allows to load a CGNS file and to find out the views you have and
-on which CGNS tree they refer to.
-Then, the ``tree view`` allows to browse and to modify the CGNS tree.
-Finally, the ``VTK view`` displays the mesh, element sets, connectivities and boundary 
-conditions written in the loaded CGNS file.
+There are three important views (or windows) you can open on a CGNS tree.
+The ``control view`` is the manager for all the views on all the trees you
+would open.
+The ``tree view`` is the main window you can open on a single tree.
+The ``VTK view`` displays the mesh, element sets, connectivities and boundary 
+conditions of your CGNS base.
 
+.. note::
+   The screenshots you have on these pages may be outdated. Most
+   features are unchanged from GUI version to another GUI version, but as the
+   update of all screenshots is long and tedious the actual GUI you would
+   have on your screen may be more or less close to these docs...
 
 Control view
 ------------

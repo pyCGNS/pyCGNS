@@ -127,55 +127,13 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_8">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="selectable">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="cursor">
-        <cursorShape>OpenHandCursor</cursorShape>
-       </property>
-       <property name="toolTip">
-        <string>Move legend</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/move-actor.gif</normaloff>:/images/icons/move-actor.gif</iconset>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
       <spacer name="horizontalSpacer_9">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Minimum</enum>
+       </property>
        <property name="sizeHint" stdset="0">
         <size>
          <width>40</width>
@@ -185,7 +143,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="cShowValue">
+      <widget class="QPushButton" name="bColorMapMin">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -203,15 +161,12 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/value.gif</normaloff>:/images/icons/value.gif</iconset>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
+         <normaloff>:/images/icons/colors-first.gif</normaloff>:/images/icons/colors-first.gif</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="bResetCamera">
+      <widget class="QPushButton" name="bColorMapMax">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -224,22 +179,22 @@
          <height>25</height>
         </size>
        </property>
-       <property name="toolTip">
-        <string>Zoom and center on selected</string>
-       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/zoompoint.gif</normaloff>:/images/icons/zoompoint.gif</iconset>
+         <normaloff>:/images/icons/colors-last.gif</normaloff>:/images/icons/colors-last.gif</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="cRotationAxis">
-       <property name="toolTip">
-        <string>Rotation axis</string>
+      <widget class="QComboBox" name="cVariables"/>
+     </item>
+     <item>
+      <widget class="QComboBox" name="cColorSpace">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
        </property>
       </widget>
      </item>
@@ -417,6 +372,106 @@
       </widget>
      </item>
      <item>
+      <spacer name="horizontalSpacer_10">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Minimum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bZoom">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/zoompoint.gif</normaloff>:/images/icons/zoompoint.gif</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="selectable">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="cursor">
+        <cursorShape>OpenHandCursor</cursorShape>
+       </property>
+       <property name="toolTip">
+        <string>Move legend</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/lock-legend.gif</normaloff>:/images/icons/lock-legend.gif</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cShowValue">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/value.gif</normaloff>:/images/icons/value.gif</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer_3">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -510,7 +565,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="bColorMapMin">
+      <widget class="QPushButton" name="bResetCamera">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -522,84 +577,23 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Zoom and center on selected</string>
        </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/colors-first.gif</normaloff>:/images/icons/colors-first.gif</iconset>
+         <normaloff>:/images/icons/zoom-actor.gif</normaloff>:/images/icons/zoom-actor.gif</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="bColorMapMax">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/colors-last.gif</normaloff>:/images/icons/colors-last.gif</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="cVariables"/>
-     </item>
-     <item>
-      <widget class="QComboBox" name="cColorSpace">
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_6">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Expanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bZoom">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Z</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
+      <widget class="QComboBox" name="cRotationAxis">
+       <property name="toolTip">
+        <string>Rotation axis</string>
        </property>
       </widget>
      </item>

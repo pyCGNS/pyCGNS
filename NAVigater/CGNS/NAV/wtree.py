@@ -46,7 +46,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           self._mode=CELLCOMBO
           editor=QComboBox(parent)
           editor.transgeometry=(xs,ys,ws,hs)
-          itemslist=self.modelData(index).sidsTypeList()
+          itemslist=self._parent.modelData(index).sidsTypeList()
           editor.addItems(itemslist)
           editor.setCurrentIndex(0)
           editor.installEventFilter(self)
@@ -56,7 +56,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           self._mode=CELLCOMBO
           editor=QComboBox(parent)
           editor.transgeometry=(xs,ys,ws,hs)
-          itemslist=self.modelData(index).sidsDataTypeList()
+          itemslist=self._parent.modelData(index).sidsDataTypeList()
           editor.addItems(itemslist)
           editor.setCurrentIndex(0)
           editor.installEventFilter(self)
@@ -136,6 +136,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         ix=self.cQuery.findText(self.querymodel.getCurrentQuery())
         if (ix!=-1): self.cQuery.setCurrentIndex(ix)
         self.bSave.clicked.connect(self.savetree)
+        self.bSaveAs.clicked.connect(self.savetreeas)
         self.bApply.clicked.connect(self.forceapply)
         self.bClose.clicked.connect(self.leave)
         self.bZoomIn.clicked.connect(self.expandLevel)
@@ -171,13 +172,21 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         return self._fgprint.model
     def modelIndex(self,idx):
         if (not idx.isValid()): return -1
-        return self.treeview.model().mapToSource(idx)
+        midx=idx
+        if (idx.model() != self.treeview.M()):
+            midx=self.treeview.model().mapToSource(idx)
+        return midx
     def modelData(self,idx):
         if (not idx.isValid()): return None
         return self.modelIndex(idx).internalPointer()
     def savetree(self):
         if ((self._fgprint.converted) or
             not (self._fgprint.isModified())): return
+        self._control.savedirect(self._fgprint)
+        self._fgprint.modifiedTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
+        self.updateTreeStatus()
+    def savetreeas(self):
+        print 'SAVE AS'
         self._control.save(self._fgprint)
         self._fgprint.modifiedTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
         self.updateTreeStatus()
@@ -244,7 +253,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.model().pasteAsBrotherAllSelectedNodes()
     def mpasteasbrother(self):
         if (self.getLastEntered() is not None):
-            self.model().pasteAsBrother(nself.getLastEntered())
+            self.model().pasteAsBrother(self.getLastEntered())
     def mpasteaschildselected(self):
         self.model().pasteAsChildAllSelectedNodes()
     def mpasteaschild(self):
@@ -285,7 +294,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                   self.popupmenu.addAction(a)
     def setLastEntered(self,nix=None):
         if ((nix is None) or (not nix.isValid())):
-            nix=self.treeview.currentIndex()
+            nix=self.treeview.modelCurrentIndex()
         self._lastEntered=None
         if (nix.isValid()):
             self.treeview.exclusiveSelectRow(nix,False)
@@ -356,14 +365,14 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.model().updateSelected()
         self.treeview.refreshView()
     def formview(self):
-        ix=self.treeview.currentIndex()
+        ix=self.treeview.modelCurrentIndex()
         node=self.modelData(ix)
         if (node is None): return
         if (node.sidsType()==CGK.CGNSTree_ts): return
         form=Q7Form(self._control,node,self._fgprint)
         form.show()
     def vtkview(self):
-        ix=self.treeview.currentIndex()
+        ix=self.treeview.modelCurrentIndex()
         zlist=self.model().getSelectedZones()
         node=self.modelData(ix)
         self.busyCursor()
@@ -371,7 +380,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.readyCursor()
         vtk.show()
     def plotview(self):
-        ix=self.treeview.currentIndex()
+        return 
+        ix=self.treeview.modelCurrentIndex()
         zlist=self.model().getSelectedZones()
         node=self.modelData(ix)
         self.busyCursor()
