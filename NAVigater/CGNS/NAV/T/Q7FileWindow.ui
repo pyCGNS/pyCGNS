@@ -56,6 +56,9 @@
      </item>
      <item>
       <widget class="QTabWidget" name="tabs">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -308,6 +311,9 @@
         </widget>
        </widget>
        <widget class="QWidget" name="tab_2">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>

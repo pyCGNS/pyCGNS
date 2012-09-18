@@ -64,6 +64,11 @@ Q_SCRIPT_POST="""
 
 # -----------------------------------------------------------------
 class Q7OptionContext(object):
+    _depends={
+        'MaxDisplayDataSize':['DoNotDisplayLargeData'],
+        'MaxLoadDataSize':['DoNotLoadLargeArrays'],
+        'MaxRecursionLevel':['RecursiveTreeDisplay'],
+    }
     CHLoneTrace=False
     NAVTrace=False
     AutoExpand=False
@@ -72,7 +77,7 @@ class Q7OptionContext(object):
     ShowTableIndex=True
     ShowColumnIndex=True
     RecursiveSIDSPatternsLoad=True
-    LoadNodeDisplay=False
+    DoNotDisplayLargeData=False
     CheckOnTheFly=False
     FollowLinksAtLoad=True
     DoNotFollowLinksAtSave=True
@@ -96,7 +101,8 @@ class Q7OptionContext(object):
     ProfileSearchPathList=[]
     CGNSFileExtension=['.cgns','.cg']
     HDFFileExtension=['.hdf','.hdf5']
-    MaxLengthDataDisplay=700
+    MaxLoadDataSize=1000
+    MaxDisplayDataSize=5000
     MaxRecursionLevel=7
     ADFConversionCom='cgnsconvert'
     TemporaryDirectory='/tmp'
@@ -443,10 +449,10 @@ RESULT=fnmatch.fnmatchcase(NAME,USERPARAMETER[0])
         return None
       sprev=sys.path
       sys.path=[dpath]+sys.path
-      try:
-        return sys.modules[name]
-      except KeyError:
-        pass
+      #try:
+      #  return sys.modules[name]
+      #except KeyError:
+      #  pass
       fp, pathname, description = imp.find_module(name)
       try:
         mod=imp.load_module(name, fp, pathname, description)

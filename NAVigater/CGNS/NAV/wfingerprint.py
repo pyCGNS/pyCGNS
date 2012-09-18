@@ -31,6 +31,7 @@ class Q7Window(QWidget,object):
     VIEW_QUERY='Q'
     VIEW_SELECT='S'
     VIEW_INFO='I'
+    VIEW_LINK='L'
     HISTORYLASTKEY='///LAST///'
     def __init__(self,vtype,control,path,fgprint):
         QWidget.__init__(self,None)
@@ -44,8 +45,14 @@ class Q7Window(QWidget,object):
         self.I_FORM=QIcon(QPixmap(":/images/icons/form.gif"))
         self.I_SELECT=QIcon(QPixmap(":/images/icons/operate-list.gif"))
         self.I_DIAG=QIcon(QPixmap(":/images/icons/check-all.gif"))
+        self.I_LINK=QIcon(QPixmap(":/images/icons/link.gif"))
         self.I_D_INF=QIcon(QPixmap(":/images/icons/subtree-sids-warning.gif"))
         self.I_D_ERR=QIcon(QPixmap(":/images/icons/subtree-sids-failed.gif"))
+        self.I_L_OKL=QIcon(QPixmap(":/images/icons/link.gif"))
+        self.I_L_NFL=QIcon(QPixmap(":/images/icons/link-nofile.gif"))
+        self.I_L_NRL=QIcon(QPixmap(":/images/icons/link-noreadable.gif"))
+        self.I_L_NNL=QIcon(QPixmap(":/images/icons/link-nonode.gif"))
+        self.I_L_ERL=QIcon(QPixmap(":/images/icons/link-error.gif"))
         if (vtype==Q7Window.VIEW_TREE):
             self._stylesheet=Q7TREEVIEWSTYLESHEET
         if (vtype==Q7Window.VIEW_CONTROL):
@@ -145,6 +152,10 @@ class Q7Window(QWidget,object):
         QApplication.setOverrideCursor(self._busyx)
     def readyCursor(self):
         QApplication.restoreOverrideCursor()
+    def setLabel(self,it,text):
+        it.setText(text)
+        it.setFont(QFont("Courier"))
+        it.setReadOnly(True)
     def _T(self,msg):
         if (self.getOptionValue('NAVTrace')):
             print '### CGNS.NAV:', msg
@@ -158,34 +169,44 @@ class Q7fingerPrint:
     STATUS_LIST=(STATUS_UNCHANGED,STATUS_MODIFIED,STATUS_CONVERTED)
     @classmethod
     def fileconversion(cls,fdir,filein,control):
-        fileout=control.getOptionValue('TemporaryDirectory')+'/'+filein+'.hdf'
+        control.loadOptions()
+        fileout=OCTXT.TemporaryDirectory+'/'+filein+'.hdf'
         count=1
         while (os.path.exists(fileout)):
-            fileout=control.getOptionValue('TemporaryDirectory')+\
-                     '/'+filein+'.%.3d.hdf'%count
+            fileout=OCTXT.TemporaryDirectory+'/'+filein+'.%.3d.hdf'%count
             count+=1
         com='(cd %s; %s -f -h %s %s)'%(fdir,
-                                       control.getOptionValue('ADFConversionCom'),
+                                       OCTXT.ADFConversionCom,
                                        filein,fileout)
         os.system(com)
         return fileout
     @classmethod
     def treeLoad(cls,control,selectedfile):
+        control.loadOptions()
         kw={}
         f=selectedfile
         (filedir,filename)=(os.path.normpath(os.path.dirname(f)),
                             os.path.basename(f))
-        slp=control.getOptionValue('LinkSearchPathList')
+        slp=OCTXT.LinkSearchPathList
         slp+=[filedir]
         if (   (os.path.splitext(filename)[1]=='.cgns')
-            and control.getOptionValue('_ConvertADFFiles')):
+            and OCTXT._ConvertADFFiles):
             f=cls.fileconversion(filedir,filename,control)
             kw['converted']=True
             kw['convertedAs']=f
         flags=CGNS.MAP.S2P_DEFAULT
-        if (control.getOptionValue('CHLoneTrace')): flags|=CGNS.MAP.S2P_TRACE
+        maxdataload=None
+        if (OCTXT.CHLoneTrace):
+            flags|=CGNS.MAP.S2P_TRACE
+        if (OCTXT.DoNotLoadLargeArrays):
+            flags|=CGNS.MAP.S2P_NODATA
+            maxdataload=OCTXT.MaxLoadDataSize
         try:
-            (tree,links,diag)=CGNS.MAP.load2(f,flags,lksearch=slp)
+            if (maxdataload):
+                (tree,links,paths,diag)=CGNS.MAP.load2(f,flags,lksearch=slp,
+                                                       maxdata=maxdataload)
+            else:
+                (tree,links,paths,diag)=CGNS.MAP.load2(f,flags,lksearch=slp)
             if (diag is not None):
                 txt="""Loading process returns:"""
                 control.readyCursor()
@@ -196,11 +217,11 @@ class Q7fingerPrint:
             MSG.wError(0,txt,'')
             return None
         kw['isfile']=True
-        return Q7fingerPrint(control,filedir,filename,tree,links,**kw)
+        return Q7fingerPrint(control,filedir,filename,tree,links,paths,**kw)
     @classmethod
     def treeSave(cls,control,fgprint,f):
         flags=CGNS.MAP.S2P_DEFAULT
-        if (control.getOptionValue('CHLoneTrace')): flags|=CGNS.MAP.S2P_TRACE
+        if (OCTXT.CHLoneTrace): flags|=CGNS.MAP.S2P_TRACE
         tree=fgprint.tree
         #for p in CGU.getAllPaths(tree): print p
         lk=[]
@@ -235,7 +256,8 @@ class Q7fingerPrint:
                 for (v,i) in x.views[vtype]:
                     if (i==int(idx)): return x
         return None
-    def __init__(self,control,filedir,filename,tree,links,**kw):
+    # -------------------------------------------------------------
+    def __init__(self,control,filedir,filename,tree,links,paths,**kw):
         self.filename=filename
         self.tree=tree
         self.filedir=filedir
@@ -256,13 +278,22 @@ class Q7fingerPrint:
             self.tmpfile=kw['convertedAs']
             if (self.converted):
                 self._status=Q7fingerPrint.STATUS_CONVERTED
+        self.lazy={}
+        for p in paths: self.lazy['/CGNSTree'+p[0]]=p[1]
         Q7fingerPrint.__extension.append(self)
     def isFile(self):
         return self.isfile
+    def isLink(self,path):
+        pth=CGU.getPathNoRoot(path)
+        for lk in self.links:
+            if (lk[3]==pth): return lk
+        return False
     def getInfo(self,view):
         d={}
         f='%s/%s'%(self.filedir,self.filename)
         d['eFilename']=f
+        d['eDirSource']=self.filedir
+        d['eFileSource']=self.filename
         d['eTmpFile']=self.tmpfile
         d['eDepth']=self.depth
         d['eNodes']=self.nodes

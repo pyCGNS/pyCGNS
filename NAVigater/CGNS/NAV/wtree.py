@@ -13,6 +13,7 @@ from CGNS.NAV.wform import Q7Form
 from CGNS.NAV.wvtk import Q7VTK, Q7VTKPlot
 from CGNS.NAV.wquery import Q7Query, Q7SelectionList
 from CGNS.NAV.wdiag import Q7CheckList
+from CGNS.NAV.wlink import Q7LinkList
 from CGNS.NAV.mquery import Q7QueryTableModel
 from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem, Q7TreeFilterProxy
 import CGNS.NAV.mtree as NMT
@@ -117,6 +118,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         Q7Window.__init__(self,Q7Window.VIEW_TREE,control,path,fgprint)
         self._depthExpanded=0
         self._lastEntered=None
+        self.lastdiag=None
+        self.linkview=None
         QObject.connect(self.treeview,
                         SIGNAL("expanded(QModelIndex)"),
                         self.expandNode)
@@ -144,7 +147,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bZoomAll.clicked.connect(self.expandMinMax)
         self.bFormView.clicked.connect(self.formview)
         self.bMarkAll.clicked.connect(self.markall)
-        self.bUnmarkAll.clicked.connect(self.unmarkall)
+        self.bUnmarkAll_1.clicked.connect(self.unmarkall)
+        self.bUnmarkAll_2.clicked.connect(self.unmarkall)
         self.bPreviousMark.clicked.connect(self.previousmark)
         self.bNextMark.clicked.connect(self.nextmark)
         self.bSwapMarks.clicked.connect(self.swapmarks)
@@ -157,6 +161,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bCheck.clicked.connect(self.check)
         self.bCheckList.clicked.connect(self.checklist)
         self.bClearChecks.clicked.connect(self.clearchecks)
+        self.bLinkView.clicked.connect(self.linklist)
+        self.bDeleteLink.clicked.connect(self.linkdelete)
+        self.bAddLink.clicked.connect(self.linkadd)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.proxy = Q7TreeFilterProxy(self)
@@ -165,8 +172,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.treeview.setItemDelegate(Q7TreeItemDelegate(self.treeview,
                                                          self._fgprint.model))
         self.treeview.setControlWindow(self,self._fgprint.model)
-        if (self._control.transientRecurse): self.expandMinMax()
+        if (self._control.transientRecurse or OCTXT.RecursiveTreeDisplay):
+            self.expandMinMax()
         if (self._control.transientVTK):     self.vtkview()
+        self._control.transientRecurse=False
+        self._control.transientVTK=False
         self.clearchecks()
     def model(self):
         return self._fgprint.model
@@ -273,6 +283,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                    ("Open form",self.popform,'Ctrl+F'),
                    ("Open view",self.openSubTree,'Ctrl+W'),
                    None,
+                   ("Load node data in memory",self.popform,'Ctrl+F'),
+                   ("Release memory node data",self.popform,'Ctrl+F'),
+                   None,
                    ("Copy",self.mcopy,'Ctrl+C'),
                    ("Cut",self.mcut,'Ctrl+X'),
                    ("Paste as brother",self.mpasteasbrother,'Ctrl+V'),
@@ -331,6 +344,25 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.model().markExtendToList(sl)
             self.model().updateSelected()
         self.treeview.refreshView()
+    def linkselect(self):
+        ix=self.treeview.modelCurrentIndex()
+        if (not idx.isValid()):
+            self._control.selectForLink=None
+            return 
+        self._control.selectForLink=self.modelData(ix)
+    def linkadd(self):
+        node=self._control.selectForLink
+        if (node is None): return
+        if (node.sidsType()==CGK.CGNSTree_ts): return
+    def linkdelete(self):
+        node=self._control.selectForLink
+        if (node is None): return
+        if (node.sidsType()==CGK.CGNSTree_ts): return
+        if (not node.isLink()): return
+    def linklist(self):
+        if (self.linkview is None):
+            self.linkview=Q7LinkList(self._control,self._fgprint)
+        self.linkview.show()
     def check(self):
         self.busyCursor()
         self.lastdiag=self.model().checkSelected()
@@ -345,8 +377,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.treeview.refreshView()
         self.lastdiag=None
     def selectionlist(self):
-        slist=Q7SelectionList(self._control,self.model()._selected,
-                              self._fgprint)
+        slist=Q7SelectionList(self._control,self.model(),self._fgprint)
         slist.show()
     def previousmark(self):
         self.treeview.changeSelectedMark(-1)

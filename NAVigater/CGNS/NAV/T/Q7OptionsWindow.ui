@@ -40,7 +40,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>15</y>
        <width>274</width>
        <height>22</height>
       </rect>
@@ -53,7 +53,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>230</y>
+       <y>240</y>
        <width>274</width>
        <height>22</height>
       </rect>
@@ -62,24 +62,24 @@
       <string>Recursive SIDS patterns load</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="__O_loadnodedisplay">
+    <widget class="QCheckBox" name="__O_donotdisplaylargedata">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>70</y>
+       <y>120</y>
        <width>274</width>
        <height>22</height>
       </rect>
      </property>
      <property name="text">
-      <string>Load node on display request</string>
+      <string>Do not dispay large data</string>
      </property>
     </widget>
     <widget class="QCheckBox" name="__O_followlinksatload">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>170</y>
+       <y>180</y>
        <width>274</width>
        <height>22</height>
       </rect>
@@ -92,7 +92,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>210</y>
+       <y>220</y>
        <width>274</width>
        <height>22</height>
       </rect>
@@ -105,7 +105,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>90</y>
+       <y>65</y>
        <width>274</width>
        <height>22</height>
       </rect>
@@ -130,53 +130,62 @@
     <widget class="QSpinBox" name="__O_maxrecursionlevel">
      <property name="geometry">
       <rect>
-       <x>220</x>
-       <y>30</y>
+       <x>235</x>
+       <y>20</y>
        <width>71</width>
        <height>27</height>
       </rect>
      </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
      <property name="maximum">
-      <number>7</number>
+      <number>99</number>
      </property>
      <property name="value">
       <number>7</number>
      </property>
     </widget>
     <widget class="QSpinBox" name="__O_maxloaddatasize">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
-       <x>220</x>
-       <y>110</y>
+       <x>235</x>
+       <y>70</y>
        <width>71</width>
        <height>27</height>
       </rect>
      </property>
+     <property name="minimum">
+      <number>-1</number>
+     </property>
      <property name="maximum">
-      <number>7</number>
+      <number>65535</number>
      </property>
      <property name="value">
-      <number>7</number>
+      <number>-1</number>
      </property>
     </widget>
     <widget class="QLabel" name="label_9">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>110</y>
+       <y>80</y>
        <width>217</width>
        <height>27</height>
       </rect>
      </property>
      <property name="text">
-      <string>Max data size to load</string>
+      <string>Do not load node data if above:</string>
      </property>
     </widget>
     <widget class="QCheckBox" name="__O_stoploadbrokenlinks">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>190</y>
+       <y>200</y>
        <width>274</width>
        <height>22</height>
       </rect>
@@ -242,6 +251,38 @@
        <width>211</width>
        <height>41</height>
       </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_23">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>135</y>
+       <width>217</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Display nodes with data size below:</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="__O_maxdisplaydatasize">
+     <property name="geometry">
+      <rect>
+       <x>235</x>
+       <y>125</y>
+       <width>71</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>-1</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>-1</number>
      </property>
     </widget>
    </widget>

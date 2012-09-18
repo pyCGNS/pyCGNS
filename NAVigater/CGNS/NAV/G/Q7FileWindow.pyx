@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FileWindow.ui'
 #
-# Created: Mon Jun 18 16:25:05 2012
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Fri Aug 31 15:24:36 2012
+#      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -31,6 +31,7 @@ class Ui_Q7FileWindow(object):
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.tabs = QtGui.QTabWidget(Q7FileWindow)
+        self.tabs.setEnabled(True)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -112,6 +113,7 @@ class Ui_Q7FileWindow(object):
         self.bClose.setObjectName("bClose")
         self.tabs.addTab(self.Selection, "")
         self.tab_2 = QtGui.QWidget()
+        self.tab_2.setEnabled(False)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)

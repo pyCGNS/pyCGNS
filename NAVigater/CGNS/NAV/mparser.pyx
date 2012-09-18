@@ -98,10 +98,10 @@ class CGNSparser:
             et=ne[0]
             eb=ne[1]
             ea=CGU.getNodeByPath(zT,e+'/'+CGK.ElementConnectivity_s)[1]
-            if (et in sp.QUAD_SURFACE):
+            if ((ea is not None) and (et in sp.QUAD_SURFACE)):
               pth=CGU.getPathAncestor(meshpath)+e+' {QUAD}'
               sl.append(list(sp.extQuadFacesPoints(ea,et,sn,mr,eb))+[pth])
-            if (et in sp.TRI_SURFACE):
+            if ((ea is not None) and (et in sp.TRI_SURFACE)):
               pth=e+' {TRI}'
               sl.append(list(sp.extTriFacesPoints(ea,et,sn,mr,eb))+[pth])
           self._zones_ns[z]=([cx[1],cy[1],cz[1]],meshpath,et,sl)

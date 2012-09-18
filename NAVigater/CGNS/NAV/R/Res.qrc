@@ -1,5 +1,10 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/link-select.gif</file>
+    <file>icons/link-child.gif</file>
+    <file>icons/link-noreadable.gif</file>
+    <file>icons/link-nonode.gif</file>
+    <file>icons/data-array-lazy.gif</file>
     <file>icons/zoom-actor.gif</file>
     <file>icons/lock-legend.gif</file>
     <file>icons/value.gif</file>

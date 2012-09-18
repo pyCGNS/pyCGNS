@@ -89,7 +89,8 @@ lext_modules  = [
               ] # close extension modules
 
 if HAS_CYTHON:
-  lext_modules+=[Extension('CGNS.WRA.mll',['CGNS/WRA/mll.pyx'],
+  lext_modules+=[Extension('CGNS.WRA.mll',['CGNS/WRA/mll.pyx',
+                                           'CGNS/WRA/mll_utils.c'],
                            include_dirs = include_dirs+['CGNS/WRA'],
                            library_dirs = library_dirs,
                            libraries    = optional_libs)]

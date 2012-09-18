@@ -502,9 +502,12 @@ cdef extern from "cgnslib.h":
   # Below is to be wrapped soon
   # ---------------------------------------------------------------------
 
-##   int cg_1to1_read_global(int fn, int B, char **connectname, char **zonename,
-##                           char **donorname, cgsize_t **range, cgsize_t **donor_range,
-##                           int **transform)
+  int cg_1to1_read_global(int fn, int B,
+                          char **connectname, char **zonename,
+                          char **donorname,
+                          cgsize_t **range, cgsize_t **donor_range,
+                          int **transform)
+   
 ## CGNSDLL int cg_bcdataset_write(const char *name, CGNS_ENUMT(BCType_t) BCType,
 ## 	CGNS_ENUMT(BCDataType_t) BCDataType);
 ## CGNSDLL int cg_bcdataset_info(int *n_dataset);

@@ -16,6 +16,7 @@ from CGNS.NAV.wfingerprint import Q7fingerPrint
 import CGNS.VAL.simplecheck as CGV
 
 HIDEVALUE='@@HIDE@@'
+LAZYVALUE='@@LAZY@@'
 
 (COLUMN_NAME,\
  COLUMN_SIDS,\
@@ -116,7 +117,7 @@ USERFLAGS=[USERFLAG_0,USERFLAG_1,USERFLAG_2,USERFLAG_3,USERFLAG_4,
 ICONMAPPING={
  STLKNOLNK:":/images/icons/empty.gif",
  STLKTOPOK:":/images/icons/link.gif",
- STLKCHDOK:":/images/icons/link.gif",
+ STLKCHDOK:":/images/icons/link-child.gif",
  STLKTOPBK:":/images/icons/link-break.gif",
  STLKTOPNF:":/images/icons/link-error.gif",
 
@@ -436,8 +437,13 @@ class Q7TreeItem(object):
             self._nodes=len(self._model._extension)
         else:
             self._nodes=0
+        if (self._path in self._fingerprint.lazy): self._lazy=True
+        else: self._lazy=False
     def orderTag(self):
         return self._tag+"0"*(self._fingerprint.depth*4-len(self._tag))
+    def sidsIsRoot(self):
+        if (self._parentitem is None): return True
+        return False
     def sidsParent(self):
         return self._parentitem._itemnode
     def sidsPathSet(self,path):
@@ -524,9 +530,24 @@ class Q7TreeItem(object):
         return (0,)
     def sidsLinkStatus(self):
         pth=CGU.getPathNoRoot(self.sidsPath())
-        if (pth in [lk[-1] for lk in self._fingerprint.links]):
+        if (pth in [lk[-2] for lk in self._fingerprint.links]):
             return STLKTOPOK
+        if self.sidsIsLinkChild(): return STLKCHDOK
         return STLKNOLNK
+    def sidsIsLink(self):
+        if (self.sidsLinkStatus()==STLKNOLNK): return False
+        return True
+    def sidsIsLinkChild(self):
+        pit=self.parentItem()
+        while (not pit.sidsIsRoot()):
+            if (pit.sidsIsLink()): return True
+            pit=pit.parentItem()
+        return False
+    def sidsLinkValue(self):
+        pth=CGU.getPathNoRoot(self.sidsPath())
+        for lk in self._fingerprint.links:
+            if (pth in lk[-2]): return "[%s/]%s:%s"%(lk[0],lk[1],lk[2])
+        return None
     def sidsRemoveChild(self,node):
         children=self.sidsChildren()
         idx=0
@@ -541,7 +562,7 @@ class Q7TreeItem(object):
           name='{%s#%.3d}'%(ntype,0)
           newtree=CGU.newNode(name,None,[],ntype)
         else:
-          newtree=copy.deepcopy(node)
+          newtree=CGU.nodeCopy(node)
         name=newtree[0]
         ntype=newtree[3]
         parent=self._itemnode
@@ -593,10 +614,12 @@ class Q7TreeItem(object):
         if (column==COLUMN_FLAG_CHECK):  return self._states['check']
         if (column==COLUMN_FLAG_USER):   return self._states['user']
         if (column==COLUMN_VALUE):
+            if (self._lazy): return LAZYVALUE
             if (self.sidsValue() is None): return None
             if (type(self.sidsValue())==numpy.ndarray):
                 vsize=reduce(lambda x,y: x*y, self.sidsValue().shape)
-                if (vsize>OCTXT.MaxLengthDataDisplay):
+                if ((vsize>OCTXT.MaxDisplayDataSize) and
+                    (OCTXT.MaxDisplayDataSize>0)):
                     return HIDEVALUE
                 if (self.sidsValue().dtype.char in ['S','c']):
                     if (len(self.sidsValue().shape)==1):
@@ -742,6 +765,11 @@ class Q7TreeModel(QAbstractItemModel):
     def data(self, index, role):
         if (not index.isValid()): return None
         if (role == Qt.UserRole): return index.internalPointer().sidsPath()
+        if (role == Qt.ToolTipRole):
+            if (index.column()==COLUMN_FLAG_LINK):
+                lk=index.internalPointer().sidsLinkValue()
+                if (lk is not None): return lk
+            return None
         if (role not in [Qt.EditRole,Qt.DisplayRole,Qt.DecorationRole]):
             return None
         if ((role == Qt.DecorationRole)
@@ -751,10 +779,12 @@ class Q7TreeModel(QAbstractItemModel):
         if ((index.column()==COLUMN_VALUE) and (role == Qt.DecorationRole)):
             if (disp == HIDEVALUE):
                 disp=QIcon(QPixmap(":/images/icons/data-array-large.gif"))
+            elif (disp == LAZYVALUE):
+                disp=QIcon(QPixmap(":/images/icons/data-array-lazy.gif"))
             else:
                 return None
         if ((index.column()==COLUMN_VALUE) and (role == Qt.DisplayRole)):
-            if (disp == HIDEVALUE):
+            if (disp in [HIDEVALUE,LAZYVALUE]):
                 return None
         if ((index.column()==COLUMN_FLAG_USER) and (role == Qt.DisplayRole)):
              return None
@@ -912,14 +942,14 @@ class Q7TreeModel(QAbstractItemModel):
         self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
     def copyNode(self,nodeitem):
         if (nodeitem is None): return
-        self._control.copyPasteBuffer=copy.deepcopy(nodeitem._itemnode)
+        self._control.copyPasteBuffer=CGU.nodeCopy(nodeitem._itemnode)
     def cutAllSelectedNodes(self):
         for pth in self._selected:
             nodeitem=self.nodeFromPath(pth)
             self.cutNode(nodeitem)
     def cutNode(self,nodeitem):
         if (nodeitem is None): return
-        self._control.copyPasteBuffer=copy.deepcopy(nodeitem._itemnode)
+        self._control.copyPasteBuffer=CGU.nodeCopy(nodeitem._itemnode)
         parentitem=nodeitem.parentItem()
         path=CGU.getPathAncestor(nodeitem.sidsPath())
         self.removeItemTree(nodeitem)

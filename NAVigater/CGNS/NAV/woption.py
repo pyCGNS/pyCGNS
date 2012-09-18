@@ -10,6 +10,7 @@ from PySide.QtCore  import *
 from PySide.QtGui   import *
 from CGNS.NAV.Q7OptionsWindow import Ui_Q7OptionsWindow
 from CGNS.NAV.wfingerprint import Q7Window
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 # -----------------------------------------------------------------
 class Q7Option(Q7Window,Ui_Q7OptionsWindow):
@@ -26,11 +27,19 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
         except AttributeError:
             return None
         return a
+    def checkDeps(self):
+        for dep in OCTXT._depends:
+            for chks in OCTXT._depends[dep]:
+                if (not self.getopt(chks).isChecked()):
+                    self.getopt(dep).setDisabled(True)
+                else:
+                    self.getopt(dep).setEnabled(True)                    
     def reset(self):
         self.getOptions()
         data=self._options
         for k in data:
           if ((k[0]!='_') and (self.getopt(k) is not None)):
+            setattr(OCTXT,k,data[k])
             if (type(data[k]) is bool):
               if (data[k]): self.getopt(k).setCheckState(Qt.Checked)
               else: self.getopt(k).setCheckState(Qt.Unchecked)
@@ -43,6 +52,7 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
               for l in data[k]:
                   s+='%s\n'%l
               self.getopt(k).setPlainText(s)
+        self.checkDeps()
     def show(self):
         self.reset()
         super(Q7Option, self).show()
@@ -68,6 +78,7 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
                     if (l): v.append(l)
                 if (self.validateOption(k,v)): data[k]=v
         self.setOptions()
+        self.reset()
     def reject(self):
         self.hide()
     

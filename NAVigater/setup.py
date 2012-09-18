@@ -59,6 +59,7 @@ if installprocess:
       'Q7SelectionWindow',
       'Q7InfoWindow',
       'Q7DiagWindow',
+      'Q7LinkWindow',
       'Q7VTKPlotWindow',
       'Q7VTKWindow'
       ]

@@ -118,7 +118,7 @@ def deepcopyNodeList(la):
   if (not la): return la
   ra=[]
   for a in la:
-    ra.append(copyNode(a))
+    ra.append(copyNode(a,a[0]))
   return ra
 
 # -----------------------------------------------------------------------------
@@ -435,7 +435,7 @@ def isRootNode(node,legacy=False,version=False,dienow=False):
            raise CE.cgnsNodeError(99)
            return False
          versionfound=1
-         if (version): return n[1][0]
+         #if (version and n[1] is not None): return n[1][0]
      elif ( n[3] != CK.CGNSBase_ts ):
        if (dienow): raise CE.cgnsNodeError(91)
        return False
@@ -1012,6 +1012,9 @@ def removeNodeFromPath(path,node):
     
 # --------------------------------------------------
 def getNodeFromPath(path,node):
+  """
+  Beware: this parse starts with children, not current node...
+  """
   for c in node[2]:
     if (c[0] == path[0]):
       if (len(path) == 1): return c
@@ -1583,9 +1586,9 @@ def copyArray(a):
   if (a==None): return None
   if (a==[]):   return None
   if (NPY.isfortran(a)):
-    b=NPY.array(a,order='Fortran')
+    b=NPY.array(a,order='Fortran',copy=True)
   else:
-    b=NPY.array(a)
+    b=NPY.array(a,copy=True)
   return b
 
 # ----

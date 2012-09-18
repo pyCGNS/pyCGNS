@@ -66,6 +66,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.transientVTK=False
         self.copyPasteBuffer=None
         self.wOption=None
+        self.selectForLink=None
     def clickedLine(self,*args):
         if (self.controlTable.lastButton==Qt.LeftButton):
             #Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))
@@ -128,9 +129,11 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
               else:
                   a=QAction(aparam[0],self,triggered=aparam[1])
                   self.popupmenu.addAction(a)
+    def loadOptions(self):
+        if (self.wOption==None): self.wOption=Q7Option(self)
+        self.wOption.reset()
     def option(self):
-        if (self.wOption==None):
-            self.wOption=Q7Option(self)
+        if (self.wOption==None): self.wOption=Q7Option(self)
         self.wOption.show()
     def about(self):
         MSG.message("About %s"%OCTXT._ToolName,
@@ -175,7 +178,10 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             v=Q7fingerPrint.getView(i)
             l=self.getLineFromIdx(i)
             self.modifiedLine(l,f._status)
-            v.updateTreeStatus()
+            try:
+                v.updateTreeStatus()
+            except AttributeError:
+                pass
     def modifiedLine(self,n,stat):
         if   (stat==Q7fingerPrint.STATUS_MODIFIED):
             stitem=QTableWidgetItem(self.I_MODIFIED,'')
@@ -201,6 +207,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             tpitem=QTableWidgetItem(self.I_SELECT,'')
         if (l[1]==Q7Window.VIEW_DIAG):
             tpitem=QTableWidgetItem(self.I_DIAG,'')
+        if (l[1]==Q7Window.VIEW_LINK):
+            tpitem=QTableWidgetItem(self.I_LINK,'')
         tpitem.setTextAlignment(Qt.AlignCenter)
         ctw.setItem(r,1,tpitem)
         self.modifiedLine(r,l[0])

@@ -2177,36 +2177,49 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_n1to1_global(self._root,B,&n)
     return n
 
-  # ------------------------------------------------------------------------------------------
-##   cpdef _1to1_read_global(self, int B):
+  # --------------------------------------------------------------------------
+  cpdef _1to1_read_global(self, int B):
 
-##     cdef char ** cname 
-##     cdef char ** zname 
-##     cdef char ** dname 
-##     cdef cgnslib.cgsize_t **  crangeptr
-##     cdef cgnslib.cgsize_t **  drangeptr 
-##     cdef int ** trptr    
-##     cxnum=self.n1to1_global(B)
-##     cn=PNY.chararray((cxnum,1),itemsize=256)
-##     zn=PNY.chararray((cxnum,1),itemsize=256)
-##     dn=PNY.chararray((cxnum,1),itemsize=256)
-##     cn[:]= " "
-##     zn[:]= " "
-##     dn[:]= " "
-##     cnameptr=<char **>CNY.PyArray_DATA(cn)
-##     znameptr=<char **>CNY.PyArray_DATA(zn)
-##     dnameptr=<char **>CNY.PyArray_DATA(dn)
-##     carray=PNY.ones((cxnum,2,3),dtype=PNY.int32)
-##     darray=PNY.ones((cxnum,2,3),dtype=PNY.int32)
-##     tarray=PNY.ones((cxnum,3),dtype=PNY.int32)
-##     crangeptr=<cgnslib.cgsize_t **>CNY.PyArray_DATA(carray)
-##     drangeptr=<cgnslib.cgsize_t **>CNY.PyArray_DATA(darray)
-##     trptr=<int **>CNY.PyArray_DATA(tarray)
-##     self._error=cgnslib.cg_1to1_read_global(self._root,B,cnameptr,znameptr,dnameptr,crangeptr,
-##                                             drangeptr,trptr)
+    cdef CNY.ndarray[dtype=CNY.uint8_t,ndim=2] tcnames
+    cdef CNY.ndarray[dtype=CNY.uint8_t,ndim=2] tznames
+    cdef CNY.ndarray[dtype=CNY.uint8_t,ndim=2] tdnames
+    cdef CNY.ndarray[dtype=CNY.int32_t,ndim=3] tcrange
+    cdef CNY.ndarray[dtype=CNY.int32_t,ndim=3] tdrange
+    cdef CNY.ndarray[dtype=CNY.int32_t,ndim=2] ttrange
+    cdef CNY.uint8_t *cnameptr
+    cdef CNY.uint8_t *znameptr
+    cdef CNY.uint8_t *dnameptr
+    cdef cgnslib.cgsize_t *crangeptr
+    cdef cgnslib.cgsize_t *drangeptr 
+    cdef int *trangeptr
+    
+    cxnum=self.n1to1_global(B)
+    tcnames=PNY.array((32,cxnum),dtype=PNY.uint8_t)
+    tznames=PNY.array((32,cxnum),dtype=PNY.uint8_t)
+    tdnames=PNY.array((32,cxnum),dtype=PNY.uint8_t)
+    
+    cnameptr=<CNY.uint8_t* >tcnames.data
+    znameptr=<CNY.uint8_t* >tznames.data
+    dnameptr=<CNY.uint8_t* >tdnames.data
+    
+    tcrange=PNY.ones((cxnum,2,3),dtype=PNY.int32)
+    tdrange=PNY.ones((cxnum,2,3),dtype=PNY.int32)
+    ttrange=PNY.ones((cxnum,3),dtype=PNY.int32)
+    
+    crangeptr=<cgnslib.cgsize_t *>tcrange.data
+    drangeptr=<cgnslib.cgsize_t *>tdrange.data
+    trangeptr=<int *>ttrange.data
+    
+    self._error=cgnslib.cg_1to1_read_global(self._root,B,
+                                            <char** >cnameptr,
+                                            <char** >znameptr,
+                                            <char** >dnameptr,
+                                            <cgnslib.cgsize_t**>crangeptr,
+                                            <cgnslib.cgsize_t** >drangeptr,
+                                            <int** >trangeptr)
 
     
-  # --------------------------------------------------------------------------------------------    
+  # -----------------------------------------------------------------------    
   cpdef nconns(self, int B, int Z):
 
     """

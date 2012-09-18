@@ -40,11 +40,14 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         Q7Window.__init__(self,Q7Window.VIEW_FORM,control,
                           node.sidsPath(),fgprint)
         self._node=node
+        self._fgprint=fgprint
+        self._operatorlist=['','<','<=','=','>','>=']
         for t in self._node.sidsTypeList():
             self.eType.addItem(t)
         self.bClose.clicked.connect(self.reject)
         for dt in node.sidsDataType(all=True):
             self.cDataType.addItem(dt)
+        self.setOperatorValue(1)
     def updateTreeStatus(self):
         pass
     def accept(self):
@@ -93,8 +96,13 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         QObject.connect(self.sMinV,
                         SIGNAL("valueChanged(int)"),
                         self.resetIndex)
-        #for n in range(self.cs):
-        #    self.tableView.setColumnWidth(n,self.model.colwidth)
+        lk=self._fgprint.isLink(self._node.sidsPath())
+        if (lk):
+            self.setLabel(self.eDestDir,lk[0])
+            self.setLabel(self.eDestFile,lk[1])
+            self.setLabel(self.eDestPath,lk[2])
+        else:
+            self.tFiles.setDisabled(True)
     def resizeTable(self):
         s=self.cRowColSize.currentText()
         (r,c)=s.split('x')
@@ -126,6 +134,11 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.model.headerDataChanged.emit(Qt.Horizontal, 1, 1)
     def addControlLine(self):
         pass
+    def setOperatorValue(self,opidx):
+        self.cOperator.clear()
+        for et in self._operatorlist:
+            self.cOperator.addItem(et)
+        self.cOperator.setCurrentIndex(opidx)
     def setEnumerateValue(self,etype,evalue,etypeidx,evalueidx):
         self.cEnumType.clear()
         self.cEnumValue.clear()
