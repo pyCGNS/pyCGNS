@@ -37,6 +37,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         xs=option.rect.x()
         ys=option.rect.y()-2
         if (index.column() in [NMT.COLUMN_NAME,NMT.COLUMN_VALUE]):
+          #if (self._parent.modelData(index).
           self._mode=CELLTEXT
           editor=QLineEdit(parent)
           editor.transgeometry=(xs,ys,ws,hs)

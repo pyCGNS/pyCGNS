@@ -601,6 +601,18 @@ class Q7TreeItem(object):
         return len(self._childrenitems)  
     def columnCount(self):
         return COLUMN_LAST+1
+    def hasValueView(self):
+        if (self._lazy): False
+        if (self.sidsValue() is None): return False
+        if (type(self.sidsValue())==numpy.ndarray):
+            vsize=reduce(lambda x,y: x*y, self.sidsValue().shape)
+            if ((vsize>OCTXT.MaxDisplayDataSize) and
+                (OCTXT.MaxDisplayDataSize>0)):
+                return False
+            if (self.sidsValue().dtype.char in ['S','c']):
+                if (len(self.sidsValue().shape)==1): return True
+                if (len(self.sidsValue().shape)>2):  return False
+                return False
     def data(self,column):
         if (self._itemnode==None):     return self._title[column]
         if (column==COLUMN_NAME):      return self.sidsName()
