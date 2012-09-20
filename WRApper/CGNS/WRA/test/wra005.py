@@ -8,10 +8,10 @@ a.gopath("/Disk/zone1/GridCoordinates")
 i=a.nuser_data()
 print i
 
-## print i
-## for j in range(i):
-##     t=a.array_info(j+1)
-##     print t
+print i
+for j in range(i):
+    t=a.array_info(j+1)
+    print t
     
 ## a.gopath("/Disk/.Solver#Compute")
 ## i=a.narrays()

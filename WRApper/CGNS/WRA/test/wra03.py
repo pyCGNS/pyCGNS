@@ -1,5 +1,6 @@
 import CGNS.WRA.mll as Mll
 import numpy as N
+import CGNS.PAT.cgnskeywords as CK
 
 # ----------------------------------------------------------------------
 def acube(im=3,jm=5,km=7,offset=0):
@@ -23,17 +24,17 @@ c03=acube(offset=2)
 
 a=Mll.pyCGNS('tmp/testmll03.hdf',Mll.MODE_WRITE)
 a.base_write('Base',3,3)
-a.zone_write(1,'Zone 01',N.array([[3,5,7],[2,4,6],[0,0,0]]),Mll.Structured)
-a.zone_write(1,'Zone 02',N.array([[3,5,7],[2,4,6],[0,0,0]]),Mll.Structured)
-a.zone_write(1,'Zone 03',N.array([[3,5,7],[2,4,6],[0,0,0]]),Mll.Structured)
-a.coord_write(1,1,Mll.RealDouble,Mll.CoordinateX,c01[0])
-a.coord_write(1,1,Mll.RealDouble,Mll.CoordinateY,c01[1])
-a.coord_write(1,1,Mll.RealDouble,Mll.CoordinateZ,c01[2])
-a.coord_write(1,2,Mll.RealDouble,Mll.CoordinateX,c02[0])
-a.coord_write(1,2,Mll.RealDouble,Mll.CoordinateY,c02[1])
-a.coord_write(1,2,Mll.RealDouble,Mll.CoordinateZ,c02[2])
-a.coord_write(1,3,Mll.RealDouble,Mll.CoordinateX,c03[0])
-a.coord_write(1,3,Mll.RealDouble,Mll.CoordinateY,c03[1])
-a.coord_write(1,3,Mll.RealDouble,Mll.CoordinateZ,c03[2])
+a.zone_write(1,'Zone 01',N.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
+a.zone_write(1,'Zone 02',N.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
+a.zone_write(1,'Zone 03',N.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
+a.coord_write(1,1,CK.RealDouble,CK.CoordinateX_s,c01[0])
+a.coord_write(1,1,CK.RealDouble,CK.CoordinateY_s,c01[1])
+a.coord_write(1,1,CK.RealDouble,CK.CoordinateZ_s,c01[2])
+a.coord_write(1,2,CK.RealDouble,CK.CoordinateX_s,c02[0])
+a.coord_write(1,2,CK.RealDouble,CK.CoordinateY_s,c02[1])
+a.coord_write(1,2,CK.RealDouble,CK.CoordinateZ_s,c02[2])
+a.coord_write(1,3,CK.RealDouble,CK.CoordinateX_s,c03[0])
+a.coord_write(1,3,CK.RealDouble,CK.CoordinateY_s,c03[1])
+a.coord_write(1,3,CK.RealDouble,CK.CoordinateZ_s,c03[2])
 a.close()
 
