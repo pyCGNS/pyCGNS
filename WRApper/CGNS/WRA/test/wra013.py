@@ -2,12 +2,11 @@ import CGNS.WRA.mll as Mll
 import numpy as N
 
 # ----------------------------------------------------------------------
-a=Mll.pyCGNS('tmp/testmll36.hdf',Mll.MODE_READ)
-
-t=a.n_rigid_motions(1,1)
+a=Mll.pyCGNS('tmp/testmll20.hdf',Mll.MODE_READ)
+a.gopath('/Base')
+t=a.convergence_read()
 print t
-
-p=a.rigid_motion_read(1,1,1)
+p=a.state_read()
 print p
 
 a.close()

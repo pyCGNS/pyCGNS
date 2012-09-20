@@ -22,7 +22,7 @@ c03=acube(offset=2)
 
 # ------------------------------------------------------------------------
 
-a=Mll.pyCGNS('tmp/testmll35.hdf',Mll.MODE_WRITE)
+a=Mll.pyCGNS('tmp/testmll51.hdf',Mll.MODE_WRITE)
 a.base_write('Base',3,3)
 a.zone_write(1,'Zone 01',N.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
 a.zone_write(1,'Zone 02',N.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
@@ -46,8 +46,11 @@ a.boco_write(1,1,'BC',12,4,2,N.array([[1,1,1],[3,5,1]]))
 a.field_write(1,1,1,3,'data array1',N.ones((2,4,6))*1.2)
 a.field_write(1,1,1,4,'data array2',N.ones((2,4,6))*1.2)
 a.field_write(1,1,1,2,'data array3',N.ones((2,4,6)))
-
-p=a.hole_write(1,1,'hole',2,4,1,2,N.array([[1,1,1],[1,3,6]]))
-print p
-
+a.subreg_bcname_write(1,1,'zone subregion3',3,'bcname')
+a.subreg_bcname_write(1,1,'zone subregion4',3,'gcname')
+a.gopath('/Base/Zone 01/zone subregion3')
+a.ptset_write(4,2,N.array([[1,1,1],[1,2,3]]))
+a.gopath('/Base/Zone 01/zone subregion4')
+a.ptset_write(4,2,N.array([[1,1,1],[1,2,3]]))
 a.close()
+

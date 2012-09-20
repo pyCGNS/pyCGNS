@@ -2,12 +2,11 @@ import CGNS.WRA.mll as Mll
 import numpy as N
 
 # ----------------------------------------------------------------------
-a=Mll.pyCGNS('tmp/testmll36.hdf',Mll.MODE_READ)
+a=Mll.pyCGNS('tmp/testmll52.hdf',Mll.MODE_READ)
 
-t=a.n_rigid_motions(1,1)
-print t
-
-p=a.rigid_motion_read(1,1,1)
-print p
+a.gopath('/Base/Zone 01/GridCoordinates')
+n=a.is_link()
+print n
 
 a.close()
+

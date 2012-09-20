@@ -444,7 +444,9 @@ cdef extern from "cgnslib.h":
                           GridConnectivityType_t type, PointSetType_t ptset_type, cgsize_t npnts,
                           cgsize_t * pnts, char * donorname, int *I)
   int cg_convergence_write(int iterations, char * NormDefinitions)
+  int cg_convergence_read(int *iterations, char **NormDefinitions)
   int cg_state_write(char * StateDescription)
+  int cg_state_read(char **StateDescription)
   int cg_equationset_read(int *EquationDimension,int *GoverningEquationsFlag, int *GasModelFlag,
                           int *ViscosityModelFlag,     int *ThermalConductivityModelFlag,
                           int *TurbulenceClosureFlag,  int *TurbulenceModelFlag)
@@ -489,15 +491,12 @@ cdef extern from "cgnslib.h":
   int cg_dataclass_read(DataClass_t *dataclass)
   int cg_gridlocation_write(GridLocation_t GridLocation)
   int cg_gridlocation_read(GridLocation_t *GridLocation)
-##   int cg_delete_node(char *node_name)
   int cg_ordinal_read(int *Ordinal)
   int cg_ordinal_write(int Ordinal)
   int cg_ptset_info(PointSetType_t *ptset_type, cgsize_t *npnts)
-##   int cg_nfamily_names(int fn, int B, int F, int *nnames)
-##   int cg_family_name_write(int fn, int B, int F, char *name, char *family)
+  int cg_ptset_write(PointSetType_t ptset_type, cgsize_t npnts, cgsize_t *pnts)
   int cg_famname_write(char * family_name)
   int cg_famname_read(char *family_name)
- ##  int cg_multifam_write(char *name, char *family)
   int cg_field_write(int fn, int B, int Z, int S, DataType_t type, char * fieldname,
                      void * field_ptr, int *F)
   int cg_nfields(int fn, int B, int Z, int S, int *nfields)
@@ -541,191 +540,42 @@ cdef extern from "cgnslib.h":
   int cg_ziter_write(int fn, int B, int Z, char * zitername)
   int cg_ziter_read(int fn, int B, int Z, char *zitername)
   int cg_gravity_write(int fn, int B, float *gravity_vector)
+  int cg_gravity_read(int fn, int B, float *gravity_vector)
+  int cg_axisym_write(int fn, int B, float *ref_point, float *axis)
+  int cg_axisym_read(int fn, int B, float *ref_point, float *axis)
+  int cg_rotating_write(float *rot_rate, float *rot_center)
+  int cg_rotating_read(float *rot_rate, float *rot_center)
+  int cg_bc_wallfunction_read(int fn, int B, int Z, int BC, WallFunctionType_t *WallFunctionType)
+  int cg_bc_wallfunction_write(int fn, int B, int Z, int BC, WallFunctionType_t WallFunctionType)
+  int cg_bc_area_read(int fn, int B, int Z, int BC, AreaType_t *AreaType, float *SurfaceArea, char *RegionName)
+  int cg_bc_area_write(int fn, int B, int Z, int BC, AreaType_t AreaType, float SurfaceArea, char *RegionName)
+  int cg_conn_periodic_read(int fn, int B, int Z, int I, float *RotationCenter, float *RotationAngle,
+                            float *Translation)
+  int cg_conn_periodic_write(int fn, int B, int Z, int I, float *RotationCenter, float *RotationAngle,
+                             float *Translation)
+  int cg_1to1_periodic_write(int fn, int B, int Z, int I, float *RotationCenter, float *RotationAngle,
+                             float *Translation)
+  int cg_1to1_periodic_read(int fn, int B, int Z, int I, float *RotationCenter, float *RotationAngle,
+                            float *Translation)
+  int cg_conn_average_read(int fn, int B, int Z, int I, AverageInterfaceType_t *AverageInterfaceType)
+  int cg_conn_average_write(int fn, int B, int Z, int I, AverageInterfaceType_t AverageInterfaceType)
+  int cg_1to1_average_write(int fn, int B, int Z, int I, AverageInterfaceType_t AverageInterfaceType)
+  int cg_1to1_average_read(int fn, int B, int Z, int I, AverageInterfaceType_t *AverageInterfaceType)
+  int cg_rind_read(int *RindData)
+  int cg_rind_write(int * RindData)
+  int cg_link_write(char * nodename, char * filename, char * name_in_file)
+  int cg_is_link(int *path_length)
+  int cg_delete_node(char *node_name)
   char *cg_get_error()
   int cg_gopath(int fn, char *path)
-  
-  # ---------------------------------------------------------------------
-  # Above is wrapped
-  # =====================================================================
-  # Below is to be wrapped soon
-  # ---------------------------------------------------------------------
+  int cg_where(int *fn, int *B, int *depth, char **label, int *num)
+  int cg_cell_dim(int fn, int B, int *cell_dim)
+  int cg_index_dim(int fn, int B, int Z, int *index_dim)
+  int cg_bcdataset_write(char *name, BCType_t BCType, BCDataType_t BCDataType)
+  int cg_bcdataset_info(int *n_dataset)
+  int cg_bcdataset_read(int index, char *name, BCType_t *BCType, int *DirichletFlag, int *NeumannFlag)
+  int cg_bcdata_write(int fn, int B, int Z, int BC, int Dset, BCDataType_t BCDataType)
 
-##   int cg_1to1_read_global(int fn, int B, char **connectname, char **zonename,
-##                           char **donorname, cgsize_t **range, cgsize_t **donor_range,
-##                           int **transform)
-## CGNSDLL int cg_bcdataset_write(const char *name, CGNS_ENUMT(BCType_t) BCType,
-## 	CGNS_ENUMT(BCDataType_t) BCDataType);
-## CGNSDLL int cg_bcdataset_info(int *n_dataset);
-## CGNSDLL int cg_bcdataset_read(int index, char *name,
-## 	CGNS_ENUMT(BCType_t) *BCType, int *DirichletFlag, int *NeumannFlag);
-## CGNSDLL int cg_bcdata_write(int file_number, int B, int Z, int BC, int Dset,
-## 	CGNS_ENUMT(BCDataType_t) BCDataType);
-
-  
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read all GridConnectivity1to1_t Nodes of a base                  *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_1to1_read_global(int fn, int B, char **connectname,
-## 	char **zonename, char **donorname, cgsize_t **range,
-## 	cgsize_t **donor_range, int **transform);
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write ConvergenceHistory_t Nodes                        *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_convergence_read(int *iterations, char **NormDefinitions);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write ReferenceState_t Nodes                            *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_state_read(char **StateDescription);
-
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write Rind_t Nodes                                      *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_rind_read(int *RindData);
-## CGNSDLL int cg_rind_write(const int * RindData);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write Descriptor_t Nodes                                *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_descriptor_read(int descr_no, char *descr_name, char **descr_text);
-  
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write IndexArray/Range_t Nodes  - new in version 2.4    *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_ptset_write(CGNS_ENUMT(PointSetType_t) ptset_type,
-## 	cgsize_t npnts, const cgsize_t *pnts);
-## CGNSDLL int cg_ptset_read(cgsize_t *pnts);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Link Handling Functions - new in version 2.1                     *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_is_link(int *path_length);
-## CGNSDLL int cg_link_read(char **filename, char **link_path);
-## CGNSDLL int cg_link_write(const char * nodename, const char * filename,
-## 	const char * name_in_file);
-
-    
-## CGNSDLL int cg_nfamily_names(int file_number, int B, int F, int *nnames);
-## CGNSDLL int cg_family_name_read(int file_number, int B, int F,
-## 	int N, char *name, char *family);
-## CGNSDLL int cg_family_name_write(int file_number, int B, int F,
-## 	const char *name, const char *family);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write FamilyName_t Nodes                                *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_famname_read(char *family_name);
-## CGNSDLL int cg_famname_write(const char * family_name);
-
-## CGNSDLL int cg_nmultifam(int *nfams);
-## CGNSDLL int cg_multifam_read(int N, char *name, char *family);
-## CGNSDLL int cg_multifam_write(const char *name, const char *family);
-  
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write OversetHoles_t Nodes  				 *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_nholes(int fn, int B, int Z, int *nholes);
-## CGNSDLL int cg_hole_info(int fn, int B, int Z, int I, char *holename,
-## 	CGNS_ENUMT(GridLocation_t) *location,  CGNS_ENUMT(PointSetType_t) *ptset_type,
-## 	int *nptsets, cgsize_t *npnts);
-## CGNSDLL int cg_hole_read(int fn, int B, int Z, int I, cgsize_t *pnts);
-## CGNSDLL int cg_hole_id(int fn, int B, int Z, int I, double *hole_id);
-## CGNSDLL int cg_hole_write(int fn, int B, int Z, const char * holename,
-## 	CGNS_ENUMT(GridLocation_t) location, CGNS_ENUMT(PointSetType_t) ptset_type,
-## 	int nptsets, cgsize_t npnts, const cgsize_t * pnts, int *I);
-  
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write RigidGridMotion_t Nodes				 *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_n_rigid_motions(int file_number, int B, int Z,
-## 	int *n_rigid_motions);
-## CGNSDLL int cg_rigid_motion_read(int file_number, int B, int Z, int R,
-## 	char *name, CGNS_ENUMT(RigidGridMotionType_t) *type);
-
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write ZoneIterativeData_t Node                          *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_ziter_read(int file_number, int B, int Z, char *zitername);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write Gravity_t Nodes                                   *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_gravity_read(int file_number, int B, float *gravity_vector);
-## CGNSDLL int cg_gravity_write(int file_number, int B, float const *gravity_vector);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write Axisymmetry_t Nodes                               *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_axisym_read(int file_number, int B, float *ref_point,
-## 	float *axis);
-## CGNSDLL int cg_axisym_write(int file_number, int B, float const *ref_point,
-##   	float const *axis);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write RotatingCoordinates_t Nodes                       *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_rotating_read(float *rot_rate, float *rot_center);
-## CGNSDLL int cg_rotating_write(float const *rot_rate, float const *rot_center);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write BCProperty_t/WallFunction_t Nodes   	         *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_bc_wallfunction_read(int file_number, int B, int Z, int BC,
-## 	CGNS_ENUMT(WallFunctionType_t) *WallFunctionType);
-## CGNSDLL int cg_bc_wallfunction_write(int file_number, int B, int Z, int BC,
-## 	CGNS_ENUMT(WallFunctionType_t) WallFunctionType);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write BCProperty_t/Area_t Nodes                         *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_bc_area_read(int file_number, int B, int Z, int BC,
-## 	CGNS_ENUMT(AreaType_t) *AreaType, float *SurfaceArea, char *RegionName);
-## CGNSDLL int cg_bc_area_write(int file_number, int B, int Z, int BC,
-## 	CGNS_ENUMT(AreaType_t) AreaType, float SurfaceArea, const char *RegionName);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write GridConnectivityProperty_t/Periodic_t Nodes       *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_conn_periodic_read(int file_number, int B, int Z, int I,
-## 	float *RotationCenter, float *RotationAngle, float *Translation);
-## CGNSDLL int cg_conn_periodic_write(int file_number, int B, int Z, int I,
-## 	float const *RotationCenter, float const *RotationAngle,
-## 	float const *Translation);
-## CGNSDLL int cg_1to1_periodic_write(int file_number, int B, int Z, int I,
-## 	float const *RotationCenter, float const *RotationAngle,
-## 	float const *Translation);
-## CGNSDLL int cg_1to1_periodic_read(int file_number, int B, int Z, int I,
-## 	float *RotationCenter, float *RotationAngle, float *Translation);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *   Read and write GridConnectivityProperty_t/AverageInterface_t Nodes  *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_conn_average_read(int file_number, int B, int Z, int I,
-## 	CGNS_ENUMT(AverageInterfaceType_t) *AverageInterfaceType);
-## CGNSDLL int cg_conn_average_write(int file_number, int B, int Z, int I,
-## 	CGNS_ENUMT(AverageInterfaceType_t) AverageInterfaceType);
-## CGNSDLL int cg_1to1_average_write(int file_number, int B, int Z, int I,
-## 	CGNS_ENUMT(AverageInterfaceType_t) AverageInterfaceType);
-## CGNSDLL int cg_1to1_average_read(int file_number, int B, int Z, int I,
-## 	CGNS_ENUMT(AverageInterfaceType_t) *AverageInterfaceType);
+##  int cg_multifam_write(char *name, char *family)
+##  int cg_nfamily_names(int fn, int B, int F, int *nnames)
+##  int cg_family_name_write(int fn, int B, int F, char *name, char *family)

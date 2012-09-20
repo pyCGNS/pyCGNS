@@ -49,5 +49,6 @@ a.field_write(1,1,1,4,'data array2',N.ones((2,4,6))*1.2)
 a.field_write(1,1,1,2,'data array3',N.ones((2,4,6)))
 
 a.biter_write(1,'biter',22)
+a.ziter_write(1,1,'ziter')
 
 a.close()

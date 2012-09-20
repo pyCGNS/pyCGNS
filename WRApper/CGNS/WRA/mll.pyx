@@ -148,6 +148,22 @@ cdef class pyCGNS(object):
   # ---------------------------------------------------------------------------
   cpdef gopath(self,char *path):
     cgnslib.cg_gopath(self._root,path)
+
+  # ------------------------------------------------------------------------------------------
+##   cpdef where(self):
+##     cdef int fn = -1
+##     cdef int B = -1
+##     cdef int depth = -1
+##     cdef CNY.ndarray[dtype=CNY.int32_t,ndim=1] pnum
+##     cdef CNY.ndarray[dtype=CNY.uint32_t,ndim=1] plab
+##     cdef int* tnum
+##     cdef char* tlab
+##     pnum=PNY.ones((9,),dtype=PNY.int32)
+##     tnum=<int *>pnum.data
+##     plab=PNY.array(tuple(' '*256))
+##     tlab=<char *>plab.data
+##     self._error=cgnslib.cg_where(&fn,&B,&depth,&tlab,tnum)
+##     return (fn,B,depth,plab,pnum)
   # ---------------------------------------------------------------------------
   cpdef nbases(self):
     """
@@ -1553,12 +1569,6 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_dataset_read(self._root,B,Z,BC,DS,name,&bct,&dflag,&nflag)
     return (name,bct,dflag,nflag)
 
-  # -------------------------------------------------------------------------------------
-##   cpdef bcdataset_write(self, char * name, cgnslib.BCType_t bct,
-##                            cgnslib.BCDataType_t bcdt):
-##     self._error=cgnslib.cg_bcdataset_write(name,bct,bcdt)
-##     print cgnslib.cg_get_error(),self._error
-
   # --------------------------------------------------------------------------------------
   cpdef narrays(self):
 
@@ -2177,35 +2187,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_n1to1_global(self._root,B,&n)
     return n
 
-  # ------------------------------------------------------------------------------------------
-##   cpdef _1to1_read_global(self, int B):
-
-##     cdef char ** cname 
-##     cdef char ** zname 
-##     cdef char ** dname 
-##     cdef cgnslib.cgsize_t **  crangeptr
-##     cdef cgnslib.cgsize_t **  drangeptr 
-##     cdef int ** trptr    
-##     cxnum=self.n1to1_global(B)
-##     cn=PNY.chararray((cxnum,1),itemsize=256)
-##     zn=PNY.chararray((cxnum,1),itemsize=256)
-##     dn=PNY.chararray((cxnum,1),itemsize=256)
-##     cn[:]= " "
-##     zn[:]= " "
-##     dn[:]= " "
-##     cnameptr=<char **>CNY.PyArray_DATA(cn)
-##     znameptr=<char **>CNY.PyArray_DATA(zn)
-##     dnameptr=<char **>CNY.PyArray_DATA(dn)
-##     carray=PNY.ones((cxnum,2,3),dtype=PNY.int32)
-##     darray=PNY.ones((cxnum,2,3),dtype=PNY.int32)
-##     tarray=PNY.ones((cxnum,3),dtype=PNY.int32)
-##     crangeptr=<cgnslib.cgsize_t **>CNY.PyArray_DATA(carray)
-##     drangeptr=<cgnslib.cgsize_t **>CNY.PyArray_DATA(darray)
-##     trptr=<int **>CNY.PyArray_DATA(tarray)
-##     self._error=cgnslib.cg_1to1_read_global(self._root,B,cnameptr,znameptr,dnameptr,crangeptr,
-##                                             drangeptr,trptr)
-
-    
+   
   # --------------------------------------------------------------------------------------------    
   cpdef nconns(self, int B, int Z):
 
@@ -2423,6 +2405,26 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_convergence_write(iter,ndef)
 
   # --------------------------------------------------------------------------------------------
+  cpdef convergence_read(self):
+
+    """
+    Reads a convergence history node.
+
+    - Args:
+    * None
+
+    - Return:
+    * number of iterations for which convergence information is recorded (`int`)
+    * description of the convergence information (`string`)
+
+    """
+    
+    cdef int iter = -1
+    cdef char * ndef = ""
+    self._error=cgnslib.cg_convergence_read(&iter,&ndef)
+    return (iter,ndef)
+
+  # --------------------------------------------------------------------------------------------
   cpdef state_write(self, char * sdes):
 
     """
@@ -2437,6 +2439,12 @@ cdef class pyCGNS(object):
     """
     
     self._error=cgnslib.cg_state_write(sdes)
+
+  # --------------------------------------------------------------------------------------------
+  cpdef state_read(self):
+    cdef char * des = ""
+    self._error=cgnslib.cg_state_read(&des)
+    return des
 
   # --------------------------------------------------------------------------------------------
   cpdef equationset_write(self, int eqdim):
@@ -3056,7 +3064,7 @@ cdef class pyCGNS(object):
   cpdef conversion_write(self, cgnslib.DataType_t dt, fact):
 
     """
-    Writes the conversion factors in a new node.
+    Writes a conversion factors node.
 
     - Args:
     * `dt` : data type in which the exponents are recorded (`int`)
@@ -3104,7 +3112,7 @@ cdef class pyCGNS(object):
   cpdef conversion_read(self):
 
     """
-     Returns the conversion factors.
+     Returns conversion factors.
 
     - Args:
     * None
@@ -3132,12 +3140,12 @@ cdef class pyCGNS(object):
   cpdef dataclass_write(self, cgnslib.DataClass_t dclass):
 
     """
-    Writes the data class in a new node.
+    Writes a data class.
 
     - Args:
     * `dclass` : data class for the nodes at this level (`int`)
-      The admissible data classes are Dimensional, NormalizedByDimensional, NormalizedByUnknownDimensional,
-      NondimensionalParameter and DimensionlessConstant.
+      The admissible data classes are `Dimensional`, `NormalizedByDimensional`,
+      `NormalizedByUnknownDimensional`, `NondimensionalParameter` and `DimensionlessConstant`.
 
     - Return:
     * None
@@ -3150,7 +3158,7 @@ cdef class pyCGNS(object):
   cpdef dataclass_read(self):
 
     """
-    Returns the data class.
+    Returns a data class.
 
     - Args:
     * None
@@ -3168,15 +3176,19 @@ cdef class pyCGNS(object):
   cpdef gridlocation_write(self, cgnslib.GridLocation_t gloc):
 
     """
-    Writes the grid location in a new node.
+    Writes a grid location.
 
     - Args:
     * `gloc` : location in the grid (`int`)
-      The admissible locations are CG_Null, CG_UserDefined, Vertex, CellCenter, FaceCenter,
-      IFaceCenter, JFaceCenter, KFaceCenter, and EdgeCenter.
+      The admissible locations are `CG_Null`, `CG_UserDefined`, `Vertex`, `CellCenter`,
+      `FaceCenter`, `IFaceCenter`, `JFaceCenter`, `KFaceCenter`, and `EdgeCenter`.
       
     - Return:
     * None
+
+    - Remarks:
+    * You must use the `gopath` function to access the node in which you want to write the
+      grid location.
     
     """
     
@@ -3186,13 +3198,17 @@ cdef class pyCGNS(object):
   cpdef gridlocation_read(self):
 
     """
-    Reads the grid location.
+    Reads a grid location.
 
     - Args:
     * None
       
     - Return:
     * location in the grid (`int`)
+
+    - Remarks:
+    * You must use the `gopath` function to access the node in which you want to read the
+      grid location.
     
     """
     
@@ -3204,13 +3220,17 @@ cdef class pyCGNS(object):
   cpdef ordinal_write(self, int ord):
 
     """
-    Writes the ordinal value in a new node.
+    Writes an ordinal value.
 
     - Args:
     * `ord` : any integer value  (`int`)
       
     - Return:
     * None
+
+    - Remarks:
+    * You must use the `gopath` function to access the node in which you want to write the
+      ordinal value.
     
     """
     
@@ -3220,13 +3240,17 @@ cdef class pyCGNS(object):
   cpdef ordinal_read(self):
 
     """
-    Reads the ordinal value.
+    Reads an ordinal value.
 
     - Args:
     * None 
       
     - Return:
-    * any integer value  (`int`)
+    * any integer value (`int`)
+
+    - Remarks:
+    * You must use the `gopath` function to access the node in which you want to read the
+      ordinal value.
     
     """
     
@@ -3238,18 +3262,20 @@ cdef class pyCGNS(object):
   cpdef ptset_info(self):
 
     """
-    Returns a tuple with information about the point set.
+    Returns a tuple with information about a point set.
   
     - Args:
     * None
       
     - Return:
-    * point set type  (`int`)
+    * point set type (`int`)
       The admissible types are PointRange for a range of points or cells, and PointList for a
       list of discrete points or cells.
     * number of points or cells in the point set (`int`)
-      For a point set type of PointRange, the number is always two.
-      For a point set type of PointList, this is the number of points or cells in the list. 
+
+    - Remarks:
+    * You must use the `gopath` function to access the node in which you want to extract information.
+      
 
     """
     
@@ -3259,17 +3285,94 @@ cdef class pyCGNS(object):
     return (pst,npnts)
 
   # ------------------------------------------------------------------------------------------
+  cpdef ptset_write(self, cgnslib.PointSetType_t pst, cgnslib.cgsize_t npnts, pnts):
+
+    """
+    Creates point set data.
+    
+    - Args:
+    * `pst` : point set type (`int`)
+    * `npnts` : number of points or cells used to define the point set (`int`)
+      For a point set type of PointRange, the number is always two.
+      For a point set type of PointList, this is the number of points or cells in the list. 
+    * `pnts` : array of point or cell indices used to define the point set  (`numpy.ndarray`)
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * You must use the `gopath` function to access the node in which you want to write point
+      set data.
+
+    """
+    
+    cdef cgnslib.cgsize_t * pntsptr
+    points=PNY.int32(pnts)
+    pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(points)
+    self._error=cgnslib.cg_ptset_write(pst,npnts,pntsptr)
+
+  # ------------------------------------------------------------------------------------------  
   cpdef famname_write(self, char * name):
+
+    """
+    Writes a family name.
+    
+    - Args:
+    * `name` : family name (`string`)
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * You must use the `gopath` function to access the node in which you want to write the
+      family name.
+
+    """
+    
     self._error=cgnslib.cg_famname_write(name)
 
   # ------------------------------------------------------------------------------------------
   cpdef famname_read(self):
-    cdef char * name = " "
+
+    """
+    Returns a family name.
+    
+    - Args:
+    * None
+
+    - Returns:
+    * family name (`string`)
+
+    - Remarks:
+    * You must use the `gopath` function to access the node in which you want to read the
+      family name.
+
+    """
+    
+    cdef char * name = ""
     self._error=cgnslib.cg_famname_read(name)
     return name
 
   # ------------------------------------------------------------------------------------------
   cpdef field_write(self, int B, int Z, int S, cgnslib.DataType_t dt, char * name, array):
+
+    """
+    Writes flow solution data.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `S` : flow solution id (`int`)
+    * `dt` : data type of the solution array (`int`)
+      The admissible data types for a solution array are `Integer`, `RealSingle`, and `RealDouble`. 
+    * `name` : name of the solution array (`string`)
+    * `array` : array of solution values (`numpy.ndarray`)
+
+    - Returns:
+    * solution array id (`int`)
+
+    """
+    
     cdef int F = -1
     cdef int * iptr
     cdef float * sptr
@@ -3294,12 +3397,42 @@ cdef class pyCGNS(object):
 
   # ------------------------------------------------------------------------------------------
   cpdef nfields(self, int B, int Z, int S):
+
+    """
+    Returns the number of flow solution arrays.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `S` : flow solution id (`int`)
+
+    - Returns:
+    * number of data arrays in the flow solution node (`int`)
+
+    """
+    
     cdef int n = -1
     self._error=cgnslib.cg_nfields(self._root,B,Z,S,&n)
     return n
   
   # ------------------------------------------------------------------------------------------
   cpdef field_info(self, int B, int Z, int S, int F):
+
+    """
+    Returns a tuple with information about a flow solution array.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `S` : flow solution id (`int`)
+    * `F` : solution array id (`int`)
+
+    - Returns:
+    * data type of the solution array (`int`)
+    * name of the solution array (`string`)
+
+    """
+    
     cdef cgnslib.DataType_t dt
     cdef char * name = " "
     self._error=cgnslib.cg_field_info(self._root,B,Z,S,F,&dt,name)
@@ -3308,6 +3441,28 @@ cdef class pyCGNS(object):
   # ------------------------------------------------------------------------------------------
   cpdef field_read(self, int B, int Z, int S, char * name, cgnslib.DataType_t dt,
                    rmin, rmax):
+
+    """
+    Reads flow solution data for a given range.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `S` : flow solution id (`int`)
+    * `dt` : data type of the solution array (`int`)
+      The admissible data types for a solution array are `Integer`, `RealSingle`, and `RealDouble`. 
+    * `rmin` : lower range index (`numpy.ndarray`)
+    * `rmax` : upper range index (`numpy.ndarray`)
+
+    - Returns:
+    * array of solution values for the range [`rmin`,`rmax`] (`numpy.ndarray`)
+
+    - Remarks:
+    * The requested data type can be different as the one in which the solution values are recorded
+      in the file. 
+
+    """
+    
     cdef cgnslib.cgsize_t * rminptr
     cdef cgnslib.cgsize_t * rmaxptr
     cdef int * iptr
@@ -3351,6 +3506,25 @@ cdef class pyCGNS(object):
   cpdef field_partial_write(self, int B, int Z, int S, cgnslib.DataType_t dt, char * name,
                             rmin, rmax, array):
 
+    """
+    Writes flow solution data for a given range.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `S` : flow solution id (`int`)
+    * `dt` : data type of the solution array (`int`)
+      The admissible data types for a solution array are `Integer`, `RealSingle`, and `RealDouble`. 
+    * `name` : name of the solution array (`string`)
+    * `rmin` : lower range index (`numpy.ndarray`)
+    * `rmax` : upper range index (`numpy.ndarray`)
+    * `array` : array of solution values (`numpy.ndarray`)
+
+    - Returns:
+    * solution array id (`int`)
+
+    """
+
     cdef int F = -1
     cdef int * iptr
     cdef float * sptr
@@ -3380,6 +3554,24 @@ cdef class pyCGNS(object):
   # ------------------------------------------------------------------------------------------
   cpdef sol_ptset_write(self, int B, int Z, char * name, cgnslib.GridLocation_t loc,
                         cgnslib.PointSetType_t pst, cgnslib.cgsize_t npnts, pnts):
+
+    """
+    Creates a point set flow solution node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `name` : name of the flow solution node (`string`)
+    * `loc` : grid location used to write the solution (`int`)
+      The admissible locations are `Vertex`, `IFaceCenter`, `JFaceCenter` and `KFaceCenter`. 
+    * `pst` : point set type defining the interface for the solution data (`int`)
+    * `npnts` : number of points defining the interface for the solution data (`int`)
+    * `pnts` : array of points defining the interface for the solution data (`numpy.ndarray`)
+
+    - Returns:
+    * flow solution id (`int`)
+   
+    """
       
     cdef int S = -1
     cdef cgnslib.cgsize_t * pntsptr
@@ -3390,6 +3582,20 @@ cdef class pyCGNS(object):
 
   # ------------------------------------------------------------------------------------------
   cpdef sol_ptset_info(self, int B, int Z, int S):
+
+    """
+    Returns a tuple with information about a point set flow solution node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `S` : flow solution id (`int`)
+
+    - Returns:
+    * point set type defining the interface for the solution data (`int`)
+    * number of points defining the interface for the solution data (`int`)
+    
+    """
       
     cdef cgnslib.PointSetType_t pst
     cdef cgnslib.cgsize_t npnts
@@ -3398,8 +3604,21 @@ cdef class pyCGNS(object):
 
   # ------------------------------------------------------------------------------------------
   cpdef sol_ptset_read(self, int B, int Z, int S):
-    cdef cgnslib.cgsize_t * pntsptr
-      
+
+    """
+    Returns the array of points which defines the interface for solution data. 
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `S` : flow solution id (`int`)
+
+    - Returns:
+    * array of points defining the interface for the solution data (`numpy.ndarray`)
+   
+    """
+    
+    cdef cgnslib.cgsize_t * pntsptr      
     ndim=self.base_read(B)[2]
     npnts=self.sol_ptset_info(B,Z,S)[1]
     pnts=PNY.ones((npnts,ndim),dtype=PNY.int32)
@@ -3410,6 +3629,27 @@ cdef class pyCGNS(object):
   # ------------------------------------------------------------------------------------------
   cpdef subreg_ptset_write(self, int  B, int Z, char * regname, int dim, cgnslib.GridLocation_t loc,
                            cgnslib.PointSetType_t pst, cgnslib.cgsize_t npnts,pnts):
+
+    """
+    Creates a point set zone subregion node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `regname` : name of the zone subregion node (`string`)
+    * `dim` : dimensionality of the subregion (`int`)
+      The dimensionality equals 1 for lines, 2 for faces and 3 for volumes.
+    * `loc` : grid location used to define the point set (`int`)
+      The admissible locations are `Vertex` and `CellCenter`.
+    * `pst` : point set type defining the interface for the zone subregion data (`int`)
+    * `npnts` : number of points defining the interface for the subregion data (`int`)
+    * `pnts` : array of points defining the interface for the zone subregion data (`numpy.ndarray`)
+
+    - Returns:
+    * zone subregion id (`int`)
+   
+    """
+    
     cdef int S = -1
     cdef cgnslib.cgsize_t * pntsptr
     array=PNY.int32(pnts)
@@ -3419,57 +3659,166 @@ cdef class pyCGNS(object):
 
   # ------------------------------------------------------------------------------------------
   cpdef subreg_bcname_write(self, int B, int Z, char * regname, int dim, char * bcname):
+
+    """
+    Creates a zone subregion node that references a boundary condition node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `regname` : name of the zone subregion node (`string`)
+    * `dim` : dimensionality of the subregion (`int`)
+      The dimensionality equals 1 for lines, 2 for faces and 3 for volumes.
+    * `bcname` : name of the boundary condition node defining the zone subregion (`string`)
+
+    - Returns:
+    * zone subregion id (`int`)
+
+    """
+    
     cdef int S = -1
     self._error=cgnslib.cg_subreg_bcname_write(self._root,B,Z,regname,dim,bcname,&S)
     return S
 
   # ------------------------------------------------------------------------------------------
   cpdef subreg_gcname_write(self, int B, int Z, char *regname, int dim, char * gcname):
+
+    """
+    Creates a zone subregion node that references a grid connectivity node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `regname` : name of the zone subregion node (`string`)
+    * `dim` : dimensionality of the subregion (`int`)
+      The dimensionality equals 1 for lines, 2 for faces and 3 for volumes.
+    * `gcname` : name of the generalized grid connectivity node or name of the 1to1 grid connectivity
+      node defining the zone subregion (`string`)
+
+    - Returns:
+    * zone subregion id (`int`)
+
+    """
+    
     cdef int S = -1
     self._error=cgnslib.cg_subreg_gcname_write(self._root,B,Z,regname,dim,gcname,&S)
     return S
 
   # ------------------------------------------------------------------------------------------
   cpdef nsubregs(self, int B, int Z):
+
+    """
+    Returns the number of zone subregion nodes.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+
+    - Returns:
+    * number of zone subregion nodes in the zone (`int`)
+
+    """
+    
     cdef int n = -1
     self._error=cgnslib.cg_nsubregs(self._root,B,Z,&n)
     return n
 
   # ------------------------------------------------------------------------------------------
   cpdef subreg_info(self, int B, int Z, int S):
-    cdef char * regname = " "
+
+    """
+    Returns a tuple with information about a zone subregion node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `S` : zone subregion id (`int`)
+
+    - Returns:
+    * name of the zone subregion node (`string`)
+    * dimensionality of the subregion (`int`)
+      The dimensionality equals 1 for lines, 2 for faces and 3 for volumes.
+    * grid location used to define the point set (`int`)
+      The admissible locations are `Vertex` and `CellCenter`.
+    * point set type defining the interface for the subregion data (`int`)
+    * number of points defining the interface for the subregion data (`int`)
+    * string length of a boundary condition node name (`int`)
+    * string length of a grid connectivity node name (`int`)
+
+    """
+      
+    cdef char * regname = ""
     cdef int dim = -1
     cdef cgnslib.GridLocation_t loc
     cdef cgnslib.PointSetType_t pst
     cdef cgnslib.cgsize_t npnts
     cdef int bcl = -1
     cdef int gcl = -1
-
     self._error=cgnslib.cg_subreg_info(self._root,B,Z,S,regname,&dim,&loc,&pst,&npnts,&bcl,&gcl)
     return (regname,dim,loc,pst,npnts,bcl,gcl)
 
   # ------------------------------------------------------------------------------------------
   cpdef subreg_ptset_read(self, int B, int Z, int S):
+
+    """
+    Returns the array of points defining a zone subregion interface.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `S` : zone subregion id (`int`)
+
+    - Returns:
+    * array of points defining the interface for the zone subregion data (`numpy.ndarray`)
+   
+    """
+    
     cdef cgnslib.cgsize_t * pntsptr
     npnts=self.subreg_info(B,Z,S)[4]
     ndim=self.base_read(B)[2]
     pnts=PNY.ones((npnts,ndim),dtype=PNY.int32)
     pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(pnts)
-
     self._error=cgnslib.cg_subreg_ptset_read(self._root,B,Z,S,pntsptr)
     return pnts
 
   # ------------------------------------------------------------------------------------------
   cpdef subreg_bcname_read(self, int B, int Z, int S):
-    cdef char * bcname = " "
 
+    """
+    Returns the boundary condition node name for a zone subregion node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `S` : zone subregion id (`int`)
+
+    - Returns:
+    * name of the boundary condition node defining the subregion (`string`)
+
+    """
+    
+    cdef char * bcname = ""
     self._error=cgnslib.cg_subreg_bcname_read(self._root,B,Z,S,bcname)
     return bcname
 
   # ------------------------------------------------------------------------------------------
   cpdef subreg_gcname_read(self, int B, int Z, int S):
-    cdef char * gcname = " "
 
+    """
+    Returns the grid connectivity node name for a zone subregion node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `S` : zone subregion id (`int`)
+
+    - Returns:
+    * name of the generalized grid connectivity node or name of the 1to1 grid connectivity node
+      which defines the subregion (`string`)
+
+    """
+    
+    cdef char * gcname = ""
     self._error=cgnslib.cg_subreg_gcname_read(self._root,B,Z,S,gcname)
     return gcname
 
@@ -3477,9 +3826,27 @@ cdef class pyCGNS(object):
   cpdef hole_write(self, int B, int Z, char * name, cgnslib.GridLocation_t loc,
                    cgnslib.PointSetType_t pst, int nptsets, cgnslib.cgsize_t npnts,
                    pnts):
+
+    """
+    Creates an overset hole data node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `name` : name of the overset hole (`string`)
+    * `loc` : grid location used to define the point set (`int`)
+    * `pst` : point set type used to define the hole (`int`)
+    * `nptsets` : number of point sets used to define the hole (`int`)
+    * `npnts` : number of points or cells in the point set (`int`)
+    * `pnts` : array of points or cells in the point set (`numpy.ndarray`)
+
+    - Returns:
+    * overset hole id (`int`)
+
+    """
+    
     cdef int I = -1
     cdef cgnslib.cgsize_t * pntsptr
-
     array=PNY.int32(pnts)
     pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(array)
     self._error=cgnslib.cg_hole_write(self._root,B,Z,name,loc,pst,nptsets,npnts,pntsptr,&I)
@@ -3487,32 +3854,72 @@ cdef class pyCGNS(object):
 
   # ------------------------------------------------------------------------------------------
   cpdef nholes(self, int B, int Z):
-    cdef int n = -1
 
+    """
+    Returns the number of overset hole data nodes.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+
+    - Returns:
+    * number of overset hole data nodes in the zone (`int`)
+
+    """
+    
+    cdef int n = -1
     self._error=cgnslib.cg_nholes(self._root,B,Z,&n)
     return n
 
   # ------------------------------------------------------------------------------------------
   cpdef hole_info(self, int B, int Z, int I):
-    cdef char * name = " "
+
+    """
+    Returns a tuple with information about an overset hole data node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `I` : overset hole id (`int`)
+
+    - Returns:
+    * name of the overset hole (`string`)
+    * grid location used to define the point set (`int`)
+    * point set type used to define the hole (`int`)
+    * number of point sets used to define the hole (`int`)
+    * number of points or cells in the point set (`int`)
+
+    """
+    
+    cdef char * name = ""
     cdef cgnslib.GridLocation_t loc
     cdef cgnslib.PointSetType_t pst
     cdef int nptsets = -1
     cdef cgnslib.cgsize_t npnts
-
     self._error=cgnslib.cg_hole_info(self._root,B,Z,I,name,&loc,&pst,&nptsets,&npnts)
     return (name,loc,pst,nptsets,npnts)
 
   # ------------------------------------------------------------------------------------------
   cpdef hole_read(self, int B, int Z, int I):
 
-    cdef cgnslib.cgsize_t * pntsptr 
+    """
+    Returns the array of points defining an overset hole.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `I` : overset hole id (`int`)
 
+    - Returns:
+    * array of points or cells in the point set (`numpy.ndarray`)
+
+    """
+
+    cdef cgnslib.cgsize_t * pntsptr 
     npnts=self.hole_info(B,Z,I)[4]
     ndim=self.base_read(B)[2]
     pnts=PNY.ones((npnts,ndim),dtype=PNY.int32)
     pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(pnts)
-
     self._error=cgnslib.cg_hole_read(self._root,B,Z,I,pntsptr)
     return pnts
 
@@ -3525,27 +3932,84 @@ cdef class pyCGNS(object):
 
   # ------------------------------------------------------------------------------------------
   cpdef rigid_motion_write(self, int B, int Z, char * name, cgnslib.RigidGridMotionType_t rgmt):
+
+    """
+    Creates a rigid grid motion node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `name` : name of the node (`string`)
+    * `rgmt` : rigid grid motion type (`int`)
+
+    - Returns:
+    * rigid grid motion id (`int`)
+
+    """
+    
     cdef int R = -1
     self._error=cgnslib.cg_rigid_motion_write(self._root,B,Z,name,rgmt,&R)
-    print cgnslib.cg_get_error()
     return R
 
   # ------------------------------------------------------------------------------------------
   cpdef n_rigid_motions(self, int B, int Z):
+
+    """
+    Returns the number of rigid grid motion nodes.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+
+    - Returns:
+    * number of rigid grid motions in the zone (`int`)
+
+    """
+    
     cdef int nrm = -1
     self._error=cgnslib.cg_n_rigid_motions(self._root,B,Z,&nrm)
     return nrm
 
   # ------------------------------------------------------------------------------------------
   cpdef rigid_motion_read(self, int B, int Z, int R):
+
+    """
+    Returns a tuple with information about a rigid grid motion node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `R` : arbitrary grid motion id (`int`)
+
+    - Returns:
+    * name of the node (`string`)
+    * rigid grid motion type (`int`)
+
+    """
+    
     cdef char * name = " "
     cdef cgnslib.RigidGridMotionType_t rgmt
-    self._error=cgnslib.cg_rigid_motion_read(self._root,B,Z,R,name,&rgmt)
     print cgnslib.cg_get_error()
+    self._error=cgnslib.cg_rigid_motion_read(self._root,B,Z,R,name,&rgmt)
     return (name,rgmt)
 
   # ------------------------------------------------------------------------------------------
   cpdef arbitrary_motion_read(self, int B, int Z, int A):
+
+    """
+    Returns a tuple with information about an arbitrary grid motion node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `A` : arbitrary grid motion id (`int`)
+
+    - Returns:
+    * name of the node (`string`)
+    * arbitrary grid motion type (`int`)
+
+    """
+    
     cdef char * name = ""
     cdef cgnslib.ArbitraryGridMotionType_t agmt 
     self._error=cgnslib.cg_arbitrary_motion_read(self._root,B,Z,A,name,&agmt)    
@@ -3554,32 +4018,111 @@ cdef class pyCGNS(object):
   # ------------------------------------------------------------------------------------------
   cpdef arbitrary_motion_write(self, int B, int Z, char * name,
                                cgnslib.ArbitraryGridMotionType_t agmt):
+
+    """
+    Creates an arbitrary grid motion node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `name` : name of the node (`string`)
+    * `agmt` : arbitrary grid motion type (`int`)
+
+    - Returns:
+    * arbitrary grid motion id (`int`)
+
+    """
+    
     cdef int A = -1
     self._error=cgnslib.cg_arbitrary_motion_write(self._root,B,Z,name,agmt,&A)
     return A
 
   # ------------------------------------------------------------------------------------------
   cpdef n_arbitrary_motions(self, int B, int Z):
+
+    """
+    Returns the number of arbitrary grid motion nodes.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+
+    - Returns:
+    * number of arbitrary grid motion nodes in the zone (`int`)
+
+    """
+    
     cdef int n = -1
     self._error=cgnslib.cg_n_arbitrary_motions(self._root,B,Z,&n)
     return n
 
   # ------------------------------------------------------------------------------------------
   cpdef simulation_type_write(self, int B, cgnslib.SimulationType_t st):
+
+    """
+    Writes the simulation type.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `st` : simulation type (`int`)
+
+    - Returns:
+    * None
+
+    """
+    
     self._error=cgnslib.cg_simulation_type_write(self._root,B,st)
 
   # ------------------------------------------------------------------------------------------
   cpdef simulation_type_read(self, int B):
+
+    """
+    Reads the simulation type.
+    
+    - Args:
+    * `B` : base id (`int`)
+
+    - Returns:
+    * simulation type (`int`)
+
+    """
+    
     cdef cgnslib.SimulationType_t st
     self._error=cgnslib.cg_simulation_type_read(self._root,B,&st)
     return st
 
   # ------------------------------------------------------------------------------------------
   cpdef biter_write(self, int B, char * name, int nsteps):
+
+    """
+    Writes the number of iterations.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `name` : name of the node (`string`)
+    * `nsteps` : number of time steps or iterations (`int`)
+
+    - Returns:
+    * None
+
+    """
+    
     self._error=cgnslib.cg_biter_write(self._root,B,name,nsteps)
 
   # ------------------------------------------------------------------------------------------
   cpdef biter_read(self, int B):
+
+    """
+    Returns the number of iterations.
+    
+    - Args:
+    * `B` : base id (`int`)
+
+    - Returns:
+    * `nsteps` : number of time steps or iterations (`int`)
+    
+    """
+    
     cdef char * name = ""
     cdef int nsteps = -1
     self._error=cgnslib.cg_biter_read(self._root,B,name,&nsteps)
@@ -3587,36 +4130,750 @@ cdef class pyCGNS(object):
 
   # ------------------------------------------------------------------------------------------
   cpdef ziter_write(self, int B, int Z, char * zname):
+
+    """
+    Creates a `ZoneIterativeData_t` node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `zname` : name of the node (`string`)
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * If there are no `BaseIterativeData_t` nodes in the tree, the `ziter_read` function can't read
+      the name of the node. That's why, you must create a `BaseIterativeData_t` node with a
+      `ZoneIterativeData_t` node.
+
+    """
+    
     self._error=cgnslib.cg_ziter_write(self._root,B,Z,zname)
 
   # ------------------------------------------------------------------------------------------
-  cpdef ziter_read(self, int B, int Z):  
+  cpdef ziter_read(self, int B, int Z):
+
+    """
+    Reads the name of a `ZoneIterativeData_t` node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+
+    - Returns:
+    * name of the node (`string`)
+
+    - Remarks:
+    * If there are no `BaseIterativeData_t` nodes in the tree, the `ziter_read` function can't read
+      the name of the node. That's why, you must create a `BaseIterativeData_t` node with a
+      `ZoneIterativeData_t` node.
+
+    """
+    
     cdef char * zname = ""
     biter=self.biter_read(B)
     if (biter<0):
-      print 'error'
+      print 'You must create a BaseIterativeData_t t node to read the ZoneIterativeData_t node'
+      return
     else:
       self._error=cgnslib.cg_ziter_read(self._root,B,Z,zname)
       return zname
-  
-##   # ------------------------------------------------------------------------------------------
-##   cpdef gravity_write(self, B, gvector):
-##     gravity_vector=PNY.float32(gvector)
-  
-##   cpdef multifam_write(self, char * name, char * fam):
-##       self._error=cgnslib.cg_multifam_write(name,fam)
-    
-##   cpdef family_name_write(self, int B, int F, char * name, char * family):
-##     self._error=cgnslib.cg_family_name_write(self._root,B,F,name,family)
-##     print cgnslib.cg_get_error()
 
   # ------------------------------------------------------------------------------------------
-##   cpdef nfamily_names(self, int B, int F):
-##     cdef int n = -1
-##     self._error=cgnslib.cg_nfamily_names(self._root,B,F,&n)
-##     return n
-  
-## # =================================================================================
+  cpdef gravity_write(self, B, gvector):
 
+    """
+    Creates a `Gravity_t` node containing the gravity vector coordinates.
     
+    - Args:
+    * `B` : base id (`int`)
+    * `gravector` : array of size equal to the physicial dimensions of the base which stores
+      the gravity vector components (`numpy.ndarray`)
 
+    - Returns:
+    * None
+
+    """
+  
+    cdef float * vectorptr
+    gravity_vector=PNY.float32(gvector)
+    vectorptr=<float *>CNY.PyArray_DATA(gravity_vector)
+    self._error=cgnslib.cg_gravity_write(self._root,B,vectorptr)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef gravity_read(self, B):
+ 
+    """
+    Returns the gravity vector coordinates.
+    
+    - Args:
+    * `B` : base id (`int`)
+
+    - Returns:
+    * array of size equal to the physicial dimensions of the base which stores
+      the gravity vector components (`numpy.ndarray`)
+
+    """
+  
+    cdef float * vectorptr
+    pdim=self.base_read(B)[3]
+    vector=PNY.ones((pdim,),dtype=PNY.float32)
+    vectorptr=<float *>CNY.PyArray_DATA(vector)
+    self._error=cgnslib.cg_gravity_read(self._root,B,vectorptr)
+    return vector
+
+  # ------------------------------------------------------------------------------------------
+  cpdef axisym_write(self, int B, refpt, axis):
+
+    """
+    Creates a `Axisymmetry_t` node which stores axisymmetry data.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `refpt` : array of 2 elements containing the origin coordinates used for defining the
+      rotation axis (`numpy.ndarray`)
+    * `axis` : array of 2 elements containing the direction cosines of the rotation axis
+      (`numpy.ndarray`)
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * This function can only be used if the physical dimensions of the base are equal to 2.
+
+    """
+    
+    cdef float * refptptr
+    cdef float * axisptr
+    refpoint=PNY.float32(refpt)
+    ax=PNY.float32(axis)
+    refptptr=<float *>CNY.PyArray_DATA(refpoint)
+    axisptr=<float *>CNY.PyArray_DATA(ax)
+    self._error=cgnslib.cg_axisym_write(self._root,B,refptptr,axisptr)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef axisym_read(self, int B):
+
+    """
+    Returns a tuple with information about the axisymmetry data.
+    
+    - Args:
+    * `B` : base id (`int`)
+    
+    - Returns:
+    * array of 2 elements containing the origin coordinates used for defining the rotation axis
+      (`numpy.ndarray`)
+    * array of 2 elements containing the direction cosines of the rotation axis (`numpy.ndarray`)
+
+    """
+    
+    cdef float * refptptr
+    cdef float * axisptr
+    refpoint=PNY.ones((2,),dtype=PNY.float32)
+    ax=PNY.ones((2,),dtype=PNY.float32)
+    refptptr=<float *>CNY.PyArray_DATA(refpoint)
+    axisptr=<float *>CNY.PyArray_DATA(ax)
+    self._error=cgnslib.cg_axisym_read(self._root,B,refptptr,axisptr)
+    return (refpoint,ax)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef rotating_write(self, rotrate, rotcenter):
+
+    """
+    Creates a rotating coordinates data node.
+    
+    - Args:
+    * `rotrate` : components of the angular velocity of the grid about the center of rotation
+      (`numpy.ndarray`)
+    * `rotcenter` : coordinates of the center of rotation (`numpy.ndarray`)
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * You must use the `gopath` function to access the node in which you want to create the rotating
+      coordinates data.
+
+    """
+    
+    cdef float * rateptr
+    cdef float * rotptr
+    rate=PNY.float32(rotrate)
+    rot=PNY.float32(rotcenter)
+    rateptr=<float *>CNY.PyArray_DATA(rate)
+    rotptr=<float *>CNY.PyArray_DATA(rot)
+    self._error=cgnslib.cg_rotating_write(rateptr,rotptr)
+
+  # ------------------------------------------------------------------------------------------
+##   cpdef rotating_read(self):
+
+##     """
+##     Returns a tuple with information about the rotating coordinates.
+    
+##     - Args:
+##     * None
+    
+##     - Returns:
+##     * components of the angular velocity of the grid about the center of rotation (`numpy.ndarray`)
+##     * coordinates of the center of rotation (`numpy.ndarray`)
+
+##     - Remarks:
+##     * You must use the `gopath` function to access the node in which you want to read rotating coordinates data.
+
+##     """
+    
+##     cdef float * rateptr
+##     cdef float * rotptr
+##     B=self.where()[1]
+##     pdim=self.base_read(B)[3]
+##     rate=PNY.ones((pdim,),dtype=PNY.float32)
+##     rot=PNY.ones((pdim,),dtype=PNY.float32)
+##     rateptr=<float *>CNY.PyArray_DATA(rate)
+##     rotptr=<float *>CNY.PyArray_DATA(rot)
+##     self._error=cgnslib.cg_rotating_read(rateptr,rotptr)
+##     return (rate,rot)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef bc_wallfunction_write(self, int B, int Z, int BC, cgnslib.WallFunctionType_t wft):
+
+    """
+    Creates a `WallFunction_t` node which stores data about the wall functions.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `BC` : boundary condition id (`int`)
+    * `wft` : wall function type (`int`)
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * The `WallFunction_t` nodes  are stored in the `BCProperty_t` nodes.
+      If no nodes of this kind exists, the function `bc_area_write` will create
+      a `BCProperty_t` node.
+    * Several `WallFunction_t` nodes may be created under the same `BCProperty_t`
+      node.
+
+    """
+    
+    self._error=cgnslib.cg_bc_wallfunction_write(self._root,B,Z,BC,wft)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef bc_wallfunction_read(self, int B, int Z, int BC):
+
+    """
+    Returns a tuple with information about the wall functions.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `BC` : boundary condition id (`int`)
+
+    - Returns:
+    * wall function type (`int`)
+
+    """
+    
+    cdef cgnslib.WallFunctionType_t wft
+    self._error=cgnslib.cg_bc_wallfunction_read(self._root,B,Z,BC,&wft)
+    return wft
+
+  # ------------------------------------------------------------------------------------------
+  cpdef bc_area_write(self, int B, int Z, int BC, cgnslib.AreaType_t atype, float sarea, char * name):
+
+    """
+    Creates a `Area_t` node which stores boundary condition properties.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `BC` : boundary condition id (`int`)
+    * `atype` : type of area (`int`)
+    * `sarea` : size of the area (`float`)
+    * `name` : region name (`string`)
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * The `Area_t` nodes  are stored in the `BCProperty_t` nodes.
+      If no nodes of this kind exists, the function `bc_area_write` will create
+      a `BCProperty_t` node.
+    * Several `Area_t` nodes may be created under the same `BCProperty_t`
+      node.
+
+    """
+    
+    self._error=cgnslib.cg_bc_area_write(self._root,B,Z,BC,atype,sarea,name)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef bc_area_read(self, int B, int Z, int BC):
+
+    """
+    Returns a tuple with information about the boundary condition properties.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `BC` : boundary condition id (`int`)
+
+    - Returns:
+    * type of area (`int`)
+    * size of the area (`float`)
+    * region name (`string`)
+
+    """
+    
+    cdef cgnslib.AreaType_t atype
+    cdef float sarea
+    cdef char * name = ""
+    self._error=cgnslib.cg_bc_area_read(self._root,B,Z,BC,&atype,&sarea,name)
+    return (atype,sarea,name)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef conn_periodic_write(self, int B, int Z, int I, rotcenter, rotangle, tr):
+
+    """
+    Creates a `Periodic_t` node which stores data for periodic interfaces in the case of
+    generalized connectivities.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `I` : grid connectivity id (`int`)
+    * `rotcenter` : array of size equal to the physical dimensions which contains the coordinates
+      of the origin for defining the rotation angle between the periodic interfaces (`numpy.ndarray`)
+    * `rotangle` : array of size equal to the physical dimensions which stores the rotation angle
+      from the current interface to the connecting interface (`numpy.ndarray`)
+    * `tr` : array of size equal to the physical dimensions which contains the translation from
+      the current interface to the connecting interface (`numpy.ndarray`)
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * The `Periodic_t` nodes  are contained in the `GridConnectivityProperty_t` nodes.
+      If no nodes of this kind exists, the function `_1to1_periodic_write` will create
+      a `GridConnectivityProperty_t` node.
+    * Several `Periodic_t` nodes may be created under the same `GridConnectivityProperty_t`
+      node.
+
+    """
+    
+    cdef float * rotcenterptr
+    cdef float * rotangleptr
+    cdef float * translationptr
+    center=PNY.float32(rotcenter)
+    angle=PNY.float32(rotangle)
+    translation=PNY.float32(tr)
+    rotcenterptr=<float *>CNY.PyArray_DATA(center)
+    rotangleptr=<float *>CNY.PyArray_DATA(angle)
+    translationptr=<float *>CNY.PyArray_DATA(translation)
+    self._error=cgnslib.cg_conn_periodic_write(self._root,B,Z,I,rotcenterptr,rotangleptr,translationptr)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef conn_periodic_read(self, int B, int Z, int I):
+    cdef float * rotcenterptr
+
+    """
+    Returns a tuple with data about periodic interfaces contained in the `GridConnectivityProperty_t` node
+    for generalized grid connectivities.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `I` : grid connectivity id (`int`)      
+
+    - Returns:
+    * array of size equal to the physical dimensions which contains the coordinates
+      of the origin for defining the rotation angle between the periodic interfaces (`numpy.ndarray`)
+    * array of size equal to the physical dimensions which stores the rotation angle
+      from the current interface to the connecting interface (`numpy.ndarray`)
+    * array of size equal to the physical dimensions which contains the translation from
+      the current interface to the connecting interface (`numpy.ndarray`)
+
+    """
+    
+    cdef float * rotangleptr
+    cdef float * translationptr
+    pdim=self.base_read(B)[3]
+    center=PNY.ones((pdim,),dtype=PNY.float32)
+    angle=PNY.ones((pdim,),dtype=PNY.float32)
+    translation=PNY.ones((pdim,),dtype=PNY.float32)
+    rotcenterptr=<float *>CNY.PyArray_DATA(center)
+    rotangleptr=<float *>CNY.PyArray_DATA(angle)
+    translationptr=<float *>CNY.PyArray_DATA(translation)
+    self._error=cgnslib.cg_conn_periodic_read(self._root,B,Z,I,rotcenterptr,rotangleptr,translationptr)
+    return (center,angle,translation)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef _1to1_periodic_write(self, int B, int Z, int I, rotcenter, rotangle, tr):
+
+    """
+    Creates a `Periodic_t` node which stores data for periodic interfaces in the case of
+    1-to-1 grid connectivities.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `I` : grid connectivity id (`int`)
+    * `rotcenter` : array of size equal to the physical dimensions which contains the coordinates
+      of the origin for defining the rotation angle between the periodic interfaces (`numpy.ndarray`)
+    * `rotangle` : array of size equal to the physical dimensions which stores the rotation angle
+      from the current interface to the connecting interface (`numpy.ndarray`)
+    * `tr` : array of size equal to the physical dimensions which contains the translation from
+      the current interface to the connecting interface (`numpy.ndarray`)
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * The `Periodic_t`  nodes are contained in the `GridConnectivityProperty_t` nodes.
+      If no nodes of this kind exists, the function `_1to1_periodic_write` will create
+      a `GridConnectivityProperty_t` node.
+    * Several `Periodic_t` nodes may be created under the same `GridConnectivityProperty_t`
+      node.
+
+    """
+    
+    cdef float * rotcenterptr
+    cdef float * rotangleptr
+    cdef float * translationptr
+    center=PNY.float32(rotcenter)
+    angle=PNY.float32(rotangle)
+    translation=PNY.float32(tr)
+    rotcenterptr=<float *>CNY.PyArray_DATA(center)
+    rotangleptr=<float *>CNY.PyArray_DATA(angle)
+    translationptr=<float *>CNY.PyArray_DATA(translation)
+    self._error=cgnslib.cg_1to1_periodic_write(self._root,B,Z,I,rotcenterptr,rotangleptr,translationptr)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef _1to1_periodic_read(self, int B, int Z, int I):
+
+    """
+    Returns a tuple with data about periodic interfaces contained in the `GridConnectivityProperty_t` node
+    for 1-to-1 grid connectivities.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `I` : grid connectivity id (`int`)      
+
+    - Returns:
+    * array of size equal to the physical dimensions which contains the coordinates
+      of the origin for defining the rotation angle between the periodic interfaces (`numpy.ndarray`)
+    * array of size equal to the physical dimensions which stores the rotation angle
+      from the current interface to the connecting interface (`numpy.ndarray`)
+    * array of size equal to the physical dimensions which contains the translation from
+      the current interface to the connecting interface (`numpy.ndarray`)
+
+    """
+    
+    cdef float * rotcenterptr
+    cdef float * rotangleptr
+    cdef float * translationptr
+    pdim=self.base_read(B)[3]
+    center=PNY.ones((pdim,),dtype=PNY.float32)
+    angle=PNY.ones((pdim,),dtype=PNY.float32)
+    translation=PNY.ones((pdim,),dtype=PNY.float32)
+    rotcenterptr=<float *>CNY.PyArray_DATA(center)
+    rotangleptr=<float *>CNY.PyArray_DATA(angle)
+    translationptr=<float *>CNY.PyArray_DATA(translation)
+    self._error=cgnslib.cg_1to1_periodic_read(self._root,B,Z,I,rotcenterptr,rotangleptr,translationptr)
+    return (center,angle,translation)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef conn_average_write(self, int B, int Z, int I, cgnslib.AverageInterfaceType_t ait):
+
+    """
+    Creates a `AverageInterface_t` node which stores the type of averaging applied to
+    generalized grid connectivities. 
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `I` : grid connectivity id (`int`)
+    * `ait` : type of averaging for the interface (`int`)      
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * The `AverageInterface_t` nodes are contained in the `GridConnectivityProperty_t` nodes.
+      If no nodes of this kind exists, the function `_1to1_average_write` will create
+      a `GridConnectivityProperty_t` node.
+    * Several `AverageInterface_t` nodes may be created under the same `GridConnectivityProperty_t`
+      node.
+
+    """
+    
+    self._error=cgnslib.cg_conn_average_write(self._root,B,Z,I,ait)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef conn_average_read(self, int B, int Z, int I):
+
+    """
+    Returns the type of averaging recorded under the `GridConnectivityProperty_t` node applied
+    to generalized grid connectivities.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `I` : grid connectivity id (`int`)      
+
+    - Returns:
+    * type of averaging for the interface (`int`)
+
+    """
+    
+    cdef cgnslib.AverageInterfaceType_t ait
+    self._error=cgnslib.cg_conn_average_read(self._root,B,Z,I,&ait)
+    return ait
+
+  # ------------------------------------------------------------------------------------------
+  cpdef _1to1_average_write(self, int B, int Z, int I, cgnslib.AverageInterfaceType_t ait):
+
+    """
+    Creates a `AverageInterface_t` node which stores the type of averaging applied to
+    1-to-1 grid connectivities. 
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `I` : grid connectivity id (`int`)
+    * `ait` : type of averaging for the interface (`int`)      
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * The `AverageInterface_t` nodes are contained in the `GridConnectivityProperty_t` nodes.
+      If no nodes of this kind exists, the function `_1to1_average_write` will create
+      a `GridConnectivityProperty_t` node.
+    * Several `AverageInterface_t` nodes may be created under the same `GridConnectivityProperty_t`
+      node.
+
+    """
+
+    self._error=cgnslib.cg_1to1_average_write(self._root,B,Z,I,ait)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef _1to1_average_read(self, int B, int Z, int I):
+
+    """
+    Returns the type of averaging recorded under the `GridConnectivityProperty_t` node applied to
+    1-to-1 grid connectivities.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `I` : grid connectivity id (`int`)      
+
+    - Returns:
+    * type of averaging for the interface (`int`)
+
+    """
+    
+    cdef cgnslib.AverageInterfaceType_t ait
+    self._error=cgnslib.cg_1to1_average_read(self._root,B,Z,I,&ait)
+    return ait
+
+  # ------------------------------------------------------------------------------------------
+  cpdef rind_write(self, data):
+
+    """
+    Creates a linked node at the current location. 
+    
+    
+    - Args:
+    * `data` : number of rind layers for each computational direction in the case of a structured
+      grid, otherwise number of rind points or elements for unstructured grids (`numpy.ndarray`)
+
+    - Returns:
+    * None
+
+    """
+    
+    cdef int * dataptr
+    rdata=PNY.int32(data)
+    dataptr=<int *>CNY.PyArray_DATA(rdata)
+    self._error=cgnslib.cg_rind_write(dataptr)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef rind_read(self):
+    pass
+#     cdef int * dataptr
+#     ztype=self.zone_type(B,Z)
+#     pdim=self.base_read(B)[3]
+#     if (ztype==CK.Unstructured):
+#       dim=1
+#     elif (ztype==CK.Structured):
+#       dim=self.base_read(B)[2]
+
+  # ------------------------------------------------------------------------------------------
+  cpdef link_write(self, char * nodename, char * filename, char * name_in_file):
+
+    """
+    Creates a linked node at the current location. 
+    
+    
+    - Args:
+    * `nodename` : name of the linked node (`string`)
+    * `filename` : name of the linked file (`string`)
+      If the link is within the same file, the name is an empty string.
+    * `name_in_file` : path name of the node which the link points to (`string`)
+
+    - Returns:
+    * None
+
+    """
+    
+    self._error=cgnslib.cg_link_write(nodename,filename,name_in_file)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef is_link(self):
+
+    """
+    Tests if a node in the tree is a link. 
+    
+    
+    - Args:
+    * None
+
+    - Returns:
+    * length of the path name of the linked node (`int`)
+      If there isn't linked node, the returned value is 0.
+
+    """
+    
+    cdef int plength = -1
+    self._error=cgnslib.cg_is_link(&plength)
+    return plength
+
+  # ------------------------------------------------------------------------------------------
+  cpdef cell_dim(self, int B):
+
+    """
+    Returns the cell dimension for the base.
+    
+    - Args:
+    * `B` : base id (`int`)
+
+    - Returns:
+    * dimension of the cells (`int`)
+
+    """
+
+    cdef int dim = -1
+    self._error=cgnslib.cg_cell_dim(self._root,B,&dim)
+    return dim
+
+  # ------------------------------------------------------------------------------------------
+  cpdef index_dim(self, int B, int Z):
+
+    """
+    Returns the index dimension for the zone.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)    
+
+    - Returns:
+    * index dimension of the zone (`int`)
+
+    """
+    
+    cdef int dim = -1
+    self._error=cgnslib.cg_index_dim(self._root,B,Z,&dim)
+    return dim
+
+  # ------------------------------------------------------------------------------------------
+  cpdef bcdataset_write(self, char * name, cgnslib.BCType_t bct, cgnslib.BCDataType_t bcdt):
+
+    """
+    Creates a boundary condition dataset node. 
+    
+    - Args:
+    * `name` : name of the dataset (`string`)
+    * `bct` : boundary condition type of the dataset (`int`)
+      The FamilySpecified type is not allowed here.
+    * `bcdt` : type of the boundary condition in the dataset (`int`)
+      The admissible types are Dirichlet and Neumann.
+
+    - Returns:
+    * None
+
+    - Remarks:
+    * This node should be created under a `FamilyBCDataSet_t` node with the gopath funtion.
+
+    """
+    
+    self._error=cgnslib.cg_bcdataset_write(name,bct,bcdt)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef bcdataset_info(self):
+
+    """
+    Returns the number of boundary condition dataset nodes.
+    
+    - Args:
+    * None
+
+    - Returns:
+    * number of boundary condition dataset nodes contained in the current family boundary
+      condition node (`int`)
+
+    """
+    
+    cdef int data = -1
+    self._error=cgnslib.cg_bcdataset_info(&data)
+    return data
+
+  # ------------------------------------------------------------------------------------------
+  cpdef bcdataset_read(self, int id):
+
+    """
+    Returns a tuple with information about a boundary condition dataset node.
+    
+    - Args:
+    * `id` : dataset id (`int`)
+
+    - Returns:
+    * dataset node name (`string`)
+    * boundary condition type of the dataset (`int`)
+    * flag indication if the dataset contains Dirichlet data (`int`)
+    * flag indication if the dataset contains Neumann data (`int`)
+    
+    """
+    
+    cdef char * name = ""
+    cdef cgnslib.BCType_t bct
+    cdef int dflag = -1
+    cdef int nflag = -1
+    self._error=cgnslib.cg_bcdataset_read(id,name,&bct,&dflag,&nflag)
+    return (name,bct,dflag,nflag)
+
+  # ------------------------------------------------------------------------------------------
+  cpdef bcdata_write(self, int B, int Z, int BC, int ds, cgnslib.BCDataType_t bcdt):
+
+    """
+    Creates a boundary condition data node.
+    
+    - Args:
+    * `B` : base id (`int`)
+    * `Z` : zone id (`int`)
+    * `BC` : boundary condition id (`int`)
+    * `ds` : dataset id (`int`)
+    * `bcdt` : type of the boundary condition in the dataset (`int`)
+      The admissible types are `Dirichlet` and `Neumann`.
+
+    - Returns:
+    * None
+
+    """
+    
+    self._error=cgnslib.cg_bcdata_write(self._root,B,Z,BC,ds,bcdt)
+
+  # ------------------------------------------------------------------------------------------

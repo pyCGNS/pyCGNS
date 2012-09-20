@@ -3,11 +3,6 @@ import numpy as N
 
 # ----------------------------------------------------------------------
 a=Mll.pyCGNS('tmp/naca12.hdf',Mll.MODE_READ)
-## a.boco_read(1,1,2)
-## a.boco_info(1,1,2)
-## a.boco_info(1,1,1)
-## a.boco_gridlocation_read(1,1,1)
-## i=a.dataset_read(1,1,1,1)
 a.gopath("/base1/dom1/GridCoordinates")
 i=a.narrays()
 print i
