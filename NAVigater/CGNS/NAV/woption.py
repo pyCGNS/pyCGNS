@@ -23,17 +23,20 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
     def getopt(self,name):
         if (name[0]=='_'): return None
         try:
-            a=getattr(self,'__O_'+string.lower(name))
+            a=getattr(self,'_Ui_Q7OptionsWindow__O_'+string.lower(name))
         except AttributeError:
             return None
         return a
     def checkDeps(self):
         for dep in OCTXT._depends:
             for chks in OCTXT._depends[dep]:
-                if (not self.getopt(chks).isChecked()):
-                    self.getopt(dep).setDisabled(True)
+                if (self.getopt(chks) is not None):
+                  if (not self.getopt(chks).isChecked()):
+                      self.getopt(dep).setDisabled(True)
+                  else:
+                      self.getopt(dep).setEnabled(True)
                 else:
-                    self.getopt(dep).setEnabled(True)                    
+                    print 'CGNS.NAV (debug) NO OPTION :',chks
     def reset(self):
         self.getOptions()
         data=self._options

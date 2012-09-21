@@ -36,14 +36,22 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         hs=option.rect.height()+4
         xs=option.rect.x()
         ys=option.rect.y()-2
-        if (index.column() in [NMT.COLUMN_NAME,NMT.COLUMN_VALUE]):
-          #if (self._parent.modelData(index).
+        if (index.column() in [NMT.COLUMN_NAME]):
           self._mode=CELLTEXT
           editor=QLineEdit(parent)
           editor.transgeometry=(xs,ys,ws,hs)
           editor.installEventFilter(self)
           self.setEditorData(editor,index)
           return editor
+        if (index.column() in [NMT.COLUMN_VALUE]):
+          node=self._parent.modelData(index)
+          if (node.hasValueView()):
+            self._mode=CELLTEXT
+            editor=QLineEdit(parent)
+            editor.transgeometry=(xs,ys,ws,hs)
+            editor.installEventFilter(self)
+            self.setEditorData(editor,index)
+            return editor
         if (index.column()==NMT.COLUMN_SIDS):
           self._mode=CELLCOMBO
           editor=QComboBox(parent)
