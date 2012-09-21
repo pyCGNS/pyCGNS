@@ -52,7 +52,8 @@ class Q7Window(QWidget,object):
         self.I_L_NFL=QIcon(QPixmap(":/images/icons/link-nofile.gif"))
         self.I_L_NRL=QIcon(QPixmap(":/images/icons/link-noreadable.gif"))
         self.I_L_NNL=QIcon(QPixmap(":/images/icons/link-nonode.gif"))
-        self.I_L_ERL=QIcon(QPixmap(":/images/icons/link-error.gif"))
+        self.I_L_IGN=QIcon(QPixmap(":/images/icons/link-error.gif"))
+        self.I_L_ERL=QIcon(QPixmap(":/images/icons/link-ignore.gif"))
         if (vtype==Q7Window.VIEW_TREE):
             self._stylesheet=Q7TREEVIEWSTYLESHEET
         if (vtype==Q7Window.VIEW_CONTROL):

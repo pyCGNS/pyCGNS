@@ -34,6 +34,10 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
             it=QTableWidgetItem(self.I_L_NFL,'')
             it.setToolTip('File not found in search path')
             return it
+        if (status & CGM.S2P_LKIGNORED):
+            it=QTableWidgetItem(self.I_L_IGN,'')
+            it.setToolTip('Link was ignored during load')
+            return it
         if (status & CGM.S2P_LKFILENOREAD):
             it=QTableWidgetItem(self.I_L_NRL,'')
             it.setToolTip('File found, not readable')

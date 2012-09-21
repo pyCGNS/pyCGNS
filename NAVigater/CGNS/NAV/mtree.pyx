@@ -54,6 +54,7 @@ STLKCHDOK='@@LCHDOK@@' # child link entry ok
 STLKTOPBK='@@LTOPBK@@' # broken top link entry
 STLKTOPNF='@@LTOPNF@@' # top link entry ok not followed
 STLKNOLNK='@@LNOLNK@@' # no link
+STLKIGNOD='@@LIGNOD@@' # link ignored by load process
 
 STCHKUNKN='@@CKUNKN@@' # unknown
 STCHKGOOD='@@CKGOOD@@' # good, ok
@@ -120,6 +121,7 @@ ICONMAPPING={
  STLKCHDOK:":/images/icons/link-child.gif",
  STLKTOPBK:":/images/icons/link-break.gif",
  STLKTOPNF:":/images/icons/link-error.gif",
+ STLKIGNOD:":/images/icons/link-ignore.gif",
 
  STCHKUNKN:":/images/icons/empty.gif",
  STCHKGOOD:":/images/icons/check-ok.gif",
