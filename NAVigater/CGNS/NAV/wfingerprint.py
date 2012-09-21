@@ -194,13 +194,15 @@ class Q7fingerPrint:
             f=cls.fileconversion(filedir,filename,control)
             kw['converted']=True
             kw['convertedAs']=f
-        flags=CGNS.MAP.S2P_DEFAULT
+        flags=CGNS.MAP.S2P_NONE&~FREVERSEDIMS
         maxdataload=None
         if (OCTXT.CHLoneTrace):
             flags|=CGNS.MAP.S2P_TRACE
         if (OCTXT.DoNotLoadLargeArrays):
             flags|=CGNS.MAP.S2P_NODATA
             maxdataload=OCTXT.MaxLoadDataSize
+        if (OCTXT.FollowLinksAtLoad):
+            flags|=CGNS.MAP.S2P_FOLLOWLINK
         try:
             if (maxdataload):
                 (tree,links,paths,diag)=CGNS.MAP.load2(f,flags,lksearch=slp,
