@@ -166,7 +166,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.expandCols()
         self.setBoxes()
     def getOpt(self,name):
-        return getattr(self,'__O_'+string.lower(name))
+        return getattr(self,'_Ui_Q7FileWindow__O_'+string.lower(name))
     def setBoxes(self):
         ckh=self.getOpt('FilterHDFFiles')
         ckg=self.getOpt('FilterCGNSFiles')
