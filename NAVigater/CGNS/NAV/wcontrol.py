@@ -283,7 +283,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self._T('edit new')
         tree=CGL.newCGNSTree()
         self.busyCursor()
-        fgprint=Q7fingerPrint(self,'.','NEW TREE',tree,[])
+        fgprint=Q7fingerPrint(self,'.','NEW TREE',tree,[],[])
         Q7TreeModel(fgprint)
         child=Q7Tree(self,'/',fgprint)
         self.readyCursor()
