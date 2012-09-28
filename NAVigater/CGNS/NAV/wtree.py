@@ -429,7 +429,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.busyCursor()
         vtk=Q7VTK(self._control,node,self._fgprint,self.model(),zlist)
         self.readyCursor()
-        vtk.show()
+        if (vtk._vtkstatus): vtk.show()
     def plotview(self):
         return 
         ix=self.treeview.modelCurrentIndex()

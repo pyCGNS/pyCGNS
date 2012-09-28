@@ -36,7 +36,6 @@ class CGNSparser:
       self._rsd=CGU.nodeByPath(r,T)
     for z in CGU.getAllNodesByTypeSet(T,[CGK.Zone_ts]):
       zT=CGU.nodeByPath(z,T)
-      print zT[1]
       if ((zlist==[]) or (z in zlist)):
         meshpath=z
         g=CGU.getAllNodesByTypeSet(zT,[CGK.GridCoordinates_ts])[0]
@@ -44,6 +43,9 @@ class CGNSparser:
         cx=CGU.nodeByPath("%s/CoordinateX"%gT[0],gT)
         cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
         cz=CGU.nodeByPath("%s/CoordinateZ"%gT[0],gT)
+        if ((cx is None) or (cy is None) or (cz is None)): return False
+        if ((cx[1] is None) or (cy[1] is None) or (cz[1] is None)):
+          return False
         zonetype=CGU.getAllNodesByTypeSet(zT,[CGK.ZoneType_ts])
         ztype=CGU.nodeByPath(zonetype[0],zT)
         if (ztype[1].tostring()==CGK.Structured_s):          
@@ -105,7 +107,7 @@ class CGNSparser:
               pth=e+' {TRI}'
               sl.append(list(sp.extTriFacesPoints(ea,et,sn,mr,eb))+[pth])
           self._zones_ns[z]=([cx[1],cy[1],cz[1]],meshpath,et,sl)
-    return None
+    return True
 
 #----------------------------------------------------------------------------
 class Mesh(CGNSparser):
@@ -130,7 +132,7 @@ class Mesh(CGNSparser):
                    CGK.HEXA_8:  (vtk.vtkHexahedron,(8,8)),
                    CGK.HEXA_20: (vtk.vtkHexahedron,(8,20)),
                    CGK.HEXA_27: (vtk.vtkHexahedron,(8,27))}
-    self.parseZones(zlist)
+    self._status=self.parseZones(zlist)
 
   def getResidus(self):
     return self._rsd
