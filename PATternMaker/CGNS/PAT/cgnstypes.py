@@ -48,10 +48,6 @@ class CGNStype:
 types={}
 
 # --------------------------------------------------------
-t=CK.CGNSTree_ts
-types[t]=CGNStype(t,dtype=[CK.MT],card=C_1N)
-
-# --------------------------------------------------------
 t=CK.CGNSLibraryVersion_ts
 types[t]=CGNStype(t,dtype=[CK.R4],card=C_11,names=[CK.CGNSLibraryVersion_s])
 types[t].shape=(1,)
@@ -730,6 +726,7 @@ t=CK.GridConnectivity1to1_ts
 types[t]=CGNStype(t,dtype=[CK.C1],card=C_0N)
 types[t].shape=(0,)
 types[t].addChild(CK.Transform_ts,CK.Transform_s)
+types[t].addChild(CK.Transform_ts2,CK.Transform_s)
 types[t].addChild(CK.IndexRange_ts,CK.PointRange_s)
 types[t].addChild(CK.IndexRange_ts,CK.PointRangeDonor_s)
 types[t].addChild(CK.Ordinal_ts,CK.Ordinal_s)

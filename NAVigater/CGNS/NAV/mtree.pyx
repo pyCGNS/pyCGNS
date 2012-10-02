@@ -2,8 +2,7 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
+#
 import sys
 import numpy
 import copy
@@ -15,6 +14,7 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wfingerprint import Q7fingerPrint
 import CGNS.VAL.simplecheck as CGV
 import CGNS.NAV.wmessages as MSG
+import CGNS.VAL.parse.messages as CGM
 
 HIDEVALUE='@@HIDE@@'
 LAZYVALUE='@@LAZY@@'
@@ -1063,11 +1063,11 @@ class Q7TreeModel(QAbstractItemModel):
             if (checkdiag.has_key(pth)):
                 item=self._extension[path]
                 stat=checkdiag[pth][0]
-                if (stat==CGV.CHECK_NONE): item.setCheck(STCHKUNKN)
-                if (stat==CGV.CHECK_GOOD): item.setCheck(STCHKGOOD)
-                if (stat==CGV.CHECK_FAIL): item.setCheck(STCHKFAIL)
-                if (stat==CGV.CHECK_WARN): item.setCheck(STCHKWARN)
-                if (stat==CGV.CHECK_USER): item.setCheck(STCHKUSER)
+                if (stat==CGM.CHECK_NONE): item.setCheck(STCHKUNKN)
+                if (stat==CGM.CHECK_GOOD): item.setCheck(STCHKGOOD)
+                if (stat==CGM.CHECK_FAIL): item.setCheck(STCHKFAIL)
+                if (stat==CGM.CHECK_WARN): item.setCheck(STCHKWARN)
+                if (stat==CGM.CHECK_USER): item.setCheck(STCHKUSER)
         return checkdiag
     def hasUserColor(self,k):
         cl=OCTXT.UserColors
