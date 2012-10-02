@@ -137,8 +137,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                       SIGNAL("currentIndexChanged(int)"),
                       self.getColorSpace)
       self.bResetCamera.clicked.connect(self.ResetCam)
-##       self.setCursor(Qt.WaitCursor)
-##       self.unsetCursor()
+
       self.Rotating=0
       self.Zooming=0
       self.Panning=0
@@ -233,11 +232,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self._vtk.SetInteractorStyle(Q7InteractorStyleTrackballObject(self))
       self.InteractorIndex=self.cRotationAxis.currentIndex()
 
+
   def setCameraMode(self):
       self.cRotationAxis.clear()
       self.cRotationAxis.addItem("Camera axis all")
       self.cRotationAxis.addItem("Object axis all")
-      self.cRotationAxis.addItem("Object axis x")
+      self.cRotationAxis.addItem("Object axis x")    
       self.cRotationAxis.addItem("Object axis y")
       self.cRotationAxis.addItem("Object axis z")
 

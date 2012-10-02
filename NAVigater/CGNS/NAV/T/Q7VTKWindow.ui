@@ -602,7 +602,7 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QVTKRenderWindowInteractor" name="display">
+      <widget class="Q7VTKRenderWindowInteractor" name="display">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -842,9 +842,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QVTKRenderWindowInteractor</class>
+   <class>Q7VTKRenderWindowInteractor</class>
    <extends>QGraphicsView</extends>
-   <header>vtk.qt4.QVTKRenderWindowInteractor</header>
+   <header>CGNS.NAV.Q7VTKRenderWindowInteractor</header>
   </customwidget>
  </customwidgets>
  <resources>

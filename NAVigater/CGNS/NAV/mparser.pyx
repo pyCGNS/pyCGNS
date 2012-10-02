@@ -46,7 +46,8 @@ class CGNSparser:
         cz=CGU.nodeByPath("%s/CoordinateZ"%gT[0],gT)
         zonetype=CGU.getAllNodesByTypeSet(zT,[CGK.ZoneType_ts])
         ztype=CGU.nodeByPath(zonetype[0],zT)
-        if (ztype[1].tostring()==CGK.Structured_s):          
+        if (ztype[1].tostring()==CGK.Structured_s):
+          if (cx[1]==None) : return
           shx=cx[1].shape
           scx=cx[1].reshape(shx)
           scy=cy[1].reshape(shx)
@@ -203,7 +204,7 @@ class Mesh(CGNSparser):
       if (s[1].shape==(idim-1,jdim-1,kdim-1)):
         array=vtk.vtkFloatArray()
         array.SetName(s[0])
-        for k in range(kdim-1):
+        for k in range(kdim-1):          
           for j in range(jdim-1):
             for i in range(idim-1):
               array.InsertNextTuple1(s[1][i][j][k])
