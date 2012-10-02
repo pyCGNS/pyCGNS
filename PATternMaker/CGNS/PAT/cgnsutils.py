@@ -145,6 +145,9 @@ def checkNodeName(node,dienow=False):
    * see also :py:func:`checkNodeCompliant`
   
   """
+  if (len(node)!=4): 
+    if (dienow): raise CE.cgnsNameError(2)
+    return False
   return checkName(node[0],dienow)
 
 def checkName(name,dienow=False):
@@ -171,7 +174,7 @@ def checkName(name,dienow=False):
    * Raises :ref:`cgnsnameerror` codes 22,23,24,25,29 if `dienow` is True
   
   """
-  if (type(name) != type("s")):
+  if (type(name) not in [str, unicode]):
     if (dienow): raise CE.cgnsNameError(22)
     return False
   if (len(name) == 0):
@@ -1151,7 +1154,7 @@ def getPathFullTree(tree):
   return getAllPaths(tree)
 
 # --------------------------------------------------   
-def checkPath(path):
+def checkPath(path,dienow=False):
   """
   Checks the compliance of a path, which is basically a UNIX-like
   path with constraints on each node name.
@@ -1165,10 +1168,10 @@ def checkPath(path):
    * True if the path is ok, False if a problem is found
   
   """
-  if ((type(path)!=str) or not path): return False
+  if ((type(path) not in [str,unicode]) or not path): return False
   if (path[0]=='/'): path=path[1:]
   for p in path.split('/'):
-    if (not checkName(p)): return False
+    if (not checkName(p,dienow)): return False
   return True
 
 # --------------------------------------------------   
@@ -1463,9 +1466,12 @@ def getNodeAllowedChildrenTypes(pnode,node):
   """
   tlist=[]
   if (node[3] == CK.CGNSTree_ts): return tlist
-  if (node[3] == None): return [CK.CGNSBase_ts,CK.CGNSLibraryVersion_ts]
   try:
-    for cn in CT.types[pnode[3]].children:
+    if ((node[3] == None) or (pnode == None)):
+      ctl=CT.types[CK.CGNSTree_ts]
+    else:
+      ctl=CT.types[pnode[3]]
+    for cn in ctl.children:
       if (cn[0] not in tlist): tlist+=[cn[0]]
   except:
     pass

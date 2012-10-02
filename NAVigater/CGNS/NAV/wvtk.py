@@ -13,6 +13,9 @@ from CGNS.NAV.wfingerprint import Q7Window
 from CGNS.NAV.mparser import Mesh
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wfile import Q7File
+
+import CGNS.NAV.wmessages as MSG
+
 import numpy as NPY
 
 import math as M
@@ -53,6 +56,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def __init__(self,control,node,fgprint,tmodel,zlist):   
       if (not zlist): pth='/'
       else: pth='<partial>'
+      self._vtkstatus=False
+      if (not self.wCGNSTreeParse(fgprint.tree,zlist)): return
+      self._vtkstatus=True
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,fgprint)
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
       self._epix=QIcon(QPixmap(":/images/icons/empty.gif"))
@@ -84,11 +90,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._camera={}
       self._blackonwhite=False
       self.widgets=False
-      self._vtktree=self.wCGNSTree(self._fgprint.tree,zlist)
       self.resetSpinBox()
       self.display.Initialize()
       self.display.Start()
       self.display.show()
+      self._vtktree=self.wCGNSTreeActors(fgprint.tree,zlist)
       self.bX.clicked.connect(self.b_xaxis)
       self.bY.clicked.connect(self.b_yaxis)
       self.bZ.clicked.connect(self.b_zaxis)
@@ -599,7 +605,15 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
         self.controlKey=0
         self.highlightProp=1
         
-  def wCGNSTree(self,T,zlist):
+  def wCGNSTreeParse(self,T,zlist):
+      self._parser=Mesh(T,zlist)
+      if (not self._parser._status):
+          MSG.wError(0,'No data to display',
+                     'Parser did not found mesh coordinates')
+          return False
+      return True
+
+  def wCGNSTreeActors(self,T,zlist):
       o=vtk.vtkObject()
       o.SetGlobalWarningDisplay(0)
       del o
@@ -614,7 +628,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
       self._vtk.GetRenderWindow().AddRenderer(self._vtkren)
       
-      self._parser=Mesh(T,zlist)
       self._selected=[]
       alist=self._parser.createActors()
       variables=[]
@@ -1721,9 +1734,6 @@ class Q7VTKPlot(Q7Window,Ui_Q7VTKPlotWindow):
       self._T=self._fgprint.tree
 ##       self._camera={}
       self._vtktree=self.wCGNSTree(self._fgprint.tree,zlist)
-      self.display.Initialize()
-      self.display.Start()
-      self.display.show()
       self._plot=None
       self._X=None
       self._Y=None

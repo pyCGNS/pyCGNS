@@ -56,9 +56,15 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           self._mode=CELLCOMBO
           editor=QComboBox(parent)
           editor.transgeometry=(xs,ys,ws,hs)
-          itemslist=self._parent.modelData(index).sidsTypeList()
+          tnode=self._parent.modelData(index)
+          itemslist=tnode.sidsTypeList()
           editor.addItems(itemslist)
-          editor.setCurrentIndex(0)
+          try:
+              tix=itemslist.index(tnode.sidsType())
+          except ValueError:
+              editor.insertItem(0,tnode.sidsType())
+              tix=0
+          editor.setCurrentIndex(tix)
           editor.installEventFilter(self)
           self.setEditorData(editor,index)
           return editor
@@ -92,7 +98,10 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
             value=editor.text()
         pth=self._parent.modelData(index).sidsPath()
         model.setData(index,value,role=Qt.EditRole)
-        #self._parent.setLastEntered(nindex)
+        node=index.internalPointer().lastEdited()
+        if (node is not None):
+            nindex=self._parent.model().indexByPath(node.sidsPath())
+            self._parent.setLastEntered(nindex)
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(*editor.transgeometry)
     def paint(self, painter, option, index):
@@ -175,8 +184,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bAddLink.clicked.connect(self.linkadd)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
-        self.proxy = Q7TreeFilterProxy(self)
-        self.proxy.setSourceModel(self._fgprint.model)
+        self.proxy = self._fgprint.model
+#        self.proxy = Q7TreeFilterProxy(self)
+#        self.proxy.setSourceModel(self._fgprint.model)
         self.treeview.setModel(self.proxy)
         self.treeview.setItemDelegate(Q7TreeItemDelegate(self.treeview,
                                                          self._fgprint.model))
@@ -278,6 +288,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def mpasteaschild(self):
         if (self.getLastEntered() is not None):
             self.model().pasteAsChild(self.getLastEntered())
+            self.layoutChanged.emit()
     def updateMenu(self,nodeidxs):
         nodeidx=self.modelIndex(nodeidxs)
         self.setLastEntered(nodeidxs)
@@ -418,7 +429,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.busyCursor()
         vtk=Q7VTK(self._control,node,self._fgprint,self.model(),zlist)
         self.readyCursor()
-        vtk.show()
+        if (vtk._vtkstatus): vtk.show()
     def plotview(self):
         return 
         ix=self.treeview.modelCurrentIndex()

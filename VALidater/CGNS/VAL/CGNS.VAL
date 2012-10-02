@@ -3,17 +3,19 @@
 #  pyCGNS.VAL - Python package for CFD General Notation System - VALidater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
+#
 import getopt
 import sys
 import os
 
 from CGNS.pyCGNSconfig import version as __vid__
+import CGNS.VAL.simplecheck as CGV
+import CGNS.MAP
+from CGNS.VAL import __vid__
 
 def usage():
   print """CGNS.VAL v%s
-  CGNS.VAL [options] files.hdf
+  CGNS.VAL [options] file.hdf
   -f : flat mode, do not recurse on tree
   -h : help
   -v : verbose (trace)
@@ -29,16 +31,20 @@ verbose=False
 recurse=True
 olist=[]
 
+filename=args[0]
+
 for o, a in opts:
   if (o == "-f"): recurse=False
   if (o == "-v"): verbose=True
   if (o in ("-h", "--help")): usage()
 
-import CGNS.VAL.parse.PYparse as parser
-import CGNS.MAP
 
-(tree,links)=CGNS.MAP.load(filename,CGNS.MAP.S2P_DEFAULTS)
+if (verbose):
+  print '### CGNS.VAL %s'%__vid__
+  print '### Loading file [%s]'%filename
+(tree,links,paths)=CGNS.MAP.load(filename,CGNS.MAP.S2P_DEFAULTS)
 
-parser.validateTree(tree)
+checkdiag=CGV.run(tree,trace=verbose)
+if (verbose): CGV.showDiag(checkdiag)
 
 # --- last line
