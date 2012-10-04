@@ -8,16 +8,11 @@ import CGNS.PAT.cgnskeywords as CGK
 import string
 
 CHECK_NONE=0
-CHECK_GOOD=1
-CHECK_WARN=2
-CHECK_FAIL=3
+CHECK_OK=CHECK_GOOD=1
+CHECK_INFO=CHECK_WARN=2
+CHECK_BAD=CHECK_ERROR=CHECK_FAIL=3
 CHECK_USER=4
 
-INVALID_NAME='Name [%s] is not valid'
-DUPLICATED_NAME='Name [%s] is a duplicated child name'
-INVALID_SIDSTYPE_P='SIDS Type [%s] not allowed as child of [%s]'
-INVALID_SIDSTYPE='SIDS Type [%s] not allowed for this node'
-INVALID_DATATYPE='Datatype [%s] not allowed for this node'
 
 def getWorst(st1,st2):
     if (CHECK_FAIL in [st1,st2]): return CHECK_FAIL
@@ -27,11 +22,25 @@ def getWorst(st1,st2):
     return CHECK_NONE
     
 class DiagnosticLog(dict):
-    __diagstr={CHECK_FAIL:'#',CHECK_USER:'%',
-               CHECK_WARN:'!',CHECK_GOOD:'=',CHECK_NONE:'?'}
-    def push(self,path,level,message):
+    __diagstr={CHECK_FAIL:'E',CHECK_USER:'U',
+               CHECK_WARN:'W',CHECK_GOOD:' ',CHECK_NONE:'?'}
+    __messages={}
+    def __init__(self):
+        dict.__init__(self)
+        DiagnosticLog.__messages
+    def addMessages(self,d):
+        for e in d:
+            DiagnosticLog.__messages[e]=d[e]
+    def push(self,path,level,messagekey,*tp):
         if (path not in self): self[path]=[]
-        self[path].append((level,message))
+        if (messagekey not in DiagnosticLog.__messages): return
+        msg=DiagnosticLog.__messages[messagekey]
+        try:
+            if (tp): msg=msg%tp
+        except TypeError:
+            pass
+        self[path].append((level,msg,messagekey))
+        return level
     def __len__(self):
         return len(self.keys())
     def shift(self,path,shiftstring=' '):
@@ -42,12 +51,24 @@ class DiagnosticLog(dict):
     def asStr(self,st):
         if (st in self.__diagstr): return self.__diagstr[st]
         return self.__diagstr[CHECK_NONE]
-    def pline(self,path,entry):
-        shft=self.shift(path)
-        s =shft+self.asStr(entry[0])+path+'\n'
-        s+=shft+self.asStr(entry[0])+self.asStr(entry[0])+'\n'
-        s+=shft+self.asStr(entry[0])+entry[1]
+    def status(self,entry):
+        return entry[0]
+    def hasOnlyKey(self,path,keylist):
+        k1=set(keylist)
+        k2=set([e[2] for e in self[path]])
+        return k2.issubset(k1)
+    def key(self,entry):
+        return entry[2]
+    def message(self,entry,path=None):
+        shft=''
+        if (path is not None): shft=self.shift(path)
+        s='%s[%s:%s] %s'%(shft,entry[2],self.asStr(entry[0]),entry[1])
         return s
+    def getWorstDiag(self,path):
+        s=set([e[2] for e in self[path]])
+        r=reduce(getWorst,s)
+        print r
+        return r
     def diagForPath(self,path):
         if (path in self): return self[path]
         return None

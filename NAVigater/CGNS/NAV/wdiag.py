@@ -24,31 +24,20 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         super(Q7CheckList, self).show()
     def reset(self):
         v=self.diagTable
-        lh=v.horizontalHeader()
-        lv=v.verticalHeader()
-        h=['S','N','Node','Diagnostic']
-        for i in range(len(h)):
-            hi=QTableWidgetItem(h[i])
-            v.setHorizontalHeaderItem(i,hi)
-            lh.setResizeMode(i,QHeaderView.ResizeToContents)
-        lh.setResizeMode(len(h)-1,QHeaderView.Stretch)
+        #lh=v.horizontalHeader()
+        #lv=v.verticalHeader()
+        #h=['S','N','Node','Diagnostic']
+        #for i in range(len(h)):
+        #    hi=QTreeWidgetItem(h[i])
+        #    v.setHorizontalHeaderItem(i,hi)
+        #    lh.setResizeMode(i,QHeaderView.ResizeToContents)
+        #lh.setResizeMode(len(h)-1,QHeaderView.Stretch)
         for path in self._data:
-            for diag in self._data[path][1]:
-                v.setRowCount(v.rowCount()+1)
-                r=v.rowCount()-1
-                stat=diag[0]
-                tpitem=QTableWidgetItem(self.I_D_INF,'')
-                if (stat==CGV.CHECK_FAIL):
-                    tpitem=QTableWidgetItem(self.I_D_ERR,'')
-                tpitem.setTextAlignment(Qt.AlignCenter)
-                v.setItem(r,0,tpitem)
-                v.setItem(r,1,QTableWidgetItem('%.4d'%(r+1)))
-                v.setItem(r,2,QTableWidgetItem('%s '%path))
-                v.setItem(r,3,QTableWidgetItem('%s '%diag[1]))
-        for i in (2,3):
-            v.resizeColumnToContents(i)
-        for i in range(v.rowCount()):
-            v.resizeRowToContents(i)
+            it=QTreeWidgetItem(None,(path,))
+            v.insertTopLevelItem(0, it)
+            for diag in self._data.diagnostics(path):
+                dit=QTreeWidgetItem(it,(self._data.message(diag),))
+                
     def reject(self):
         self.close()
          

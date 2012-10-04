@@ -15,6 +15,7 @@ from CGNS.NAV.wfingerprint import Q7fingerPrint
 import CGNS.VAL.simplecheck as CGV
 import CGNS.NAV.wmessages as MSG
 import CGNS.VAL.parse.messages as CGM
+import CGNS.VAL.grammars.USER as CGG
 
 HIDEVALUE='@@HIDE@@'
 LAZYVALUE='@@LAZY@@'
@@ -441,6 +442,7 @@ class Q7TreeItem(object):
         self._depth=self._path.count('/')
         self._size=None
         self._fingerprint=fgprint
+        self._log=None
         self._control=self._fingerprint.control
         self._states={'mark':STMARKOFF,'check':STCHKUNKN,
                       'user':STUSR_X,'shared':STSHRUNKN}
@@ -678,8 +680,10 @@ class Q7TreeItem(object):
     def switchMarked(self):
         if (self._states['mark']==STMARK_ON): self._states['mark']=STMARKOFF
         else:                                 self._states['mark']=STMARK_ON
-    def setCheck(self,check):
-        if (check in STCHKLIST): self._states['check']=check
+    def setCheck(self,check,status,id,msg):
+        if (check in STCHKLIST):
+            self._states['check']=check
+            self._log=(status,id,msg)
     def userState(self):
         return self._states['user']
     def setUserState(self,s):
@@ -1057,18 +1061,19 @@ class Q7TreeModel(QAbstractItemModel):
         self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
         return True
     def checkTree(self,T,pathlist):
-        checkdiag=CGV.checkTree(T)
+        checkdiag=CGG.elsAbase(None)
+        checkdiag.checkTree(T,False)
         for path in pathlist:
             pth=CGU.getPathNoRoot(path)
-            if (checkdiag.has_key(pth)):
+            if (checkdiag.log.has_key(pth)):
                 item=self._extension[path]
-                stat=checkdiag[pth][0]
+                stat=checkdiag.log[pth].status
                 if (stat==CGM.CHECK_NONE): item.setCheck(STCHKUNKN)
                 if (stat==CGM.CHECK_GOOD): item.setCheck(STCHKGOOD)
                 if (stat==CGM.CHECK_FAIL): item.setCheck(STCHKFAIL)
                 if (stat==CGM.CHECK_WARN): item.setCheck(STCHKWARN)
                 if (stat==CGM.CHECK_USER): item.setCheck(STCHKUSER)
-        return checkdiag
+        return checkdiag.log
     def hasUserColor(self,k):
         cl=OCTXT.UserColors
         c=k[-3]

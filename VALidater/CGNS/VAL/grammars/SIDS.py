@@ -11,151 +11,50 @@ import CGNS.VAL.parse.generic
 
 import string
 
+UKZONETYPE='S004'
+BADVALUEDTYPE='S100'
+BADVALUESHAPE='S101'
+BADCELLDIM='S102'
+BADPHYSDIM='S103'
+
 class SIDSbase(CGNS.VAL.parse.generic.GenericParser):
-  def __init__(self):
-    CGNS.VAL.parse.generic.GenericParser.__init__(self)
-    self.updateMethods()
-    
-  # --------------------------------------------------------------------
-  # Enumerates
-  def ZoneType_t_enum(self):
-    return CGK.ZoneType_l
-
-  def SimulationType_t_enum(self):
-    return CGK.SimulationType_l
-
-  def RigidGridMotionType_t_enum(self):
-    return CGK.RigidGridMotionType_l
-
-  def TurbulenceModelType_t_enum(self):
-    return CGK.TurbulenceModelType_l
-
-  def ViscosityModelType_t_enum(self):
-    return CGK.ViscosityModelType_l
-
-  def TurbulenceClosureType_t_enum(self):
-    return CGK.TurbulenceClosureType_l
-
-  def GasModelType_t_enum(self):
-    return CGK.GasModelType_l
-
-  def ThermalRelaxationModelType_t_enum(self):
-    return CGK.ThermalRelaxationModelType_l
-
-  def ChemicalKineticsModelType_t_enum(self):
-    return CGK.ChemicalKineticsModelType_l
-
-  def EMElectricFieldModelType_t_enum(self):
-    return CGK.EMElectricFieldModelType_l
-
-  def EMMagneticFieldModelType_t_enum(self):
-    return CGK.EMMagneticFieldModelType_l
-
-  def EMConductivityModelType_t_enum(self):
-    return CGK.EMConductivityModelType_l
-
-  def AverageInterfaceType_t_enum(self):
-    return CGK.AverageInterfaceType_l
-
-  def GoverningEquationsType_t_enum(self):
-    return CGK.GoverningEquationsType_l
-
-  def ElementType_t_enum(self):
-    return CGK.ElementType_l
-
-  def ArbitraryGridMotionType_t_enum(self):
-    return CGK.ArbitraryGridMotionType_l
-
-  # --- special cases
-  def BCTypeSimple_t_enum(self):
-    return CGK.BCTypeSimple_l
-
-  def BCTypeCompound_t_enum(self):
-    return CGK.BCTypeCompound_l
-
-  def MassUnits_t_enum(self):
-    return CGK.MassUnits_l
-
-  def LengthUnits_t_enum(self):
-    return CGK.LengthUnits_l
-
-  def TimeUnits_t_enum(self):
-    return CGK.TimeUnits_l
-
-  def TemperatureUnits_t_enum(self):
-    return CGK.TemperatureUnits_l
-
-  def AngleUnits_t_enum(self):
-    return CGK.AngleUnits_l
-
-  def LuminousIntensityUnits_t_enum(self):
-    return CGK.LuminousIntensityUnits_l
-
-  def DataClass_t_enum(self):
-    return CGK.DataClass_l
-
-  def GridLocation_t_enum(self):
-    return CGK.GridLocation_l
-
-  def GridConnectivityType_t_enum(self):
-    return CGK.GridConnectivityType_l
-
+  __messages={
+   UKZONETYPE:'Unknown ZoneType_t value',
+   BADVALUEDTYPE:'Bad node value data type',
+   BADVALUESHAPE:'Bad node value shape',
+   BADCELLDIM:'Bad value for CellDimensions',
+   BADPHYSDIM:'Bad value for PhysicalDimensions',
+  }
+  def __init__(self,log):
+    CGNS.VAL.parse.generic.GenericParser.__init__(self,log)
+    self.log.addMessages(SIDSbase.__messages)
   # --------------------------------------------------------------------
   def Zone_t(self,pth,node,parent,tree,log):
-    rs=1
-    r=0
-    msg='No GridCoordinates in this Zone_t'
-    for cn in CGU.childNames(node):
-      if (cn!='GridCoordinates'):
-        r=1
-        break
-    if (not r): log.push(pth,CGM.CHECK_WARN,msg)
-    rs*=r
-    r=0
-    msg='No FlowSolution# found for output definition'
-    for cn in CGU.childNames(node):
-      if (    (len(cn)>12)
-          and (cn[:13]=='FlowSolution#')
-          and (cn!='FlowSolution#Init')):
-        r=1
-        break
-    if (not r): log.push(pth,CGM.CHECK_WARN,msg)
-    rs*=r
-    r=0
-    msg='No FlowSolution#Init found for field initialization'
-    for cn in CGU.childNames(node):
-      if (cn=='FlowSolution#Init'):
-        r=1
-        break
-    if (not r): log.push(pth,CGM.CHECK_WARN,msg)
-    rs*=r
+    rs=CGM.CHECK_OK
     return rs
-
   # --------------------------------------------------------------------
   def CGNSBase_t(self,pth,node,parent,tree,log):
-    rs=1
-    r=0
-    msg='No Zone_t found in this CGNSBase_t'
-    r=CGU.hasChildNodeOfType(node,CGK.Zone_ts)
-    if (not r): log.push(pth,CGM.CHECK_WARN,msg)
-    rs*=r
-    r=0
-    msg='No ReferenceState found in this CGNSBase_t'
-    for cn in CGU.childNames(node):
-      if (cn!=CGK.ReferenceState_s):
-        r=1
-        break
-    if (not r): log.push(pth,CGM.CHECK_WARN,msg)
-    rs*=r
+    rs=CGM.CHECK_OK
+    if (CGU.getShape(node)!=(2,)):
+      rs=log.push(pth,CGM.CHECK_FAIL,BADVALUESHAPE)
+    else:
+      cd=node[1][0]
+      pd=node[1][1]
+      self.context[CGK.CellDimension_s]=0
+      self.context[CGK.PhysicalDimension_s]=0
+      if (cd not in [1,2,3]):
+        rs=log.push(pth,CGM.CHECK_FAIL,BADCELLDIM)
+        self.context[CGK.CellDimension_s]=cd
+      if (pd not in [1,2,3]):
+        rs=log.push(pth,CGM.CHECK_FAIL,BADPHYSDIM)
+        self.context[CGK.PhysicalDimension_s]=pd
     return rs
-
   # --------------------------------------------------------------------
   def ZoneType_t(self,pth,node,parent,tree,log):
-    msg='Only Structured ZoneType_t is allowed'
-    r=CGU.stringValueMatches(node,CGK.Structured_s)
-    if (not r): log.push(pth,CGM.CHECK_WARN,msg)
-    return 1
-
+    rs=CGM.CHECK_OK
+    if (not CGU.stringValueInList(node,CGK.ZoneType_l)):
+      rs=log.push(pth,CGM.CHECK_FAIL,UKZONETYPE)
+    return rs
   # --------------------------------------------------------------------
   def IndexRange_t(self,pth,node,parent,tree,log):
     if not ((node[0]==CGK.PointRange_s) or (node[0]==CGK.PointRangeDonor_s)):

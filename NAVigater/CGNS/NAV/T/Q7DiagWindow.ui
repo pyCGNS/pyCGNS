@@ -122,7 +122,7 @@
    <item row="4" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QTableWidget" name="diagTable">
+      <widget class="QTreeWidget" name="diagTable">
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOn</enum>
        </property>
@@ -138,16 +138,11 @@
        <property name="selectionBehavior">
         <enum>QAbstractItemView::SelectRows</enum>
        </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-       <property name="columnCount">
-        <number>4</number>
-       </property>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
       </widget>
      </item>
     </layout>

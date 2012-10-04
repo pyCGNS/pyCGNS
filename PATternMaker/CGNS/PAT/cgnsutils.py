@@ -695,6 +695,15 @@ def getNodeShape(node):
   else: r=str(list(node[1].shape))
   return r
 
+def getShape(node):
+  r=0
+  if   (node[1]==None): r=(0,)
+  elif (node[1]==[]):   r=(0,)
+  elif (node[3]==''):   r=(0,)
+  elif (node[1].shape in ['',(0,),()]): r=(0,)
+  else: r=node[1].shape
+  return r
+
 # --------------------------------------------------
 def getValueDataType(node):
   """
@@ -1075,6 +1084,56 @@ def getPathFromNode(tree,node,path=''):
     if (p): return p
   return None
 
+# --------------------------------------------------
+def getAllNodesByTypeOrNameList(tree,typeornamelist):
+  """
+  Returns a list of paths from the argument tree with nodes matching
+  the list of types or names. The list you give is the list you would
+  have if you pick the node type or the node name during the parse.
+
+  .. code-block:: python
+
+     tnlist=['CGNSTree_t','Base#001','Zone_t']
+
+     for path in getAllNodesByTypeOrNameList(T,tnlist):
+        node=getNodeByPath(T,path)
+        # do something with node
+
+  Would return all the zones of the named base.
+  See also :py:func:`getAllNodesByTypeSet`
+  See also :py:func:`getAllNodesByTypeList`
+
+  - Args:
+   * `tree`: the start node of the CGNS tree to parse
+   * `typeornamelist`: the (ordered) list of types
+
+  - Return:
+   * a list of strings, each string is the path to a matching node
+
+  - Remark:
+   * the first comparison is performed on name, then on type. If you have
+     a node name that matches a type, the node is included in the result.
+ 
+  """
+  if ((tree[0]!=typeornamelist[0]) and (tree[3]!=typeornamelist[0])):
+    return None
+  if (tree[3]==CK.CGNSTree_ts): start=""
+  else:                         start="%s"%tree[0]
+  n=getAllNodesFromTypeOrNameList(typeornamelist[1:],tree[2],start,[])
+  if (n==-1): return None
+  return n
+  
+# --------------------------------------------------
+def getAllNodesFromTypeOrNameList(tnlist,node,path,result):
+  for c in node:
+    if ((c[0]==tnlist[0]) or (c[3]==tnlist[0])):
+      if (len(tnlist) == 1):
+        result.append("%s/%s"%(path,c[0]))
+      else:
+        getAllNodesFromTypeOrNameList(tnlist[1:],
+                                      c[2],"%s/%s"%(path,c[0]),result)
+  return result
+  
 # --------------------------------------------------
 def getAllNodesByTypeList(tree,typelist):
   """
@@ -1575,6 +1634,18 @@ def stringValueMatches(node,reval):
     vn=node[1].tostring()
   else: return 0
   return re.match(reval,vn)
+
+# --------------------------------------------------
+def stringValueInList(node,listval):
+  if (node == None):             return 0
+  if (node[1] == None):          return 0  
+  if (getNodeType(node)!=CK.C1): return 0
+  tn=type(node[1])
+  if   (tn==type('')): vn=node[1]
+  elif (tn == type(NPY.ones((1,))) and (node[1].dtype.char in ['S','c','s'])):
+    vn=node[1].tostring()
+  else: return 0
+  return vn in listval
 
 # --------------------------------------------------
 def checkLinkFile(lkfile,lksearch=['']):

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7DiagWindow.ui'
 #
-# Created: Fri Sep 21 15:04:26 2012
+# Created: Thu Oct  4 16:58:15 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -55,16 +55,14 @@ class Ui_Q7DiagWindow(object):
         self.gridLayout.addLayout(self.horizontalLayout, 3, 0, 1, 1)
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.diagTable = QtGui.QTableWidget(Q7DiagWindow)
+        self.diagTable = QtGui.QTreeWidget(Q7DiagWindow)
         self.diagTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.diagTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.diagTable.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         self.diagTable.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.diagTable.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
-        self.diagTable.setColumnCount(4)
         self.diagTable.setObjectName("diagTable")
-        self.diagTable.setColumnCount(4)
-        self.diagTable.setRowCount(0)
+        self.diagTable.headerItem().setText(0, "1")
         self.verticalLayout.addWidget(self.diagTable)
         self.gridLayout.addLayout(self.verticalLayout, 4, 0, 1, 1)
 
@@ -74,6 +72,5 @@ class Ui_Q7DiagWindow(object):
     def retranslateUi(self, Q7DiagWindow):
         Q7DiagWindow.setWindowTitle(QtGui.QApplication.translate("Q7DiagWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setText(QtGui.QApplication.translate("Q7DiagWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
-        self.diagTable.setSortingEnabled(True)
 
 import Res_rc
