@@ -55,7 +55,7 @@ for o, v in opts:
 if (verbose):
   print '### CGNS.VAL %s'%__vid__
   print '### Loading file [%s]'%filename
-(tree,links,paths)=CGNS.MAP.load(filename,CGNS.MAP.S2P_DEFAULTS)
+(tree,links,paths,diag)=CGNS.MAP.load2(filename,CGNS.MAP.S2P_DEFAULTS,maxdata=200)
 
 checkdiag=CGV.run(tree,verbose,user)
 if (verbose): CGV.showDiag(checkdiag,idlist,bypath=pathsort)

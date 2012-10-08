@@ -13,6 +13,8 @@ import CGNS.APP.sids.utils     as CGS
 import string
 
 UKZONETYPE='S004'
+UKSIMTYPE='S005'
+INCONSCELLPHYSDIM='S006'
 BADTRANSFORM='S200'
 BADVALUEDTYPE='S100'
 BADVALUESHAPE='S101'
@@ -23,14 +25,16 @@ BADADDFAMREFERENCE='S021'
 
 class SIDSbase(CGNS.VAL.parse.generic.GenericParser):
   __messages={
-   UKZONETYPE:'Unknown ZoneType_t value',
-   BADVALUEDTYPE:'Bad node value data type',
-   BADVALUESHAPE:'Bad node value shape',
-   BADCELLDIM:'Bad value for CellDimension',
-   BADPHYSDIM:'Bad value for PhysicalDimension',
-   BADTRANSFORM:'Bad Transform values',
-   BADFAMREFERENCE:'Reference to unknown family [%s]',
-   BADADDFAMREFERENCE:'Reference to unknown additional family [%s]',
+INCONSCELLPHYSDIM:'Inconsistent PhysicalDimension/CellDimension',
+UKZONETYPE:'Unknown ZoneType_t value',
+UKSIMTYPE:'Unknown SimulationType_t value',
+BADVALUEDTYPE:'Bad node value data type',
+BADVALUESHAPE:'Bad node value shape',
+BADCELLDIM:'Bad value for CellDimension',
+BADPHYSDIM:'Bad value for PhysicalDimension',
+BADTRANSFORM:'Bad Transform values',
+BADFAMREFERENCE:'Reference to unknown family [%s]',
+BADADDFAMREFERENCE:'Reference to unknown additional family [%s]',
   }
   def __init__(self,log):
     CGNS.VAL.parse.generic.GenericParser.__init__(self,log)
@@ -72,12 +76,24 @@ class SIDSbase(CGNS.VAL.parse.generic.GenericParser):
       if (pd not in [1,2,3]):
         rs=log.push(pth,CGM.CHECK_FAIL,BADPHYSDIM)
         self.context[CGK.PhysicalDimension_s]=pd
+      if (pd<cd):
+        rs=log.push(pth,CGM.CHECK_FAIL,INCONSCELLPHYSDIM)
+    return rs
+  # --------------------------------------------------------------------
+  def GridLocation_t(self,pth,node,parent,tree,log):
+    rs=CGM.CHECK_OK
     return rs
   # --------------------------------------------------------------------
   def ZoneType_t(self,pth,node,parent,tree,log):
     rs=CGM.CHECK_OK
     if (not CGU.stringValueInList(node,CGK.ZoneType_l)):
       rs=log.push(pth,CGM.CHECK_FAIL,UKZONETYPE)
+    return rs
+  # --------------------------------------------------------------------
+  def SimulationType_t(self,pth,node,parent,tree,log):
+    rs=CGM.CHECK_OK
+    if (not CGU.stringValueInList(node,CGK.SimulationType_l)):
+      rs=log.push(pth,CGM.CHECK_FAIL,UKSIMTYPE)
     return rs
   # --------------------------------------------------------------------
   def IntIndexDimension_t(self,pth,node,parent,tree,log):
