@@ -1617,6 +1617,11 @@ def hasChildName(parent,name,dienow=False):
   return None
 
 # --------------------------------------------------
+def getTypeAsGrammarToken(ntype):
+  if (ntype in CK.weirdSIDStypes): return CK.weirdSIDStypes[ntype]
+  return ntype
+    
+# --------------------------------------------------
 def hasChildNodeOfType(node,ntype):
   if (node == None): return 0
   for cn in node[2]:

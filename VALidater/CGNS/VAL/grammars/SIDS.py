@@ -8,22 +8,29 @@ import CGNS.PAT.cgnstypes      as CGT
 import CGNS.PAT.cgnskeywords   as CGK
 import CGNS.VAL.parse.messages as CGM
 import CGNS.VAL.parse.generic
+import CGNS.APP.sids.utils     as CGS
 
 import string
 
 UKZONETYPE='S004'
+BADTRANSFORM='S200'
 BADVALUEDTYPE='S100'
 BADVALUESHAPE='S101'
 BADCELLDIM='S102'
 BADPHYSDIM='S103'
+BADFAMREFERENCE='S020'
+BADADDFAMREFERENCE='S021'
 
 class SIDSbase(CGNS.VAL.parse.generic.GenericParser):
   __messages={
    UKZONETYPE:'Unknown ZoneType_t value',
    BADVALUEDTYPE:'Bad node value data type',
    BADVALUESHAPE:'Bad node value shape',
-   BADCELLDIM:'Bad value for CellDimensions',
-   BADPHYSDIM:'Bad value for PhysicalDimensions',
+   BADCELLDIM:'Bad value for CellDimension',
+   BADPHYSDIM:'Bad value for PhysicalDimension',
+   BADTRANSFORM:'Bad Transform values',
+   BADFAMREFERENCE:'Reference to unknown family [%s]',
+   BADADDFAMREFERENCE:'Reference to unknown additional family [%s]',
   }
   def __init__(self,log):
     CGNS.VAL.parse.generic.GenericParser.__init__(self,log)
@@ -31,6 +38,23 @@ class SIDSbase(CGNS.VAL.parse.generic.GenericParser):
   # --------------------------------------------------------------------
   def Zone_t(self,pth,node,parent,tree,log):
     rs=CGM.CHECK_OK
+    if (CGU.hasChildNodeOfType(node,CGK.FamilyName_ts)):
+      basepath=[CGK.CGNSTree_ts,parent[0],node[0]]
+      searchpath=basepath+[CGK.FamilyName_ts]
+      famlist1=CGU.getAllNodesByTypeOrNameList(tree,searchpath)
+      searchpath=basepath+[CGK.AdditionalFamilyName_ts]
+      famlist2=CGU.getAllNodesByTypeOrNameList(tree,searchpath)
+      for (famlist, diagmessage) in ((famlist1,BADFAMREFERENCE),
+                                     (famlist2,BADADDFAMREFERENCE)):
+        for fampath in famlist:
+          famtarget=CGU.getNodeByPath(tree,fampath)[1].tostring()
+          famtargetpath="/%s/%s"%(parent[0],famtarget)
+          if (not self.context.has_key(famtargetpath)):
+            famtargetnode=CGU.getNodeByPath(tree,famtargetpath)
+            if (famtargetnode is None):
+              rs=log.push(pth,CGM.CHECK_FAIL,diagmessage,famtarget)
+            else:
+              self.context[famtargetpath]=True
     return rs
   # --------------------------------------------------------------------
   def CGNSBase_t(self,pth,node,parent,tree,log):
@@ -56,26 +80,12 @@ class SIDSbase(CGNS.VAL.parse.generic.GenericParser):
       rs=log.push(pth,CGM.CHECK_FAIL,UKZONETYPE)
     return rs
   # --------------------------------------------------------------------
-  def IndexRange_t(self,pth,node,parent,tree,log):
-    if not ((node[0]==CGK.PointRange_s) or (node[0]==CGK.PointRangeDonor_s)):
-      return 1
-    if (node[2]):
-      return 0
-    if not ((len(node[1])==2) and (len(node[1][0]==3)) and (len(node[1][1]==3))):
-      return 0
-    return 1
-
-  # --------------------------------------------------------------------
-  def IndexRangeT2_t(self,pth,node,parent,tree,log):
-    if not (node[0]==CGK.Transform_s):
-      return 1
-    if (node[2]):
-      return 0
-    if not (len(node[1])==3):
-      return 0
-    for n in node[1]:
-      if (n not in [1,2,3,-1,-2,-3]):
-        return 0
-    return 1
+  def IntIndexDimension_t(self,pth,node,parent,tree,log):
+    rs=CGM.CHECK_OK
+    if (node[0]==CGK.Transform_s):
+      tr=list(node[0].flat)
+      if (not CGS.transformCheckValues(tr,self.context[CGK.CellDimension_s])):
+        rs=log.push(pth,CGM.CHECK_FAIL,BADTRANSFORM)
+    return rs
 
 # -----

@@ -17,6 +17,7 @@ NOGRIDZONE='U002'
 NOBREFSTATE='U003'
 NOZREFSTATE='U004'
 NOSTRUCTZONE='U005'
+NOTRHTRANSFORM='U006'
 NOFLOWSOL='U100'
 NOFLOWINIT='U101'
 
@@ -29,6 +30,7 @@ class elsAbase(CGNS.VAL.grammars.SIDS.SIDSbase):
    NOZREFSTATE:'No ReferenceState found at Zone level',
    NOFLOWSOL:'No FlowSolution# found for output definition',
    NOFLOWINIT:'No FlowSolution#Init found for fields initialisation',
+   NOTRHTRANSFORM:'Transform is not right-handed (direct)',
   }
   def __init__(self,log):
     CGNS.VAL.grammars.SIDS.SIDSbase.__init__(self,log)
@@ -62,4 +64,15 @@ class elsAbase(CGNS.VAL.grammars.SIDS.SIDSbase):
     if (not CGU.hasChildNodeOfType(node,CGK.ReferenceState_ts)):
       rs=log.push(pth,CGM.CHECK_WARN,NOBREFSTATE)
     return rs
+  # --------------------------------------------------------------------
+  def IntIndexDimension_t(self,pth,node,parent,tree,log):
+    rs=CGM.CHECK_OK
+    self.sids.IntIndexDimension_t(self,pth,node,parent,tree,log)
+    if (node[0]==CGK.Transform_s):
+      tr=list(node[0].flat)
+      if (not CGS.transformIsDirect(tr,self.context[CGK.CellDimension_s])):
+        rs=log.push(pth,CGM.CHECK_FAIL,NOTRHTRANSFORM)
+    return rs
+
+
 # -----

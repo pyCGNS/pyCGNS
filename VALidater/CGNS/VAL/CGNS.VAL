@@ -16,22 +16,25 @@ from CGNS.VAL import __vid__
 def usage():
   print """CGNS.VAL v%s
   CGNS.VAL [options] file.hdf
+  -p <path> : start check at this node
   -f : flat mode, do not recurse on tree
   -u : check user requirements
-  -r <idlist> : suppress the list of ids ( -r U012:U023:U001 )
+  -r <idlist> : remove the list of ids ( -r U012:U023:U001 )
+  -m : Output by message id instead of path
   -h : help
   -v : verbose (trace)
   """%__vid__
   sys.exit(-1)
 
 try:
- opts, args = getopt.getopt(sys.argv[1:], "fhvur:")
+ opts, args = getopt.getopt(sys.argv[1:], "mfhvur:p:")
 except getopt.GetoptError:
  usage()
 
 verbose=False
 recurse=True
 user=False
+pathsort=True
 olist=[]
 idlist=[]
 
@@ -42,6 +45,8 @@ except IndexError:
   
 for o, v in opts:
   if (o == "-f"): recurse=False
+  if (o == "-m"): pathsort=False
+  if (o == "-p"): path=v
   if (o == "-v"): verbose=True
   if (o == "-u"): user=True
   if (o == "-r"): idlist=v.split(':')
@@ -53,6 +58,6 @@ if (verbose):
 (tree,links,paths)=CGNS.MAP.load(filename,CGNS.MAP.S2P_DEFAULTS)
 
 checkdiag=CGV.run(tree,verbose,user)
-if (verbose): CGV.showDiag(checkdiag,idlist)
+if (verbose): CGV.showDiag(checkdiag,idlist,bypath=pathsort)
 
 # --- last line

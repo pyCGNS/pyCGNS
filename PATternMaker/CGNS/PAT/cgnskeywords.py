@@ -83,6 +83,7 @@ Transform_ts          = 'Transform_t"'
 DiffusionModel_ts     = 'DiffusionModel_t'
 EquationDimension_ts  = 'EquationDimension_t'
 InwardNormalIndex_ts  = 'InwardNormalIndex_t'
+IntIndexDimension_ts  = 'IntIndexDimension_ts'
 
 # --- Add legacy strings for translation tools
 #
@@ -90,6 +91,20 @@ Transform_ts2         = '"int[IndexDimension]"'
 DiffusionModel_ts2    = '"int[1+...+IndexDimension]"'
 EquationDimension_ts2 = '"int"'
 InwardNormalIndex_ts2 = '"int[IndexDimension]"'
+
+weirdSIDStypes={
+  Transform_ts2:         IntIndexDimension_ts,
+  DiffusionModel_ts2:    DiffusionModel_ts,
+  EquationDimension_ts2: EquationDimension_ts,
+  InwardNormalIndex_ts2: IntIndexDimension_ts,
+  }
+
+weirdSIDStypes_={
+  Transform_ts:         Transform_ts2,
+  DiffusionModel_ts:    DiffusionModel_ts2,
+  EquationDimension_ts: EquationDimension_ts2,
+  InwardNormalIndex_ts: InwardNormalIndex_ts2,
+  }
 
 # -------------------------------------------------- (SIDS)
 # SIDS
@@ -714,6 +729,8 @@ FamilyBC_ts                   = "FamilyBC_t"
 
 FamilyName_ts                 = "FamilyName_t"
 FamilyName_s                  = "FamilyName"
+AdditionalFamilyName_ts       = "AdditionalFamilyName_t"
+AdditionalFamilyName_s        = "AdditionalFamilyName"
 Family_ts                     = "Family_t"
 Family_s                      = "Family"
 FlowEquationSet_ts            = "FlowEquationSet_t"

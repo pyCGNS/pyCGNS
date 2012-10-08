@@ -17,20 +17,35 @@ def run(T,trace,user):
     parser.checkTree(T,trace)
     return parser
 
-def showDiag(diag,idlist):
-    sz=len(diag.log)
-    ct=1
+def showDiag(diag,idlist,bypath=True):
     ok=True
-    for p in diag.log:
-        if (not diag.log.hasOnlyKey(p,idlist)):
-          print '\n%s\n%s'%('-'*75,p)
-          for s in diag.log.diagnostics(p):
-              if ((diag.log.status(s)!=CGM.CHECK_GOOD)
-                  and (diag.log.key(s) not in idlist)):
-                  print diag.log.message(s)
-                  if (diag.log.status(s)==CGM.CHECK_FAIL): ok=False
-              ct+=1
-    print '\n%s\n'%('-'*75)
-    if (ok): print '\n### CGNS/Python tree Compliant'
-    else:    print '\n### CGNS/Python tree *NOT* Compliant'
+    if (bypath):
+      for p in diag.log:
+          if (not diag.log.hasOnlyKey(p,idlist)):
+            print '\n%s\n%s'%('-'*75,p)
+            for (s,sp) in diag.log.diagnosticsByPath(p):
+                if ((diag.log.status(s)!=CGM.CHECK_GOOD)
+                    and (diag.log.key(s) not in idlist)):
+                    print diag.log.message(s)
+                    if (diag.log.status(s)==CGM.CHECK_FAIL): ok=False
+      print '\n%s\n'%('-'*75)
+    else:
+      for m in diag.log.allMessageKeys():
+        if (m not in idlist):
+          first=True
+          ctxt=diag.log.noContextMessage(m)
+          if (ctxt is not None): print '\n%s\n[%s] %s'%('-'*75,m,ctxt)
+          else: print '\n%s\n[%s]'%('-'*75,m)
+          for (d,dp) in diag.log.diagnosticsByMessage(m):
+              if (diag.log.status(d)!=CGM.CHECK_GOOD):
+                  if (ctxt is None):
+                      if (not first): skip='\n'
+                      else: skip=''
+                      print '%s  %s\n  > %s'%(skip,dp,d[1])
+                  else: print '  %s'%(dp)
+                  first=False
+                  if (diag.log.status(d)==CGM.CHECK_FAIL): ok=False
+      print '\n%s'%('-'*75)
+    if (ok): print '### CGNS/Python tree Compliant'
+    else:    print '### CGNS/Python tree *NOT* Compliant'
     

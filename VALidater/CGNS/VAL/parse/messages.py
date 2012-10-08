@@ -28,6 +28,9 @@ class DiagnosticLog(dict):
     def __init__(self):
         dict.__init__(self)
         DiagnosticLog.__messages
+    def noContextMessage(self,m):
+        if ('%' in DiagnosticLog.__messages[m]): return None
+        return DiagnosticLog.__messages[m]
     def addMessages(self,d):
         for e in d:
             DiagnosticLog.__messages[e]=d[e]
@@ -72,8 +75,24 @@ class DiagnosticLog(dict):
     def diagForPath(self,path):
         if (path in self): return self[path]
         return None
-    def diagnostics(self,path):
+    def allMessageKeys(self):
+        r=set()
+        for path in self:
+            for entry in self[path]:
+                r.add(entry[2])
+        mlist=list(r)
+        mlist.sort()
+        return mlist
+    def allPathKeys(self):
+        return self.keys()
+    def diagnosticsByPath(self,path):
         if (self.diagForPath(path) is not None):
             for diag in self[path]:
-                yield diag
+                yield (diag,path)
+    def diagnosticsByMessage(self,msg):
+        plist=self.keys()
+        plist.sort()
+        for path in plist:
+            for diag in self[path]:
+                if (diag[2]==msg): yield (diag,path)
 # --- last line

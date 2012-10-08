@@ -35,7 +35,7 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         for path in self._data:
             it=QTreeWidgetItem(None,(path,))
             v.insertTopLevelItem(0, it)
-            for diag in self._data.diagnostics(path):
+            for diag in self._data.diagnosticsByPath(path):
                 dit=QTreeWidgetItem(it,(self._data.message(diag),))
                 
     def reject(self):

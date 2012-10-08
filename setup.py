@@ -21,7 +21,7 @@ versionList=[4]
 
 # order IS significant
 CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater',
-             'DATaTracer','VALidater','APPlicater']
+             'DATaTracer','VALidater','APPlicationSampler']
 
 modList=CGNSmodList[:]
 modList.remove('DATaTracer')

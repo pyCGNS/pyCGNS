@@ -15,6 +15,7 @@ tlistA=[
 
 allDT=[CK.C1,CK.MT,CK.I4,CK.I8,CK.R4,CK.R8] # LK is default
 
+C_00='Zero/Zero'
 C_01='Zero/One'
 C_11='One/One'
 C_0N='Zero/N'
@@ -27,10 +28,9 @@ allCARD=[C_01,C_11,C_0N,C_1N,C_NN]
 
 # --------------------------------------------------------
 class CGNStype:
-  def __init__(self,ntype,dtype=[CK.MT],card=C_01,names=[UD]):
+  def __init__(self,ntype,dtype=[CK.MT],names=[UD]):
     self.type=ntype
     self.datatype=[CK.LK]+dtype
-    self.cardinality=card
     self.enumerate=[]
     self.shape=()
     self.names=names
@@ -40,21 +40,24 @@ class CGNStype:
     for c in self.children:
       if (c[0]==ctype): return True
     return False
-  def addChild(self,ctype,cname=UD,dtype=CK.MT,ccard=C_01):
-    self.children.append((ctype,cname,dtype,ccard))
+  def addChild(self,ctype,cname=UD,dtype=CK.MT,card=C_0N):
+    self.children.append((ctype,cname,dtype,card))
   def addParent(self,parent):
     self.parents.append(parent)
-
+  def cardinality(self,childtype):
+    for c in self.children:
+      if (c[0]==childtype): return c[3]
+    return C_00
 types={}
 
 # --------------------------------------------------------
 t=CK.CGNSLibraryVersion_ts
-types[t]=CGNStype(t,dtype=[CK.R4],card=C_11,names=[CK.CGNSLibraryVersion_s])
+types[t]=CGNStype(t,dtype=[CK.R4],names=[CK.CGNSLibraryVersion_s])
 types[t].shape=(1,)
 
 # --------------------------------------------------------
 t=CK.Descriptor_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_0N)
+types[t]=CGNStype(t,dtype=[CK.C1])
 types[t].shape=(0,)
 
 # --------------------------------------------------------
@@ -98,7 +101,7 @@ types[t].shape=(3,)
 
 # --------------------------------------------------------
 t=CK.DataArray_ts
-types[t]=CGNStype(t,dtype=allDT,card=C_0N)
+types[t]=CGNStype(t,dtype=allDT)
 types[t].addChild(CK.DimensionalExponents_ts,CK.DimensionalExponents_s)
 types[t].addChild(CK.DataConversion_ts,CK.DataConversion_s)
 types[t].addChild(CK.DataClass_ts,CK.DataClass_s)
@@ -184,7 +187,7 @@ types[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CK.IntegralData_ts
-types[t]=CGNStype(t,card=C_0N)
+types[t]=CGNStype(t)
 types[t].addChild(CK.Descriptor_ts)
 types[t].addChild(CK.DataClass_ts,CK.DataClass_s)
 types[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
@@ -193,7 +196,7 @@ types[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CK.UserDefinedData_ts
-types[t]=CGNStype(t,card=C_0N)
+types[t]=CGNStype(t)
 types[t].addChild(CK.Descriptor_ts)
 types[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
 types[t].addChild(CK.IndexRange_ts,CK.PointRange_s)
@@ -358,25 +361,25 @@ types[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CK.ZoneType_ts
-types[t]=CGNStype(t,card=C_11,dtype=[CK.C1],names=[CK.ZoneType_s])
+types[t]=CGNStype(t,dtype=[CK.C1],names=[CK.ZoneType_s])
 types[t].shape=(0,)
 types[t].enumerate=CK.ZoneType_l
 
 # --------------------------------------------------------
 t=CK.SimulationType_ts
-types[t]=CGNStype(t,card=C_11,dtype=[CK.C1],names=[CK.SimulationType_s])
+types[t]=CGNStype(t,dtype=[CK.C1],names=[CK.SimulationType_s])
 types[t].shape=(0,)
 types[t].enumerate=CK.SimulationType_l
 
 # --------------------------------------------------------
 t=CK.GridConnectivityType_ts
-types[t]=CGNStype(t,card=C_11,dtype=[CK.C1],names=[CK.GridConnectivityType_s])
+types[t]=CGNStype(t,dtype=[CK.C1],names=[CK.GridConnectivityType_s])
 types[t].shape=(0,)
 types[t].enumerate=CK.GridConnectivityType_l
 
 # --------------------------------------------------------
 t=CK.Family_ts
-types[t]=CGNStype(t,card=C_0N)
+types[t]=CGNStype(t)
 types[t].addChild(CK.Descriptor_ts)
 types[t].addChild(CK.Ordinal_ts,CK.Ordinal_s)
 types[t].addChild(CK.FamilyBC_ts)
@@ -398,7 +401,7 @@ types[t].addChild(CK.BCDataSet_ts)
 
 # --------------------------------------------------------
 t=CK.GeometryReference_ts
-types[t]=CGNStype(t,card=C_0N)
+types[t]=CGNStype(t)
 types[t].addChild(CK.Descriptor_ts)
 types[t].addChild(CK.GeometryFile_ts,CK.GeometryFile_s)
 types[t].addChild(CK.GeometryFormat_ts,CK.GeometryFormat_s)
@@ -407,29 +410,29 @@ types[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CK.GeometryFile_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_11,names=[CK.GeometryFile_s])
+types[t]=CGNStype(t,dtype=[CK.C1],names=[CK.GeometryFile_s])
 types[t].shape=(0,)
 
 # --------------------------------------------------------
 t=CK.GeometryFormat_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_11,names=[CK.GeometryFormat_s])
+types[t]=CGNStype(t,dtype=[CK.C1],names=[CK.GeometryFormat_s])
 types[t].shape=(0,)
 
 # --------------------------------------------------------
 t=CK.GeometryEntity_ts
-types[t]=CGNStype(t,card=C_0N)
+types[t]=CGNStype(t)
 
 # --------------------------------------------------------
 t=CK.CGNSTree_ts
-types[t]=CGNStype(t,card=C_11,names=[CK.CGNSTree_s,UD])
-types[t].addChild(CK.CGNSLibraryVersion_ts,CK.CGNSLibraryVersion_s)
-types[t].addChild(CK.CGNSBase_ts)
+types[t]=CGNStype(t,names=[CK.CGNSTree_s,UD])
+types[t].addChild(CK.CGNSLibraryVersion_ts,CK.CGNSLibraryVersion_s,card=C_11)
+types[t].addChild(CK.CGNSBase_ts,card=C_0N)
 
 # --------------------------------------------------------
 t=CK.CGNSBase_ts
-types[t]=CGNStype(t,card=C_0N,dtype=[CK.I4])
+types[t]=CGNStype(t,dtype=[CK.I4])
 types[t].shape=(0,0)
-types[t].addChild(CK.Zone_ts)
+types[t].addChild(CK.Zone_ts,card=C_0N)
 types[t].addChild(CK.SimulationType_ts,CK.SimulationType_s)
 types[t].addChild(CK.BaseIterativeData_ts)
 types[t].addChild(CK.IntegralData_ts)
@@ -447,15 +450,14 @@ types[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CK.Zone_ts
-types[t]=CGNStype(t,card=C_0N,dtype=[CK.I4])
+types[t]=CGNStype(t,dtype=[CK.I4])
 types[t].shape=(0,3)
-types[t].addChild(CK.GridCoordinates_ts,CK.GridCoordinates_s)
 types[t].addChild(CK.GridCoordinates_ts)
 types[t].addChild(CK.DiscreteData_ts)
 types[t].addChild(CK.Elements_ts)
-types[t].addChild(CK.ZoneBC_ts,CK.ZoneBC_s)
+types[t].addChild(CK.ZoneBC_ts,CK.ZoneBC_s,card=C_01)
 types[t].addChild(CK.FlowSolution_ts)
-types[t].addChild(CK.ZoneType_ts,CK.ZoneType_s)
+types[t].addChild(CK.ZoneType_ts,CK.ZoneType_s,card=C_11)
 types[t].addChild(CK.Ordinal_ts,CK.Ordinal_s)
 types[t].addChild(CK.ZoneGridConnectivity_ts,CK.ZoneGridConnectivity_s)
 types[t].addChild(CK.ZoneIterativeData_ts)
@@ -463,7 +465,7 @@ types[t].addChild(CK.RigidGridMotion_ts)
 types[t].addChild(CK.ReferenceState_ts,CK.ReferenceState_s)
 types[t].addChild(CK.IntegralData_ts)
 types[t].addChild(CK.ArbitraryGridMotion_ts)
-types[t].addChild(CK.FamilyName_ts,CK.FamilyName_s)
+types[t].addChild(CK.FamilyName_ts,CK.FamilyName_s,card=C_01)
 types[t].addChild(CK.FlowEquationSet_ts,CK.FlowEquationSet_s)
 types[t].addChild(CK.ConvergenceHistory_ts,CK.ZoneConvergenceHistory_s)
 types[t].addChild(CK.RotatingCoordinates_ts,CK.RotatingCoordinates_s)
@@ -474,19 +476,19 @@ types[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CK.GridCoordinates_ts
-types[t]=CGNStype(t,card=C_0N,names=[CK.GridCoordinates_s,UD])
-types[t].addChild(CK.DataArray_ts)
-types[t].addChild(CK.Rind_ts,CK.Rind_s)
-types[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-types[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-types[t].addChild(CK.Descriptor_ts)
-types[t].addChild(CK.UserDefinedData_ts)
+types[t]=CGNStype(t,names=[CK.GridCoordinates_s,UD])
+types[t].addChild(CK.DataArray_ts,card=C_0N)
+types[t].addChild(CK.Rind_ts,CK.Rind_s,card=C_01)
+types[t].addChild(CK.DataClass_ts,CK.DataClass_s,card=C_01)
+types[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s,card=C_01)
+types[t].addChild(CK.Descriptor_ts,card=C_0N)
+types[t].addChild(CK.UserDefinedData_ts,card=C_0N)
 
 # --------------------------------------------------------
 t=CK.Elements_ts
-types[t]=CGNStype(t,card=C_0N,dtype=[CK.I4])
+types[t]=CGNStype(t,dtype=[CK.I4])
 types[t].shape=(2,)
-types[t].addChild(CK.IndexRange_ts,CK.ElementRange_s)
+types[t].addChild(CK.IndexRange_ts,CK.ElementRange_s,card=C_11)
 types[t].addChild(CK.DataArray_ts,CK.ElementConnectivity_s)
 types[t].addChild(CK.DataArray_ts,CK.ParentData_s)
 types[t].addChild(CK.Rind_ts,CK.Rind_s)
@@ -517,7 +519,7 @@ types[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CK.FlowSolution_ts
-types[t]=CGNStype(t,card=C_0N)
+types[t]=CGNStype(t)
 types[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
 types[t].addChild(CK.DataArray_ts)
 types[t].addChild(CK.Rind_ts,CK.Rind_s)
@@ -528,7 +530,7 @@ types[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CK.DiscreteData_ts
-types[t]=CGNStype(t,card=C_0N)
+types[t]=CGNStype(t)
 types[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
 types[t].addChild(CK.DataArray_ts)
 types[t].addChild(CK.Rind_ts,CK.Rind_s)
@@ -566,7 +568,7 @@ types[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CK.BCDataSet_ts
-types[t]=CGNStype(t,card=C_0N,dtype=[CK.C1])
+types[t]=CGNStype(t,dtype=[CK.C1])
 types[t].enumerate=CK.BCTypeSimple_l
 types[t].addChild(CK.BCData_ts,CK.NeumannData_s)
 types[t].addChild(CK.BCData_ts,CK.DirichletData_s)
@@ -581,7 +583,7 @@ types[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CK.BC_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_0N)
+types[t]=CGNStype(t,dtype=[CK.C1])
 types[t].enumerate=CK.BCType_l
 types[t].shape=(0,)
 types[t].addChild(CK.ReferenceState_ts,CK.ReferenceState_s)
@@ -603,18 +605,18 @@ types[t].addChild(CK.BCProperty_ts,CK.BCProperty_s)
 
 # --------------------------------------------------------
 t=CK.ArbitraryGridMotionType_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_11,
+types[t]=CGNStype(t,dtype=[CK.C1],
                   names=[CK.ArbitraryGridMotionType_s])
 types[t].shape=(0,)
 
 # --------------------------------------------------------
 t=CK.RigidGridMotionType_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_11,names=[CK.RigidGridMotionType_s])
+types[t]=CGNStype(t,dtype=[CK.C1],names=[CK.RigidGridMotionType_s])
 types[t].shape=(0,)
 
 # --------------------------------------------------------
 t=CK.WallFunctionType_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_11,names=[CK.WallFunctionType_s])
+types[t]=CGNStype(t,dtype=[CK.C1],names=[CK.WallFunctionType_s])
 types[t].shape=(0,)
 
 # --------------------------------------------------------
@@ -626,7 +628,7 @@ types[t].addChild(CK.WallFunctionType_ts,CK.WallFunctionType_s)
 
 # --------------------------------------------------------
 t=CK.AreaType_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_11,names=[CK.AreaType_s])
+types[t]=CGNStype(t,dtype=[CK.C1],names=[CK.AreaType_s])
 types[t].shape=(0,)
 
 # --------------------------------------------------------
@@ -659,7 +661,7 @@ types[t].addChild(CK.DataArray_ts)
 
 # --------------------------------------------------------
 t=CK.RigidGridMotion_ts
-types[t]=CGNStype(t,card=C_0N,dtype=[CK.C1])
+types[t]=CGNStype(t,dtype=[CK.C1])
 types[t].shape=(0,)
 types[t].enumerate=CK.RigidGridMotionType_l
 types[t].addChild(CK.DataClass_ts,CK.DataClass_s)
@@ -670,7 +672,7 @@ types[t].addChild(CK.DataArray_ts)
 
 # --------------------------------------------------------
 t=CK.ArbitraryGridMotion_ts
-types[t]=CGNStype(t,card=C_0N,dtype=[CK.C1])
+types[t]=CGNStype(t,dtype=[CK.C1])
 types[t].shape=(0,)
 types[t].enumerate=CK.ArbitraryGridMotionType_l
 types[t].addChild(CK.DataClass_ts,CK.DataClass_s)
@@ -711,7 +713,7 @@ types[t].addChild(CK.DataArray_ts,CK.Translation_s)
 
 # --------------------------------------------------------
 t=CK.AverageInterfaceType_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_11,names=[CK.AverageInterfaceType_s])
+types[t]=CGNStype(t,dtype=[CK.C1],names=[CK.AverageInterfaceType_s])
 types[t].shape=(0,)
 
 # --------------------------------------------------------
@@ -723,9 +725,10 @@ types[t].addChild(CK.AverageInterfaceType_ts,CK.AverageInterfaceType_s)
 
 # --------------------------------------------------------
 t=CK.GridConnectivity1to1_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_0N)
+types[t]=CGNStype(t,dtype=[CK.C1])
 types[t].shape=(0,)
 types[t].addChild(CK.Transform_ts,CK.Transform_s)
+types[t].addChild(CK.IntIndexDimension_ts,CK.Transform_s)
 types[t].addChild(CK.Transform_ts2,CK.Transform_s)
 types[t].addChild(CK.IndexRange_ts,CK.PointRange_s)
 types[t].addChild(CK.IndexRange_ts,CK.PointRangeDonor_s)
@@ -736,12 +739,12 @@ types[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CK.GridConnectivityType_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_11,names=[CK.GridConnectivityType_s])
+types[t]=CGNStype(t,dtype=[CK.C1],names=[CK.GridConnectivityType_s])
 types[t].shape=(0,)
 
 # --------------------------------------------------------
 t=CK.GridConnectivity_ts
-types[t]=CGNStype(t,dtype=[CK.C1],card=C_0N)
+types[t]=CGNStype(t,dtype=[CK.C1])
 types[t].shape=(0,)
 types[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
 types[t].addChild(CK.Ordinal_ts,CK.Ordinal_s)
@@ -756,7 +759,7 @@ types[t].addChild(CK.DataArray_ts,CK.InterpolantsDonor_s)
 
 # --------------------------------------------------------
 t=CK.OversetHoles_ts
-types[t]=CGNStype(t,card=C_0N)
+types[t]=CGNStype(t)
 types[t].addChild(CK.Descriptor_ts)
 types[t].addChild(CK.IndexArray_ts,CK.PointList_s)
 types[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
