@@ -8,28 +8,36 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-import CGNS.PAT.cgnsutils    as CGU
-import CGNS.PAT.cgnstypes    as CGT
-import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils      as CGU
+import CGNS.PAT.cgnstypes      as CGT
+import CGNS.PAT.cgnskeywords   as CGK
+import CGNS.PAT.cgnserrors     as CGE
 import CGNS.VAL.parse.messages as CGM
 
 import inspect
 
 BAD_VERSION='G999'
-OLD_VERSION='G000'
+OLD_VERSION='G992'
 INVALID_NAME='G001'
 DUPLICATED_NAME='G002'
 INVALID_SIDSTYPE_P='G003'
 INVALID_SIDSTYPE='G004'
 INVALID_DATATYPE='G005'
+INVALID_PATH='G998'
 FORBIDDEN_CHILD='G006'
 SINGLE_CHILD='G007'
 MANDATORY_CHILD='G008'
+NODE_EMPTYLIST='G997'
+NODE_NOTALIST='G996'
+NODE_NAMENOTSTRING='G995'
+NODE_CHILDRENNOTLIST='G994'
+NODE_BADDATA='G993'
 
 genericmessages={
 BAD_VERSION:'CGNSLibraryVersion is incorrect',
 OLD_VERSION:'CGNSLibraryVersion [%s] is too old for current check level',
 INVALID_NAME:'Name [%s] is not valid',
+INVALID_PATH:'PANIC: Cannot find node with path [%s]',
 DUPLICATED_NAME:'Name [%s] is a duplicated child name',
 INVALID_SIDSTYPE_P:'SIDS Type [%s] not allowed as child of [%s]',
 INVALID_SIDSTYPE:'SIDS Type [%s] not allowed for this node',
@@ -37,18 +45,49 @@ INVALID_DATATYPE:'Datatype [%s] not allowed for this node',
 FORBIDDEN_CHILD:'Node [%s] of type [%s] is not allowed as child',
 SINGLE_CHILD:'Node [%s] of type [%s] is allowed only once as child',
 MANDATORY_CHILD:'Node [%s] of type [%s] is mandatory',
+NODE_EMPTYLIST:'PANIC: Node is empty list or None (child of [%s])',
+NODE_NOTALIST:'PANIC: Node is not a list of 4 objects (child of [%s])',
+NODE_NAMENOTSTRING:'PANIC: Node name is not a string (child of [%s])',
+NODE_CHILDRENNOTLIST:'PANIC: Node children is not a list (child of [%s])',
+NODE_BADDATA:'PANIC: Node data is not numpy.ndarray or None (child of [%s])',
 }
 
 class GenericContext(dict):
   pass
 
 class GenericParser(object):
+  # --------------------------------------------------------------------
   def __init__(self,log=None):
     self.keywordlist=CGK.cgnsnames
     if (log is None):
       self.log=CGM.DiagnosticLog()
     self.log.addMessages(genericmessages)
     self.context=GenericContext()
+  # --------------------------------------------------------------------
+  def listDiagnostics(self):
+    return self.log.listMessages()
+  # --------------------------------------------------------------------
+  def checkLeafStructure(self,T,path,node):
+    stt=CGM.CHECK_GOOD
+    try:
+      CGU.checkNode(node,dienow=True)
+    except CGE.CE.cgnsNameError(1):
+      stt=CGM.CHECK_FAIL
+      self.log.push(path,CGM.CHECK_FAIL,NODE_EMPTYLIST)
+    except CGE.CE.cgnsNameError(2):
+      stt=CGM.CHECK_FAIL
+      self.log.push(path,CGM.CHECK_FAIL,NODE_NOTALIST)
+    except CGE.CE.cgnsNameError(3):
+      stt=CGM.CHECK_FAIL
+      self.log.push(path,CGM.CHECK_FAIL,NODE_NAMENOTASTRING)
+    except CGE.CE.cgnsNameError(4):
+      stt=CGM.CHECK_FAIL
+      self.log.push(path,CGM.CHECK_FAIL,NODE_CHILDRENNOTLIST)
+    except CGE.CE.cgnsNameError(5):
+      stt=CGM.CHECK_FAIL
+      self.log.push(path,CGM.CHECK_FAIL,NODE_BADDATA)
+    return stt
+  # --------------------------------------------------------------------
   def checkLeaf(self,T,path,node):
     if (not hasattr(self,'methods')):
       self.methods=[]
@@ -87,7 +126,7 @@ class GenericParser(object):
     return stt
   # --------------------------------------------------------------------
   def checkTree(self,T,trace=False):
-    status=CGM.CHECK_GOOD
+    status1=CGM.CHECK_GOOD
     if (trace): print '### Parsing node paths...'
     paths=CGU.getPathFullTree(T)
     sz=len(paths)
@@ -95,10 +134,16 @@ class GenericParser(object):
     for path in paths:
       if (trace): print '### Check node [%.6d/%.6d]\r'%(ct,sz),
       node=CGU.getNodeByPath(T,path)
-      if (node is None): print 'FAIL [%s]'%p
-      status=self.checkLeaf(T,path,node)
+      status2=CGM.CHECK_GOOD
+      if (node is None):
+        status2=self.log.push(path,CGM.CHECK_FAIL,INVALID_PATH,path)
+      if (status2==CGM.CHECK_GOOD):
+        status2=self.checkLeafStructure(T,path,node)
+      if (status2==CGM.CHECK_GOOD):
+        status2=self.checkLeaf(T,path,node)
+      status1=status2
       ct+=1
-    return status
+    return status1
   # --------------------------------------------------
   def checkCardinalityOfChildren(self,T,path,node,parent):
       stt=CGM.CHECK_GOOD

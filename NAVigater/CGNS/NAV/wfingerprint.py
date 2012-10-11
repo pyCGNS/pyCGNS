@@ -12,6 +12,7 @@ import pwd
 import grp
 import time
 import stat
+import sys
 import CGNS.MAP
 import CGNS.PAT.cgnsutils as CGU
 
@@ -54,6 +55,8 @@ class Q7Window(QWidget,object):
         self.I_L_NNL=QIcon(QPixmap(":/images/icons/link-nonode.gif"))
         self.I_L_IGN=QIcon(QPixmap(":/images/icons/link-error.gif"))
         self.I_L_ERL=QIcon(QPixmap(":/images/icons/link-ignore.gif"))
+        self.I_C_SFL=QIcon(QPixmap(":/images/icons/check-fail.gif"))
+        self.I_C_SWR=QIcon(QPixmap(":/images/icons/check-warn.gif"))
         if (vtype==Q7Window.VIEW_TREE):
             self._stylesheet=Q7TREEVIEWSTYLESHEET
         if (vtype==Q7Window.VIEW_CONTROL):
@@ -183,6 +186,7 @@ class Q7fingerPrint:
         return fileout
     @classmethod
     def treeLoad(cls,control,selectedfile):
+        
         control.loadOptions()
         kw={}
         f=selectedfile

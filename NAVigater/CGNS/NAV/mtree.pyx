@@ -256,15 +256,15 @@ class Q7TreeView(QTreeView):
           lastpath=last.sidsPath()
           nix=self._model.indexByPath(last.sidsPath())
           pix=self._model.indexByPath(last.parentItem().sidsPath())
-          if (not nix.isValid()):
-              if (last.sidsType()==CGK.CGNSTree_ts):
-                 if (kval==KEYMAPPING[PASTECHILD]):
-                     self._model.pasteAsChild(last)
-                     self.exclusiveSelectRow()
-                 if (kval==KEYMAPPING[NEWCHILDNODE]):
-                     self._model.newNodeChildOfRoot()
-                     self.exclusiveSelectRow()
-              return
+          # if (not nix.isValid()):
+#               if (last.sidsType()==CGK.CGNSTree_ts):
+#                  if (kval==KEYMAPPING[PASTECHILD]):
+#                      self._model.pasteAsChild(last)
+#                      self.exclusiveSelectRow()
+#                  if (kval==KEYMAPPING[NEWCHILDNODE]):
+#                      self._model.newNodeChild(last)
+#                      self.exclusiveSelectRow()
+#               return
           if (kval in EDITKEYMAPPINGS):
               if (kmod==Qt.ControlModifier):
                 if (kval==KEYMAPPING[NEWCHILDNODE]):
@@ -391,6 +391,7 @@ class Q7TreeView(QTreeView):
     def exclusiveSelectRow(self,index=-1,setlast=True):
         if ((index==-1) or (not index.isValid())): index=QModelIndex()
         mod=QItemSelectionModel.SelectCurrent|QItemSelectionModel.Rows
+        if (index.internalPointer() is None): return
         pth=index.internalPointer().sidsPath()
         nix=self.M().indexByPath(pth)
         self.selectionModel().setCurrentIndex(nix,mod)
@@ -460,6 +461,9 @@ class Q7TreeItem(object):
     def sidsIsRoot(self):
         if (self._parentitem is None): return True
         return False
+    def sidsIsCGNSTree(self):
+        if (self._path=='/CGNSTree'): return True
+        return False
     def sidsParent(self):
         return self._parentitem._itemnode
     def sidsPathSet(self,path):
@@ -476,7 +480,7 @@ class Q7TreeItem(object):
         if (type(name) not in [str,unicode]): return False
         name=str(name)
         if (name==''): return False
-        if (not CGU.checkNodeName(name)): return False
+        if (not CGU.checkName(name)): return False
         if (not CGU.checkDuplicatedName(self.sidsParent(),name,dienow=False)):
             return False
         if (name==self._itemnode[0]): return False
@@ -613,7 +617,7 @@ class Q7TreeItem(object):
         pth=self.sidsPath()
         parentitem=self.parentItem()
         row=0
-        for child in self._childrenitems:
+        for child in parentitem._childrenitems:
             if (child.sidsPath()==pth): return row
             row+=1
         return -1
@@ -671,8 +675,9 @@ class Q7TreeItem(object):
                     return str(self.sidsValue()[0])
             return str(self.sidsValue().tolist())[:100]
         return None
-    def parentItem(self):  
-        return self._parentitem  
+    def parentItem(self):
+        p=self._parentitem  
+        return p
     def row(self):  
         if self._parentitem:  
             return self._parentitem._childrenitems.index(self)  
@@ -834,7 +839,7 @@ class Q7TreeModel(QAbstractItemModel):
             disp=Q7TreeModel._icons[disp]
         return disp
     def flags(self, index):  
-        if (not index.isValid()):  return Qt.NoItemFlags  
+        if (not index.isValid()):  return Qt.NoItemFlags
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable
     def headerData(self, section, orientation, role):  
         if ((orientation == Qt.Horizontal) and (role == Qt.DisplayRole)):  
@@ -856,10 +861,12 @@ class Q7TreeModel(QAbstractItemModel):
         childitem = parentitem.child(row)  
         if (childitem): return self.createIndex(row, column, childitem)
         return QModelIndex()  
-    def parent(self, index):  
-        if (not index.isValid()): return QModelIndex()
+    def parent(self, index):
+        if ((not index.isValid()) or (index.internalPointer() is None)):
+            return QModelIndex()
+        if (index.internalPointer().sidsPath()=='/CGNSTree'):
+            return QModelIndex()  
         childitem = index.internalPointer()
-        if (childitem is None): return QModelIndex()
         parentitem = childitem.parentItem()
         if (parentitem is None): return QModelIndex()
         return self.createIndex(parentitem.row(), 0, parentitem)  
@@ -948,8 +955,8 @@ class Q7TreeModel(QAbstractItemModel):
         return st
     def removeItem(self,parentitem,targetitem,row):
         parentindex=self.indexByPath(parentitem.sidsPath())
-        self.beginRemoveRows(parentindex,row,row)
         path=targetitem.sidsPath()
+        self.beginRemoveRows(parentindex,row,row)
         parentitem.delChild(targetitem)
         del self._extension[path]
         self.endRemoveRows()

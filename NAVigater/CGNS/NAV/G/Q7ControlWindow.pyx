@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ControlWindow.ui'
 #
-# Created: Thu Oct  4 14:06:51 2012
+# Created: Tue Oct  9 13:35:32 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -43,6 +43,8 @@ class Ui_Q7ControlWindow(object):
         self.bTreeLoad.setIcon(icon2)
         self.bTreeLoad.setObjectName("bTreeLoad")
         self.horizontalLayout.addWidget(self.bTreeLoad)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
         self.bEditTree = QtGui.QToolButton(Q7ControlWindow)
         self.bEditTree.setMinimumSize(QtCore.QSize(25, 25))
         self.bEditTree.setMaximumSize(QtCore.QSize(25, 25))
@@ -51,8 +53,6 @@ class Ui_Q7ControlWindow(object):
         self.bEditTree.setIcon(icon3)
         self.bEditTree.setObjectName("bEditTree")
         self.horizontalLayout.addWidget(self.bEditTree)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
         self.bPatternView = QtGui.QToolButton(Q7ControlWindow)
         self.bPatternView.setMinimumSize(QtCore.QSize(25, 25))
         self.bPatternView.setMaximumSize(QtCore.QSize(25, 25))

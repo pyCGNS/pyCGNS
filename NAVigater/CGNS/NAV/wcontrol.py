@@ -67,6 +67,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.copyPasteBuffer=None
         self.wOption=None
         self.selectForLink=None
+        self.__newtreecount=1
     def clickedLine(self,*args):
         if (self.controlTable.lastButton==Qt.LeftButton):
             #Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))
@@ -282,11 +283,15 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
     def edit(self):
         self._T('edit new')
         tree=CGL.newCGNSTree()
+        tc=self.__newtreecount
         self.busyCursor()
-        fgprint=Q7fingerPrint(self,'.','NEW TREE',tree,[],[])
+        fgprint=Q7fingerPrint(self,'.','{CGNS/Python#%.3d}'%tc,tree,[],[])
         Q7TreeModel(fgprint)
         child=Q7Tree(self,'/',fgprint)
         self.readyCursor()
+        self.__newtreecount+=1
         child.show()
+
+   
 
 # -----------------------------------------------------------------

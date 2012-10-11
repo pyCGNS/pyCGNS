@@ -15,27 +15,34 @@ import string
 UKZONETYPE='S004'
 UKSIMTYPE='S005'
 INCONSCELLPHYSDIM='S006'
+UKGRIDLOCTYPE='S007'
+UKGRIDCONNTYPE='S008'
 BADTRANSFORM='S200'
-BADVALUEDTYPE='S100'
 BADVALUESHAPE='S101'
 BADCELLDIM='S102'
 BADPHYSDIM='S103'
 BADFAMREFERENCE='S020'
 BADADDFAMREFERENCE='S021'
+DEFGRIDLOCATION='S030'
+DEFGRIDCONNTYPE='S040'
 
 class SIDSbase(CGNS.VAL.parse.generic.GenericParser):
   __messages={
 INCONSCELLPHYSDIM:'Inconsistent PhysicalDimension/CellDimension',
-UKZONETYPE:'Unknown ZoneType_t value',
-UKSIMTYPE:'Unknown SimulationType_t value',
-BADVALUEDTYPE:'Bad node value data type',
+UKZONETYPE:'Unknown ZoneType value',
+UKGRIDLOCTYPE:'Unknown GridLocation value',
+UKGRIDCONNTYPE:'Unknown GridConnectivityType value',
+UKSIMTYPE:'Unknown SimulationType value',
 BADVALUESHAPE:'Bad node value shape',
 BADCELLDIM:'Bad value for CellDimension',
 BADPHYSDIM:'Bad value for PhysicalDimension',
 BADTRANSFORM:'Bad Transform values',
 BADFAMREFERENCE:'Reference to unknown family [%s]',
 BADADDFAMREFERENCE:'Reference to unknown additional family [%s]',
-  }
+DEFGRIDLOCATION:'Default GridLocation is set to Vertex',
+DEFGRIDCONNTYPE:'Default GridConnectivityType is set to Overset',
+}
+  # --------------------------------------------------------------------
   def __init__(self,log):
     CGNS.VAL.parse.generic.GenericParser.__init__(self,log)
     self.log.addMessages(SIDSbase.__messages)
@@ -80,8 +87,25 @@ BADADDFAMREFERENCE:'Reference to unknown additional family [%s]',
         rs=log.push(pth,CGM.CHECK_FAIL,INCONSCELLPHYSDIM)
     return rs
   # --------------------------------------------------------------------
+  def GridConnectivity_t(self,pth,node,parent,tree,log):
+    rs=CGM.CHECK_OK
+    if (not CGU.hasChildNodeOfType(node,CGK.GridConnectivityType_ts)):
+      rs=log.push(pth,CGM.CHECK_WARN,DEFGRIDCONNTYPE)
+    if (not CGU.hasChildNodeOfType(node,CGK.GridLocation_ts)):
+      rs=log.push(pth,CGM.CHECK_WARN,DEFGRIDLOCATION)
+    zonedonor=node[1].tostring()
+    return rs
+  # --------------------------------------------------------------------
+  def GridConnectivityType_t(self,pth,node,parent,tree,log):
+    rs=CGM.CHECK_OK
+    if (not CGU.stringValueInList(node,CGK.GridConnectivityType_l)):
+      rs=log.push(pth,CGM.CHECK_FAIL,UKGRIDCONNTYPE)
+    return rs
+  # --------------------------------------------------------------------
   def GridLocation_t(self,pth,node,parent,tree,log):
     rs=CGM.CHECK_OK
+    if (not CGU.stringValueInList(node,CGK.GridLocation_l)):
+      rs=log.push(pth,CGM.CHECK_FAIL,UKGRIDLOCTYPE)
     return rs
   # --------------------------------------------------------------------
   def ZoneType_t(self,pth,node,parent,tree,log):

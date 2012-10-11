@@ -32,6 +32,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         self._mode=CELLTEXT
         self._model=model
     def createEditor(self, parent, option, index):
+        if (index.internalPointer().sidsIsCGNSTree()): return None
         ws=option.rect.width()
         hs=option.rect.height()+4
         xs=option.rect.x()
@@ -215,7 +216,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._fgprint.modifiedTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
         self.updateTreeStatus()
     def savetreeas(self):
-        print 'SAVE AS'
         self._control.save(self._fgprint)
         self._fgprint.modifiedTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
         self.updateTreeStatus()
@@ -291,6 +291,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.layoutChanged.emit()
     def updateMenu(self,nodeidxs):
         nodeidx=self.modelIndex(nodeidxs)
+        if (not nodeidx.isValid): return False
+        if (nodeidx.internalPointer() is None): return False
+        if (nodeidx.internalPointer().sidsPath()=='/CGNSTree'): return False
         self.setLastEntered(nodeidxs)
         if (nodeidx != -1):
           node=nodeidx.internalPointer()
@@ -325,6 +328,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                   a=QAction(aparam[0],self,triggered=aparam[1])
                   if (aparam[2] is not None): a.setShortcut(aparam[2])
                   self.popupmenu.addAction(a)
+          return True
     def setLastEntered(self,nix=None):
         if ((nix is None) or (not nix.isValid())):
             nix=self.treeview.modelCurrentIndex()
@@ -339,10 +343,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.treeview.selectionModel().clearSelection()
         return None
     def clickedNode(self,index):
-        self.setLastEntered(index)
-        if (self.treeview.lastButton==Qt.RightButton):
-            self.updateMenu(index)
-            self.popupmenu.popup(self.treeview.lastPos)
+        if (self.updateMenu(index)):
+            if (self.treeview.lastButton==Qt.RightButton):
+                self.popupmenu.popup(self.treeview.lastPos)
     def expandNode(self,*args):
         self.resizeAll()
     def collapseNode(self,*args):

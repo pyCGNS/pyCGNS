@@ -28,6 +28,8 @@ class DiagnosticLog(dict):
     def __init__(self):
         dict.__init__(self)
         DiagnosticLog.__messages
+    def listMessages(self):
+        return self.__messages
     def noContextMessage(self,m):
         if ('%' in DiagnosticLog.__messages[m]): return None
         return DiagnosticLog.__messages[m]
@@ -68,9 +70,8 @@ class DiagnosticLog(dict):
         s='%s[%s:%s] %s'%(shft,entry[2],self.asStr(entry[0]),entry[1])
         return s
     def getWorstDiag(self,path):
-        s=set([e[2] for e in self[path]])
+        s=set([e[0] for e in self[path]])
         r=reduce(getWorst,s)
-        print r
         return r
     def diagForPath(self,path):
         if (path in self): return self[path]

@@ -373,7 +373,7 @@ def checkNode(node,dienow=False):
   if (len(node) != 4):
     if (dienow): raise CE.cgnsException(2)
     return False
-  if (type(node[0]) != type("")):
+  if (type(node[0]) not in [str, unicode]):
     if (dienow): raise CE.cgnsException(3)
     return False
   if (type(node[2]) != type([3,])):
