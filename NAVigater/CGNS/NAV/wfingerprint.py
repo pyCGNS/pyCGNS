@@ -20,6 +20,7 @@ import CGNS.NAV.wmessages as MSG
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
 from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
+from CGNS.NAV.wfile import checkFilePermission
 
 # -----------------------------------------------------------------
 class Q7Window(QWidget,object):
@@ -37,9 +38,10 @@ class Q7Window(QWidget,object):
     def __init__(self,vtype,control,path,fgprint):
         QWidget.__init__(self,None)
         self._stylesheet=None
-        self.I_UNCHANGED=QIcon(QPixmap(":/images/icons/save-inactive.gif"))
-        self.I_MODIFIED=QIcon(QPixmap(":/images/icons/save.gif"))
-        self.I_CONVERTED=QIcon(QPixmap(":/images/icons/save-converted.gif"))
+        self.I_MOD_SAV=QIcon(QPixmap(":/images/icons/save-S-M.gif"))
+        self.I_UMOD_SAV=QIcon(QPixmap(":/images/icons/save-S-UM.gif"))
+        self.I_MOD_USAV=QIcon(QPixmap(":/images/icons/save-US-M.gif"))
+        self.I_UMOD_USAV=QIcon(QPixmap(":/images/icons/save-US-UM.gif"))
         self.I_TREE=QIcon(QPixmap(":/images/icons/tree-load.gif"))
         self.I_VTK=QIcon(QPixmap(":/images/icons/vtkview.gif"))
         self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.gif"))
@@ -116,6 +118,11 @@ class Q7Window(QWidget,object):
         for d in self._history:
             if (file in self._history[d]): return (d,file)
         return None
+    def removeDirFromHistory(self,filedir):
+        if (self._history.has_key(filedir)): del self._history[filedir]
+        if ((self.getLastFile() is not None)
+            and (self._history[Q7Window.HISTORYLASTKEY][0]==filedir)):
+            del self._history[Q7Window.HISTORYLASTKEY]
     def setHistory(self,filedir,filename):
         for d in self._history.keys():
             if (d==filedir):
@@ -144,7 +151,7 @@ class Q7Window(QWidget,object):
         self._index=self._fgprint.addChild(self._vtype,self)
         l=[self._fgprint._status,self._vtype,'%.3d'%self._index]
         l+=[self._fgprint.filedir,self._fgprint.filename,self._path]
-        self._control.addLine(l)
+        self._control.addLine(l,self._fgprint)
         return self._index
     def closeEvent(self, event):
         self._control.delLine('%.3d'%self._index)
@@ -169,8 +176,10 @@ class Q7fingerPrint:
     __extension=[]
     STATUS_UNCHANGED='U'
     STATUS_MODIFIED='M'
+    STATUS_SAVEABLE='S'
     STATUS_CONVERTED='C'
-    STATUS_LIST=(STATUS_UNCHANGED,STATUS_MODIFIED,STATUS_CONVERTED)
+    STATUS_LIST=(STATUS_UNCHANGED,STATUS_MODIFIED,STATUS_CONVERTED,
+                 STATUS_SAVEABLE)
     @classmethod
     def fileconversion(cls,fdir,filein,control):
         control.loadOptions()
@@ -186,7 +195,6 @@ class Q7fingerPrint:
         return fileout
     @classmethod
     def treeLoad(cls,control,selectedfile):
-        
         control.loadOptions()
         kw={}
         f=selectedfile
@@ -233,6 +241,7 @@ class Q7fingerPrint:
         #for p in CGU.getAllPaths(tree): print p
         lk=[]
         CGNS.MAP.save(f,tree,lk,flags)
+        fgprint.updateFileStats(f)
     @classmethod
     def closeAllTrees(cls):
         for x in cls.__extension: x.closeAllViews()
@@ -277,17 +286,24 @@ class Q7fingerPrint:
         self.converted=False
         self.isfile=False
         self.tmpfile=''
-        self._status=Q7fingerPrint.STATUS_UNCHANGED
+        self._status=[]
+        if (checkFilePermission(filedir+'/'+filename,write=True)):
+            self._status=[Q7fingerPrint.STATUS_SAVEABLE]
         if (kw.has_key('isfile')):
             self.isfile=True
         if (kw.has_key('converted')):
             self.converted=kw['converted']
             self.tmpfile=kw['convertedAs']
             if (self.converted):
-                self._status=Q7fingerPrint.STATUS_CONVERTED
+                self._status=[]
         self.lazy={}
         for p in paths: self.lazy['/CGNSTree'+p[0]]=p[1]
         Q7fingerPrint.__extension.append(self)
+    def updateFileStats(self,fname):
+        (filedir,filename)=(os.path.normpath(os.path.dirname(fname)),
+                            os.path.basename(fname))
+        self.filename=filename
+        self.filedir=filedir
     def isFile(self):
         return self.isfile
     def isLink(self,path):
@@ -361,17 +377,15 @@ class Q7fingerPrint:
         for vtype in self.views:
             for (v,i) in self.views[vtype]: v.close()
     def isModified(self):
-        return (self._status==Q7fingerPrint.STATUS_MODIFIED)
-    def modifiedTreeStatus(self,status=None):
+        return (Q7fingerPrint.STATUS_MODIFIED in self._status)
+    def isSaveable(self):
+        return (Q7fingerPrint.STATUS_SAVEABLE in self._status)
+    def removeTreeStatus(self,status):
         if (status not in Q7fingerPrint.STATUS_LIST): return
-        if (status is not None): self._status=status
-        elif (self._status==Q7fingerPrint.STATUS_UNCHANGED):
-            self._status=Q7fingerPrint.STATUS_MODIFIED
-        elif (self._status==Q7fingerPrint.STATUS_MODIFIED):
-            self._status=Q7fingerPrint.STATUS_UNCHANGED
-        elif (self._status==Q7fingerPrint.STATUS_CONVERTED):
-            self._status=Q7fingerPrint.STATUS_MODIFIED
-        else:
-            pass
+        if (status in self._status): self._status.remove(status)
+        self.control.updateViews()
+    def addTreeStatus(self,status):
+        if (status not in Q7fingerPrint.STATUS_LIST): return
+        if (status not in self._status): self._status.append(status)
         self.control.updateViews()
 # -----------------------------------------------------------------

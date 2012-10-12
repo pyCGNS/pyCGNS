@@ -47,9 +47,22 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         if (index.column() in [NMT.COLUMN_VALUE]):
           node=self._parent.modelData(index)
           if (node.hasValueView()):
-            self._mode=CELLTEXT
-            editor=QLineEdit(parent)
-            editor.transgeometry=(xs,ys,ws,hs)
+            en=node.sidsValueEnum()
+            if (en is None):
+              self._mode=CELLTEXT
+              editor=QLineEdit(parent)
+              editor.transgeometry=(xs,ys,ws,hs)
+            else:
+              self._mode=CELLCOMBO
+              editor=QComboBox(parent)
+              editor.transgeometry=(xs,ys,ws,hs)
+              editor.addItems(en)
+              try:
+                tix=en.index(node.sidsValue().tostring())
+              except ValueError:
+                editor.insertItem(0,node.sidsValue().tostring())
+                tix=0
+              editor.setCurrentIndex(tix)
             editor.installEventFilter(self)
             self.setEditorData(editor,index)
             return editor
@@ -73,7 +86,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           self._mode=CELLCOMBO
           editor=QComboBox(parent)
           editor.transgeometry=(xs,ys,ws,hs)
-          itemslist=self._parent.modelData(index).sidsDataTypeList()
+          itemslist=self._parent.modelData(index).sidsDataType(all=True)
           editor.addItems(itemslist)
           editor.setCurrentIndex(0)
           editor.installEventFilter(self)
@@ -198,6 +211,18 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._control.transientRecurse=False
         self._control.transientVTK=False
         self.clearchecks()
+        #
+        self.bCheckList.setDisabled(True)
+        self.bPlotView.setDisabled(True)
+        self.bDeleteLink.setDisabled(True)
+        self.bAddLink.setDisabled(True)
+        self.bToolsView.setDisabled(True)
+        self.bPatternView.setDisabled(True)
+        self.bCheckView.setDisabled(True)
+        self.bPatternDB.setDisabled(True)
+        self.bSelectLink.setDisabled(True)
+        self.cSaveLog.setDisabled(True)
+        self.updateTreeStatus()
     def model(self):
         return self._fgprint.model
     def modelIndex(self,idx):
@@ -210,15 +235,14 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (not idx.isValid()): return None
         return self.modelIndex(idx).internalPointer()
     def savetree(self):
-        if ((self._fgprint.converted) or
-            not (self._fgprint.isModified())): return
+        if (not (self._fgprint.isSaveable() and self._fgprint.isModified())):
+            return
         self._control.savedirect(self._fgprint)
-        self._fgprint.modifiedTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
-        self.updateTreeStatus()
+        self._fgprint.removeTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
     def savetreeas(self):
         self._control.save(self._fgprint)
-        self._fgprint.modifiedTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
-        self.updateTreeStatus()
+        self._fgprint.removeTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._fgprint.addTreeStatus(Q7fingerPrint.STATUS_SAVEABLE)
     def screenshot(self):
         self.treeview.model().sort(0)
         sshot=QPixmap.grabWindow(self.treeview.winId())
@@ -288,7 +312,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def mpasteaschild(self):
         if (self.getLastEntered() is not None):
             self.model().pasteAsChild(self.getLastEntered())
-            self.layoutChanged.emit()
     def updateMenu(self,nodeidxs):
         nodeidx=self.modelIndex(nodeidxs)
         if (not nodeidx.isValid): return False
@@ -391,6 +414,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.lastdiag=self.model().checkSelected()
         self.readyCursor()
         self.treeview.refreshView()
+        self.bCheckList.setDisabled(False)
     def checklist(self):
         if (self.lastdiag is None): return
         self.diagview=Q7CheckList(self._control,self.lastdiag,self._fgprint)
@@ -399,6 +423,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.model().checkClear()
         self.treeview.refreshView()
         self.lastdiag=None
+        self.bCheckList.setDisabled(True)
     def selectionlist(self):
         slist=Q7SelectionList(self._control,self.model(),self._fgprint)
         slist.show()
@@ -433,6 +458,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         vtk=Q7VTK(self._control,node,self._fgprint,self.model(),zlist)
         self.readyCursor()
         if (vtk._vtkstatus): vtk.show()
+        else:  MSG.message("VTK 3D view:",
+               """<b>Fail to parse or to interpret CGNSTree data</b>""",
+               MSG.INFO)
     def plotview(self):
         return 
         ix=self.treeview.modelCurrentIndex()
@@ -441,7 +469,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.busyCursor()
         plot=Q7VTKPlot(self._control,node,self._fgprint,self.model(),zlist)
         self.readyCursor()
-        plot.show()
+        if (plot._vtkstatus): plot.show()
+        else:  MSG.message("VTK 2D plot view:",
+               """<b>Fail to parse or to interpret CGNSTree data</b>""",
+               MSG.INFO)
     def queryview(self):
         q=self.querymodel.getCurrentQuery()
         self.querymodel.setCurrentQuery(' ')
@@ -455,10 +486,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def leave(self):
         self.close()
     def updateTreeStatus(self):
-        if (self._fgprint.converted): return
-        if (self._fgprint._status==Q7fingerPrint.STATUS_MODIFIED):
-            self.bSave.setIcon(self.I_MODIFIED)
+        if (    (Q7fingerPrint.STATUS_MODIFIED in self._fgprint._status)
+            and (Q7fingerPrint.STATUS_SAVEABLE in self._fgprint._status)):
+            self.bSave.setEnabled(True)
         else:
-            self.bSave.setIcon(self.I_UNCHANGED)
+            self.bSave.setEnabled(False)
         
 # -----------------------------------------------------------------

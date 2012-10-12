@@ -12,15 +12,16 @@ import CGNS.VAL.grammars.SIDS
 
 import string
 
-NOZONE='U001'
-NOGRIDZONE='U002'
-NOBREFSTATE='U003'
-NOZREFSTATE='U004'
-NOSTRUCTZONE='U005'
-NOTRHTRANSFORM='U006'
-NOFLOWSOL='U100'
-NOFLOWINIT='U101'
-CHSGRIDLOCATION='U020'
+NOZONE            = 'U101'
+NOGRIDZONE        = 'U102'
+NOBREFSTATE       = 'U103'
+NOZREFSTATE       = 'U104'
+NOSTRUCTZONE      = 'U105'
+NOTRHTRANSFORM    = 'U106'
+NOFLOWSOL         = 'U107'
+NOFLOWINIT        = 'U108'
+CHSGRIDLOCATION   = 'U109'
+CHSELEMENTTYPE    = 'U110'
 
 class elsAbase(CGNS.VAL.grammars.SIDS.SIDSbase):
   __messages={
@@ -33,6 +34,7 @@ NOFLOWSOL:'No FlowSolution# found for output definition',
 NOFLOWINIT:'No FlowSolution#Init found for fields initialisation',
 NOTRHTRANSFORM:'Transform is not right-handed (direct)',
 CHSGRIDLOCATION:'Cannot handle such GridLocation [%s]',
+CHSELEMENTTYPE:'Cannot handle such ElementType [%s]',
   }
   def __init__(self,log):
     CGNS.VAL.grammars.SIDS.SIDSbase.__init__(self,log)
@@ -78,5 +80,15 @@ CHSGRIDLOCATION:'Cannot handle such GridLocation [%s]',
     val=node[1].tostring()
     if (val not in [CGK.Vertex_s,CGK.CellCenter_s,CGK.FaceCenter_s]):
         rs=log.push(pth,CGM.CHECK_FAIL,CHSGRIDLOCATION,val)
+    return rs
+  # --------------------------------------------------------------------
+  def Elements_t(self,pth,node,parent,tree,log):
+    rs=self.sids.Elements_t(self,pth,node,parent,tree,log)
+    if (self.context[CGK.ElementType_s] not in [CGK.QUAD_4, CGK.HEXA_8]):
+      try:
+        et=CGK.ElementType_[self.context[CGK.ElementType_s]]
+      except KeyError:
+        et=str(self.context[CGK.ElementType_s])
+      rs=log.push(pth,CGM.CHECK_FAIL,CHSELEMENTTYPE,et)
     return rs
 # -----

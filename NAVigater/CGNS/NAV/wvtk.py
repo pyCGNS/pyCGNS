@@ -1730,6 +1730,7 @@ class Q7VTKPlot(Q7Window,Ui_Q7VTKPlotWindow):
   def __init__(self,control,node,fgprint,tmodel,zlist):   
       if (not zlist): pth='/'
       else: pth='<partial>'
+      self._vtkstatus=False
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,fgprint)
       self._T=self._fgprint.tree
 ##       self._camera={}

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7InfoWindow.ui'
 #
-# Created: Thu Oct  4 14:07:03 2012
+# Created: Fri Oct 12 15:26:37 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -84,7 +84,7 @@ class Ui_Q7InfoWindow(object):
         self.cConverted.setCheckable(True)
         self.cConverted.setObjectName("cConverted")
         self.pushButton_3 = QtGui.QPushButton(self.groupBox_2)
-        self.pushButton_3.setGeometry(QtCore.QRect(160, 210, 25, 25))
+        self.pushButton_3.setGeometry(QtCore.QRect(170, 200, 25, 25))
         self.pushButton_3.setMinimumSize(QtCore.QSize(25, 25))
         self.pushButton_3.setMaximumSize(QtCore.QSize(25, 25))
         self.pushButton_3.setText("")

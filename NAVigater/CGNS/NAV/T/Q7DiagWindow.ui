@@ -170,25 +170,24 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="bClear">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
+      <widget class="QLineEdit" name="eCount">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
        <property name="maximumSize">
         <size>
-         <width>25</width>
-         <height>25</height>
+         <width>30</width>
+         <height>16777215</height>
         </size>
        </property>
-       <property name="text">
-        <string/>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
-       <property name="icon">
-        <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/node-sids-leaf.gif</normaloff>:/images/icons/node-sids-leaf.gif</iconset>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -286,7 +285,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+         <normaloff>:/images/icons/check-save.gif</normaloff>:/images/icons/check-save.gif</iconset>
        </property>
       </widget>
      </item>

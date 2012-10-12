@@ -398,7 +398,7 @@ class Q7TreeView(QTreeView):
         if (setlast):
             self.clearLastEntered()
             self.setLastEntered(index)
-        #self.scrollTo(index)
+        self.scrollTo(index)
     def changeSelectedMark(self,delta):
         if (self.M()._selected==[]): return
         sidx=self.M()._selectedIndex
@@ -428,10 +428,10 @@ def __sortItems(i1,i2):
 
 # -----------------------------------------------------------------
 class Q7TreeItem(object):
-    dtype=['MT','I4','I8','R4','R8','C1','LK']
     stype={'MT':0,'I4':4,'I8':8,'R4':4,'R8':8,'C1':1,'LK':0}
-    atype={'I4':numpy.int32,'I8':numpy.int64,
-           'R4':numpy.float32,'R8':numpy.float64}
+    atype={'I4':'i','I8':'l',
+           'R4':'f','R8':'d',
+           'LK':'S','MT':'S','C1':'S'}
     __lastEdited=None
     def __init__(self,fgprint,data,model,tag="",parent=None):
         self._parentitem=parent  
@@ -483,7 +483,6 @@ class Q7TreeItem(object):
         if (not CGU.checkName(name)): return False
         if (not CGU.checkDuplicatedName(self.sidsParent(),name,dienow=False)):
             return False
-        if (name==self._itemnode[0]): return False
         self._itemnode[0]=name
         return True
     def sidsValue(self):
@@ -495,6 +494,10 @@ class Q7TreeItem(object):
         if (self.sidsValueArray()):
             return numpy.isfortran(self.sidsValue())
         return False
+    def sidsValueEnum(self):
+        if (self.sidsType() in CGK.cgnsenums):
+          return CGK.cgnsenums[self.sidsType()]
+        return None
     def sidsValueSet(self,value):
         try:
             aval=numpy.array([float(value)])
@@ -525,21 +528,27 @@ class Q7TreeItem(object):
         if (type(value) not in [str,unicode]): return False
         value=str(value)
         if (value not in self.sidsTypeList()): return False
-        if (value == self._itemnode[3]): return False
         self._itemnode[3]=value
         return True
     def sidsDataType(self,all=False):
-        if (all): return Q7TreeItem.dtype
+        if (all): return CGK.adftypes
         return CGU.getValueDataType(self._itemnode)
     def sidsDataTypeSet(self,value):
-        if (value not in Q7TreeItem.atype): return False
-        ndt=Q7TreeItem.atype[value]
+        if (value not in CGK.adftypes): return False
+        odt=self.sidsDataType()
+        ndt=value
+        adt=Q7TreeItem.atype[ndt]
         oval=self._itemnode[1]
-        nval=numpy.array(oval,dtype=ndt)
+        if ((oval==None) and (ndt!=CGK.MT)):
+            if (ndt==CGK.C1): oval=""
+            else: oval=(0,)
+        if (ndt==CGK.MT): nval=None
+        else:
+            if (     (odt not in [CGK.I4, CGK.I8, CGK.R4, CGK.R8])
+                 and (ndt     in [CGK.I4, CGK.I8, CGK.R4, CGK.R8])): oval=(0,)
+            nval=numpy.array(oval,dtype=adt)
         self._itemnode[1]=nval
         return True
-    def sidsDataTypeList(self,all=False):
-        return Q7TreeItem.dtype
     def sidsDataTypeSize(self):
         return Q7TreeItem.stype[CGU.getValueDataType(self._itemnode)]
     def sidsTypeList(self):
@@ -640,6 +649,8 @@ class Q7TreeItem(object):
                 if (len(self.sidsValue().shape)==1): return True
                 if (len(self.sidsValue().shape)>2):  return False
                 return False
+            return True
+        return False
     def data(self,column):
         if (self._itemnode==None):     return self._title[column]
         if (column==COLUMN_NAME):      return self.sidsName()
@@ -685,10 +696,9 @@ class Q7TreeItem(object):
     def switchMarked(self):
         if (self._states['mark']==STMARK_ON): self._states['mark']=STMARKOFF
         else:                                 self._states['mark']=STMARK_ON
-    def setCheck(self,check,status,id,msg):
+    def setCheck(self,check):
         if (check in STCHKLIST):
             self._states['check']=check
-            self._log=(status,id,msg)
     def userState(self):
         return self._states['user']
     def setUserState(self,s):
@@ -951,7 +961,7 @@ class Q7TreeModel(QAbstractItemModel):
         if (index.column()==COLUMN_VALUE):    st=node.sidsValueSet(value)
         if (index.column()==COLUMN_DATATYPE): st=node.sidsDataTypeSet(value)
         if (st):
-            self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+            self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
         return st
     def removeItem(self,parentitem,targetitem,row):
         parentindex=self.indexByPath(parentitem.sidsPath())
@@ -1016,12 +1026,12 @@ class Q7TreeModel(QAbstractItemModel):
         self.refreshModel(pix)
         self.refreshModel(nix)
         self.refreshModel(cix)
-        self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
     def newNodeBrother(self,nodeitem):
         if (nodeitem is None): return
         nix=self.indexByPath(nodeitem.sidsPath())
         self.newNodeChild(nix.parent().internalPointer())
-        self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
     def copyNode(self,nodeitem):
         if (nodeitem is None): return
         self._control.copyPasteBuffer=CGU.nodeCopy(nodeitem._itemnode)
@@ -1038,7 +1048,7 @@ class Q7TreeModel(QAbstractItemModel):
         pix=self.indexByPath(path)
         parentitem.sidsRemoveChild(self._control.copyPasteBuffer)
         self.refreshModel(pix)
-        self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
     def pasteAsChildAllSelectedNodes(self):
         for pth in self._selected:
             nodeitem=self.nodeFromPath(pth)
@@ -1055,7 +1065,7 @@ class Q7TreeModel(QAbstractItemModel):
         self.refreshModel(pix)
         self.refreshModel(nix)
         self.refreshModel(cix)
-        self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
         return True
     def pasteAsBrotherAllSelectedNodes(self):
         for pth in self._selected:
@@ -1065,7 +1075,7 @@ class Q7TreeModel(QAbstractItemModel):
         if (nodeitem is None): return False
         nix=self.indexByPath(nodeitem.sidsPath())
         self.pasteAsChild(nix.parent().internalPointer())
-        self._fingerprint.modifiedTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
         return True
     def checkTree(self,T,pathlist):
         checkdiag=CGG.elsAbase(None)
@@ -1074,7 +1084,7 @@ class Q7TreeModel(QAbstractItemModel):
             pth=CGU.getPathNoRoot(path)
             if (checkdiag.log.has_key(pth)):
                 item=self._extension[path]
-                stat=checkdiag.log[pth].status
+                stat=checkdiag.log.getWorstDiag(pth)
                 if (stat==CGM.CHECK_NONE): item.setCheck(STCHKUNKN)
                 if (stat==CGM.CHECK_GOOD): item.setCheck(STCHKGOOD)
                 if (stat==CGM.CHECK_FAIL): item.setCheck(STCHKFAIL)

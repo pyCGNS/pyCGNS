@@ -21,20 +21,51 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         self.bClose.clicked.connect(self.reject)
         self.bExpandAll.clicked.connect(self.expand)
         self.bCollapseAll.clicked.connect(self.collapse)
-        self.bPrevious.clicked.connect(self.previousfiltered)
-        self.bNext.clicked.connect(self.nextfiltered)
-        self.bClear.clicked.connect(self.clearfiltered)
+        self.bPrevious.clicked.connect(self.nextfiltered)
+        self.bNext.clicked.connect(self.previousfiltered)
         self.cWarnings.clicked.connect(self.warnings)
+        self.bSave.clicked.connect(self.diagnosticssave)
+        QObject.connect(self.cFilter,
+                        SIGNAL("currentIndexChanged(int)"),
+                        self.filterChange)
         self._data=data
+        self._filterItems={}
+        self.filterChange()
+    def diagnosticssave(self):
+        n='data=%s\n'%self._data
+        filename=QFileDialog.getSaveFileName(self,
+                                             "Save diagnostics",".","*.py")
+        if (filename==""): return
+        f=open(str(filename[0]),'w+')
+        f.write(n)
+        f.close()
     def warnings(self):
         if (not self.cWarnings.isChecked()): self.reset(False)
         else: self.reset(True)
     def previousfiltered(self):
-        print 'PREVIOUS'
+      if (self._currentItem==0): return
+      iold=self._filterItems[self.cFilter.currentText()][self._currentItem]
+      self._currentItem-=1
+      inew=self._filterItems[self.cFilter.currentText()][self._currentItem]
+      iold.setSelected(False)
+      inew.setSelected(True)
+      self.diagTable.scrollToItem(inew)
+      self.eCount.setText(str(self._currentItem+1))
     def nextfiltered(self):
-        print 'NEXT'
-    def clearfiltered(self):
-        print 'CLEAR'
+      ilist=self._filterItems[self.cFilter.currentText()]
+      if (self._currentItem>=len(ilist)-1):
+        return
+      iold=ilist[self._currentItem]
+      self._currentItem+=1
+      inew=ilist[self._currentItem]
+      iold.setSelected(False)
+      inew.setSelected(True)
+      self.diagTable.scrollToItem(inew)
+      self.eCount.setText(str(self._currentItem+1))
+    def filterChange(self):
+      self._currentItem=0
+      self.eCount.setText("")
+      self.diagTable.clearSelection()
     def expand(self):
         self.diagTable.expandAll()
     def collapse(self):
@@ -46,7 +77,10 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         v=self.diagTable
         v.clear()
         v.setHeaderHidden(True)
-        for path in self._data:
+        plist=self._data.keys()
+        plist.sort()
+        plist.reverse()
+        for path in plist:
           state=self._data.getWorstDiag(path)
           if ((state==CGM.CHECK_WARN) and not warnings):
             pass
@@ -64,6 +98,10 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
                 dit.setFont(0,OCTXT.FixedFontTable)
                 if (diag[0]==CGM.CHECK_FAIL): dit.setIcon(0,self.I_C_SFL)
                 if (diag[0]==CGM.CHECK_WARN): dit.setIcon(0,self.I_C_SWR)
+                if (diag[2] not in self._filterItems):
+                  self._filterItems[diag[2]]=[dit]
+                else:
+                  self._filterItems[diag[2]].append(dit)
         self.cFilter.addItems(self._data.allMessageKeys())
     def reject(self):
         self.close()

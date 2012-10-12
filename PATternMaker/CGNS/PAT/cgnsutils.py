@@ -735,7 +735,8 @@ def getNodeType(node):
     if (data.dtype.char in ['S','c','s']):    return CK.C1
     if (data.dtype.char in ['f','F']):        return CK.R4
     if (data.dtype.char in ['D','d']):        return CK.R8
-    if (data.dtype.char in ['l','i','I']):    return CK.I4
+    if (data.dtype.char in ['i','I']):        return CK.I4
+    if (data.dtype.char in ['l']):            return CK.I8
   if ((type(data) == type([])) and (len(data))): # oups !
     if (type(data[0]) == type("")):           return CK.C1 
     if (type(data[0]) == type(0)):            return CK.I4 

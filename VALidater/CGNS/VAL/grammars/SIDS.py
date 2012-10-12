@@ -1,51 +1,83 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  pyCGNS.VAL - Python package for CFD General Notation System - VALidater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
 import CGNS.PAT.cgnsutils      as CGU
 import CGNS.PAT.cgnstypes      as CGT
 import CGNS.PAT.cgnskeywords   as CGK
+import CGNS.APP.sids.utils     as CGS
 import CGNS.VAL.parse.messages as CGM
 import CGNS.VAL.parse.generic
-import CGNS.APP.sids.utils     as CGS
 
-import string
+messagetable=(
+('UKZONETYPE'         ,'S101','Unknown ZoneType value'),
+('UKSIMTYPE'          ,'S102','Unknown SimulationType value'),
+('UKGRIDLOCTYPE'      ,'S103','Unknown GridLocation value'),
+('UKGRIDCONNTYPE'     ,'S104','Unknown GridConnectivityType value'),
+('UKDATACLASS'        ,'S105','Unknown DataClass value'),
+('UKBCDATATYPE'       ,'S106','Unknown BCDataType value'),
+('UKRIGIDMOTYPE'      ,'S107','Unknown RigidMotionType value'),
+('UKBCTYPE'           ,'S108','Unknown BCType value'),
+('UKELEMTYPE'         ,'S109','Unknown ElementType value'),
+('UKMASSUNIT'         ,'S110','Unknown MassUnit value'),
+('UKTIMEUNIT'         ,'S111','Unknown TimeUnit value'),
+('UKLENGTHUNIT'       ,'S112','Unknown LengthUnit value'),
+('UKTEMPUNIT'         ,'S113','Unknown TemperatureUnit value'),
+('UKANGLEUNIT'        ,'S114','Unknown AngleUnit value'),
+('UKECUUNIT'          ,'S115','Unknown ElectricCurrentUnit value'),
+('UKSUBSTUNIT'        ,'S116','Unknown SubstanceAmountUnit value'),
+('UKLUMUNIT'          ,'S117','Unknown LuminousIntensityUnit value'),
 
-UKZONETYPE='S004'
-UKSIMTYPE='S005'
-INCONSCELLPHYSDIM='S006'
-UKGRIDLOCTYPE='S007'
-UKGRIDCONNTYPE='S008'
-BADTRANSFORM='S200'
-BADVALUESHAPE='S101'
-BADCELLDIM='S102'
-BADPHYSDIM='S103'
-BADFAMREFERENCE='S020'
-BADADDFAMREFERENCE='S021'
-DEFGRIDLOCATION='S030'
-DEFGRIDCONNTYPE='S040'
+('BADVALUESHAPE'      ,'S191','Bad node value shape'),
 
+('DEFGRIDLOCATION'    ,'S151','Default GridLocation is set to Vertex'),
+('DEFGRIDCONNTYPE'    ,'S152','Default GridConnectivityType is set to Overset'),
+
+('INCONSCELLPHYSDIM'  ,'S201','Inconsistent PhysicalDimension/CellDimension'),
+('BADCELLDIM'         ,'S202','Bad value for CellDimension'),
+('BADPHYSDIM'         ,'S203','Bad value for PhysicalDimension'),
+('BADTRANSFORM'       ,'S204','Bad Transform values'),
+('BADELEMSZBND'       ,'S205','Bad ElementSizeBoundary value'),
+
+('BADFAMREFERENCE'    ,'S301','Reference to unknown family [%s]'),
+('BADADDFAMREFERENCE' ,'S302','Reference to unknown additional family [%s]'),
+)
+
+SIDS_MESSAGES={}
+for (v,k,m) in messagetable:
+  locals()[v]=k
+  SIDS_MESSAGES[k]=m
+
+# ------------------------------------------------------------------------------
 class SIDSbase(CGNS.VAL.parse.generic.GenericParser):
-  __messages={
-INCONSCELLPHYSDIM:'Inconsistent PhysicalDimension/CellDimension',
-UKZONETYPE:'Unknown ZoneType value',
-UKGRIDLOCTYPE:'Unknown GridLocation value',
-UKGRIDCONNTYPE:'Unknown GridConnectivityType value',
-UKSIMTYPE:'Unknown SimulationType value',
-BADVALUESHAPE:'Bad node value shape',
-BADCELLDIM:'Bad value for CellDimension',
-BADPHYSDIM:'Bad value for PhysicalDimension',
-BADTRANSFORM:'Bad Transform values',
-BADFAMREFERENCE:'Reference to unknown family [%s]',
-BADADDFAMREFERENCE:'Reference to unknown additional family [%s]',
-DEFGRIDLOCATION:'Default GridLocation is set to Vertex',
-DEFGRIDCONNTYPE:'Default GridConnectivityType is set to Overset',
-}
   # --------------------------------------------------------------------
   def __init__(self,log):
     CGNS.VAL.parse.generic.GenericParser.__init__(self,log)
-    self.log.addMessages(SIDSbase.__messages)
+    self.log.addMessages(SIDS_MESSAGES)
+  # --------------------------------------------------------------------
+  def CGNSBase_t(self,pth,node,parent,tree,log):
+    rs=CGM.CHECK_OK
+    if (CGU.getShape(node)!=(2,)):
+      rs=log.push(pth,CGM.CHECK_FAIL,BADVALUESHAPE)
+    else:
+      cd=node[1][0]
+      pd=node[1][1]
+      self.context[CGK.CellDimension_s]=cd
+      self.context[CGK.PhysicalDimension_s]=pd
+      if (cd not in [1,2,3]):
+        rs=log.push(pth,CGM.CHECK_FAIL,BADCELLDIM)
+      if (pd not in [1,2,3]):
+        rs=log.push(pth,CGM.CHECK_FAIL,BADPHYSDIM)
+      if (pd<cd):
+        rs=log.push(pth,CGM.CHECK_FAIL,INCONSCELLPHYSDIM)
+    return rs
+  # --------------------------------------------------------------------
+  def SimulationType_t(self,pth,node,parent,tree,log):
+    rs=CGM.CHECK_OK
+    if (not CGU.stringValueInList(node,CGK.SimulationType_l)):
+      rs=log.push(pth,CGM.CHECK_FAIL,UKSIMTYPE)
+    return rs
   # --------------------------------------------------------------------
   def Zone_t(self,pth,node,parent,tree,log):
     rs=CGM.CHECK_OK
@@ -68,23 +100,10 @@ DEFGRIDCONNTYPE:'Default GridConnectivityType is set to Overset',
               self.context[famtargetpath]=True
     return rs
   # --------------------------------------------------------------------
-  def CGNSBase_t(self,pth,node,parent,tree,log):
+  def ZoneType_t(self,pth,node,parent,tree,log):
     rs=CGM.CHECK_OK
-    if (CGU.getShape(node)!=(2,)):
-      rs=log.push(pth,CGM.CHECK_FAIL,BADVALUESHAPE)
-    else:
-      cd=node[1][0]
-      pd=node[1][1]
-      self.context[CGK.CellDimension_s]=0
-      self.context[CGK.PhysicalDimension_s]=0
-      if (cd not in [1,2,3]):
-        rs=log.push(pth,CGM.CHECK_FAIL,BADCELLDIM)
-        self.context[CGK.CellDimension_s]=cd
-      if (pd not in [1,2,3]):
-        rs=log.push(pth,CGM.CHECK_FAIL,BADPHYSDIM)
-        self.context[CGK.PhysicalDimension_s]=pd
-      if (pd<cd):
-        rs=log.push(pth,CGM.CHECK_FAIL,INCONSCELLPHYSDIM)
+    if (not CGU.stringValueInList(node,CGK.ZoneType_l)):
+      rs=log.push(pth,CGM.CHECK_FAIL,UKZONETYPE)
     return rs
   # --------------------------------------------------------------------
   def GridConnectivity_t(self,pth,node,parent,tree,log):
@@ -108,24 +127,36 @@ DEFGRIDCONNTYPE:'Default GridConnectivityType is set to Overset',
       rs=log.push(pth,CGM.CHECK_FAIL,UKGRIDLOCTYPE)
     return rs
   # --------------------------------------------------------------------
-  def ZoneType_t(self,pth,node,parent,tree,log):
-    rs=CGM.CHECK_OK
-    if (not CGU.stringValueInList(node,CGK.ZoneType_l)):
-      rs=log.push(pth,CGM.CHECK_FAIL,UKZONETYPE)
-    return rs
-  # --------------------------------------------------------------------
-  def SimulationType_t(self,pth,node,parent,tree,log):
-    rs=CGM.CHECK_OK
-    if (not CGU.stringValueInList(node,CGK.SimulationType_l)):
-      rs=log.push(pth,CGM.CHECK_FAIL,UKSIMTYPE)
-    return rs
-  # --------------------------------------------------------------------
   def IntIndexDimension_t(self,pth,node,parent,tree,log):
     rs=CGM.CHECK_OK
     if (node[0]==CGK.Transform_s):
       tr=list(node[0].flat)
       if (not CGS.transformCheckValues(tr,self.context[CGK.CellDimension_s])):
         rs=log.push(pth,CGM.CHECK_FAIL,BADTRANSFORM)
+    return rs
+  # --------------------------------------------------------------------
+  def Elements_t(self,pth,node,parent,tree,log):
+    rs=CGM.CHECK_OK
+    if (CGU.getShape(node)!=(2,)):
+      rs=log.push(pth,CGM.CHECK_FAIL,BADVALUESHAPE)
+    else:
+      et=node[1][0]
+      eb=node[1][1]
+      self.context[CGK.ElementType_s]=et
+      self.context[CGK.ElementSizeBoundary_s]=eb
+      if (et not in range(0,len(CGK.ElementType)+1)):
+        rs=log.push(pth,CGM.CHECK_FAIL,UKELEMTYPE)
+      if (eb==0): bad_eb=False
+      elif (eb<0): bad_eb=True
+      else:
+        bad_eb=True
+        ecnode=CGU.getNodeByPath(tree,pth+'/'+CGK.ElementRange_s)
+        if (    (ecnode is not None)
+            and (CGU.getShape(node)==(2,))
+            and (CGU.getValueDataType(ecnode)==CGK.I4)
+            and (ecnode[1][1]>eb)): bad_eb=False
+      if (bad_eb):
+        rs=log.push(pth,CGM.CHECK_FAIL,BADELEMSZBND)
     return rs
 
 # -----

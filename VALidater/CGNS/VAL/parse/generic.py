@@ -1,10 +1,5 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
-#  See license.txt file in the root directory of this Python module source  
-#  -------------------------------------------------------------------------
-#
-#  -------------------------------------------------------------------------
-#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  pyCGNS.VAL - Python package for CFD General Notation System - VALidater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
@@ -16,22 +11,25 @@ import CGNS.VAL.parse.messages as CGM
 
 import inspect
 
-BAD_VERSION='G999'
-OLD_VERSION='G992'
-INVALID_NAME='G001'
-DUPLICATED_NAME='G002'
-INVALID_SIDSTYPE_P='G003'
-INVALID_SIDSTYPE='G004'
-INVALID_DATATYPE='G005'
-INVALID_PATH='G998'
-FORBIDDEN_CHILD='G006'
-SINGLE_CHILD='G007'
-MANDATORY_CHILD='G008'
-NODE_EMPTYLIST='G997'
-NODE_NOTALIST='G996'
-NODE_NAMENOTSTRING='G995'
-NODE_CHILDRENNOTLIST='G994'
-NODE_BADDATA='G993'
+OLD_VERSION          = 'G001'
+BAD_VERSION          = 'G002'
+INVALID_NAME         = 'G003'
+DUPLICATED_NAME      = 'G004'
+INVALID_PATH         = 'G005'
+NODE_BADDATA         = 'G006'
+NODE_CHILDRENNOTLIST = 'G007'
+NODE_NAMENOTSTRING   = 'G008'
+NODE_NOTALIST        = 'G009'
+NODE_EMPTYLIST       = 'G010'
+
+UNKNOWN_SIDSTYPE     = 'S001'
+INVALID_SIDSTYPE_P   = 'S002'
+INVALID_SIDSTYPE     = 'S003'
+INVALID_DATATYPE     = 'S004'
+FORBIDDEN_CHILD      = 'S005'
+SINGLE_CHILD         = 'S006'
+MANDATORY_CHILD      = 'S007'
+
 
 genericmessages={
 BAD_VERSION:'CGNSLibraryVersion is incorrect',
@@ -39,9 +37,10 @@ OLD_VERSION:'CGNSLibraryVersion [%s] is too old for current check level',
 INVALID_NAME:'Name [%s] is not valid',
 INVALID_PATH:'PANIC: Cannot find node with path [%s]',
 DUPLICATED_NAME:'Name [%s] is a duplicated child name',
-INVALID_SIDSTYPE_P:'SIDS Type [%s] not allowed as child of [%s]',
-INVALID_SIDSTYPE:'SIDS Type [%s] not allowed for this node',
-INVALID_DATATYPE:'Datatype [%s] not allowed for this node',
+UNKNOWN_SIDSTYPE:'Unknown SIDS type [%s]',
+INVALID_SIDSTYPE_P:'SIDS type [%s] not allowed as child of [%s]',
+INVALID_SIDSTYPE:'SIDS type [%s] not allowed for this node',
+INVALID_DATATYPE:'DataType [%s] not allowed for this node',
 FORBIDDEN_CHILD:'Node [%s] of type [%s] is not allowed as child',
 SINGLE_CHILD:'Node [%s] of type [%s] is allowed only once as child',
 MANDATORY_CHILD:'Node [%s] of type [%s] is mandatory',
@@ -53,7 +52,9 @@ NODE_BADDATA:'PANIC: Node data is not numpy.ndarray or None (child of [%s])',
 }
 
 class GenericContext(dict):
-  pass
+  def __getitem__(self,i):
+    if (i not in self): self[i]=None
+    return dict.__getitem__(self,i)
 
 class GenericParser(object):
   # --------------------------------------------------------------------
@@ -122,7 +123,10 @@ class GenericParser(object):
     dt=CGU.getValueDataType(node)
     if (dt not in dlist):
       stt=self.log.push(path,CGM.CHECK_FAIL,INVALID_DATATYPE,dt)
-    stt=self.checkCardinalityOfChildren(T,path,node,parent)
+    if (node[3] not in CGT.types.keys()):
+      stt=self.log.push(path,CGM.CHECK_FAIL,UNKNOWN_SIDSTYPE,node[3])
+    else:
+      stt=self.checkCardinalityOfChildren(T,path,node,parent)
     return stt
   # --------------------------------------------------------------------
   def checkTree(self,T,trace=False):

@@ -2,9 +2,7 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
-
+#
 from PySide.QtCore    import *
 from PySide.QtGui     import *
 from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
@@ -20,6 +18,22 @@ import time
 LOADBUTTON='Load'
 SAVEBUTTON='Save'
 (LOADMODE,SAVEMODE)=(0,1)
+
+def checkFilePermission(path,write=False):
+    if (not os.path.exists(path)): return False
+    r=False
+    w=False
+    st=os.stat(path)
+    m=st.st_mode
+    if ((st.st_uid == os.getuid()) and (m & stat.S_IRUSR)): r=True
+    if ((st.st_gid == os.getgid()) and (m & stat.S_IRGRP)): r=True
+    if (m & stat.S_IROTH): r=True
+    if (not r): return False
+    if ((st.st_uid == os.getuid()) and (m & stat.S_IWUSR)): w=True
+    if ((st.st_gid == os.getgid()) and (m & stat.S_IWGRP)): w=True
+    if (m & stat.S_IWOTH): w=True
+    if (write and not w): return False
+    return True
 
 # -----------------------------------------------------------------
 class Q7FileFilterProxy(QSortFilterProxyModel):
@@ -49,20 +63,7 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         if ((xlist == []) or (ext in xlist)): return True
         return False
     def checkPermission(self,path,write=False):
-        if (not os.path.exists(path)): return False
-        r=False
-        w=False
-        st=os.stat(path)
-        m=st.st_mode
-        if ((st.st_uid == os.getuid()) and (m & stat.S_IRUSR)): r=True
-        if ((st.st_gid == os.getgid()) and (m & stat.S_IRGRP)): r=True
-        if (m & stat.S_IROTH): r=True
-        if (not r): return False
-        if ((st.st_uid == os.getuid()) and (m & stat.S_IWUSR)): w=True
-        if ((st.st_gid == os.getgid()) and (m & stat.S_IWGRP)): w=True
-        if (m & stat.S_IWOTH): w=True
-        if (write and not w): return False
-        return True
+        return checkFilePermission(path,write)
     def lessThan(self,left,right):
         c=self.sortColumn()
         a=self.model.data(left)
@@ -128,9 +129,9 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         (self.model,"directoryLoaded(QString)",self.expandCols),
         (self.treeview,"expanded(QModelIndex)",self.expandCols),
         (self.treeview,"clicked(QModelIndex)",self.clickedNode),
-        (self.direntries.lineEdit(),"editingFinished()",self.changeDir),
-        (self.direntries,"currentIndexChanged(int)",self.changeDir),
-        (self.direntries,"editTextChanged(QString)",self.changeDir),
+        (self.direntries.lineEdit(),"returnPressed()",self.changeDirEdit),
+        (self.direntries,"currentIndexChanged(int)",self.changeDirIndex),
+        #(self.direntries,"editTextChanged(QString)",self.changeDirText),
         (self.fileentries,"currentIndexChanged(int)",self.changeFile),
         (self.fileentries.lineEdit(),"editingFinished()",self.changeFile),
         (self.tabs,"currentChanged(int)",self.currentTabChanged),
@@ -197,9 +198,27 @@ class Q7File(QWidget,Ui_Q7FileWindow):
     def backDir(self,*args):
         p=os.path.split(self.path())[0]
         self.setCurrentDir(p)
+    def changeDirEdit(self,*args):
+        #print 'EDIT'
+        self.changeDir(args)
+    def changeDirText(self,*args):
+        #print 'TEXT'
+        self.changeDir(args)
+    def changeDirIndex(self,*args):
+        #print 'INDEX'
+        self.changeDir(args)
     def changeDir(self,*args):
         p=self.direntries.currentText()
         if (os.path.isdir(p)): self.updateView()
+        else:
+            reply=MSG.message('Directory not found...',
+                              """The path doesn't exist, do you wan to remove<br>
+                              it from the history?""",
+                              MSG.YESNO)
+            if (reply == QMessageBox.Yes):
+                ix=self.direntries.currentIndex()
+                self.direntries.removeItem(ix)
+                
     def changeFile(self,*args):
         self.selectedfile=self.fileentries.lineEdit().text()
         d=self.parent.getHistoryFile(self.selectedfile)

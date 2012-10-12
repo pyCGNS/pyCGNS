@@ -42,7 +42,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/save-inactive.gif</normaloff>:/images/icons/save-inactive.gif</iconset>
+         <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
        </property>
       </widget>
      </item>

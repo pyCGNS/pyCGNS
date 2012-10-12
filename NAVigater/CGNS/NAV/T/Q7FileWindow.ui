@@ -118,27 +118,33 @@
         <widget class="QLabel" name="label">
          <property name="geometry">
           <rect>
-           <x>40</x>
-           <y>15</y>
-           <width>171</width>
-           <height>17</height>
+           <x>0</x>
+           <y>10</y>
+           <width>121</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="text">
           <string>Current directory</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
         </widget>
         <widget class="QLabel" name="label_2">
          <property name="geometry">
           <rect>
-           <x>40</x>
-           <y>45</y>
-           <width>171</width>
-           <height>17</height>
+           <x>20</x>
+           <y>40</y>
+           <width>101</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="text">
           <string>Selected file</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
         <widget class="QComboBox" name="fileentries">
@@ -206,7 +212,7 @@
         <widget class="QPushButton" name="bAction">
          <property name="geometry">
           <rect>
-           <x>10</x>
+           <x>130</x>
            <y>40</y>
            <width>25</width>
            <height>25</height>
@@ -251,7 +257,7 @@
         <widget class="QPushButton" name="bBack">
          <property name="geometry">
           <rect>
-           <x>10</x>
+           <x>130</x>
            <y>10</y>
            <width>25</width>
            <height>25</height>

@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/save-S-M.gif</file>
+    <file>icons/save-S-UM.gif</file>
+    <file>icons/save-US-M.gif</file>
+    <file>icons/save-US-UM.gif</file>
     <file>icons/link-select.gif</file>
     <file>icons/link-child.gif</file>
     <file>icons/link-noreadable.gif</file>

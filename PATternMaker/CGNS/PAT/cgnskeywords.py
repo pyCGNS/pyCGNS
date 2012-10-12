@@ -48,7 +48,8 @@ def enumAsKeyDict(l):
 # --------------------------------------------------
 # --- ADF-level Datatypes
 #
-(C1,I4,I8,R4,R8,MT,LK)=('C1','I4','I8','R4','R8','MT','LK')
+adftypes=('C1','I4','I8','R4','R8','MT','LK')
+(C1,I4,I8,R4,R8,MT,LK)=adftypes
 
 # --------------------------------------------------
 # --- ADF-level Constants
@@ -372,8 +373,8 @@ GridConnectivityType_l = [Null_s,UserDefined_s,
 GridConnectivityType   = stringAsKeyDict(GridConnectivityType_l)
 GridConnectivityType_  = enumAsKeyDict(GridConnectivityType_l)
 
-(Null_s,UserDefined_s,
- Overset_s,Abutting_s,Abutting1to1_s)=GridConnectivityType_.keys()
+(Null,UserDefined,
+ Overset,Abutting,Abutting1to1)=GridConnectivityType_.keys()
 
 # --------------------------------------------------
 ZoneType_ts    = "ZoneType_t"
@@ -443,6 +444,7 @@ ElementConnectivity_s         = "ElementConnectivity"
 ParentData_s                  = "ParentData"
 ParentElements_s              = "ParentElements"
 ParentElementsPosition_s      = "ParentElementsPosition"
+ElementSizeBoundary_s         = "ElementSizeBoundary"
 VectorX_ps                    = "%sX"
 VectorY_ps                    = "%sY"
 VectorZ_ps                    = "%sZ"
@@ -1065,11 +1067,12 @@ UserDefinedData_ts            = "UserDefinedData_t"
 # ---
 cgnsnames=[globals()[k] for k in dir() if (k[-2:]=='_s')]
 cgnstypes=[globals()[k] for k in dir() if (k[-3:]=='_ts')]
-cgnsenums=[k[:-1]+'t' for k in dir() if (k[-2:]=='_l')]
+cgnsenums={}
+for k in dir():
+  if (k[-2:]=='_l'): cgnsenums[k[:-1]+'t']=locals()[k]
 #
 cgnsnames.sort()
 cgnstypes.sort()
-cgnsenums.sort()
 #
 # --- last line
 

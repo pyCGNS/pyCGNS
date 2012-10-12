@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FileWindow.ui'
 #
-# Created: Thu Oct  4 14:06:58 2012
+# Created: Fri Oct 12 08:55:34 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -54,10 +54,12 @@ class Ui_Q7FileWindow(object):
         self.direntries.setEditable(True)
         self.direntries.setObjectName("direntries")
         self.label = QtGui.QLabel(self.Selection)
-        self.label.setGeometry(QtCore.QRect(40, 15, 171, 17))
+        self.label.setGeometry(QtCore.QRect(0, 10, 121, 20))
+        self.label.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label.setObjectName("label")
         self.label_2 = QtGui.QLabel(self.Selection)
-        self.label_2.setGeometry(QtCore.QRect(40, 45, 171, 17))
+        self.label_2.setGeometry(QtCore.QRect(20, 40, 101, 20))
+        self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_2.setObjectName("label_2")
         self.fileentries = QtGui.QComboBox(self.Selection)
         self.fileentries.setGeometry(QtCore.QRect(160, 40, 301, 27))
@@ -84,7 +86,7 @@ class Ui_Q7FileWindow(object):
         self.treeview.setAllColumnsShowFocus(True)
         self.treeview.setObjectName("treeview")
         self.bAction = QtGui.QPushButton(self.Selection)
-        self.bAction.setGeometry(QtCore.QRect(10, 40, 25, 25))
+        self.bAction.setGeometry(QtCore.QRect(130, 40, 25, 25))
         self.bAction.setMinimumSize(QtCore.QSize(25, 25))
         self.bAction.setMaximumSize(QtCore.QSize(25, 25))
         self.bAction.setText("")
@@ -96,7 +98,7 @@ class Ui_Q7FileWindow(object):
         self.cShowAll.setGeometry(QtCore.QRect(570, 40, 91, 22))
         self.cShowAll.setObjectName("cShowAll")
         self.bBack = QtGui.QPushButton(self.Selection)
-        self.bBack.setGeometry(QtCore.QRect(10, 10, 25, 25))
+        self.bBack.setGeometry(QtCore.QRect(130, 10, 25, 25))
         self.bBack.setMinimumSize(QtCore.QSize(25, 25))
         self.bBack.setMaximumSize(QtCore.QSize(25, 25))
         self.bBack.setText("")

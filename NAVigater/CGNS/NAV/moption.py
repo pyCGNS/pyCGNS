@@ -111,7 +111,7 @@ class Q7OptionContext(object):
     _ToolVersion='v%s'%__vid__
     
     _CopyrightNotice="""
-Copyright (c) 2010-2012 Marc Poinot - Onera - The French Aerospace Labs
+Copyright (c) 2010-2013 Marc Poinot - Onera - The French Aerospace Labs
 All rights reserved in accordance with GPL v2 
 NO WARRANTY :
 Check GPL v2 sections 15 and 16 about loss of data or corrupted data

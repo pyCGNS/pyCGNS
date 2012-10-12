@@ -13,6 +13,9 @@ CHECK_INFO=CHECK_WARN=2
 CHECK_BAD=CHECK_ERROR=CHECK_FAIL=3
 CHECK_USER=4
 
+def sortDiagByKey(d1,d2):
+  (k1,k2)=(d1[2],d2[2])
+  return k1>k2
 
 def getWorst(st1,st2):
     if (CHECK_FAIL in [st1,st2]): return CHECK_FAIL
@@ -88,7 +91,9 @@ class DiagnosticLog(dict):
         return self.keys()
     def diagnosticsByPath(self,path):
         if (self.diagForPath(path) is not None):
-            for diag in self[path]:
+            dlist=self[path]
+            dlist.sort(sortDiagByKey)
+            for diag in dlist:
                 yield (diag,path)
     def diagnosticsByMessage(self,msg):
         plist=self.keys()

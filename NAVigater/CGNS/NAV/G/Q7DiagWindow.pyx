@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7DiagWindow.ui'
 #
-# Created: Tue Oct  9 11:15:57 2012
+# Created: Fri Oct 12 14:09:12 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -75,22 +75,24 @@ class Ui_Q7DiagWindow(object):
         self.bPrevious.setIcon(icon3)
         self.bPrevious.setObjectName("bPrevious")
         self.horizontalLayout.addWidget(self.bPrevious)
-        self.bClear = QtGui.QPushButton(Q7DiagWindow)
-        self.bClear.setMinimumSize(QtCore.QSize(25, 25))
-        self.bClear.setMaximumSize(QtCore.QSize(25, 25))
-        self.bClear.setText("")
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-leaf.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bClear.setIcon(icon4)
-        self.bClear.setObjectName("bClear")
-        self.horizontalLayout.addWidget(self.bClear)
+        self.eCount = QtGui.QLineEdit(Q7DiagWindow)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.eCount.sizePolicy().hasHeightForWidth())
+        self.eCount.setSizePolicy(sizePolicy)
+        self.eCount.setMaximumSize(QtCore.QSize(30, 16777215))
+        self.eCount.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.eCount.setReadOnly(True)
+        self.eCount.setObjectName("eCount")
+        self.horizontalLayout.addWidget(self.eCount)
         self.bNext = QtGui.QPushButton(Q7DiagWindow)
         self.bNext.setMinimumSize(QtCore.QSize(25, 25))
         self.bNext.setMaximumSize(QtCore.QSize(25, 25))
         self.bNext.setText("")
-        icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/images/icons/selected.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bNext.setIcon(icon5)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(":/images/icons/selected.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bNext.setIcon(icon4)
         self.bNext.setObjectName("bNext")
         self.horizontalLayout.addWidget(self.bNext)
         self.cFilter = QtGui.QComboBox(Q7DiagWindow)
@@ -113,9 +115,9 @@ class Ui_Q7DiagWindow(object):
         self.bSave.setMinimumSize(QtCore.QSize(25, 25))
         self.bSave.setMaximumSize(QtCore.QSize(25, 25))
         self.bSave.setText("")
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/images/icons/save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bSave.setIcon(icon6)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(":/images/icons/check-save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bSave.setIcon(icon5)
         self.bSave.setObjectName("bSave")
         self.horizontalLayout.addWidget(self.bSave)
         self.gridLayout.addLayout(self.horizontalLayout, 3, 0, 1, 1)

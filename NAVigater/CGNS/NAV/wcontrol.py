@@ -50,6 +50,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.bTreeLoadLast.clicked.connect(self.loadlast)
         self.bTreeLoad.clicked.connect(self.load)
         self.bEditTree.clicked.connect(self.edit)
+        self.bPatternView.setDisabled(True)
         #self.bResetScrollBars.clicked.connect(self.resetScrolls)
         self.bClose.clicked.connect(self.close)
         QObject.connect(self.controlTable,
@@ -178,21 +179,33 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             f=Q7fingerPrint.getFingerPrint(i)
             v=Q7fingerPrint.getView(i)
             l=self.getLineFromIdx(i)
-            self.modifiedLine(l,f._status)
+            self.modifiedLine(l,f._status,f)
             try:
                 v.updateTreeStatus()
             except AttributeError:
                 pass
-    def modifiedLine(self,n,stat):
-        if   (stat==Q7fingerPrint.STATUS_MODIFIED):
-            stitem=QTableWidgetItem(self.I_MODIFIED,'')
-        elif (stat==Q7fingerPrint.STATUS_CONVERTED):
-            stitem=QTableWidgetItem(self.I_CONVERTED,'')
-        else:
-            stitem=QTableWidgetItem(self.I_UNCHANGED,'')
+    def modifiedLine(self,n,stat,fg):
+        if (     (Q7fingerPrint.STATUS_MODIFIED in stat)
+             and (Q7fingerPrint.STATUS_SAVEABLE in stat)):
+            stitem=QTableWidgetItem(self.I_MOD_SAV,'')
+            stitem.setToolTip('Tree modified and saveable')
+        if (     (Q7fingerPrint.STATUS_MODIFIED in stat)
+             and (Q7fingerPrint.STATUS_SAVEABLE not in stat)):
+            stitem=QTableWidgetItem(self.I_MOD_USAV,'')
+            stitem.setToolTip('Tree modified but NOT saveable')
+        if (     (Q7fingerPrint.STATUS_MODIFIED not in stat)
+             and (Q7fingerPrint.STATUS_SAVEABLE not in stat)):
+            stitem=QTableWidgetItem(self.I_UMOD_USAV,'')
+            stitem.setToolTip('Tree unmodified and NOT saveable')
+        if (     (Q7fingerPrint.STATUS_MODIFIED not in stat)
+             and (Q7fingerPrint.STATUS_SAVEABLE in stat)):
+            stitem=QTableWidgetItem(self.I_UMOD_SAV,'')
+            stitem.setToolTip('Tree unmodified and saveable')
         stitem.setTextAlignment(Qt.AlignCenter)
         self.controlTable.setItem(n,0,stitem)
-    def addLine(self,l):
+        self.controlTable.item(n,3).setText(str(fg.filedir))
+        self.controlTable.item(n,4).setText(str(fg.filename))
+    def addLine(self,l,fg):
         ctw=self.controlTable
         ctw.setRowCount(ctw.rowCount()+1)
         r=ctw.rowCount()-1
@@ -212,13 +225,13 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             tpitem=QTableWidgetItem(self.I_LINK,'')
         tpitem.setTextAlignment(Qt.AlignCenter)
         ctw.setItem(r,1,tpitem)
-        self.modifiedLine(r,l[0])
         for i in range(len(l)-2):
             it=QTableWidgetItem('%s '%(l[i+2]))
             if (i in [0]): it.setTextAlignment(Qt.AlignCenter)
             else: it.setTextAlignment(Qt.AlignLeft)
             it.setFont(QFont("Courier"))
             ctw.setItem(r,i+2,it)
+        self.modifiedLine(r,l[0],fg)
         for i in (0,1,2):
             ctw.resizeColumnToContents(i)
         for i in range(self.controlTable.rowCount()):
@@ -252,13 +265,17 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         if (fgprint is None): return
         Q7TreeModel(fgprint)
         child=Q7Tree(self,'/',fgprint)
-        self.readyCursor()
         child.show()
         self.setHistory(fgprint.filedir,fgprint.filename)
+        self.updateViews()
+        self.readyCursor()
     def saving(self,*args):
         self._T('saving as: [%s]'%self.signals.buffer)
         self.busyCursor()
         Q7fingerPrint.treeSave(self,self.signals.fgprint,self.signals.buffer)
+        self.setHistory(self.signals.fgprint.filedir,
+                        self.signals.fgprint.filename)
+        self.updateViews()
         self.readyCursor()
     def load(self):
         self.fdialog=Q7File(self)
@@ -288,6 +305,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         fgprint=Q7fingerPrint(self,'.','{CGNS/Python#%.3d}'%tc,tree,[],[])
         Q7TreeModel(fgprint)
         child=Q7Tree(self,'/',fgprint)
+        fgprint._status=[Q7fingerPrint.STATUS_MODIFIED]
         self.readyCursor()
         self.__newtreecount+=1
         child.show()
