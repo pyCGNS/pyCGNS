@@ -6,14 +6,39 @@
 #  -------------------------------------------------------------------------
 
 import CGNS.VAL.grammars.SIDS
-import CGNS.VAL.grammars.USER
 import CGNS.VAL.parse.messages as CGM
+import CGNS.VAL.parse.findgrammar
 
-def run(T,trace,user):
-    if (user):
-        parser=CGNS.VAL.grammars.USER.elsAbase(None)        
+def listuserkeys(trace):
+    s=''
+    dk=CGNS.VAL.parse.findgrammar.findAllUserGrammars()
+    for key in dk:
+        s+='[%s] %s'%(key,dk[key])
+    return s
+
+def getParser(trace,user):
+    if (user is not None):
+        mod=CGNS.VAL.parse.findgrammar.importUserGrammars(user)
+        if (mod is None):
+            parser=CGNS.VAL.grammars.SIDS.SIDSbase(None)
+        else:
+            parser=mod.CGNS_VAL_USER_Checks(None)
     else:
         parser=CGNS.VAL.grammars.SIDS.SIDSbase(None)
+    return parser
+
+def listdiags(trace,user):
+    parser=getParser(trace,user)
+    mlist=parser.listDiagnostics()
+    s=''
+    ld=mlist.keys()
+    ld.sort()
+    for d in ld:
+        s+="%s\n"%(str(mlist[d]))
+    return s
+
+def run(T,trace,user):
+    parser=getParser(trace,user)
     parser.checkTree(T,trace)
     return parser
 

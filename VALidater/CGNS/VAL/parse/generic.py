@@ -30,25 +30,24 @@ FORBIDDEN_CHILD      = 'S005'
 SINGLE_CHILD         = 'S006'
 MANDATORY_CHILD      = 'S007'
 
-
 genericmessages={
-BAD_VERSION:'CGNSLibraryVersion is incorrect',
-OLD_VERSION:'CGNSLibraryVersion [%s] is too old for current check level',
-INVALID_NAME:'Name [%s] is not valid',
-INVALID_PATH:'PANIC: Cannot find node with path [%s]',
-DUPLICATED_NAME:'Name [%s] is a duplicated child name',
-UNKNOWN_SIDSTYPE:'Unknown SIDS type [%s]',
-INVALID_SIDSTYPE_P:'SIDS type [%s] not allowed as child of [%s]',
-INVALID_SIDSTYPE:'SIDS type [%s] not allowed for this node',
-INVALID_DATATYPE:'DataType [%s] not allowed for this node',
-FORBIDDEN_CHILD:'Node [%s] of type [%s] is not allowed as child',
-SINGLE_CHILD:'Node [%s] of type [%s] is allowed only once as child',
-MANDATORY_CHILD:'Node [%s] of type [%s] is mandatory',
-NODE_EMPTYLIST:'PANIC: Node is empty list or None (child of [%s])',
-NODE_NOTALIST:'PANIC: Node is not a list of 4 objects (child of [%s])',
-NODE_NAMENOTSTRING:'PANIC: Node name is not a string (child of [%s])',
-NODE_CHILDRENNOTLIST:'PANIC: Node children is not a list (child of [%s])',
-NODE_BADDATA:'PANIC: Node data is not numpy.ndarray or None (child of [%s])',
+BAD_VERSION:         (CGM.CHECK_FAIL,'CGNSLibraryVersion is incorrect'),
+OLD_VERSION:         (CGM.CHECK_FAIL,'CGNSLibraryVersion [%s] is too old for current check level'),
+INVALID_NAME:        (CGM.CHECK_FAIL,'Name [%s] is not valid'),
+INVALID_PATH:        (CGM.CHECK_FAIL,'PANIC: Cannot find node with path [%s]'),
+DUPLICATED_NAME:     (CGM.CHECK_FAIL,'Name [%s] is a duplicated child name'),
+UNKNOWN_SIDSTYPE:    (CGM.CHECK_FAIL,'Unknown SIDS type [%s]'),
+INVALID_SIDSTYPE_P:  (CGM.CHECK_FAIL,'SIDS type [%s] not allowed as child of [%s]'),
+INVALID_SIDSTYPE:    (CGM.CHECK_FAIL,'SIDS type [%s] not allowed for this node'),
+INVALID_DATATYPE:    (CGM.CHECK_FAIL,'DataType [%s] not allowed for this node'),
+FORBIDDEN_CHILD:     (CGM.CHECK_FAIL,'Node [%s] of type [%s] is not allowed as child'),
+SINGLE_CHILD:        (CGM.CHECK_FAIL,'Node [%s] of type [%s] is allowed only once as child'),
+MANDATORY_CHILD:     (CGM.CHECK_FAIL,'Node [%s] of type [%s] is mandatory'),
+NODE_EMPTYLIST:      (CGM.CHECK_FAIL,'PANIC: Node is empty list or None (child of [%s])'),
+NODE_NOTALIST:       (CGM.CHECK_FAIL,'PANIC: Node is not a list of 4 objects (child of [%s])'),
+NODE_NAMENOTSTRING:  (CGM.CHECK_FAIL,'PANIC: Node name is not a string (child of [%s])'),
+NODE_CHILDRENNOTLIST:(CGM.CHECK_FAIL,'PANIC: Node children is not a list (child of [%s])'),
+NODE_BADDATA:        (CGM.CHECK_FAIL,'PANIC: Node data is not numpy.ndarray or None (child of [%s])'),
 }
 
 class GenericContext(dict):
@@ -73,20 +72,15 @@ class GenericParser(object):
     try:
       CGU.checkNode(node,dienow=True)
     except CGE.CE.cgnsNameError(1):
-      stt=CGM.CHECK_FAIL
-      self.log.push(path,CGM.CHECK_FAIL,NODE_EMPTYLIST)
+      stt=self.log.push(path,NODE_EMPTYLIST)
     except CGE.CE.cgnsNameError(2):
-      stt=CGM.CHECK_FAIL
-      self.log.push(path,CGM.CHECK_FAIL,NODE_NOTALIST)
+      stt=self.log.push(path,NODE_NOTALIST)
     except CGE.CE.cgnsNameError(3):
-      stt=CGM.CHECK_FAIL
-      self.log.push(path,CGM.CHECK_FAIL,NODE_NAMENOTASTRING)
+      stt=self.log.push(path,NODE_NAMENOTASTRING)
     except CGE.CE.cgnsNameError(4):
-      stt=CGM.CHECK_FAIL
-      self.log.push(path,CGM.CHECK_FAIL,NODE_CHILDRENNOTLIST)
+      stt=self.log.push(path,NODE_CHILDRENNOTLIST)
     except CGE.CE.cgnsNameError(5):
-      stt=CGM.CHECK_FAIL
-      self.log.push(path,CGM.CHECK_FAIL,NODE_BADDATA)
+      stt=self.log.push(path,NODE_BADDATA)
     return stt
   # --------------------------------------------------------------------
   def checkLeaf(self,T,path,node):
@@ -106,25 +100,25 @@ class GenericParser(object):
   def checkSingleNode(self,T,path,node,parent):
     stt=CGM.CHECK_GOOD
     if (not CGU.checkNodeName(node)):
-      stt=self.log.push(path,CGM.CHECK_FAIL,INVALID_NAME,node[0])
+      stt=self.log.push(path,INVALID_NAME,node[0])
     lchildren=CGU.childNames(parent)
     if (lchildren):
       lchildren.remove(node[0])
       if (node[0] in lchildren):
-        stt=self.log.push(path,CGM.CHECK_FAIL,DUPLICATED_NAME,node[0])
+        stt=self.log.push(path,DUPLICATED_NAME,node[0])
     tlist=CGU.getNodeAllowedChildrenTypes(parent,node)
     if (CGU.getTypeAsGrammarToken(node[3]) not in tlist):
       if (parent is not None):
-        stt=self.log.push(path,CGM.CHECK_FAIL,INVALID_SIDSTYPE_P,
+        stt=self.log.push(path,INVALID_SIDSTYPE_P,
                           node[3],parent[3])
       else:
-        stt=self.log.push(path,CGM.CHECK_FAIL,INVALID_SIDSTYPE,node[3])
+        stt=self.log.push(path,INVALID_SIDSTYPE,node[3])
     dlist=CGU.getNodeAllowedDataTypes(node)
     dt=CGU.getValueDataType(node)
     if (dt not in dlist):
-      stt=self.log.push(path,CGM.CHECK_FAIL,INVALID_DATATYPE,dt)
+      stt=self.log.push(path,INVALID_DATATYPE,dt)
     if (node[3] not in CGT.types.keys()):
-      stt=self.log.push(path,CGM.CHECK_FAIL,UNKNOWN_SIDSTYPE,node[3])
+      stt=self.log.push(path,UNKNOWN_SIDSTYPE,node[3])
     else:
       stt=self.checkCardinalityOfChildren(T,path,node,parent)
     return stt
@@ -140,7 +134,7 @@ class GenericParser(object):
       node=CGU.getNodeByPath(T,path)
       status2=CGM.CHECK_GOOD
       if (node is None):
-        status2=self.log.push(path,CGM.CHECK_FAIL,INVALID_PATH,path)
+        status2=self.log.push(path,INVALID_PATH,path)
       if (status2==CGM.CHECK_GOOD):
         status2=self.checkLeafStructure(T,path,node)
       if (status2==CGM.CHECK_GOOD):
@@ -154,19 +148,16 @@ class GenericParser(object):
       for child in node[2]:
         card=CGT.types[node[3]].cardinality(child[3])
         if (card==CGT.C_00):
-          stt=CGM.CHECK_FAIL
           cpath='%s/%s'%(path,child[0])
-          self.log.push(path,stt,FORBIDDEN_CHILD,cpath,child[3])
+          stt=self.log.push(path,FORBIDDEN_CHILD,cpath,child[3])
         if (card in [CGT.C_11,CGT.C_01]):
           if ([c[3] for c in node[2]].count(child[3])>1):
-            stt=CGM.CHECK_FAIL
-            self.log.push(path,stt,SINGLE_CHILD,child[0],child[3])
+            stt=self.log.push(path,SINGLE_CHILD,child[0],child[3])
       for tchild in CGT.types[node[3]].children:
         card=CGT.types[node[3]].cardinality(tchild[0])
         if (card in [CGT.C_11,CGT.C_1N]):
           if ([c[3] for c in node[2]].count(tchild[0])<1):
-            stt=CGM.CHECK_FAIL
-            self.log.push(path,stt,MANDATORY_CHILD,tchild[1],tchild[0])
+            stt=self.log.push(path,MANDATORY_CHILD,tchild[1],tchild[0])
       return stt
   # --------------------------------------------------------------------
   def CGNSLibraryVersion_t(self,pth,node,parent,tree,log):
@@ -174,11 +165,9 @@ class GenericParser(object):
     try:
       version=int(node[1][0]*1000)
       if (version < 2400):
-        stt=CGM.CHECK_FAIL
-        self.log.push(pth,stt,OLD_VERSION,version)
+        stt=self.log.push(pth,OLD_VERSION,version)
     except Exception:
-      stt=CGM.CHECK_FAIL
-      self.log.push(pth,stt,BAD_VERSION)
+      stt=self.log.push(pth,BAD_VERSION)
     return stt
       
 # --- last line

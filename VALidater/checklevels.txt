@@ -1,0 +1,101 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
+Diagnostics
++++++++++++
+
+There are two levels of diagnostics, the `Error` and the `Warning`.
+The check process continues even if it has and `Error`.
+A diagnostics has a key, `S003` for example, which is composed of a 
+single letter and a unique number for each letter. The `G` series
+stand for `generic`, the `S` for `SIDS` and `U` for `User`.
+
+The checking process always starts with `G` checks, then `S` checks,
+then `U` checks if it has been requested.
+
+Generic diagnostics
+~~~~~~~~~~~~~~~~~~~
+
+The first checks are the generic checks. **VAL** performs very low level
+controls on the node structure, node name and `CGNSLibraryVersion`.
+This latter is an exception, it is the only `SIDS`-related data to be
+verified. As a matter of fact, `CGNSLibraryVersion` is more an implementation
+node than a `SIDS` node.
+
+SIDS diagnostics
+~~~~~~~~~~~~~~~~
+
+The core checks are `SIDS` checks. All the **CGNS/SIDS** document requirements
+are inspected, default values are reported.
+
+User defined diagnostics
+~~~~~~~~~~~~~~~~~~~~~~~~
+A user defined grammar is identified by a `key`.
+
+Diagnostics list
+~~~~~~~~~~~~~~~~
+The following table gives existing diagnostics including the `elsA` user
+defined set of checks::
+
+  [G001:E] CGNSLibraryVersion [%s] is too old for current check level
+  [G002:E] CGNSLibraryVersion is incorrect
+  [G003:E] Name [%s] is not valid
+  [G004:E] Name [%s] is a duplicated child name
+  [G005:E] PANIC: Cannot find node with path [%s]
+  [G006:E] PANIC: Node data is not numpy.ndarray or None (child of [%s])
+  [G007:E] PANIC: Node children is not a list (child of [%s])
+  [G008:E] PANIC: Node name is not a string (child of [%s])
+  [G009:E] PANIC: Node is not a list of 4 objects (child of [%s])
+  [G010:E] PANIC: Node is empty list or None (child of [%s])
+  [S001:E] Unknown SIDS type [%s]
+  [S002:E] SIDS type [%s] not allowed as child of [%s]
+  [S003:E] SIDS type [%s] not allowed for this node
+  [S004:E] DataType [%s] not allowed for this node
+  [S005:E] Node [%s] of type [%s] is not allowed as child
+  [S006:E] Node [%s] of type [%s] is allowed only once as child
+  [S007:E] Node [%s] of type [%s] is mandatory
+  [S101:E] Unknown ZoneType value
+  [S102:E] Unknown SimulationType value
+  [S103:E] Unknown GridLocation value
+  [S104:E] Unknown GridConnectivityType value
+  [S105:E] Unknown DataClass value
+  [S106:E] Unknown BCDataType value
+  [S107:E] Unknown RigidMotionType value
+  [S108:E] Unknown BCType value
+  [S109:E] Unknown ElementType value
+  [S110:E] Unknown MassUnit value
+  [S111:E] Unknown TimeUnit value
+  [S112:E] Unknown LengthUnit value
+  [S113:E] Unknown TemperatureUnit value
+  [S114:E] Unknown AngleUnit value
+  [S115:E] Unknown ElectricCurrentUnit value
+  [S116:E] Unknown SubstanceAmountUnit value
+  [S117:E] Unknown LuminousIntensityUnit value
+  [S151:W] Default GridLocation is set to Vertex
+  [S152:W] Default GridConnectivityType is set to Overset
+  [S191:E] Bad node value shape
+  [S201:E] Inconsistent PhysicalDimension/CellDimension
+  [S202:E] Bad value for CellDimension
+  [S203:E] Bad value for PhysicalDimension
+  [S204:E] Bad Transform values
+  [S205:E] Bad ElementSizeBoundary value
+  [S301:E] Reference to unknown family [%s]
+  [S302:E] Reference to unknown additional family [%s]
+  [U101:W] No Zone in this Base
+  [U102:W] No GridCoordinates in this Zone
+  [U103:W] No ReferenceState found at Base level
+  [U104:W] No ReferenceState found at Zone level
+  [U105:E] At least one structured Zone is required in the Base
+  [U106:E] Transform is not right-handed (direct)
+  [U107:W] No FlowSolution# found for output definition
+  [U108:W] No FlowSolution#Init found for fields initialisation
+  [U109:E] Cannot handle such GridLocation [%s]
+  [U110:E] Cannot handle such ElementType [%s]
+
+.. note::
+
+   The list has been generated with the command `CGNS.VAL -lu elsA`.
+
+.. -------------------------------------------------------------------------

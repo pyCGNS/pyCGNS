@@ -6,10 +6,58 @@
 CGNS.VAL
 ========
 
-.. warning::
-   VAL is not up-to-date and there is no planned maintenance on it.
+The **VALidator** tool is a CGNS/Python tree checker. It parses a CGNS/Python 
+tree and applies three kind of verifications. The first is the structural
+check, the second is the CGNS/SIDS check and the last is the user defined 
+check.
+
+The **CGNS.VAL** tool has a command line interface, it can be run in a user's
+shell window and returns a set of diagnostics on the standard output.
+The **CGNS.VAL** tool has an embedded check tool which actually makes calls
+to the *VALidator* API. Then any user can use this *VALidator* API to make
+his own embedded check tool.
+
+Quick start
+-----------
+
+The **CGNS.VAL** tool takes a CGNS/HDF5 file as argument and checks its
+contents, with respect to tree structure and CGNS/SIDS recommandations.
+The simple command line is::
+
+ CGNS.VAL naca012.hdf
+
+Which loads the file, runs the checks and returns a list of diagnostics::
+
+  ---------------------------------------------------------------------------
+  /Base#1/domain21/blockName
+  [S004:E] DataType [MT] not allowed for this node
+  [S007:E] Node [ElementRange] of type [IndexRange_t] is mandatory
+  [S191:E] Bad node value shape
+  [U110:E] Cannot handle such ElementType [None]
+
+  ---------------------------------------------------------------------------
+  /Base#1/domain24
+  [U104:W] No ReferenceState found at Zone level
+
+  ---------------------------------------------------------------------------
+
+  ### CGNS/Python tree *NOT* Compliant
+
+Each diagnostic entry starts with the node path followed by the list of
+warnings and errors detected at this node level.
+
+Reference
+---------
+
+.. toctree::
+
+   commandline
+   checklevels
+   extending
 
 -----
+
+.. include:: ../doc/Intro/glossary.txt
 
 .. _val_index:
 

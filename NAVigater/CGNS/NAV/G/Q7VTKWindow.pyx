@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Thu Oct  4 14:07:09 2012
+# Created: Thu Oct 18 14:42:38 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -336,6 +336,8 @@ class Ui_Q7VTKWindow(object):
         self.bAddView.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Add current view to view list", None, QtGui.QApplication.UnicodeUTF8))
         self.bSaveView.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Write view list into a file", None, QtGui.QApplication.UnicodeUTF8))
         self.bRemoveView.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Remove current view from view list", None, QtGui.QApplication.UnicodeUTF8))
+        self.bColorMapMin.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Set color for palette high bound", None, QtGui.QApplication.UnicodeUTF8))
+        self.bColorMapMax.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Set color for palette low bound", None, QtGui.QApplication.UnicodeUTF8))
         self.bSaveVTK.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Save VTK data into a file", None, QtGui.QApplication.UnicodeUTF8))
         self.bScreenShot.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Save view snapshot into a file", None, QtGui.QApplication.UnicodeUTF8))
         self.bX.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Show Y/Z plane", None, QtGui.QApplication.UnicodeUTF8))
@@ -345,7 +347,9 @@ class Ui_Q7VTKWindow(object):
         self.bZ.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Show X/Y plane", None, QtGui.QApplication.UnicodeUTF8))
         self.bZ.setText(QtGui.QApplication.translate("Q7VTKWindow", "Z", None, QtGui.QApplication.UnicodeUTF8))
         self.cMirror.setText(QtGui.QApplication.translate("Q7VTKWindow", "Mirror", None, QtGui.QApplication.UnicodeUTF8))
-        self.selectable.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Move legend", None, QtGui.QApplication.UnicodeUTF8))
+        self.bZoom.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Activate Mouse Zoom mode", None, QtGui.QApplication.UnicodeUTF8))
+        self.selectable.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Acticate Move Legend Mode", None, QtGui.QApplication.UnicodeUTF8))
+        self.cShowValue.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Activate Show Value Mode", None, QtGui.QApplication.UnicodeUTF8))
         self.bSuffleColors.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Change colors to random", None, QtGui.QApplication.UnicodeUTF8))
         self.bBlackColor.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Switch black/white colors", None, QtGui.QApplication.UnicodeUTF8))
         self.bResetCamera.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Zoom and center on selected", None, QtGui.QApplication.UnicodeUTF8))

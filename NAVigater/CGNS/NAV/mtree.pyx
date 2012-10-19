@@ -727,7 +727,6 @@ class Q7TreeModel(QAbstractItemModel):
         self._slist=OCTXT._SortedTypeList
         self._count=0
         self._movedPaths={}
-        self._fingerprint.version=CGU.getVersion(self._fingerprint.tree)
         self.parseAndUpdate(self._rootitem,
                             self._fingerprint.tree,
                             QModelIndex(),0)

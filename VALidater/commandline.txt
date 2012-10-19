@@ -1,0 +1,47 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
+Command line
+++++++++++++
+
+The **CGNS.VAL** tool uses the *VALidator* API. The **CGNS.NAV** tool uses
+this API as well, and in this case the diagnostics output are displayed into
+a graphical window in a hierarchical form.
+
+The **CGNS.VAL** command line usage is the following::
+
+  CGNS.VAL [options] file.hdf
+  
+  -p <path>   : Start check at this node
+  -f          : Flat mode, do not recurse on tree
+  -u <key>    : Check user requirements identified by <key>
+  -k          : Gives list of known user requirements keys
+  -l          : List all known diagnostics
+  -r <idlist> : remove the list of ids ( -r U012:U023:U001 )
+  -m          : Output by message id instead of path
+  -h          : help
+  -v          : verbose (trace)
+
+The usual command line such as::
+
+  CGNS.VAL -r U103:U104 -v -u elsA naca012.hdf
+
+runs a check on the **elsA** user defined grammar, excluding the
+diagnostics `U103` and `U104`. 
+
+You want to known the complete diagnostics list, you run::
+  
+  CGNS.VAL -lu elsA
+
+and you get the messages for the `U103` and `U104` diagnostics::
+
+  [U103:W] No ReferenceState found at Base level
+  [U104:W] No ReferenceState found at Zone level
+
+you have ignored in the previous command.
+
+The -k option returns the list of known user grammars.
+
+.. -------------------------------------------------------------------------

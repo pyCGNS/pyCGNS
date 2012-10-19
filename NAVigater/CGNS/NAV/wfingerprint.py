@@ -299,11 +299,13 @@ class Q7fingerPrint:
         self.lazy={}
         for p in paths: self.lazy['/CGNSTree'+p[0]]=p[1]
         Q7fingerPrint.__extension.append(self)
+        self.updateFileStats(filedir+'/'+filename)
     def updateFileStats(self,fname):
         (filedir,filename)=(os.path.normpath(os.path.dirname(fname)),
                             os.path.basename(fname))
         self.filename=filename
         self.filedir=filedir
+        self.version=CGU.getVersion(self.tree)
     def isFile(self):
         return self.isfile
     def isLink(self,path):
@@ -333,7 +335,7 @@ class Q7fingerPrint:
         d['eOwner']=e[0]
         d['eGroup']=g[0]
         d['cNoFollow']=False
-        d['cHasLinks']=False
+        d['cHasLinks']=(len(self.links)!=0)
         d['cSameFS']=False
         d['cBadLinks']=False
         d['cModeProp']=False
@@ -360,8 +362,8 @@ class Q7fingerPrint:
         d['cConverted']=self.converted
         d['cADF']=self.converted
         d['cHDF5']=not self.converted
-        d['cREAD']=self.converted
-        d['cMODIFY']=False
+        d['cREAD']=not self.isSaveable()
+        d['cMODIFY']=self.isSaveable()
         d['cNODATA']=False
         d['cHasInt64']=False
         return d

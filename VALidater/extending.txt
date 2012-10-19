@@ -1,0 +1,119 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
+Extending with user defined rules
++++++++++++++++++++++++++++++++++
+
+The extension requires a top file with the name `CGNS_VAL_USER_<key>.py`
+with the `CGNS_VAL_USER_Checks` declaration. This file has to be importable,
+which means the file should be in one of the `PYTHONPATH` directories.
+
+Writing an extension requires good Python skills. The user has to define
+a new class, with `CGNS.VAL.grammars.SIDS.SIDSbase` as one of its base
+class, a set of per-node check methods and a set of associated diagnostics.
+
+Diagnostics
+~~~~~~~~~~~
+A diagnostic is composed of a key, a level and a message::
+
+  ('U101',CGM.CHECK_WARN,'No Zone in this Base')
+
+The `CGM.CHECK_WARN` enumerate comes from the `CGNS.VAL.parse.messages`
+module, in that example impported as `CGM`.
+
+All diagnostics are set into the class as a dictionnary, using the method
+`addMessages` of the `log` object of the class. This is performed in the
+`__init__` method of the user class::
+
+  def __init__(self,log):
+    CGS.SIDSbase.__init__(self,log)
+    self.log.addMessages(USER_MESSAGES)
+
+Do not forget the base class initialisation. The `log` argument is managed
+by the **CGNS.VAL** internals, you should not take care about it.
+  
+Per-node check methods
+~~~~~~~~~~~~~~~~~~~~~~
+
+The **CGNS.VAL** internals are in charge of parsing the tree. Each time a node
+is entered, the corresponding check function is called. The functions args
+are always the same: the `path` of the node in which you are entering,
+the `node` itself as a **CGNS/Python** list, the `parent` node as 
+a **CGNS/Python** list, the complete **CGNS/Python** `tree` and 
+the `log` object.
+
+The function should have the name of the entered node type. For example,
+the `Zone_t` is called each time the parser enters into a `Zone_t` node::
+
+  def Zone_t(self,pth,node,parent,tree,log):
+    rs=self.sids.Zone_t(self,pth,node,parent,tree,log)
+    if (CGK.GridCoordinates_s not in CGU.childNames(node)):
+      rs=log.push(pth,NOGRIDZONE)
+    if (not CGU.hasChildNodeOfType(node,CGK.ReferenceState_ts)):
+      rs=log.push(pth,NOZREFSTATE)
+    return rs
+  
+The first step is to call the `Zone_t` for the `SIDS` checker. This is
+strongly recommanded, but not mandatory... The `rs` variable contains the
+current status for this node: that can be `CHECK_GOOD`,`CHECK_FAIL` or
+`CHECK_WARN`. This status should be the return of your check function.
+
+We check values of the node and in case of problem, we `push` the
+diagnostic into the log. The `path` of the node is pushed as well.
+
+Now each check is a test on several values of the current node, the use
+of `CGNS.PAT.cgnsutils`, `CGNS.PAT.cgnstypes` and `CGNS.PAT.cgnskeywords`
+would help.
+
+You should not parse the tree by yourself, unless you have to check consistency
+with other node values. The example below shows a control on the mandatory
+`ElementRange_s` node of an `Elements_t` node (The `context` object is
+detailled in the next section).::
+
+  def Elements_t(self,pth,node,parent,tree,log):
+    rs=CGM.CHECK_OK
+    if (CGU.getShape(node)!=(2,)):
+      rs=log.push(pth,BADVALUESHAPE)
+    else:
+      et=node[1][0]
+      eb=node[1][1]
+      self.context[CGK.ElementType_s]=et
+      self.context[CGK.ElementSizeBoundary_s]=eb
+      if (et not in range(0,len(CGK.ElementType)+1)):
+        rs=log.push(pth,UKELEMTYPE)
+      if (eb==0): bad_eb=False
+      elif (eb<0): bad_eb=True
+      else:
+        bad_eb=True
+        ecnode=CGU.getNodeByPath(tree,pth+'/'+CGK.ElementRange_s)
+        if (    (ecnode is not None)
+            and (CGU.getShape(node)==(2,))
+            and (CGU.getValueDataType(ecnode)==CGK.I4)
+            and (ecnode[1][1]>eb)): bad_eb=False
+      if (bad_eb):
+        rs=log.push(pth,BADELEMSZBND)
+    return rs
+
+
+Context
+~~~~~~~
+The parser has a `context` for global and local data. It is a dictionnary
+with `SIDS` names as keys, the values are overwritten during the parse but
+a value is always correct for a given sub-tree. For example to set
+the base dimension attributes::
+ 
+      cd=node[1][0]
+      pd=node[1][1]
+      self.context[CGK.CellDimension_s]=cd
+      self.context[CGK.PhysicalDimension_s]=pd
+ 
+And to get them later on in another node function::
+
+      if (not CGS.transformIsDirect(tr,self.context[CGK.CellDimension_s])):
+        rs=log.push(pth,NOTRHTRANSFORM)
+
+In this test, `CGS` stands for `CGNS.APP.sids.utils`.
+
+.. -------------------------------------------------------------------------

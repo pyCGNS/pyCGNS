@@ -10,7 +10,8 @@ A Python package for CGNS
 
    - `CGNS.MAP` is now a wrapper 
      to `CHLone <http://chlone.sourceforge.net/>`_ python module
-   - `CGNS.WRA` re-coding using cython
+   - `CGNS.WRA` re-coding using *Cython*
+   - `CGNS.WRA` usable again
    - completely new `CGNS.NAV` using *Qt*, *VTK* and *Cython*
    - YouTube demos `here <http://www.youtube.com/user/pyCGNS?feature=watch>`_
 
@@ -27,27 +28,35 @@ and a *MLL-like* set of functions that uses the
 
 .. raw:: html
 
-  Click below for a quick access to modules (VAL, DAT and APP are not available
+  Click below for a quick access to modules (DAT and APP are not available
   in this current version).<br>
   
   <div>
-  <table width="100%">
+  <table width="100%" border=2 bordercolor=white>
   <tr align="center" valign="middle">
+
   <td align="center" valign="middle"><a href="MAP/readme.html">
       <img src="images/MAP-logo.jpg" height="48" alt="MAP"/></a></td>
+
   <td align="center" valign="middle"><a href="PAT/readme.html">
       <img src="images/PAT-logo.jpg" height="48" alt="PAT"/></a></td>
+
   <td align="center" valign="middle"><a href="NAV/readme.html">
       <img src="images/NAV-logo.jpg" height="48" alt="NAV"/></a></td>
+
+  <td align="center" valign="middle"><a href="VAL/readme.html">
+    <img src="images/VAL-logo.jpg" height="48" alt="VAL"/></a></td>
+
   <td align="center" valign="middle"><a href="WRA/readme.html">
       <img src="images/WRA-logo.jpg" height="48" alt="WRA"/></a></td>
-  <td align="center" valign="middle">
-    <img src="images/VAL-logo.jpg" height="48" alt="VAL"/></td>
-  <td align="center" valign="middle">
-    <img src="images/DAT-logo.jpg" height="48" alt="DAT"/></td>
-  <td align="center" valign="middle">
-    <img src="images/APP-logo.jpg" height="48" alt="APP"/></td>
-  </tr></table><br></div>
+
+  <td align="center" valign="middle"><a href="WRA/readme.html">
+    <img src="images/DAT-logo.jpg" height="48" alt="DAT"/></a></td>
+
+  <td align="center" valign="middle"><a href="WRA/readme.html">
+    <img src="images/APP-logo.jpg" height="48" alt="APP"/></a></td>
+ 
+ </tr></table></div>
 
 The package uses :term:`numpy`, :term:`cython` and :term:`HDF5`
 you should install before pyCGNS. 
@@ -68,7 +77,7 @@ instead of *CGNS/MLL* to map its :term:`CGNS/Python` trees to *HDF5*.
   and `bug tracking <http://sourceforge.net/apps/trac/pycgns/report/6>`_.
 
 The listed chapters are the introduction chapters, each MAP, PAT, WRA, 
-NAV module has its own documentation which doesn't appear below.
+NAV, VAL module has its own documentation which doesn't appear below.
 Click on the modules icons above to get their documentation.
 
 .. toctree::
@@ -91,5 +100,6 @@ PDF Docs
   * `PAT manual <_pdf/pyCGNS_PAT.pdf>`_
   * `NAV manual <_pdf/pyCGNS_NAV.pdf>`_
   * `WRA manual <_pdf/pyCGNS_WRA.pdf>`_
+  * `VAL manual <_pdf/pyCGNS_VAL.pdf>`_
 
 .. -------------------------------------------------------------------------

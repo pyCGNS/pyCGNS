@@ -14,7 +14,7 @@ CHECK_BAD=CHECK_ERROR=CHECK_FAIL=3
 CHECK_USER=4
 
 def sortDiagByKey(d1,d2):
-  (k1,k2)=(d1[2],d2[2])
+  (k1,k2)=(d1.key,d2.key)
   return k1>k2
 
 def getWorst(st1,st2):
@@ -23,10 +23,41 @@ def getWorst(st1,st2):
     if (CHECK_WARN in [st1,st2]): return CHECK_WARN
     if (CHECK_GOOD in [st1,st2]): return CHECK_GOOD
     return CHECK_NONE
+
+class DiagnosticMessagePattern(object):
+  __levelstr={CHECK_FAIL:'E',CHECK_USER:'U',
+              CHECK_WARN:'W',CHECK_GOOD:' ',CHECK_NONE:'?'}
+  def __init__(self,mkey,mlevel,mstring):
+    self._key=mkey
+    self._lvl=mlevel
+    self._str=mstring
+  @property
+  def key(self):
+    return self._key
+  @property
+  def level(self):
+    return self._lvl
+  @property
+  def message(self):
+    return self._str
+  def levelAsStr(self):
+    return self.__levelstr[self._lvl]
+  def __str__(self):
+    return '[%s:%s] %s'%(self._key,self.levelAsStr(),self._str)
     
+class DiagnosticMessageInstance(DiagnosticMessagePattern):
+  def __init__(self,pattern):
+    super(DiagnosticMessageInstance,self).__init__(pattern.key,pattern.level,pattern.message)
+  def substitute(self,*tp):
+    msg=self._str
+    try:
+      if (tp): msg=msg%tp
+    except TypeError:
+      pass
+    self._str=msg
+    return self
+
 class DiagnosticLog(dict):
-    __diagstr={CHECK_FAIL:'E',CHECK_USER:'U',
-               CHECK_WARN:'W',CHECK_GOOD:' ',CHECK_NONE:'?'}
     __messages={}
     def __init__(self):
         dict.__init__(self)
@@ -36,19 +67,18 @@ class DiagnosticLog(dict):
     def noContextMessage(self,m):
         if ('%' in DiagnosticLog.__messages[m]): return None
         return DiagnosticLog.__messages[m]
+    def addMessage(self,k,m):
+        DiagnosticLog.__messages[k]=DiagnosticMessageInstance(*m)
     def addMessages(self,d):
         for e in d:
-            DiagnosticLog.__messages[e]=d[e]
-    def push(self,path,level,messagekey,*tp):
+            DiagnosticLog.__messages[e]=DiagnosticMessagePattern(e,d[e][0],d[e][1])
+    def push(self,path,messagekey,*tp):
+        if (path is None): return
         if (path not in self): self[path]=[]
         if (messagekey not in DiagnosticLog.__messages): return
-        msg=DiagnosticLog.__messages[messagekey]
-        try:
-            if (tp): msg=msg%tp
-        except TypeError:
-            pass
-        self[path].append((level,msg,messagekey))
-        return level
+        entry=DiagnosticMessageInstance(DiagnosticLog.__messages[messagekey])
+        self[path].append(entry.substitute(*tp))
+        return DiagnosticLog.__messages[messagekey].level
     def __len__(self):
         return len(self.keys())
     def shift(self,path,shiftstring=' '):
@@ -56,24 +86,21 @@ class DiagnosticLog(dict):
         return len(n)*shiftstring
     def getWorst(self,st1,st2):
         return getWorst(st1,st2)
-    def asStr(self,st):
-        if (st in self.__diagstr): return self.__diagstr[st]
-        return self.__diagstr[CHECK_NONE]
     def status(self,entry):
-        return entry[0]
+        return entry.level
     def hasOnlyKey(self,path,keylist):
         k1=set(keylist)
-        k2=set([e[2] for e in self[path]])
+        k2=set([e.key for e in self[path]])
         return k2.issubset(k1)
     def key(self,entry):
-        return entry[2]
+        return entry.key
     def message(self,entry,path=None):
         shft=''
         if (path is not None): shft=self.shift(path)
-        s='%s[%s:%s] %s'%(shft,entry[2],self.asStr(entry[0]),entry[1])
+        s='%s[%s:%s] %s'%(shft,entry.key,entry.levelAsStr(),entry.message)
         return s
     def getWorstDiag(self,path):
-        s=set([e[0] for e in self[path]])
+        s=set([e.level for e in self[path]])
         r=reduce(getWorst,s)
         return r
     def diagForPath(self,path):
@@ -83,7 +110,7 @@ class DiagnosticLog(dict):
         r=set()
         for path in self:
             for entry in self[path]:
-                r.add(entry[2])
+                r.add(entry.message)
         mlist=list(r)
         mlist.sort()
         return mlist
@@ -100,5 +127,5 @@ class DiagnosticLog(dict):
         plist.sort()
         for path in plist:
             for diag in self[path]:
-                if (diag[2]==msg): yield (diag,path)
+                if (diag.message==msg): yield (diag,path)
 # --- last line

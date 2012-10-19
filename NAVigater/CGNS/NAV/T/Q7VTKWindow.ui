@@ -156,6 +156,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Set color for palette high bound</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -178,6 +181,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Set color for palette low bound</string>
        </property>
        <property name="text">
         <string/>
@@ -401,6 +407,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Activate Mouse Zoom mode</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -431,7 +440,7 @@
         <cursorShape>OpenHandCursor</cursorShape>
        </property>
        <property name="toolTip">
-        <string>Move legend</string>
+        <string>Acticate Move Legend Mode</string>
        </property>
        <property name="text">
         <string/>
@@ -458,6 +467,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Activate Show Value Mode</string>
        </property>
        <property name="text">
         <string/>

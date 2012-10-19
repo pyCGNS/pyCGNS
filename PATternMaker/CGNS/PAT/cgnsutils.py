@@ -438,7 +438,7 @@ def isRootNode(node,legacy=False,version=False,dienow=False):
            raise CE.cgnsNodeError(99)
            return False
          versionfound=1
-         #if (version and n[1] is not None): return n[1][0]
+         if (version and n[1] is not None): return n[1][0]
      elif ( n[3] != CK.CGNSBase_ts ):
        if (dienow): raise CE.cgnsNodeError(91)
        return False

@@ -103,6 +103,8 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
             self.setLabel(self.eDestPath,lk[2])
         else:
             self.tFiles.setDisabled(True)
+        self.tPython.setDisabled(True)
+        self.tChecks.setDisabled(True)
     def resizeTable(self):
         s=self.cRowColSize.currentText()
         (r,c)=s.split('x')

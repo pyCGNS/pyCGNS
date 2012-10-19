@@ -857,6 +857,10 @@ BCType_  = enumAsKeyDict(BCType_l)
  BCWallViscousHeatFlux,BCWallViscousIsothermal,
  FamilySpecified)=BCType_.keys()
 
+FamilyBC_l = BCType_l
+FamilyBC   = BCType
+FamilyBC_  = BCType_
+
 # CAUTION, index of values in the lists below cannot be used as enumerate,
 # the lists are subset of the global list and some index are missing.
 BCTypeSimple_l   =[Null_s,BCGeneral_s,BCDirichlet_s,BCNeumann_s,

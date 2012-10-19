@@ -35,7 +35,7 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         n='data=%s\n'%self._data
         filename=QFileDialog.getSaveFileName(self,
                                              "Save diagnostics",".","*.py")
-        if (filename==""): return
+        if (filename[0]==""): return
         f=open(str(filename[0]),'w+')
         f.write(n)
         f.close()
