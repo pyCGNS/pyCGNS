@@ -51,7 +51,7 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
         n+=']\n'
         filename=QFileDialog.getSaveFileName(self,
                                              "Save selection list",".","*.py")
-        if (filename==""): return
+        if (filename[0]==""): return
         f=open(str(filename[0]),'w+')
         f.write(n)
         f.close()

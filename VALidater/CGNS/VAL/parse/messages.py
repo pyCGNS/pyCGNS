@@ -110,7 +110,7 @@ class DiagnosticLog(dict):
         r=set()
         for path in self:
             for entry in self[path]:
-                r.add(entry.message)
+                r.add(entry.key)
         mlist=list(r)
         mlist.sort()
         return mlist

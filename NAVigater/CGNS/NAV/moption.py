@@ -99,7 +99,7 @@ class Q7OptionContext(object):
     _QueriesDefaultFile='defaultqueries.py'
     LinkSearchPathList=[]
     ProfileSearchPathList=[]
-    CGNSFileExtension=['.cgns','.cg']
+    CGNSFileExtension=['.cgns','.adf']
     HDFFileExtension=['.hdf','.hdf5']
     MaxLoadDataSize=1000
     MaxDisplayDataSize=5000

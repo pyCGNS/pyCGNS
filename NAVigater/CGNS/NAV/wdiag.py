@@ -2,8 +2,7 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
+#
 import sys
 import string
 from PySide.QtCore  import *
@@ -21,15 +20,14 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         self.bClose.clicked.connect(self.reject)
         self.bExpandAll.clicked.connect(self.expand)
         self.bCollapseAll.clicked.connect(self.collapse)
-        self.bPrevious.clicked.connect(self.nextfiltered)
-        self.bNext.clicked.connect(self.previousfiltered)
+        self.bPrevious.clicked.connect(self.previousfiltered)
+        self.bNext.clicked.connect(self.nextfiltered)
         self.cWarnings.clicked.connect(self.warnings)
         self.bSave.clicked.connect(self.diagnosticssave)
         QObject.connect(self.cFilter,
                         SIGNAL("currentIndexChanged(int)"),
                         self.filterChange)
         self._data=data
-        self._filterItems={}
         self.filterChange()
     def diagnosticssave(self):
         n='data=%s\n'%self._data
@@ -43,9 +41,8 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         if (not self.cWarnings.isChecked()): self.reset(False)
         else: self.reset(True)
     def previousfiltered(self):
-      if (self._currentItem==0): return
       iold=self._filterItems[self.cFilter.currentText()][self._currentItem]
-      self._currentItem-=1
+      if (self._currentItem!=0): self._currentItem-=1
       inew=self._filterItems[self.cFilter.currentText()][self._currentItem]
       iold.setSelected(False)
       inew.setSelected(True)
@@ -80,6 +77,9 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         plist=self._data.keys()
         plist.sort()
         plist.reverse()
+        keyset=set()
+        self.cFilter.clear()
+        self._filterItems={}
         for path in plist:
           state=self._data.getWorstDiag(path)
           if ((state==CGM.CHECK_WARN) and not warnings):
@@ -91,18 +91,20 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
             if (state==CGM.CHECK_WARN): it.setIcon(0,self.I_C_SWR)
             v.insertTopLevelItem(0, it)
             for (diag,pth) in self._data.diagnosticsByPath(path):
-              if ((diag[0]==CGM.CHECK_WARN) and not warnings):
+              if ((diag.level==CGM.CHECK_WARN) and not warnings):
                 pass
               else:
                 dit=QTreeWidgetItem(it,(self._data.message(diag),))
                 dit.setFont(0,OCTXT.FixedFontTable)
-                if (diag[0]==CGM.CHECK_FAIL): dit.setIcon(0,self.I_C_SFL)
-                if (diag[0]==CGM.CHECK_WARN): dit.setIcon(0,self.I_C_SWR)
-                if (diag[2] not in self._filterItems):
-                  self._filterItems[diag[2]]=[dit]
+                keyset.add(diag.key)
+                if (diag.level==CGM.CHECK_FAIL): dit.setIcon(0,self.I_C_SFL)
+                if (diag.level==CGM.CHECK_WARN): dit.setIcon(0,self.I_C_SWR)
+                if (diag.key not in self._filterItems):
+                  self._filterItems[diag.key]=[dit]
                 else:
-                  self._filterItems[diag[2]].append(dit)
-        self.cFilter.addItems(self._data.allMessageKeys())
+                  self._filterItems[diag.key].insert(0,dit)
+        for k in keyset:
+            self.cFilter.addItem(k)
     def reject(self):
         self.close()
          

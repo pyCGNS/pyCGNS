@@ -91,7 +91,7 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
    
 # -----------------------------------------------------------------
 class Q7FileIconProvider(QFileIconProvider):
-    slist=['hdf','HDF','cgns','CGNS']
+    slist=['hdf','HDF','cgns','CGNS','adf','ADF']
     def __init__(self):
         super(Q7FileIconProvider, self).__init__()
         self.dir=QIcon(QPixmap(":/images/icons/folder.gif"))
