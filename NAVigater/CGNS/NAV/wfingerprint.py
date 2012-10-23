@@ -202,7 +202,7 @@ class Q7fingerPrint:
                             os.path.basename(f))
         slp=OCTXT.LinkSearchPathList
         slp+=[filedir]
-        if (   (os.path.splitext(filename)[1]=='.cgns')
+        if (   (os.path.splitext(filename)[1] in OCTXT.CGNSFileExtension)
             and OCTXT._ConvertADFFiles):
             f=cls.fileconversion(filedir,filename,control)
             kw['converted']=True

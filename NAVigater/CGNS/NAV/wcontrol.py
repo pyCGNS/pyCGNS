@@ -18,6 +18,7 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wtree import Q7Tree
 from CGNS.NAV.mtree import Q7TreeModel
 from CGNS.NAV.wfingerprint import Q7fingerPrint, Q7Window
+from CGNS.NAV.wquery import Q7Query
 
 import CGNS.NAV.wmessages as MSG
 
@@ -69,6 +70,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.wOption=None
         self.selectForLink=None
         self.__newtreecount=1
+        Q7Query.loadUserQueries()
+        Q7Query.fillQueries()
     def clickedLine(self,*args):
         if (self.controlTable.lastButton==Qt.LeftButton):
             #Q7fingerPrint.raiseView(self.getIdxFromLine(args[0]))

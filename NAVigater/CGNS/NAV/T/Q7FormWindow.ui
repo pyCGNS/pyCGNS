@@ -533,8 +533,8 @@
              <widget class="QComboBox" name="cOperator">
               <property name="geometry">
                <rect>
-                <x>45</x>
-                <y>10</y>
+                <x>46</x>
+                <y>11</y>
                 <width>215</width>
                 <height>22</height>
                </rect>
@@ -785,7 +785,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tChecks">
+       <widget class="QWidget" name="tText">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
           <horstretch>0</horstretch>
@@ -793,138 +793,11 @@
          </sizepolicy>
         </property>
         <attribute name="title">
-         <string>Checks</string>
+         <string>Text</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_10">
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetFixedSize</enum>
-           </property>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_4">
-             <property name="sizeConstraint">
-              <enum>QLayout::SetNoConstraint</enum>
-             </property>
-             <item>
-              <widget class="QCheckBox" name="checkBox_2">
-               <property name="text">
-                <string>Compliant Name</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox_3">
-               <property name="text">
-                <string>Compliant Label</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox_4">
-               <property name="text">
-                <string>Compliant Data Type</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox_17">
-               <property name="text">
-                <string>Name with special chars</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox_19">
-               <property name="text">
-                <string>Filename is not basename</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox">
-               <property name="text">
-                <string>Reserved Name</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox_16">
-               <property name="text">
-                <string>Unconsistant dimensions</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox_13">
-               <property name="text">
-                <string>Name size &gt; 32</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="verticalSpacer">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="Line" name="line_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_5">
-             <property name="sizeConstraint">
-              <enum>QLayout::SetNoConstraint</enum>
-             </property>
-             <item>
-              <widget class="QCheckBox" name="checkBox_14">
-               <property name="text">
-                <string>Has broken link</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox_12">
-               <property name="text">
-                <string>Has absolute link path</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox_15">
-               <property name="text">
-                <string>Has relative non-local path</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="verticalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
            <item>
             <spacer name="horizontalSpacer_3">
              <property name="orientation">
@@ -938,7 +811,56 @@
              </property>
             </spacer>
            </item>
+           <item>
+            <widget class="QPushButton" name="bRevert">
+             <property name="minimumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../R/Res.qrc">
+               <normaloff>:/images/icons/subtree-sids-failed.gif</normaloff>:/images/icons/subtree-sids-failed.gif</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="bCommit">
+             <property name="minimumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../R/Res.qrc">
+               <normaloff>:/images/icons/save-log.gif</normaloff>:/images/icons/save-log.gif</iconset>
+             </property>
+            </widget>
+           </item>
           </layout>
+         </item>
+         <item>
+          <widget class="Q7PythonEditor" name="eText"/>
          </item>
         </layout>
        </widget>
@@ -1217,6 +1139,11 @@
   <customwidget>
    <class>Q7TableView</class>
    <extends>QTableView</extends>
+   <header>CGNS.NAV.mtable</header>
+  </customwidget>
+  <customwidget>
+   <class>Q7PythonEditor</class>
+   <extends>QPlainTextEdit</extends>
    <header>CGNS.NAV.mtable</header>
   </customwidget>
  </customwidgets>

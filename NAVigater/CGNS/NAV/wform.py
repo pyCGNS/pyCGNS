@@ -41,7 +41,7 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
                           node.sidsPath(),fgprint)
         self._node=node
         self._fgprint=fgprint
-        self._operatorlist=['','<','<=','=','>','>=']
+        self._operatorlist=['']
         for t in self._node.sidsTypeList():
             self.eType.addItem(t)
         self.bClose.clicked.connect(self.reject)
@@ -104,7 +104,9 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         else:
             self.tFiles.setDisabled(True)
         self.tPython.setDisabled(True)
-        self.tChecks.setDisabled(True)
+        if (self._node.sidsDataType()==CGK.C1):
+            txt=self._node.sidsValue().tostring()
+            self.eText.initText(txt)
     def resizeTable(self):
         s=self.cRowColSize.currentText()
         (r,c)=s.split('x')
@@ -141,6 +143,7 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         for et in self._operatorlist:
             self.cOperator.addItem(et)
         self.cOperator.setCurrentIndex(opidx)
+        self.cOperator.setDisabled(True)
     def setEnumerateValue(self,etype,evalue,etypeidx,evalueidx):
         self.cEnumType.clear()
         self.cEnumValue.clear()

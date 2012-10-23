@@ -16,35 +16,15 @@ from CGNS.pyCGNSconfig import version as __vid__
 import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
-Q_OR    ='or'
-Q_AND   ='and'
-Q_ORNOT ='or not'
-Q_ANDNOT='and not'
-
-Q_OPERATOR=(Q_OR,Q_AND,Q_ORNOT,Q_ANDNOT)
-
-Q_PARENT  ='Parent'
-Q_NODE    ='Node'
-Q_CHILDREN='Children'
-
-Q_TARGET=(Q_PARENT,Q_NODE,Q_CHILDREN)
-
-Q_CGNSTYPE='CGNS type'
-Q_VALUETYPE='Value type'
-Q_NAME='Name'
-Q_VALUE='Value'
-Q_SCRIPT='Python script'
-
-Q_ATTRIBUTE=(Q_CGNSTYPE,Q_VALUETYPE,Q_NAME,Q_VALUE,Q_SCRIPT)
-
+Q_VAR_NODE='NODE'
 Q_VAR_NAME='NAME'
 Q_VAR_VALUE='VALUE'
-Q_VAR_CGNSTYPE='CGNSTYPE'
+Q_VAR_CGNSTYPE='SIDSTYPE'
 Q_VAR_CHILDREN='CHILDREN'
 Q_VAR_TREE='TREE'
 Q_VAR_PATH='PATH'
 Q_VAR_RESULT='RESULT'
-Q_VAR_USER='USERPARAMETER'
+Q_VAR_USER='ARGS'
 Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
 
 Q_SCRIPT_PRE="""
@@ -388,26 +368,15 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     CGK.CGNSLibraryVersion_ts,
     ]
 
-    _UsualQueriesText=[
-    ['+Search by node name',[(Q_OR,  Q_NODE, Q_SCRIPT,
-                             'RESULT=(NAME==USERPARAMETER[0])')]],
-    ['+Search by wildcard nodename',[(Q_OR,  Q_NODE, Q_SCRIPT,
+    _UsualQueries=[
+    ['Search by node name','RESULT=(NAME==ARGS[0])'],
+    ['Search by wildcard nodename',
+"""import fnmatch
+RESULT=fnmatch.fnmatchcase(NAME,ARGS[0])
 """
-import fnmatch
-RESULT=fnmatch.fnmatchcase(NAME,USERPARAMETER[0])
-"""
-    )]],
-    ['+Search by node type',[(Q_OR,  Q_NODE, Q_SCRIPT,
-                             'RESULT=(CGNSTYPE==USERPARAMETER[0])')]],
-    ['+Families',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.Family_ts)]],
-    ['+Family names',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.FamilyName_ts)]],
-    ['+BCs',[(Q_OR,  Q_NODE, Q_CGNSTYPE, CGK.BC_ts)]],
-    ['+QUADs',[(Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
-              (Q_AND, Q_NODE, Q_SCRIPT,
-               'RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)')]],
-    ['+TRIs',[(Q_OR,  Q_NODE, Q_CGNSTYPE,  CGK.Elements_ts),
-             (Q_AND, Q_NODE, Q_SCRIPT,
-              'RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)')]],
+    ],
+    ['Search by node type','RESULT=(SIDSTYPE==ARGS[0])'],
+    ['QUADs','RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)'],
     ]
     # -----------------------------------------------------------------
     @classmethod

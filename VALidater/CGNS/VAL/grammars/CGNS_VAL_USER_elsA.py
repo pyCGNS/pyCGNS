@@ -6,7 +6,7 @@
 import CGNS.PAT.cgnsutils      as CGU
 import CGNS.PAT.cgnstypes      as CGT
 import CGNS.PAT.cgnskeywords   as CGK
-import CGNS.VAL.parse.messages` as CGM
+import CGNS.VAL.parse.messages as CGM
 import CGNS.VAL.grammars.SIDS  as CGS
 
 messagetable=(

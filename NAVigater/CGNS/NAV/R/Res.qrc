@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/undo-at-most.gif</file>
     <file>icons/save-S-M.gif</file>
     <file>icons/save-S-UM.gif</file>
     <file>icons/save-US-M.gif</file>

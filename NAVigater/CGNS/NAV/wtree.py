@@ -14,7 +14,6 @@ from CGNS.NAV.wvtk import Q7VTK, Q7VTKPlot
 from CGNS.NAV.wquery import Q7Query, Q7SelectionList
 from CGNS.NAV.wdiag import Q7CheckList
 from CGNS.NAV.wlink import Q7LinkList
-from CGNS.NAV.mquery import Q7QueryTableModel
 from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem, Q7TreeFilterProxy
 import CGNS.NAV.mtree as NMT
 from CGNS.NAV.wfingerprint import Q7Window,Q7fingerPrint
@@ -164,11 +163,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         QObject.connect(self.treeview,
                         SIGNAL("customContextMenuRequested(QPoint)"),
                         self.clickedNode)
-        self.querymodel=Q7QueryTableModel(self)
-        qlist=self.querymodel.queriesNamesList()
+        qlist=Q7Query.queriesNamesList()
         qlist.sort()
         for q in qlist: self.cQuery.addItem(q)
-        ix=self.cQuery.findText(self.querymodel.getCurrentQuery())
+        ix=-1#self.cQuery.findText()self.querymodel.getCurrentQuery())
         if (ix!=-1): self.cQuery.setCurrentIndex(ix)
         self.bSave.clicked.connect(self.savetree)
         self.bSaveAs.clicked.connect(self.savetreeas)
@@ -384,7 +382,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (q in ['',' ']):
             self.unmarkall()
             return
-        qry=self.querymodel
+        qry=Q7Query
         if (q in qry.queriesNamesList()):
             sl=qry.getQuery(q).run(self._fgprint.tree,v)
             self.model().markExtendToList(sl)
@@ -474,11 +472,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                """<b>Fail to parse or to interpret CGNSTree data</b>""",
                MSG.INFO)
     def queryview(self):
-        q=self.querymodel.getCurrentQuery()
-        self.querymodel.setCurrentQuery(' ')
         qry=Q7Query(self._control,self._fgprint,self)
         qry.show()
-        self.querymodel.setCurrentQuery(q)
     def closeAlone(self):
         pass
     def forceapply(self):

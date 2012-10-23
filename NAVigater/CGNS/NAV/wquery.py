@@ -12,10 +12,11 @@ from PySide.QtGui   import QFileDialog
 from PySide.QtGui   import *
 from CGNS.NAV.Q7QueryWindow import Ui_Q7QueryWindow
 from CGNS.NAV.Q7SelectionWindow import Ui_Q7SelectionWindow
-from CGNS.NAV.mquery import Q7QueryTableModel,Q7ComboBoxDelegate
 from CGNS.NAV.wfingerprint import Q7Window
 from CGNS.NAV.mtree import COLUMN_VALUE,COLUMN_DATATYPE,COLUMN_SIDS,COLUMN_NAME
 from CGNS.NAV.mtree import HIDEVALUE
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from CGNS.NAV.mquery import Q7QueryEntry
 
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
@@ -111,43 +112,81 @@ class Q7QueryTableItemDelegate(QStyledItemDelegate):
 
 # -----------------------------------------------------------------
 class Q7Query(Q7Window,Ui_Q7QueryWindow):
+    _allQueries={}
     def __init__(self,control,fgprint,treeview):
         Q7Window.__init__(self,Q7Window.VIEW_QUERY,control,'/',fgprint)
-        self.querytablemodel=treeview.querymodel
-        self.querytableview.setModel(self.querytablemodel)
-        self.querytableview.setEditTriggers(QAbstractItemView.CurrentChanged)
-        self.querytableview.viewport().installEventFilter(self)
-        self.querytablemodel.setDelegates(self.querytableview,self.editFrame)
         self.bClose.clicked.connect(self.reject)
+        self.bRun.clicked.connect(self.runcurrent)
         self.bSave.clicked.connect(self.queriessave)
         QObject.connect(self.cQueryName,
                         SIGNAL("currentIndexChanged(int)"),
                         self.changeCurrentQuery)
-        self.resizeAll()
-        self.showQuery(self.querytablemodel.getCurrentQuery())
+        self.setCurrentQuery()
+        self.showQuery()
     def updateTreeStatus(self):
         print 'query up'
     def queriessave(self):
-        self.querytablemodel.saveUserQueries()
-    def changeCurrentQuery(self,*args):
-        qtm=self.querytablemodel
-        qtm.setCurrentQuery(self.cQueryName.currentText())
-        qtm.refreshRows(self.querytableview)
-    def resizeAll(self):
-        for c in range(self.querytablemodel._cols):
-            self.querytableview.resizeColumnToContents(c)
+        Q7Query.saveUserQueries()
     def reject(self):
         self.close()
     def reset(self):
-        for qn in self.querytablemodel.queriesNamesList():
+        for qn in self.queriesNamesList():
             self.cQueryName.addItem(qn)
-    def queries(self):
-        return self.querytablemodel.queriesNamesList()
-    def showQuery(self,name):
-        if (name in self.querytablemodel.queriesNamesList()):
-            pass
+    def showQuery(self,name=None):
+        if (name is None):
+            name=self.getCurrentQuery().name
+        if (name in Q7Query.queriesNamesList()):
+          txt=self.getCurrentQuery().script
+          self.eText.initText(txt)
     def show(self):
         self.reset()
         super(Q7Query, self).show()
+    def runcurrent(self):
+        com=self.eText.toPlainText()
+        q=Q7QueryEntry('__tmp__query__')
+        q.setScript(com)
+        r=q.run(self._fgprint.tree,True)
+        self.eResult.initText(str(r))
+    @classmethod
+    def fillQueries(self):
+        allqueriestext=self._userQueriesText+OCTXT._UsualQueries
+        self._defaultQueriesNames=[n[0] for n in OCTXT._UsualQueries]
+        for qe in allqueriestext:
+            q=Q7QueryEntry(qe[0])
+            q.setScript(qe[1])
+            self._allQueries[qe[0]]=q
+    @classmethod
+    def getQuery(self,name):
+        if (name in Q7Query.queriesNamesList()): return self._allQueries[name]
+        return None
+    @classmethod
+    def loadUserQueries(self):
+        self._userQueriesText=OCTXT._readQueries(self)
+        if (self._userQueriesText is None): self._userQueriesText=[]
+        return self._userQueriesText
+    @classmethod
+    def saveUserQueries(self):
+        ql=[]
+        for q in self._allQueries:
+            if (q not in self._defaultQueriesNames):
+                ql+=[str(self._allQueries[q])]
+        OCTXT._writeQueries(self,ql)
+    @classmethod
+    def queriesNamesList(self):
+        k=self._allQueries.keys()
+        k.sort()
+        return k
+    def getCurrentQuery(self):
+        return self._currentQuery
+    def changeCurrentQuery(self,*args):
+        name=self.cQueryName.currentText()
+        self.setCurrentQuery(name)
+        self.showQuery()
+    def setCurrentQuery(self,name=None):
+        if (name is None): name=self.queriesNamesList()[0]
+        self._currentQuery=self._allQueries[name]
+    @classmethod
+    def queries(self):
+        return Q7Query.queriesNamesList()
 
 # -----------------------------------------------------------------
