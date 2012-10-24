@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
-# Created: Fri Oct 12 15:26:34 2012
+# Created: Wed Oct 24 11:21:02 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -305,6 +305,16 @@ class Ui_Q7TreeWindow(object):
         self.horizontalLayout_3.addWidget(self.bBackControl)
         spacerItem8 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem8)
+        self.label_3 = QtGui.QLabel(Q7TreeWindow)
+        self.label_3.setObjectName("label_3")
+        self.horizontalLayout_3.addWidget(self.label_3)
+        self.cGroup = QtGui.QComboBox(Q7TreeWindow)
+        self.cGroup.setEnabled(False)
+        self.cGroup.setObjectName("cGroup")
+        self.horizontalLayout_3.addWidget(self.cGroup)
+        self.label = QtGui.QLabel(Q7TreeWindow)
+        self.label.setObjectName("label")
+        self.horizontalLayout_3.addWidget(self.label)
         self.cQuery = QtGui.QComboBox(Q7TreeWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -313,6 +323,9 @@ class Ui_Q7TreeWindow(object):
         self.cQuery.setSizePolicy(sizePolicy)
         self.cQuery.setObjectName("cQuery")
         self.horizontalLayout_3.addWidget(self.cQuery)
+        self.label_2 = QtGui.QLabel(Q7TreeWindow)
+        self.label_2.setObjectName("label_2")
+        self.horizontalLayout_3.addWidget(self.label_2)
         self.eUserVariable = QtGui.QLineEdit(Q7TreeWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -406,6 +419,9 @@ class Ui_Q7TreeWindow(object):
         self.bScreenShot.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.cSaveLog.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Write commands log", None, QtGui.QApplication.UnicodeUTF8))
         self.bBackControl.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Raise Control window", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("Q7TreeWindow", "Group:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("Q7TreeWindow", "Query:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("Q7TreeWindow", "Args:", None, QtGui.QApplication.UnicodeUTF8))
         self.bApply.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Run Query", None, QtGui.QApplication.UnicodeUTF8))
         self.bPreviousMark.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Select previous marked node", None, QtGui.QApplication.UnicodeUTF8))
         self.bPreviousMark.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))

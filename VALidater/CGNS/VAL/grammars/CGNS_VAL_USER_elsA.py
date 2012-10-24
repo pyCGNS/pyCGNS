@@ -12,14 +12,14 @@ import CGNS.VAL.grammars.SIDS  as CGS
 messagetable=(
 ('NOZONE','U101',CGM.CHECK_WARN,'No Zone in this Base'),
 ('NOGRIDZONE','U102',CGM.CHECK_WARN,'No GridCoordinates in this Zone'),
-('NOSTRUCTZONE:','U105',CGM.CHECK_FAIL,'At least one structured Zone is required in the Base'),
-('NOBREFSTATE:','U103',CGM.CHECK_WARN,'No ReferenceState found at Base level'),
-('NOZREFSTATE:','U104',CGM.CHECK_WARN,'No ReferenceState found at Zone level'),
-('NOFLOWSOL:','U107',CGM.CHECK_WARN,'No FlowSolution# found for output definition'),
-('NOFLOWINIT:','U108',CGM.CHECK_WARN,'No FlowSolution#Init found for fields initialisation'),
-('NOTRHTRANSFORM:','U106',CGM.CHECK_FAIL,'Transform is not right-handed (direct)'),
-('CHSGRIDLOCATION:','U109',CGM.CHECK_FAIL,'Cannot handle such GridLocation [%s]'),
-('CHSELEMENTTYPE:','U110',CGM.CHECK_FAIL,'Cannot handle such ElementType [%s]'),
+('NOSTRUCTZONE','U105',CGM.CHECK_FAIL,'At least one structured Zone is required in the Base'),
+('NOBREFSTATE','U103',CGM.CHECK_WARN,'No ReferenceState found at Base level'),
+('NOZREFSTATE','U104',CGM.CHECK_WARN,'No ReferenceState found at Zone level'),
+('NOFLOWSOL','U107',CGM.CHECK_WARN,'No FlowSolution# found for output definition'),
+('NOFLOWINIT','U108',CGM.CHECK_WARN,'No FlowSolution#Init found for fields initialisation'),
+('NOTRHTRANSFORM','U106',CGM.CHECK_FAIL,'Transform is not right-handed (direct)'),
+('CHSGRIDLOCATION','U109',CGM.CHECK_FAIL,'Cannot handle such GridLocation [%s]'),
+('CHSELEMENTTYPE','U110',CGM.CHECK_FAIL,'Cannot handle such ElementType [%s]'),
 )
 
 USER_MESSAGES={}
@@ -27,7 +27,7 @@ for (v,k,l,m) in messagetable:
   locals()[v]=k
   USER_MESSAGES[k]=(l,m)
 
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 class CGNS_VAL_USER_Checks(CGS.SIDSbase):
   def __init__(self,log):
     CGS.SIDSbase.__init__(self,log)
@@ -49,11 +49,11 @@ class CGNS_VAL_USER_Checks(CGS.SIDSbase):
     else:
       target=[CGK.CGNSTree_ts,node[0],CGK.Zone_ts,CGK.ZoneType_s]
       plist=CGU.getAllNodesByTypeOrNameList(tree,target)
-      found=0
+      found=False
       for p in plist:
         if (CGU.stringValueMatches(CGU.getNodeByPath(tree,p),
                                    CGK.Structured_s)):
-          found=0
+          found=True
       if (not found):
         rs=log.push(pth,NOSTRUCTZONE)
     if (not CGU.hasChildNodeOfType(node,CGK.ReferenceState_ts)):

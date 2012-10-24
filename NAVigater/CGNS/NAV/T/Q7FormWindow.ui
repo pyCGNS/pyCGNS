@@ -597,7 +597,7 @@
               </sizepolicy>
              </property>
              <property name="title">
-              <string>Destination</string>
+              <string>Node</string>
              </property>
              <widget class="QLabel" name="label_9">
               <property name="geometry">
@@ -776,6 +776,25 @@
                </property>
                <property name="text">
                 <string>File load without following links</string>
+               </property>
+              </widget>
+              <widget class="QCheckBox" name="cChildOfLink">
+               <property name="geometry">
+                <rect>
+                 <x>205</x>
+                 <y>45</y>
+                 <width>232</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Child of a linked node</string>
                </property>
               </widget>
              </widget>

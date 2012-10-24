@@ -18,6 +18,8 @@ from CGNS.NAV.mtree import HIDEVALUE
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.mquery import Q7QueryEntry
 
+import CGNS.NAV.wmessages as MSG
+
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
@@ -116,17 +118,61 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
     def __init__(self,control,fgprint,treeview):
         Q7Window.__init__(self,Q7Window.VIEW_QUERY,control,'/',fgprint)
         self.bClose.clicked.connect(self.reject)
-        self.bRun.clicked.connect(self.runcurrent)
-        self.bSave.clicked.connect(self.queriessave)
+        self.bRun.clicked.connect(self.runCurrent)
+        self.bAdd.clicked.connect(self.queryAdd)
+        self.bDel.clicked.connect(self.queryDel)
+        self.bCommit.clicked.connect(self.queryCommit)
+        self.bRevert.clicked.connect(self.queryRevert)
+        self.bSave.clicked.connect(self.queriesSave)
         QObject.connect(self.cQueryName,
                         SIGNAL("currentIndexChanged(int)"),
                         self.changeCurrentQuery)
+        self.cQueryName.editTextChanged.connect(self.checkNewQueryName)
+        QObject.connect(self.cQueryName,
+                        SIGNAL("editTextChanged()"),
+                        self.checkNewQueryName)
+        QObject.connect(self.cQueryName,
+                        SIGNAL("editTextChanged(str)"),
+                        self.checkNewQueryName)
+        QObject.connect(self.eText,
+                        SIGNAL("textChanged()"),
+                        self.changeText)
+        self.bAdd.setEnabled(False)
         self.setCurrentQuery()
         self.showQuery()
     def updateTreeStatus(self):
         print 'query up'
-    def queriessave(self):
+    def queriesSave(self):
         Q7Query.saveUserQueries()
+    def queryDel(self):
+        q=self.cQueryName.currentText()
+        i=self.cQueryName.currentIndex()
+        reply = MSG.message('Delete query',
+                            """Do you really want to delete query [%s]?"""%q,
+                            MSG.YESNO)
+        if (reply == QMessageBox.Yes):
+            del Q7Query._allQueries[q]
+            self.cQueryName.removeItem(i)
+    def checkNewQueryName(self,*args):
+        qname=self.cQueryName.currentText().strip()
+        if (qname not in Q7Query._allQueries):
+            self.bAdd.setEnabled(True)
+    def queryAdd(self):
+        self.bAdd.setEnabled(False)
+        qname=self.cQueryName.currentText().strip()
+        if (qname in Q7Query._allQueries): return
+        q=Q7QueryEntry(qname)
+        Q7Query._allQueries[qname]=q
+        self.queryCommit()
+        self.cQueryName.addItem(qname)
+    def queryCommit(self):
+        q=self.cQueryName.currentText()
+        com=self.eText.toPlainText()
+        Q7Query._allQueries[q].setScript(com)
+        self.bCommit.setEnabled(False)
+        self.bRevert.setEnabled(False)
+    def queryRevert(self):
+        self.showQuery()
     def reject(self):
         self.close()
     def reset(self):
@@ -138,10 +184,12 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         if (name in Q7Query.queriesNamesList()):
           txt=self.getCurrentQuery().script
           self.eText.initText(txt)
+        self.bCommit.setEnabled(False)
+        self.bRevert.setEnabled(False)
     def show(self):
         self.reset()
         super(Q7Query, self).show()
-    def runcurrent(self):
+    def runCurrent(self):
         com=self.eText.toPlainText()
         q=Q7QueryEntry('__tmp__query__')
         q.setScript(com)
@@ -149,42 +197,48 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.eResult.initText(str(r))
     @classmethod
     def fillQueries(self):
-        allqueriestext=self._userQueriesText+OCTXT._UsualQueries
-        self._defaultQueriesNames=[n[0] for n in OCTXT._UsualQueries]
+        allqueriestext=Q7Query._userQueriesText+OCTXT._UsualQueries
+        Q7Query._defaultQueriesNames=[n[0] for n in OCTXT._UsualQueries]
         for qe in allqueriestext:
-            q=Q7QueryEntry(qe[0])
-            q.setScript(qe[1])
-            self._allQueries[qe[0]]=q
+            try:
+                q=Q7QueryEntry(qe[0],qe[1],qe[2])
+                Q7Query._allQueries[qe[0]]=q
+            except IndexError: pass
     @classmethod
     def getQuery(self,name):
-        if (name in Q7Query.queriesNamesList()): return self._allQueries[name]
+        if (name in Q7Query.queriesNamesList()):
+            return Q7Query._allQueries[name]
         return None
     @classmethod
     def loadUserQueries(self):
-        self._userQueriesText=OCTXT._readQueries(self)
-        if (self._userQueriesText is None): self._userQueriesText=[]
-        return self._userQueriesText
+        Q7Query._userQueriesText=OCTXT._readQueries(self)
+        if (Q7Query._userQueriesText is None): Q7Query._userQueriesText=[]
+        return Q7Query._userQueriesText
     @classmethod
     def saveUserQueries(self):
         ql=[]
-        for q in self._allQueries:
-            if (q not in self._defaultQueriesNames):
-                ql+=[str(self._allQueries[q])]
+        for q in Q7Query._allQueries:
+            if (q not in Q7Query._defaultQueriesNames):
+                ql+=[str(Q7Query._allQueries[q])]
         OCTXT._writeQueries(self,ql)
     @classmethod
     def queriesNamesList(self):
-        k=self._allQueries.keys()
+        k=Q7Query._allQueries.keys()
         k.sort()
         return k
     def getCurrentQuery(self):
         return self._currentQuery
     def changeCurrentQuery(self,*args):
         name=self.cQueryName.currentText()
+        if (name not in self.queriesNamesList()): return
         self.setCurrentQuery(name)
         self.showQuery()
     def setCurrentQuery(self,name=None):
         if (name is None): name=self.queriesNamesList()[0]
-        self._currentQuery=self._allQueries[name]
+        self._currentQuery=Q7Query._allQueries[name]
+    def changeText(self):
+        self.bCommit.setEnabled(True)
+        self.bRevert.setEnabled(True)
     @classmethod
     def queries(self):
         return Q7Query.queriesNamesList()

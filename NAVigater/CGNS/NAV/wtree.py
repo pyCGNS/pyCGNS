@@ -384,7 +384,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             return
         qry=Q7Query
         if (q in qry.queriesNamesList()):
-            sl=qry.getQuery(q).run(self._fgprint.tree,v)
+            sl=qry.getQuery(q).run(self._fgprint.tree,False,v)
             self.model().markExtendToList(sl)
             self.model().updateSelected()
         self.treeview.refreshView()

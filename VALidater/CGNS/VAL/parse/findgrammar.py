@@ -21,13 +21,30 @@ def findAllUserGrammars(verbose=False):
     except OSError: pass
   return kdict
 
+def findOneUserGrammar(tag,verbose=False):
+  kdict={}
+  found=False
+  for pth in sys.path:
+    if (verbose): print '### CGNS.VAL: scanning',pth
+    try:
+      for pthroot, dirs, files in os.walk(pth):
+          for fn in files:
+              if fnmatch.fnmatch(fn,'CGNS_VAL_USER_%s.py'%tag):
+                  kdict[fn[14:-3]]=pthroot
+                  found=True
+                  break
+          if found: break
+    except OSError: pass
+    if found: break
+  return kdict
+
 def importUserGrammars(key,verbose=False):
   mod=None
   modname='CGNS_VAL_USER_%s'%key
   try:
       tp=imp.find_module(modname)
   except ImportError:
-      dk=findAllUserGrammars()
+      dk=findOneUserGrammar(key)
       if (key in dk):
           sys.path.append(dk[key])
           print '### CGNS.VAL [warning]: not in search path [%s]\n'%dk[key]
@@ -40,6 +57,7 @@ def importUserGrammars(key,verbose=False):
   try:
     fp=tp[0]
     mod=imp.load_module(modname, *tp)
+    # print '### CGNS.VAL [info]: Module info',tp
   finally:
     if fp:
        fp.close()

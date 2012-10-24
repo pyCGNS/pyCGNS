@@ -369,14 +369,13 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     ]
 
     _UsualQueries=[
-    ['Search by node name','RESULT=(NAME==ARGS[0])'],
-    ['Search by wildcard nodename',
+    ('Search by node name','Find','RESULT=(NAME==ARGS[0])'),
+    ('Search by wildcard nodename','Find',
 """import fnmatch
 RESULT=fnmatch.fnmatchcase(NAME,ARGS[0])
-"""
-    ],
-    ['Search by node type','RESULT=(SIDSTYPE==ARGS[0])'],
-    ['QUADs','RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)'],
+"""),
+    ('Search by node type','Find','RESULT=(SIDSTYPE==ARGS[0])'),
+    ('QUADs','Find','RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)'),
     ]
     # -----------------------------------------------------------------
     @classmethod
@@ -384,6 +383,7 @@ RESULT=fnmatch.fnmatchcase(NAME,ARGS[0])
         setattr(cls,name,value)
     @classmethod
     def _writeFile(cls,tag,name,udata,filename,prefix=""):
+      #print '### CGNS.NAV update',filename
       gdate=strftime("%Y-%m-%d %H:%M:%S", gmtime())
       s="""# %s - %s file - Generated %s\n%s\n%s="""%\
          (cls._ToolName,tag,gdate,prefix,name)
@@ -406,6 +406,7 @@ RESULT=fnmatch.fnmatchcase(NAME,ARGS[0])
       f.close()
     @classmethod
     def _readFile(cls,name,filename):
+      #print '### CGNS.NAV read  ',filename
       dpath='/tmp/pyCGNS.tmp:%d.%s'%(os.getpid(),time())
       try:
         os.mkdir(dpath)

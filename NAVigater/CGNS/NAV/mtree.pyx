@@ -15,7 +15,8 @@ from CGNS.NAV.wfingerprint import Q7fingerPrint
 import CGNS.VAL.simplecheck as CGV
 import CGNS.NAV.wmessages as MSG
 import CGNS.VAL.parse.messages as CGM
-import CGNS.VAL.grammars.USER as CGG
+import CGNS.VAL.grammars.SIDS
+import CGNS.VAL.parse.findgrammar
 
 HIDEVALUE='@@HIDE@@'
 LAZYVALUE='@@LAZY@@'
@@ -1077,8 +1078,13 @@ class Q7TreeModel(QAbstractItemModel):
         self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
         return True
     def checkTree(self,T,pathlist):
-        checkdiag=CGG.elsAbase(None)
+        tag='elsA'
+        mod=CGNS.VAL.parse.findgrammar.importUserGrammars(tag)
+        if (mod is None): checkdiag=CGNS.VAL.grammars.SIDS.SIDSbase(None)
+        else:             checkdiag=mod.CGNS_VAL_USER_Checks(None)
         checkdiag.checkTree(T,False)
+        if (pathlist==[]):
+            pathlist=self._extension.keys()
         for path in pathlist:
             pth=CGU.getPathNoRoot(path)
             if (checkdiag.log.has_key(pth)):

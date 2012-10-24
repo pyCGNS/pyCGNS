@@ -41,6 +41,7 @@ def evalScript(node,parent,tree,path,val,args):
     l[OCST.Q_VAR_TREE]=tree
     l[OCST.Q_VAR_PATH]=path
     l[OCST.Q_VAR_USER]=args
+    l[OCST.Q_VAR_NODE]=node
     pre=OCST.Q_SCRIPT_PRE+val+OCST.Q_SCRIPT_POST
     try:
       eval(compile(pre,'<string>','exec'),globals(),l)
@@ -64,10 +65,10 @@ def parseAndSelect(tree,node,parent,path,script,args,result):
 
 # -----------------------------------------------------------------
 class Q7QueryEntry(object):
-    def __init__(self,name,group=None):
+    def __init__(self,name,group=None,script=''):
         self._name=name
         self._group=group
-        self._script=''
+        self._script=script
     @property
     def name(self):
         return self._name
@@ -80,9 +81,9 @@ class Q7QueryEntry(object):
     def setScript(self,value):
         self._script=value
     def __str__(self):
-        s='%s'%self._script
+        s='("%s","%s","%s")'%(self.name,self.group,self._script)
         return s
-    def run(self,tree,mode=False,*args):
+    def run(self,tree,mode,*args):
         self._args=args
         result=parseAndSelect(tree,tree,[None,None,[],None],'',
                               self._script,self._args,mode)
