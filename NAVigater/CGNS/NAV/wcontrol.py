@@ -2,9 +2,7 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
-
+#
 import sys
 
 from PySide.QtCore import *
@@ -19,6 +17,7 @@ from CGNS.NAV.wtree import Q7Tree
 from CGNS.NAV.mtree import Q7TreeModel
 from CGNS.NAV.wfingerprint import Q7fingerPrint, Q7Window
 from CGNS.NAV.wquery import Q7Query
+from CGNS.NAV.whelp import Q7Help
 
 import CGNS.NAV.wmessages as MSG
 
@@ -51,6 +50,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.bTreeLoadLast.clicked.connect(self.loadlast)
         self.bTreeLoad.clicked.connect(self.load)
         self.bEditTree.clicked.connect(self.edit)
+        self.bInfo.clicked.connect(self.infoControl)
         self.bPatternView.setDisabled(True)
         #self.bResetScrollBars.clicked.connect(self.resetScrolls)
         self.bClose.clicked.connect(self.close)
@@ -70,6 +70,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.wOption=None
         self.selectForLink=None
         self.__newtreecount=1
+        self.help=None
         Q7Query.loadUserQueries()
         Q7Query.fillQueries()
     def clickedLine(self,*args):
@@ -85,6 +86,12 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
     def raiseView(self):
         self.updateLastView()
         if (self.lastView): Q7fingerPrint.raiseView(self.lastView)
+    def infoControl(self):
+        self.helpWindow('Control')
+    def helpWindow(self,key):
+        if (self.help is not None): self.help.close()
+        self.help=Q7Help(self,key)
+        self.help.show()
     def info(self):
         self.updateLastView()
         (f,v,d)=Q7fingerPrint.infoView(self.lastView)
@@ -120,9 +127,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         if (lv is not None):
           self.lastView=lv
           actlist=(("View information (Enter)",self.info),
-                   None,
                    ("Raise view (Space)",self.raiseView),
-                   ("Update tree",self.pop6),
+#                   ("Update tree",self.pop6),
                    None,
                    ("Close tree",self.closeTree),
                    ("Close all views",self.closeAllViews),
@@ -153,6 +159,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
                             MSG.YESNO)
         if (reply == QMessageBox.Yes):
             Q7fingerPrint.closeAllTrees()
+            if (self.help is not None): self.help.close()
             return True
         else:
             return False
@@ -305,7 +312,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         tree=CGL.newCGNSTree()
         tc=self.__newtreecount
         self.busyCursor()
-        fgprint=Q7fingerPrint(self,'.','{CGNS/Python#%.3d}'%tc,tree,[],[])
+        fgprint=Q7fingerPrint(self,'.','new#%.3d.hdf'%tc,tree,[],[])
         Q7TreeModel(fgprint)
         child=Q7Tree(self,'/',fgprint)
         fgprint._status=[Q7fingerPrint.STATUS_MODIFIED]

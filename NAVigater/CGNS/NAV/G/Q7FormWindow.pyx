@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created: Tue Oct 23 15:06:31 2012
+# Created: Thu Oct 25 11:30:22 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -294,6 +294,13 @@ class Ui_Q7FormWindow(object):
         self.checkBox_18 = QtGui.QCheckBox(self.groupBox)
         self.checkBox_18.setGeometry(QtCore.QRect(205, 20, 203, 22))
         self.checkBox_18.setObjectName("checkBox_18")
+        self.cChildOfLink = QtGui.QCheckBox(self.groupBox)
+        self.cChildOfLink.setGeometry(QtCore.QRect(205, 45, 232, 21))
+        font = QtGui.QFont()
+        font.setWeight(75)
+        font.setBold(True)
+        self.cChildOfLink.setFont(font)
+        self.cChildOfLink.setObjectName("cChildOfLink")
         self.verticalLayout_6.addWidget(self.groupBox_3)
         self.verticalLayout_9.addLayout(self.verticalLayout_6)
         self.tabWidget.addTab(self.tFiles, "")
@@ -417,6 +424,15 @@ class Ui_Q7FormWindow(object):
         self.bBackControl.setIcon(icon6)
         self.bBackControl.setObjectName("bBackControl")
         self.horizontalLayout_3.addWidget(self.bBackControl)
+        self.bInfo = QtGui.QPushButton(Q7FormWindow)
+        self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
+        self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
+        self.bInfo.setText("")
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bInfo.setIcon(icon7)
+        self.bInfo.setObjectName("bInfo")
+        self.horizontalLayout_3.addWidget(self.bInfo)
         spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem3)
         self.bClose = QtGui.QPushButton(Q7FormWindow)
@@ -440,7 +456,7 @@ class Ui_Q7FormWindow(object):
         self.bMinimize.setText(QtGui.QApplication.translate("Q7FormWindow", "fit", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("Q7FormWindow", "Enum", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tData), QtGui.QApplication.translate("Q7FormWindow", "Table", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_3.setTitle(QtGui.QApplication.translate("Q7FormWindow", "Destination", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_3.setTitle(QtGui.QApplication.translate("Q7FormWindow", "Node", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("Q7FormWindow", "Path", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setText(QtGui.QApplication.translate("Q7FormWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
         self.label_23.setText(QtGui.QApplication.translate("Q7FormWindow", "Size", None, QtGui.QApplication.UnicodeUTF8))
@@ -451,6 +467,7 @@ class Ui_Q7FormWindow(object):
         self.checkBox_8.setText(QtGui.QApplication.translate("Q7FormWindow", "Destination File Read Only", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBox_10.setText(QtGui.QApplication.translate("Q7FormWindow", "Node not found in file", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBox_18.setText(QtGui.QApplication.translate("Q7FormWindow", "File load without following links", None, QtGui.QApplication.UnicodeUTF8))
+        self.cChildOfLink.setText(QtGui.QApplication.translate("Q7FormWindow", "Child of a linked node", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tFiles), QtGui.QApplication.translate("Q7FormWindow", "Link", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tText), QtGui.QApplication.translate("Q7FormWindow", "Text", None, QtGui.QApplication.UnicodeUTF8))
         self.label_11.setText(QtGui.QApplication.translate("Q7FormWindow", "Type", None, QtGui.QApplication.UnicodeUTF8))

@@ -32,7 +32,10 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
         self._data=model._selected
         self._fgprint=fgprint
         self.bSave.clicked.connect(self.selectionsave)
+        self.bInfo.clicked.connect(self.infoSelectView)
         self.bDelete.clicked.connect(self.deletelocal)
+    def infoSelectView(self):
+        self._control.helpWindow('Selection')
     def show(self):
         self.reset()
         super(Q7SelectionList, self).show()
@@ -137,9 +140,12 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         QObject.connect(self.eText,
                         SIGNAL("textChanged()"),
                         self.changeText)
+        self.bInfo.clicked.connect(self.infoQueryView)
         self.bAdd.setEnabled(False)
         self.setCurrentQuery()
         self.showQuery()
+    def infoQueryView(self):
+        self._control.helpWindow('Query')
     def updateTreeStatus(self):
         print 'query up'
     def queriesSave(self):

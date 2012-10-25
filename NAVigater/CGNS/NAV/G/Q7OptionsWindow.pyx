@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Thu Oct  4 14:06:53 2012
+# Created: Thu Oct 25 11:30:19 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -324,6 +324,15 @@ class Ui_Q7OptionsWindow(object):
         self.bReset = QtGui.QPushButton(Q7OptionsWindow)
         self.bReset.setGeometry(QtCore.QRect(10, 330, 81, 27))
         self.bReset.setObjectName("bReset")
+        self.bInfo = QtGui.QPushButton(Q7OptionsWindow)
+        self.bInfo.setGeometry(QtCore.QRect(100, 330, 25, 25))
+        self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
+        self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
+        self.bInfo.setText("")
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bInfo.setIcon(icon1)
+        self.bInfo.setObjectName("bInfo")
 
         self.retranslateUi(Q7OptionsWindow)
         self.tabs.setCurrentIndex(0)

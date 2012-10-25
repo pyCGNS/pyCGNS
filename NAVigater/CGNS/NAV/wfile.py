@@ -142,6 +142,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
             QObject.connect(o,SIGNAL(s),f)
         self.bClose.clicked.connect(self.close)
         self.bBack.clicked.connect(self.backDir)
+        self.bInfo.clicked.connect(self.infoFileView)
         if (mode==SAVEMODE): self.setMode(False)
         else:                self.setMode(True)
         self.setBoxes()
@@ -157,6 +158,8 @@ class Q7File(QWidget,Ui_Q7FileWindow):
             self.selecteddir=os.getcwd()
             self.selectedfile=""
             self.setCurrentDir(self.selecteddir)
+    def infoFileView(self):
+        self.control.helpWindow('File')
     def updateView(self):
         p=self.direntries.currentText()
         self.setCurrentDir(p)

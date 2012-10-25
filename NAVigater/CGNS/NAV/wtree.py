@@ -172,6 +172,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bSaveAs.clicked.connect(self.savetreeas)
         self.bApply.clicked.connect(self.forceapply)
         self.bClose.clicked.connect(self.leave)
+        self.bInfo.clicked.connect(self.infoTreeView)
         self.bZoomIn.clicked.connect(self.expandLevel)
         self.bZoomOut.clicked.connect(self.collapseLevel)
         self.bZoomAll.clicked.connect(self.expandMinMax)
@@ -241,6 +242,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._control.save(self._fgprint)
         self._fgprint.removeTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
         self._fgprint.addTreeStatus(Q7fingerPrint.STATUS_SAVEABLE)
+    def infoTreeView(self):
+        self._control.helpWindow('Tree')
     def screenshot(self):
         self.treeview.model().sort(0)
         sshot=QPixmap.grabWindow(self.treeview.winId())

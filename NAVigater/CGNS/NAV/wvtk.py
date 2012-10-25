@@ -117,6 +117,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bZoom.clicked.connect(self.RubberbandZoom)
       self.bColorMapMin.clicked.connect(self.displayColorMapMin)
       self.bColorMapMax.clicked.connect(self.displayColorMapMax)
+      self.bInfo.clicked.connect(self.infoVtkView)
       self.cShowValue.clicked.connect(self.showValues)
       self.setColorSpace()
       QObject.connect(self.cViews,
@@ -213,6 +214,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtkren.AddActor(self.planeActor)
       self._iren.Render()
             
+  def infoVtkView(self):
+      self._control.helpWindow('VTK')
+      
   def mouseReleaseEvent(self, ev):
         self._ActiveButton=ev.button()
         ctrl=self._iren.GetControlKey()
@@ -255,14 +259,14 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._iren.Render()                                       
                   
   def RubberbandZoom(self,*args):
-      if (self.bZoom.isChecked()):
-          self._vtk.SetInteractorStyle(Q7InteractorStyleRubberBandZoom(self))
+    if (self.bZoom.isChecked()):
+      self._vtk.SetInteractorStyle(Q7InteractorStyleRubberBandZoom(self))
+    else:
+      interactor=self.cRotationAxis.currentIndex()
+      if (interactor==0):
+        self._vtk.SetInteractorStyle(Q7InteractorStyle(self))
       else:
-          interactor=self.cRotationAxis.currentIndex()
-          if (interactor==0):
-              self._vtk.SetInteractorStyle(Q7InteractorStyle(self))
-          else:
-              self._vtk.SetInteractorStyle(Q7InteractorStyleTrackballObject(self))
+        self._vtk.SetInteractorStyle(Q7InteractorStyleTrackballObject(self))
 
   def showValues(self,*args):
       if (self._currentactor is not None):

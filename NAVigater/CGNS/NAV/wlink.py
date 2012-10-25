@@ -22,9 +22,12 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
         self._links=fgprint.links
         self.setLabel(self.eDirSource,fgprint.filedir)
         self.setLabel(self.eFileSource,fgprint.filename)
+        self.bInfo.clicked.connect(self.infoLinkView)
         self.bAddLink.setDisabled(True)
         self.bDeleteLink.setDisabled(True)
         self.bSave.setDisabled(True)
+    def infoLinkView(self):
+        self._control.helpWindow('Link')
     def show(self):
         self.reset()
         super(Q7LinkList, self).show()

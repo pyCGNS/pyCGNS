@@ -17,7 +17,10 @@ class Q7Info(Q7Window,Ui_Q7InfoWindow):
     def __init__(self,parent,data,fgprint):
         Q7Window.__init__(self,Q7Window.VIEW_INFO,parent,None,None)
         self.bClose.clicked.connect(self.reject)
+        self.bInfo.clicked.connect(self.infoInfoView)
         self._data=data
+    def infoInfoView(self):
+        self._control.helpWindow('Info')
     def show(self):
         self.reset()
         super(Q7Info, self).show()

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FileWindow.ui'
 #
-# Created: Fri Oct 12 08:55:34 2012
+# Created: Thu Oct 25 11:30:24 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -113,6 +113,15 @@ class Ui_Q7FileWindow(object):
         self.bClose = QtGui.QPushButton(self.Selection)
         self.bClose.setGeometry(QtCore.QRect(610, 320, 75, 26))
         self.bClose.setObjectName("bClose")
+        self.bInfo = QtGui.QPushButton(self.Selection)
+        self.bInfo.setGeometry(QtCore.QRect(10, 320, 25, 25))
+        self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
+        self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
+        self.bInfo.setText("")
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bInfo.setIcon(icon3)
+        self.bInfo.setObjectName("bInfo")
         self.tabs.addTab(self.Selection, "")
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setEnabled(False)

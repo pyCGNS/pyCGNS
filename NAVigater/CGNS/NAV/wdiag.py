@@ -19,6 +19,7 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         Q7Window.__init__(self,Q7Window.VIEW_DIAG,parent,None,fgprint)
         self.bClose.clicked.connect(self.reject)
         self.bExpandAll.clicked.connect(self.expand)
+        self.bInfo.clicked.connect(self.infoDiagView)
         self.bCollapseAll.clicked.connect(self.collapse)
         self.bPrevious.clicked.connect(self.previousfiltered)
         self.bNext.clicked.connect(self.nextfiltered)
@@ -29,10 +30,12 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
                         self.filterChange)
         self._data=data
         self.filterChange()
+    def infoDiagView(self):
+        self._control.helpWindow('Diagnosis')
     def diagnosticssave(self):
         n='data=%s\n'%self._data
         filename=QFileDialog.getSaveFileName(self,
-                                             "Save diagnostics",".","*.py")
+                                             "Save diagnosis",".","*.py")
         if (filename[0]==""): return
         f=open(str(filename[0]),'w+')
         f.write(n)

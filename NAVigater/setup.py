@@ -61,6 +61,7 @@ if installprocess:
       'Q7DiagWindow',
       'Q7LinkWindow',
       'Q7VTKPlotWindow',
+      'Q7HelpWindow',
       'Q7VTKWindow'
       ]
   modgenlist=[]

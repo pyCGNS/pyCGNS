@@ -45,9 +45,12 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         for t in self._node.sidsTypeList():
             self.eType.addItem(t)
         self.bClose.clicked.connect(self.reject)
+        self.bInfo.clicked.connect(self.infoFormView)
         for dt in node.sidsDataType(all=True):
             self.cDataType.addItem(dt)
         self.setOperatorValue(1)
+    def infoFormView(self):
+        self._control.helpWindow('Form')
     def updateTreeStatus(self):
         pass
     def accept(self):

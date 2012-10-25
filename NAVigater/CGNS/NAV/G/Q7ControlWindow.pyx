@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ControlWindow.ui'
 #
-# Created: Tue Oct  9 13:35:32 2012
+# Created: Thu Oct 25 11:00:11 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -75,21 +75,30 @@ class Ui_Q7ControlWindow(object):
         self.bOptionView.setIcon(icon5)
         self.bOptionView.setObjectName("bOptionView")
         self.horizontalLayout.addWidget(self.bOptionView)
+        self.bInfo = QtGui.QPushButton(Q7ControlWindow)
+        self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
+        self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
+        self.bInfo.setText("")
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bInfo.setIcon(icon6)
+        self.bInfo.setObjectName("bInfo")
+        self.horizontalLayout.addWidget(self.bInfo)
         self.bAbout = QtGui.QToolButton(Q7ControlWindow)
         self.bAbout.setMinimumSize(QtCore.QSize(25, 25))
         self.bAbout.setMaximumSize(QtCore.QSize(25, 25))
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/images/icons/view-help.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bAbout.setIcon(icon6)
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(":/images/icons/view-help.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bAbout.setIcon(icon7)
         self.bAbout.setObjectName("bAbout")
         self.horizontalLayout.addWidget(self.bAbout)
         self.bClose = QtGui.QPushButton(Q7ControlWindow)
         self.bClose.setMinimumSize(QtCore.QSize(25, 25))
         self.bClose.setMaximumSize(QtCore.QSize(25, 25))
         self.bClose.setText("")
-        icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/images/icons/close-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bClose.setIcon(icon7)
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap(":/images/icons/close-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bClose.setIcon(icon8)
         self.bClose.setObjectName("bClose")
         self.horizontalLayout.addWidget(self.bClose)
         self.verticalLayout_2.addLayout(self.horizontalLayout)

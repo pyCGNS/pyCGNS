@@ -17,9 +17,12 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
     def __init__(self,parent):
         Q7Window.__init__(self,Q7Window.VIEW_OPTION,parent,None,None)
         self.bApply.clicked.connect(self.accept)
+        self.bInfo.clicked.connect(self.infoOptionView)
         self.bClose.clicked.connect(self.reject)
         self.bReset.clicked.connect(self.reset)
         self.getOptions()
+    def infoOptionView(self):
+        self._control.helpWindow('Option')
     def getopt(self,name):
         if (name[0]=='_'): return None
         try:

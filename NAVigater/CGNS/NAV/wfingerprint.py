@@ -21,7 +21,6 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
 from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
 from CGNS.NAV.wfile import checkFilePermission
-
 # -----------------------------------------------------------------
 class Q7Window(QWidget,object):
     VIEW_CONTROL='C'
