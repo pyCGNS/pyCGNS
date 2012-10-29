@@ -56,6 +56,8 @@ class DiagnosticMessageInstance(DiagnosticMessagePattern):
       pass
     self._str=msg
     return self
+  def __str__(self):
+    return '("%s","%s","""%s""")'%(self._key,self.levelAsStr(),self._str)
 
 class DiagnosticLog(dict):
     __messages={}
@@ -128,4 +130,13 @@ class DiagnosticLog(dict):
         for path in plist:
             for diag in self[path]:
                 if (diag.message==msg): yield (diag,path)
+    def __str__(self):
+      s="{\n"
+      for path in self:
+        s+="'%s':\n"%path
+        for diag in self[path]:
+          s+="  %s,\n"%diag
+      s+="}\n"
+      return s
+    
 # --- last line

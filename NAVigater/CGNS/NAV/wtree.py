@@ -125,10 +125,8 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           uf=self._parent.modelData(index).userState()
           if (uf in NMT.USERSTATES):
             if (self._model.hasUserColor(uf)):
-                br=QBrush(self._model.getUserColor(uf))
-                cg=option.palette.ColorGroup()
-                option.palette.setBrush(cg,QPalette.Text,br)
-                option.palette.setBrush(cg,QPalette.HighlightedText,br)
+              cl=self._model.getUserColor(uf)
+              option.palette.brush(QPalette.Text).setColor(cl)
           QStyledItemDelegate.paint(self, painter, option, index)
           option.font.setWeight(QFont.Light)
         elif (index.column() in [NMT.COLUMN_VALUE,NMT.COLUMN_DATATYPE]):
@@ -197,6 +195,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bAddLink.clicked.connect(self.linkadd)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
+        self.diagview=None
         self.proxy = self._fgprint.model
 #        self.proxy = Q7TreeFilterProxy(self)
 #        self.proxy.setSourceModel(self._fgprint.model)
@@ -412,13 +411,16 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.linkview.show()
     def check(self):
         self.busyCursor()
+        if (self.diagview is not None):
+            self.diagview.close()
+            self.diagview=None
         self.lastdiag=self.model().checkSelected()
         self.readyCursor()
         self.treeview.refreshView()
         self.bCheckList.setDisabled(False)
     def checklist(self):
         if (self.lastdiag is None): return
-        self.diagview=Q7CheckList(self._control,self.lastdiag,self._fgprint)
+        self.diagview=Q7CheckList(self,self.lastdiag,self._fgprint)
         self.diagview.show()
     def clearchecks(self):
         self.model().checkClear()

@@ -79,9 +79,12 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
                     data[k]=self.getopt(k).text()
             if (type(data[k]) is list):
                 s=self.getopt(k).toPlainText()
-                v=[]
+                cset=set()
                 for l in s.split('\n'):
-                    if (l): v.append(l)
+                    if (l):
+                        cset.add(l)
+                v=list(cset)
+                v.sort()
                 if (self.validateOption(k,v)): data[k]=v
         self.setOptions()
         self.reset()

@@ -132,10 +132,20 @@ ICONMAPPING={
  STCHKWARN:":/images/icons/check-warn.gif",
 
  STUSR_X:  ":/images/icons/empty.gif",   
- STUSR_0:  ":/images/icons/empty.gif",   
  STSHRUNKN:":/images/icons/empty.gif",   
  STMARKOFF:":/images/icons/empty.gif",
- STMARK_ON:":/images/icons/mark-node.gif",   
+ STMARK_ON:":/images/icons/mark-node.gif",
+
+ STUSR_0:  ":/images/icons/empty.gif",   
+ STUSR_1:  ":/images/icons/user-A.gif",
+ STUSR_2:  ":/images/icons/user-B.gif",
+ STUSR_3:  ":/images/icons/user-C.gif",
+ STUSR_4:  ":/images/icons/user-D.gif",
+ STUSR_5:  ":/images/icons/user-E.gif",
+ STUSR_6:  ":/images/icons/user-F.gif",
+ STUSR_7:  ":/images/icons/user-G.gif",
+ STUSR_8:  ":/images/icons/user-H.gif",
+ STUSR_9:  ":/images/icons/user-J.gif",
 }
 
 KEYMAPPING={
@@ -389,6 +399,10 @@ class Q7TreeView(QTreeView):
         if (idx.model() != self.M()):
             idx=self.model().mapFromSource(idx)
         return idx
+    def selectByPath(self,path):
+        npath=CGU.getPathNoRoot(path)
+        ix=self.M().indexByPath('/CGNSTree'+npath)
+        self.exclusiveSelectRow(ix)
     def exclusiveSelectRow(self,index=-1,setlast=True):
         if ((index==-1) or (not index.isValid())): index=QModelIndex()
         mod=QItemSelectionModel.SelectCurrent|QItemSelectionModel.Rows
@@ -843,8 +857,8 @@ class Q7TreeModel(QAbstractItemModel):
         if ((index.column()==COLUMN_VALUE) and (role == Qt.DisplayRole)):
             if (disp in [HIDEVALUE,LAZYVALUE]):
                 return None
-        if ((index.column()==COLUMN_FLAG_USER) and (role == Qt.DisplayRole)):
-             return None
+        #if ((index.column()==COLUMN_FLAG_USER) and (role == Qt.DisplayRole)):
+        #     return None
         if (disp in ICONMAPPING.keys()):
             disp=Q7TreeModel._icons[disp]
         return disp
@@ -919,6 +933,7 @@ class Q7TreeModel(QAbstractItemModel):
             or (index.column() not in COLUMN_EDIT)):
             return False
         node=index.internalPointer()
+        if (node.sidsIsLinkChild()): return False
         node.setLastEdited()
         oldpath=node.sidsPath()
         oldname=node.sidsName()
@@ -1079,7 +1094,18 @@ class Q7TreeModel(QAbstractItemModel):
         return True
     def checkTree(self,T,pathlist):
         tag='elsA'
+        pths=[]
+        oldsys=sys.path
+        for p in OCTXT.GrammarSearchPathList:
+            pths.append(str(p))
+        for p in sys.path:
+            pths.append(str(p))
+        pths_uniq=[]
+        for p in pths:
+            if (p not in pths_uniq): pths_uniq.append(p)
+        sys.path=pths_uniq
         mod=CGNS.VAL.parse.findgrammar.importUserGrammars(tag)
+        sys.path=oldsys
         if (mod is None): checkdiag=CGNS.VAL.grammars.SIDS.SIDSbase(None)
         else:             checkdiag=mod.CGNS_VAL_USER_Checks(None)
         checkdiag.checkTree(T,False)

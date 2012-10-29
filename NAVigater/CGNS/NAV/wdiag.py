@@ -16,7 +16,7 @@ import CGNS.VAL.parse.messages as CGM
 # -----------------------------------------------------------------
 class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
     def __init__(self,parent,data,fgprint):
-        Q7Window.__init__(self,Q7Window.VIEW_DIAG,parent,None,fgprint)
+        Q7Window.__init__(self,Q7Window.VIEW_DIAG,parent._control,None,fgprint)
         self.bClose.clicked.connect(self.reject)
         self.bExpandAll.clicked.connect(self.expand)
         self.bInfo.clicked.connect(self.infoDiagView)
@@ -29,7 +29,21 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
                         SIGNAL("currentIndexChanged(int)"),
                         self.filterChange)
         self._data=data
+        self._parent=parent
+        self.diagTable.keyPressEvent=self.diagTableKeyPressEvent
         self.filterChange()
+    def diagTableKeyPressEvent(self,event):
+        kmod=event.modifiers()
+        kval=event.key()
+        if (kval==Qt.Key_Space):
+            itlist=self.diagTable.selectedItems()
+            it=itlist[0]
+            itxt=it.text(0)
+            if (itxt[0]!='/'):
+                itxt=it.parent().text(0)
+            self._parent.treeview.selectByPath(itxt)
+        else:
+            QTreeView.keyPressEvent(self.diagTable,event)
     def infoDiagView(self):
         self._control.helpWindow('Diagnosis')
     def diagnosticssave(self):
@@ -110,5 +124,8 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
             self.cFilter.addItem(k)
     def reject(self):
         self.close()
+    def close(self):
+        self._parent.diagview=None
+        QWidget.close(self)
          
 # -----------------------------------------------------------------

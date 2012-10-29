@@ -32,14 +32,18 @@ HELPDOCS={
 """
 <h2>Control panel</h2>
 The main panel of CGNS.NAV is a summary of views. The list gives you
-short information about the file/tree being viewed in each window.
+short information about the file/tree being viewed and allows you some
+basic operations.
 <p>
-You can open new trees, close views or close all CGNS.NAV from this panel.
+You can open new trees, close views or close all <i>CGNS.NAV</i> from this
+panel. 
 
 <h3>Table entries</h3>
 Each line of the control panel is a view. Each view has a number, which
 counts from 001 up to the max number of views you have. The status and the
-type of the view are indicated by an icon.
+type of the view are indicated by an icon.<i>We use the term <b>view</b>
+when a CGNS.NAV window appears in this list
+and <b>panel</b> when the window doesn't appear.
 <p>
 
 The <b>status</b> changes each time you modify the CGNS/Python tree or
@@ -170,7 +174,7 @@ parameters such as link management</td></tr>
 <tr><td><img source=":/images/icons/flag-none.gif"></td>
 <td> remove all selection flags</td></tr>
 <tr><td><img source=":/images/icons/operate-list.gif"></td>
-<td> open the selection panel, gives the list of all selected nodes</td></tr>
+<td> open the selection view, gives the list of all selected nodes</td></tr>
 <tr><td><img source=":/images/icons/check-all.gif"></td>
 <td> check nodes using <b>CGNS.VAL</b> tool. If the selection list is not
 empty, then only the selected nodes are checked. If the selection list is
@@ -178,7 +182,7 @@ empty, all nodes of the tree are checked.</td></tr>
 <tr><td><img source=":/images/icons/check-clear.gif"></td>
 <td> remove all check flags</td></tr>
 <tr><td><img source=":/images/icons/check-list.gif"></td>
-<td> open the diagnosis panel which details the check log</td></tr>
+<td> open the diagnosis view which details the check log</td></tr>
 <tr><td><img source=":/images/icons/link-select.gif"></td>
 <td> not available yet</td></tr>
 <tr><td><img source=":/images/icons/link-add.gif"></td>
@@ -243,9 +247,34 @@ See user options for directory and file used for this snapshot.</td></tr>
 """
 <h2>Form view</h2>
 
-<h3>Buttons</h3>
+This view shows all information it can find about a node. The <i>Form view</i>
+displays the node and its data using different ways and allows you some
+basic operations on this node. Each tab is a view of the same node. The
+<i>table tab</i> is a raw view of dimensions, types and shows the
+actual <i>data</i> in a spreadsheet-like widget.
+
+
+<h3>Spreadsheet</h3>
 <p>
-<img source=":/images/icons/unselected.gif">
+The data is displayed in a 2D table, you can change the horizontal/vertical
+distribution using the <i>Size</i> selector. It computes for you all
+possible combinations of horizontal and vertical indicies from the original
+data size.
+
+<h3>Links</h3>
+<p>
+All details about relationship with other files are in the <i>Link</i> tab.
+It shows you the current link if the node is actually the root node of a link,
+it also shows you the parent node link if the current node is the child of a
+linked-to node. In other words, it tells you wether the node you are looking at
+is in the top file or not.
+
+<h3>Text</h3>
+<p>
+Some node data are text, it is often more readable to look at it using a real
+text tool than a spreadsheet-like tool. The <i>Text</i> tab is available only
+for text data.
+
 """),
 # --------------------------------------------------------------------------
 'Query':('Query view',
@@ -275,31 +304,84 @@ See user options for directory and file used for this snapshot.</td></tr>
 <img source=":/images/icons/unselected.gif">
 """),
 # --------------------------------------------------------------------------
-'Selection':('Selection panel',
+'Selection':('Selection view',
 """
-<h2>Selectione panel</h2>
+<h2>Selectione view</h2>
 
 <h3>Buttons</h3>
 <p>
 <img source=":/images/icons/unselected.gif">
 """),
 # --------------------------------------------------------------------------
-'Diagnosis':('Diagnosis panel',
+'Diagnosis':('Diagnosis view',
 """
-<h2>Diagnosis panel</h2>
+<h2>Diagnosis view</h2>
+
+A <i>Diagnosis view</i> is associated to one <i>Tree view</i> once a check
+of its CGNS/Python tree has been performed. The <i>Diagnosis view</i>
+shows the errors and warnings per node, filter the error/warning type you
+want to see or suppress the warnings display. You can browse these diagnosis
+and go back to the targeted node in the <i>Tree view</i> by pressing the
+<i>[space]</i> key.
+
+<h3>Filters</h3>
+<p>
+You can select an error/warning code in the combo-box, it shows all the
+error/warning codes the check has collected. In the case you have too
+many warnings, you can just ignore them by un-setting the <i>Warnings</i>
+checkbox.
 
 <h3>Buttons</h3>
 <p>
-<img source=":/images/icons/unselected.gif">
+<table>
+<tr><td><img source=":/images/icons/level-in.gif"></td>
+<td> expand all errors/warnings</td></tr>
+<tr><td><img source=":/images/icons/level-out.gif"></td>
+<td> collapse all errors/warnings</td></tr>
+<tr><td><img source=":/images/icons/node-sids-opened.gif"></td>
+<td> go to previous filtered error/warning</td></tr>
+<tr><td><img source=":/images/icons/selected.gif"></td>
+<td> go to next filtered error/warning</td></tr>
+<tr><td><img source=":/images/icons/check-save.gif"></td>
+<td> save errors/warnings as a Python importable file (see hereafter)</td></tr>
+</table>
+
+<h3>Save diagnosis</h3>
+<p>
+You can save all the diagnosis in a file. The file contains a Python
+dictionnary in the variable <i>data</i> with the node paths as key.
+For a key, the value is the list of diagnosis, each diagnosis is a tuple
+of three strings: the error/warning code, the level, the message.
+Here is an example of such a file:
+<pre>
+data={
+'/SquaredNozzle/INJ3/.Solver#Trigger/next_iteration':
+  ("S004","E","DataType [I4] not allowed for this node"),
+'/SquaredNozzle/INJ3/.Solver#Trigger/next_state':
+  ("S004","E","DataType [I4] not allowed for this node")
+}
+</pre>
+
 """),
 # --------------------------------------------------------------------------
 'Info':('Info panel',
 """
 <h2>Info panel</h2>
 
-<h3>Buttons</h3>
+Gives all details on the top file you use to load/save the target CGNS/Tree.
+
+
+<b>In case of links, only the top file is detailled.</b>
+
+<h3>Translated files</h3>
 <p>
-<img source=":/images/icons/unselected.gif">
+
+As <i>pyCGNS</i> uses only GCNS/HDF5 files, using <i>CHLone</i>, the CGNS/ADF
+files are translated on the fly when you load them. The translation tool is
+<i>cgnsconvert</i> and its location should be set into the <i>Option panel</i>.
+
+A translated file is stored into a temporary directory, the <i>Info panel</i>
+shows you which is the actual original file name and the temporary filename.
 """),
 # --------------------------------------------------------------------------
 }
