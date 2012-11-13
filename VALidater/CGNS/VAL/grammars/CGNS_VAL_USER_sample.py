@@ -7,7 +7,7 @@ import CGNS.PAT.cgnsutils          as CGU
 import CGNS.PAT.cgnstypes          as CGT
 import CGNS.PAT.cgnskeywords       as CGK
 import CGNS.VAL.parse.messages     as CGM
-import CGNS.VAL.grammars.SIDSbase  as CGS
+import CGNS.VAL.parse.generic
 
 messagetable=(
 ('NOZONE','U101',CGM.CHECK_WARN,'No Zone in this Base'),
@@ -28,14 +28,13 @@ for (v,k,l,m) in messagetable:
   USER_MESSAGES[k]=(l,m)
 
 # -----------------------------------------------------------------------------
-class CGNS_VAL_USER_checks(CGS.SIDSbase):
+class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
   def __init__(self,log):
-    CGS.SIDSbase.__init__(self,log)
+    CGNS.VAL.parse.generic.GenericParser.__init__(self,log)
     self.log.addMessages(USER_MESSAGES)
-    self.sids=CGS.SIDSbase
   # --------------------------------------------------------------------
   def Zone_t(self,pth,node,parent,tree,log):
-    rs=self.sids.Zone_t(self,pth,node,parent,tree,log)
+    rs=CGM.CHECK_OK
     if (CGK.GridCoordinates_s not in CGU.childNames(node)):
       rs=log.push(pth,NOGRIDZONE)
     if (not CGU.hasChildNodeOfType(node,CGK.ReferenceState_ts)):
@@ -43,7 +42,7 @@ class CGNS_VAL_USER_checks(CGS.SIDSbase):
     return rs
   # --------------------------------------------------------------------
   def CGNSBase_t(self,pth,node,parent,tree,log):
-    rs=self.sids.CGNSBase_t(self,pth,node,parent,tree,log)
+    rs=CGM.CHECK_OK
     if (not CGU.hasChildNodeOfType(node,CGK.Zone_ts)):
       rs=log.push(pth,NOZONE)
     else:
@@ -60,28 +59,10 @@ class CGNS_VAL_USER_checks(CGS.SIDSbase):
       rs=log.push(pth,NOBREFSTATE)
     return rs
   # --------------------------------------------------------------------
-  def IntIndexDimension_t(self,pth,node,parent,tree,log):
-    rs=self.sids.IntIndexDimension_t(self,pth,node,parent,tree,log)
-    if (node[0]==CGK.Transform_s):
-      tr=list(node[0].flat)
-      if (not CGS.transformIsDirect(tr,self.context[CGK.CellDimension_s])):
-        rs=log.push(pth,NOTRHTRANSFORM)
-    return rs
-  # --------------------------------------------------------------------
   def GridLocation_t(self,pth,node,parent,tree,log):
-    rs=self.sids.GridLocation_t(self,pth,node,parent,tree,log)
+    rs=CGM.CHECK_OK
     val=node[1].tostring()
     if (val not in [CGK.Vertex_s,CGK.CellCenter_s,CGK.FaceCenter_s]):
         rs=log.push(pth,CHSGRIDLOCATION,val)
-    return rs
-  # --------------------------------------------------------------------
-  def Elements_t(self,pth,node,parent,tree,log):
-    rs=self.sids.Elements_t(self,pth,node,parent,tree,log)
-    if (self.context[CGK.ElementType_s] not in [CGK.QUAD_4, CGK.HEXA_8]):
-      try:
-        et=CGK.ElementType_[self.context[CGK.ElementType_s]]
-      except KeyError:
-        et=str(self.context[CGK.ElementType_s])
-      rs=log.push(pth,CHSELEMENTTYPE,et)
     return rs
 # -----

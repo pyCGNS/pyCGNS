@@ -63,7 +63,9 @@ class DiagnosticLog(dict):
     __messages={}
     def __init__(self):
         dict.__init__(self)
-        DiagnosticLog.__messages
+        #DiagnosticLog.__messages
+    def merge(self,log):
+        self.update(log)
     def listMessages(self):
         return self.__messages
     def noContextMessage(self,m):

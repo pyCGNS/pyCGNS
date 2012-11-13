@@ -43,7 +43,7 @@ verbose=False
 mlist=False
 klist=False
 recurse=True
-user=None
+userlist=[]
 pathsort=True
 olist=[]
 idlist=[]
@@ -55,7 +55,7 @@ for o, v in opts:
   if (o == "-m"): pathsort=False
   if (o == "-p"): path=v
   if (o == "-v"): verbose=True
-  if (o == "-u"): user=v
+  if (o == "-u"): userlist+=[v]
   if (o == "-r"): idlist=v.split(':')
   if (o in ("-h", "--help")): usage()
 
@@ -65,7 +65,7 @@ except IndexError:
   if ((not mlist) and (not klist)): usage()
 
 if (mlist):
-  ml=CGV.listdiags(verbose,user)
+  ml=CGV.listdiags(verbose,userlist)
   print ml
 elif (klist):
   kl=CGV.listuserkeys(verbose)
@@ -76,7 +76,7 @@ else:
     print '### Loading file [%s]'%filename
   (tree,links,paths)=CGNS.MAP.load(filename,CGNS.MAP.S2P_DEFAULTS,
                                         lksearch=['.'],maxdata=200)
-  checkdiag=CGV.run(tree,verbose,user)
+  checkdiag=CGV.run(tree,verbose,userlist)
   CGV.showDiag(checkdiag,idlist,bypath=pathsort)
 
 # --- last line

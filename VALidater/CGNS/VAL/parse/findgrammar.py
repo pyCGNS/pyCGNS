@@ -16,7 +16,16 @@ def findAllUserGrammars(verbose=False):
     try:
       for pthroot, dirs, files in os.walk(pth):
           for fn in files:
-              if fnmatch.fnmatch(fn,'CGNS_VAL_USER_*.py'):
+              if (fnmatch.fnmatch(fn,'CGNS_VAL_USER_*.py')
+                  or fnmatch.fnmatch(fn,'CGNS_VAL_USER_*.so')):
+                gkey=fn[14:-3]
+                if (gkey in kdict):
+                  if (verbose):
+                    print '### CGNS.VAL:          found grammar:',
+                    print gkey,'already found, ignore this one'
+                else:
+                  if (verbose):
+                    print '### CGNS.VAL:          found grammar:',gkey
                   kdict[fn[14:-3]]=pthroot
     except OSError: pass
   return kdict
