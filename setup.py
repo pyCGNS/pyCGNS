@@ -28,19 +28,20 @@ modList.remove('DATaTracer')
 #modList.remove('VALidater')
 
 solist='m:'
-lolist=["without-mod=","single-mod=","prefix="]
+lolist=["without-mod=","single-mod=","prefix=","force"]
 
 try:
   opts, args = getopt.gnu_getopt(sys.argv[1:],solist,lolist)
 except getopt.GetoptError:
   print 72*'='
   print "### pyCGNS: ERROR"
-  print "### pyCGNS: see documentation for details on installation options"
-  print "### pyCGNS: in particular for default values."
-  print "### pyCGNS: known options are: "
-  print "### pyCGNS:   --without-mod='MMM' to install without this module"
-  print "### pyCGNS:   --single-mod='MMM'  to install only this module"
-  print "### pyCGNS:   --prefix='/path'    to install in the specified path"
+  print "###       : see documentation for details on installation options"
+  print "###       : in particular for default values."
+  print "###       : known options are: "
+  print "###       :   --without-mod='MMM' to install without this module"
+  print "###       :   --single-mod='MMM'  to install only this module"
+  print "###       :   --prefix='/path'    to install in the specified path"
+  print "###       :   --force             force all rebuilds"
   sys.exit(2)
 
 for o,a in opts:
@@ -58,7 +59,7 @@ for opt in sys.argv[1:]:
 modArgs=string.join(modArgs)
 
 for mod in modList:
-  print '\n',mod, 65*'-'
+  print '\n',mod, (69-len(mod))*'-'
   if os.path.exists('./%s/setup.py'%mod):
     os.chdir(mod)
     com='%s setup.py %s'%(pcom,modArgs)

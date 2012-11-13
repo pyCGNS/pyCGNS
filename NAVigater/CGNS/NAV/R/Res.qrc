@@ -1,5 +1,16 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/help-01.gif</file>
+    <file>icons/user-0.gif</file>
+    <file>icons/user-1.gif</file>
+    <file>icons/user-2.gif</file>
+    <file>icons/user-3.gif</file>
+    <file>icons/user-4.gif</file>
+    <file>icons/user-5.gif</file>
+    <file>icons/user-6.gif</file>
+    <file>icons/user-7.gif</file>
+    <file>icons/user-8.gif</file>
+    <file>icons/user-9.gif</file>
     <file>icons/undo-at-most.gif</file>
     <file>icons/save-S-M.gif</file>
     <file>icons/save-S-UM.gif</file>

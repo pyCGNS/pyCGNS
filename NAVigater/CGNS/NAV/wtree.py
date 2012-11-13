@@ -36,7 +36,8 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         hs=option.rect.height()+4
         xs=option.rect.x()
         ys=option.rect.y()-2
-        if (index.column() in [NMT.COLUMN_NAME]):
+        if (not index.internalPointer().hasEditCheck()
+            or (index.column() in [NMT.COLUMN_NAME])):
           self._mode=CELLTEXT
           editor=QLineEdit(parent)
           editor.transgeometry=(xs,ys,ws,hs)

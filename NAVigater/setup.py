@@ -36,19 +36,22 @@ if installprocess:
 
   sys.path.append('.')
   from pyCGNSconfig import version as __vid__
+  from optparse import OptionParser,OptionError
 
-  from optparse import OptionParser
+  fakefile="CGNS/NAV/fake.pxi"
 
   parser = OptionParser()
+  parser.add_option("--force",dest="forcerebuild",action="store_true")
   parser.add_option("--prefix",dest="prefix")
   try:
     (options, args) = parser.parse_args(sys.argv)
-  except optparse.OptionError: pass
-
+    if (options.forcerebuild): setuputils.touch(fakefile)
+  except OptionError: pass
 
   if (not os.path.exists("build")): os.system("ln -sf ../build build")
   setuputils.installConfigFiles()
 
+    
   modnamelist=[
       'Q7TreeWindow',
       'Q7ControlWindow',
@@ -67,13 +70,15 @@ if installprocess:
   modgenlist=[]
   modextlist=[]
   for mfile in ['mtree','mparser','mquery','mcontrol','mtable']:
-     modextlist+=[Extension("CGNS.NAV.%s"%mfile,["CGNS/NAV/%s.pyx"%mfile],
+     modextlist+=[Extension("CGNS.NAV.%s"%mfile,["CGNS/NAV/%s.pyx"%mfile,
+                                                 fakefile],
                            include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
                            library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
                            libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
                            )]
   for m in modnamelist:
-     modextlist+=[Extension("CGNS.NAV.%s"%m, ["CGNS/NAV/G/%s.pyx"%m],
+     modextlist+=[Extension("CGNS.NAV.%s"%m, ["CGNS/NAV/G/%s.pyx"%m,
+                                              fakefile],
                             include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
                             library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
                             libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,

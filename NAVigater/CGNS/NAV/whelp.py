@@ -98,7 +98,7 @@ would require a <b>save as</b> to set these values.
 
 All <b>CGNS.NAV</b> windows have a <img source=":/images/icons/top.gif">
 button that raises the control panel window. The other way, you select
-a view line in the control panel and press <i>[space bar]</i> to raise the
+a view line in the control panel and press <i>[space]</i> to raise the
 corresponding view.
 
 You can close a single view, all views related to one tree or all the trees
@@ -150,6 +150,69 @@ The current node is the highlighted line. The selected nodes are the lines
 with a blue flag on. Some commands require a current node to run, for example
 the <i>Form view</i> requires it. Some other commands require a list of
 selected nodes, or example the check, or the <i>paste as child for each selected node</i>. This latter command is in the right-click menu.
+
+<h3>Flags</h3>
+
+There a 4 flag columns: <b>L</b> is for link flag, <b>M</b> is mark flag,
+<b>C</b> is check flag and the last <b>U</b> is user flag.<br><br>
+
+There are two link flags, <img source=":/images/icons/link.gif"> indicates
+the root node of a linked-to node. The actual node is in file used for the
+current tree, but the node value and its children are located into another
+file. Use the <img source=":/images/icons/link-view.gif"> icon to open the
+link view, that shows all existing links for the current tree. Or you can move
+the mouse pointer on the link icon, the actual linked-to reference would
+be displayed.
+The second link flag is
+<img source=":/images/icons/link-child.gif"> that indicates the node has a
+linked-to ancestor node (its direct parent or any other parent). Depending
+on the options you set, you may or may not have the right to change this
+child-link node name, type or value.<br><br>
+
+The mark flag is set when you run a selection, or when you mark it by
+yourself by pressing <i>[space]</i>. The list of all selected nodes, for
+example after running a large query, is displayed using the
+<img source=":/images/icons/operate-list.gif"> icon.<br><br>
+
+The check flag is set when you run a check with 
+<img source=":/images/icons/check-all.gif">, the diagnosis list is
+open with <img source=":/images/icons/check-list.gif">.
+Nodes can have a warning <img source=":/images/icons/check-warn.gif">
+or an error <img source=":/images/icons/check-fail.gif"> flag. Node without
+flags are ok.<br><br>
+
+The last flag column is for the user flag. The user sets/unsets the flag
+for each node by selecting the node and pressing one of the <i>[0-9]</i> keys.
+Then, by default, the corresponding number is set as flag (for example you
+have a <img source=":/images/icons/user-5.gif"> if you press <i>[5]</i>.
+The flag is an informative flag, it is not used by CGNS.NAV functions.<br><br>
+
+The snapshot below shows the flag columns with various flag settings.<br><br>
+<img source=":/images/icons/help-01.gif"><br>
+
+
+<h3>Editing nodes</h3>
+You can edit node name, type and values by right-cliking on the line/column
+you want to edit.<br><br>
+
+The new name is rejected if it already exists or if its syntax is not
+compliant with CGNS/SIDS requirements.<br><br>
+
+The new SIDS type should be one of the allowed types.<br><br>
+
+The new value edit depends on its SIDS type and its data type (the *D* column).
+You may have an enumerate or a plain string. In case of plain string, you have
+to provide a new value as a python value without interpretation.<br><br>
+
+In the case you want to get rid of enumerates, for example when you want
+to document a new SIDS type for CPEX proposal, you force plain using
+<i>[insert]</i> to edit the name (*NO NAME CHECK*),
+<i>[control-insert]</i> to edit the SIDS type and
+<i>[shift-insert]</i> to edit value.
+These edit methods are not performing any check and your CGNS/Python tree
+may be not-compliant, or even impossible to actually store with CGNS/HDF5!
+
+<h3>Copy/Cut/Paste</h3>
 
 <h3>Top Buttons</h3>
 <p>

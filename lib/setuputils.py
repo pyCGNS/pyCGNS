@@ -7,6 +7,7 @@ import os
 import sys
 import shutil
 import re
+import time
 from   distutils.dir_util import remove_tree
 
 from  distutils.core import setup
@@ -402,6 +403,11 @@ def find_numpy(pincs,plibs,libs):
     print pfx,pincs
   
   return (vers,pincs,plibs,libs,extraargs)
+
+# --------------------------------------------------------------------
+def touch(filename):
+  now=time.time()
+  os.utime(filename,(now,now))
 
 # --- last line
 

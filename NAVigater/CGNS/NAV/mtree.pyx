@@ -136,16 +136,16 @@ ICONMAPPING={
  STMARKOFF:":/images/icons/empty.gif",
  STMARK_ON:":/images/icons/mark-node.gif",
 
- STUSR_0:  ":/images/icons/empty.gif",   
- STUSR_1:  ":/images/icons/user-A.gif",
- STUSR_2:  ":/images/icons/user-B.gif",
- STUSR_3:  ":/images/icons/user-C.gif",
- STUSR_4:  ":/images/icons/user-D.gif",
- STUSR_5:  ":/images/icons/user-E.gif",
- STUSR_6:  ":/images/icons/user-F.gif",
- STUSR_7:  ":/images/icons/user-G.gif",
- STUSR_8:  ":/images/icons/user-H.gif",
- STUSR_9:  ":/images/icons/user-J.gif",
+ STUSR_0:  ":/images/icons/user-0.gif",   
+ STUSR_1:  ":/images/icons/user-1.gif",
+ STUSR_2:  ":/images/icons/user-2.gif",
+ STUSR_3:  ":/images/icons/user-3.gif",
+ STUSR_4:  ":/images/icons/user-4.gif",
+ STUSR_5:  ":/images/icons/user-5.gif",
+ STUSR_6:  ":/images/icons/user-6.gif",
+ STUSR_7:  ":/images/icons/user-7.gif",
+ STUSR_8:  ":/images/icons/user-8.gif",
+ STUSR_9:  ":/images/icons/user-9.gif",
 }
 
 KEYMAPPING={
@@ -313,6 +313,7 @@ class Q7TreeView(QTreeView):
               last.setUserState(kval-48)
               self.exclusiveSelectRow(nix)
           elif (kval==KEYMAPPING[EDITNODE]):
+              last.setEditCheck(False)
               if (kmod==Qt.ControlModifier):
                   eix=self._model.createIndex(nix.row(),COLUMN_SIDS,
                                               nix.internalPointer())
@@ -459,6 +460,7 @@ class Q7TreeItem(object):
         self._size=None
         self._fingerprint=fgprint
         self._log=None
+        self._checkable=True
         self._control=self._fingerprint.control
         self._states={'mark':STMARKOFF,'check':STCHKUNKN,
                       'user':STUSR_X,'shared':STSHRUNKN}
@@ -494,11 +496,14 @@ class Q7TreeItem(object):
     def sidsNameSet(self,name):
         if (type(name) not in [str,unicode]): return False
         name=str(name)
-        if (name==''): return False
-        if (not CGU.checkName(name)): return False
-        if (not CGU.checkDuplicatedName(self.sidsParent(),name,dienow=False)):
-            return False
+        if (self._checkable):
+            if (name==''): return False
+            if (not CGU.checkName(name)): return False
+            if (not CGU.checkDuplicatedName(self.sidsParent(),
+                                            name,dienow=False)):
+                return False
         self._itemnode[0]=name
+        self._checkable=True
         return True
     def sidsValue(self):
         return self._itemnode[1]
@@ -542,8 +547,10 @@ class Q7TreeItem(object):
     def sidsTypeSet(self,value):
         if (type(value) not in [str,unicode]): return False
         value=str(value)
-        if (value not in self.sidsTypeList()): return False
+        if (self._checkable and (value not in self.sidsTypeList())):
+            return False
         self._itemnode[3]=value
+        self._checkable=True
         return True
     def sidsDataType(self,all=False):
         if (all): return CGK.adftypes
@@ -652,6 +659,10 @@ class Q7TreeItem(object):
         return len(self._childrenitems)  
     def columnCount(self):
         return COLUMN_LAST+1
+    def setEditCheck(self,check=True):
+        self._checkable=check
+    def hasEditCheck(self):
+        return self._checkable
     def hasValueView(self):
         if (self._lazy): False
         if (self.sidsValue() is None): return False
@@ -960,7 +971,7 @@ class Q7TreeModel(QAbstractItemModel):
                            "The new name [%s] is rejected"%newname)
         if (index.column()==COLUMN_SIDS):
             newtype=value
-            if (newtype in CGK.cgnstypes):
+            if (not node.hasEditCheck() or (newtype in CGK.cgnstypes)):
                 st=node.sidsTypeSet(newtype)
             if (st):
                 torow=self.getSortedChildRow(oldpath)
