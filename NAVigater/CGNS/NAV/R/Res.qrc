@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/operate-doc.gif</file>
     <file>icons/help-01.gif</file>
     <file>icons/user-0.gif</file>
     <file>icons/user-1.gif</file>

@@ -10,15 +10,21 @@ from CGNS.NAV.Q7HelpWindow import Ui_Q7HelpWindow
 
 # -----------------------------------------------------------------
 class Q7Help(QWidget,Ui_Q7HelpWindow):
-  def __init__(self,control,key=None):
+  def __init__(self,control,key=None,doc=None):
     super(Q7Help, self).__init__()
     self.setupUi(self)
     self._control=control
-    if (key not in HELPDOCS): return
-    self.setWindowTitle("CGNS.NAV: Help on "+HELPDOCS[key][0])
+    if ((doc is None) and (key not in HELPDOCS)): return
     self.eHelp.setAcceptRichText(True)
     self.eHelp.clear()
-    self.eHelp.insertHtml(HELPDOCS[key][1])
+    if (key is not None):
+      self.setWindowTitle("CGNS.NAV: Help on "+HELPDOCS[key][0])
+      self.eHelp.insertHtml(HELPDOCS[key][1])
+    elif (doc is not None):
+      self.setWindowTitle("CGNS.NAV: Contextual Documentation")
+      self.eHelp.insertHtml(doc)
+    else:
+      return
     self.eHelp.moveCursor(QTextCursor.Start,QTextCursor.MoveAnchor)
     self.eHelp.ensureCursorVisible()
     self.eHelp.setReadOnly(True)
@@ -366,7 +372,10 @@ same as NODE[2]</td></tr>
 <tr><td><b>TREE</b></td><td>the complete CGNS/Python TREE</td></tr>
 <tr><td><b>PATH</b></td><td>the PATH to the current NODE</td></tr>
 <tr><td><b>ARGS</b></td><td>The arguments tuple you may have passed (in
-the Tree view for example)</td></tr>
+the Tree view for example). Please note this is always a tuple, even if you
+have a single argument (then use ARGS[0]). The is a special case, if your
+argument is a single string then you need not to put quotes around. For
+example, you can use <i>ZoneType</i> instead of <i>'ZoneType'</i>.</td></tr>
 <tr><td><b>RESULT</b></td><td>the output of your script, this result value
 is inserted into the global result list for all nodes. Thus, you would
 rather add a tuple containing the current PATH and the result if you

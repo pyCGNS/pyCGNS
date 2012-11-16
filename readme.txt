@@ -3,11 +3,14 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-# This is a source distribution, doc is generated in the doc directory
+# pyCGNS is a set of Python modules about the CGNS standard
+# 
+# CGNS.MAP implements CGNS/Python physical representation of CGNS/SIDS
+# CGNS.PAT has a large set of fonctions for CGNS/Python tree handling
+# CGNS.NAV is a CGNS/Python tree browser 
+# CGNS.WRA wraps CGNS/MLL in Python
+# CGNS.VAL checks CGNS/SIDS compliance of CGNS/Python trees
 #
-# You have the on-line doc on the http://www.python-science web site
-# you also have a copy of the .pdf files in ./doc directory.
-#
-# Textual version for installation can be found in  ./doc/Intro/install.txt
+# pyCGNS is released under LGPL v2.1 license
 #
 

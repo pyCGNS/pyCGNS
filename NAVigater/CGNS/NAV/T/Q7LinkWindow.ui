@@ -31,6 +31,10 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../R/Res.qrc">
+    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">

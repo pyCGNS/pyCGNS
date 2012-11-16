@@ -21,6 +21,7 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
 from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
 from CGNS.NAV.wfile import checkFilePermission
+
 # -----------------------------------------------------------------
 class Q7Window(QWidget,object):
     VIEW_CONTROL='C'
@@ -75,7 +76,7 @@ class Q7Window(QWidget,object):
         fn=''
         if (fgprint is not None): fn=fgprint.filename
         if (self._index!=0):
-            tit="%s:[%s]:%s%.3d"%(OCTXT._ToolName,fn,self._vtype,self._index)
+            tit="%s:%s%.3d"%(OCTXT._ToolName,self._vtype,self._index)
         else:
             tit="%s:Control"%(OCTXT._ToolName)            
         self.setWindowTitle(tit)

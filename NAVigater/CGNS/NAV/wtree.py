@@ -162,11 +162,16 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         QObject.connect(self.treeview,
                         SIGNAL("customContextMenuRequested(QPoint)"),
                         self.clickedNode)
+        QObject.connect(self.cGroup,
+                        SIGNAL("currentIndexChanged(int)"),
+                        self.fillqueries)
         qlist=Q7Query.queriesNamesList()
         qlist.sort()
         for q in qlist: self.cQuery.addItem(q)
-        ix=-1#self.cQuery.findText()self.querymodel.getCurrentQuery())
-        if (ix!=-1): self.cQuery.setCurrentIndex(ix)
+        gqlist=Q7Query.queriesGroupsList()
+        for gq in gqlist: self.cGroup.addItem(gq)
+        #ix=-1#self.cQuery.findText()self.querymodel.getCurrentQuery())
+        #if (ix!=-1): self.cQuery.setCurrentIndex(ix)
         self.bSave.clicked.connect(self.savetree)
         self.bSaveAs.clicked.connect(self.savetreeas)
         self.bApply.clicked.connect(self.forceapply)
@@ -194,6 +199,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bLinkView.clicked.connect(self.linklist)
         self.bDeleteLink.clicked.connect(self.linkdelete)
         self.bAddLink.clicked.connect(self.linkadd)
+        self.bOperateDoc.clicked.connect(self.querydoc)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.diagview=None
@@ -379,6 +385,17 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.treeview.resizeColumnToContents(n)
     def show(self):
         super(Q7Tree, self).show()
+    def fillqueries(self):
+        g=self.cGroup.currentText()
+        self.cQuery.clear()
+        for qn in Q7Query.queriesNamesList():
+          if ((g=='*') or (Q7Query.getQuery(qn).group==g)):
+            self.cQuery.addItem(qn)
+    def querydoc(self):
+        q=self.cQuery.currentText()
+        if (q in Q7Query.queriesNamesList()):
+            doc=Q7Query.getQuery(q).doc
+            self._control.helpWindowDoc(doc)
     def applyquery(self):
         q=self.cQuery.currentText()
         v=self.eUserVariable.text()

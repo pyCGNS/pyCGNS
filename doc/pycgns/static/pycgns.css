@@ -137,12 +137,12 @@ p {
 }
 
 a {
-    color: #CA7900;
+    color: #0D0D0D;
     text-decoration: none;
 }
 
 a:hover {
-    color: #2491CF;
+    color: #AFC1C4;
 }
 
 h1 {
@@ -298,11 +298,11 @@ hr {
 
 a tt {
     border: 0;
-    color: #CA7900;
+    color: #AFC1C4;
 }
 
 a tt:hover {
-    color: #2491CF;
+    color: #AFC1C4;
 }
 
 span.pre {

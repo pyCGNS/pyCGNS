@@ -88,6 +88,10 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         if (self.lastView): Q7fingerPrint.raiseView(self.lastView)
     def infoControl(self):
         self.helpWindow('Control')
+    def helpWindowDoc(self,doc):
+        if (self.help is not None): self.help.close()
+        self.help=Q7Help(self,doc=doc)
+        self.help.show()
     def helpWindow(self,key):
         if (self.help is not None): self.help.close()
         self.help=Q7Help(self,key)

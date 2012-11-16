@@ -10,12 +10,11 @@ A Python package for CGNS
 
    - `CGNS.MAP` is now a wrapper 
      to `CHLone <http://chlone.sourceforge.net/>`_ python module
-   - `CGNS.WRA` re-coding using *Cython*
-   - `CGNS.WRA` usable again
+   - `CGNS.WRA` reborn, re-coding using *Cython*
+   - `CGNS.VAL` reborn
    - completely new `CGNS.NAV` using *Qt*, *VTK* and *Cython*
    - YouTube demos `here <http://www.youtube.com/user/pyCGNS?feature=watch>`_
 
-..    - new pages `CGNS How to? <ch2/cgnshowto.html>`_
 
 The package gathers various tools and libraries for CGNS end-users and
 Python application developpers. The main object of *pyCGNS* is to provide the
@@ -25,6 +24,29 @@ model. The *MAP* and *PAT* modules are dedicated to this goal: map the
 The *WRA* module contains wrapper on :term:`CGNS/MLL`
 and a *MLL-like* set of functions that uses the
 :term:`CGNS/Python` mapping as implementation.
+The *NAV* module supports the *CGNS.NAV* graphical browser, with nice
+features about tree exploration, copy/paste and even global node changes.
+Then, the *VAL* module is a parser engine for :term:`CGNS/Python` tree compliance
+checking. The *CGNS.VAL* tool can analyze your :term:`CGNS/HDF5` file
+and returns you a list of diagnostics.
+
+The package uses :term:`numpy`, :term:`cython` and :term:`HDF5`
+you should install before pyCGNS. 
+The *CGNS.NAV* graphical tool uses :term:`Qt` and has a :term:`VTK` viewer,
+the tool requires the *Qt libs*, *VTK libs* and their python interfaces.
+The *CGNS/SIDS* data model has a mapping the *HDF5* for file storage. The
+*MAP* module uses :term:`CHLone` 
+instead of :term:`CGNS/MLL` to map its :term:`CGNS/Python` trees to *HDF5*.
+
+.. note::
+  The *pyCGNS* python package is released 
+  under `LGPL2 license <http://opensource.org/licenses/lgpl-2.1>`_ and hosted 
+  by `sourceforge <http://sourceforge.net/projects/pycgns>`_
+  where you can find 
+  `source download <http://sourceforge.net/projects/pycgns/files>`_, 
+  `help forum <http://sourceforge.net/projects/pycgns/forums/forum/1350997>`_, 
+  `wiki <http://sourceforge.net/apps/trac/pycgns/wiki>`_ 
+  and `bug tracking <http://sourceforge.net/apps/trac/pycgns/report/6>`_.
 
 .. raw:: html
 
@@ -57,24 +79,6 @@ and a *MLL-like* set of functions that uses the
     <img src="images/APP-logo.jpg" height="48" alt="APP"/></a></td>
  
  </tr></table></div>
-
-The package uses :term:`numpy`, :term:`cython` and :term:`HDF5`
-you should install before pyCGNS. 
-The *CGNS.NAV* tools has an optional :term:`VTK` viewer which requires the
-*VTK lib* and its python interface.
-The *CGNS/SIDS* data model has a mapping the *HDF5* for file storage. The
-*MAP* module uses :term:`CHLone` 
-instead of *CGNS/MLL* to map its :term:`CGNS/Python` trees to *HDF5*.
-
-.. note::
-  The *pyCGNS* python package is released 
-  under `LGPL2 license <http://opensource.org/licenses/lgpl-2.1>`_ and hosted 
-  by `sourceforge <http://sourceforge.net/projects/pycgns>`_
-  where you can find 
-  `source download <http://sourceforge.net/projects/pycgns/files>`_, 
-  `help forum <http://sourceforge.net/projects/pycgns/forums/forum/1350997>`_, 
-  `wiki <http://sourceforge.net/apps/trac/pycgns/wiki>`_ 
-  and `bug tracking <http://sourceforge.net/apps/trac/pycgns/report/6>`_.
 
 The listed chapters are the introduction chapters, each MAP, PAT, WRA, 
 NAV, VAL module has its own documentation which doesn't appear below.

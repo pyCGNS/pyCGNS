@@ -126,10 +126,15 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.bDel.clicked.connect(self.queryDel)
         self.bCommit.clicked.connect(self.queryCommit)
         self.bRevert.clicked.connect(self.queryRevert)
+        self.bCommitDoc.clicked.connect(self.queryCommit)
+        self.bRevertDoc.clicked.connect(self.queryRevert)
         self.bSave.clicked.connect(self.queriesSave)
         QObject.connect(self.cQueryName,
                         SIGNAL("currentIndexChanged(int)"),
                         self.changeCurrentQuery)
+        QObject.connect(self.cQueryGroup,
+                        SIGNAL("currentIndexChanged(int)"),
+                        self.changeCurrentGroup)
         self.cQueryName.editTextChanged.connect(self.checkNewQueryName)
         QObject.connect(self.cQueryName,
                         SIGNAL("editTextChanged()"),
@@ -138,6 +143,9 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
                         SIGNAL("editTextChanged(str)"),
                         self.checkNewQueryName)
         QObject.connect(self.eText,
+                        SIGNAL("textChanged()"),
+                        self.changeText)
+        QObject.connect(self.eQueryDoc,
                         SIGNAL("textChanged()"),
                         self.changeText)
         self.bInfo.clicked.connect(self.infoQueryView)
@@ -174,32 +182,46 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
     def queryCommit(self):
         q=self.cQueryName.currentText()
         com=self.eText.toPlainText()
+        doc=self.eQueryDoc.toPlainText()
         Q7Query._allQueries[q].setScript(com)
+        Q7Query._allQueries[q].setDoc(doc)
         self.bCommit.setEnabled(False)
         self.bRevert.setEnabled(False)
+        self.bCommitDoc.setEnabled(False)
+        self.bRevertDoc.setEnabled(False)
     def queryRevert(self):
         self.showQuery()
     def reject(self):
         self.close()
     def reset(self):
+        gq=set()
         for qn in self.queriesNamesList():
             self.cQueryName.addItem(qn)
+            gq.add(Q7Query._allQueries[qn].group)
+        self.cQueryGroup.addItem('*')    
+        for gqn in gq:
+            self.cQueryGroup.addItem(gqn)
     def showQuery(self,name=None):
         if (name is None):
             name=self.getCurrentQuery().name
         if (name in Q7Query.queriesNamesList()):
           txt=self.getCurrentQuery().script
           self.eText.initText(txt)
+          doc=self.getCurrentQuery().doc
+          self.eQueryDoc.initText(doc)
         self.bCommit.setEnabled(False)
         self.bRevert.setEnabled(False)
+        self.bCommitDoc.setEnabled(False)
+        self.bRevertDoc.setEnabled(False)
     def show(self):
         self.reset()
         super(Q7Query, self).show()
     def runCurrent(self):
         com=self.eText.toPlainText()
+        v=self.eUserVariable.text()
         q=Q7QueryEntry('__tmp__query__')
         q.setScript(com)
-        r=q.run(self._fgprint.tree,True)
+        r=q.run(self._fgprint.tree,True,v)
         self.eResult.initText(str(r))
     @classmethod
     def fillQueries(self):
@@ -207,7 +229,7 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         Q7Query._defaultQueriesNames=[n[0] for n in OCTXT._UsualQueries]
         for qe in allqueriestext:
             try:
-                q=Q7QueryEntry(qe[0],qe[1],qe[2])
+                q=Q7QueryEntry(qe[0],qe[1],qe[2],qe[3])
                 Q7Query._allQueries[qe[0]]=q
             except IndexError: pass
     @classmethod
@@ -232,8 +254,23 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         k=Q7Query._allQueries.keys()
         k.sort()
         return k
+    @classmethod
+    def queriesGroupsList(self):
+      gl=set()
+      for q in Q7Query._allQueries:
+        g=Q7Query._allQueries[q].group
+        gl.add(g)
+      return ['*']+list(gl)
     def getCurrentQuery(self):
         return self._currentQuery
+    def changeCurrentGroup(self):
+        group=self.cQueryGroup.currentText()
+        self.cQueryName.clear()
+        for qn in self.queriesNamesList():
+            gp=Q7Query._allQueries[qn].group
+            if ((group=='*') or (gp==group)):
+                self.cQueryName.addItem(qn)
+        self.showQuery()
     def changeCurrentQuery(self,*args):
         name=self.cQueryName.currentText()
         if (name not in self.queriesNamesList()): return
@@ -245,6 +282,8 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
     def changeText(self):
         self.bCommit.setEnabled(True)
         self.bRevert.setEnabled(True)
+        self.bCommitDoc.setEnabled(True)
+        self.bRevertDoc.setEnabled(True)
     @classmethod
     def queries(self):
         return Q7Query.queriesNamesList()

@@ -40,6 +40,7 @@ def evalScript(node,parent,tree,path,val,args):
     l[OCST.Q_VAR_CHILDREN]=node[2]
     l[OCST.Q_VAR_TREE]=tree
     l[OCST.Q_VAR_PATH]=path
+    if (args is None): args=()
     l[OCST.Q_VAR_USER]=args
     l[OCST.Q_VAR_NODE]=node
     pre=OCST.Q_SCRIPT_PRE+val+OCST.Q_SCRIPT_POST
@@ -65,10 +66,11 @@ def parseAndSelect(tree,node,parent,path,script,args,result):
 
 # -----------------------------------------------------------------
 class Q7QueryEntry(object):
-    def __init__(self,name,group=None,script=''):
+    def __init__(self,name,group=None,script='',doc=''):
         self._name=name
         self._group=group
         self._script=script
+        self._doc=doc
     @property
     def name(self):
         return self._name
@@ -76,15 +78,28 @@ class Q7QueryEntry(object):
     def group(self):
         return self._group
     @property
+    def doc(self):
+        return self._doc
+    @property
     def script(self):
         return self._script
     def setScript(self,value):
         self._script=value
+    def setDoc(self,value):
+        self._doc=value
     def __str__(self):
         s='("%s","%s","%s")'%(self.name,self.group,self._script)
         return s
-    def run(self,tree,mode,*args):
-        self._args=args
+    def run(self,tree,mode,args):
+        v=None
+        try:
+            if (args): v=eval(args)
+            if ((v is not None) and (type(v)!=tuple)): v=(v,)
+        except NameError:
+            v=(str(args),)
+        except:
+            pass
+        self._args=v
         result=parseAndSelect(tree,tree,[None,None,[],None],'',
                               self._script,self._args,mode)
         return result

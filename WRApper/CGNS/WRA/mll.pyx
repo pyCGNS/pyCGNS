@@ -1,9 +1,8 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRApper
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release: v4.0.1 $
-#  -------------------------------------------------------------------------
+#
 """
 CGNS.WRA.mll is a CGNS/MLL Python wrapper. It defines a `pyCGNS` class
 which performs the `cg_open` and holds the opened file descriptor for

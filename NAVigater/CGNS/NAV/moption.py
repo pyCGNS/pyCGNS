@@ -370,14 +370,19 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     ]
 
     _UsualQueries=[
-    ('Search by node name','Find','RESULT=(NAME==ARGS[0])'),
-    ('Search by wildcard nodename','Find',
+    ('Node name','Search by','RESULT=(NAME==ARGS[0])',"""search all nodes with the exact NAME as argument."""),
+    ('Wildcard node name','Search by',
 """import fnmatch
 RESULT=fnmatch.fnmatchcase(NAME,ARGS[0])
-"""),
-    ('Search by node type','Find','RESULT=(SIDSTYPE==ARGS[0])'),
-    ('QUADs','Find','RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)'),
+""",
+     """search all nodes with the wilcard NAME as argument.
+The syntax for the argument is a*."""),
+    ('Node type','Search by','RESULT=(SIDSTYPE==ARGS[0])',
+     """search all nodes with ARGUMENT SIDS type."""),
+    ('QUADs','Find elements',
+     'RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)',"""Find all elements of type QUAD"""),
     ]
+
     # -----------------------------------------------------------------
     @classmethod
     def _setOption(cls,name,value):
