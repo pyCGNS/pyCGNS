@@ -295,7 +295,6 @@ cgt[t].addChild(CK.UserDefinedData_ts)
 t=CK.TurbulenceModel_ts
 cgt[t]=CGNStype(t)
 cgt[t].datatype=[CK.C1]
-cgt[t].cardinality=C_01
 cgt[t].shape=(0,)
 cgt[t].enumerate=CK.TurbulenceModelType_l
 cgt[t].addChild(CK.Descriptor_ts)

@@ -30,12 +30,14 @@ Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
 Q_SCRIPT_PRE="""
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils as CGU
+import numpy
 """
 
 Q_FILE_PRE="""
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.NAV.moption as CGO
+import numpy
 """
 
 Q_SCRIPT_POST="""
@@ -370,17 +372,149 @@ Check GPL v2 sections 15 and 16 about loss of data or corrupted data
     ]
 
     _UsualQueries=[
-    ('Node name','Search by','RESULT=(NAME==ARGS[0])',"""search all nodes with the exact NAME as argument."""),
-    ('Wildcard node name','Search by',
+
+# --- Search -----------------------------------------------------------
+('Node name',
+ 'Search by',
+ 'RESULT=(NAME==ARGS[0])',
+ """
+Search by
+Node name
+
+Search all nodes with the exact NAME as argument.
+
+The argument name need not to be a tuple or to have quotes,
+all the following values are ok and would match the NAME <i>ZoneType</i>:
+
+ZoneType
+'ZoneType'
+('ZoneType',)
+"""),
+
+('Wildcard node name',
+ 'Search by',
 """import fnmatch
 RESULT=fnmatch.fnmatchcase(NAME,ARGS[0])
 """,
-     """search all nodes with the wilcard NAME as argument.
-The syntax for the argument is a*."""),
-    ('Node type','Search by','RESULT=(SIDSTYPE==ARGS[0])',
-     """search all nodes with ARGUMENT SIDS type."""),
-    ('QUADs','Find elements',
-     'RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)',"""Find all elements of type QUAD"""),
+"""
+Search by
+Wildcard node name
+
+Search all nodes with the wildcard NAME as argument.
+
+Warning: the <b>argument name</b> should be quoted:
+
+'BC*' is ok
+
+BC* would fail
+"""),
+        
+('Node type',
+ 'Search by',
+ 'RESULT=(SIDSTYPE==ARGS[0])',
+ """search all nodes with argument SIDS type."""),
+
+('Wildcard node type',
+ 'Search by',
+"""
+import fnmatch
+RESULT=fnmatch.fnmatchcase(SIDSTYPE,ARGS[0])
+""",
+"""
+Search by
+Wildcard node type
+
+Search all nodes with wildcard argument SIDS type.
+Warning: the <b>argument type</b> should be quoted:
+
+'Turb*' is ok
+
+Turb* would fail
+"""),
+
+('Non-MT UserDefinedData',
+ 'Search by',
+"""
+if (    (SIDSTYPE==CGK.UserDefinedData_ts)
+    and (CGU.getValueDataType(NODE)!=CGK.MT)):
+  RESULT=True
+""",
+"""
+Search by
+Valued UserDefinedData
+
+Search all <b>UserDefinedData_t</b> nodes with a non-<b>MT</b> data type.
+
+No argument.
+"""),
+
+# --- Replace
+
+('Valued UserDefinedData',
+ 'Replace',"""
+if (     (SIDSTYPE==CGK.UserDefinedData_ts)
+     and (CGU.getValueDataType(NODE)!=CGK.MT)):
+  NODE[3]=CGK.DataArray_ts
+  RESULT=True
+""",
+"""
+Replace
+Valued UserDefinedData
+
+Search all <b>UserDefinedData_t</b> nodes with a non-<b>MT</b> data type
+ and replace them as <b>DataArray_t</b>."""),
+
+('Substitute Zone name',
+ 'Replace',"""
+l1=len(ARGS[0])
+if ((SIDSTYPE==CGK.Zone_ts) and (NAME[:l1]==ARGS[0])):
+  NODE[0]=ARGS[1]+NODE[0][l1:]
+  RESULT=True
+
+if (CGU.getValueDataType(NODE)==CGK.C1):
+  v=VALUE.tostring()
+  if (v[:l1]==ARGS[0]):
+    v=ARGS[1]+v[l1:]
+    NODE[1]=CGU.setStringAsArray(v)
+    RESULT=True
+""",
+"""
+<h1>Replace</h1>
+<h2>Substitute Zone name</h2>
+<p>
+Search all <b>Zone_t</b> nodes with a name pattern, then rename the
+zone with the substitution pattern. Any other reference in the tree,
+as a connectivity value for example, is subsitued as well.
+<p>
+Argument is a tuple with the first pattern to find and
+the second as the subsitution pattern. For example:
+<pre>
+('domain.','zone#')
+</pre>
+"""),
+
+# --- Find Elements_t
+('QUADs',
+ 'Find Elements_t',
+ """if (SIDSTYPE==CGK.Elements_ts):
+   RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)
+ """,
+ """Find all <b>Elements_t</b> nodes of type <b>QUAD</b>"""),
+
+('TRIs',
+ 'Find Elements_t',
+ """if (SIDSTYPE==CGK.Elements_ts):
+   RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)
+ """,
+ """Find all <b>Elements_t</b> nodes of type <b>TRI</b>"""),
+
+('NGONs',
+ 'Find Elements_t',
+ """if (SIDSTYPE==CGK.Elements_ts):
+   RESULT=VALUE[0] in (CGK.NGON_n,)
+ """,
+ """Find all <b>Elements_t</b> nodes of type <b>NGON_n</b>"""),
+
     ]
 
     # -----------------------------------------------------------------
