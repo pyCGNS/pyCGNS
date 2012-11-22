@@ -30,6 +30,7 @@ class Q7SignalPool(QObject):
     saveFile=Signal()
     buffer=None
     fgprint=None
+    saveAs=False
 
 # -----------------------------------------------------------------
 class Q7ControlItemDelegate(QStyledItemDelegate):
@@ -152,8 +153,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.wOption.show()
     def about(self):
         MSG.message("About %s"%OCTXT._ToolName,
-               """<b>%s %s</b><p>%s<p>http://www.onera.fr"""\
-               %(OCTXT._ToolName,OCTXT._ToolVersion,OCTXT._CopyrightNotice),
+               """<b>%s</b><p>%s<p>"""\
+               %(OCTXT._ToolVersion,OCTXT._CopyrightNotice),
                MSG.INFO)
     def closeApplication(self):
         reply = MSG.message('Double check...',
@@ -286,7 +287,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
     def saving(self,*args):
         self._T('saving as: [%s]'%self.signals.buffer)
         self.busyCursor()
-        Q7fingerPrint.treeSave(self,self.signals.fgprint,self.signals.buffer)
+        Q7fingerPrint.treeSave(self,self.signals.fgprint,self.signals.buffer,
+                               self.signals.saveAs)
         self.setHistory(self.signals.fgprint.filedir,
                         self.signals.fgprint.filename)
         self.updateViews()
@@ -304,11 +306,12 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.signals.loadFile.emit()
     def save(self,fgprint):
         self.signals.fgprint=fgprint
+        self.signals.saveAs=True
         self.fdialog=Q7File(self,1)
         self.fdialog.show()
     def savedirect(self,fgprint):
-        return
         self.signals.fgprint=fgprint
+        self.signals.saveAs=False
         self.signals.buffer=fgprint.filedir+'/'+fgprint.filename
         self.signals.saveFile.emit()
     def edit(self):

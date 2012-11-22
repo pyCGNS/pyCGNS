@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created: Thu Oct 25 11:30:22 2012
+# Created: Thu Nov 22 09:24:20 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -405,7 +405,7 @@ class Ui_Q7FormWindow(object):
         self.pushButton.setGeometry(QtCore.QRect(332, 95, 161, 27))
         self.pushButton.setObjectName("pushButton")
         self.verticalLayout_7.addWidget(self.frame_6)
-        self.plainTextEdit = QtGui.QPlainTextEdit(self.tPython)
+        self.plainTextEdit = Q7PythonEditor(self.tPython)
         self.plainTextEdit.setObjectName("plainTextEdit")
         self.verticalLayout_7.addWidget(self.plainTextEdit)
         self.verticalLayout_11.addLayout(self.verticalLayout_7)

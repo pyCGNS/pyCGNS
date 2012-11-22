@@ -369,6 +369,7 @@ with <i>[ NAME, VALUE, CHILDREN, SIDSTYPE]</i></td></tr>
 as NODE[3]</td></tr>
 <tr><td><b>CHILDREN</b></td><td>the list of CHILDREN of the NODE,
 same as NODE[2]</td></tr>
+<tr><td><b>PARENT</b></td><td>the PARENT node of current NODE</td></tr>
 <tr><td><b>TREE</b></td><td>the complete CGNS/Python TREE</td></tr>
 <tr><td><b>PATH</b></td><td>the PATH to the current NODE</td></tr>
 <tr><td><b>ARGS</b></td><td>The arguments tuple you may have passed (in

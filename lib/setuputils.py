@@ -1,8 +1,9 @@
-# -------------------------------------------------------------------------
-# pyCGNS - CFD General Notation System - SIDS PATterns
-# $Rev: 56 $ $Date: 2008-06-10 09:44:23 +0200 (Tue, 10 Jun 2008) $         
-# See license file in the root directory of this Python module source      
-# -------------------------------------------------------------------------
+#  -------------------------------------------------------------------------
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 import os
 import sys
 import shutil

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7QueryWindow.ui'
 #
-# Created: Fri Nov 16 15:08:27 2012
+# Created: Thu Nov 22 09:38:05 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -148,7 +148,7 @@ class Ui_Q7QueryWindow(object):
         self.tabWidget.addTab(self.tab, "")
         self.tab_3 = QtGui.QWidget()
         self.tab_3.setObjectName("tab_3")
-        self.eQueryDoc = Q7PythonEditor(self.tab_3)
+        self.eQueryDoc = Q7DocEditor(self.tab_3)
         self.eQueryDoc.setGeometry(QtCore.QRect(10, 40, 671, 191))
         self.eQueryDoc.setObjectName("eQueryDoc")
         self.horizontalLayoutWidget_3 = QtGui.QWidget(self.tab_3)
@@ -233,7 +233,7 @@ class Ui_Q7QueryWindow(object):
         self.gridLayout.addWidget(self.tabWidget, 5, 1, 1, 1)
 
         self.retranslateUi(Q7QueryWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Q7QueryWindow)
 
     def retranslateUi(self, Q7QueryWindow):
@@ -246,5 +246,5 @@ class Ui_Q7QueryWindow(object):
         self.label_3.setText(QtGui.QApplication.translate("Q7QueryWindow", "Args:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("Q7QueryWindow", "Result", None, QtGui.QApplication.UnicodeUTF8))
 
-from CGNS.NAV.mtable import Q7PythonEditor
+from CGNS.NAV.mtable import Q7DocEditor, Q7PythonEditor
 import Res_rc

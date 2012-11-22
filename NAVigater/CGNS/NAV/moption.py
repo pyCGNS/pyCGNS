@@ -17,6 +17,7 @@ import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
 Q_VAR_NODE='NODE'
+Q_VAR_NODE='PARENT'
 Q_VAR_NAME='NAME'
 Q_VAR_VALUE='VALUE'
 Q_VAR_CGNSTYPE='SIDSTYPE'
@@ -94,10 +95,14 @@ class Q7OptionContext(object):
     _ToolVersion='v%s'%__vid__
     
     _CopyrightNotice="""
-Copyright (c) 2010-2013 Marc Poinot - Onera - The French Aerospace Labs
-All rights reserved in accordance with GPL v2 
-NO WARRANTY :
-Check GPL v2 sections 15 and 16 about loss of data or corrupted data
+Copyright (c) Marc Poinot <br>
+Copyright (c) Onera - The French Aerospace Labs<br>
+
+<br>
+All rights reserved in accordance with GPL v2 <br><br>
+<b>NO WARRANTY :</b><br>
+Check GPL v2 sections 15 and 16<br>
+about loss of data or corrupted data<br>
 """
     FixedFontTable='fixed'
 

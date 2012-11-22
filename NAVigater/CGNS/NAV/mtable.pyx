@@ -98,11 +98,23 @@ class Q7TableModel(QAbstractTableModel):
         return None
 
 # -----------------------------------------------------------------
+class Q7DocEditor(QTextEdit):  
+    def __init__(self,parent=None):
+      QTextEdit.__init__(self,parent)
+    def initText(self,text):
+      self.clear()
+      self.insertPlainText(text)
+      self.moveCursor(QTextCursor.Start,QTextCursor.MoveAnchor)
+      self.ensureCursorVisible()
+
+# -----------------------------------------------------------------
 class Q7PythonEditor(QTextEdit):  
     def __init__(self,parent=None):
       QTextEdit.__init__(self,parent)
       self.highlighter = Q7PythonEditorHighlighter(self.document())
-      self.setCurrentFont(QFont('Courier'))
+      fsz=12
+      ffm='Courier'
+      self.setStyleSheet("font: %dpt \"%s\";"%(fsz,ffm))
     def initText(self,text):
       self.clear()
       self.insertPlainText(text)
@@ -119,7 +131,7 @@ class Q7PythonEditorHighlighter(QSyntaxHighlighter):
         keywords+=r"|\bglobal\b|\byield\b|\bexec\b|\bassert\b|\break\b"
         constants=r"\bNone\b|\bTrue\b|\bFalse\b|\bself\b"
         autovars =r"\bNODE\b|\bNAME\b|\bVALUE\b|\bSIDSTYPE\b|\bCHILDREN\b"
-        autovars+=r"|\bTREE\b|\bPATH\b|\bRESULT\b|\bARGS\b"
+        autovars+=r"|\bTREE\b|\bPATH\b|\bRESULT\b|\bARGS\b|\bPARENT\b"
         numbers=r'[-+]?\d+'+'|[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
         comment=r'\#.*$'
         textstring=r'"[^"]*?"|\'[^\']*?\''
@@ -131,7 +143,7 @@ class Q7PythonEditorHighlighter(QSyntaxHighlighter):
         self.f_comment.setForeground(QColor('Red'))
         self.f_constants=QTextCharFormat()
         self.f_constants.setFontWeight(QFont.Light)
-        self.f_constants.setForeground(QColor('Blue'))
+        self.f_constants.setForeground(QColor('Navy'))
         self.f_autovars=QTextCharFormat()
         self.f_autovars.setFontWeight(QFont.Bold)
         self.f_autovars.setForeground(QColor('Green'))

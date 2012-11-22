@@ -247,7 +247,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -351,7 +351,7 @@
       <attribute name="title">
        <string>Documentation</string>
       </attribute>
-      <widget class="Q7PythonEditor" name="eQueryDoc">
+      <widget class="Q7DocEditor" name="eQueryDoc">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -564,6 +564,11 @@
  <customwidgets>
   <customwidget>
    <class>Q7PythonEditor</class>
+   <extends>QPlainTextEdit</extends>
+   <header>CGNS.NAV.mtable</header>
+  </customwidget>
+  <customwidget>
+   <class>Q7DocEditor</class>
    <extends>QPlainTextEdit</extends>
    <header>CGNS.NAV.mtable</header>
   </customwidget>

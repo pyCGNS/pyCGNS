@@ -34,6 +34,7 @@ def sameValType(n,v):
 def evalScript(node,parent,tree,path,val,args):
     l=locals()
     l[OCST.Q_VAR_RESULT_LIST]=[False]
+    l[OCST.Q_VAR_PARENT]=parent
     l[OCST.Q_VAR_NAME]=node[0]
     l[OCST.Q_VAR_VALUE]=node[1]
     l[OCST.Q_VAR_CGNSTYPE]=node[3]

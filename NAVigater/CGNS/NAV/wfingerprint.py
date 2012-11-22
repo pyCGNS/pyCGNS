@@ -235,11 +235,11 @@ class Q7fingerPrint:
         kw['isfile']=True
         return Q7fingerPrint(control,filedir,filename,tree,links,paths,**kw)
     @classmethod
-    def treeSave(cls,control,fgprint,f):
+    def treeSave(cls,control,fgprint,f,saveas):
         flags=CGNS.MAP.S2P_DEFAULT
         if (OCTXT.CHLoneTrace): flags|=CGNS.MAP.S2P_TRACE
+        if (not saveas):        flags|=CGNS.MAP.S2P_UPDATE
         tree=fgprint.tree
-        #for p in CGU.getAllPaths(tree): print p
         lk=[]
         try:
             CGNS.MAP.save(f,tree,lk,flags)
@@ -253,7 +253,7 @@ class Q7fingerPrint:
             control.readyCursor()
             MSG.wError(0,txt,'')
             return None
-        fgprint.updateFileStats(f)
+        fgprint.updateFileStats(f,saveas=True)
     @classmethod
     def closeAllTrees(cls):
         for x in cls.__extension: x.closeAllViews()
@@ -312,12 +312,19 @@ class Q7fingerPrint:
         for p in paths: self.lazy['/CGNSTree'+p[0]]=p[1]
         Q7fingerPrint.__extension.append(self)
         self.updateFileStats(filedir+'/'+filename)
-    def updateFileStats(self,fname):
+    def updateFileStats(self,fname,saveas=False):
         (filedir,filename)=(os.path.normpath(os.path.dirname(fname)),
                             os.path.basename(fname))
         self.filename=filename
         self.filedir=filedir
         self.version=CGU.getVersion(self.tree)
+        self.removeTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self.addTreeStatus(Q7fingerPrint.STATUS_UNCHANGED)
+        if (saveas):
+            self.converted=False
+            self.tmpfile=''
+            self.removeTreeStatus(Q7fingerPrint.STATUS_CONVERTED)
+            self.addTreeStatus(Q7fingerPrint.STATUS_SAVEABLE)
     def isFile(self):
         return self.isfile
     def isLink(self,path):

@@ -1092,7 +1092,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPlainTextEdit" name="plainTextEdit"/>
+            <widget class="Q7PythonEditor" name="plainTextEdit"/>
            </item>
           </layout>
          </item>

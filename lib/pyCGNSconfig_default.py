@@ -1,12 +1,9 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System
+#  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $File$
-#  $Node$
-#  $Last: v4.0.1 $
+#  $Release$
 #  -------------------------------------------------------------------------
-#
 # Change these values to fit your installation
 # See notes at end of file about config values
 #
@@ -73,14 +70,16 @@ LIBRARY_DIRS+=LIBRARY_DIRS+PYTHON_PATH_LIBRARIES+HDF5_PATH_LIBRARIES\
 # You should not change values beyond this point
 #
 MAJORVERSION=4
-MINORVERSION=2
+MINORVERSION=3
 #
 PFX='### pyCGNS:'
 #
-#
+# --- UPDATE .hg/hgrc for keywords expansion
+__hgrev__="$Release:"
 __version__=MAJORVERSION
 __release__=MINORVERSION
-__vid__="%d.%d"%(__version__,__release__)
+# ---
+__vid__="%d.%d.%s"%(__version__,__release__,__hgrev__)
 __doc__="""pyCGNS - v%d.%s - Python package for CFD General Notation System"""%(__version__,__release__)
 version=__vid__
 #

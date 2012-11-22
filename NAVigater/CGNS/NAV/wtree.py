@@ -243,11 +243,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (not (self._fgprint.isSaveable() and self._fgprint.isModified())):
             return
         self._control.savedirect(self._fgprint)
-        self._fgprint.removeTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self.updateTreeStatus()
     def savetreeas(self):
         self._control.save(self._fgprint)
-        self._fgprint.removeTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
-        self._fgprint.addTreeStatus(Q7fingerPrint.STATUS_SAVEABLE)
+        self.updateTreeStatus()
     def infoTreeView(self):
         self._control.helpWindow('Tree')
     def screenshot(self):
