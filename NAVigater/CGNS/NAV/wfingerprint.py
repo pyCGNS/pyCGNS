@@ -244,7 +244,7 @@ class Q7fingerPrint:
         try:
             CGNS.MAP.save(f,tree,lk,flags)
         except (CGNS.MAP.error,),chlex:
-            txt="""The current save operation has been aborted:"""
+            txt="""The current save operation has been aborted (CHLone):"""
             control.readyCursor()
             MSG.wError(chlex[0],txt,chlex[1])
             return None

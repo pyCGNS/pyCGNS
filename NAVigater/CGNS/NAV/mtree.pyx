@@ -568,6 +568,8 @@ class Q7TreeItem(object):
         else:
             if (     (odt not in [CGK.I4, CGK.I8, CGK.R4, CGK.R8])
                  and (ndt     in [CGK.I4, CGK.I8, CGK.R4, CGK.R8])): oval=(0,)
+            if (ndt==CGK.C1):
+                oval=CGU.setStringAsArray(oval)
             nval=numpy.array(oval,dtype=adt)
         self._itemnode[1]=nval
         return True
@@ -667,6 +669,7 @@ class Q7TreeItem(object):
         if (self._lazy): False
         if (self.sidsValue() is None): return False
         if (type(self.sidsValue())==numpy.ndarray):
+            if (not self.sidsValue().shape): return False
             vsize=reduce(lambda x,y: x*y, self.sidsValue().shape)
             if ((vsize>OCTXT.MaxDisplayDataSize) and
                 (OCTXT.MaxDisplayDataSize>0)):
