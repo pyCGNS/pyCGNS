@@ -69,17 +69,16 @@ LIBRARY_DIRS+=LIBRARY_DIRS+PYTHON_PATH_LIBRARIES+HDF5_PATH_LIBRARIES\
 # -------------------------------------------------------------------------
 # You should not change values beyond this point
 #
-MAJORVERSION=4
-MINORVERSION=3
+# --- UPDATE .hg/hgrc for overall pyCGNS version number
+MAJORVERSION="$MajorVersion$"
+MINORVERSION="$MinorVersion$"
 #
 PFX='### pyCGNS:'
 #
-# --- UPDATE .hg/hgrc for keywords expansion
 __hgrev__="$Release$"
 __version__=MAJORVERSION
 __release__=MINORVERSION
-# ---
-__vid__="%d.%d.%s"%(__version__,__release__,__hgrev__)
+__vid__=__hgrev__.split()[1]
 __doc__="""pyCGNS - v%d.%s - Python package for CFD General Notation System"""%(__version__,__release__)
 version=__vid__
 #
