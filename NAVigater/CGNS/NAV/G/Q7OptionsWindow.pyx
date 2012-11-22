@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Wed Nov 14 09:00:59 2012
+# Created: Thu Nov 22 14:19:48 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -151,9 +151,9 @@ class Ui_Q7OptionsWindow(object):
         self.__O_forcefortranflag = QtGui.QCheckBox(self.tab_6)
         self.__O_forcefortranflag.setGeometry(QtCore.QRect(10, 50, 274, 22))
         self.__O_forcefortranflag.setObjectName("__O_forcefortranflag")
-        self.eValKeys = QtGui.QPlainTextEdit(self.tab_6)
-        self.eValKeys.setGeometry(QtCore.QRect(10, 95, 104, 91))
-        self.eValKeys.setObjectName("eValKeys")
+        self.__O_valkeylist = QtGui.QPlainTextEdit(self.tab_6)
+        self.__O_valkeylist.setGeometry(QtCore.QRect(10, 95, 104, 91))
+        self.__O_valkeylist.setObjectName("__O_valkeylist")
         self.label_25 = QtGui.QLabel(self.tab_6)
         self.label_25.setGeometry(QtCore.QRect(10, 75, 106, 16))
         self.label_25.setObjectName("label_25")

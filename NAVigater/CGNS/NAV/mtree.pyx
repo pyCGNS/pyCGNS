@@ -753,6 +753,8 @@ class Q7TreeModel(QAbstractItemModel):
         self._extension={}
         self._rootitem=Q7TreeItem(fgprint,(None),None)  
         self._fingerprint=fgprint
+        self._control=self._fingerprint.control
+        self._control.loadOptions()
         self._slist=OCTXT._SortedTypeList
         self._count=0
         self._movedPaths={}
@@ -764,7 +766,6 @@ class Q7TreeModel(QAbstractItemModel):
             Q7TreeModel._icons[ik]=QIcon(QPixmap(ICONMAPPING[ik]))
         self._selected=[]
         self._selectedIndex=-1
-        self._control=self._fingerprint.control
     def nodeFromPath(self,path):
         if (path in self._extension.keys()): return self._extension[path]
         return None
@@ -1107,7 +1108,8 @@ class Q7TreeModel(QAbstractItemModel):
         self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
         return True
     def checkTree(self,T,pathlist):
-        tag='SIDS'
+        if (not OCTXT.ValKeyList): return
+        tag=OCTXT.ValKeyList[0]
         pths=[]
         oldsys=sys.path
         for p in OCTXT.GrammarSearchPathList:

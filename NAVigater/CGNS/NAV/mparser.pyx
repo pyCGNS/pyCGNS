@@ -38,7 +38,9 @@ class CGNSparser:
       zT=CGU.nodeByPath(z,T)
       if ((zlist==[]) or (z in zlist)):
         meshpath=z
-        g=CGU.getAllNodesByTypeSet(zT,[CGK.GridCoordinates_ts])[0]
+        gnode=CGU.getAllNodesByTypeSet(zT,[CGK.GridCoordinates_ts])
+        if (gnode==[]): return False
+        g=gnode[0] # first found
         gT=CGU.nodeByPath(g,zT)
         cx=CGU.nodeByPath("%s/CoordinateX"%gT[0],gT)
         cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
@@ -49,7 +51,7 @@ class CGNSparser:
         zonetype=CGU.getAllNodesByTypeSet(zT,[CGK.ZoneType_ts])
         ztype=CGU.nodeByPath(zonetype[0],zT)
         if (ztype[1].tostring()==CGK.Structured_s):
-          if (cx[1]==None) : return
+          if (cx[1]==None) : return False
           shx=cx[1].shape
           scx=cx[1].reshape(shx)
           scy=cy[1].reshape(shx)

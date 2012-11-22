@@ -83,6 +83,7 @@ class Q7OptionContext(object):
     LinkSearchPathList=[]
     ProfileSearchPathList=[]
     GrammarSearchPathList=[]
+    ValKeyList=['sample']
     CGNSFileExtension=['.cgns','.adf']
     HDFFileExtension=['.hdf','.hdf5']
     MaxLoadDataSize=1000

@@ -493,7 +493,7 @@
           <string>Force fortran flag in numpy arrays</string>
          </property>
         </widget>
-        <widget class="QPlainTextEdit" name="eValKeys">
+        <widget class="QPlainTextEdit" name="__O_valkeylist">
          <property name="geometry">
           <rect>
            <x>10</x>
