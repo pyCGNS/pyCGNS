@@ -75,7 +75,7 @@ MINORVERSION=3
 PFX='### pyCGNS:'
 #
 # --- UPDATE .hg/hgrc for keywords expansion
-__hgrev__="$Release:"
+__hgrev__="$Release:$"
 __version__=MAJORVERSION
 __release__=MINORVERSION
 # ---
