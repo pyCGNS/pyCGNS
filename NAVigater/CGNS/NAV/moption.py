@@ -92,7 +92,7 @@ class Q7OptionContext(object):
     TemporaryDirectory='/tmp'
     _ConvertADFFiles=True
     _ToolName='CGNS.NAV'
-    _ToolVersion='v%s'%__vid__
+    _ToolVersion='%s'%__vid__
     
     _CopyrightNotice="""
 Copyright (c) Marc Poinot <br>

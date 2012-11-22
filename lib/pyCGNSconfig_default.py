@@ -76,10 +76,10 @@ MINORVERSION="$MinorVersion$"
 PFX='### pyCGNS:'
 #
 __hgrev__="$Release$"
-__version__=MAJORVERSION
-__release__=MINORVERSION
+__version__=MAJORVERSION.split()[1]
+__release__=MINORVERSION.split()[1]
 __vid__=__hgrev__.split()[1]
-__doc__="""pyCGNS - v%d.%s - Python package for CFD General Notation System"""%(__version__,__release__)
+__doc__="""pyCGNS - v%s.%s - Python package for CFD General Notation System"""%(__version__,__release__)
 version=__vid__
 #
 WRA_VERSION=__vid__+'.0'
@@ -150,10 +150,11 @@ NUMPY_PATH_LIBRARIES=%(NUMPY_PATH_LIBRARIES)s
 NUMPY_LINK_LIBRARIES=%(NUMPY_LINK_LIBRARIES)s
 NUMPY_EXTRA_ARGS=%(NUMPY_EXTRA_ARGS)s
 
-__version__=MAJORVERSION
-__release__=MINORVERSION
-__vid__="%%s.%%s"%%(__version__,__release__)
-__doc__="pyCGNS - v%%s.%%s - Python package for CFD General Notation System"%%(__version__,__release__)
+__hgrev__='$Release$'
+__version__=MAJORVERSION.split()[1]
+__release__=MINORVERSION.split()[1]
+__vid__=__hgrev__.split()[1]
+__doc__='pyCGNS - Python package for CFD General Notation System'
 version=__vid__
 """
 #
