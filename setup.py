@@ -2,22 +2,22 @@
 #  pyCGNS - Python package for CFD General Notation System 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $File$
-#  $Node$
-#  $Last: v4.0.1 $
+#  $Release$
 #  -------------------------------------------------------------------------
 import os
 import sys
 import string
 import getopt
+sys.path=['./lib']+sys.path
+import setuputils
 
-# - add a web site update here
-# hg push ssh://poinot@pycgns.hg.sourceforge.net/hgroot/pycgns/pycgns
+# hg pull ssh://poinot@hg.code.sf.net/p/pycgns/code
 #
+# OLD (bad) ssh://poinot@pycgns.hg.sourceforge.net/hgroot/pycgns/pycgns
 pcom=sys.executable
 
-version=4
-versionList=[4]
+#version=4
+#versionList=[4]
 
 # order IS significant
 CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater',
@@ -25,7 +25,6 @@ CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater',
 
 modList=CGNSmodList[:]
 modList.remove('DATaTracer')
-#modList.remove('VALidater')
 
 solist='m:'
 lolist=["without-mod=","single-mod=","prefix=","force"]
@@ -41,7 +40,7 @@ except getopt.GetoptError:
   print "###       :   --without-mod='MMM' to install without this module"
   print "###       :   --single-mod='MMM'  to install only this module"
   print "###       :   --prefix='/path'    to install in the specified path"
-  print "###       :   --force             force all rebuilds"
+  print "###       :   --force             force all rebuilds, update version"
   sys.exit(2)
 
 for o,a in opts:
@@ -52,6 +51,8 @@ for o,a in opts:
       break
   if ((o == "--without-mod") and (m in CGNSmodList)): modList.remove(m)
   if ((o == "--single-mod")  and (m in CGNSmodList)): modList=[m]
+  if (o == "--force"): 
+    setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py')
   
 modArgs=[]
 for opt in sys.argv[1:]:

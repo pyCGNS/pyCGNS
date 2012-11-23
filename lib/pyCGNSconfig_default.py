@@ -69,17 +69,14 @@ LIBRARY_DIRS+=LIBRARY_DIRS+PYTHON_PATH_LIBRARIES+HDF5_PATH_LIBRARIES\
 # -------------------------------------------------------------------------
 # You should not change values beyond this point
 #
-# --- UPDATE .hg/hgrc for overall pyCGNS version number
-MAJORVERSION="$MajorVersion$"
-MINORVERSION="$MinorVersion$"
-#
 PFX='### pyCGNS:'
 #
-__hgrev__="$Release$"
-__version__=MAJORVERSION.split()[1]
-__release__=MINORVERSION.split()[1]
-__vid__=__hgrev__.split()[1]
-__doc__="""pyCGNS - v%s.%s - Python package for CFD General Notation System"""%(__version__,__release__)
+__version__=4 # @@UPDATEVERSION@@
+__release__=2 # @@UPDATERELEASE@@
+__revision__=928 # @@UPDATEREVISION@@
+__vid__="%s.%s.%s"%(__version__,__release__,__revision__)
+__doc__="""pyCGNS - %s - Python package for CFD General Notation System"""\
+        %(__vid__)
 version=__vid__
 #
 WRA_VERSION=__vid__+'.0'
@@ -96,9 +93,6 @@ file_pattern="""#  -------------------------------------------------------------
 #  -------------------------------------------------------------------------
 # This file has been generated on [%(DATE)s]
 # Using platform [%(PLATFORM)s]
-
-MAJORVERSION='%(MAJORVERSION)s'
-MINORVERSION='%(MINORVERSION)s'
 
 DATE='%(DATE)s'
 PLATFORM='%(PLATFORM)s'
@@ -150,11 +144,12 @@ NUMPY_PATH_LIBRARIES=%(NUMPY_PATH_LIBRARIES)s
 NUMPY_LINK_LIBRARIES=%(NUMPY_LINK_LIBRARIES)s
 NUMPY_EXTRA_ARGS=%(NUMPY_EXTRA_ARGS)s
 
-__hgrev__='$Release$'
-__version__=MAJORVERSION.split()[1]
-__release__=MINORVERSION.split()[1]
-__vid__=__hgrev__.split()[1]
-__doc__='pyCGNS - Python package for CFD General Notation System'
+__version__=4 # @@UPDATEVERSION@@
+__release__=2 # @@UPDATERELEASE@@
+__revision__=928 # @@UPDATEREVISION@@
+__vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
+__doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
+        %%(__vid__)
 version=__vid__
 """
 #

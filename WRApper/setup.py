@@ -1,5 +1,5 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRApper
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #  $Release$
@@ -20,7 +20,11 @@ except ImportError:
 import sys
 sys.path+=['../lib']
 import setuputils
-(pyCGNSconfig,installprocess)=setuputils.search('WRA',['HDF5','MLL','numpy'])
+RCONF=setuputils.search('WRA',['HDF5','MLL','numpy'])
+if (RCONF is None):
+  sys.exit(1)
+  
+(pyCGNSconfig,installprocess)=RCONF
 
 # ---------------------------------------------------------------------------
 # --- config values

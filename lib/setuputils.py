@@ -15,6 +15,12 @@ from  distutils.core import setup
 from  distutils.util import get_platform
 from  distutils.command.clean import clean as _clean
 
+# --------------------------------------------------------------------
+MAJORVERSION=4
+MINORVERSION=2
+REVISION='$rev: 928 $'
+# --------------------------------------------------------------------
+
 rootfiles=['errors.py']
 compfiles=['__init__.py','midlevel.py','wrap.py','version.py']
 
@@ -63,16 +69,17 @@ def search(tag,deps=[]):
 
     # -----------------------------------------------------------------------
     if ('HDF5' in deps):
+      tp=find_HDF5(C.HDF5_PATH_INCLUDES+C.INCLUDE_DIRS,
+                   C.HDF5_PATH_LIBRARIES+C.LIBRARY_DIRS,
+                   C.HDF5_LINK_LIBRARIES)
+      if (tp is None):
+        print pfx+'ERROR: %s setup cannot find HDF5!'%tag
+        sys.exit(1)
       (C.HDF5_VERSION,
        C.HDF5_PATH_INCLUDES,
        C.HDF5_PATH_LIBRARIES,
        C.HDF5_LINK_LIBRARIES,
-       C.HDF5_EXTRA_ARGS)=find_HDF5(C.HDF5_PATH_INCLUDES+C.INCLUDE_DIRS,
-                                    C.HDF5_PATH_LIBRARIES+C.LIBRARY_DIRS,
-                                    C.HDF5_LINK_LIBRARIES)
-      if (C.HDF5_VERSION == ''):
-        print pfx+'ERROR: %s setup cannot find HDF5!'%tag
-        sys.exit(1)
+       C.HDF5_EXTRA_ARGS)=tp
       print pfx+'using HDF5 %s for %s'%(C.HDF5_VERSION,tag)
       print pfx+'using HDF5 headers from %s'%(C.HDF5_PATH_INCLUDES[0])
       print pfx+'using HDF5 libs from %s'%(C.HDF5_PATH_LIBRARIES[0])
@@ -80,17 +87,18 @@ def search(tag,deps=[]):
 
     # -----------------------------------------------------------------------
     if ('MLL' in deps):
+      tp=find_MLL(C.MLL_PATH_INCLUDES+C.INCLUDE_DIRS,
+                  C.MLL_PATH_LIBRARIES+C.LIBRARY_DIRS,
+                  C.MLL_LINK_LIBRARIES,
+                  C.MLL_EXTRA_ARGS)
+      if (tp is None):
+        print pfx+'ERROR: %s setup cannot find cgns.org library (MLL)!'%tag
+        sys.exit(1)
       (C.MLL_VERSION,
        C.MLL_PATH_INCLUDES,
        C.MLL_PATH_LIBRARIES,
        C.MLL_LINK_LIBRARIES,
-       C.MLL_EXTRA_ARGS)=find_MLL(C.MLL_PATH_INCLUDES+C.INCLUDE_DIRS,
-                                  C.MLL_PATH_LIBRARIES+C.LIBRARY_DIRS,
-                                  C.MLL_LINK_LIBRARIES,
-                                  C.MLL_EXTRA_ARGS)
-      if (C.MLL_VERSION == ''):
-        print pfx+'ERROR: %s setup cannot find cgns.org library (MLL)!'%tag
-        sys.exit(1)
+       C.MLL_EXTRA_ARGS)=tp
       print pfx+'using MLL %s for %s'%(C.MLL_VERSION,tag)
       print pfx+'using MLL headers from %s'%(C.MLL_PATH_INCLUDES[0])
       print pfx+'using MLL libs from %s'%(C.MLL_PATH_LIBRARIES[0])
@@ -98,17 +106,17 @@ def search(tag,deps=[]):
         
     # -----------------------------------------------------------------------
     if ('CHLone' in deps):
+      tp=find_CHLone(C.CHLONE_PATH_INCLUDES+C.INCLUDE_DIRS,
+                     C.CHLONE_PATH_LIBRARIES+C.LIBRARY_DIRS,
+                     C.CHLONE_LINK_LIBRARIES)
+      if (tp is None):
+        print pfx+'ERROR: %s setup cannot find CHLone!'%tag
+        sys.exit(1)
       (C.CHLONE_VERSION,
        C.CHLONE_PATH_INCLUDES,
        C.CHLONE_PATH_LIBRARIES,
        C.CHLONE_LINK_LIBRARIES,
-       C.CHLONE_EXTRA_ARGS)=find_CHLone(C.CHLONE_PATH_INCLUDES+C.INCLUDE_DIRS,
-                                        C.CHLONE_PATH_LIBRARIES+C.LIBRARY_DIRS,
-                                        C.CHLONE_LINK_LIBRARIES)
-
-      if (C.CHLONE_VERSION == ''):
-        print pfx+'ERROR: %s setup cannot find CHLone!'%tag
-        sys.exit(1)
+       C.CHLONE_EXTRA_ARGS)=tp
       print pfx+'using CHLone %s for %s'%(C.CHLONE_VERSION,tag)
       print pfx+'using CHLone headers from %s'%(C.CHLONE_PATH_INCLUDES[0])
       print pfx+'using CHLone libs from %s'%(C.CHLONE_PATH_LIBRARIES[0])
@@ -116,17 +124,17 @@ def search(tag,deps=[]):
         
     # -----------------------------------------------------------------------
     if ('numpy' in deps):
+      tp=find_numpy(C.NUMPY_PATH_INCLUDES,
+                    C.NUMPY_PATH_LIBRARIES,
+                    C.NUMPY_LINK_LIBRARIES)
+      if (tp is None):
+        print pfx+'ERROR: %s setup cannot find Numpy!'%tag
+        sys.exit(1)
       (C.NUMPY_VERSION,
        C.NUMPY_PATH_INCLUDES,
        C.NUMPY_PATH_LIBRARIES,
        C.NUMPY_LINK_LIBRARIES,
-       C.NUMPY_EXTRA_ARGS)=find_numpy(C.NUMPY_PATH_INCLUDES,
-                                      C.NUMPY_PATH_LIBRARIES,
-                                      C.NUMPY_LINK_LIBRARIES)
-
-      if (C.NUMPY_VERSION == ''):
-        print pfx+'ERROR: %s setup cannot find Numpy!'%tag
-        sys.exit(1)
+       C.NUMPY_EXTRA_ARGS)=tp
       print pfx+'using Numpy API version %s for %s'%(C.NUMPY_VERSION,tag)
       print pfx+'using Numpy headers from %s'%(C.NUMPY_PATH_INCLUDES[0])
       C.HAS_NUMPY=True
@@ -155,6 +163,31 @@ def installConfigFiles():
     shutil.copy("%s/lib/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
   for ff in compfiles:
     shutil.copy("%s/lib/compatibility/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
+
+# --------------------------------------------------------------------
+def updateVersionInFile(filename):
+  f=open(filename,'r')
+  l=f.readlines()
+  f.close()
+  vver='@@UPDATEVERSION@@'
+  vrel='@@UPDATERELEASE@@'
+  vrev='@@UPDATEREVISION@@'
+  r=[]
+  for ll in l:
+    rl=ll
+    if (ll[-len(vver)-1:-1]==vver): 
+      rl='__version__=%s # %s\n'%(MAJORVERSION,vver)
+    if (ll[-len(vrel)-1:-1]==vrel): 
+      rl='__release__=%s # %s\n'%(MINORVERSION,vrel)
+    if (ll[-len(vrev)-1:-1]==vrev):
+      asp=REVISION.split()
+      if (len(asp)>1):
+        ACTUALREV=asp[1]
+        rl='__revision__=%s # %s\n'%(ACTUALREV,vrev)
+    r+=[rl]
+  f=open(filename,'w+')
+  f.writelines(r)
+  f.close()
 
 # --------------------------------------------------------------------
 # Clean target redefinition - force clean everything
@@ -247,6 +280,8 @@ def find_HDF5(pincs,plibs,libs):
   if notfound:
     print pfx,"ERROR: hdf5.h not found, please check paths"
     print pfx,pincs
+    return None
+
   ifh='HDF5 library version: unknown'
   notfound=1
   for pth in pincs:
@@ -266,6 +301,8 @@ def find_HDF5(pincs,plibs,libs):
   if notfound:
       print pfx,"ERROR: cannot find hdf5 version, please check paths"
       print pfx,pincs
+      return None
+
   return (vers,pincs,plibs,libs,extraargs)
 
 # --------------------------------------------------------------------
@@ -288,8 +325,9 @@ def find_MLL(pincs,plibs,libs,extraargs):
             print pfx,"ERROR: version should be v3.x for MLL"
       break
   if notfound:
-    print pfx,"ERROR: cgnslib.h not found, please check paths"
+    print pfx+"ERROR: cgnslib.h not found, please check paths"
     print pfx,pincs
+    return None
 
   notfound=1
   for pth in plibs:
@@ -302,7 +340,8 @@ def find_MLL(pincs,plibs,libs,extraargs):
   if notfound:
     print pfx,"ERROR: libcgns not found, please check paths:"
     print pfx,plibs
-    
+    return None
+
   notfound=1
   for pth in pincs:
     if (os.path.exists(pth+'/adfh/ADFH.h')):
@@ -336,6 +375,8 @@ def find_CHLone(pincs,plibs,libs):
   if notfound:
     print pfx,"ERROR: libCHlone not found, please check paths:"
     print pfx,plibs
+    return None
+
   notfound=1      
   for pth in pincs:
     if (os.path.exists(pth+'/CHLone/CHLone.h')):
@@ -359,6 +400,8 @@ def find_CHLone(pincs,plibs,libs):
   if notfound:
     print pfx,"ERROR: CHLone/CHLone.h not found, please check paths"
     print pfx,pincs
+    return None
+
   return (vers,pincs,plibs,libs,extraargs)
 
 # --------------------------------------------------------------------
@@ -402,6 +445,7 @@ def find_numpy(pincs,plibs,libs):
   if notfound:
     print pfx,"ERROR: numpy headers not found, please check your paths"
     print pfx,pincs
+    return None
   
   return (vers,pincs,plibs,libs,extraargs)
 

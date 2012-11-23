@@ -17,10 +17,20 @@ ccy='cython'
 
 try:
   from Cython.Distutils import build_ext
-  HAS_CYTHON=True
 except:
-  HAS_CYTHON=False
   raise 'Cannot build CGNS.NAV without cython'
+  sys.exit()
+
+try:
+  import PySide.QtCore
+except:
+  raise 'Cannot build CGNS.NAV without PySide (Qt)'
+  sys.exit()
+
+try:
+  import vtk
+except:
+  raise 'Cannot build CGNS.NAV without vtk'
   sys.exit()
 
 # --- pyCGNSconfig search

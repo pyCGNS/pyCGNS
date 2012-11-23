@@ -4,6 +4,11 @@
 # -------------------------------------------------------------------------
 from distutils.core import setup
 
+try:
+    import CHLone
+except:
+    print "### pyCGNSERROR: CHLone not found, abort MAP"
+
 # -------------------------------------------------------------------------
 setup (
 name         = "CGNS.MAP",
