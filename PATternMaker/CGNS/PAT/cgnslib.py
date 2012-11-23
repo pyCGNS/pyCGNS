@@ -232,10 +232,10 @@ def newDimensionalUnits(parent,value=[CK.Meter_s,CK.Kelvin_s,
         and (v not in [CK.Null_s,CK.UserDefined_s])):
       if (v in vunit): raise CE.cgnsException(204,v)
       else:            vunit[4]=v
-  node=CU.newNode(CK.DimensionalUnits_s,concatenateForArrayChar(vunit),[],
+  node=CU.newNode(CK.DimensionalUnits_s,CU.concatenateForArrayChar(vunit),[],
                CK.DimensionalUnits_ts,parent)
   snode=CU.newNode(CK.AdditionalUnits_s,
-                concatenateForArrayChar([CK.Null_s,CK.Null_s,CK.Null_s]),
+                CU.concatenateForArrayChar([CK.Null_s,CK.Null_s,CK.Null_s]),
                 [],
                 CK.AdditionalUnits_ts,node)
   return node

@@ -11,7 +11,7 @@ import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 
 data=C.newBase(None,'{Base}',3,3)
-C.newZone(data,'{Zone}')
+C.newZone(data,'{Zone}',N.array([[5,7,9],[4,6,8],[0,0,0]],order='F'))
 C.newSimulationType(data)
 C.newIntegralData(data,'{IntegralData}')
 C.newBaseIterativeData(data)
@@ -28,5 +28,5 @@ C.newUserDefinedData(data,'{UserDefinedData}')
 C.newDescriptor(data,'{Descriptor}')
 
 status='6.2'
-comment='Full SIDS with all optionals'
+comment='Full SIDS with all optionals children'
 pattern=[data, status, comment]

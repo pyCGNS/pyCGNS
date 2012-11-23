@@ -10,7 +10,7 @@ import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 #
-data=C.newElements(None)
+data=C.newElements(None,'{Elements_t}')
 C.newDataArray(data,K.ParentData_s)
 C.newRind(data,N.array([0,0,0,0,1,1]))
 C.newUserDefinedData(data,'{UserDefinedData}')

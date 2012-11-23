@@ -11,10 +11,3 @@ the model itself but with some of local stuff and I want two
 separate classes.
 
 
-todo:
-
-- copy/paste/cut on selected nodes
-- selected list (clear, merge, add, operate something on)
-- add patterns
-- call cgnsconvert if found (?)
-- load straight CGNS/Python + run-time update
