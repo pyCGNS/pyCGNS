@@ -121,7 +121,7 @@ using the right click menu, on a row.
 <td> create a new CGNS/Python tree from scratch</td></tr>
 <tr><td><img source=":/images/icons/pattern.gif"></td>
 <td> open the pattern database</td></tr>
-<tr><td><img source=":/images/icons/option-view.gif"></td>
+<tr><td><img source=":/images/icons/options-view.gif"></td>
 <td> open the user options panel</td></tr>
 <tr><td><img source=":/images/icons/help-view.gif"></td>
 <td> help</td></tr>

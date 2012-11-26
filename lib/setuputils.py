@@ -18,7 +18,7 @@ from  distutils.command.clean import clean as _clean
 # --------------------------------------------------------------------
 MAJORVERSION=4
 MINORVERSION=2
-REVISION='$rev: 928 $'
+REVISION='$rev: 351 $'
 # --------------------------------------------------------------------
 
 rootfiles=['errors.py']
