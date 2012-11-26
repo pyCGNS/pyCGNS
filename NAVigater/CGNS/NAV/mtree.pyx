@@ -15,7 +15,7 @@ from CGNS.NAV.wfingerprint import Q7fingerPrint
 import CGNS.VAL.simplecheck as CGV
 import CGNS.NAV.wmessages as MSG
 import CGNS.VAL.parse.messages as CGM
-import CGNS.VAL.grammars.SIDS
+import CGNS.VAL.grammars.CGNS_VAL_USER_sample as CGV
 import CGNS.VAL.parse.findgrammar
 
 HIDEVALUE='@@HIDE@@'
@@ -1123,7 +1123,7 @@ class Q7TreeModel(QAbstractItemModel):
         sys.path=pths_uniq
         mod=CGNS.VAL.parse.findgrammar.importUserGrammars(tag)
         sys.path=oldsys
-        if (mod is None): checkdiag=CGNS.VAL.grammars.SIDS.SIDSbase(None)
+        if (mod is None): checkdiag=CGV.CGNS_VAL_USER_Checks(None)
         else:             checkdiag=mod.CGNS_VAL_USER_Checks(None)
         checkdiag.checkTree(T,False)
         if (pathlist==[]):

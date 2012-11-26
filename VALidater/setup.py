@@ -15,6 +15,10 @@ import sys
 sys.path+=['../lib']
 import setuputils
 (pyCGNSconfig,installprocess)=setuputils.search('VAL')
+
+if (not os.path.exists("build")): os.system("ln -sf ../build build")
+setuputils.installConfigFiles()
+
 # ---
 
 setup (
