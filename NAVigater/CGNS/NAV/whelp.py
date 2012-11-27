@@ -494,6 +494,12 @@ A translated file is stored into a temporary directory, the <i>Info panel</i>
 shows you which is the actual original file name and the temporary filename.
 """),
 # --------------------------------------------------------------------------
+'Pattern':('Pattern panel',
+"""
+<h2>Pattern panel</h2>
+
+"""),
+# --------------------------------------------------------------------------
 }
 
 # --- last line

@@ -22,11 +22,12 @@ A simple exemple to load a *CGNS/HDF5* file as a :term:`CGNS/Python` tree::
 
   import CGNS.MAP
 
-  (tree,links)=CGNS.MAP.load("T0.cgns")
+  (tree,links,paths)=CGNS.MAP.load("T0.cgns")
 
 The ``tree`` value contains the actual CGNS/Python tree, 
 ``links`` value is a list of links found during the *HDF5* file parse.
 The default behavior of the load is to follow linked-to files.
+The ``paths`` has the list of linked-to nodes that failed.
 Now we can use the `CGNS.PAT` module to handle this tree. For example
 you can print the whole tree path hierarchy::
 
@@ -34,7 +35,7 @@ you can print the whole tree path hierarchy::
   import CGNS.MAP
   import CGNS.PAT.cgnsutils as CGU
 
-  (tree,links)=CGNS.MAP.load("T0.cgns")
+  (tree,links,paths)=CGNS.MAP.load("T0.cgns")
 
   for p in CGU.getAllPaths(tree): print p
 
@@ -58,7 +59,7 @@ There are two functions: the ``load`` and the ``save``. The ``load`` reads
 a *CGNS/HDF5* file and produces a *CGNS/Python* tree. The ``save`` takes a 
 *CGNS/Python* tree and writes the contents in a *CGNS/HDF5* file::
 
- (tree,links)=CGNS.MAP.load(filename,flags,depth,path,linkpaths,updatepaths)
+ (tree,links,paths)=CGNS.MAP.load(filename,flags,depth,path,linkpaths,updatepaths)
 
  status=CGNS.MAP.save(filename,tree,links,flags,depth,path)
 

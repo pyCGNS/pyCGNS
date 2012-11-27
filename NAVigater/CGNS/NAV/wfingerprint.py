@@ -32,6 +32,7 @@ class Q7Window(QWidget,object):
     VIEW_FORM='F'
     VIEW_QUERY='Q'
     VIEW_SELECT='S'
+    VIEW_PATTERN='P'
     VIEW_INFO='I'
     VIEW_LINK='L'
     HISTORYLASTKEY='///LAST///'
@@ -47,6 +48,7 @@ class Q7Window(QWidget,object):
         self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.gif"))
         self.I_FORM=QIcon(QPixmap(":/images/icons/form.gif"))
         self.I_SELECT=QIcon(QPixmap(":/images/icons/operate-list.gif"))
+        self.I_PATTERN=QIcon(QPixmap(":/images/icons/pattern.gif"))
         self.I_DIAG=QIcon(QPixmap(":/images/icons/check-all.gif"))
         self.I_LINK=QIcon(QPixmap(":/images/icons/link.gif"))
         self.I_D_INF=QIcon(QPixmap(":/images/icons/subtree-sids-warning.gif"))

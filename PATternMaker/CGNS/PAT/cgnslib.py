@@ -412,7 +412,7 @@ def newOrdinal(parent,value=0):
   chapter 6.3
   """
   CU.checkDuplicatedName(parent,CK.Ordinal_s)
-  node=CU.newNode(CK.Ordinal_s,NPY.array(value,dtype=NPY.int32),[],CK.Ordinal_ts,parent)
+  node=CU.newNode(CK.Ordinal_s,NPY.array([value],dtype=NPY.int32),[],CK.Ordinal_ts,parent)
   return node
 
 # -----------------------------------------------------------------------------
@@ -1187,7 +1187,7 @@ def newBaseIterativeData(parent,nsteps=0,
   CU.checkDuplicatedName(parent,CK.BaseIterativeData_s)
   CU.checkType(parent,CK.CGNSBase_ts,CK.BaseIterativeData_ts)
   if ((type(nsteps) != type(1)) or (nsteps < 0)): raise CE.cgnsException(209)
-  node=CU.newNode(CK.BaseIterativeData_s,NPY.array(nsteps,dtype='i'),[],CK.BaseIterativeData_ts,parent)
+  node=CU.newNode(CK.BaseIterativeData_s,NPY.array([nsteps],dtype='i'),[],CK.BaseIterativeData_ts,parent)
   if (itype not in [CK.IterationValues_s, CK.TimeValues_s]):
     raise CE.cgnsException(210,(CK.IterationValues_s, CK.TimeValues_s))
   CU.newNode(itype,None,[],CK.DataArray_ts,node)  
@@ -1271,7 +1271,7 @@ def newConvergenceHistory(parent,name=CK.GlobalConvergenceHistory_s,
   if (name == CK.ZoneConvergenceHistory_s):
     CU.checkType(parent,CK.Zone_ts,name)
   CU.checkDuplicatedName(parent,name)
-  node=CU.newNode(name,NPY.array(iterations,dtype='i'),[],CK.ConvergenceHistory_ts,parent)
+  node=CU.newNode(name,NPY.array([iterations],dtype='i'),[],CK.ConvergenceHistory_ts,parent)
   return node
 
 #-----------------------------------------------------------------------------

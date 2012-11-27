@@ -72,6 +72,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.selectForLink=None
         self.__newtreecount=1
         self.help=None
+        self.pattern=None
         Q7Query.loadUserQueries()
         Q7Query.fillQueries()
     def clickedLine(self,*args):
@@ -165,6 +166,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         if (reply == QMessageBox.Yes):
             Q7fingerPrint.closeAllTrees()
             if (self.help is not None): self.help.close()
+            if (self.pattern is not None): self.pattern.close()
             return True
         else:
             return False

@@ -10,6 +10,7 @@ from PySide.QtCore import *
 from PySide.QtGui  import *
 from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.wform import Q7Form
+from CGNS.NAV.wpattern import Q7PatternList
 from CGNS.NAV.wvtk import Q7VTK, Q7VTKPlot
 from CGNS.NAV.wquery import Q7Query, Q7SelectionList
 from CGNS.NAV.wdiag import Q7CheckList
@@ -199,6 +200,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bCheckList.clicked.connect(self.checklist)
         self.bClearChecks.clicked.connect(self.clearchecks)
         self.bLinkView.clicked.connect(self.linklist)
+        self.bPatternView.clicked.connect(self.patternlist)
         self.bDeleteLink.clicked.connect(self.linkdelete)
         self.bAddLink.clicked.connect(self.linkadd)
         self.bOperateDoc.clicked.connect(self.querydoc)
@@ -224,7 +226,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bDeleteLink.setDisabled(True)
         self.bAddLink.setDisabled(True)
         self.bToolsView.setDisabled(True)
-        self.bPatternView.setDisabled(True)
         self.bCheckView.setDisabled(True)
         self.bPatternDB.setDisabled(True)
         self.bSelectLink.setDisabled(True)
@@ -428,6 +429,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (self.linkview is None):
             self.linkview=Q7LinkList(self._control,self._fgprint)
         self.linkview.show()
+    def patternlist(self):
+        if (self._control.pattern is None):
+            self._control.pattern=Q7PatternList(self._control,self._fgprint)
+        self._control.pattern.show()
     def check(self):
         self.busyCursor()
         if (self.diagview is not None):

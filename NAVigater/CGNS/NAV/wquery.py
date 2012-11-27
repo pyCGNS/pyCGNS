@@ -39,6 +39,7 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
     def show(self):
         self.reset()
         super(Q7SelectionList, self).show()
+        self.raise_()
     def selectionsave(self):
         n='data=[\n'
         for path in self._data:
