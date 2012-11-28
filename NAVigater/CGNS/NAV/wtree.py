@@ -304,13 +304,16 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def mcopy(self):
         if (self.getLastEntered() is not None):
             self.model().copyNode(self.getLastEntered())
+            self.clearOtherSelections()
     def mcutselected(self):
         self.model().cutAllSelectedNodes()
         self.clearLastEntered()
+        self.clearOtherSelections()
     def mcut(self):
         if (self.getLastEntered() is not None):
             self.model().cutNode(self.getLastEntered())
             self.clearLastEntered()
+            self.clearOtherSelections()
     def mpasteasbrotherselected(self):
         self.model().pasteAsBrotherAllSelectedNodes()
     def mpasteasbrother(self):
@@ -374,6 +377,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._lastEntered=None
         self.treeview.selectionModel().clearSelection()
         return None
+    def clearOtherSelections(self):
+        if (self._control.pattern is not None):
+            self._control.pattern.clearSelection()
     def clickedNode(self,index):
         if (self.updateMenu(index)):
             if (self.treeview.lastButton==Qt.RightButton):

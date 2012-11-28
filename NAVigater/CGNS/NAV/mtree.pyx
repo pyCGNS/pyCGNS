@@ -1066,10 +1066,12 @@ class Q7TreeModel(QAbstractItemModel):
     def copyNode(self,nodeitem):
         if (nodeitem is None): return
         self._control.copyPasteBuffer=CGU.nodeCopy(nodeitem._itemnode)
+        self._control.clearOtherSelections()
     def cutAllSelectedNodes(self):
         for pth in self._selected:
             nodeitem=self.nodeFromPath(pth)
             self.cutNode(nodeitem)
+        self._control.clearOtherSelections()
     def cutNode(self,nodeitem):
         if (nodeitem is None): return
         self._control.copyPasteBuffer=CGU.nodeCopy(nodeitem._itemnode)
@@ -1080,6 +1082,7 @@ class Q7TreeModel(QAbstractItemModel):
         parentitem.sidsRemoveChild(self._control.copyPasteBuffer)
         self.refreshModel(pix)
         self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._control.clearOtherSelections()
     def pasteAsChildAllSelectedNodes(self):
         for pth in self._selected:
             nodeitem=self.nodeFromPath(pth)

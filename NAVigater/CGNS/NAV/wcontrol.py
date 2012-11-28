@@ -275,6 +275,9 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         for n in range(self.controlTable.rowCount()):
             all.append(self.controlTable.item(n,2).text())
         return all
+    def clearOtherSelections(self):
+        if (self.pattern is not None):
+            self.pattern.clearSelection()
     def loading(self,*args):
         self._T('loading: [%s]'%self.signals.buffer)
         self.busyCursor()

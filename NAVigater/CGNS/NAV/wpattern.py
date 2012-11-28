@@ -33,16 +33,33 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
         self._profiles['SIDS']=CGS.profile
         self._modified=False
         self._initialized=False
+        self._selected=None
     def infoPatternView(self):
         self._control.helpWindow('Pattern')
+    def clearSelection(self):
+        if (self._selected is not None):
+          rold=self.findRow(*self._selected)
+          if (rold!=-1):
+              it1=QTableWidgetItem(self.I_EMPTY,'')
+              self.patternTable.setItem(rold,0,it1)
+    def findRow(self,pit,nit):
+        maxrow=self.patternTable.rowCount()
+        for row in range(maxrow):
+            rnit=self.patternTable.item(row,1).text()
+            rpit=self.patternTable.item(row,2).text()
+            if ((rpit,rnit)==(pit,nit)): return row
+        return -1
     def copyPatternInBuffer(self):
         ix=self.patternTable.currentIndex()
         if (not ix.isValid()): return
+        self.clearSelection()
         row=ix.row()
-        nit=self.patternTable.item(ix.row(),0).text()
+        nit=self.patternTable.item(ix.row(),1).text()
         pit=self.patternTable.item(ix.row(),2).text()
-        id="%s/%s"%(pit,nit)
+        self._selected=(pit,nit)
         self._control.copyPasteBuffer=self._profiles[pit][nit][0]
+        it1=QTableWidgetItem(self.I_MARK,'')
+        self.patternTable.setItem(row,0,it1)
     def show(self):
         if (not self._initialized): self.reset()
         super(Q7PatternList, self).show()
@@ -58,7 +75,7 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
         pass
     def reset(self):
         tlvcols=4
-        tlvcolsnames=['Pattern','Status','Profile','Comment']
+        tlvcolsnames=['S','Pattern','P','Comment']
         v=self.patternTable
         v.setColumnCount(tlvcols)
         lh=v.horizontalHeader()
@@ -74,15 +91,17 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
             pentry=prof[k]
             v.setRowCount(v.rowCount()+1)
             r=v.rowCount()-1
-            it1=QTableWidgetItem(k)
-            it1.setFont(QFont("Courier"))
-            it2=QTableWidgetItem('-')
+            it1=QTableWidgetItem(self.I_EMPTY,'')
+            it2=QTableWidgetItem(k)
+            it2.setFont(QFont("Courier"))
             it3=QTableWidgetItem(profkey)
             it4=QTableWidgetItem(pentry[2])
             v.setItem(r,0,it1)
             v.setItem(r,1,it2)
             v.setItem(r,2,it3)
             v.setItem(r,3,it4)
+        self.patternTable.resizeColumnsToContents()
+        self.patternTable.resizeRowsToContents()
         plist=[]
         for i in range(len(plist)):
             v.resizeColumnToContents(i)

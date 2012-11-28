@@ -61,6 +61,8 @@ class Q7Window(QWidget,object):
         self.I_L_ERL=QIcon(QPixmap(":/images/icons/link-ignore.gif"))
         self.I_C_SFL=QIcon(QPixmap(":/images/icons/check-fail.gif"))
         self.I_C_SWR=QIcon(QPixmap(":/images/icons/check-warn.gif"))
+        self.I_EMPTY=QIcon(QPixmap(":/images/icons/empty.gif"))
+        self.I_MARK=QIcon(QPixmap(":/images/icons/mark-node.gif"))
         if (vtype==Q7Window.VIEW_TREE):
             self._stylesheet=Q7TREEVIEWSTYLESHEET
         if (vtype==Q7Window.VIEW_CONTROL):
