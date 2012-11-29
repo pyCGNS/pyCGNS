@@ -2,7 +2,6 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $KeyFile$
 #  $Release$
 #  -------------------------------------------------------------------------
 from  distutils.core import setup, Extension
@@ -80,7 +79,7 @@ if installprocess:
       ]
   modgenlist=[]
   modextlist=[]
-  for mfile in ['mtree','mparser','mquery','mcontrol','mtable']:
+  for mfile in ['mtree','mparser','mquery','mcontrol','mtable','mpattern']:
      modextlist+=[Extension("CGNS.NAV.%s"%mfile,["CGNS/NAV/%s.pyx"%mfile,
                                                  fakefile],
                            include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,

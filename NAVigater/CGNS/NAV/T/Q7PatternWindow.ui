@@ -165,7 +165,7 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/pattern-reload.gif</normaloff>:/images/icons/pattern-reload.gif</iconset>
+           <normaloff>:/images/icons/mark-node.gif</normaloff>:/images/icons/mark-node.gif</iconset>
          </property>
         </widget>
        </item>
@@ -208,7 +208,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QTableWidget" name="patternTable">
+      <widget class="Q7PatternTableWidget" name="patternTable">
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOn</enum>
        </property>
@@ -243,6 +243,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Q7PatternTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header>CGNS.NAV.mpattern</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../R/Res.qrc"/>
  </resources>

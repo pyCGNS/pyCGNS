@@ -29,11 +29,15 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
         self.bInfo.clicked.connect(self.infoPatternView)
         self.bCopy.clicked.connect(self.copyPatternInBuffer)
         self.bDelete.clicked.connect(self.deletelocal)
+        self.bSave.setDisabled(True)
+        self.bDelete.setDisabled(True)
+        self.bAdd.setDisabled(True)
         self._profiles={}
         self._profiles['SIDS']=CGS.profile
         self._modified=False
         self._initialized=False
         self._selected=None
+        self.patternTable._panel=self
     def infoPatternView(self):
         self._control.helpWindow('Pattern')
     def clearSelection(self):
@@ -52,10 +56,14 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
     def copyPatternInBuffer(self):
         ix=self.patternTable.currentIndex()
         if (not ix.isValid()): return
-        self.clearSelection()
         row=ix.row()
         nit=self.patternTable.item(ix.row(),1).text()
         pit=self.patternTable.item(ix.row(),2).text()
+        if ((pit,nit)==self._selected):
+            self.clearSelection()
+            self._selected=None
+            return
+        self.clearSelection()
         self._selected=(pit,nit)
         self._control.copyPasteBuffer=self._profiles[pit][nit][0]
         it1=QTableWidgetItem(self.I_MARK,'')

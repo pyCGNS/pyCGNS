@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7LinkWindow.ui'
 #
-# Created: Tue Nov 20 09:38:25 2012
+# Created: Wed Nov 28 14:47:28 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -52,7 +52,7 @@ class Ui_Q7LinkWindow(object):
         self.bSave.setMaximumSize(QtCore.QSize(25, 25))
         self.bSave.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/images/icons/select-save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/icons/link-save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bSave.setIcon(icon3)
         self.bSave.setObjectName("bSave")
         self.horizontalLayout.addWidget(self.bSave)

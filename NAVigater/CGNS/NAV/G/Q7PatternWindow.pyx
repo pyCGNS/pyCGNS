@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7PatternWindow.ui'
 #
-# Created: Tue Nov 27 16:44:49 2012
+# Created: Wed Nov 28 15:06:56 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -71,7 +71,7 @@ class Ui_Q7PatternWindow(object):
         self.bCopy.setMaximumSize(QtCore.QSize(25, 25))
         self.bCopy.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/images/icons/pattern-reload.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/images/icons/mark-node.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bCopy.setIcon(icon4)
         self.bCopy.setObjectName("bCopy")
         self.horizontalLayout.addWidget(self.bCopy)
@@ -87,7 +87,7 @@ class Ui_Q7PatternWindow(object):
         self.bSave.setObjectName("bSave")
         self.horizontalLayout.addWidget(self.bSave)
         self.verticalLayout.addLayout(self.horizontalLayout)
-        self.patternTable = QtGui.QTableWidget(Q7PatternWindow)
+        self.patternTable = Q7PatternTableWidget(Q7PatternWindow)
         self.patternTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.patternTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.patternTable.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
@@ -109,4 +109,5 @@ class Ui_Q7PatternWindow(object):
         self.bClose.setText(QtGui.QApplication.translate("Q7PatternWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
         self.patternTable.setSortingEnabled(True)
 
+from CGNS.NAV.mpattern import Q7PatternTableWidget
 import Res_rc

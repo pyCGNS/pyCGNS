@@ -116,7 +116,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/select-save.gif</normaloff>:/images/icons/select-save.gif</iconset>
+         <normaloff>:/images/icons/link-save.gif</normaloff>:/images/icons/link-save.gif</iconset>
        </property>
       </widget>
      </item>

@@ -7,6 +7,8 @@
 
 # v4.2 -
 - Move MAP to CHLone
+- WRA now uses Cython
+- VAL re-born
 
 # v4.1 -
 - Change pyS7 into CGNS.NAV, use Qt
