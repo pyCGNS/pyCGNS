@@ -4,6 +4,11 @@
 #  -------------------------------------------------------------------------
 #  $Release$
 #  -------------------------------------------------------------------------
+MAJORVERSION=4
+MINORVERSION=2
+REVISION='$rev: 351 $'
+# --------------------------------------------------------------------
+
 import os
 import sys
 import shutil
@@ -14,12 +19,6 @@ from distutils.dir_util import remove_tree
 from distutils.core import setup
 from distutils.util import get_platform
 from distutils.command.clean import clean as _clean
-
-# --------------------------------------------------------------------
-MAJORVERSION=4
-MINORVERSION=2
-REVISION='$rev: 351 $'
-# --------------------------------------------------------------------
 
 rootfiles=['errors.py']
 compfiles=['__init__.py','midlevel.py','wrap.py','version.py']
