@@ -9,11 +9,11 @@ import sys
 import shutil
 import re
 import time
-from   distutils.dir_util import remove_tree
 
-from  distutils.core import setup
-from  distutils.util import get_platform
-from  distutils.command.clean import clean as _clean
+from distutils.dir_util import remove_tree
+from distutils.core import setup
+from distutils.util import get_platform
+from distutils.command.clean import clean as _clean
 
 # --------------------------------------------------------------------
 MAJORVERSION=4
