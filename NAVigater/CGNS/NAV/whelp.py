@@ -219,6 +219,7 @@ These edit methods are not performing any check and your CGNS/Python tree
 may be not-compliant, or even impossible to actually store with CGNS/HDF5!
 
 <h3>Copy/Cut/Paste</h3>
+The <i>Tree views</i> support the copy/cut/paste of sub-trees.
 
 <h3>Top Buttons</h3>
 <p>
@@ -293,7 +294,44 @@ See user options for directory and file used for this snapshot.</td></tr>
 <p>
 <img source=":/images/icons/unselected.gif">
 
-<h3>Key Bindings</h3>
+<h3>Icons and buttons</h3>
+<p>
+<table>
+<tr><td><img source=":/images/icons/zoompoint.gif"></td>
+<td>Switch to the zoom-window mode. You draw a window using the mouse left
+button and the zoom would fit to the defined window.</td></tr>
+<tr><td><img source=":/images/icons/zoom-actor.gif"></td>
+<td>Reset the view to fit the object in the window</td></tr>
+<tr><td><img source=":/images/icons/lock-legend.gif"></td>
+<td>Switch to move legend mode, used to mose the reference axis draw, the
+legend and other extra information displayed on the view.</td></tr>
+<tr><td><img source=":/images/icons/value.gif"></td>
+<td>Switch to the show value mode, in the case you have actual values,
+the pick of a node would show corresponding value.</td></tr>
+<tr><td><img source=":/images/icons/colors.gif"></td>
+<td>Randomly change the colors of view objects.</td></tr>
+<tr><td><img source=":/images/icons/colors-bw.gif"></td>
+<td>Switch the view background to balck/white.</td></tr>
+</table>
+
+
+<h3>Interactions</h3>
+
+<h4>Mouse buttons</h4>
+The <i>mouse left button</i> runs the rotation (see below). The
+<i>mouse right button</i> runs the zoom, same with the <i>mouse wheel</i>
+if you have one. The <i>mouse middle button</i>, if you have one, runs a
+translation parallel to the view plane. 
+
+<h4>Rotation</h4>
+The <i>Camera axis all</i> uses the center of the view (the center of the
+camera view) as the center of rotation.<br>
+The <i>Object axis all</i> is a rotation with the center of the object
+as rotation center.<br>
+The <i>Object axis x</i> mode forces a rotation with x as single axis, same
+for y and z.<br>
+
+<h4>Key Bindings</h4>
 <b>s</b> Surface mode rendering<br>
 <b>w</b> Wire mode rendering<br>
 <b>q</b> Surface and wire mode rendering<br>

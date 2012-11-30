@@ -147,6 +147,7 @@ cdef class pyCGNS(object):
   # ---------------------------------------------------------------------------
   cpdef gopath(self,char *path):
     cgnslib.cg_gopath(self._root,path)
+    
   # ---------------------------------------------------------------------------
   cpdef nbases(self):
     """
@@ -1552,13 +1553,25 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_dataset_read(self._root,B,Z,BC,DS,name,&bct,&dflag,&nflag)
     return (name,bct,dflag,nflag)
 
-  # -------------------------------------------------------------------------------------
-##   cpdef bcdataset_write(self, char * name, cgnslib.BCType_t bct,
-##                            cgnslib.BCDataType_t bcdt):
-##     self._error=cgnslib.cg_bcdataset_write(name,bct,bcdt)
-##     print cgnslib.cg_get_error(),self._error
+  # ---------------------------------------------------------------------------
+  cpdef bcdataset_info(self):
+    print 'NOT IMPLEMENTED YET bcdataset_info'
+    return
 
-  # --------------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  cpdef bcdataset_read(self, int n):
+    print 'NOT IMPLEMENTED YET bcdataset_read'
+    return
+
+  # ---------------------------------------------------------------------------
+  cpdef bcdataset_write(self, char * name, cgnslib.BCType_t bct,
+                        cgnslib.BCDataType_t bcdt):
+    print 'NOT IMPLEMENTED YET bcdataset_write'
+    return
+    self._error=cgnslib.cg_bcdataset_write(name,bct,bcdt)
+    print cgnslib.cg_get_error(),self._error
+
+  # --------------------------------------------------------------------------
   cpdef narrays(self):
 
     """
@@ -1700,7 +1713,7 @@ cdef class pyCGNS(object):
 
     return data
               
-  # -----------------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef array_write(self, char * aname, cgnslib.DataType_t dt, int dd,
                     dimv, adata):
     """
@@ -1717,12 +1730,14 @@ cdef class pyCGNS(object):
     * None
 
     """
-
     cdef int * dataptrI
     cdef float * dataptrF
     cdef double * dataptrD
     cdef char * dataptrC
     cdef cgnslib.cgsize_t * dv
+
+    print 'NOT IMPLEMENTED YET array_write'
+    return
 
     div=PNY.int32(dimv)
     dv=<cgnslib.cgsize_t *>CNY.PyArray_DATA(div)
@@ -1766,12 +1781,12 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_nuser_data(&nuser)
     return nuser
 
-  # -----------------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef user_data_write(self, char * usn):
 
     """
-    Creates a new `UserDefinedData_t` node. You can set the position of the node in the `CGNS tree`
-    by using the `gopath` function.
+    Creates a new `UserDefinedData_t` node. You can set the position of
+    the node in the `CGNS tree` with the `gopath` function.
 
     - Args:
     * `usn` : name of the created node (`string`)
@@ -1780,6 +1795,8 @@ cdef class pyCGNS(object):
     * None
 
     """
+    print 'NOT IMPLEMENTED YET user_data_write'
+    return
     
     self._error=cgnslib.cg_user_data_write(usn)
 
@@ -2118,14 +2135,14 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_1to1_read(self._root,B,Z,I,name,dname,arangeptr,drangeptr,trptr)
     return (name,dname,arange,drange,tr)
 
-  # -----------------------------------------------------------------------------------------
-  cpdef _1to1_id(self, int B, int Z, int I):
+  # ---------------------------------------------------------------------------
+  cpdef conn_1to1_id(self, int B, int Z, int I):
     cdef double id1to1 = -1
     self._error=cgnslib.cg_1to1_id(self._root,B,Z,I,&id1to1)
     return id1to1
 
-  # ------------------------------------------------------------------------------------------
-  cpdef _1to1_write(self, int B, int Z, char * cname, char * dname, crange, drange, tr):
+  # --------------------------------------------------------------------------
+  cpdef conn_1to1_write(self, int B, int Z, char * cname, char * dname, crange, drange, tr):
 
     """
     Creates a new 1-to-1 connectivity node.
@@ -2417,7 +2434,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_conn_write_short(self._root,B,Z,name,location,gct,pst,npnts,pntsptr,dname,&I)
     return I
 
-  # --------------------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef convergence_write(self, int iter, char * ndef):
 
     """
@@ -2434,8 +2451,8 @@ cdef class pyCGNS(object):
     
     self._error=cgnslib.cg_convergence_write(iter,ndef)
 
-  # --------------------------------------------------------------------------------------------
-  cpdef state_write(self, char * sdes):
+  # ---------------------------------------------------------------------------
+  cpdef state_write(self, char *sdes):
 
     """
     Creates a reference state node.
@@ -2447,10 +2464,9 @@ cdef class pyCGNS(object):
     * None
 
     """
-    
     self._error=cgnslib.cg_state_write(sdes)
 
-  # --------------------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef equationset_write(self, int eqdim):
 
     """
@@ -2464,10 +2480,9 @@ cdef class pyCGNS(object):
     * None
 
     """
-    
-    self._error=cgnslib.cg_equationset_write(eqdim)
+    self._error=cgnslib.cg_equationset_write(2)
 
-  # --------------------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef equationset_read(self):
 
     """
@@ -2503,7 +2518,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_equationset_read(&eqdim,&geq,&gasflag,&visflag,&thermflag,&turbcflag,&turbmflag)
     return (eqdim,geq,gasflag,visflag,thermflag,turbcflag,turbmflag)
 
-  # --------------------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef equationset_chemistry_read(self):
     
     """

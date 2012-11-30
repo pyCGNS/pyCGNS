@@ -384,7 +384,12 @@ cdef extern from "cgnslib.h":
   int cg_dataset_write(int fn, int B, int Z, int BC, char * name, BCType_t BCType, int *Dset)
   int cg_dataset_read(int fn, int B, int Z, int BC, int DS, char *name, BCType_t *BCType,
                       int *DirichletFlag, int *NeumannFlag)
-##  int cg_bcdataset_write(char *name, BCType_t BCType, BCDataType_t BCDataType)
+  int cg_bcdataset_write(char *name, BCType_t BCType, BCDataType_t BCDataType)
+  int cg_bcdataset_info(int *n_dataset)
+  int cg_bcdataset_read(int index, char *name,
+                        BCType_t *BCType, int *DirichletFlag,
+                        int *NeumannFlag)
+  
 ##   int cg_sol_ptset_write(int fn, int B, int Z, char *solname,
 ##        GridLocation_t location, PointSetType_t ptset_type, cgsize_t npnts,
 ##        cgsize_t *pnts, int *S)
@@ -510,9 +515,6 @@ cdef extern from "cgnslib.h":
    
 ## CGNSDLL int cg_bcdataset_write(const char *name, CGNS_ENUMT(BCType_t) BCType,
 ## 	CGNS_ENUMT(BCDataType_t) BCDataType);
-## CGNSDLL int cg_bcdataset_info(int *n_dataset);
-## CGNSDLL int cg_bcdataset_read(int index, char *name,
-## 	CGNS_ENUMT(BCType_t) *BCType, int *DirichletFlag, int *NeumannFlag);
 ## CGNSDLL int cg_bcdata_write(int file_number, int B, int Z, int BC, int Dset,
 ## 	CGNS_ENUMT(BCDataType_t) BCDataType);
 

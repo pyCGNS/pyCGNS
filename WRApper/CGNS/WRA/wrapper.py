@@ -7,6 +7,7 @@
 import CGNS.errors    as ERR
 import CGNS.WRA._mll  as __MLL
 import CGNS.WRA._adf  as __ADF
+import CGNS.WRA
 
 import posixpath
 import copy
@@ -299,7 +300,7 @@ class pyCGNS:
 
          ''*pyCGNS*'(file-name:S,file-mode:I)'
 
-         The file mode is an enumerate. It can have the values:
+         The file mode is an enumerate. Values are:
          MODE_READ, MODE_WRITE, MODE_MODIFY
       """
       import CGNS.WRA._mll  as __MLL

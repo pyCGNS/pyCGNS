@@ -4,13 +4,13 @@
 #  -------------------------------------------------------------------------
 #  $Release$
 #  -------------------------------------------------------------------------
-import CGNS.pyCGNSconfig
-from CGNS.PAT.cgnskeywords import *
+import CGNS.WRA.mll as Mll
 
-MODE_READ=0
-MODE_WRITE=1
-MODE_MODIFY=2
-MODE_CLOSED=3
+print 'CGNS.WRA.mll','#001 - pyCGNS/base_write/close'
 
-# --- last line
+a=Mll.pyCGNS('tmp/testmll.hdf',Mll.MODE_WRITE)
+a.base_write('Base',3,3)
+a.close()
+
+# ---
 

@@ -1,14 +1,21 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 import CGNS.WRA.mll as Mll
-import numpy as N
+import numpy as NPY
 import CGNS.PAT.cgnskeywords as CK
 
+print 'CGNS.WRA.mll','#003 - coord_write'
 
 # ----------------------------------------------------------------------
 def acube(im=3,jm=5,km=7,offset=0):
   # inverse k/i in order to get correct order in ADF file
-  x=N.zeros((km,jm,im),'d')
-  y=N.zeros((km,jm,im),'d')
-  z=N.zeros((km,jm,im),'d')
+  x=NPY.zeros((km,jm,im),'d')
+  y=NPY.zeros((km,jm,im),'d')
+  z=NPY.zeros((km,jm,im),'d')
   for i in range(im):
     for j in range(jm):
       for k in range(km):
@@ -23,11 +30,11 @@ c03=acube(offset=2)
 
 # ------------------------------------------------------------------------
 
-a=Mll.pyCGNS('tmp/testmll19.hdf',Mll.MODE_WRITE)
+a=Mll.pyCGNS('tmp/testmll03.hdf',Mll.MODE_WRITE)
 a.base_write('Base',3,3)
-a.zone_write(1,'Zone 01',N.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
-a.zone_write(1,'Zone 02',N.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
-a.zone_write(1,'Zone 03',N.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
+a.zone_write(1,'Zone 01',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
+a.zone_write(1,'Zone 02',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
+a.zone_write(1,'Zone 03',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
 a.coord_write(1,1,CK.RealDouble,CK.CoordinateX_s,c01[0])
 a.coord_write(1,1,CK.RealDouble,CK.CoordinateY_s,c01[1])
 a.coord_write(1,1,CK.RealDouble,CK.CoordinateZ_s,c01[2])
@@ -37,17 +44,6 @@ a.coord_write(1,2,CK.RealDouble,CK.CoordinateZ_s,c02[2])
 a.coord_write(1,3,CK.RealDouble,CK.CoordinateX_s,c03[0])
 a.coord_write(1,3,CK.RealDouble,CK.CoordinateY_s,c03[1])
 a.coord_write(1,3,CK.RealDouble,CK.CoordinateZ_s,c03[2])
-a.sol_write(1,1,"Initialize",CK.CellCenter)
-a.sol_write(1,1,"Result",CK.CellCenter)
-a.sol_write(1,2,"Initialize",CK.CellCenter)
-a.sol_write(1,2,"Result",CK.CellCenter)
-a.sol_write(1,3,"Initialize",CK.CellCenter)
-a.sol_write(1,3,"Result",CK.CellCenter)
-a.boco_write(1,1,'BC',12,4,2,N.array([[1,1,1],[3,5,1]]))
-a.boco_write(1,1,'BC2',12,4,2,N.array([[1,1,7],[3,5,7]]))
-## t=a._1to1_write(1,1,'Connectivity','Zone2',N.array([[3,1,1],[3,5,7]]),N.array([[1,1,1],[1,5,7]]),N.array([1,2,3]))
-t=a.conn_write_short(1,1,'Connectivity',3,3,4,2,N.array([[3,1,1],[3,5,7]]),'Zone 02')
-print t
-
 a.close()
 
+# ---
