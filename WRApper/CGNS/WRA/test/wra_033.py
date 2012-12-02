@@ -1,17 +1,18 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRApper
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #  $Release$
 #  -------------------------------------------------------------------------
-import CGNS.WRA.mll as Mll
+import CGNS.WRA.mll as Mll 
 import numpy as NPY
 import CGNS.PAT.cgnskeywords as CK
 
-print 'CGNS.WRA.mll','#021 - model_write'
+print 'CGNS.WRA.mll','#033 - sol_ptset_write'
 
 # ----------------------------------------------------------------------
 def acube(im=3,jm=5,km=7,offset=0):
+  # inverse k/i in order to get correct order in ADF file
   x=NPY.zeros((km,jm,im),'d')
   y=NPY.zeros((km,jm,im),'d')
   z=NPY.zeros((km,jm,im),'d')
@@ -29,7 +30,7 @@ c03=acube(offset=2)
 
 # ------------------------------------------------------------------------
 
-a=Mll.pyCGNS('tmp/testmll21.hdf',Mll.MODE_WRITE)
+a=Mll.pyCGNS('tmp/testmll33.hdf',Mll.MODE_WRITE)
 a.base_write('Base',3,3)
 a.zone_write(1,'Zone 01',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
 a.zone_write(1,'Zone 02',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
@@ -50,13 +51,10 @@ a.sol_write(1,2,"Result",CK.CellCenter)
 a.sol_write(1,3,"Initialize",CK.CellCenter)
 a.sol_write(1,3,"Result",CK.CellCenter)
 a.boco_write(1,1,'BC',12,4,2,NPY.array([[1,1,1],[3,5,1]]))
-a.gopath('/Base')
-a.convergence_write(1000,'convergence')
-a.state_write('Global reference state')
-a.equationset_write(10)
-a.gopath('/Base/FlowEquationSet')
-a.governing_write(5)
-a.model_write('GasModel_t',3)
+a.field_write(1,1,1,3,'data array1',NPY.ones((2,4,6))*1.2)
+a.field_write(1,1,1,4,'data array2',NPY.ones((2,4,6))*1.2)
+t=a.field_write(1,1,1,2,'data array3',NPY.ones((2,4,6)))
+p=a.sol_ptset_write(1,1,'sol ptset',3,4,2,NPY.array([[1,1,1],[1,2,2]]))
 a.close()
 
 # ---

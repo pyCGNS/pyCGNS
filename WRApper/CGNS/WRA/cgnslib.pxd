@@ -389,10 +389,24 @@ cdef extern from "cgnslib.h":
   int cg_bcdataset_read(int index, char *name,
                         BCType_t *BCType, int *DirichletFlag,
                         int *NeumannFlag)
-  
-##   int cg_sol_ptset_write(int fn, int B, int Z, char *solname,
-##        GridLocation_t location, PointSetType_t ptset_type, cgsize_t npnts,
-##        cgsize_t *pnts, int *S)
+  int cg_nfields(int fn, int B, int Z, int S, int *nfields)
+  int cg_field_info(int fn,int B,int Z,int S, int F,
+                    DataType_t *type, char *fieldname)
+  int cg_field_read(int fn, int B, int Z, int S, char *fieldname,
+                    DataType_t type, cgsize_t *rmin,
+                    cgsize_t *rmax, void *field_ptr)
+  int cg_field_id(int fn, int B, int Z,int S, int F, double *field_id)
+  int cg_field_write(int fn,int B,int Z,int S,
+                     DataType_t type, char * fieldname,
+                     void * field_ptr, int *F)
+  int cg_field_partial_write(int B, int Z, int S,
+                              DataType_t type, char *fieldname,
+                              cgsize_t *rmin, cgsize_t *rmax,
+                              field_ptr)
+
+  int cg_sol_ptset_write(int fn, int B, int Z, char *solname,
+                         GridLocation_t location, PointSetType_t ptset_type, 
+                         cgsize_t npnts, cgsize_t *pnts, int *S)
 
   int cg_narrays(int *narrays)
   int cg_array_info(int A, char *ArrayName, DataType_t *DataType, int *DataDimension,
@@ -401,6 +415,67 @@ cdef extern from "cgnslib.h":
   int cg_array_read_as(int A, DataType_t type, void *Data)
   int cg_array_write(char * ArrayName, DataType_t DataType, int DataDimension,
                      cgsize_t * DimensionVector, void * Data)
+
+  int cg_nsubregs(int fn, int B, int Z, int *nsubreg)
+  int cg_subreg_info(int fn, int B, int Z, int S, char *regname,
+                     int *dimension, GridLocation_t *location,
+                     PointSetType_t *ptset_type, cgsize_t *npnts,
+                     int *bcname_len, int *gcname_len)
+  int cg_subreg_ptset_read(int fn, int B, int Z, int S, cgsize_t *pnts)
+  int cg_subreg_bcname_read(int fn, int B, int Z, int S, char *bcname)
+  int cg_subreg_gcname_read(int fn, int B, int Z, int S, char *gcname)
+  int cg_subreg_ptset_write(int fn, int B, int Z, char *regname,
+                            int dimension, GridLocation_t location,
+                            PointSetType_t ptset_type, cgsize_t npnts,
+                            cgsize_t *pnts, int *S)
+  int cg_subreg_bcname_write(int fn, int B, int Z, char *regname,
+                             int dimension, char *bcname, int *S)
+  int cg_subreg_gcname_write(int fn, int B, int Z, char *regname,
+                             int dimension, char *gcname, int *S)
+
+  int cg_nholes(int fn, int B, int Z, int *nholes)
+  int cg_hole_info(int fn, int B, int Z, int I, char *holename,
+                   GridLocation_t *location, PointSetType_t *ptset_type,
+                   int *nptsets, cgsize_t *npnts)
+  int cg_hole_read(int fn, int B, int Z, int I, cgsize_t *pnts)
+  int cg_hole_id(int fn, int B, int Z, int I, double *hole_id)
+  int cg_hole_write(int fn, int B, int Z, char * holename,
+                    GridLocation_t location, PointSetType_t ptset_type,
+                    int nptsets, cgsize_t npnts, cgsize_t * pnts, int *I)
+
+  int cg_n_rigid_motions(int file_number, int B, int Z,
+                         int *n_rigid_motions)
+  int cg_rigid_motion_read(int file_number, int B, int Z, int R,
+                           char *name, RigidGridMotionType_t *type)
+  int cg_rigid_motion_write(int file_number, int B, int Z,
+                            char * name, RigidGridMotionType_t type, int *R)
+
+  int cg_n_arbitrary_motions(int file_number, int B, int Z,
+                             int *n_arbitrary_motions)
+  int cg_arbitrary_motion_read(int file_number, int B, int Z, int A,
+                               char *name, ArbitraryGridMotionType_t *type)
+  int cg_arbitrary_motion_write(int file_number, int B, int Z,
+                                char * amotionname, 
+                                ArbitraryGridMotionType_t type)
+
+  int cg_simulation_type_read(int file_number, int B,
+                              SimulationType_t *type)
+  int cg_simulation_type_write(int file_number, int B,
+                               SimulationType_t type)
+
+  int cg_biter_read(int file_number, int B, char *bitername, int *nsteps)
+  int cg_biter_write(int file_number, int B, char * bitername, int nsteps)
+  int cg_ziter_read(int file_number, int B, int Z, char *zitername)
+  int cg_ziter_write(int file_number, int B, int Z, char *zitername)
+
+  int cg_gravity_read(int file_number, int B, float *gravity_vector)
+  int cg_gravity_write(int file_number, int B, float *gravity_vector)
+
+  int cg_axisym_read(int file_number, int B, float *ref_point, float *axis)
+  int cg_axisym_write(int file_number, int B, float *ref_point, float *axis)
+  int cg_rotating_read(float *rot_rate, float *rot_center)
+  int cg_rotating_write(float *rot_rate, float *rot_center)
+
   int cg_nuser_data(int *nuser_data)
   int cg_user_data_read(int Index, char *user_data_name)
   int cg_user_data_write(char * user_data_name)
@@ -443,7 +518,7 @@ cdef extern from "cgnslib.h":
   int cg_conn_write_short(int fn, int B, int Z, char * connectname, GridLocation_t location,
                           GridConnectivityType_t type, PointSetType_t ptset_type, cgsize_t npnts,
                           cgsize_t * pnts, char * donorname, int *I)
-  int cg_convergence_write(int iterations, char * NormDefinitions)
+  int cg_convergence_write(int iterations, char *NormDefinitions)
   int cg_state_write(char * StateDescription)
   int cg_equationset_read(int *EquationDimension,int *GoverningEquationsFlag, int *GasModelFlag,
                           int *ViscosityModelFlag,     int *ThermalConductivityModelFlag,
@@ -515,8 +590,8 @@ cdef extern from "cgnslib.h":
    
 ## CGNSDLL int cg_bcdataset_write(const char *name, CGNS_ENUMT(BCType_t) BCType,
 ## 	CGNS_ENUMT(BCDataType_t) BCDataType);
-## CGNSDLL int cg_bcdata_write(int file_number, int B, int Z, int BC, int Dset,
-## 	CGNS_ENUMT(BCDataType_t) BCDataType);
+  int cg_bcdata_write(int file_number, int B, int Z, int BC, int Dset,
+                      BCDataType_t BCDataType)
 
   
 ## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
@@ -538,13 +613,8 @@ cdef extern from "cgnslib.h":
 
 ## CGNSDLL int cg_state_read(char **StateDescription);
 
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write Rind_t Nodes                                      *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_rind_read(int *RindData);
-## CGNSDLL int cg_rind_write(const int * RindData);
+  int cg_rind_read(int *RindData)
+  int cg_rind_write(int * RindData)
 
 ## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
 ##  *      Read and write Descriptor_t Nodes                                *
@@ -557,19 +627,13 @@ cdef extern from "cgnslib.h":
 ##  *      Read and write IndexArray/Range_t Nodes  - new in version 2.4    *
 ## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-## CGNSDLL int cg_ptset_write(CGNS_ENUMT(PointSetType_t) ptset_type,
-## 	cgsize_t npnts, const cgsize_t *pnts);
-## CGNSDLL int cg_ptset_read(cgsize_t *pnts);
+  int cg_ptset_write(PointSetType_t ptset_type,
+                     cgsize_t npnts, pnts)
+  int cg_ptset_read(cgsize_t pnts)
 
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Link Handling Functions - new in version 2.1                     *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_is_link(int *path_length);
-## CGNSDLL int cg_link_read(char **filename, char **link_path);
-## CGNSDLL int cg_link_write(const char * nodename, const char * filename,
-## 	const char * name_in_file);
-
+  int cg_is_link(int *path_length)
+  int cg_link_read(char **filename, char **link_path)
+  int cg_link_write(char * nodename, char * filename, char * name_in_file)
     
 ## CGNSDLL int cg_nfamily_names(int file_number, int B, int F, int *nnames);
 ## CGNSDLL int cg_family_name_read(int file_number, int B, int F,
@@ -587,3 +651,37 @@ cdef extern from "cgnslib.h":
 ## CGNSDLL int cg_nmultifam(int *nfams);
 ## CGNSDLL int cg_multifam_read(int N, char *name, char *family);
 ## CGNSDLL int cg_multifam_write(const char *name, const char *family);
+
+  int cg_bc_wallfunction_read(int file_number, int B, int Z, int BC,
+                              WallFunctionType_t *WallFunctionType)
+  int cg_bc_wallfunction_write(int file_number, int B, int Z, int BC,
+                               WallFunctionType_t WallFunctionType)
+
+  int cg_bc_area_read(int file_number, int B, int Z, int BC,
+                      AreaType_t *AreaType, float *SurfaceArea, 
+                      char *RegionName)
+  int cg_bc_area_write(int file_number, int B, int Z, int BC,
+                       AreaType_t AreaType, float SurfaceArea, 
+                       char *RegionName)
+
+  int cg_conn_periodic_read(int file_number, int B, int Z, int I,
+                            float *RotationCenter, float *RotationAngle, 
+                            float *Translation)
+  int cg_conn_periodic_write(int file_number, int B, int Z, int I,
+                             float *RotationCenter, float *RotationAngle,
+                             float *Translation)
+  int cg_1to1_periodic_write(int file_number, int B, int Z, int I,
+                             float *RotationCenter, float *RotationAngle,
+                             float *Translation)
+  int cg_1to1_periodic_read(int file_number, int B, int Z, int I,
+                            float *RotationCenter, float *RotationAngle, 
+                            float *Translation)
+
+  int cg_conn_average_read(int file_number, int B, int Z, int I,
+                           AverageInterfaceType_t *AverageInterfaceType)
+  int cg_conn_average_write(int file_number, int B, int Z, int I,
+                            AverageInterfaceType_t AverageInterfaceType)
+  int cg_1to1_average_write(int file_number, int B, int Z, int I,
+                            AverageInterfaceType_t AverageInterfaceType)
+  int cg_1to1_average_read(int file_number, int B, int Z, int I,
+                           AverageInterfaceType_t *AverageInterfaceType)

@@ -52,7 +52,6 @@ a.sol_write(1,3,"Initialize",CK.CellCenter)
 a.sol_write(1,3,"Result",CK.CellCenter)
 a.boco_write(1,1,'BC',12,4,2,NPY.array([[1,1,1],[3,5,1]]))
 a.boco_write(1,1,'BC2',12,4,2,NPY.array([[1,1,7],[3,5,7]]))
-## t=a._1to1_write(1,1,'Connectivity','Zone2',NPY.array([[3,1,1],[3,5,7]]),NPY.array([[1,1,1],[1,5,7]]),NPY.array([1,2,3]))
 t=a.conn_write_short(1,1,'Connectivity',3,3,4,2,
                      NPY.array([[3,1,1],[3,5,7]]),'Zone 02')
 

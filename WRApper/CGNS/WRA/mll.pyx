@@ -1762,11 +1762,202 @@ cdef class pyCGNS(object):
       dataptrC=<char *>CNY.PyArray_DATA(adata)
       self._error=cgnslib.cg_array_write(aname,dt,dd,dv,dataptrC)
 
-  # -----------------------------------------------------------------------------------------
+  cpdef int nfields(self, int B, int Z, int S):
+    print 'NOT IMPLEMENTED YET nfields'
+    return 0
+
+  cpdef int field_write(self, int B,int Z,int S,
+                        cgnslib.DataType_t type, char *fieldname,
+                        Field_ptr):
+    print 'NOT IMPLEMENTED YET field_write'
+    return 0
+
+  cpdef int field_partial_write(self, int B, int Z, int S,
+                                cgnslib.DataType_t type, char *fieldname,
+                                rmin, rmax, field_ptr):
+    print 'NOT IMPLEMENTED YET field_partial_write'
+    return 0
+
+  cpdef int sol_ptset_write(self, int B, int Z, char *solname,
+                            cgnslib.GridLocation_t location, 
+                            cgnslib.PointSetType_t ptset_type, 
+                            npnts, pnts):
+    print 'NOT IMPLEMENTED YET sol_ptset_write'
+    return 0
+
+  cpdef int subreg_ptset_write(self, int B, int Z, char *regname,
+                               int dimension, cgnslib.GridLocation_t location,
+                               cgnslib.PointSetType_t ptset_type, npnts, pnts):
+    print 'NOT IMPLEMENTED YET subreg_ptset_write'
+    return 0
+
+  cpdef int subreg_bcname_write(self, int B, int Z, char *regname,
+                                int dimension, char *bcname):
+    print 'NOT IMPLEMENTED YET subreg_bcname_write'
+    return 0
+
+  cpdef int hole_write(self, int B, int Z, char * holename,
+                       cgnslib.GridLocation_t location, 
+                       cgnslib.PointSetType_t ptset_type,
+                       int nptsets, npnts, pnts):
+    print 'NOT IMPLEMENTED YET hole_write'
+    return 0
+
+  cpdef int rigid_motion_write(self, int B, int Z,
+                               char * name, cgnslib.RigidGridMotionType_t type):
+    print 'NOT IMPLEMENTED YET rigid_motion_write'
+    return 0
+
+  cpdef int arbitrary_motion_write(self, int B, int Z,
+                                   char * amotionname, 
+                                   cgnslib.ArbitraryGridMotionType_t type):
+    print 'NOT IMPLEMENTED YET arbitrary_motion_write'
+    return 0
+
+  cpdef int simulation_type_write(self, int B,
+                                  cgnslib.SimulationType_t type):
+    print 'NOT IMPLEMENTED YET simulation_type_write'
+    return 0
+
+  cpdef int biter_write(self, int B, char * zitername, int steps):
+    print 'NOT IMPLEMENTED YET biter_write'
+    return 0
+
+  cpdef int ziter_write(self, int B, int Z, char * zitername):
+    print 'NOT IMPLEMENTED YET ziter_write'
+    return 0
+
+  cpdef int gravity_read(self, int B, gravity_vector):
+    print 'NOT IMPLEMENTED YET gravity_read'
+    return 0
+
+  cpdef int gravity_write(self, int B, gravity_vector):
+    print 'NOT IMPLEMENTED YET gravity_write'
+    return 0
+
+  cpdef int axisym_read(self, int B, ref_point, axis):
+    print 'NOT IMPLEMENTED YET axisym_read'
+    return 0
+
+  cpdef int axisym_write(self, int B, ref_point, axis):
+    print 'NOT IMPLEMENTED YET axisym_write'
+    return 0
+
+  cpdef int rotating_read(self, rot_rate, rot_center):
+    print 'NOT IMPLEMENTED YET rotating_read'
+    return 0
+
+  cpdef int rotating_write(self, rot_rate, rot_center):
+    print 'NOT IMPLEMENTED YET rotating_write'
+    return 0
+
+  cpdef int bc_wallfunction_read(self, int B, int Z, int BC,
+                                    cgnslib.WallFunctionType_t WallFunctionType):
+    print 'NOT IMPLEMENTED YET bc_wallfunction_read'
+    return 0
+
+  cpdef int bc_wallfunction_write(self, int B, int Z, int BC,
+                                     cgnslib.WallFunctionType_t WallFunctionType):
+    print 'NOT IMPLEMENTED YET bc_wallfunction_write'
+    return 0
+
+  cpdef  int bc_area_read(self, int B, int Z, int BC,
+                             cgnslib.AreaType_t AreaType, SurfaceArea, 
+                             char *RegionName):
+    print 'NOT IMPLEMENTED YET bc_area_read'
+    return 0
+
+  cpdef int bc_area_write(self, int B, int Z, int BC,
+                             cgnslib.AreaType_t AreaType, float SurfaceArea, 
+                             char *RegionName):
+    print 'NOT IMPLEMENTED YET bc_area_write'
+    return 0
+
+  cpdef  int conn_periodic_read(self, int B, int Z, int I,
+                                   RotationCenter, RotationAngle, 
+                                   Translation):
+    print 'NOT IMPLEMENTED YET conn_periodic_read'
+    return 0
+
+  cpdef int conn_periodic_write(self, int B, int Z, int I,
+                                   RotationCenter, RotationAngle,
+                                   Translation):
+    print 'NOT IMPLEMENTED YET conn_periodic_write'
+    return 0
+
+  cpdef int conn_1to1_periodic_write(self, int B, int Z, int I,
+                                   RotationCenter, RotationAngle,
+                                   Translation):
+    print 'NOT IMPLEMENTED YET conn_1to1_periodic_write'
+    return 0
+
+  cpdef int conn_1to1_periodic_read(self, int B, int Z, int I,
+                                  RotationCenter, RotationAngle, 
+                                  Translation):
+    print 'NOT IMPLEMENTED YET conn_1to1_periodic_read'
+    return 0
+
+  cpdef  int conn_average_read(self, int B, int Z, int I,
+                           cgnslib.AverageInterfaceType_t AverageInterfaceType):
+    print 'NOT IMPLEMENTED YET conn_average_read'
+    return 0
+
+  cpdef int conn_average_write(self, int B, int Z, int I,
+                            cgnslib.AverageInterfaceType_t AverageInterfaceType):
+    print 'NOT IMPLEMENTED YET conn_average_write'
+    return 0
+
+  cpdef int conn_1to1_average_write(self, int B, int Z, int I,
+                            cgnslib.AverageInterfaceType_t AverageInterfaceType):
+    print 'NOT IMPLEMENTED YET conn_1to1_average_write'
+    return 0
+
+  cpdef int conn_1to1_average_read(self, int B, int Z, int I,
+                           cgnslib.AverageInterfaceType_t AverageInterfaceType):
+    print 'NOT IMPLEMENTED YET conn_1to1_average_read'
+    return 0
+
+  cpdef int rind_read(self, RindData):
+    print 'NOT IMPLEMENTED YET rind_read'
+    return 0
+
+  cpdef int rind_write(self, RindData):
+    print 'NOT IMPLEMENTED YET rind_write'
+    return 0
+
+  cpdef int ptset_write(self, cgnslib.PointSetType_t ptset_type,
+                     cgnslib.cgsize_t npnts, pnts):
+    print 'NOT IMPLEMENTED YET ptset_write'
+    return 0
+
+  cpdef int ptset_read(self, cgnslib.cgsize_t pnts):
+    print 'NOT IMPLEMENTED YET ptset_read'
+    return 0
+
+  cpdef int is_link(self, path_length):
+    print 'NOT IMPLEMENTED YET is_link'
+    return 0
+
+  cpdef int link_read(self, filename, link_path):
+    print 'NOT IMPLEMENTED YET link_read'
+    return 0
+
+  cpdef int link_write(self, char * nodename, char * filename,
+                       char * name_in_file):
+    print 'NOT IMPLEMENTED YET link_write'
+    return 0
+
+  cpdef int bcdata_write(self, int B, int Z, int BC, int Dset,
+                         cgnslib.BCDataType_t BCDataType):
+    print 'NOT IMPLEMENTED YET bcdata_write'
+    return 0
+
+  # ---------------------------------------------------------------------------
   cpdef nuser_data(self):
 
     """
-    Counts the number of `UserDefinedData_t` nodes contained in the current node. You can access
+    Counts the number of `UserDefinedData_t` nodes contained in 
+    the current node. You can access
     the current node by using the `gopath` function.
 
     - Args:
@@ -2435,7 +2626,7 @@ cdef class pyCGNS(object):
     return I
 
   # ---------------------------------------------------------------------------
-  cpdef convergence_write(self, int iter, char * ndef):
+  cpdef convergence_write(self, int iter, char *ndef):
 
     """
     Creates a convergence history node.
@@ -2448,8 +2639,8 @@ cdef class pyCGNS(object):
     * None
 
     """
-    
-    self._error=cgnslib.cg_convergence_write(iter,ndef)
+    cdef bytes sdef = ndef    
+    self._error=cgnslib.cg_convergence_write(iter,sdef)
 
   # ---------------------------------------------------------------------------
   cpdef state_write(self, char *sdes):
