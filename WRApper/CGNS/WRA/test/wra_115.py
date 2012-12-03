@@ -1,21 +1,18 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRApper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 import CGNS.WRA.mll as Mll
 import numpy as N
 
+print 'CGNS.WRA.mll','#115 - nconns/conn_info/conn_read'
+
 # ----------------------------------------------------------------------
 a=Mll.pyCGNS('tmp/114Disk.cgns',Mll.MODE_READ)
-
 t=a.nconns(1,1)
-print t
-
 for i in range(t):
     p=a.conn_info(1,1,i+1)
-    print p
     o=a.conn_read_short(1,1,i+1)
-    print o
-    
-## tmp/cgns/101Disk.cgns
-## tmp/cgns/102Disk.cgns
-## tmp/cgns/104Disk.cgns
-## tmp/cgns/114Disk.cgns
-## tmp/cgns/123Disk.cgns
-## tmp/cgns/131Disk.cgns
+a.close()

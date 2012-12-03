@@ -8,7 +8,7 @@ import CGNS.WRA.mll as Mll
 import numpy as NPY
 import CGNS.PAT.cgnskeywords as CK
 
-print 'CGNS.WRA.mll','#035 - n_rigid_motions/rigid_motion_read'
+print 'CGNS.WRA.mll','#135 - n_rigid_motions/rigid_motion_read'
 
 # ----------------------------------------------------------------------
 a=Mll.pyCGNS('tmp/testmll36.hdf',Mll.MODE_READ)

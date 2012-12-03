@@ -144,9 +144,14 @@ cdef class pyCGNS(object):
     cdef float v
     cgnslib.cg_version(self._root,&v)
     return v
+
   # ---------------------------------------------------------------------------
   cpdef gopath(self,char *path):
     cgnslib.cg_gopath(self._root,path)
+
+  cpdef where(self):
+    print 'NOT IMPLEMENTED YET where'
+    return
     
   # ---------------------------------------------------------------------------
   cpdef nbases(self):
@@ -1225,7 +1230,7 @@ cdef class pyCGNS(object):
                                                  start,end,nbndry,&S)
     return S
 
-  # -----------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
   cpdef elements_partial_write(self, int B, int Z, int S, cgnslib.cgsize_t start,
                               cgnslib.cgsize_t end, elements):
 
@@ -1247,7 +1252,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_elements_partial_write(self._root,B,Z,S,start,end,
                                                   elementsptr)
 
-  # ------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef parent_data_partial_write(self, int B, int Z, int S, cgnslib.cgsize_t start,
                                   cgnslib.cgsize_t end, parent_data):
 
@@ -1272,7 +1277,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_parent_data_partial_write(self._root,B,Z,S,start,end,
                                                      parent_dataptr)
 
-  # ------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef nbocos(self, int B, int Z):
 
       """
@@ -1291,7 +1296,7 @@ cdef class pyCGNS(object):
       self._error=cgnslib.cg_nbocos(self._root,B,Z,&nbbdcd)
       return nbbdcd
 
-  # -----------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
   cpdef boco_info(self, int B, int Z, int BC):
 
     """
@@ -1338,13 +1343,13 @@ cdef class pyCGNS(object):
     return (boconame,bocotype,ptset_type,npnts,NormalIndex,NormalListFlag,NormalDataType,
                                      ndataset)
 
-  # ----------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
   cpdef boco_id(self, int B, int Z, int BC):
     cdef double boco_id
     self._error=cgnslib.cg_boco_id(self._root,B,Z,BC,&boco_id)
     return boco_id
 
-  # ----------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
   cpdef boco_write(self, int B, int Z, char * boconame, cgnslib.BCType_t bocotype,
                    cgnslib.PointSetType_t ptset_type, cgnslib.cgsize_t npnts, pnts):
 
@@ -1373,7 +1378,7 @@ cdef class pyCGNS(object):
                                       &BC)
     return BC
 
-  # --------------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
   cpdef boco_normal_write(self, int B, int Z, int BC, NormalIndex,
                           int NormalListFlag, NormalDataType=None, NormalList=None):
 
@@ -1421,7 +1426,7 @@ cdef class pyCGNS(object):
       self._error=cgnslib.cg_boco_normal_write(self._root,B,Z,BC,nixptr,
                                                  NormalListFlag,ndt,nlptrS)
 
-  # ----------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
   cpdef boco_read(self, int B, int Z, int BC):
 
     """
@@ -1433,9 +1438,10 @@ cdef class pyCGNS(object):
     * `BC`: boundary condition id (`int`)
 
     - Returns:
-    * array of point or element indices defining the boundary condition region (`numpy.ndarray`)
-    * list of vectors normal to the boundary condition patch pointing into the interior
-      of the zone (`numpy.ndarray`)
+    * array of point or element indices defining the boundary condition 
+      region (`numpy.ndarray`)
+    * list of vectors normal to the boundary condition patch pointing into 
+      the interior of the zone (`numpy.ndarray`)
     
     """
     cdef int NormalList
@@ -1446,10 +1452,8 @@ cdef class pyCGNS(object):
     datatype=self.boco_info(B,Z,BC)[6]
     ztype=self.zone_type(B,Z)
     pdim=self.base_read(B)[3]
-    if (ztype==CK.Unstructured):
-      dim=1
-    elif (ztype==CK.Structured):
-      dim=self.base_read(B)[2]  
+    if (ztype==CK.Unstructured): dim=1
+    elif (ztype==CK.Structured): dim=self.base_read(B)[2]  
     pnts=PNY.zeros((npnts,dim),dtype=PNY.int32)
     pntsptr=<int *>CNY.PyArray_DATA(pnts)
     if (nls==0):
@@ -1465,7 +1469,7 @@ cdef class pyCGNS(object):
         self._error=cgnslib.cg_boco_read(self._root,B,Z,BC,pntsptr,nlptrS)
     return (pnts,nl)
 
-  # ------------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
   cpdef boco_gridlocation_read(self, int B, int Z, int BC):
 
     """
@@ -1485,7 +1489,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_boco_gridlocation_read(self._root,B,Z,BC,&location)
     return location
 
-  # ------------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
   cpdef boco_gridlocation_write(self, int B, int Z, int BC,
                                 cgnslib.GridLocation_t location):
 
@@ -1505,7 +1509,7 @@ cdef class pyCGNS(object):
     
     self._error=cgnslib.cg_boco_gridlocation_write(self._root,B,Z,BC,location)
 
-  # ------------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
   cpdef dataset_write(self, int B, int Z, int BC, char * name, cgnslib.BCType_t BCType):
 
     """
@@ -1526,7 +1530,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_dataset_write(self._root,B,Z,BC,name,BCType,&DSet)
     return DSet
 
-  # ------------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
   cpdef dataset_read(self, int B, int Z, int BC, int DS):
 
     """
@@ -1561,6 +1565,16 @@ cdef class pyCGNS(object):
   # ---------------------------------------------------------------------------
   cpdef bcdataset_read(self, int n):
     print 'NOT IMPLEMENTED YET bcdataset_read'
+    return
+
+  # ---------------------------------------------------------------------------
+  cpdef convergence_read(self):
+    print 'NOT IMPLEMENTED YET convergence_read'
+    return
+
+  # ---------------------------------------------------------------------------
+  cpdef state_read(self):
+    print 'NOT IMPLEMENTED YET state_read'
     return
 
   # ---------------------------------------------------------------------------
@@ -1766,6 +1780,14 @@ cdef class pyCGNS(object):
     print 'NOT IMPLEMENTED YET nfields'
     return 0
 
+  cpdef int field_info(self, int B, int Z, int S, int F):
+    print 'NOT IMPLEMENTED YET field_info'
+    return 0
+
+  cpdef int field_read(self, int B, int Z, int S, char *fieldname):
+    print 'NOT IMPLEMENTED YET field_read'
+    return 0
+
   cpdef int field_write(self, int B,int Z,int S,
                         cgnslib.DataType_t type, char *fieldname,
                         Field_ptr):
@@ -1776,6 +1798,14 @@ cdef class pyCGNS(object):
                                 cgnslib.DataType_t type, char *fieldname,
                                 rmin, rmax, field_ptr):
     print 'NOT IMPLEMENTED YET field_partial_write'
+    return 0
+
+  cpdef int sol_ptset_info(self, int B, int Z, int S):
+    print 'NOT IMPLEMENTED YET sol_ptset_info'
+    return 0
+
+  cpdef int sol_ptset_read(self, int B, int Z, int S):
+    print 'NOT IMPLEMENTED YET sol_ptset_read'
     return 0
 
   cpdef int sol_ptset_write(self, int B, int Z, char *solname,
@@ -1791,9 +1821,50 @@ cdef class pyCGNS(object):
     print 'NOT IMPLEMENTED YET subreg_ptset_write'
     return 0
 
+  cpdef int nsubregs(self, int B, int Z):
+    print 'NOT IMPLEMENTED YET nsubregs'
+    return 0
+
+  cpdef int subreg_info(self, int B, int Z, int S, char *regname):
+    print 'NOT IMPLEMENTED YET subreg_info'
+    return 0
+
+  cpdef int subreg_ptset_read(self, int B, int Z, int S):
+    print 'NOT IMPLEMENTED YET subreg_ptset_read'
+    return 0
+
+  cpdef int subreg_bcname_read(self, int B, int Z, int S, char *bcname):
+    print 'NOT IMPLEMENTED YET subreg_bcname_read'
+    return 0
+
+  cpdef int subreg_gcname_read(self, int B, int Z, int S, char *gcname):
+    print 'NOT IMPLEMENTED YET subreg_gcname_write'
+    return 0
+
+  cpdef int subreg_gcname_write(self, int B, int Z, char *regname,
+                             int dimension, char *gcname):
+    print 'NOT IMPLEMENTED YET subreg_gcname_write'
+    return 0
+
   cpdef int subreg_bcname_write(self, int B, int Z, char *regname,
                                 int dimension, char *bcname):
     print 'NOT IMPLEMENTED YET subreg_bcname_write'
+    return 0
+
+  cpdef int nholes(self, int B, int Z):
+    print 'NOT IMPLEMENTED YET nholes'
+    return 0
+
+  cpdef int hole_info(self, int B, int Z, int I):
+    print 'NOT IMPLEMENTED YET hole_info'
+    return 0
+
+  cpdef int hole_read(self, int B, int Z, int I):
+    print 'NOT IMPLEMENTED YET hole_read'
+    return 0
+
+  cpdef int hole_id(self, int B, int Z, int I):
+    print 'NOT IMPLEMENTED YET hole_id'
     return 0
 
   cpdef int hole_write(self, int B, int Z, char * holename,
@@ -1801,6 +1872,14 @@ cdef class pyCGNS(object):
                        cgnslib.PointSetType_t ptset_type,
                        int nptsets, npnts, pnts):
     print 'NOT IMPLEMENTED YET hole_write'
+    return 0
+
+  cpdef n_rigid_motions(self, int B, int Z):
+    print 'NOT IMPLEMENTED YET n_rigid_motion'
+    return 0
+
+  cpdef rigid_motion_read(self, int B, int Z, int R):
+    print 'NOT IMPLEMENTED YET rigid_motion_read'
     return 0
 
   cpdef int rigid_motion_write(self, int B, int Z,
@@ -1814,20 +1893,40 @@ cdef class pyCGNS(object):
     print 'NOT IMPLEMENTED YET arbitrary_motion_write'
     return 0
 
+  cpdef n_arbitrary_motions(self, int B, int Z):
+    print 'NOT IMPLEMENTED YET n_arbitrary_motions'
+    return 0
+
+  cpdef arbitrary_motion_read(self, int B, int Z, int A):
+    print 'NOT IMPLEMENTED YET arbitrary_motion_read'
+    return 0
+
+  cpdef int simulation_type_read(self, int B):
+    print 'NOT IMPLEMENTED YET simulation_type_read'
+    return 0
+
   cpdef int simulation_type_write(self, int B,
                                   cgnslib.SimulationType_t type):
     print 'NOT IMPLEMENTED YET simulation_type_write'
+    return 0
+
+  cpdef biter_read(self, int B):
+    print 'NOT IMPLEMENTED YET biter_read'
     return 0
 
   cpdef int biter_write(self, int B, char * zitername, int steps):
     print 'NOT IMPLEMENTED YET biter_write'
     return 0
 
+  cpdef ziter_read(self, int B, int Z):
+    print 'NOT IMPLEMENTED YET ziter_read'
+    return 0
+
   cpdef int ziter_write(self, int B, int Z, char * zitername):
     print 'NOT IMPLEMENTED YET ziter_write'
     return 0
 
-  cpdef int gravity_read(self, int B, gravity_vector):
+  cpdef int gravity_read(self, int B):
     print 'NOT IMPLEMENTED YET gravity_read'
     return 0
 
@@ -1835,7 +1934,7 @@ cdef class pyCGNS(object):
     print 'NOT IMPLEMENTED YET gravity_write'
     return 0
 
-  cpdef int axisym_read(self, int B, ref_point, axis):
+  cpdef int axisym_read(self, int B):
     print 'NOT IMPLEMENTED YET axisym_read'
     return 0
 
@@ -1843,7 +1942,7 @@ cdef class pyCGNS(object):
     print 'NOT IMPLEMENTED YET axisym_write'
     return 0
 
-  cpdef int rotating_read(self, rot_rate, rot_center):
+  cpdef int rotating_read(self):
     print 'NOT IMPLEMENTED YET rotating_read'
     return 0
 
@@ -1851,8 +1950,7 @@ cdef class pyCGNS(object):
     print 'NOT IMPLEMENTED YET rotating_write'
     return 0
 
-  cpdef int bc_wallfunction_read(self, int B, int Z, int BC,
-                                    cgnslib.WallFunctionType_t WallFunctionType):
+  cpdef int bc_wallfunction_read(self, int B, int Z, int BC):
     print 'NOT IMPLEMENTED YET bc_wallfunction_read'
     return 0
 
@@ -1861,9 +1959,7 @@ cdef class pyCGNS(object):
     print 'NOT IMPLEMENTED YET bc_wallfunction_write'
     return 0
 
-  cpdef  int bc_area_read(self, int B, int Z, int BC,
-                             cgnslib.AreaType_t AreaType, SurfaceArea, 
-                             char *RegionName):
+  cpdef  int bc_area_read(self, int B, int Z, int BC):
     print 'NOT IMPLEMENTED YET bc_area_read'
     return 0
 
@@ -1873,9 +1969,7 @@ cdef class pyCGNS(object):
     print 'NOT IMPLEMENTED YET bc_area_write'
     return 0
 
-  cpdef  int conn_periodic_read(self, int B, int Z, int I,
-                                   RotationCenter, RotationAngle, 
-                                   Translation):
+  cpdef  int conn_periodic_read(self, int B, int Z, int I):
     print 'NOT IMPLEMENTED YET conn_periodic_read'
     return 0
 
@@ -1891,14 +1985,11 @@ cdef class pyCGNS(object):
     print 'NOT IMPLEMENTED YET conn_1to1_periodic_write'
     return 0
 
-  cpdef int conn_1to1_periodic_read(self, int B, int Z, int I,
-                                  RotationCenter, RotationAngle, 
-                                  Translation):
+  cpdef int conn_1to1_periodic_read(self, int B, int Z, int I):
     print 'NOT IMPLEMENTED YET conn_1to1_periodic_read'
     return 0
 
-  cpdef  int conn_average_read(self, int B, int Z, int I,
-                           cgnslib.AverageInterfaceType_t AverageInterfaceType):
+  cpdef  int conn_average_read(self, int B, int Z, int I):
     print 'NOT IMPLEMENTED YET conn_average_read'
     return 0
 
@@ -1912,8 +2003,7 @@ cdef class pyCGNS(object):
     print 'NOT IMPLEMENTED YET conn_1to1_average_write'
     return 0
 
-  cpdef int conn_1to1_average_read(self, int B, int Z, int I,
-                           cgnslib.AverageInterfaceType_t AverageInterfaceType):
+  cpdef int conn_1to1_average_read(self, int B, int Z, int I):
     print 'NOT IMPLEMENTED YET conn_1to1_average_read'
     return 0
 
@@ -1934,7 +2024,19 @@ cdef class pyCGNS(object):
     print 'NOT IMPLEMENTED YET ptset_read'
     return 0
 
-  cpdef int is_link(self, path_length):
+  cpdef int delete_node(self, path):
+    print 'NOT IMPLEMENTED YET delete_node'
+    return 0
+
+  cpdef int cell_dim(self, int B):
+    print 'NOT IMPLEMENTED YET cell_dim'
+    return 0
+
+  cpdef int index_dim(self, int B, int Z):
+    print 'NOT IMPLEMENTED YET index_dim'
+    return 0
+
+  cpdef int is_link(self):
     print 'NOT IMPLEMENTED YET is_link'
     return 0
 
@@ -2271,7 +2373,7 @@ cdef class pyCGNS(object):
     
     self._error=cgnslib.cg_zconn_set(self._root,B,Z,ZC)
 
-  # ---------------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
   cpdef n1to1(self, int B, int Z):
 
     """
@@ -2293,8 +2395,8 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_n1to1(self._root,B,Z,&n1to1)
     return n1to1
 
-  # ----------------------------------------------------------------------------------------
-  cpdef _1to1_read(self, int B, int Z, int I):
+  # ---------------------------------------------------------------------------
+  cpdef conn_1to1_read(self, int B, int Z, int I):
 
     """
     Returns a tuple with information about a 1-to-1 connectivity data.
@@ -2366,7 +2468,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_1to1_write(self._root,B,Z,cname,dname,crangeptr,drangeptr,trptr,&I)
     return I
 
-  # ------------------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef n1to1_global(self, int B):
 
     """
@@ -2385,7 +2487,7 @@ cdef class pyCGNS(object):
     return n
 
   # --------------------------------------------------------------------------
-  cpdef _1to1_read_global(self, int B):
+  cpdef conn_1to1_read_global(self, int B):
 
     cdef CNY.ndarray[dtype=CNY.uint8_t,ndim=2] tcnames
     cdef CNY.ndarray[dtype=CNY.uint8_t,ndim=2] tznames
@@ -2401,9 +2503,11 @@ cdef class pyCGNS(object):
     cdef int *trangeptr
     
     cxnum=self.n1to1_global(B)
-    tcnames=PNY.array((32,cxnum),dtype=PNY.uint8_t)
-    tznames=PNY.array((32,cxnum),dtype=PNY.uint8_t)
-    tdnames=PNY.array((32,cxnum),dtype=PNY.uint8_t)
+    if (cxnum==-1): return
+
+    tcnames=PNY.array((32,cxnum),dtype=PNY.uint8)
+    tznames=PNY.array((32,cxnum),dtype=PNY.uint8)
+    tdnames=PNY.array((32,cxnum),dtype=PNY.uint8)
     
     cnameptr=<CNY.uint8_t* >tcnames.data
     znameptr=<CNY.uint8_t* >tznames.data

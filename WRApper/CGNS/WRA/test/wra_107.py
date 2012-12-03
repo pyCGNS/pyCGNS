@@ -1,16 +1,19 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRApper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 import CGNS.WRA.mll as Mll
 import numpy as N
 
+print 'CGNS.WRA.mll','#107 - ndiscrete/discrete_read/discrete_size/discrete_ptset_info'
+
 # ----------------------------------------------------------------------
 a=Mll.pyCGNS('tmp/testmll14.hdf',Mll.MODE_READ)
-
 t=a.ndiscrete(1,1)
-print t
 for i in range(t):
     p=a.discrete_read(1,1,i+1)
-    print p
     o=a.discrete_size(1,1,i+1)
-    print o
     u=a.discrete_ptset_info(1,1,i+1)
-    print u
 a.close()

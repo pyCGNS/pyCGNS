@@ -1,19 +1,18 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS.WRA - Python package for CFD General Notation System - WRApper
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
 import CGNS.WRA.mll as Mll
 import numpy as N
 
+print 'CGNS.WRA.mll','#134 - nholes/hole_info/hole_read/hole_id'
+
 # ----------------------------------------------------------------------
 a=Mll.pyCGNS('tmp/testmll35.hdf',Mll.MODE_READ)
-
 t=a.nholes(1,1)
-print t
-
 u=a.hole_info(1,1,1)
-print u
-
 o=a.hole_read(1,1,1)
-print o, o.dtype
-
 p=a.hole_id(1,1,1)
-print p
-
 a.close()

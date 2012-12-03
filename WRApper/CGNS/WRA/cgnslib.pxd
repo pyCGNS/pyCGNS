@@ -404,6 +404,9 @@ cdef extern from "cgnslib.h":
                               cgsize_t *rmin, cgsize_t *rmax,
                               field_ptr)
 
+  int cg_sol_ptset_info(int fn, int B, int Z, int S,
+                        PointSetType_t *ptset_type, cgsize_t *npnts)
+  int cg_sol_ptset_read(int fn, int B, int Z, int S, cgsize_t *pnts)
   int cg_sol_ptset_write(int fn, int B, int Z, char *solname,
                          GridLocation_t location, PointSetType_t ptset_type, 
                          cgsize_t npnts, cgsize_t *pnts, int *S)
@@ -575,6 +578,12 @@ cdef extern from "cgnslib.h":
  ##  int cg_multifam_write(char *name, char *family)
   char *cg_get_error()
   int cg_gopath(int fn, char *path)
+  int cg_goto(int file_number, int B, ...)
+  int cg_gorel(int file_number, ...)
+  int cg_golist(int file_number, int B, int depth, char **label,
+	int *num)
+  int cg_where(int *file_number, int *B, int *depth, char **label,
+	int *num)
   
   # ---------------------------------------------------------------------
   # Above is wrapped
@@ -601,17 +610,14 @@ cdef extern from "cgnslib.h":
 ## CGNSDLL int cg_1to1_read_global(int fn, int B, char **connectname,
 ## 	char **zonename, char **donorname, cgsize_t **range,
 ## 	cgsize_t **donor_range, int **transform);
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write ConvergenceHistory_t Nodes                        *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-## CGNSDLL int cg_convergence_read(int *iterations, char **NormDefinitions);
+  int cg_convergence_read(int *iterations, char **NormDefinitions)
 
 ## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
 ##  *      Read and write ReferenceState_t Nodes                            *
 ## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-## CGNSDLL int cg_state_read(char **StateDescription);
+  int cg_state_read(char **StateDescription)
 
   int cg_rind_read(int *RindData)
   int cg_rind_write(int * RindData)
