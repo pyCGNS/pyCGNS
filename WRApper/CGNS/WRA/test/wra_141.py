@@ -12,7 +12,7 @@ print 'CGNS.WRA.mll','#141 - axisym_read'
 
 # ----------------------------------------------------------------------
 a=Mll.pyCGNS('tmp/testmll42.hdf',Mll.MODE_READ)
-n=a.axisym_read(1)
+(base,refpoint,axis)=a.axisym_read(1)
 a.close()
 
 # ---

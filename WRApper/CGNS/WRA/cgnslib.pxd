@@ -4,7 +4,7 @@
 #  -------------------------------------------------------------------------
 #  $Release: v4.0.1 $
 #  -------------------------------------------------------------------------
-
+#
 cdef extern from "cgnslib.h":
   
   ctypedef int cgsize_t
@@ -270,424 +270,260 @@ cdef extern from "cgnslib.h":
       Overset=2
       Abutting=3
       Abutting1to1=4           
-            
-  int cg_open(char *name, int mode, int *db)
-  int cg_version(int db,float *v)
-  int cg_close(int db)
 
-  int cg_nbases(int db,int *nbases)
-  int cg_base_read(int file_number, int B, char *basename,
-                   int *cell_dim, int *phys_dim)
-  int cg_base_id(int fn, int B, double *base_id)
-  int cg_base_write(int file_number, char * basename,
-                    int cell_dim, int phys_dim, int *B)
-
-  int cg_nzones(int fn, int B, int *nzones)
-  int cg_zone_read(int fn, int B, int Z, char *zonename, int *size)
-  int cg_zone_type(int file_number, int B, int Z, ZoneType_t *type)
-  int cg_zone_id(int fn, int B, int Z, double *zone_id)
-  int cg_zone_write(int fn, int B, char * zonename, 
-                    int * size, ZoneType_t type, int *Z)
-
-  int cg_nfamilies(int file_number, int B, int *nfamilies)
-  int cg_family_read(int file_number, int B, int F,
-                     char *family_name, int *nboco, int *ngeos)
-  int cg_family_write(int file_number, int B,
-                      char * family_name, int *F)
-
-  int cg_fambc_read(int file_number, int B, int F, int BC,
-                    char *fambc_name, BCType_t *bocotype)
-  int cg_fambc_write(int file_number, int B, int F,
-                     char * fambc_name, BCType_t bocotype, int *BC)
-
-  int cg_geo_read(int file_number, int B, int F, int G, char *geo_name,
-                  char **geo_file, char *CAD_name, int *npart)
-  int cg_geo_write(int file_number, int B, int F, char * geo_name,
-                   char * filename, char * CADname, int *G)
-
-  int cg_part_read(int file_number, int B, int F, int G, int P,
-                   char *part_name)
-  int cg_part_write(int file_number, int B, int F, int G,
-                    char * part_name, int *P)
- 
-  int cg_ngrids(int file_number, int B, int Z, int *ngrids)
-  int cg_grid_read(int file_number, int B, int Z, int G, char *gridname)
-  int cg_grid_write(int file_number, int B, int Z,
-                    char * gridname, int *G)
-
-  int cg_ncoords(int fn, int B, int Z, int *ncoords)
-  int cg_coord_info(int fn, int B, int Z, int C,
-                    DataType_t *type, char *coordname)
-  int cg_coord_read(int fn, int B, int Z,  char * coordname,
-                    DataType_t type,  cgsize_t * rmin,
-                    cgsize_t * rmax, void *coord)
-  int cg_coord_id(int fn, int B, int Z, int C, double *coord_id)
-  int cg_coord_write(int fn, int B, int Z,
-                     DataType_t type,  char * coordname,
-                     void * coord_ptr, int *C)
-  int cg_coord_partial_write(int fn, int B, int Z,
-                             DataType_t type,  char * coordname,
-                             cgsize_t *rmin,  cgsize_t *rmax,
-                             void * coord_ptr, int *C)
-  int cg_nsols(int fn, int B, int Z, int *nsols)
-  int cg_sol_write(int fn, int B, int Z, char * solname,
-                   GridLocation_t location, int *S)
-  int cg_sol_info(int fn, int B, int Z, int S, char * solname, GridLocation_t *location)
-  int cg_sol_id(int fn, int B, int Z, int S, double *sol_id)
-  int cg_sol_size(int fn, int B, int Z, int S, int *data_dim, cgsize_t *dim_vals)
-  int cg_nsections(int fn, int B, int Z, int *nsections)
-  int cg_section_read(int fn, int B, int Z, int S,
-                      char *SectionName, ElementType_t *type,
-                      cgsize_t *start, cgsize_t *end,
-                      int *nbndry, int *parent_flag)
-  int cg_elements_read(int fn, int B, int Z, int S,
-                       cgsize_t *elements, cgsize_t *parent_data)
-  int cg_section_write(int fn, int B, int Z,
-                       char * SectionName, ElementType_t type,
-                       cgsize_t start, cgsize_t end, int nbndry,
-                       cgsize_t * elements, int *S)
-  int cg_npe(ElementType_t type, int *npe)
-  int cg_ElementDataSize(int fn, int B, int Z, int S,
-                         cgsize_t *ElementDataSize)
-  int cg_parent_data_write(int fn, int B, int Z, int S,
-                           cgsize_t * parent_data)
-  int cg_elements_partial_read(int fn, int B, int Z, int S,
-                               cgsize_t start, cgsize_t end,
-                               cgsize_t *elements, cgsize_t *parent_data)
-  int cg_ElementPartialSize(int fn, int B, int Z, int S,
-                            cgsize_t start, cgsize_t end,
-                            cgsize_t *ElementDataSize)
-  int cg_section_partial_write(int fn, int B, int Z,
-                               char * SectionName, ElementType_t type,
-                               cgsize_t start, cgsize_t end, int nbndry, int *S)
-  int cg_elements_partial_write(int fn, int B, int Z, int S,
-                                cgsize_t start, cgsize_t end,
-                                cgsize_t *elements)
-  int cg_parent_data_partial_write(int fn, int B, int Z, int S,
-                                   cgsize_t start, cgsize_t end,
-                                   cgsize_t *ParentData)
-  int cg_nbocos(int fn, int B, int Z, int *nbocos)
-  int cg_boco_write(int fn, int B, int Z, char * boconame,
-	BCType_t bocotype, PointSetType_t ptset_type,
-	cgsize_t npnts, cgsize_t * pnts, int *BC)
-  int cg_boco_info(int fn, int B, int Z, int BC, char *boconame,
-	BCType_t *bocotype, PointSetType_t *ptset_type,
- 	cgsize_t *npnts, int *NormalIndex, cgsize_t *NormalListFlag,
- 	DataType_t *NormalDataType, int *ndataset)
-  int cg_boco_read(int fn, int B, int Z, int BC, cgsize_t *pnts, void *NormalList)
-  int cg_boco_id(int fn, int B, int Z, int BC, double *boco_id)
-  int cg_boco_normal_write(int fn, int B, int Z, int BC,
-	int * NormalIndex, int NormalListFlag,
-	DataType_t NormalDataType, void * NormalList)
-  int cg_boco_gridlocation_read(int fn, int B, int Z, int BC, GridLocation_t *location)
-  int cg_boco_gridlocation_write(int fn, int B, int Z, int BC, GridLocation_t location)
-  int cg_dataset_write(int fn, int B, int Z, int BC, char * name, BCType_t BCType, int *Dset)
-  int cg_dataset_read(int fn, int B, int Z, int BC, int DS, char *name, BCType_t *BCType,
-                      int *DirichletFlag, int *NeumannFlag)
-  int cg_bcdataset_write(char *name, BCType_t BCType, BCDataType_t BCDataType)
+  # ------------------------------------------------------------------------
+  int cg_1to1_average_read(int fn,int B,int Z,int I,AverageInterfaceType_t *AverageInterfaceType)
+  int cg_1to1_average_write(int fn,int B,int Z,int I,AverageInterfaceType_t AverageInterfaceType)
+  int cg_1to1_id(int fn,int B,int Z,int I,double *one21_id)
+  int cg_1to1_periodic_read(int fn,int B,int Z,int I,float *RotationCenter,float *RotationAngle,float *Translation)
+  int cg_1to1_periodic_write(int fn,int B,int Z,int I,float *RotationCenter,float *RotationAngle,float *Translation)
+  int cg_1to1_read(int fn,int B,int Z,int I,char *connectname,char *donorname,cgsize_t *range,cgsize_t *donor_range,int *transform)
+  int cg_1to1_read_global(int fn,int B,char **connectname,char **zonename,char **donorname,cgsize_t **range,cgsize_t **donor_range,int **transform)
+  int cg_1to1_write(int fn,int B,int Z,char *connectname,char *donorname,cgsize_t *range,cgsize_t *donor_range,int *transform,int *I)
+# cg_AngleUnitsName
+# cg_ArbitraryGridMotionTypeName
+# cg_AreaTypeName
+# cg_AverageInterfaceTypeName
+# cg_BCDataTypeName
+# cg_BCTypeName
+# cg_DataClassName
+# cg_DataTypeName
+# cg_ElectricCurrentUnitsName
+  int cg_ElementDataSize(int fn,int B,int Z,int S,cgsize_t *ElementDataSize)
+  int cg_ElementPartialSize(int fn,int B,int Z,int S,cgsize_t start,cgsize_t end,cgsize_t *ElementDataSize)
+# cg_ElementTypeName
+# cg_GoverningEquationsTypeName
+# cg_GridConnectivityTypeName
+# cg_GridLocationName
+# cg_LengthUnitsName
+# cg_LuminousIntensityUnitsName
+# cg_MassUnitsName
+# cg_ModelTypeName
+# cg_PointSetTypeName
+# cg_RigidGridMotionTypeName
+# cg_SimulationTypeName
+# cg_SubstanceAmountUnitsName
+# cg_TemperatureUnitsName
+# cg_TimeUnitsName
+# cg_WallFunctionTypeName
+# cg_ZoneTypeName
+# cg_add_path
+  int cg_arbitrary_motion_read(int fn,int B,int Z,int A,char *name,ArbitraryGridMotionType_t *type)
+  int cg_arbitrary_motion_write(int fn,int B,int Z,char *amotionname,ArbitraryGridMotionType_t type,int*A)
+  int cg_array_info(int A,char *ArrayName,DataType_t *DataType,int *DataDimension,cgsize_t *DimensionVector)
+  int cg_array_read(int A,void *Data)
+  int cg_array_read_as(int A,DataType_t type,void *Data)
+  int cg_array_write(char *ArrayName,DataType_t DataType,int DataDimension,cgsize_t *DimensionVector,void *Data)
+  int cg_axisym_read(int fn,int B,float *ref_point,float *axis)
+  int cg_axisym_write(int fn,int B,float *ref_point,float *axis)
+  int cg_base_id(int fn,int B,double *base_id)
+  int cg_base_read(int fn,int B,char *basename,int *cell_dim,int *phys_dim)
+  int cg_base_write(int fn,char *basename,int cell_dim,int phys_dim,int *B)
+  int cg_bc_area_read(int fn,int B,int Z,int BC,AreaType_t *AreaType,float *SurfaceArea,char *RegionName)
+  int cg_bc_area_write(int fn,int B,int Z,int BC,AreaType_t AreaType,float SurfaceArea,char *RegionName)
+  int cg_bc_wallfunction_read(int fn,int B,int Z,int BC,WallFunctionType_t *WallFunctionType)
+  int cg_bc_wallfunction_write(int fn,int B,int Z,int BC,WallFunctionType_t WallFunctionType)
+  int cg_bcdata_write(int fn,int B,int Z,int BC,int Dset,BCDataType_t BCDataType)
   int cg_bcdataset_info(int *n_dataset)
-  int cg_bcdataset_read(int index, char *name,
-                        BCType_t *BCType, int *DirichletFlag,
-                        int *NeumannFlag)
-  int cg_nfields(int fn, int B, int Z, int S, int *nfields)
-  int cg_field_info(int fn,int B,int Z,int S, int F,
-                    DataType_t *type, char *fieldname)
-  int cg_field_read(int fn, int B, int Z, int S, char *fieldname,
-                    DataType_t type, cgsize_t *rmin,
-                    cgsize_t *rmax, void *field_ptr)
-  int cg_field_id(int fn, int B, int Z,int S, int F, double *field_id)
-  int cg_field_write(int fn,int B,int Z,int S,
-                     DataType_t type, char * fieldname,
-                     void * field_ptr, int *F)
-  int cg_field_partial_write(int B, int Z, int S,
-                              DataType_t type, char *fieldname,
-                              cgsize_t *rmin, cgsize_t *rmax,
-                              field_ptr)
-
-  int cg_sol_ptset_info(int fn, int B, int Z, int S,
-                        PointSetType_t *ptset_type, cgsize_t *npnts)
-  int cg_sol_ptset_read(int fn, int B, int Z, int S, cgsize_t *pnts)
-  int cg_sol_ptset_write(int fn, int B, int Z, char *solname,
-                         GridLocation_t location, PointSetType_t ptset_type, 
-                         cgsize_t npnts, cgsize_t *pnts, int *S)
-
-  int cg_narrays(int *narrays)
-  int cg_array_info(int A, char *ArrayName, DataType_t *DataType, int *DataDimension,
-                    cgsize_t *DimensionVector)
-  int cg_array_read(int A, void *Data)
-  int cg_array_read_as(int A, DataType_t type, void *Data)
-  int cg_array_write(char * ArrayName, DataType_t DataType, int DataDimension,
-                     cgsize_t * DimensionVector, void * Data)
-
-  int cg_nsubregs(int fn, int B, int Z, int *nsubreg)
-  int cg_subreg_info(int fn, int B, int Z, int S, char *regname,
-                     int *dimension, GridLocation_t *location,
-                     PointSetType_t *ptset_type, cgsize_t *npnts,
-                     int *bcname_len, int *gcname_len)
-  int cg_subreg_ptset_read(int fn, int B, int Z, int S, cgsize_t *pnts)
-  int cg_subreg_bcname_read(int fn, int B, int Z, int S, char *bcname)
-  int cg_subreg_gcname_read(int fn, int B, int Z, int S, char *gcname)
-  int cg_subreg_ptset_write(int fn, int B, int Z, char *regname,
-                            int dimension, GridLocation_t location,
-                            PointSetType_t ptset_type, cgsize_t npnts,
-                            cgsize_t *pnts, int *S)
-  int cg_subreg_bcname_write(int fn, int B, int Z, char *regname,
-                             int dimension, char *bcname, int *S)
-  int cg_subreg_gcname_write(int fn, int B, int Z, char *regname,
-                             int dimension, char *gcname, int *S)
-
-  int cg_nholes(int fn, int B, int Z, int *nholes)
-  int cg_hole_info(int fn, int B, int Z, int I, char *holename,
-                   GridLocation_t *location, PointSetType_t *ptset_type,
-                   int *nptsets, cgsize_t *npnts)
-  int cg_hole_read(int fn, int B, int Z, int I, cgsize_t *pnts)
-  int cg_hole_id(int fn, int B, int Z, int I, double *hole_id)
-  int cg_hole_write(int fn, int B, int Z, char * holename,
-                    GridLocation_t location, PointSetType_t ptset_type,
-                    int nptsets, cgsize_t npnts, cgsize_t * pnts, int *I)
-
-  int cg_n_rigid_motions(int file_number, int B, int Z,
-                         int *n_rigid_motions)
-  int cg_rigid_motion_read(int file_number, int B, int Z, int R,
-                           char *name, RigidGridMotionType_t *type)
-  int cg_rigid_motion_write(int file_number, int B, int Z,
-                            char * name, RigidGridMotionType_t type, int *R)
-
-  int cg_n_arbitrary_motions(int file_number, int B, int Z,
-                             int *n_arbitrary_motions)
-  int cg_arbitrary_motion_read(int file_number, int B, int Z, int A,
-                               char *name, ArbitraryGridMotionType_t *type)
-  int cg_arbitrary_motion_write(int file_number, int B, int Z,
-                                char * amotionname, 
-                                ArbitraryGridMotionType_t type)
-
-  int cg_simulation_type_read(int file_number, int B,
-                              SimulationType_t *type)
-  int cg_simulation_type_write(int file_number, int B,
-                               SimulationType_t type)
-
-  int cg_biter_read(int file_number, int B, char *bitername, int *nsteps)
-  int cg_biter_write(int file_number, int B, char * bitername, int nsteps)
-  int cg_ziter_read(int file_number, int B, int Z, char *zitername)
-  int cg_ziter_write(int file_number, int B, int Z, char *zitername)
-
-  int cg_gravity_read(int file_number, int B, float *gravity_vector)
-  int cg_gravity_write(int file_number, int B, float *gravity_vector)
-
-  int cg_axisym_read(int file_number, int B, float *ref_point, float *axis)
-  int cg_axisym_write(int file_number, int B, float *ref_point, float *axis)
-  int cg_rotating_read(float *rot_rate, float *rot_center)
-  int cg_rotating_write(float *rot_rate, float *rot_center)
-
-  int cg_nuser_data(int *nuser_data)
-  int cg_user_data_read(int Index, char *user_data_name)
-  int cg_user_data_write(char * user_data_name)
-  int cg_user_data_read(int Index, char *user_data_name)
-  int cg_discrete_write(int fn, int B, int Z, char * discrete_name, int *D)
-  int cg_ndiscrete(int fn, int B, int Z, int *ndiscrete)
-  int cg_discrete_read(int fn, int B, int Z, int D, char *discrete_name)
-  int cg_discrete_size(int fn, int B, int Z, int D, int *data_dim, cgsize_t *dim_vals)
-  int cg_discrete_ptset_info(int fn, int B, int Z, int D, PointSetType_t *ptset_type,
-                             cgsize_t *npnts)
-  int cg_discrete_ptset_read(int fn, int B, int Z, int D, cgsize_t *pnts)
-  int cg_discrete_ptset_write(int fn, int B, int Z, char *discrete_name,
-                              GridLocation_t location, PointSetType_t ptset_type,
-                              cgsize_t npnts, cgsize_t *pnts, int *D)
-  int cg_nzconns(int fn, int B, int Z, int *nzconns)
-  int cg_zconn_read(int fn, int B, int Z, int C, char *name)
-  int cg_zconn_write(int fn, int B, int Z, char *name, int *C)
-  int cg_zconn_get(int fn, int B, int Z, int *C)
-  int cg_zconn_set(int fn, int B, int Z, int C)
-  int cg_n1to1(int fn, int B, int Z, int *n1to1)
-  int cg_1to1_read(int fn, int B, int Z, int I, char *connectname,
-                   char *donorname, cgsize_t *range, cgsize_t *donor_range, int *transform)
-  int cg_1to1_id(int fn, int B, int Z, int I, double *one21_id)
-  int cg_1to1_write(int fn, int B, int Z, char * connectname, char * donorname,
-                    cgsize_t * range, cgsize_t * donor_range, int * transform, int *I)
-  int cg_n1to1_global(int fn, int B, int *n1to1_global)
-  int cg_nconns(int fn, int B, int Z, int *nconns)
-  int cg_conn_info(int fn, int B, int Z, int I, char *connectname, GridLocation_t *location,
-                   GridConnectivityType_t *type, PointSetType_t *ptset_type, cgsize_t *npnts,
-                   char *donorname, ZoneType_t *donor_zonetype, PointSetType_t *donor_ptset_type,
-                   DataType_t *donor_datatype, cgsize_t *ndata_donor)
-  int cg_conn_read(int fn, int B, int Z, int I, cgsize_t *pnts, DataType_t donor_datatype,
-                   cgsize_t *donor_data)
-  int cg_conn_write(int fn, int B, int Z, char * connectname, GridLocation_t location,
-                    GridConnectivityType_t type, PointSetType_t ptset_type, cgsize_t npnts, cgsize_t * pnts,
-                    char * donorname, ZoneType_t donor_zonetype, PointSetType_t donor_ptset_type,
-                    DataType_t donor_datatype, cgsize_t ndata_donor, cgsize_t *donor_data, int *I)
-  int cg_conn_id(int fn, int B, int Z, int I, double *conn_id)
-  int cg_conn_read_short(int fn, int B, int Z, int I, cgsize_t *pnts)
-  int cg_conn_write_short(int fn, int B, int Z, char * connectname, GridLocation_t location,
-                          GridConnectivityType_t type, PointSetType_t ptset_type, cgsize_t npnts,
-                          cgsize_t * pnts, char * donorname, int *I)
-  int cg_convergence_write(int iterations, char *NormDefinitions)
-  int cg_state_write(char * StateDescription)
-  int cg_equationset_read(int *EquationDimension,int *GoverningEquationsFlag, int *GasModelFlag,
-                          int *ViscosityModelFlag,     int *ThermalConductivityModelFlag,
-                          int *TurbulenceClosureFlag,  int *TurbulenceModelFlag)
-  int cg_equationset_write(int EquationDimension)
-  int cg_equationset_chemistry_read(int *ThermalRelaxationFlag, int *ChemicalKineticsFlag)
-  int cg_equationset_elecmagn_read(int *ElecFldModelFlag, int *MagnFldModelFlag,
-                                   int *ConductivityModelFlag)
-  int cg_governing_read(GoverningEquationsType_t *EquationsType)
-  int cg_governing_write(GoverningEquationsType_t Equationstype)
-  int cg_diffusion_write(int * diffusion_model)
-  int cg_diffusion_read(int *diffusion_model)
-  int cg_model_read(char *ModelLabel, ModelType_t *ModelType)
-  int cg_model_write(char * ModelLabel, ModelType_t ModelType)
-  int cg_nintegrals(int *nintegrals)
-  int cg_integral_write(char * IntegralDataName)
-  int cg_integral_read(int IntegralDataIndex, char *IntegralDataName)
-  int cg_descriptor_write(char * descr_name, char * descr_text)
-  int cg_ndescriptors(int *ndescriptors)
-  int cg_units_write(MassUnits_t mass, LengthUnits_t length, TimeUnits_t time,
-                     TemperatureUnits_t temperature, AngleUnits_t angle)
-  int cg_nunits(int *nunits)
-  int cg_units_read(MassUnits_t *mass, LengthUnits_t *length, TimeUnits_t *time,
-                    TemperatureUnits_t *temperature, AngleUnits_t *angle)
-  int cg_unitsfull_write(MassUnits_t mass, LengthUnits_t length, TimeUnits_t time,
-                         TemperatureUnits_t temperature, AngleUnits_t angle,
-                         ElectricCurrentUnits_t current, SubstanceAmountUnits_t amount,
-                         LuminousIntensityUnits_t intensity)
-  int cg_unitsfull_read (MassUnits_t *mass, LengthUnits_t *length, TimeUnits_t *time,
-                         TemperatureUnits_t *temperature, AngleUnits_t *angle,
-                         ElectricCurrentUnits_t *current, SubstanceAmountUnits_t *amount,
-                         LuminousIntensityUnits_t *intensity)
-  int cg_exponents_info(DataType_t *DataType)
-  int cg_exponents_write(DataType_t DataType, void * exponents)
-  int cg_nexponents(int *numexp)
-  int cg_exponents_read(void *exponents)
-  int cg_expfull_write(DataType_t DataType, void * exponents)
-  int cg_expfull_read(void *exponents)
-  int cg_conversion_write(DataType_t DataType, void * ConversionFactors)
+  int cg_bcdataset_read(int index,char *name,BCType_t *BCType,int *DirichletFlag,int *NeumannFlag)
+  int cg_bcdataset_write(char *name,BCType_t BCType,BCDataType_t BCDataType)
+  int cg_biter_read(int fn,int B,char *bitername,int *nsteps)
+  int cg_biter_write(int fn,int B,char *bitername,int nsteps)
+  int cg_boco_gridlocation_read(int fn,int B,int Z,int BC,GridLocation_t *location)
+  int cg_boco_gridlocation_write(int fn,int B,int Z,int BC,GridLocation_t location)
+  int cg_boco_id(int fn,int B,int Z,int BC,double *boco_id)
+  int cg_boco_info(int fn,int B,int Z,int BC,char *boconame,BCType_t *bocotype,PointSetType_t *ptset_type,cgsize_t *npnts,int *NormalIndex,cgsize_t *NormalListFlag,DataType_t *NormalDataType,int *ndataset)
+  int cg_boco_normal_write(int fn,int B,int Z,int BC,int *NormalIndex,int NormalListFlag,DataType_t NormalDataType,void *NormalList)
+  int cg_boco_read(int fn,int B,int Z,int BC,cgsize_t *pnts,void *NormalList)
+  int cg_boco_write(int fn,int B,int Z,char *boconame,BCType_t bocotype,PointSetType_t ptset_type,cgsize_t npnts,cgsize_t *pnts,int *BC)
+  int cg_cell_dim(int fn,int B,int *cell_dim)
+  int cg_close(int db)
+# cg_configure
+  int cg_conn_average_read(int fn,int B,int Z,int I,AverageInterfaceType_t *AverageInterfaceType)
+  int cg_conn_average_write(int fn,int B,int Z,int I,AverageInterfaceType_t AverageInterfaceType)
+  int cg_conn_id(int fn,int B,int Z,int I,double *conn_id)
+  int cg_conn_info(int fn,int B,int Z,int I,char *connectname,GridLocation_t *location,GridConnectivityType_t *type,PointSetType_t *ptset_type,cgsize_t *npnts,char *donorname,ZoneType_t *donor_zonetype,PointSetType_t *donor_ptset_type,DataType_t *donor_datatype,cgsize_t *ndata_donor)
+  int cg_conn_periodic_read(int fn,int B,int Z,int I,float *RotationCenter,float *RotationAngle,float *Translation)
+  int cg_conn_periodic_write(int fn,int B,int Z,int I,float *RotationCenter,float *RotationAngle,float *Translation)
+  int cg_conn_read(int fn,int B,int Z,int I,cgsize_t *pnts,DataType_t donor_datatype,cgsize_t *donor_data)
+  int cg_conn_read_short(int fn,int B,int Z,int I,cgsize_t *pnts)
+  int cg_conn_write(int fn,int B,int Z,char *connectname,GridLocation_t location,GridConnectivityType_t type,PointSetType_t ptset_type,cgsize_t npnts,cgsize_t *pnts,char *donorname,ZoneType_t donor_zonetype,PointSetType_t donor_ptset_type,DataType_t donor_datatype,cgsize_t ndata_donor,cgsize_t *donor_data,int *I)
+  int cg_conn_write_short(int fn,int B,int Z,char *connectname,GridLocation_t location,GridConnectivityType_t type,PointSetType_t ptset_type,cgsize_t npnts,cgsize_t *pnts,char *donorname,int *I)
+  int cg_convergence_read(int *iterations,char **NormDefinitions)
+  int cg_convergence_write(int iterations,char *NormDefinitions)
   int cg_conversion_info(DataType_t *DataType)
   int cg_conversion_read(void *ConversionFactors)
-  int cg_dataclass_write(DataClass_t dataclass)
+  int cg_conversion_write(DataType_t DataType,void *ConversionFactors)
+  int cg_coord_id(int fn,int B,int Z,int C,double *coord_id)
+  int cg_coord_info(int fn,int B,int Z,int C,DataType_t *type,char *coordname)
+  int cg_coord_partial_write(int fn,int B,int Z,DataType_t type,char *coordname,cgsize_t *rmin,cgsize_t *rmax,void *coord_ptr,int *C)
+  int cg_coord_read(int fn,int B,int Z,char *coordname,DataType_t type,cgsize_t *rmin,cgsize_t *rmax,void *coord)
+  int cg_coord_write(int fn,int B,int Z,DataType_t type,char *coordname,void *coord_ptr,int *C)
   int cg_dataclass_read(DataClass_t *dataclass)
-  int cg_gridlocation_write(GridLocation_t GridLocation)
-  int cg_gridlocation_read(GridLocation_t *GridLocation)
+  int cg_dataclass_write(DataClass_t dataclass)
+  int cg_dataset_read(int fn,int B,int Z,int BC,int DS,char *name,BCType_t *BCType,int *DirichletFlag,int *NeumannFlag)
+  int cg_dataset_write(int fn,int B,int Z,int BC,char *name,BCType_t BCType,int *Dset)
   int cg_delete_node(char *node_name)
+  int cg_descriptor_read(int descr_no,char *descr_name,char **descr_text)
+  int cg_descriptor_write(char *descr_name,char *descr_text)
+  int cg_diffusion_read(int *diffusion_model)
+  int cg_diffusion_write(int *diffusion_model)
+  int cg_discrete_ptset_info(int fn,int B,int Z,int D,PointSetType_t *ptset_type,cgsize_t *npnts)
+  int cg_discrete_ptset_read(int fn,int B,int Z,int D,cgsize_t *pnts)
+  int cg_discrete_ptset_write(int fn,int B,int Z,char *discrete_name,GridLocation_t location,PointSetType_t ptset_type,cgsize_t npnts,cgsize_t *pnts,int *D)
+  int cg_discrete_read(int fn,int B,int Z,int D,char *discrete_name)
+  int cg_discrete_size(int fn,int B,int Z,int D,int *data_dim,cgsize_t *dim_vals)
+  int cg_discrete_write(int fn,int B,int Z,char *discrete_name,int *D)
+  int cg_elements_partial_read(int fn,int B,int Z,int S,cgsize_t start,cgsize_t end,cgsize_t *elements,cgsize_t *parent_data)
+  int cg_elements_partial_write(int fn,int B,int Z,int S,cgsize_t start,cgsize_t end,cgsize_t *elements)
+  int cg_elements_read(int fn,int B,int Z,int S,cgsize_t *elements,cgsize_t *parent_data)
+  int cg_equationset_chemistry_read(int *ThermalRelaxationFlag,int *ChemicalKineticsFlag)
+  int cg_equationset_elecmagn_read(int *ElecFldModelFlag,int *MagnFldModelFlag,int *ConductivityModelFlag)
+  int cg_equationset_read(int *EquationDimension,int *GoverningEquationsFlag,int *GasModelFlag,int *ViscosityModelFlag,int *ThermalConductivityModelFlag,int *TurbulenceClosureFlag,int *TurbulenceModelFlag)
+  int cg_equationset_write(int EquationDimension)
+# cg_error_exit
+# cg_error_handler
+# cg_error_print
+  int cg_expfull_read(void *exponents)
+  int cg_expfull_write(DataType_t DataType,void *exponents)
+  int cg_exponents_info(DataType_t *DataType)
+  int cg_exponents_read(void *exponents)
+  int cg_exponents_write(DataType_t DataType,void *exponents)
+  int cg_fambc_read(int fn,int B,int F,int BC,char *fambc_name,BCType_t *bocotype)
+  int cg_fambc_write(int fn,int B,int F,char *fambc_name,BCType_t bocotype,int *BC)
+  int cg_family_name_read(int fn,int B,int F,int N,char *name,char *family)
+  int cg_family_name_write(int fn,int B,int F,char *name,char *family)
+  int cg_family_read(int fn,int B,int F,char *family_name,int *nboco,int *ngeos)
+  int cg_family_write(int fn,int B,char *family_name,int *F)
+  int cg_famname_read(char *family_name)
+  int cg_famname_write(char *family_name)
+  int cg_field_id(int fn,int B,int Z,int S,int F,double *field_id)
+  int cg_field_info(int fn,int B,int Z,int S,int F,DataType_t *type,char *fieldname)
+  int cg_field_partial_write(int fn,int B,int Z,int S,DataType_t dtype,char *fieldname,cgsize_t *rmin,cgsize_t *rmax,void *field_ptr,int *F)
+  int cg_field_read(int fn,int B,int Z,int S,char *fieldname,DataType_t type,cgsize_t *rmin,cgsize_t *rmax,void *field_ptr)
+  int cg_field_write(int fn,int B,int Z,int S,DataType_t type,char *fieldname,void *field_ptr,int *F)
+  int cg_free(void *data)
+  int cg_geo_read(int fn,int B,int F,int G,char *geo_name,char **geo_file,char *CAD_name,int *npart)
+  int cg_geo_write(int fn,int B,int F,char *geo_name,char *filename,char *CADname,int *G)
+# cg_get_cgio
+# cg_get_compress
+  char *cg_get_error()
+# cg_get_file_type
+# cg_get_name
+  int cg_golist(int fn,int B,int depth,char **label,int *num)
+  int cg_gopath(int fn,char *path)
+  int cg_gorel(int fn,...)
+  int cg_goto(int fn,int B,...)
+  int cg_governing_read(GoverningEquationsType_t *EquationsType)
+# cg_governing_read
+  int cg_governing_write(GoverningEquationsType_t Equationstype)
+  int cg_gravity_read(int fn,int B,float *gravity_vector)
+  int cg_gravity_write(int fn,int B,float *gravity_vector)
+  int cg_grid_read(int fn,int B,int Z,int G,char *gridname)
+  int cg_grid_write(int fn,int B,int Z,char *gridname,int *G)
+  int cg_gridlocation_read(GridLocation_t *GridLocation)
+  int cg_gridlocation_write(GridLocation_t GridLocation)
+  int cg_hole_id(int fn,int B,int Z,int I,double *hole_id)
+  int cg_hole_info(int fn,int B,int Z,int I,char *holename,GridLocation_t *location,PointSetType_t *ptset_type,int *nptsets,cgsize_t *npnts)
+  int cg_hole_read(int fn,int B,int Z,int I,cgsize_t *pnts)
+  int cg_hole_write(int fn,int B,int Z,char *holename,GridLocation_t location,PointSetType_t ptset_type,int nptsets,cgsize_t npnts,cgsize_t *pnts,int *I)
+  int cg_index_dim(int fn,int B,int Z,int *index_dim)
+  int cg_integral_read(int IntegralDataIndex,char *IntegralDataName)
+  int cg_integral_write(char *IntegralDataName)
+# cg_is_cgns
+  int cg_is_link(int *path_length)
+  int cg_link_read(char **filename,char **link_path)
+  int cg_link_write(char *nodename,char *filename,char *name_in_file)
+  int cg_model_read(char *ModelLabel,ModelType_t *ModelType)
+  int cg_model_write(char *ModelLabel,ModelType_t ModelType)
+  int cg_multifam_read(int N,char *name,char *family)
+  int cg_multifam_write(char *name,char *family)
+  int cg_n1to1(int fn,int B,int Z,int *n1to1)
+  int cg_n1to1_global(int fn,int B,int *n1to1_global)
+  int cg_n_arbitrary_motions(int fn,int B,int Z,int *n_arbitrary_motions)
+  int cg_n_rigid_motions(int fn,int B,int Z,int *n_rigid_motions)
+  int cg_narrays(int *narrays)
+  int cg_nbases(int db,int *nbases)
+  int cg_nbocos(int fn,int B,int Z,int *nbocos)
+  int cg_nconns(int fn,int B,int Z,int *nconns)
+  int cg_ncoords(int fn,int B,int Z,int *ncoords)
+  int cg_ndescriptors(int *ndescriptors)
+  int cg_ndiscrete(int fn,int B,int Z,int *ndiscrete)
+  int cg_nexponents(int *numexp)
+  int cg_nfamilies(int fn,int B,int *nfamilies)
+  int cg_nfamily_names(int fn,int B,int F,int *nnames)
+  int cg_nfields(int fn,int B,int Z,int S,int *nfields)
+  int cg_ngrids(int fn,int B,int Z,int *ngrids)
+  int cg_nholes(int fn,int B,int Z,int *nholes)
+  int cg_nintegrals(int *nintegrals)
+  int cg_nmultifam(int *nfams)
+  int cg_npe(ElementType_t type,int *npe)
+  int cg_nsections(int fn,int B,int Z,int *nsections)
+  int cg_nsols(int fn,int B,int Z,int *nsols)
+  int cg_nsubregs(int fn,int B,int Z,int *nsubreg)
+  int cg_nunits(int *nunits)
+  int cg_nuser_data(int *nuser_data)
+  int cg_nzconns(int fn,int B,int Z,int *nzconns)
+  int cg_nzones(int fn,int B,int *nzones)
+  int cg_open(char *name,int mode,int *db)
   int cg_ordinal_read(int *Ordinal)
   int cg_ordinal_write(int Ordinal)
-  int cg_ptset_info(PointSetType_t *ptset_type, cgsize_t *npnts)
-##   int cg_nfamily_names(int fn, int B, int F, int *nnames)
-##   int cg_family_name_write(int fn, int B, int F, char *name, char *family)
-  int cg_famname_write(char * family_name)
-  int cg_famname_read(char *family_name)
- ##  int cg_multifam_write(char *name, char *family)
-  char *cg_get_error()
-  int cg_gopath(int fn, char *path)
-  int cg_goto(int file_number, int B, ...)
-  int cg_gorel(int file_number, ...)
-  int cg_golist(int file_number, int B, int depth, char **label,
-	int *num)
-  int cg_where(int *file_number, int *B, int *depth, char **label,
-	int *num)
-  
-  # ---------------------------------------------------------------------
-  # Above is wrapped
-  # =====================================================================
-  # Below is to be wrapped soon
-  # ---------------------------------------------------------------------
-
-  int cg_1to1_read_global(int fn, int B,
-                          char **connectname, char **zonename,
-                          char **donorname,
-                          cgsize_t **range, cgsize_t **donor_range,
-                          int **transform)
-   
-## CGNSDLL int cg_bcdataset_write(const char *name, CGNS_ENUMT(BCType_t) BCType,
-## 	CGNS_ENUMT(BCDataType_t) BCDataType);
-  int cg_bcdata_write(int file_number, int B, int Z, int BC, int Dset,
-                      BCDataType_t BCDataType)
-
-  
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read all GridConnectivity1to1_t Nodes of a base                  *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_1to1_read_global(int fn, int B, char **connectname,
-## 	char **zonename, char **donorname, cgsize_t **range,
-## 	cgsize_t **donor_range, int **transform);
-
-  int cg_convergence_read(int *iterations, char **NormDefinitions)
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write ReferenceState_t Nodes                            *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-  int cg_state_read(char **StateDescription)
-
-  int cg_rind_read(int *RindData)
-  int cg_rind_write(int * RindData)
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write Descriptor_t Nodes                                *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_descriptor_read(int descr_no, char *descr_name, char **descr_text);
-  
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write IndexArray/Range_t Nodes  - new in version 2.4    *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-  int cg_ptset_write(PointSetType_t ptset_type,
-                     cgsize_t npnts, pnts)
+  int cg_parent_data_partial_write(int fn,int B,int Z,int S,cgsize_t start,cgsize_t end,cgsize_t *ParentData)
+  int cg_parent_data_write(int fn,int B,int Z,int S,cgsize_t *parent_data)
+  int cg_part_read(int fn,int B,int F,int G,int P,char *part_name)
+  int cg_part_write(int fn,int B,int F,int G,char *part_name,int *P)
+  int cg_ptset_info(PointSetType_t *ptset_type,cgsize_t *npnts)
   int cg_ptset_read(cgsize_t pnts)
+  int cg_ptset_write(PointSetType_t ptset_type,cgsize_t npnts,pnts)
+  int cg_rigid_motion_read(int fn,int B,int Z,int R,char *name,RigidGridMotionType_t *type)
+  int cg_rigid_motion_write(int fn,int B,int Z,char *name,RigidGridMotionType_t type,int *R)
+  int cg_rind_read(int *RindData)
+  int cg_rind_write(int *RindData)
+# cg_root_id
+  int cg_rotating_read(float *rot_rate,float *rot_center)
+  int cg_rotating_write(float *rot_rate,float *rot_center)
+# cg_save_as
+  int cg_section_partial_write(int fn,int B,int Z,char *SectionName,ElementType_t type,cgsize_t start,cgsize_t end,int nbndry,int *S)
+  int cg_section_read(int fn,int B,int Z,int S,char *SectionName,ElementType_t *type,cgsize_t *start,cgsize_t *end,int *nbndry,int *parent_flag)
+  int cg_section_write(int fn,int B,int Z,char *SectionName,ElementType_t type,cgsize_t start,cgsize_t end,int nbndry,cgsize_t *elements,int *S)
+# cg_set_compress
+# cg_set_file_type
+# cg_set_path
+  int cg_simulation_type_read(int fn,int B,SimulationType_t *type)
+  int cg_simulation_type_write(int fn,int B,SimulationType_t type)
+  int cg_sol_id(int fn,int B,int Z,int S,double *sol_id)
+  int cg_sol_info(int fn,int B,int Z,int S,char *solname,GridLocation_t *location)
+  int cg_sol_ptset_info(int fn,int B,int Z,int S,PointSetType_t *ptset_type,cgsize_t *npnts)
+  int cg_sol_ptset_read(int fn,int B,int Z,int S,cgsize_t *pnts)
+  int cg_sol_ptset_write(int fn,int B,int Z,char *solname,GridLocation_t location,PointSetType_t ptset_type,cgsize_t npnts,cgsize_t *pnts,int *S)
+  int cg_sol_size(int fn,int B,int Z,int S,int *data_dim,cgsize_t *dim_vals)
+  int cg_sol_write(int fn,int B,int Z,char *solname,GridLocation_t location,int *S)
+  int cg_state_read(char **StateDescription)
+  int cg_state_write(char *StateDescription)
+  int cg_subreg_bcname_read(int fn,int B,int Z,int S,char *bcname)
+  int cg_subreg_bcname_write(int fn,int B,int Z,char *regname,int dimension,char *bcname,int *S)
+  int cg_subreg_gcname_read(int fn,int B,int Z,int S,char *gcname)
+  int cg_subreg_gcname_write(int fn,int B,int Z,char *regname,int dimension,char *gcname,int *S)
+  int cg_subreg_info(int fn,int B,int Z,int S,char *regname,int *dimension,GridLocation_t *location,PointSetType_t *ptset_type,cgsize_t *npnts,int *bcname_len,int *gcname_len)
+  int cg_subreg_ptset_read(int fn,int B,int Z,int S,cgsize_t *pnts)
+  int cg_subreg_ptset_write(int fn,int B,int Z,char *regname,int dimension,GridLocation_t location,PointSetType_t ptset_type,cgsize_t npnts,cgsize_t *pnts,int *S)
+  int cg_units_read(MassUnits_t *mass,LengthUnits_t *length,TimeUnits_t *time,TemperatureUnits_t *temperature,AngleUnits_t *angle)
+  int cg_units_write(MassUnits_t mass,LengthUnits_t length,TimeUnits_t time,TemperatureUnits_t temperature,AngleUnits_t angle)
+  int cg_unitsfull_read (MassUnits_t *mass,LengthUnits_t *length,TimeUnits_t *time,TemperatureUnits_t *temperature,AngleUnits_t *angle,ElectricCurrentUnits_t *current,SubstanceAmountUnits_t *amount,LuminousIntensityUnits_t *intensity)
+  int cg_unitsfull_write(MassUnits_t mass,LengthUnits_t length,TimeUnits_t time,TemperatureUnits_t temperature,AngleUnits_t angle,ElectricCurrentUnits_t current,SubstanceAmountUnits_t amount,LuminousIntensityUnits_t intensity)
+  int cg_user_data_read(int Index,char *user_data_name)
+  int cg_user_data_write(char *user_data_name)
+  int cg_version(int db,float *v)
+  int cg_where(int *fn,int *B,int *depth,char **label,int *num)
+  int cg_zconn_get(int fn,int B,int Z,int *C)
+  int cg_zconn_read(int fn,int B,int Z,int C,char *name)
+  int cg_zconn_set(int fn,int B,int Z,int C)
+  int cg_zconn_write(int fn,int B,int Z,char *name,int *C)
+  int cg_ziter_read(int fn,int B,int Z,char *zitername)
+  int cg_ziter_write(int fn,int B,int Z,char *zitername)
+  int cg_zone_id(int fn,int B,int Z,double *zone_id)
+  int cg_zone_read(int fn,int B,int Z,char *zonename,int *size)
+  int cg_zone_type(int fn,int B,int Z,ZoneType_t *type)
+  int cg_zone_write(int fn,int B,char *zonename,int *size,ZoneType_t type,int *Z)
 
-  int cg_is_link(int *path_length)
-  int cg_link_read(char **filename, char **link_path)
-  int cg_link_write(char * nodename, char * filename, char * name_in_file)
-    
-## CGNSDLL int cg_nfamily_names(int file_number, int B, int F, int *nnames);
-## CGNSDLL int cg_family_name_read(int file_number, int B, int F,
-## 	int N, char *name, char *family);
-## CGNSDLL int cg_family_name_write(int file_number, int B, int F,
-## 	const char *name, const char *family);
-
-## /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *\
-##  *      Read and write FamilyName_t Nodes                                *
-## \* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-## CGNSDLL int cg_famname_read(char *family_name);
-## CGNSDLL int cg_famname_write(const char * family_name);
-
-## CGNSDLL int cg_nmultifam(int *nfams);
-## CGNSDLL int cg_multifam_read(int N, char *name, char *family);
-## CGNSDLL int cg_multifam_write(const char *name, const char *family);
-
-  int cg_bc_wallfunction_read(int file_number, int B, int Z, int BC,
-                              WallFunctionType_t *WallFunctionType)
-  int cg_bc_wallfunction_write(int file_number, int B, int Z, int BC,
-                               WallFunctionType_t WallFunctionType)
-
-  int cg_bc_area_read(int file_number, int B, int Z, int BC,
-                      AreaType_t *AreaType, float *SurfaceArea, 
-                      char *RegionName)
-  int cg_bc_area_write(int file_number, int B, int Z, int BC,
-                       AreaType_t AreaType, float SurfaceArea, 
-                       char *RegionName)
-
-  int cg_conn_periodic_read(int file_number, int B, int Z, int I,
-                            float *RotationCenter, float *RotationAngle, 
-                            float *Translation)
-  int cg_conn_periodic_write(int file_number, int B, int Z, int I,
-                             float *RotationCenter, float *RotationAngle,
-                             float *Translation)
-  int cg_1to1_periodic_write(int file_number, int B, int Z, int I,
-                             float *RotationCenter, float *RotationAngle,
-                             float *Translation)
-  int cg_1to1_periodic_read(int file_number, int B, int Z, int I,
-                            float *RotationCenter, float *RotationAngle, 
-                            float *Translation)
-
-  int cg_conn_average_read(int file_number, int B, int Z, int I,
-                           AverageInterfaceType_t *AverageInterfaceType)
-  int cg_conn_average_write(int file_number, int B, int Z, int I,
-                            AverageInterfaceType_t AverageInterfaceType)
-  int cg_1to1_average_write(int file_number, int B, int Z, int I,
-                            AverageInterfaceType_t AverageInterfaceType)
-  int cg_1to1_average_read(int file_number, int B, int Z, int I,
-                           AverageInterfaceType_t *AverageInterfaceType)
+# --- last line

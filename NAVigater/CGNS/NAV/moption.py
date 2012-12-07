@@ -17,7 +17,7 @@ import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
 Q_VAR_NODE='NODE'
-Q_VAR_NODE='PARENT'
+Q_VAR_PARENT='PARENT'
 Q_VAR_NAME='NAME'
 Q_VAR_VALUE='VALUE'
 Q_VAR_CGNSTYPE='SIDSTYPE'

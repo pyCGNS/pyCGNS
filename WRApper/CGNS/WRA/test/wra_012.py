@@ -8,7 +8,7 @@ import CGNS.WRA.mll as Mll
 import numpy as NPY
 import CGNS.PAT.cgnskeywords as CK
 
-print 'CGNS.WRA.mll','#012 - user_data__write'
+print 'CGNS.WRA.mll','#012 - user_data_write'
 
 # ----------------------------------------------------------------------
 def acube(im=3,jm=5,km=7,offset=0):
