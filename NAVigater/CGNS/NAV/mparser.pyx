@@ -177,24 +177,33 @@ class Mesh(CGNSparser):
     data.SetNumberOfComponents(3)
     data.SetName("index volume")
     cdef int p, i, j, k, idim, jdim, kdim
-    cdef double x,y,z
+    cdef float  xf,yf,zf
+    cdef double xd,yd,zd
     idim = dx.shape[0]
     jdim = dx.shape[1]
     kdim = dx.shape[2]
     pts=vtk.vtkPoints()
     pts.SetNumberOfPoints(idim*jdim*kdim)
-    for k in range(kdim):
-     for j in range(jdim):
-      for i in range(idim):
-       data.InsertNextTuple3(i+1,j+1,k+1)
-       p=i+j*idim+k*idim*jdim
-##        x = (<float*>CNPY.PyArray_GETPTR1(dx,p))[0]
-##        y = (<float*>CNPY.PyArray_GETPTR1(dy,p))[0]
-##        z = (<float*>CNPY.PyArray_GETPTR1(dz,p))[0]
-       x = (<double*>CNPY.PyArray_GETPTR1(dx,p))[0]
-       y = (<double*>CNPY.PyArray_GETPTR1(dy,p))[0]
-       z = (<double*>CNPY.PyArray_GETPTR1(dz,p))[0]
-       pts.InsertPoint(p,x,y,z)
+    if (dx.dtype==NPY.float32):
+      for k in range(kdim):
+       for j in range(jdim):
+        for i in range(idim):
+         data.InsertNextTuple3(i+1,j+1,k+1)
+         p=i+j*idim+k*idim*jdim
+         xf = (<float*>CNPY.PyArray_GETPTR1(dx,p))[0]
+         yf = (<float*>CNPY.PyArray_GETPTR1(dy,p))[0]
+         zf = (<float*>CNPY.PyArray_GETPTR1(dz,p))[0]
+         pts.InsertPoint(p,xf,yf,zf)
+    else:
+      for k in range(kdim):
+       for j in range(jdim):
+        for i in range(idim):
+         data.InsertNextTuple3(i+1,j+1,k+1)
+         p=i+j*idim+k*idim*jdim
+         xd = (<double*>CNPY.PyArray_GETPTR1(dx,p))[0]
+         yd = (<double*>CNPY.PyArray_GETPTR1(dy,p))[0]
+         zd = (<double*>CNPY.PyArray_GETPTR1(dz,p))[0]
+         pts.InsertPoint(p,xd,yd,zd)
     g=vtk.vtkStructuredGrid()
     g.SetPoints(pts)
     g.SetExtent(0,idim-1,0,jdim-1,0,kdim-1)
