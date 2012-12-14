@@ -129,6 +129,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         (self.model,"directoryLoaded(QString)",self.expandCols),
         (self.treeview,"expanded(QModelIndex)",self.expandCols),
         (self.treeview,"clicked(QModelIndex)",self.clickedNode),
+        (self.treeview,"doubleClicked(QModelIndex)",self.clickedNodeAndLoad),
         (self.direntries.lineEdit(),"returnPressed()",self.changeDirEdit),
         (self.direntries,"currentIndexChanged(int)",self.changeDirIndex),
         #(self.direntries,"editTextChanged(QString)",self.changeDirText),
@@ -143,8 +144,9 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.bClose.clicked.connect(self.close)
         self.bBack.clicked.connect(self.backDir)
         self.bInfo.clicked.connect(self.infoFileView)
-        if (mode==SAVEMODE): self.setMode(False)
-        else:                self.setMode(True)
+        self.mode=mode
+        if (self.mode==SAVEMODE): self.setMode(False)
+        else:                     self.setMode(True)
         self.setBoxes()
         if (self.parent.getHistoryLastKey() in hlist.keys()):
             self.selecteddir=hlist[self.parent.getHistoryLastKey()][0]
@@ -224,7 +226,9 @@ class Q7File(QWidget,Ui_Q7FileWindow):
                 
     def changeFile(self,*args):
         self.selectedfile=self.fileentries.lineEdit().text()
-        d=self.parent.getHistoryFile(self.selectedfile)
+        d=None
+        if (self.cAutoDir.checkState()==Qt.Checked):
+            d=self.parent.getHistoryFile(self.selectedfile)
         if (d is not None):
             self.selecteddir=d[0]
             ix=self.direntries.findText(self.selecteddir)
@@ -284,6 +288,11 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         else:
             p=self.model.filePath(self.proxy.mapToSource(index))
         return p
+    def clickedNodeAndLoad(self,index):
+        self.clickedNode(index)
+        if (self.mode==SAVEMODE): self.save()
+        else:                     self.load()
+        
     def clickedNode(self,index):
         self.treeview.resizeColumnToContents(0)
         p=self.path(index)

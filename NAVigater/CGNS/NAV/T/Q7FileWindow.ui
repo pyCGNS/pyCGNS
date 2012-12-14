@@ -105,9 +105,9 @@
         <widget class="QComboBox" name="direntries">
          <property name="geometry">
           <rect>
-           <x>160</x>
+           <x>40</x>
            <y>10</y>
-           <width>531</width>
+           <width>651</width>
            <height>27</height>
           </rect>
          </property>
@@ -115,44 +115,12 @@
           <bool>true</bool>
          </property>
         </widget>
-        <widget class="QLabel" name="label">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>10</y>
-           <width>121</width>
-           <height>20</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Current directory</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_2">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>40</y>
-           <width>101</width>
-           <height>20</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Selected file</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
         <widget class="QComboBox" name="fileentries">
          <property name="geometry">
           <rect>
-           <x>160</x>
+           <x>40</x>
            <y>40</y>
-           <width>301</width>
+           <width>321</width>
            <height>27</height>
           </rect>
          </property>
@@ -212,7 +180,7 @@
         <widget class="QPushButton" name="bAction">
          <property name="geometry">
           <rect>
-           <x>130</x>
+           <x>10</x>
            <y>40</y>
            <width>25</width>
            <height>25</height>
@@ -238,15 +206,15 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/save-tree.gif</normaloff>:/images/icons/save-tree.gif</iconset>
+           <normaloff>:/images/icons/mandatory-sids-node.gif</normaloff>:/images/icons/mandatory-sids-node.gif</iconset>
          </property>
         </widget>
         <widget class="QCheckBox" name="cShowAll">
          <property name="geometry">
           <rect>
-           <x>570</x>
+           <x>470</x>
            <y>40</y>
-           <width>91</width>
+           <width>61</width>
            <height>22</height>
           </rect>
          </property>
@@ -257,7 +225,7 @@
         <widget class="QPushButton" name="bBack">
          <property name="geometry">
           <rect>
-           <x>130</x>
+           <x>10</x>
            <y>10</y>
            <width>25</width>
            <height>25</height>
@@ -283,13 +251,13 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/arrow.gif</normaloff>:/images/icons/arrow.gif</iconset>
+           <normaloff>:/images/icons/control.gif</normaloff>:/images/icons/control.gif</iconset>
          </property>
         </widget>
         <widget class="QCheckBox" name="cShowDirs">
          <property name="geometry">
           <rect>
-           <x>470</x>
+           <x>370</x>
            <y>40</y>
            <width>91</width>
            <height>22</height>
@@ -342,6 +310,19 @@
          <property name="icon">
           <iconset resource="../R/Res.qrc">
            <normaloff>:/images/icons/help-view.gif</normaloff>:/images/icons/help-view.gif</iconset>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="cAutoDir">
+         <property name="geometry">
+          <rect>
+           <x>520</x>
+           <y>40</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Auto-Change directory</string>
          </property>
         </widget>
        </widget>
