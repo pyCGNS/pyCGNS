@@ -47,7 +47,7 @@ if installprocess:
   from pyCGNSconfig import version as __vid__
   from optparse import OptionParser,OptionError
 
-  fakefile="CGNS/NAV/fake.pxi"
+  fakefile="./CGNS/NAV/fake.pxi"
 
   parser = OptionParser()
   parser.add_option("--force",dest="forcerebuild",action="store_true")

@@ -6,7 +6,7 @@
 #  -------------------------------------------------------------------------
 MAJORVERSION=4
 MINORVERSION=2
-REVISION='$ProductRevision$'
+REVISION=0
 # --------------------------------------------------------------------
 
 import os
@@ -165,6 +165,9 @@ def installConfigFiles():
 
 # --------------------------------------------------------------------
 def updateVersionInFile(filename):
+  f=open('./lib/revision.tmp')
+  r=int(f.readlines()[0][:-1])
+  REVISION=r
   f=open(filename,'r')
   l=f.readlines()
   f.close()
@@ -179,10 +182,8 @@ def updateVersionInFile(filename):
     if (ll[-len(vrel)-1:-1]==vrel): 
       rl='__release__=%s # %s\n'%(MINORVERSION,vrel)
     if (ll[-len(vrev)-1:-1]==vrev):
-      asp=REVISION.split()
-      if (len(asp)>1):
-        ACTUALREV=asp[1]
-        rl='__revision__=%s # %s\n'%(ACTUALREV,vrev)
+      ACTUALREV=REVISION
+      rl='__revision__=%s # %s\n'%(ACTUALREV,vrev)
     r+=[rl]
   f=open(filename,'w+')
   f.writelines(r)

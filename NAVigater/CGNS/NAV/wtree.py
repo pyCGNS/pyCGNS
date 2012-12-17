@@ -136,7 +136,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           QStyledItemDelegate.paint(self, painter, option, index)
           option.font.setWeight(QFont.Light)
         elif (index.column() in [NMT.COLUMN_VALUE,NMT.COLUMN_DATATYPE]):
-          option.font.setFamily(OCTXT.FixedFontTable)
+          option.font.setFamily(OCTXT.Table_Family)
           if (index.column() == NMT.COLUMN_DATATYPE):
               option.font.setPointSize(8)
           QStyledItemDelegate.paint(self, painter, option, index)

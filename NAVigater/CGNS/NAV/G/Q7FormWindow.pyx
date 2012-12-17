@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created: Fri Nov 23 10:24:57 2012
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Mon Dec 17 13:56:09 2012
+#      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 

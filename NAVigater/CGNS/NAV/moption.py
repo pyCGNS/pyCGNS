@@ -105,8 +105,31 @@ All rights reserved in accordance with GPL v2 <br><br>
 Check GPL v2 sections 15 and 16<br>
 about loss of data or corrupted data<br>
 """
-    FixedFontTable='fixed'
-
+    Label_Family='arial'
+    Label_Size=10
+    Label_Bold=False
+    Label_Italic=False
+    Edit_Family='courier'
+    Edit_Size=10
+    Edit_Bold=False
+    Edit_Italic=False
+    Table_Family='courier'
+    Table_Size=10
+    Table_Bold=False
+    Table_Italic=False
+    Button_Family='arial'
+    Button_Size=10
+    Button_Bold=False
+    Button_Italic=False
+    RName_Family='arial'
+    RName_Size=10
+    RName_Bold=False
+    RName_Italic=False
+    NName_Family='arial'
+    NName_Size=10
+    NName_Bold=False
+    NName_Italic=False
+    
     UserColors=[
         'gray',
         'red',

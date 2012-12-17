@@ -13,6 +13,7 @@ from CGNS.NAV.wcontrol import Q7Main
 def run(args=[],files=[],flags=(False,False,False,False),ppath=None):
   app=QApplication(args)
   wcontrol=Q7Main()
+  wcontrol._application=app
   wcontrol.setOptionValue('NAVTrace',flags[2])
   wcontrol._T('start')
   if (flags[1]): wcontrol.loadlast()

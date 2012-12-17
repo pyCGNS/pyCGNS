@@ -51,7 +51,8 @@ for o,a in opts:
       break
   if ((o == "--without-mod") and (m in CGNSmodList)): modList.remove(m)
   if ((o == "--single-mod")  and (m in CGNSmodList)): modList=[m]
-  if (o == "--force"): 
+  if (o == "--force"):
+    os.system('hg parents --template="{rev}\n" > ./lib/revision.tmp')
     setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py')
   
 modArgs=[]
