@@ -35,7 +35,7 @@ class Q7Info(Q7Window,Ui_Q7InfoWindow):
                     getattr(self,k).setEnabled(False)
                 if (type(v) in [str,unicode,int,float]):
                     getattr(self,k).setText(str(v))
-                    getattr(self,k).setFont(OCTXT.FixedFontTable)
+                    #getattr(self,k).setFont(OCTXT.FixedFontTable)
     def reject(self):
         self.close()
          
