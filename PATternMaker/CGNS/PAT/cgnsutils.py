@@ -1268,6 +1268,45 @@ def hasSameRootPath(pathroot,pathtocompare):
   return True
 
 # --------------------------------------------------   
+def getPathListCommonAncestor(pathlist):
+  """
+  Finds the common ancestor for all paths in list::
+
+    >>>p=['/Base/Zone/Data-A','/Base/Zone/Data-D','/Base/Zone/ZoneBC/BC1']
+    >>>print getPathListCommonAncestor(p)
+    '/Base/Zone'
+
+  - Args:
+   * `pathlist`: list of path strings
+   
+  - Return:
+   * The common root path (at least '/')
+   
+  """
+  if (len(pathlist)==0): return '/'
+  if (len(pathlist)==1): return pathlist[0]
+  lp=[]
+  for p in pathlist:
+    if (p=='/'): return '/'
+    lp.append(getPathToList(p,True))
+  t=lp[0]
+  for p in lp:
+    r=t
+    m=min(len(p),len(r))
+    for n in range(m):
+      if (p[n]!=r[n]):
+        t=r[:n]
+        break
+    else:
+      t=r[:n+1]
+  if (t):
+    t=['']+t
+    c='/'.join(t)
+  else:
+    c='/'
+  return c
+
+# --------------------------------------------------   
 def getPathToList(path,nofirst=False,noroot=True):
   """
   Return the path as a list of node names::

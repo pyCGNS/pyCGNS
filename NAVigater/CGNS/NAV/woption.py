@@ -96,12 +96,11 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
                     data[k]=self.getopt(k).text()
             elif (type(data[k]) is list):
                 s=self.getopt(k).toPlainText()
-                cset=set()
+                cset=[]
                 for l in s.split('\n'):
-                    if (l):
-                        cset.add(l)
-                v=list(cset)
-                if (self.validateOption(k,v)): data[k]=v
+                    if (l and l not in cset):
+                        cset.append(l)
+                if (self.validateOption(k,cset)): data[k]=cset
         self.updateFonts(update=True)
         self.setOptions()
         self.reset()

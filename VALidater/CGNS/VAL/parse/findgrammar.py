@@ -46,12 +46,14 @@ def findOneUserGrammar(tag,verbose=False):
     if found: break
   return kdict
 
-def importUserGrammars(key,verbose=False):
+def importUserGrammars(key,recurse=False,verbose=False):
   mod=None
   modname='CGNS_VAL_USER_%s'%key
   try:
-      tp=imp.find_module(modname)
+    tp=imp.find_module(modname)
   except ImportError:
+    print '### CGNS.VAL [warning]: grammar [%s] not found\n'%key
+    if (recurse):
       dk=findOneUserGrammar(key)
       if (key in dk):
           sys.path.append(dk[key])
@@ -62,6 +64,8 @@ def importUserGrammars(key,verbose=False):
               return None
       else:
           return None
+    else:
+      return None
   try:
     fp=tp[0]
     if (tp[2][2]!=imp.C_EXTENSION):

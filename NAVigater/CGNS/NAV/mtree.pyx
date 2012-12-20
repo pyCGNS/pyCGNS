@@ -476,6 +476,8 @@ class Q7TreeItem(object):
         else: self._lazy=False
     def orderTag(self):
         return self._tag+"0"*(self._fingerprint.depth*4-len(self._tag))
+    def updateData(self,data):
+        self._itemnode[1]=data
     def sidsIsRoot(self):
         if (self._parentitem is None): return True
         return False
@@ -526,19 +528,19 @@ class Q7TreeItem(object):
             aval=numpy.array([float(value)])
             self._itemnode[1]=aval
             return True
-        except ValueError:
+        except (ValueError, TypeError ):
             pass
         try:
             aval=numpy.array([int(value)])
             self._itemnode[1]=aval
             return True
-        except ValueError:
+        except (ValueError, TypeError ):
             pass
         try:
             aval=numpy.array(eval(value))
             self._itemnode[1]=aval
             return True
-        except (ValueError, SyntaxError, NameError ):
+        except (ValueError, SyntaxError, NameError, TypeError ):
             pass
         aval=CGU.setStringAsArray(value)
         self._itemnode[1]=aval
@@ -675,6 +677,24 @@ class Q7TreeItem(object):
         self._checkable=check
     def hasEditCheck(self):
         return self._checkable
+    def dataRelease(self):
+        if (self._lazy): return
+        if (self.sidsPath() not in self._fingerprint.lazy):
+                self._fingerprint.lazy[self.sidsPath()]=1
+        self._lazy=True
+        self.updateData(None)
+    def dataLoad(self,partialtree):
+        if (not self._lazy): return
+        nodetab=self.sidsValue()
+        npath=CGU.getPathNoRoot(self.sidsPath())
+        if (nodetab==None):
+            self.updateData(CGU.getValueByPath(partialtree,npath))
+            if (npath in self._fingerprint.lazy):
+                del self._fingerprint.lazy.remove[self.sidsPath()]
+            self._lazy=False
+        return self
+    def hasLazyLoad(self):
+        return self._lazy
     def hasValueView(self):
         if (self._lazy): False
         if (self.sidsValue() is None): return False
@@ -1121,6 +1141,24 @@ class Q7TreeModel(QAbstractItemModel):
         self.pasteAsChild(nix.parent().internalPointer())
         self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
         return True
+    def dataLoadSelected(self,single=None):
+        udict={}
+        if (single is None): pthlist=self._selected
+        else: pthlist=[single]
+        for pth in pthlist:
+            nodeitem=self.nodeFromPath(pth)
+            udict[CGU.getPathNoRoot(nodeitem.sidsPath())]=nodeitem.sidsValue()
+        if (udict):
+            (t,l,p)=self._fingerprint.updateNodeData(udict)
+        for pth in pthlist:
+            nodeitem=self.nodeFromPath(pth)
+            nodeitem.dataLoad(t)
+    def dataReleaseSelected(self,single=None):
+        if (single is None): pthlist=self._selected
+        else: pthlist=[single]
+        for pth in pthlist:
+            nodeitem=self.nodeFromPath(pth)
+            nodeitem.dataRelease()
     def checkTree(self,T,pathlist):
         if (not OCTXT.ValKeyList): return
         tag=OCTXT.ValKeyList[0]

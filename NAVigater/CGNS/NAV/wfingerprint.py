@@ -159,6 +159,7 @@ class Q7Window(QWidget,object):
         return self._index
     def closeEvent(self, event):
         self._control.delLine('%.3d'%self._index)
+        self._fgprint.closeView(self._index)
         event.accept()
     def backcontrol(self):
         self._fgprint.raiseControlView()
@@ -337,6 +338,17 @@ class Q7fingerPrint:
         for p in paths: self.lazy['/CGNSTree'+p[0]]=p[1]
         Q7fingerPrint.__extension.append(self)
         self.updateFileStats(filedir+'/'+filename)
+    def updateNodeData(self,pathdict):
+        tfile="%s/%s"%(self.filedir,self.filename)
+        minpath=CGU.getPathListCommonAncestor(pathdict.keys())
+        flags=CGNS.MAP.S2P_NONE&~CGNS.MAP.S2P_REVERSEDIMS
+        if (OCTXT.CHLoneTrace):
+            flags|=CGNS.MAP.S2P_TRACE
+        if (OCTXT.FollowLinksAtLoad):
+            flags|=CGNS.MAP.S2P_FOLLOWLINKS
+        (t,l,p)=CGNS.MAP.load(tfile,flags,path=minpath,
+                              update=pathdict)
+        return (t,l,p)
     def updateFileStats(self,fname,saveas=False):
         (filedir,filename)=(os.path.normpath(os.path.dirname(fname)),
                             os.path.basename(fname))
@@ -425,10 +437,12 @@ class Q7fingerPrint:
         fg=self.getFingerPrint(idx)
         vw=self.getView(idx)
         vt=self.getViewType(idx)
-        vw.close()
-        self.views[vt].remove((vw,idx))
-        if (self.views[vt]==[]): del self.views[vt]
-        if (self.views=={}):  self.__extension.remove(fg)
+        if (vw is not None): vw.close()
+        if ((vw is not None) and self.views.has_key(vt)):
+          self.views[vt].remove((vw,idx))
+          if (self.views[vt]==[]): del self.views[vt]
+        if ((self.views=={}) and (fg in self.__extension)):
+            self.__extension.remove(fg)
     def closeAllViews(self):
         vtlist=self.views.keys()
         for vtype in vtlist:

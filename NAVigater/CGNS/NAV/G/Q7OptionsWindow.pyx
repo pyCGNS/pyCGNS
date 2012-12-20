@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Mon Dec 17 14:19:34 2012
+# Created: Thu Dec 20 11:07:44 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -151,12 +151,22 @@ class Ui_Q7OptionsWindow(object):
         self.__O_forcefortranflag = QtGui.QCheckBox(self.tab_6)
         self.__O_forcefortranflag.setGeometry(QtCore.QRect(10, 50, 274, 22))
         self.__O_forcefortranflag.setObjectName("__O_forcefortranflag")
-        self.__O_valkeylist = QtGui.QPlainTextEdit(self.tab_6)
-        self.__O_valkeylist.setGeometry(QtCore.QRect(10, 95, 104, 91))
+        self.groupBox_3 = QtGui.QGroupBox(self.tab_6)
+        self.groupBox_3.setGeometry(QtCore.QRect(5, 75, 546, 201))
+        self.groupBox_3.setObjectName("groupBox_3")
+        self.__O_valkeylist = QtGui.QPlainTextEdit(self.groupBox_3)
+        self.__O_valkeylist.setGeometry(QtCore.QRect(380, 35, 156, 156))
         self.__O_valkeylist.setObjectName("__O_valkeylist")
-        self.label_25 = QtGui.QLabel(self.tab_6)
-        self.label_25.setGeometry(QtCore.QRect(10, 75, 106, 16))
+        self.label_25 = QtGui.QLabel(self.groupBox_3)
+        self.label_25.setGeometry(QtCore.QRect(380, 15, 111, 16))
         self.label_25.setObjectName("label_25")
+        self.label_31 = QtGui.QLabel(self.groupBox_3)
+        self.label_31.setGeometry(QtCore.QRect(10, 25, 271, 21))
+        self.label_31.setObjectName("label_31")
+        self.cRecurseGrammarSearch = QtGui.QCheckBox(self.groupBox_3)
+        self.cRecurseGrammarSearch.setGeometry(QtCore.QRect(10, 50, 301, 21))
+        self.cRecurseGrammarSearch.setCheckable(False)
+        self.cRecurseGrammarSearch.setObjectName("cRecurseGrammarSearch")
         self.tabs.addTab(self.tab_6, "")
         self.tab_3 = QtGui.QWidget()
         self.tab_3.setObjectName("tab_3")
@@ -486,7 +496,7 @@ class Ui_Q7OptionsWindow(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(Q7OptionsWindow)
-        self.tabs.setCurrentIndex(3)
+        self.tabs.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Q7OptionsWindow)
 
     def retranslateUi(self, Q7OptionsWindow):
@@ -516,7 +526,10 @@ class Ui_Q7OptionsWindow(object):
         self.__O_checkonthefly.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Check on the fly", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_forcesidslegacymapping.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Force SIDS legacy mapping", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_forcefortranflag.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Force fortran flag in numpy arrays", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_25.setText(QtGui.QApplication.translate("Q7OptionsWindow", "CGNS.VAL keys:", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_3.setTitle(QtGui.QApplication.translate("Q7OptionsWindow", "CGNS.VAL parameters", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_25.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Grammar keys", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_31.setText(QtGui.QApplication.translate("Q7OptionsWindow", "See also: Paths tab and grammars paths", None, QtGui.QApplication.UnicodeUTF8))
+        self.cRecurseGrammarSearch.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Activate recursion search for grammars (long)", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.tab_6), QtGui.QApplication.translate("Q7OptionsWindow", "Checks", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7OptionsWindow", "label", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("Q7OptionsWindow", "button", None, QtGui.QApplication.UnicodeUTF8))

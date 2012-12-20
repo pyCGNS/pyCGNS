@@ -342,31 +342,36 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (nodeidx != -1):
           node=nodeidx.internalPointer()
           lknode=not node.sidsIsLink()
+          lznode=node.hasLazyLoad()
           actlist=(
-              ("About %s"%node.sidsType(),self.pop0,None,False),
-              None,
-              ("Mark/unmark node",self.marknode,'Space',False),
-              ("Add new child node",self.newnodechild,'Ctrl+A',False),
-              ("Add new brother node",self.newnodebrother,'Ctrl+Z',False),
-              None,
-              ("Open form",self.popform,'Ctrl+F',False),
-              ("Open view",self.openSubTree,'Ctrl+W',False),
-              ("Open view on linked-to file",self.openLkTree,'Ctrl+O',lknode),
-              None,
-              ("Load node data in memory",self.popform,'Ctrl+L',True),
-              ("Release memory node data",self.popform,'Ctrl+R',True),
-              None,
-              ("Copy",self.mcopy,'Ctrl+C',False),
-              ("Cut",self.mcut,'Ctrl+X',False),
-              ("Paste as brother",self.mpasteasbrother,'Ctrl+V',False),
-              ("Paste as child",self.mpasteaschild,'Ctrl+Y',False),
-              None,
-              ("Cut all selected",self.mcutselected,'Ctrl+S',False),
-              ("Paste as brother for each selected",
-               self.mpasteasbrotherselected,'Ctrl+K',False),
-              ("Paste as child for each selected",
-               self.mpasteaschildselected,'Ctrl+I',False),
-              )
+            ("About %s"%node.sidsType(),self.aboutSIDS,None,False),
+            None,
+            ("Mark/unmark node",self.marknode,'Space',False),
+            ("Add new child node",self.newnodechild,'Ctrl+A',False),
+            ("Add new brother node",self.newnodebrother,'Ctrl+Z',False),
+            None,
+            ("Open form",self.popform,'Ctrl+F',False),
+            ("Open view",self.openSubTree,'Ctrl+W',False),
+            ("Open view on linked-to file",self.openLkTree,'Ctrl+O',lknode),
+            None,
+            ("Load node data in memory",self.dataLoad,'Ctrl+L',not lznode),
+            ("Release memory node data",self.dataRelease,'Ctrl+R',lznode),
+            None,
+            ("Copy",self.mcopy,'Ctrl+C',False),
+            ("Cut",self.mcut,'Ctrl+X',False),
+            ("Paste as brother",self.mpasteasbrother,'Ctrl+V',False),
+            ("Paste as child",self.mpasteaschild,'Ctrl+Y',False),
+            None,
+            ("Cut all selected",self.mcutselected,'Ctrl+Shift+X',False),
+            ("Paste as brother for each selected",
+             self.mpasteasbrotherselected,'Ctrl+Shift+V',False),
+            ("Paste as child for each selected",
+             self.mpasteaschildselected,'Ctrl+Shift+Y',False),
+            ("Load nodes data in memory for each selected",
+             self.dataLoadSelected,'Ctrl+Shift+L',False),
+            ("Release memory node data for each selected",
+             self.dataReleaseSelected,'Ctrl+Shift+R',False),
+            )
           self.popupmenu.clear()
           self.popupmenu.setTitle('Node menu')
           for aparam in actlist:
@@ -526,6 +531,19 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.qryview=Q7Query(self._control,self._fgprint,self)
             self.qryview.show()
         self.qryview.raise_()
+    def aboutSIDS(self):
+        path=self.getLastEntered().sidsPath()
+        print path
+    def dataLoadSelected(self):
+        self.model().dataLoadSelected()
+    def dataReleaseSelected(self):
+        self.model().dataReleaseSelected()
+    def dataLoad(self):
+        node=self.getLastEntered()
+        self.model().dataLoadSelected(single=node.sidsPath())
+    def dataRelease(self):
+        node=self.getLastEntered()
+        self.model().dataReleaseSelected(single=node.sidsPath())
     def closeAlone(self):
         pass
     def forceapply(self):
