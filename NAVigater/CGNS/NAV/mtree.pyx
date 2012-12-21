@@ -103,6 +103,11 @@ PASTEBROTHERSELECTED='@@NODEPASTEBS@@'
 PASTECHILDSELECTED='@@NODEPASTECS@@'
 OPENFORM='@@OPENFORM@@'
 OPENVIEW='@@OPENVIEW@@'
+LOADNODEDATASELECTED='@@LOADNODEDATASELECTED@@'
+RELEASENODEDATASELECTED='@@RELEASENODEDATASELECTED@@'
+LOADNODEDATA='@@LOADNODEDATA@@'
+RELEASENODEDATA='@@RELEASENODEDATA@@'
+OPENLINKEDTOFILE='@@OPENLINKEDTOFILE@@'
 
 USERFLAG_0='@@USER0@@'
 USERFLAG_1='@@USER1@@'
@@ -149,34 +154,63 @@ ICONMAPPING={
 }
 
 KEYMAPPING={
- MARKNODE:              Qt.Key_Space,
- UPNODE  :              Qt.Key_Up,
- DOWNNODE:              Qt.Key_Down,
- OPENFORM     :         Qt.Key_F,
- OPENVIEW     :         Qt.Key_W,
+ MARKNODE:                Qt.Key_Space,
+ UPNODE:                  Qt.Key_Up,
+ DOWNNODE:                Qt.Key_Down,
+ OPENFORM:                Qt.Key_F,
+ OPENVIEW:                Qt.Key_W,
 
- NEWCHILDNODE:          Qt.Key_A,
- NEWBROTHERNODE:        Qt.Key_Z,
- EDITNODE:              Qt.Key_Insert,
- COPY    :              Qt.Key_C,
- CUT     :              Qt.Key_X,
- PASTECHILD   :         Qt.Key_Y,
- PASTEBROTHER :         Qt.Key_V,
- CUTSELECTED  :         Qt.Key_O,
- PASTECHILDSELECTED   : Qt.Key_I,
- PASTEBROTHERSELECTED : Qt.Key_K,
+ NEWCHILDNODE:            Qt.Key_A,
+ NEWBROTHERNODE:          Qt.Key_Z,
+ EDITNODE:                Qt.Key_Insert,
+ COPY:                    Qt.Key_C,
+ CUT:                     Qt.Key_X,
+ PASTECHILD:              Qt.Key_Y,
+ PASTEBROTHER:            Qt.Key_V,
+ CUTSELECTED:             Qt.Key_X,
+ PASTECHILDSELECTED:      Qt.Key_Y,
+ PASTEBROTHERSELECTED:    Qt.Key_V,
 
- USERFLAG_0:            Qt.Key_0,
- USERFLAG_1:            Qt.Key_1,
- USERFLAG_2:            Qt.Key_2,
- USERFLAG_3:            Qt.Key_3,
- USERFLAG_4:            Qt.Key_4,
- USERFLAG_5:            Qt.Key_5,
- USERFLAG_6:            Qt.Key_6,
- USERFLAG_7:            Qt.Key_7,
- USERFLAG_8:            Qt.Key_8,
- USERFLAG_9:            Qt.Key_9,  
-    
+ LOADNODEDATA:            Qt.Key_L,
+ RELEASENODEDATA:         Qt.Key_R,
+ LOADNODEDATASELECTED:    Qt.Key_L,
+ RELEASENODEDATASELECTED: Qt.Key_R,
+
+ OPENLINKEDTOFILE:        Qt.Key_O,
+
+ USERFLAG_0:              Qt.Key_0,
+ USERFLAG_1:              Qt.Key_1,
+ USERFLAG_2:              Qt.Key_2,
+ USERFLAG_3:              Qt.Key_3,
+ USERFLAG_4:              Qt.Key_4,
+ USERFLAG_5:              Qt.Key_5,
+ USERFLAG_6:              Qt.Key_6,
+ USERFLAG_7:              Qt.Key_7,
+ USERFLAG_8:              Qt.Key_8,
+ USERFLAG_9:              Qt.Key_9,  
+}
+
+MODIFIERMAPPING={
+ OPENFORM:                (Qt.Key_Control,),
+ OPENVIEW:                (Qt.Key_Control,),
+
+ NEWCHILDNODE:            (Qt.Key_Control,),
+ NEWBROTHERNODE:          (Qt.Key_Control,),
+ EDITNODE:                (Qt.Key_Control,),
+ COPY:                    (Qt.Key_Control,),
+ CUT:                     (Qt.Key_Control,),
+ PASTECHILD:              (Qt.Key_Control,),
+ PASTEBROTHER:            (Qt.Key_Control,),
+ CUTSELECTED:             (Qt.Key_Control,Qt.Key_Shift),
+ PASTECHILDSELECTED:      (Qt.Key_Control,Qt.Key_Shift),
+ PASTEBROTHERSELECTED:    (Qt.Key_Control,Qt.Key_Shift),
+
+ LOADNODEDATA:            (Qt.Key_Control,),
+ RELEASENODEDATA:         (Qt.Key_Control,),
+ LOADNODEDATASELECTED:    (Qt.Key_Control,Qt.Key_Shift),
+ RELEASENODEDATASELECTED: (Qt.Key_Control,Qt.Key_Shift),
+
+ OPENLINKEDTOFILE:        (Qt.Key_Control,),
 }
 
 EDITKEYMAPPINGS=[
@@ -348,6 +382,9 @@ class Q7TreeView(QTreeView):
           elif (kval==KEYMAPPING[OPENVIEW]):
               self._parent.openSubTree()
               self.exclusiveSelectRow(nix)
+          else:
+              print 'HERE ',kmod,kval
+              QTreeView.keyPressEvent(self,event)
     def modelCurrentIndex(self):
         idx=self.tryToMapTo(self.currentIndex())
         return idx
@@ -688,10 +725,12 @@ class Q7TreeItem(object):
         nodetab=self.sidsValue()
         npath=CGU.getPathNoRoot(self.sidsPath())
         if (nodetab==None):
-            self.updateData(CGU.getValueByPath(partialtree,npath))
-            if (npath in self._fingerprint.lazy):
-                del self._fingerprint.lazy.remove[self.sidsPath()]
-            self._lazy=False
+            nval=CGU.getNodeByPath(partialtree,npath)
+            if (nval is not None):
+              self.updateData(nval[1])
+              if (npath in self._fingerprint.lazy):
+                  del self._fingerprint.lazy.remove[self.sidsPath()]
+              self._lazy=False
         return self
     def hasLazyLoad(self):
         return self._lazy

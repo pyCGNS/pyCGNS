@@ -229,7 +229,7 @@ class Q7fingerPrint:
         try:
             if (maxdataload):
                 (tree,links,paths)=CGNS.MAP.load(f,flags,lksearch=slp,
-                                                       maxdata=maxdataload)
+                                                 maxdata=maxdataload)
             else:
                 (tree,links,paths)=CGNS.MAP.load(f,flags,lksearch=slp)
         except (CGNS.MAP.error,),chlex:
@@ -340,13 +340,15 @@ class Q7fingerPrint:
         self.updateFileStats(filedir+'/'+filename)
     def updateNodeData(self,pathdict):
         tfile="%s/%s"%(self.filedir,self.filename)
+        slp=OCTXT.LinkSearchPathList
+        slp+=[self.filedir]
         minpath=CGU.getPathListCommonAncestor(pathdict.keys())
         flags=CGNS.MAP.S2P_NONE&~CGNS.MAP.S2P_REVERSEDIMS
         if (OCTXT.CHLoneTrace):
             flags|=CGNS.MAP.S2P_TRACE
         if (OCTXT.FollowLinksAtLoad):
             flags|=CGNS.MAP.S2P_FOLLOWLINKS
-        (t,l,p)=CGNS.MAP.load(tfile,flags,path=minpath,
+        (t,l,p)=CGNS.MAP.load(tfile,flags,path=minpath,lksearch=slp,
                               update=pathdict)
         return (t,l,p)
     def updateFileStats(self,fname,saveas=False):

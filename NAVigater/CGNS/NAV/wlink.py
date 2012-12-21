@@ -77,6 +77,7 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
         h=['S','Source Node','Linked-to file','Linked-to Node','Found in dir']
         for i in range(len(h)):
             hi=QTableWidgetItem(h[i])
+            hi.setFont(OCTXT._Label_Font)
             v.setHorizontalHeaderItem(i,hi)
             lh.setResizeMode(i,QHeaderView.ResizeToContents)
         lh.setResizeMode(len(h)-1,QHeaderView.Stretch)
@@ -86,13 +87,13 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
           (ld,lf,ln,sn,st)=lk
           t1item=self.statusIcon(st)
           t2item=QTableWidgetItem(sn)
-          t2item.setFont(QFont("Courier"))
+          t2item.setFont(OCTXT._Table_Font)
           t3item=QTableWidgetItem(lf)
-          t3item.setFont(QFont("Courier"))
+          t3item.setFont(OCTXT._Table_Font)
           t4item=QTableWidgetItem(ln)
-          t4item.setFont(QFont("Courier"))
+          t4item.setFont(OCTXT._Table_Font)
           t5item=QTableWidgetItem(ld)
-          t5item.setFont(QFont("Courier"))
+          t5item.setFont(OCTXT._Table_Font)
           v.setItem(r,0,t1item)
           v.setItem(r,1,t2item)
           v.setItem(r,2,t3item)

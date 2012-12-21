@@ -126,6 +126,7 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
           if (bd): wg=QFont.Bold
           else: wg=QFont.Normal
           qf=QFont(fm,italic=it,weight=wg,pointSize=sz)
+          setattr(OCTXT,'_%s_Font'%kfont,qf)
           self.getopt('%s_Family'%kfont).setCurrentFont(qf)
           for wtype in Q7Option.labdict[kfont]:
               bf=''
@@ -133,7 +134,6 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
               if (bd): bf='bold'
               if (it): tf='italic'
               scss+="""%s { font:  %s %s %dpx "%s" }\n"""%(wtype,bf,tf,sz,fm)
-        #print scss
         self._control._application.setStyleSheet(scss)
 
 # -----------------------------------------------------------------

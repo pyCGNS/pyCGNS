@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ControlWindow.ui'
 #
-# Created: Mon Nov 12 15:52:12 2012
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Fri Dec 21 10:50:05 2012
+#      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -121,6 +121,7 @@ class Ui_Q7ControlWindow(object):
         self.controlTable.setObjectName("controlTable")
         self.controlTable.setColumnCount(6)
         self.controlTable.setRowCount(0)
+        self.controlTable.horizontalHeader().setCascadingSectionResizes(True)
         self.controlTable.horizontalHeader().setStretchLastSection(True)
         self.verticalLayout_2.addWidget(self.controlTable)
 

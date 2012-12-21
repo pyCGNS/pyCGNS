@@ -185,6 +185,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         h=['S','T','View','Dir','File','Node']
         for i in range(len(h)):
             hi=QTableWidgetItem(h[i])
+            hi.setFont(OCTXT._Label_Font)
             ctw.setHorizontalHeaderItem(i,hi)
             cth.setResizeMode(i,QHeaderView.ResizeToContents)
         cth.setResizeMode(len(h)-1,QHeaderView.Stretch)
@@ -243,7 +244,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             it=QTableWidgetItem('%s '%(l[i+2]))
             if (i in [0]): it.setTextAlignment(Qt.AlignCenter)
             else: it.setTextAlignment(Qt.AlignLeft)
-            it.setFont(QFont("Courier"))
+            it.setFont(OCTXT._Table_Font)
             ctw.setItem(r,i+2,it)
         self.modifiedLine(r,l[0],fg)
         for i in (0,1,2):

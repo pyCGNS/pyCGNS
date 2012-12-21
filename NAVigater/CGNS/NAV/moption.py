@@ -129,6 +129,13 @@ about loss of data or corrupted data<br>
     NName_Size=10
     NName_Bold=False
     NName_Italic=False
+
+    _Label_Font=None
+    _Table_Font=None
+    _Edit_Font=None
+    _Button_Font=None
+    _RName_Font=None
+    _NName_Font=None
     
     UserColors=[
         'gray',

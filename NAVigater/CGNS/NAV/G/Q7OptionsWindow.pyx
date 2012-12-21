@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Thu Dec 20 11:07:44 2012
+# Created: Fri Dec 21 10:50:08 2012
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -177,7 +177,7 @@ class Ui_Q7OptionsWindow(object):
         self.__O_label_size.setProperty("value", 10)
         self.__O_label_size.setObjectName("__O_label_size")
         self.label = QtGui.QLabel(self.tab_3)
-        self.label.setGeometry(QtCore.QRect(10, 25, 46, 17))
+        self.label.setGeometry(QtCore.QRect(10, 25, 166, 17))
         self.label.setObjectName("label")
         self.__O_label_bold = QtGui.QCheckBox(self.tab_3)
         self.__O_label_bold.setGeometry(QtCore.QRect(455, 25, 86, 21))
@@ -191,19 +191,19 @@ class Ui_Q7OptionsWindow(object):
         self.__O_label_family.setGeometry(QtCore.QRect(180, 20, 216, 26))
         self.__O_label_family.setObjectName("__O_label_family")
         self.label_3 = QtGui.QLabel(self.tab_3)
-        self.label_3.setGeometry(QtCore.QRect(10, 55, 46, 17))
+        self.label_3.setGeometry(QtCore.QRect(10, 55, 161, 17))
         self.label_3.setObjectName("label_3")
         self.label_12 = QtGui.QLabel(self.tab_3)
-        self.label_12.setGeometry(QtCore.QRect(10, 85, 46, 17))
+        self.label_12.setGeometry(QtCore.QRect(10, 85, 161, 17))
         self.label_12.setObjectName("label_12")
         self.label_26 = QtGui.QLabel(self.tab_3)
-        self.label_26.setGeometry(QtCore.QRect(10, 115, 46, 17))
+        self.label_26.setGeometry(QtCore.QRect(10, 115, 161, 17))
         self.label_26.setObjectName("label_26")
         self.label_27 = QtGui.QLabel(self.tab_3)
-        self.label_27.setGeometry(QtCore.QRect(10, 145, 86, 17))
+        self.label_27.setGeometry(QtCore.QRect(10, 145, 166, 17))
         self.label_27.setObjectName("label_27")
         self.label_28 = QtGui.QLabel(self.tab_3)
-        self.label_28.setGeometry(QtCore.QRect(10, 175, 131, 17))
+        self.label_28.setGeometry(QtCore.QRect(10, 175, 166, 17))
         self.label_28.setObjectName("label_28")
         self.label_29 = QtGui.QLabel(self.tab_3)
         self.label_29.setGeometry(QtCore.QRect(445, 5, 58, 16))

@@ -1291,6 +1291,7 @@ def getPathListCommonAncestor(pathlist):
     lp.append(getPathToList(p,True))
   t=lp[0]
   for p in lp:
+    n=0
     r=t
     m=min(len(p),len(r))
     for n in range(m):
