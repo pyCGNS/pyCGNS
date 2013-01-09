@@ -26,6 +26,7 @@ from CGNS.NAV.wfile import checkFilePermission
 class Q7Window(QWidget,object):
     VIEW_CONTROL='C'
     VIEW_DIAG='D'
+    VIEW_DIFF='X'
     VIEW_TREE='T'
     VIEW_OPTION='O'
     VIEW_VTK='G'
@@ -35,6 +36,7 @@ class Q7Window(QWidget,object):
     VIEW_PATTERN='P'
     VIEW_INFO='I'
     VIEW_LINK='L'
+    VIEW_TOOLS='Z'
     HISTORYLASTKEY='///LAST///'
     def __init__(self,vtype,control,path,fgprint):
         QWidget.__init__(self,None)
@@ -50,6 +52,7 @@ class Q7Window(QWidget,object):
         self.I_SELECT=QIcon(QPixmap(":/images/icons/operate-list.gif"))
         self.I_PATTERN=QIcon(QPixmap(":/images/icons/pattern.gif"))
         self.I_DIAG=QIcon(QPixmap(":/images/icons/check-all.gif"))
+        self.I_DIFF=QIcon(QPixmap(":/images/icons/diff.gif"))
         self.I_LINK=QIcon(QPixmap(":/images/icons/link.gif"))
         self.I_D_INF=QIcon(QPixmap(":/images/icons/subtree-sids-warning.gif"))
         self.I_D_ERR=QIcon(QPixmap(":/images/icons/subtree-sids-failed.gif"))
@@ -304,6 +307,15 @@ class Q7fingerPrint:
                 for (v,i) in x.views[vtype]:
                     if (i==int(idx)): return x
         return None
+    @classmethod
+    def getUniqueTreeViewIdList(cls):
+        r=set()
+        for x in cls.__extension:
+            for vtype in x.views:
+                if (vtype==Q7Window.VIEW_TREE):
+                  for (v,i) in x.views[vtype]:
+                      r.add(i)
+        return list(r)
     @classmethod
     def getExpandedFilenameList(cls):
         l=[]

@@ -53,6 +53,8 @@ Q7TREEVIEWSTYLESHEET="""
  background: palette(base);
  }
 
+ QTreeView::item [diffNA="true"] { background-color: yellow }
+
  QTreeView::item {
  border: 1px solid #d9d9d9;
  border-top-color: transparent;

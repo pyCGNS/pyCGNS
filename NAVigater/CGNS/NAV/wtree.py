@@ -155,6 +155,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._lastEntered=None
         self.lastdiag=None
         self.linkview=None
+        self.toolsview=None
         self.qryview=None
         QObject.connect(self.treeview,
                         SIGNAL("expanded(QModelIndex)"),
@@ -206,6 +207,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bPatternView.clicked.connect(self.patternlist)
         self.bDeleteLink.clicked.connect(self.linkdelete)
         self.bAddLink.clicked.connect(self.linkadd)
+        self.bToolsView.clicked.connect(self.tools)
         self.bOperateDoc.clicked.connect(self.querydoc)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
@@ -228,7 +230,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bPlotView.setDisabled(True)
         self.bDeleteLink.setDisabled(True)
         self.bAddLink.setDisabled(True)
-        self.bToolsView.setDisabled(True)
+        if (not OCTXT._HasProPackage):
+            self.bToolsView.setDisabled(True)
         self.bCheckView.setDisabled(True)
         self.bPatternDB.setDisabled(True)
         self.bSelectLink.setDisabled(True)
@@ -250,6 +253,13 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             return
         self._control.savedirect(self._fgprint)
         self.updateTreeStatus()
+    def tools(self):
+        if (not OCTXT._HasProPackage): return
+        from CGNS.PRO.wtools import Q7ToolsView
+        if (self.toolsview is None):
+            self.toolsview=Q7ToolsView(self._control,self._fgprint,self)
+            self.toolsview.show()
+        self.toolsview.raise_()
     def savetreeas(self):
         self._control.save(self._fgprint)
         self.updateTreeStatus()

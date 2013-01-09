@@ -551,6 +551,12 @@ shows you which is the actual original file name and the temporary filename.
 
 """),
 # --------------------------------------------------------------------------
+'Tools':('Tools panel',
+"""
+<h2>Tools panel</h2>
+
+"""),
+# --------------------------------------------------------------------------
 }
 
 # --- last line

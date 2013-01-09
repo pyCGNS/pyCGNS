@@ -52,6 +52,7 @@ class Q7OptionContext(object):
         'MaxLoadDataSize':['DoNotLoadLargeArrays'],
         'MaxRecursionLevel':['RecursiveTreeDisplay'],
     }
+    _HasProPackage=True
     CHLoneTrace=False
     NAVTrace=False
     AutoExpand=False

@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/lock-scroll.gif</file>
+    <file>icons/diff.gif</file>
     <file>icons/link-save.gif</file>
     <file>icons/operate-doc.gif</file>
     <file>icons/help-01.gif</file>

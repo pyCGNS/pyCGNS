@@ -238,6 +238,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             tpitem=QTableWidgetItem(self.I_DIAG,'')
         if (l[1]==Q7Window.VIEW_LINK):
             tpitem=QTableWidgetItem(self.I_LINK,'')
+        if (l[1]==Q7Window.VIEW_DIFF):
+            tpitem=QTableWidgetItem(self.I_DIFF,'')
         tpitem.setTextAlignment(Qt.AlignCenter)
         ctw.setItem(r,1,tpitem)
         for i in range(len(l)-2):
