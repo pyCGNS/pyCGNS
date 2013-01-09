@@ -112,7 +112,7 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
                 pass
               else:
                 dit=QTreeWidgetItem(it,(self._data.message(diag),))
-                dit.setFont(OCTXT._Edit_Font)
+                dit.setFont(0,OCTXT._Edit_Font)
                 keyset.add(diag.key)
                 if (diag.level==CGM.CHECK_FAIL): dit.setIcon(0,self.I_C_SFL)
                 if (diag.level==CGM.CHECK_WARN): dit.setIcon(0,self.I_C_SWR)

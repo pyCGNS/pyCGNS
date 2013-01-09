@@ -561,20 +561,29 @@ class Q7TreeItem(object):
           return CGK.cgnsenums[self.sidsType()]
         return None
     def sidsValueSet(self,value):
+        odt=self.sidsDataType()
         try:
-            aval=numpy.array([float(value)])
+            aval=numpy.array([float(value)],order='F')
+            if (odt==CGK.R4):
+                aval=numpy.array([float(value)],dtype='f',order='F')
             self._itemnode[1]=aval
             return True
         except (ValueError, TypeError ):
             pass
         try:
-            aval=numpy.array([int(value)])
+            aval=numpy.array([int(value)],order='F')
+            if (odt==CGK.I4):
+                aval=numpy.array([float(value)],dtype='i',order='F')
             self._itemnode[1]=aval
             return True
         except (ValueError, TypeError ):
             pass
         try:
-            aval=numpy.array(eval(value))
+            aval=numpy.array(eval(value),order='F')
+            if (odt==CGK.R4):
+                aval=numpy.array(eval(value),dtype='f',order='F')
+            if (odt==CGK.I4):
+                aval=numpy.array(eval(value),dtype='i',order='F')
             self._itemnode[1]=aval
             return True
         except (ValueError, SyntaxError, NameError, TypeError ):
