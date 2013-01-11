@@ -46,6 +46,29 @@ Which loads the file, runs the checks and returns a list of diagnostics::
 Each diagnostic entry starts with the node path followed by the list of
 warnings and errors detected at this node level.
 
+API
+---
+
+The only function you can call in your Python script are *run*, *showdiag*
+and *compliant*.
+
+The *run* function parses a full CGNS/Python tree and returns a complex
+diagnostic. This latter can be printed using *showdiag*.
+
+The *compliant* function parses a full CGNS/Python tree and returns two values,
+a boolean telling you if the CGNS/Python is compliant or not and a list
+or diagnostics messages::
+
+  import CGNS.PAT.cgnslib as CGL
+  import CGNS.VAL.simplecheck as CGV
+  import CGNS.MAP as CGM
+
+  T=CGL.newCGNSTree()
+
+  diag=CGV.compliant(T)
+  if (diag[0]): CGM.save(mfile,T,[])
+
+
 Reference
 ---------
 

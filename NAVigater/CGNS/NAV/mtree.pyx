@@ -560,37 +560,37 @@ class Q7TreeItem(object):
         if (self.sidsType() in CGK.cgnsenums):
           return CGK.cgnsenums[self.sidsType()]
         return None
+    def trySetAs(self,value,dt):
+        try:
+          aval=eval(value)
+          if (aval is None):
+              self._itemnode[1]=aval
+              return True
+          if (type(aval)==list):
+              aval=numpy.array(aval,dtype=dt,order='F')
+              self._itemnode[1]=aval
+              return True
+          else:
+              aval=numpy.array([aval],dtype=dt,order='F')
+              self._itemnode[1]=aval
+              return True
+        except :
+          pass
+        return False
     def sidsValueSet(self,value):
+        if (value==""): return False
         odt=self.sidsDataType()
-        try:
-            aval=numpy.array([float(value)],order='F')
-            if (odt==CGK.R4):
-                aval=numpy.array([float(value)],dtype='f',order='F')
-            self._itemnode[1]=aval
+        if (odt==CGK.R4): return self.trySetAs(value,'f')
+        if (odt==CGK.R8): return self.trySetAs(value,'d')
+        if (odt==CGK.I4): return self.trySetAs(value,'i')
+        if (odt==CGK.I8): return self.trySetAs(value,'l')
+        if (odt==CGK.MT):
+            self._itemnode[1]=None
             return True
-        except (ValueError, TypeError ):
-            pass
-        try:
-            aval=numpy.array([int(value)],order='F')
-            if (odt==CGK.I4):
-                aval=numpy.array([float(value)],dtype='i',order='F')
-            self._itemnode[1]=aval
+        if (odt==CGK.C1):
+            self._itemnode[1]=CGU.setStringAsArray(value)
             return True
-        except (ValueError, TypeError ):
-            pass
-        try:
-            aval=numpy.array(eval(value),order='F')
-            if (odt==CGK.R4):
-                aval=numpy.array(eval(value),dtype='f',order='F')
-            if (odt==CGK.I4):
-                aval=numpy.array(eval(value),dtype='i',order='F')
-            self._itemnode[1]=aval
-            return True
-        except (ValueError, SyntaxError, NameError, TypeError ):
-            pass
-        aval=CGU.setStringAsArray(value)
-        self._itemnode[1]=aval
-        return True
+        return False
     def sidsChildren(self):
         return self._itemnode[2]
     def sidsType(self):

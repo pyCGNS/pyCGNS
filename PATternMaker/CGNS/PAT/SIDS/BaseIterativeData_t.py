@@ -10,7 +10,7 @@ import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy                 as N
 #
-data=C.newBaseIterativeData(None)
+data=C.newBaseIterativeData(None,K.BaseIterativeData_s)
 C.newDataArray(data,K.NumberOfZones_s)
 C.newDataArray(data,K.NumberOfFamilies_s)
 C.newDataArray(data,K.ZonePointers_s)

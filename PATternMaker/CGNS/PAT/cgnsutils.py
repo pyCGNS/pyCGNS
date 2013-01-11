@@ -620,7 +620,25 @@ def concatenateForArrayChar(nlist):
     else:
       checkArrayChar(n)
       nl+=[setStringAsArray(("%-32s"%n.tostring())[:32])]
-  r=NPY.array(NPY.array(nl,order='Fortran').T,order='Fortran')
+  r=NPY.array(NPY.array(nl,order='F').T,order='F')
+  return r
+
+# -----------------------------------------------------------------------------
+def concatenateForArrayChar2D(nlist):
+  return concatenateForArrayChar(nlist)
+
+# -----------------------------------------------------------------------------
+def concatenateForArrayChar3D(nlist):
+  rr=[]
+  for p in nlist:
+    nl=[]
+    for n in p:
+      if (type(n)==type('')): nl+=[setStringAsArray(("%-32s"%n)[:32])]
+      else:
+        checkArrayChar(n)
+        nl+=[setStringAsArray(("%-32s"%n.tostring())[:32])]
+    rr.append(NPY.array(NPY.array(nl,order='F'),order='F'))
+  r=NPY.array(rr,order='F').T
   return r
 
 # -----------------------------------------------------------------------------
@@ -1193,10 +1211,18 @@ def getAllPaths(tree):
   plist=[]
   path=''
   getPaths(tree,path,plist)
+  plist.sort()
   return plist
 
+def wsort(a,b):
+    if (a[0] < b[0]): return -1
+    if (a[0] > b[0]): return  1
+    if (a[1] < b[1]): return -1
+    if (a[1] > b[1]): return  1
+    return 0
+
 # --------------------------------------------------   
-def getPathFullTree(tree):
+def getPathFullTree(tree,width=False):
   """
   Returns the list of all possible node paths of a CGNS/Python tree.
 
@@ -1207,15 +1233,26 @@ def getPathFullTree(tree):
         
   - Args:
    * `tree`: the CGNS/Python target tree to parse
+   * `width`: a boolean set to True (default is False) for width sorting
 
   - Return:
    * A list of strings, each is a path
    
   - Remark:
    * Returns [] is tree empty or invalid
+   * When sorting with width the paths are listed as width-first parse
   
   """
-  return getAllPaths(tree)
+  r=getAllPaths(tree)
+  if (width):
+    s=[]
+    for p in r:
+      s.append((p.count('/'),p))
+    s.sort(cmp=wsort)
+    r=[]
+    for p in s:
+      r.append(p[1])
+  return r
 
 # --------------------------------------------------   
 def checkPath(path,dienow=False):
@@ -1362,7 +1399,9 @@ def getPathAncestor(path,level=1):
   if ((len(lp)==2) and (lp[0]=='')):  ancestor='/'
   elif (len(lp)>1):                   ancestor='/'.join(lp[:-1])
   elif (len(lp)==1):                  ancestor='/'
-  else:                               ancestor=None    
+  else:                               ancestor=None
+  if (level >1):
+    ancestor=getPathAncestor(ancestor,level-1)
   return ancestor
 
 # --------------------------------------------------   

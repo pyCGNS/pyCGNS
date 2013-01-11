@@ -1171,11 +1171,11 @@ def newEMConductivityModel(parent,valueType=CK.UserDefined_s):
   return node
 
 # -----------------------------------------------------------------------------
-def newBaseIterativeData(parent,nsteps=0,
+def newBaseIterativeData(parent,name,nsteps=0,
                          itype=CK.IterationValues_s):
   """-BaseIterativeData node creation -BaseIterativeData
   
-   'newNode:N='*newBaseIterativeData*'(parent:N,nsteps:I,itype:E)'
+   'newNode:N='*newBaseIterativeData*'(parent:N,name:S,nsteps:I,itype:E)'
   
    Returns a new <node> representing a BaseIterativeData_t sub-tree. 
    If a parent is given, the new <node> is added to the parent children list. 
@@ -1184,13 +1184,15 @@ def newBaseIterativeData(parent,nsteps=0,
   """ 
   
   if (parent): CU.checkNode(parent)
-  CU.checkDuplicatedName(parent,CK.BaseIterativeData_s)
+  CU.checkDuplicatedName(parent,name)
   CU.checkType(parent,CK.CGNSBase_ts,CK.BaseIterativeData_ts)
   if ((type(nsteps) != type(1)) or (nsteps < 0)): raise CE.cgnsException(209)
-  node=CU.newNode(CK.BaseIterativeData_s,NPY.array([nsteps],dtype='i'),[],CK.BaseIterativeData_ts,parent)
+  asteps=NPY.arange(1,nsteps+1,dtype='i')
+  node=CU.newNode(name,NPY.array([nsteps],dtype='i'),[],
+                  CK.BaseIterativeData_ts,parent)
   if (itype not in [CK.IterationValues_s, CK.TimeValues_s]):
     raise CE.cgnsException(210,(CK.IterationValues_s, CK.TimeValues_s))
-  CU.newNode(itype,None,[],CK.DataArray_ts,node)  
+  CU.newNode(itype,asteps,[],CK.DataArray_ts,node)  
   return node
 
 # -----------------------------------------------------------------------------

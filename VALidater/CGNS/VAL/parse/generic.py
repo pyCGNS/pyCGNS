@@ -126,7 +126,7 @@ class GenericParser(object):
   def checkTree(self,T,trace=False):
     status1=CGM.CHECK_GOOD
     if (trace): print '### Parsing node paths...'
-    paths=CGU.getPathFullTree(T)
+    paths=CGU.getPathFullTree(T,width=True)
     sz=len(paths)
     ct=1
     for path in paths:

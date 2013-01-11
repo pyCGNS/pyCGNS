@@ -47,6 +47,18 @@ def run(T,trace,userlist):
         diag.merge(parser.log)
     return diag
 
+def compliant(T,trace=False,userlist=[]):
+    diag=run(T,trace,userlist)
+    ok=[True,[]]
+    for m in diag.allMessageKeys():
+      first=True
+      ctxt=diag.noContextMessage(m)
+      for (d,dp) in diag.diagnosticsByMessage(m):
+         if (diag.status(d)==CGM.CHECK_FAIL):
+             ok[0]=False
+             ok[1].append(dp)
+    return ok
+
 def showDiag(diag,idlist,bypath=True):
     ok=True
     if (bypath):
