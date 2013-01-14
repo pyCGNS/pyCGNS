@@ -41,13 +41,23 @@ class CGNStype:
       if (c[0]==ctype): return True
     return False
   def addChild(self,ctype,cname=UD,dtype=CK.MT,card=C_0N):
-    self.children.append((ctype,cname,dtype,card))
+    if (type(cname)!=list): lname=[cname]
+    else: lname=cname
+    self.children.append((ctype,lname,dtype,card))
   def addParent(self,parent):
     self.parents.append(parent)
   def cardinality(self,childtype):
     for c in self.children:
       if (c[0]==childtype): return c[3]
     return C_00
+  def isReservedName(self,name):
+    for c in self.children:
+      if (name in c[1]): return True
+    return False
+  def hasReservedNameType(self,name):
+    for c in self.children:
+      if (name in c[1]): return c[0]
+    return None
 
 cgt={}
 
@@ -433,18 +443,18 @@ t=CK.CGNSBase_ts
 cgt[t]=CGNStype(t,dtype=[CK.I4])
 cgt[t].shape=(0,0)
 cgt[t].addChild(CK.Zone_ts,card=C_0N)
-cgt[t].addChild(CK.SimulationType_ts,CK.SimulationType_s,card=C_01)
+cgt[t].addChild(CK.SimulationType_ts,[CK.SimulationType_s],card=C_01)
 cgt[t].addChild(CK.BaseIterativeData_ts,card=C_01)
 cgt[t].addChild(CK.IntegralData_ts,card=C_0N)
-cgt[t].addChild(CK.ConvergenceHistory_ts,CK.GlobalConvergenceHistory_s,card=C_01)
+cgt[t].addChild(CK.ConvergenceHistory_ts,[CK.GlobalConvergenceHistory_s],card=C_01)
 cgt[t].addChild(CK.Family_ts,card=C_0N)
-cgt[t].addChild(CK.FlowEquationSet_ts,CK.FlowEquationSet_s,card=C_01)
-cgt[t].addChild(CK.ReferenceState_ts,CK.ReferenceState_s,card=C_01)
-cgt[t].addChild(CK.Axisymmetry_ts,CK.Axisymmetry_s,card=C_01)
-cgt[t].addChild(CK.RotatingCoordinates_ts,CK.RotatingCoordinates_s,card=C_01)
-cgt[t].addChild(CK.Gravity_ts,CK.Gravity_s,card=C_01)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s,card=C_01)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s,card=C_01)
+cgt[t].addChild(CK.FlowEquationSet_ts,[CK.FlowEquationSet_s],card=C_01)
+cgt[t].addChild(CK.ReferenceState_ts,[CK.ReferenceState_s],card=C_01)
+cgt[t].addChild(CK.Axisymmetry_ts,[CK.Axisymmetry_s],card=C_01)
+cgt[t].addChild(CK.RotatingCoordinates_ts,[CK.RotatingCoordinates_s],card=C_01)
+cgt[t].addChild(CK.Gravity_ts,[CK.Gravity_s],card=C_01)
+cgt[t].addChild(CK.DataClass_ts,[CK.DataClass_s],card=C_01)
+cgt[t].addChild(CK.DimensionalUnits_ts,[CK.DimensionalUnits_s],card=C_01)
 cgt[t].addChild(CK.Descriptor_ts,card=C_0N)
 cgt[t].addChild(CK.UserDefinedData_ts,card=C_0N)
 
@@ -646,8 +656,8 @@ cgt[t].addChild(CK.DataArray_ts,CK.RegionName_s)
 t=CK.BaseIterativeData_ts
 cgt[t]=CGNStype(t,dtype=[CK.I4])
 cgt[t].shape=(1,)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
+cgt[t].addChild(CK.DataClass_ts,[CK.DataClass_s],card=C_01)
+cgt[t].addChild(CK.DimensionalUnits_ts,[CK.DimensionalUnits_s],card=C_01)
 cgt[t].addChild(CK.Descriptor_ts)
 cgt[t].addChild(CK.UserDefinedData_ts)
 cgt[t].addChild(CK.DataArray_ts)
@@ -655,22 +665,29 @@ cgt[t].addChild(CK.DataArray_ts)
 # --------------------------------------------------------
 t=CK.ZoneIterativeData_ts
 cgt[t]=CGNStype(t)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
+cgt[t].addChild(CK.DataClass_ts,[CK.DataClass_s],card=C_01)
+cgt[t].addChild(CK.DimensionalUnits_ts,[CK.DimensionalUnits_s],card=C_01)
 cgt[t].addChild(CK.Descriptor_ts)
 cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.DataArray_ts)
+cgt[t].addChild(CK.DataArray_ts,[CK.CGK.RigidGridMotionPointers_s,
+                                 CGK.ArbitraryGridMotionPointers_s,
+                                 CGK.FlowSolutionPointers_s,
+                                 CGK.ZoneGridConnectivityPointers_s,
+                                 CGK.ZoneSubRegionPointers_s])
 
 # --------------------------------------------------------
 t=CK.RigidGridMotion_ts
 cgt[t]=CGNStype(t,dtype=[CK.C1])
 cgt[t].shape=(0,)
 cgt[t].enumerate=CK.RigidGridMotionType_l
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
+cgt[t].addChild(CK.DataClass_ts,[CK.DataClass_s],card=C_01)
+cgt[t].addChild(CK.DimensionalUnits_ts,[CK.DimensionalUnits_s],card=C_01)
 cgt[t].addChild(CK.Descriptor_ts)
 cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.DataArray_ts)
+cgt[t].addChild(CK.DataArray_ts,[CK.OriginLocation_s,
+                                 CK.RigidRotationAngle_s,
+                                 CK.RigidRotationRate_s,
+                                 CK.RigidVelocity_s])
 
 # --------------------------------------------------------
 t=CK.ArbitraryGridMotion_ts

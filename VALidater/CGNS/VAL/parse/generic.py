@@ -29,6 +29,7 @@ INVALID_DATATYPE     = 'S004'
 FORBIDDEN_CHILD      = 'S005'
 SINGLE_CHILD         = 'S006'
 MANDATORY_CHILD      = 'S007'
+BADSIDSTYPE_CHILD    = 'S008'
 
 genericmessages={
 BAD_VERSION:         (CGM.CHECK_FAIL,'CGNSLibraryVersion is incorrect'),
@@ -43,6 +44,7 @@ INVALID_DATATYPE:    (CGM.CHECK_FAIL,'DataType [%s] not allowed for this node'),
 FORBIDDEN_CHILD:     (CGM.CHECK_FAIL,'Node [%s] of type [%s] is not allowed as child'),
 SINGLE_CHILD:        (CGM.CHECK_FAIL,'Node [%s] of type [%s] is allowed only once as child'),
 MANDATORY_CHILD:     (CGM.CHECK_FAIL,'Node [%s] of type [%s] is mandatory'),
+BADSIDSTYPE_CHILD:   (CGM.CHECK_FAIL,'Child name [%s] is reserved for a type [%s]'),
 NODE_EMPTYLIST:      (CGM.CHECK_FAIL,'PANIC: Node is empty list or None (child of [%s])'),
 NODE_NOTALIST:       (CGM.CHECK_FAIL,'PANIC: Node is not a list of 4 objects (child of [%s])'),
 NODE_NAMENOTSTRING:  (CGM.CHECK_FAIL,'PANIC: Node name is not a string (child of [%s])'),
@@ -121,6 +123,7 @@ class GenericParser(object):
       stt=self.log.push(path,UNKNOWN_SIDSTYPE,node[3])
     else:
       stt=self.checkCardinalityOfChildren(T,path,node,parent)
+      stt=self.checkReservedChildrenNames(T,path,node,parent)
     return stt
   # --------------------------------------------------------------------
   def checkTree(self,T,trace=False):
@@ -159,6 +162,15 @@ class GenericParser(object):
           if ([c[3] for c in node[2]].count(tchild[0])<1):
             stt=self.log.push(path,MANDATORY_CHILD,tchild[1],tchild[0])
       return stt
+  # --------------------------------------------------
+  def checkReservedChildrenNames(self,T,path,node,parent):
+      stt=CGM.CHECK_GOOD
+      for child in node[2]:
+        rt=CGT.types[node[3]].hasReservedNameType(child[0])
+        if ((rt is not None) and (rt!=child[3])):
+          stt=self.log.push(path,BADSIDSTYPE_CHILD,child[0],rt)
+      return stt
+
   # --------------------------------------------------------------------
   def CGNSLibraryVersion_t(self,pth,node,parent,tree,log):
     stt=CGM.CHECK_OK
