@@ -30,6 +30,8 @@ FORBIDDEN_CHILD      = 'S005'
 SINGLE_CHILD         = 'S006'
 MANDATORY_CHILD      = 'S007'
 BADSIDSTYPE_CHILD    = 'S008'
+BADNODESHAPE         = 'S009'
+BADNODEVALUE         = 'S010'
 
 genericmessages={
 BAD_VERSION:         (CGM.CHECK_FAIL,'CGNSLibraryVersion is incorrect'),
@@ -45,6 +47,8 @@ FORBIDDEN_CHILD:     (CGM.CHECK_FAIL,'Node [%s] of type [%s] is not allowed as c
 SINGLE_CHILD:        (CGM.CHECK_FAIL,'Node [%s] of type [%s] is allowed only once as child'),
 MANDATORY_CHILD:     (CGM.CHECK_FAIL,'Node [%s] of type [%s] is mandatory'),
 BADSIDSTYPE_CHILD:   (CGM.CHECK_FAIL,'Child name [%s] is reserved for a type [%s]'),
+BADNODESHAPE:        (CGM.CHECK_FAIL,'Bad node shape [%s]'),
+BADNODEVALUE:        (CGM.CHECK_FAIL,'Bad node value'),
 NODE_EMPTYLIST:      (CGM.CHECK_FAIL,'PANIC: Node is empty list or None (child of [%s])'),
 NODE_NOTALIST:       (CGM.CHECK_FAIL,'PANIC: Node is not a list of 4 objects (child of [%s])'),
 NODE_NAMENOTSTRING:  (CGM.CHECK_FAIL,'PANIC: Node name is not a string (child of [%s])'),
@@ -109,7 +113,8 @@ class GenericParser(object):
       if (node[0] in lchildren):
         stt=self.log.push(path,DUPLICATED_NAME,node[0])
     tlist=CGU.getNodeAllowedChildrenTypes(parent,node)
-    if (CGU.getTypeAsGrammarToken(node[3]) not in tlist):
+    if ((CGU.getTypeAsGrammarToken(node[3]) not in tlist)
+        and (node[3]!=CGK.CGNSTree_ts)):
       if (parent is not None):
         stt=self.log.push(path,INVALID_SIDSTYPE_P,
                           node[3],parent[3])
@@ -132,7 +137,7 @@ class GenericParser(object):
     paths=CGU.getPathFullTree(T,width=True)
     sz=len(paths)
     ct=1
-    for path in paths:
+    for path in ['/']+paths:
       if (trace): print '### Check node [%.6d/%.6d]\r'%(ct,sz),
       node=CGU.getNodeByPath(T,path)
       status2=CGM.CHECK_GOOD
@@ -160,7 +165,7 @@ class GenericParser(object):
         card=CGT.types[node[3]].cardinality(tchild[0])
         if (card in [CGT.C_11,CGT.C_1N]):
           if ([c[3] for c in node[2]].count(tchild[0])<1):
-            stt=self.log.push(path,MANDATORY_CHILD,tchild[1],tchild[0])
+            stt=self.log.push(path,MANDATORY_CHILD,tchild[1][0],tchild[0])
       return stt
   # --------------------------------------------------
   def checkReservedChildrenNames(self,T,path,node,parent):
@@ -178,6 +183,8 @@ class GenericParser(object):
       version=int(node[1][0]*1000)
       if (version < 2400):
         stt=self.log.push(pth,OLD_VERSION,version)
+      if (version > 3200):
+        stt=self.log.push(pth,BAD_VERSION)
     except Exception:
       stt=self.log.push(pth,BAD_VERSION)
     return stt

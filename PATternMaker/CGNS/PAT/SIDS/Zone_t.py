@@ -10,7 +10,7 @@ import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 
-data=C.newZone(None,'{Zone}',N.array([[5,7,9],[4,6,8],[0,0,0]],order='F'))
+data=C.newZone(None,'{Zone}',N.array([[5,4,0],[7,7,0],[9,8,0]],order='F'))
 
 g1=C.newGridCoordinates(data,"GridCoordinates")
 C.newRigidGridMotion(data,"{RigidGridMotion}")

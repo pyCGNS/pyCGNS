@@ -110,7 +110,8 @@ def nodeDelete(tree,node,legacy=False):
     pc=getPathLeaf(path)
     if (pp!=path):
       np=getNodeByPath(tree,pp)
-      removeChildByName(np,pc)
+      if (np is not None):
+        removeChildByName(np,pc)
   return tree
 
 # --------------------------------------------------
@@ -810,6 +811,7 @@ def getNodeByPath(tree,path):
    * No wildcards allowed (see :py:func:`getPathByNameFilter` and :py:func:`getPathByNameFilter` )
      
   """
+  if (path=='/'): return tree
   if (not checkPath(path)): return None
   if (path[0]=='/'): path=path[1:]
   if (tree[3]==CK.CGNSTree_ts): T=tree

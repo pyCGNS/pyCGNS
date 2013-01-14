@@ -424,6 +424,7 @@ AverageJ_s                    = "AverageJ"
 AverageK_s                    = "AverageK"
 CGNSLibraryVersion_s          = "CGNSLibraryVersion"
 CellDimension_s               = "CellDimension"
+IndexDimension_s              = "IndexDimension"
 PhysicalDimension_s           = "PhysicalDimension"
 GridCoordinates_s             = "GridCoordinates"
 CoordinateNames_s             = "CoordinateNames"
@@ -648,10 +649,13 @@ FamilyPointers_s              = "FamilyPointers"
 RigidGridMotionPointers_s     = "RigidGridMotionPointers"
 ArbitraryGridMotionPointers_s = "ArbitraryGridMotionPointers"
 GridCoordinatesPointers_s     = "GridCoordinatesPointers"
-FlowSolutionsPointers_s       = "FlowSolutionsPointers"
+FlowSolutionPointers_s        = "FlowSolutionPointers"
+ZoneGridConnectivityPointers_s= "ZoneGridConnectivityPointers"
+ZoneSubRegionPointers_s       = "ZoneSubRegionPointers"
 PointerNames_l = [ZonePointers_s,FamilyPointers_s,RigidGridMotionPointers_s,
                   ArbitraryGridMotionPointers_s,GridCoordinatesPointers_s,
-                  FlowSolutionsPointers_s]
+                  FlowSolutionPointers_s,
+                  ZoneGridConnectivityPointers_s,ZoneSubRegionPointers_s]
 
 OriginLocation_s              = "OriginLocation"
 RigidRotationAngle_s          = "RigidRotationAngle"

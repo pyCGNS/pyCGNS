@@ -30,6 +30,8 @@ author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",
 packages     = ['CGNS.VAL',
                 'CGNS.VAL.grammars',
+                'CGNS.VAL.suite',
+                'CGNS.VAL.suite.treebasics',
                 'CGNS.VAL.parse'],
 scripts      = ['CGNS/VAL/CGNS.VAL'],
 cmdclass={'clean':setuputils.clean}

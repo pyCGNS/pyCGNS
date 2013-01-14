@@ -215,7 +215,7 @@ cgt[t].addChild(CK.IndexArray_ts,CK.PointList_s)
 cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
 cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
 cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.FamilyName_ts,CK.FamilyName_s)
+cgt[t].addChild(CK.FamilyName_ts,[CK.FamilyName_s],card=C_01)
 cgt[t].addChild(CK.UserDefinedData_ts)
 cgt[t].addChild(CK.Ordinal_ts,CK.Ordinal_s)
 
@@ -435,7 +435,7 @@ cgt[t]=CGNStype(t)
 # --------------------------------------------------------
 t=CK.CGNSTree_ts
 cgt[t]=CGNStype(t,names=[CK.CGNSTree_s,UD])
-cgt[t].addChild(CK.CGNSLibraryVersion_ts,CK.CGNSLibraryVersion_s,card=C_11)
+cgt[t].addChild(CK.CGNSLibraryVersion_ts,[CK.CGNSLibraryVersion_s],card=C_11)
 cgt[t].addChild(CK.CGNSBase_ts,card=C_0N)
 
 # --------------------------------------------------------
@@ -460,7 +460,7 @@ cgt[t].addChild(CK.UserDefinedData_ts,card=C_0N)
 
 # --------------------------------------------------------
 t=CK.Zone_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4])
+cgt[t]=CGNStype(t,dtype=[CK.I4,CK.I8])
 cgt[t].shape=(0,3)
 cgt[t].addChild(CK.GridCoordinates_ts,card=C_0N)
 cgt[t].addChild(CK.DiscreteData_ts,card=C_0N)
@@ -669,11 +669,11 @@ cgt[t].addChild(CK.DataClass_ts,[CK.DataClass_s],card=C_01)
 cgt[t].addChild(CK.DimensionalUnits_ts,[CK.DimensionalUnits_s],card=C_01)
 cgt[t].addChild(CK.Descriptor_ts)
 cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.DataArray_ts,[CK.CGK.RigidGridMotionPointers_s,
-                                 CGK.ArbitraryGridMotionPointers_s,
-                                 CGK.FlowSolutionPointers_s,
-                                 CGK.ZoneGridConnectivityPointers_s,
-                                 CGK.ZoneSubRegionPointers_s])
+cgt[t].addChild(CK.DataArray_ts,[CK.RigidGridMotionPointers_s,
+                                 CK.ArbitraryGridMotionPointers_s,
+                                 CK.FlowSolutionPointers_s,
+                                 CK.ZoneGridConnectivityPointers_s,
+                                 CK.ZoneSubRegionPointers_s])
 
 # --------------------------------------------------------
 t=CK.RigidGridMotion_ts

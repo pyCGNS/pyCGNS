@@ -11,7 +11,7 @@ import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 
 data=C.newBase(None,'{Base}',3,3)
-C.newZone(data,'{Zone}',N.array([[5,7,9],[4,6,8],[0,0,0]],order='F'))
+C.newZone(data,'{Zone}',N.array([[5,4,0],[7,6,0],[9,8,0]],order='F'))
 C.newSimulationType(data)
 C.newIntegralData(data,'{IntegralData}')
 C.newBaseIterativeData(data,'{BaseIterativeData}')
