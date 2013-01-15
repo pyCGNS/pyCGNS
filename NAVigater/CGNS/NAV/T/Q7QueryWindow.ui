@@ -202,6 +202,32 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="bSaveAsScript">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Write query as single stand-alone python script</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/operate-edit.gif</normaloff>:/images/icons/operate-edit.gif</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="bSave">
        <property name="minimumSize">
         <size>
@@ -214,6 +240,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Save all queries in user profile directory</string>
        </property>
        <property name="text">
         <string/>

@@ -6,6 +6,7 @@
 #  -------------------------------------------------------------------------
 import sys
 import numpy
+import os
 
 from PySide.QtCore  import *
 from PySide.QtGui   import QFileDialog
@@ -130,6 +131,7 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.bCommitDoc.clicked.connect(self.queryCommit)
         self.bRevertDoc.clicked.connect(self.queryRevert)
         self.bSave.clicked.connect(self.queriesSave)
+        self.bSaveAsScript.clicked.connect(self.queryScriptSave)
         self._master=treeview
         QObject.connect(self.cQueryName,
                         SIGNAL("currentIndexChanged(int)"),
@@ -160,6 +162,20 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         print 'query up'
     def queriesSave(self):
         Q7Query.saveUserQueries()
+    def queryScriptSave(self):
+        n=self.cQueryName.currentText()
+        q=self.getQuery(n)
+        c=self.eText.toPlainText()
+        v=self.eUserVariable.text()
+        f="%s/%s"%(self._fgprint.filedir,self._fgprint.filename)
+        s=q.getFullScript(f,c,v)
+        filename=QFileDialog.getSaveFileName(self,
+                                             "Save query script",".","*.py")
+        if (filename[0]==""): return
+        f=open(str(filename[0]),'w+')
+        f.write(s)
+        f.close()
+        os.chmod(filename[0],0o0750)
     def queryDel(self):
         q=self.cQueryName.currentText()
         i=self.cQueryName.currentIndex()

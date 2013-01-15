@@ -16,6 +16,79 @@ import CGNS.NAV.moption as OCST
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
+SCRIPT_PATTERN="""#!/usr/bin/env python
+#  -------------------------------------------------------------------------
+#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  CGNS.NAV - GENERATED FILE - %(Q_VAR_DATE)s
+#  query: %(Q_VAR_QUERYNAME)s
+# -----------------------------------------------------------------
+import CGNS.MAP as CGM
+
+FILE='%(Q_VAR_TREE_FILE)s'
+SCRIPT=\"\"\"%(Q_VAR_QUERY_SCRIPT)s\"\"\"
+ARGS=\"\"\"%(Q_VAR_QUERY_ARGS)s\"\"\"
+
+# -----------------------------------------------------------------
+SCRIPT_PRE=\"\"\"%(Q_VAR_SCRIPT_PRE)s\"\"\"
+SCRIPT_POST=\"\"\"%(Q_VAR_SCRIPT_POST)s\"\"\"
+# -----------------------------------------------------------------
+def evalScript(node,parent,tree,path,val,args):
+    l=locals()
+    l['%(Q_VAR_RESULT_LIST)s']=[False]
+    l['%(Q_VAR_PARENT)s']=parent
+    l['%(Q_VAR_NAME)s']=node[0]
+    l['%(Q_VAR_VALUE)s']=node[1]
+    l['%(Q_VAR_CGNSTYPE)s']=node[3]
+    l['%(Q_VAR_CHILDREN)s']=node[2]
+    l['%(Q_VAR_TREE)s']=tree
+    l['%(Q_VAR_PATH)s']=path
+    if (args is None): args=()
+    l['%(Q_VAR_USER)s']=args
+    l['%(Q_VAR_NODE)s']=node
+    pre=SCRIPT_PRE+val+SCRIPT_POST
+    try:
+      eval(compile(pre,'<string>','exec'),globals(),l)
+    except Exception:
+      RESULT=False
+    RESULT=l['%(Q_VAR_RESULT_LIST)s'][0]
+    return RESULT
+# -----------------------------------------------------------------
+def parseAndSelect(tree,node,parent,path,script,args,result):
+    path=path+'/'+node[0]
+    Q=evalScript(node,parent,tree,path,script,args)
+    R=[]
+    if (Q):
+        if (result):
+            R=[Q]
+        else:
+            R=[path]
+    for C in node[2]:
+        R+=parseAndSelect(tree,C,node,path,script,args,result)
+    return R
+
+# -----------------------------------------------------------------
+def run(tree,mode,args,script):
+    v=None
+    try:
+        if (args): v=eval(args)
+        if ((v is not None) and (type(v)!=tuple)): v=(v,)
+    except NameError:
+        v=(str(args),)
+    except:
+        pass
+    _args=v
+    result=parseAndSelect(tree,tree,[None,None,[],None],'',
+                          script,_args,mode)
+    return result
+# -----------------------------------------------------------------
+(t,l,p)=CGM.load(FILE)
+print run(t,True,ARGS,SCRIPT)
+
+# -----------------------------------------------------------------
+"""
+
 # -----------------------------------------------------------------
 def sameVal(n,v):
     if (n is None):
@@ -104,5 +177,26 @@ class Q7QueryEntry(object):
         result=parseAndSelect(tree,tree,[None,None,[],None],'',
                               self._script,self._args,mode)
         return result
+    def getFullScript(self,filename,text,args):
+        datadict={}
+        datadict['Q_VAR_DATE']='00/00/00'
+        datadict['Q_VAR_QUERYNAME']='%s/%s'%(self._group,self._name)
+        datadict['Q_VAR_SCRIPT_PRE']=OCST.Q_SCRIPT_PRE
+        datadict['Q_VAR_SCRIPT_POST']=OCST.Q_SCRIPT_POST
+        datadict['Q_VAR_RESULT_LIST']=OCST.Q_VAR_RESULT_LIST
+        datadict['Q_VAR_PARENT']=OCST.Q_VAR_PARENT
+        datadict['Q_VAR_NAME']=OCST.Q_VAR_NAME
+        datadict['Q_VAR_VALUE']=OCST.Q_VAR_VALUE
+        datadict['Q_VAR_CGNSTYPE']=OCST.Q_VAR_CGNSTYPE
+        datadict['Q_VAR_CHILDREN']=OCST.Q_VAR_CHILDREN
+        datadict['Q_VAR_TREE']=OCST.Q_VAR_TREE
+        datadict['Q_VAR_PATH']=OCST.Q_VAR_PATH
+        datadict['Q_VAR_USER']=OCST.Q_VAR_USER
+        datadict['Q_VAR_NODE']=OCST.Q_VAR_NODE
+        datadict['Q_VAR_QUERY_SCRIPT']=text
+        datadict['Q_VAR_QUERY_ARGS']=args
+        datadict['Q_VAR_TREE_FILE']=filename
+        script=SCRIPT_PATTERN%datadict
+        return script
     
 # -----------------------------------------------------------------

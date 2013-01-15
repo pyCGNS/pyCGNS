@@ -399,6 +399,14 @@ for text data.
 # --------------------------------------------------------------------------
 'Query':('Query view',
 """
+<h3><font color=red>WARNING</font></h3>
+The queries can modify your CGNS/Python tree in such a way that it could
+become non-compliant, inconsistant in CGNS/Python or even <font color=red>
+<b>crash</b> the CGNS.NAV application</font>
+or any of its sub-applications such as MAP or VAL.<p>
+<font color=red>Use of CGNS/Python data modification requires a very
+good level of Python and CGNS skills, use at your own risks...</font>
+
 <h2>Query view</h2>
 The query view is one of CGNS.NAV most powerful feature. It provides a
 true Python scripting access on the CGNS tree, the script you write is
