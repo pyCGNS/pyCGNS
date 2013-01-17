@@ -80,7 +80,7 @@ CGNSTree_s            = 'CGNSTree'
 
 # --- Type with weird (coming from outer space) names
 #
-Transform_ts          = 'Transform_t"'
+Transform_ts          = 'Transform_ts'
 DiffusionModel_ts     = 'DiffusionModel_t'
 EquationDimension_ts  = 'EquationDimension_t'
 InwardNormalIndex_ts  = 'InwardNormalIndex_t'

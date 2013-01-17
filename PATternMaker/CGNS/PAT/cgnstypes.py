@@ -55,9 +55,10 @@ class CGNStype:
       if (name in c[1]): return True
     return False
   def hasReservedNameType(self,name):
+    nl=[]
     for c in self.children:
-      if (name in c[1]): return c[0]
-    return None
+      if (name in c[1]): nl.append(c[0])
+    return nl
 
 cgt={}
 

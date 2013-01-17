@@ -188,6 +188,15 @@ class Q7fingerPrint:
     STATUS_CONVERTED='C'
     STATUS_LIST=(STATUS_UNCHANGED,STATUS_MODIFIED,STATUS_CONVERTED,
                  STATUS_SAVEABLE)
+    __mutex=QMutex()
+    @classmethod
+    def Lock(cls):
+        print 'LOCK'
+        cls.__mutex.lock()
+    @classmethod
+    def Unlock(cls):
+        cls.__mutex.unlock()
+        print 'UNLOCK'
     @classmethod
     def fileconversion(cls,fdir,filein,control):
         control.loadOptions()
@@ -203,12 +212,14 @@ class Q7fingerPrint:
         return fileout
     @classmethod
     def treeLoad(cls,control,selectedfile):
+        cls.Lock()
         control.loadOptions()
         kw={}
         f=selectedfile
         (filedir,filename)=(os.path.abspath(os.path.dirname(f)),
                             os.path.basename(f))
         if ("%s/%s"%(filedir,filename) in cls.getExpandedFilenameList()):
+            cls.Unlock()
             txt="""The current file is already open:"""
             MSG.message(txt,"%s/%s"%(filedir,filename),MSG.INFO)
             control.readyCursor()
@@ -236,16 +247,19 @@ class Q7fingerPrint:
             else:
                 (tree,links,paths)=CGNS.MAP.load(f,flags,lksearch=slp)
         except (CGNS.MAP.error,),chlex:
+            cls.Unlock()
             txt="""The current load operation has been aborted:"""
             control.readyCursor()
             MSG.wError(chlex[0],txt,chlex[1])
             return None
         except Exception, e:
+            cls.Unlock()
             txt="""The current operation has been aborted: %s"""%e
             control.readyCursor()
             MSG.wError(0,txt,'')
             return None
         kw['isfile']=True
+        cls.Unlock()
         return Q7fingerPrint(control,filedir,filename,tree,links,paths,**kw)
     @classmethod
     def treeSave(cls,control,fgprint,f,saveas):
@@ -274,10 +288,12 @@ class Q7fingerPrint:
             x.closeAllViews()
     @classmethod
     def raiseView(cls,idx):
+        cls.Lock()
         for x in cls.__extension:
             for vtype in x.views:
                 for (v,i) in x.views[vtype]:
                     if (i==int(idx)): v.raise_()
+        cls.Unlock()
     @classmethod
     def infoView(cls,idx):
         f=cls.getFingerPrint(idx)

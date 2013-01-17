@@ -5,7 +5,7 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 
-import CGNS.VAL.grammars.CGNS_VAL_USER_sample as CGV
+import CGNS.VAL.grammars.CGNS_VAL_USER_SAMPLE as CGV
 import CGNS.VAL.parse.messages as CGM
 import CGNS.VAL.parse.findgrammar
 

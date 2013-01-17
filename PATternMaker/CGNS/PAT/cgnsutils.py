@@ -1524,6 +1524,9 @@ def getPathNormalize(path):
 
 # --------------------------------------------------
 def childNames(node):
+  return childrenNames(node)
+
+def childrenNames(node):
   """
   Gets the children names
 

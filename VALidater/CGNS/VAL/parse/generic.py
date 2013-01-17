@@ -56,10 +56,26 @@ NODE_CHILDRENNOTLIST:(CGM.CHECK_FAIL,'PANIC: Node children is not a list (child 
 NODE_BADDATA:        (CGM.CHECK_FAIL,'PANIC: Node data is not numpy.ndarray or None (child of [%s])'),
 }
 
+class PathContext(dict):
+  def __getitem__(self,path):
+    if (path not in self): return self.scope(path)
+    return dict.__getitem__(self,path)
+  def scope(self,path):
+    if (path in self): return dict.__getitem__(self,path)
+    level=1
+    while True:
+      apath=CGU.getPathAncestor(path,level)
+      if ((apath=='/') or (apath in self)): return dict.__getitem__(self,apath)
+      level+=1
+
 class GenericContext(dict):
-  def __getitem__(self,i):
-    if (i not in self): self[i]=None
-    return dict.__getitem__(self,i)
+  def __getitem__(self,key):
+    if (key not in self):
+        dict.__setitem__(self,key,PathContext())
+    return dict.__getitem__(self,key)
+  def __setitem__(self,key,value):
+    d=self[key]
+    d['/']=value
 
 class GenericParser(object):
   # --------------------------------------------------------------------
@@ -90,16 +106,14 @@ class GenericParser(object):
     return stt
   # --------------------------------------------------------------------
   def checkLeaf(self,T,path,node):
-    if (not hasattr(self,'methods')):
-      self.methods=[]
-      for m in inspect.getmembers(self):
-        if ((m[0][-2:]=='_t') or (m[0][-7:]=='_n')): self.methods+=[m[0]]
     parent=CGU.getParentFromNode(T,node)
     status1=self.checkSingleNode(T,path,node,parent)
     status2=status1
     ntype=CGU.getTypeAsGrammarToken(node[3])
     if ((len(node)==4) and (ntype in self.methods)):
       status2=apply(getattr(self,ntype),[path,node,parent,T,self.log])
+    else:
+      print 'SKIP ',ntype
     status1=CGM.getWorst(status1,status2)
     return status1
   # --------------------------------------------------------------------
@@ -137,6 +151,11 @@ class GenericParser(object):
     paths=CGU.getPathFullTree(T,width=True)
     sz=len(paths)
     ct=1
+    if (not hasattr(self,'methods')):
+      self.methods=[]
+      for m in inspect.getmembers(self):
+        if ((m[0][-2:]=='_t') or (m[0][-2:]=='_n') or (m[0][-3:]=='_ts')):
+          self.methods+=[m[0]]
     for path in ['/']+paths:
       if (trace): print '### Check node [%.6d/%.6d]\r'%(ct,sz),
       node=CGU.getNodeByPath(T,path)
@@ -172,7 +191,7 @@ class GenericParser(object):
       stt=CGM.CHECK_GOOD
       for child in node[2]:
         rt=CGT.types[node[3]].hasReservedNameType(child[0])
-        if ((rt is not None) and (rt!=child[3])):
+        if ((rt!=[]) and (child[3] not in rt)):
           stt=self.log.push(path,BADSIDSTYPE_CHILD,child[0],rt)
       return stt
 
