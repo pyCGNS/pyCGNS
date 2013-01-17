@@ -1,0 +1,36 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#  -------------------------------------------------------------------------
+
+from PySide.QtCore    import *
+from PySide.QtGui     import *
+
+# -----------------------------------------------------------------
+class Q7ComboBox(QComboBox):
+    def __init__(self,arg):
+        QComboBox.__init__(self,arg)
+        self.actorlist=QListWidget()
+        self.setModel(self.actorlist.model())
+        self.setView(self.actorlist)
+        self.view().installEventFilter(self)
+        self.parent=None
+    def setParent(self,parent):
+        self.parent=parent
+    def eventFilter(self,o,e):
+        if (e.type()==QEvent.KeyPress):
+            kmod=e.modifiers()
+            kval=e.key()
+            if (kval in [Qt.Key_Z]):
+               path=self.actorlist.currentItem().text()
+               actor=self.parent.findPathObject(path)
+               self.parent.changeCurrentActor([path,actor])
+               return True
+        return QComboBox.eventFilter(self,o,e)
+    def keyPressEvent(self,event):
+        kmod=event.modifiers()
+        kval=event.key()
+        print kmod,kval
+        

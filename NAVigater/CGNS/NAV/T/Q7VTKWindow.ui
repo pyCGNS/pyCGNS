@@ -716,7 +716,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="cCurrentPath">
+      <widget class="Q7ComboBox" name="cCurrentPath">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -724,7 +724,7 @@
         </sizepolicy>
        </property>
        <property name="editable">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -880,6 +880,11 @@
    <class>Q7VTKRenderWindowInteractor</class>
    <extends>QGraphicsView</extends>
    <header>CGNS.NAV.Q7VTKRenderWindowInteractor</header>
+  </customwidget>
+  <customwidget>
+   <class>Q7ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>CGNS.NAV.wvtkutils</header>
   </customwidget>
  </customwidgets>
  <resources>

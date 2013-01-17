@@ -10,7 +10,10 @@ from PySide.QtGui     import *
 from CGNS.NAV.Q7VTKWindow import Ui_Q7VTKWindow
 from CGNS.NAV.Q7VTKPlotWindow import Ui_Q7VTKPlotWindow
 from CGNS.NAV.wfingerprint import Q7Window
-from CGNS.NAV.mparser import Mesh
+try:
+    from CGNS.PRO.vtkparser import Mesh
+except:
+    from CGNS.NAV.mparser import Mesh
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wfile import Q7File
 
@@ -111,7 +114,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bScreenShot.clicked.connect(self.screenshot)
       self.selectable.clicked.connect(self.setInteractive)
       self.ColorMapMin=QColorDialog(self)
-      self.ColorMapMax=QColorDialog(self)      
+      self.ColorMapMax=QColorDialog(self)
+      self.cCurrentPath.setParent(self)
       QObject.connect(self.ColorMapMin, SIGNAL("colorSelected(QColor)"), self.getColorMapMin)
       QObject.connect(self.ColorMapMax, SIGNAL("colorSelected(QColor)"), self.getColorMapMax)
       self.bZoom.clicked.connect(self.RubberbandZoom)
@@ -695,7 +699,6 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                        'R'     :self.resetCam,
                        'd'     :self.hideActor,
                        'D'     :self.hideActor }
-      
       
       return self._vtk.GetRenderWindow()
 

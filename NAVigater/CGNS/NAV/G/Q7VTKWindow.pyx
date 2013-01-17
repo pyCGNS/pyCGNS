@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Mon Nov 12 15:52:25 2012
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Thu Jan 17 18:07:31 2013
+#      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -276,13 +276,13 @@ class Ui_Q7VTKWindow(object):
         self.bUpdate.setIcon(icon16)
         self.bUpdate.setObjectName("bUpdate")
         self.horizontalLayout_2.addWidget(self.bUpdate)
-        self.cCurrentPath = QtGui.QComboBox(Q7VTKWindow)
+        self.cCurrentPath = Q7ComboBox(Q7VTKWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.cCurrentPath.sizePolicy().hasHeightForWidth())
         self.cCurrentPath.setSizePolicy(sizePolicy)
-        self.cCurrentPath.setEditable(True)
+        self.cCurrentPath.setEditable(False)
         self.cCurrentPath.setObjectName("cCurrentPath")
         self.horizontalLayout_2.addWidget(self.cCurrentPath)
         self.bReverse = QtGui.QPushButton(Q7VTKWindow)
@@ -371,5 +371,6 @@ class Ui_Q7VTKWindow(object):
         self.bReset.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Clear selection list", None, QtGui.QApplication.UnicodeUTF8))
         self.bNext.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Highlight next selected item", None, QtGui.QApplication.UnicodeUTF8))
 
+from CGNS.NAV.wvtkutils import Q7ComboBox
 from CGNS.NAV.Q7VTKRenderWindowInteractor import Q7VTKRenderWindowInteractor
 import Res_rc
