@@ -18,7 +18,17 @@ import vtk
 from vtk.util import numpy_support
 
 # ----------------------------------------------------------------------------
-
+class CGNSactor(vtk.vtkActor):
+  __actortypes=['Zone','BC','Min/Max']
+  def __init__(self,*args):
+    vtk.vtkActor.__init__(self,*args)
+    self.__type=None
+  def setType(self,atype):
+    if (atype in self.__actortypes):
+      self.__type=atype
+  def getType(self):
+    return self.__type
+  
 class CGNSparser:
   
   def __init__(self,T):    
@@ -153,8 +163,13 @@ class Mesh(CGNSparser):
   def getObjectList(self):    
     return self._actors                 
 
-  def getPathList(self):
-    return [a[3] for a in self._actors]
+  def getPathList(self,filter=None):
+    if (file is None): return [a[3] for a in self._actors]
+    else:
+      r=[]
+      for a in self._actors:
+        if (a.getType() in filter): r=a[3]
+      return r
 
   def getPathFromObject(self,selectedobject):
     for (o,p) in [(a[2],a[3]) for a in self._actors]:                  
@@ -209,7 +224,8 @@ class Mesh(CGNSparser):
     g.SetExtent(0,idim-1,0,jdim-1,0,kdim-1)
     d=vtk.vtkDataSetMapper()
     d.SetInput(g)
-    a=vtk.vtkActor()
+    a=CGNSactor()
+    a.setType('Zone')
     a.SetMapper(d)
     a.GetProperty().SetRepresentationToWireframe()
     g.GetPointData().AddArray(data)
@@ -256,7 +272,8 @@ class Mesh(CGNSparser):
     sg.SetPoints(qp)
     am = vtk.vtkDataSetMapper()
     am.SetInput(sg)
-    a = vtk.vtkActor()
+    a = CGNSactor()
+    a.setType('Min/Max')
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
     return (a,None,sg,path,(1,None),None)
@@ -293,7 +310,8 @@ class Mesh(CGNSparser):
     sg.SetPoints(qp)
     am = vtk.vtkDataSetMapper()
     am.SetInput(sg)
-    a = vtk.vtkActor()
+    a = CGNSactor()
+    a.setType('BC')
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
     return (a,None,sg,path,(1,None),None)
@@ -339,7 +357,7 @@ class Mesh(CGNSparser):
         sg.SetPoints(qp)    
         am = vtk.vtkDataSetMapper()
         am.SetInput(sg)
-        a = vtk.vtkActor()
+        a = CGNSactor()
         a.SetMapper(am)
         a.GetProperty().SetRepresentationToWireframe()
         actors+=[(a,a.GetBounds(),sg,path,(2,None))]

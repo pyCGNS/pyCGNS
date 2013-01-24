@@ -4,8 +4,9 @@
 #  -------------------------------------------------------------------------
 #  $Release$
 #  -------------------------------------------------------------------------
-from PySide.QtCore       import *
-from PySide.QtGui        import *
+from PySide.QtCore import QCoreApplication
+from PySide.QtCore import *
+from PySide.QtGui  import *
 import os
 import os.path
 import pwd
@@ -80,6 +81,8 @@ class Q7Window(QWidget,object):
         self._control=control
         self._fgprint=fgprint
         self._index=self.addChildWindow()
+        self._lockableWidgets=[]
+        self._lockedWidgets=[]
         fn=''
         if (fgprint is not None): fn=fgprint.filename
         if (self._index!=0):
@@ -168,9 +171,24 @@ class Q7Window(QWidget,object):
         self._fgprint.raiseControlView()
         self._control.selectLine('%.3d'%self._index)
     def busyCursor(self):
-        QApplication.setOverrideCursor(self._busyx)
+        if (self._fgprint is not None): self._fgprint.lockAllViews()
     def readyCursor(self):
-        QApplication.restoreOverrideCursor()
+        if (self._fgprint is not None): self._fgprint.unlockAllViews()
+    def lockView(self,lock):
+        for wid in self._lockableWidgets:
+            if (not lock and wid in self._lockedWidgets):
+                wid.setDisabled(lock)
+                self._lockedWidgets.remove(wid)
+            if (lock and wid.isEnabled()):
+                self._lockedWidgets.append(wid)
+                wid.setDisabled(lock)
+        self._fgprint._locked=lock
+    def isLocked(self):
+        return self._fgprint._locked
+    def lockable(self,widget):
+        self._lockableWidgets.append(widget)
+    def refreshScreen(self):
+        QCoreApplication.processEvents()
     def setLabel(self,it,text):
         it.setText(text)
         it.setFont(QFont("Courier"))
@@ -191,12 +209,12 @@ class Q7fingerPrint:
     __mutex=QMutex()
     @classmethod
     def Lock(cls):
-        print 'LOCK'
+#        print 'LOCK'
         cls.__mutex.lock()
     @classmethod
     def Unlock(cls):
         cls.__mutex.unlock()
-        print 'UNLOCK'
+#        print 'UNLOCK'
     @classmethod
     def fileconversion(cls,fdir,filein,control):
         control.loadOptions()
@@ -353,6 +371,7 @@ class Q7fingerPrint:
         self.isfile=False
         self.tmpfile=''
         self._status=[]
+        self._locked=False
         if (checkFilePermission(filedir+'/'+filename,write=True)):
             self._status=[Q7fingerPrint.STATUS_SAVEABLE]
         if (kw.has_key('isfile')):
@@ -366,6 +385,8 @@ class Q7fingerPrint:
         for p in paths: self.lazy['/CGNSTree'+p[0]]=p[1]
         Q7fingerPrint.__extension.append(self)
         self.updateFileStats(filedir+'/'+filename)
+    def isLocked(self):
+        return self._locked
     def updateNodeData(self,pathdict):
         tfile="%s/%s"%(self.filedir,self.filename)
         slp=OCTXT.LinkSearchPathList
@@ -473,6 +494,12 @@ class Q7fingerPrint:
           if (self.views[vt]==[]): del self.views[vt]
         if ((self.views=={}) and (fg in self.__extension)):
             self.__extension.remove(fg)
+    def unlockAllViews(self):
+        self.lockAllViews(lock=False)
+    def lockAllViews(self,lock=True):
+        vtlist=self.views.keys()
+        for vtype in vtlist:
+            for (v,i) in self.views[vtype]: v.lockView(lock)
     def closeAllViews(self):
         vtlist=self.views.keys()
         for vtype in vtlist:

@@ -22,10 +22,10 @@ import CGNS.NAV.wmessages as MSG
 import numpy as NPY
 
 import math as M
+import sys
 
 import random
 import vtk
-
 
 # ----------------------------------------------------------------------------
 class wVTKContext():
@@ -56,7 +56,7 @@ class wVTKContext():
 
 # -----------------------------------------------------------------
 class Q7VTK(Q7Window,Ui_Q7VTKWindow):
-  def __init__(self,control,node,fgprint,tmodel,zlist):   
+  def __init__(self,control,parent,node,fgprint,tmodel,zlist):
       if (not zlist): pth='/'
       else: pth='<partial>'
       self._vtkstatus=False
@@ -69,6 +69,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._npix=QIcon(QPixmap(":/images/icons/unselected.gif"))
       self._hpix=QIcon(QPixmap(":/images/icons/hidden.gif"))
       self._T=self._fgprint.tree
+      self._parent=parent
       self.lut=None
       self.grid_dims=None
       self.mincolor=None
@@ -116,8 +117,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.ColorMapMin=QColorDialog(self)
       self.ColorMapMax=QColorDialog(self)
       self.cCurrentPath.setParent(self)
-      QObject.connect(self.ColorMapMin, SIGNAL("colorSelected(QColor)"), self.getColorMapMin)
-      QObject.connect(self.ColorMapMax, SIGNAL("colorSelected(QColor)"), self.getColorMapMax)
+      QObject.connect(self.ColorMapMin,SIGNAL("colorSelected(QColor)"),self.getColorMapMin)
+      QObject.connect(self.ColorMapMax,SIGNAL("colorSelected(QColor)"),self.getColorMapMax)
       self.bZoom.clicked.connect(self.RubberbandZoom)
       self.bColorMapMin.clicked.connect(self.displayColorMapMin)
       self.bColorMapMax.clicked.connect(self.displayColorMapMax)
@@ -139,6 +140,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                       self.highlightPoint)
       QObject.connect(self.sIndex3, SIGNAL("valueChanged(int)"),
                       self.highlightPoint)
+      QObject.connect(self.cShowZone, SIGNAL("stateChanged(int)"),
+                      self.fillCurrentPath)
+      QObject.connect(self.cShowBC, SIGNAL("stateChanged(int)"),
+                      self.fillCurrentPath)
+      QObject.connect(self.cShowMinMax, SIGNAL("stateChanged(int)"),
+                      self.fillCurrentPath)
       QObject.connect(self.cRotationAxis,
                       SIGNAL("currentIndexChanged(int)"),self.setInteractor)
       QObject.connect(self.cVariables,
@@ -159,6 +166,14 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.actorval=None      
       self.planeActor=None
 
+  @Slot(str)
+  def printMessage(self, text):
+        sys.stdout.write(text+'\n')
+        sys.stdout.flush()
+
+  def parseDone(self):
+      print 'PARSE DONE'
+      
   def setCutPlane(self):
       if (self._currentactor is None): return
       if (not vtk.vtkStructuredGrid().SafeDownCast(self._currentactor[1].GetMapper().GetInput())):
@@ -477,15 +492,16 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def findObjectDims(self,selected):
       return self._parser.getDimsFromObject(selected)
         
-  def leave(self):
-    self._wtop.destroy()
-    self._control._hasvtkWindow=None
-  
-  def onexit(self):  
-    self._control._control.delTreeView(self._viewid,
-                                       self._fgprint.filedir,
-                                       self._fgprint.filename)
-    self.leave()     
+#  def leave(self):
+#    self._wtop.destroy()
+#    print self._parent._vtkwindow
+#    self._parent._vtkwindow=None
+#  
+#  def onexit(self):  
+#    self._control._control.delTreeView(self._viewid,
+#                                       self._fgprint.filedir,
+#                                       self._fgprint.filename)
+#    self.leave()     
 
   def addMarker(self):
     axes=vtk.vtkAxesActor()
@@ -868,11 +884,16 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       sel=[n[0] for n in self._selected]
       hid=[n[0] for n in self._hidden]
       self.cCurrentPath.addItem(self._epix,'')
-      for i in self._parser.getPathList():
+      pthlist=[]
+      if (self.cShowZone.isChecked()): pthlist+=['Zone']
+      if (self.cShowMinMax.isChecked()): pthlist+=['Min/Max']
+      if (self.cShowBC.isChecked()): pthlist+=['BC']
+      for i in self._parser.getPathList(pthlist):
           pix=self._npix
           if (i in sel): pix=self._spix
           if (i in hid): pix=self._hpix
           self.cCurrentPath.addItem(pix,i)
+      self.cCurrentPath.model().sort(0)
       self._iren.Render()
 
   def reverseSelection(self):
@@ -1028,6 +1049,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def close(self):
       self._vtk.GetRenderWindow().Finalize()
       QWidget.close(self)
+      self._parent._vtkwindow=None
 
   def changeCurrentActor(self,atp,combo=True):
       self.resetSpinBox()
@@ -1371,7 +1393,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (control==1): self.controlKey=1     
       return
 
-# -----------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------
 class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
     def __init__(self,parent):
       self._parent=parent
@@ -1396,7 +1418,7 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
           self._parent.cutting()      
       if (control==1): self._parent.controlKey=1
 
-# --------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------
 class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
     def __init__(self,parent):
       self._parent=parent
@@ -1586,7 +1608,7 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
         self._parent._vtkren.ResetCameraClippingRange()
         self._parent._iren.Render()                                                               
 
-# ------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------
 class Q7InteractorStyleRubberBandZoom(vtk.vtkInteractorStyleRubberBandZoom):
     def __init__(self,parent):
       self._parent=parent
@@ -1869,15 +1891,14 @@ class Q7VTKPlot(Q7Window,Ui_Q7VTKPlotWindow):
     sshot=QPixmap.grabWindow(self.display.winId())
     sshot.save('/tmp/foo.png','png')
         
-  def leave(self):
-    self._wtop.destroy()
-    self._control._hasvtkWindow=None
-  
-  def onexit(self):  
-    self._control._control.delTreeView(self._viewid,
-                                       self._fgprint.filedir,
-                                       self._fgprint.filename)
-    self.leave()     
+#  def leave(self):
+#    self._wtop.destroy()
+#  
+#  def onexit(self):  
+#    self._control._control.delTreeView(self._viewid,
+#                                       self._fgprint.filedir,
+#                                       self._fgprint.filename)
+#    self.leave()     
             
   def wCGNSTree(self,T,zlist):
       o=vtk.vtkObject()

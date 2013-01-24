@@ -1,5 +1,17 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/anim-auto-sids.gif</file>
+    <file>icons/anim-item-add.gif</file>
+    <file>icons/anim-item-del.gif</file>
+    <file>icons/anim-item-first.gif</file>
+    <file>icons/anim-item-last.gif</file>
+    <file>icons/anim-item-next.gif</file>
+    <file>icons/anim-item-prev.gif</file>
+    <file>icons/anim-save.gif</file>
+    <file>icons/anim-add.gif</file>
+    <file>icons/anim-del.gif</file>
+    <file>icons/anim-view.gif</file>
+    <file>icons/anim.gif</file>
     <file>icons/lock-scroll.gif</file>
     <file>icons/diff.gif</file>
     <file>icons/link-save.gif</file>

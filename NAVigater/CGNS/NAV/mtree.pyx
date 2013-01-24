@@ -258,6 +258,8 @@ class Q7TreeView(QTreeView):
         self._parent=parent
         self._control=None
         self._model=None
+    def isLocked(self):
+        return self._model._fingerprint.isLocked()
     def setControlWindow(self,control,model):
         self._control=control
         self._model=model
@@ -383,7 +385,6 @@ class Q7TreeView(QTreeView):
               self._parent.openSubTree()
               self.exclusiveSelectRow(nix)
           else:
-              print 'HERE ',kmod,kval
               QTreeView.keyPressEvent(self,event)
     def modelCurrentIndex(self):
         idx=self.tryToMapTo(self.currentIndex())
@@ -1021,6 +1022,7 @@ class Q7TreeModel(QAbstractItemModel):
             row+=1
         return -1
     def setData(self,index,value,role):
+        if (self._fingerprint.isLocked()): return
         if (   (value is None)
             or (role!=Qt.EditRole)
             or (not index.isValid())

@@ -28,6 +28,12 @@ class Q7ComboBox(QComboBox):
                actor=self.parent.findPathObject(path)
                self.parent.changeCurrentActor([path,actor])
                return True
+            if (kval in [Qt.Key_H]):
+               path=self.actorlist.currentItem().text()
+               actor=self.parent.findPathObject(path)
+               self.parent.changeCurrentActor([path,actor])
+               self.parent.hideActor(None)
+               return True
         return QComboBox.eventFilter(self,o,e)
     def keyPressEvent(self,event):
         kmod=event.modifiers()

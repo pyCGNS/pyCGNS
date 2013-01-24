@@ -34,6 +34,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         self._mode=CELLTEXT
         self._model=model
     def createEditor(self, parent, option, index):
+        if (self._parent.isLocked()): return None
         if (index.internalPointer().sidsIsCGNSTree()): return None
         if (index.internalPointer().sidsIsLink()): return None
         if (index.internalPointer().sidsIsLinkChild()): return None
@@ -154,9 +155,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._depthExpanded=0
         self._lastEntered=None
         self.lastdiag=None
-        self.linkview=None
-        self.toolsview=None
-        self.qryview=None
+        self._linkwindow=None
+        self._toolswindow=None
+        self._querywindow=None
+        self._vtkwindow=None
         QObject.connect(self.treeview,
                         SIGNAL("expanded(QModelIndex)"),
                         self.expandNode)
@@ -196,9 +198,13 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bSwapMarks.clicked.connect(self.swapmarks)
         self.bMarksAsList.clicked.connect(self.selectionlist)
         self.bApply.clicked.connect(self.applyquery)
+        self.lockable(self.bApply)
         self.bVTKView.clicked.connect(self.vtkview)
+        self.lockable(self.bVTKView)
         self.bPlotView.clicked.connect(self.plotview)
+        self.lockable(self.bPlotView)
         self.bQueryView.clicked.connect(self.queryview)
+        self.lockable(self.bQueryView)
         self.bScreenShot.clicked.connect(self.screenshot)
         self.bCheck.clicked.connect(self.check)
         self.bCheckList.clicked.connect(self.checklist)
@@ -221,7 +227,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.treeview.setControlWindow(self,self._fgprint.model)
         if (self._control.transientRecurse or OCTXT.RecursiveTreeDisplay):
             self.expandMinMax()
-        if (self._control.transientVTK):     self.vtkview()
+        if (self._control.transientVTK): self.vtkview()
         self._control.transientRecurse=False
         self._control.transientVTK=False
         self.clearchecks()
@@ -256,10 +262,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def tools(self):
         if (not OCTXT._HasProPackage): return
         from CGNS.PRO.wtools import Q7ToolsView
-        if (self.toolsview is None):
-            self.toolsview=Q7ToolsView(self._control,self._fgprint,self)
-            self.toolsview.show()
-        self.toolsview.raise_()
+        if (self._toolswindow is None):
+            self._toolswindow=Q7ToolsView(self._control,self._fgprint,self)
+            self._toolswindow.show()
+        else:
+            self._toolswindow.raise_()
     def savetreeas(self):
         self._control.save(self._fgprint)
         self.updateTreeStatus()
@@ -460,10 +467,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (node.sidsType()==CGK.CGNSTree_ts): return
         if (not node.isLink()): return
     def linklist(self):
-        if (self.linkview is None):
-            self.linkview=Q7LinkList(self._control,self._fgprint,self)
-            self.linkview.show()
-        self.linkview.raise_()
+        if (self._linkwindow is None):
+            self._linkwindow=Q7LinkList(self._control,self._fgprint,self)
+            self._linkwindow.show()
+        else:
+            self._linkwindow.raise_()
     def patternlist(self):
         if (self._control.pattern is None):
             self._control.pattern=Q7PatternList(self._control,self._fgprint)
@@ -514,16 +522,21 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         form=Q7Form(self._control,node,self._fgprint)
         form.show()
     def vtkview(self):
-        ix=self.treeview.modelCurrentIndex()
-        zlist=self.model().getSelectedZones()
-        node=self.modelData(ix)
-        self.busyCursor()
-        vtk=Q7VTK(self._control,node,self._fgprint,self.model(),zlist)
-        self.readyCursor()
-        if (vtk._vtkstatus): vtk.show()
-        else:  MSG.message("VTK 3D view:",
-               """<b>Fail to parse or to interpret CGNSTree data</b>""",
-               MSG.INFO)
+        if (self._vtkwindow is None):
+          self.busyCursor()
+          ix=self.treeview.modelCurrentIndex()
+          zlist=self.model().getSelectedZones()
+          node=self.modelData(ix)
+          self._vtkwindow=Q7VTK(self._control,self,node,self._fgprint,self.model(),zlist)
+          if (self._vtkwindow._vtkstatus): self._vtkwindow.show()
+          else:
+              MSG.message("VTK 3D view:",
+                          """<b>Fail to parse or to interpret CGNSTree data</b>""",
+                          MSG.INFO)
+              self._vtkwindow=None
+          self.readyCursor()
+        else:
+          self._vtkwindow.raise_()
     def plotview(self):
         return 
         ix=self.treeview.modelCurrentIndex()
@@ -537,10 +550,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                """<b>Fail to parse or to interpret CGNSTree data</b>""",
                MSG.INFO)
     def queryview(self):
-        if (self.qryview is None):
-            self.qryview=Q7Query(self._control,self._fgprint,self)
-            self.qryview.show()
-        self.qryview.raise_()
+        if (self._querywindow is None):
+            self._querywindow=Q7Query(self._control,self._fgprint,self)
+            self._querywindow.show()
+        else:
+            self._querywindow.raise_()
     def aboutSIDS(self):
         path=self.getLastEntered().sidsPath()
         print path

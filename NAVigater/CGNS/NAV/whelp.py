@@ -290,9 +290,17 @@ See user options for directory and file used for this snapshot.</td></tr>
 """
 <h2>VTK view</h2>
 
-<h3>Buttons</h3>
+<h3>Selection list</h3>
 <p>
-<img source=":/images/icons/unselected.gif">
+<table>
+<tr><td><img source=":/images/icons/selected.gif"></td>
+<td>The selection list entry is selected for operations</td></tr>
+<tr><td><img source=":/images/icons/unselected.gif"></td>
+<td>The selection list entry is NOT selected for operations</td></tr>
+<tr><td><img source=":/images/icons/hidden.gif"></td>
+<td>The selection list entry is hidden, the data is still there but it is not
+displayed in the window.</td></tr>
+</table>
 
 <h3>Icons and buttons</h3>
 <p>
