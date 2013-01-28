@@ -264,6 +264,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         diag=self.checkTarget(self.selectedPath())
         if (diag is None):
           self.parent.signals.buffer=self.selectedPath()
+          self.hide()
           self.parent.signals.loadFile.emit()
           self.close()
         else:
@@ -273,6 +274,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         diag=self.checkTarget(self.selectedPath(),write=True)
         if (diag is None):
           self.parent.signals.buffer=self.selectedPath()
+          self.hide()
           self.parent.signals.saveFile.emit()
           self.close()
         else:

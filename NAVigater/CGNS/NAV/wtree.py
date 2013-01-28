@@ -17,7 +17,7 @@ from CGNS.NAV.wdiag import Q7CheckList
 from CGNS.NAV.wlink import Q7LinkList
 from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem, Q7TreeFilterProxy
 import CGNS.NAV.mtree as NMT
-from CGNS.NAV.wfingerprint import Q7Window,Q7fingerPrint
+from CGNS.NAV.wfingerprint import Q7Window,Q7FingerPrint
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import CGNS.PAT.cgnskeywords as CGK
 
@@ -575,8 +575,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def leave(self):
         self.close()
     def updateTreeStatus(self):
-        if (    (Q7fingerPrint.STATUS_MODIFIED in self._fgprint._status)
-            and (Q7fingerPrint.STATUS_SAVEABLE in self._fgprint._status)):
+        if (    (Q7FingerPrint.STATUS_MODIFIED in self._fgprint._status)
+            and (Q7FingerPrint.STATUS_SAVEABLE in self._fgprint._status)):
             self.bSave.setEnabled(True)
         else:
             self.bSave.setEnabled(False)

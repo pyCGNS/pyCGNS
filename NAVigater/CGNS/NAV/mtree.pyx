@@ -11,7 +11,7 @@ from PySide.QtCore    import *
 from PySide.QtGui     import *
 from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
-from CGNS.NAV.wfingerprint import Q7fingerPrint
+from CGNS.NAV.wfingerprint import Q7FingerPrint
 import CGNS.VAL.simplecheck as CGV
 import CGNS.NAV.wmessages as MSG
 import CGNS.VAL.parse.messages as CGM
@@ -1072,7 +1072,7 @@ class Q7TreeModel(QAbstractItemModel):
         if (index.column()==COLUMN_VALUE):    st=node.sidsValueSet(value)
         if (index.column()==COLUMN_DATATYPE): st=node.sidsDataTypeSet(value)
         if (st):
-            self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+            self._fingerprint.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)
         return st
     def removeItem(self,parentitem,targetitem,row):
         parentindex=self.indexByPath(parentitem.sidsPath())
@@ -1112,6 +1112,7 @@ class Q7TreeModel(QAbstractItemModel):
             self._fingerprint.depth=max(c._depth,self._fingerprint.depth)
             self._fingerprint.nodes=max(c._nodes,self._fingerprint.nodes)
             crow+=1
+        self._fingerprint.refreshScreen()
         return newItem
     def refreshModel(self,nodeidx):
         if (not nodeidx.isValid()): return
@@ -1137,12 +1138,12 @@ class Q7TreeModel(QAbstractItemModel):
         self.refreshModel(pix)
         self.refreshModel(nix)
         self.refreshModel(cix)
-        self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._fingerprint.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)
     def newNodeBrother(self,nodeitem):
         if (nodeitem is None): return
         nix=self.indexByPath(nodeitem.sidsPath())
         self.newNodeChild(nix.parent().internalPointer())
-        self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._fingerprint.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)
     def copyNode(self,nodeitem):
         if (nodeitem is None): return
         self._control.copyPasteBuffer=CGU.nodeCopy(nodeitem._itemnode)
@@ -1161,7 +1162,7 @@ class Q7TreeModel(QAbstractItemModel):
         pix=self.indexByPath(path)
         parentitem.sidsRemoveChild(self._control.copyPasteBuffer)
         self.refreshModel(pix)
-        self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._fingerprint.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)
         self._control.clearOtherSelections()
     def pasteAsChildAllSelectedNodes(self):
         for pth in self._selected:
@@ -1179,7 +1180,7 @@ class Q7TreeModel(QAbstractItemModel):
         self.refreshModel(pix)
         self.refreshModel(nix)
         self.refreshModel(cix)
-        self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._fingerprint.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)
         return True
     def pasteAsBrotherAllSelectedNodes(self):
         for pth in self._selected:
@@ -1189,7 +1190,7 @@ class Q7TreeModel(QAbstractItemModel):
         if (nodeitem is None): return False
         nix=self.indexByPath(nodeitem.sidsPath())
         self.pasteAsChild(nix.parent().internalPointer())
-        self._fingerprint.addTreeStatus(Q7fingerPrint.STATUS_MODIFIED)
+        self._fingerprint.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)
         return True
     def dataLoadSelected(self,single=None):
         udict={}
