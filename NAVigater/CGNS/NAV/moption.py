@@ -54,6 +54,7 @@ class Q7OptionContext(object):
     }
     _HasProPackage=True
     CHLoneTrace=False
+    ActivateMultiThreading=False
     NAVTrace=False
     AutoExpand=False
     RecursiveTreeDisplay=False

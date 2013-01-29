@@ -1501,7 +1501,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>40</y>
+           <y>15</y>
            <width>147</width>
            <height>27</height>
           </rect>
@@ -1514,7 +1514,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>70</y>
+           <y>45</y>
            <width>147</width>
            <height>27</height>
           </rect>
@@ -1527,7 +1527,7 @@
          <property name="geometry">
           <rect>
            <x>160</x>
-           <y>70</y>
+           <y>45</y>
            <width>391</width>
            <height>27</height>
           </rect>
@@ -1537,7 +1537,7 @@
          <property name="geometry">
           <rect>
            <x>160</x>
-           <y>40</y>
+           <y>15</y>
            <width>391</width>
            <height>27</height>
           </rect>
@@ -1547,7 +1547,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>100</y>
+           <y>75</y>
            <width>147</width>
            <height>27</height>
           </rect>
@@ -1560,7 +1560,7 @@
          <property name="geometry">
           <rect>
            <x>160</x>
-           <y>100</y>
+           <y>75</y>
            <width>391</width>
            <height>27</height>
           </rect>
@@ -1570,7 +1570,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>260</y>
+           <y>215</y>
            <width>111</width>
            <height>21</height>
           </rect>
@@ -1583,7 +1583,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>240</y>
+           <y>195</y>
            <width>131</width>
            <height>21</height>
           </rect>
@@ -1596,7 +1596,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>160</y>
+           <y>115</y>
            <width>147</width>
            <height>27</height>
           </rect>
@@ -1609,7 +1609,7 @@
          <property name="geometry">
           <rect>
            <x>160</x>
-           <y>160</y>
+           <y>115</y>
            <width>391</width>
            <height>27</height>
           </rect>
@@ -1619,7 +1619,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>200</y>
+           <y>145</y>
            <width>151</width>
            <height>27</height>
           </rect>
@@ -1632,10 +1632,36 @@
          <property name="geometry">
           <rect>
            <x>160</x>
-           <y>200</y>
+           <y>145</y>
            <width>391</width>
            <height>27</height>
           </rect>
+         </property>
+        </widget>
+        <widget class="Line" name="line_2">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>180</y>
+           <width>536</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="__O_activatemultithreading">
+         <property name="geometry">
+          <rect>
+           <x>375</x>
+           <y>195</y>
+           <width>166</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Activate Multi-threading</string>
          </property>
         </widget>
        </widget>

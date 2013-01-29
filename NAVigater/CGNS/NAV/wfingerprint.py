@@ -29,9 +29,11 @@ class Q7CHLoneProxy(object):
     def __init__(self,hasthreads=False):
         self._data=None
         self._hasthreads=hasthreads
+        self._thread=None
+    def kill(self):
+        if (self._thread is not None): self._thread.quit()
     def load(self,control,selectedfile):
         self._control=control
-        self._control.loadOptions()
         self._thread=Q7CHLoneThread(control,selectedfile)
         self._thread.datacompleted.connect(self.proxyCompleted, Qt.QueuedConnection)
         self._data=None
@@ -256,9 +258,11 @@ class Q7Window(QWidget,object):
         self._fgprint.raiseControlView()
         self._control.selectLine('%.3d'%self._index)
     def busyCursor(self):
-        if (self._fgprint is not None): self._fgprint.lockAllViews()
+        self._control.lockView(True)
+        Q7FingerPrint.disableAllViewsButtons(True)
     def readyCursor(self):
-        if (self._fgprint is not None): self._fgprint.unlockAllViews()
+        self._control.lockView(False)
+        Q7FingerPrint.disableAllViewsButtons(False)
     def lockView(self,lock):
         for wid in self._lockableWidgets:
             if (not lock and wid in self._lockedWidgets):
@@ -267,7 +271,7 @@ class Q7Window(QWidget,object):
             if (lock and wid.isEnabled()):
                 self._lockedWidgets.append(wid)
                 wid.setDisabled(lock)
-        self._fgprint._locked=lock
+        if (self._fgprint is not None): self._fgprint._locked=lock
     def isLocked(self):
         return self._fgprint._locked
     def lockable(self,widget):
@@ -297,24 +301,23 @@ class Q7FingerPrint:
     def proxy(cls):
         cls.Lock()
         if (cls.__chloneproxy is None):
-            cls.__chloneproxy=Q7CHLoneProxy() # BLOCK ACTUAL MULTI-THREADING HERE
+            thrd=OCTXT.ActivateMultiThreading
+            cls.__chloneproxy=Q7CHLoneProxy(thrd) # BLOCK ACTUAL MULTI-THREADING HERE
         cls.Unlock()
         return cls.__chloneproxy
+    @classmethod
+    def killProxy(cls):
+        cls.Lock()
+        if (cls.__chloneproxy is not None): cls.__chloneproxy.kill()
+        cls.Unlock()
     @classmethod
     def Lock(cls):
         cls.__mutex.lock()
     @classmethod
     def Unlock(cls):
         cls.__mutex.unlock()
-    @Slot(str)
-    def CHLoneMessage(self,text):
-        sys.stdout.write(text+'\n')
-        sys.stdout.flush()
-    def CHLoneFinished(self):
-        print 'Finished'
     @classmethod
     def fileconversion(cls,fdir,filein,control):
-#        control.loadOptions()
         fileout=OCTXT.TemporaryDirectory+'/'+filein+'.hdf'
         count=1
         while (os.path.exists(fileout)):
@@ -327,6 +330,7 @@ class Q7FingerPrint:
         return fileout
     @classmethod
     def treeLoad(cls,control,selectedfile):
+        control.loadOptions()
         proxy=cls.proxy()
         proxy.load(control,selectedfile)
         cls.refreshScreen()
@@ -359,6 +363,21 @@ class Q7FingerPrint:
     @classmethod
     def refreshScreen(cls):
         QCoreApplication.processEvents()
+    @classmethod
+    def disableAllViewsButtons(cls,lock):
+        cls.Lock()
+        for x in cls.__extension:
+          for vtype in x.views:
+            for (v,i) in x.views[vtype]:
+              for wid in v._lockableWidgets:
+                if (not lock and wid in v._lockedWidgets):
+                    wid.setDisabled(lock)
+                    v._lockedWidgets.remove(wid)
+                if (lock and wid.isEnabled()):
+                    v._lockedWidgets.append(wid)
+                    wid.setDisabled(lock)
+              if (v._fgprint is not None): v._fgprint._locked=lock
+        cls.Unlock()
     @classmethod
     def raiseView(cls,idx):
         cls.Lock()

@@ -65,7 +65,8 @@ class PathContext(dict):
     level=1
     while True:
       apath=CGU.getPathAncestor(path,level)
-      if ((apath=='/') or (apath in self)): return dict.__getitem__(self,apath)
+      if (apath in self): return dict.__getitem__(self,apath)
+      if (apath=='/'): return None
       level+=1
 
 class GenericContext(dict):

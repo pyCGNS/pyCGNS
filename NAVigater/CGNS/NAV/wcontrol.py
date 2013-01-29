@@ -50,8 +50,11 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.bAbout.clicked.connect(self.about)
         self.bOptionView.clicked.connect(self.option)
         self.bTreeLoadLast.clicked.connect(self.loadlast)
+        self.lockable(self.bTreeLoadLast)
         self.bTreeLoad.clicked.connect(self.load)
+        self.lockable(self.bTreeLoad)
         self.bEditTree.clicked.connect(self.edit)
+        self.lockable(self.bEditTree)
         self.bInfo.clicked.connect(self.infoControl)
         self.bPatternView.setDisabled(True)
         #self.bResetScrollBars.clicked.connect(self.resetScrolls)
@@ -282,6 +285,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             self.pattern.clearSelection()
     def loadStart(self,*args):
         self._T('loading: [%s]'%self.signals.buffer)
+        self.busyCursor()
         Q7FingerPrint.treeLoad(self,self.signals.buffer)
         Q7FingerPrint.refreshScreen()
     def loadCompleted(self,*args):
@@ -294,6 +298,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         child.show()
         self.setHistory(fgprint.filedir,fgprint.filename)
         self.updateViews()
+        self.readyCursor()
     def saving(self,*args):
         self._T('saving as: [%s]'%self.signals.buffer)
         self.busyCursor()
