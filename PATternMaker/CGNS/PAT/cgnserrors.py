@@ -81,6 +81,7 @@ errorTable={
   108 : "Parent node should have type [%s]",
   109 : "Value should be an array",
   110 : "Value should be a string in [%s]",
+  111 : "Bad value type",
   200 : "Bad GridLocation value [%s]",
   201 : "Bad ConvergenceHistory name [%s]",
   202 : "Units specification list should have 5 values (one per unit)",

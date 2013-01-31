@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Tue Jan 29 09:14:58 2013
+# Created: Wed Jan 30 11:06:52 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -99,7 +99,7 @@ class Ui_Q7OptionsWindow(object):
         self.__O_maxdisplaydatasize = QtGui.QSpinBox(self.tab_1)
         self.__O_maxdisplaydatasize.setGeometry(QtCore.QRect(235, 125, 71, 27))
         self.__O_maxdisplaydatasize.setMinimum(-1)
-        self.__O_maxdisplaydatasize.setMaximum(100)
+        self.__O_maxdisplaydatasize.setMaximum(1000)
         self.__O_maxdisplaydatasize.setProperty("value", -1)
         self.__O_maxdisplaydatasize.setObjectName("__O_maxdisplaydatasize")
         self.label_9 = QtGui.QLabel(self.tab_1)

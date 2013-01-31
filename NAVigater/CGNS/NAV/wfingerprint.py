@@ -69,6 +69,7 @@ class Q7CHLoneThread(QThread):
             txt="""The current file is already open:"""
             self._data=(None,(txt,"%s/%s"%(filedir,filename),MSG.INFO))
             self.datacompleted.emit(self._data)
+            control.readyCursor()
             return 
         slp=OCTXT.LinkSearchPathList
         slp+=[filedir]
@@ -98,12 +99,14 @@ class Q7CHLoneThread(QThread):
             txt="""The current load operation has been aborted:"""
             self._data=(None,(chlex[0],txt,chlex[1]))
             self.datacompleted.emit(self._data)
+            control.readyCursor()
             return 
         except Exception, e:
             Q7FingerPrint.Unlock()
             txt="""The current operation has been aborted: %s"""%e
             self._data=(None,(0,txt,''))
             self.datacompleted.emit(self._data)
+            control.readyCursor()
             return 
         kw['isfile']=True
         Q7FingerPrint.Unlock()
@@ -252,10 +255,12 @@ class Q7Window(QWidget,object):
         return self._index
     def closeEvent(self, event):
         self._control.delLine('%.3d'%self._index)
-        self._fgprint.closeView(self._index)
+        if (self._fgprint is not None):
+            self._fgprint.closeView(self._index)
         event.accept()
     def backcontrol(self):
-        self._fgprint.raiseControlView()
+        if (self._fgprint is not None):
+            self._fgprint.raiseControlView()
         self._control.selectLine('%.3d'%self._index)
     def busyCursor(self):
         self._control.lockView(True)
@@ -273,7 +278,8 @@ class Q7Window(QWidget,object):
                 wid.setDisabled(lock)
         if (self._fgprint is not None): self._fgprint._locked=lock
     def isLocked(self):
-        return self._fgprint._locked
+        if (self._fgprint is None): return self._fgprint._locked
+        return False
     def lockable(self,widget):
         self._lockableWidgets.append(widget)
     def refreshScreen(self):

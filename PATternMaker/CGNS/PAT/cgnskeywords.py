@@ -390,6 +390,10 @@ ZoneType_      = enumAsKeyDict(ZoneType_l)
 
 (ZoneTypeNull,ZoneTypeUserdefined,Structured,Unstructured)=ZoneType_.keys()
 
+ZoneSubRegion_ts = "ZoneSubRegion_t"
+BCRegionName_s   = "BCRegionName"
+GridConnectivityRegionName_s = "GridConnectivityRegionName"
+
 # --------------------------------------------------
 SimulationType_ts = "SimulationType_t"
 SimulationType_s  = "SimulationType"
@@ -733,6 +737,7 @@ DiscreteData_s                = "DiscreteData"
 
 FamilyBC_s                    = "FamilyBC"
 FamilyBC_ts                   = "FamilyBC_t"
+FamilyBCDataSet_ts            = "FamilyBCDataSet_t"
 
 FamilyName_ts                 = "FamilyName_t"
 FamilyName_s                  = "FamilyName"

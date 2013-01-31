@@ -500,6 +500,7 @@ class Q7TreeItem(object):
         self._fingerprint=fgprint
         self._log=None
         self._checkable=True
+        self._diag=None
         self._control=self._fingerprint.control
         self._states={'mark':STMARKOFF,'check':STCHKUNKN,
                       'user':STUSR_X,'shared':STSHRUNKN}
@@ -749,11 +750,15 @@ class Q7TreeItem(object):
         if (self.sidsValue() is None): return False
         if (type(self.sidsValue())==numpy.ndarray):
             if (not self.sidsValue().shape): return False
-            vsize=reduce(lambda x,y: x*y, self.sidsValue().shape)
+            try:
+              vsize=reduce(lambda x,y: x*y, self.sidsValue().shape)
+            except TypeError:
+              print '# CGNS.NAV unexpected (mtree.hasValueView)',\
+                    self.sidsPath()
             if ((vsize>OCTXT.MaxDisplayDataSize) and
                 (OCTXT.MaxDisplayDataSize>0)):
                 return False
-            if (self.sidsValue().dtype.char in ['S','c']):
+            if (self.sidsValue().dtype.kind in ['S','a']):
                 if (len(self.sidsValue().shape)==1): return True
                 if (len(self.sidsValue().shape)>2):  return False
                 return False
@@ -767,6 +772,7 @@ class Q7TreeItem(object):
         if (column==COLUMN_SHAPE):
             if (self.sidsValue() is None): return None
             if (type(self.sidsValue())!=numpy.ndarray): return None
+            if (not self.sidsValue().shape): return '(0,)'
             return str(self.sidsValue().shape)
         if (column==COLUMN_FLAG_SELECT): return self._states['mark']
         if (column==COLUMN_DATATYPE):    return self.sidsDataType()
@@ -776,11 +782,17 @@ class Q7TreeItem(object):
             if (self._lazy): return LAZYVALUE
             if (self.sidsValue() is None): return None
             if (type(self.sidsValue())==numpy.ndarray):
-                vsize=reduce(lambda x,y: x*y, self.sidsValue().shape)
+                if (not self.sidsValue().shape): vsize=0
+                else:
+                  try:
+                    vsize=reduce(lambda x,y: x*y, self.sidsValue().shape)
+                  except TypeError:
+                    print '# CGNS.NAV unexpected (mtree.data)',self.sidsPath()
                 if ((vsize>OCTXT.MaxDisplayDataSize) and
                     (OCTXT.MaxDisplayDataSize>0)):
                     return HIDEVALUE
-                if (self.sidsValue().dtype.char in ['S','c']):
+                if (self.sidsValue().dtype.kind in ['S','a']):
+                    if (vsize==0): return ''
                     if (len(self.sidsValue().shape)==1):
                         return self.sidsValue().tostring()
                     if (len(self.sidsValue().shape)>2):
@@ -808,6 +820,10 @@ class Q7TreeItem(object):
     def setCheck(self,check):
         if (check in STCHKLIST):
             self._states['check']=check
+    def setDiag(self,diag):
+        self._diag=diag
+    def getDiag(self):
+        return self._diag
     def userState(self):
         return self._states['user']
     def setUserState(self,s):
@@ -935,6 +951,9 @@ class Q7TreeModel(QAbstractItemModel):
             if (index.column()==COLUMN_FLAG_LINK):
                 lk=index.internalPointer().sidsLinkValue()
                 if (lk is not None): return lk
+            if (index.column()==COLUMN_FLAG_CHECK):
+                dg=index.internalPointer().getDiag()
+                if (dg is not None): return dg
             return None
         if (role not in [Qt.EditRole,Qt.DisplayRole,Qt.DecorationRole]):
             return None
@@ -1237,9 +1256,24 @@ class Q7TreeModel(QAbstractItemModel):
                 stat=checkdiag.log.getWorstDiag(pth)
                 if (stat==CGM.CHECK_NONE): item.setCheck(STCHKUNKN)
                 if (stat==CGM.CHECK_GOOD): item.setCheck(STCHKGOOD)
-                if (stat==CGM.CHECK_FAIL): item.setCheck(STCHKFAIL)
-                if (stat==CGM.CHECK_WARN): item.setCheck(STCHKWARN)
-                if (stat==CGM.CHECK_USER): item.setCheck(STCHKUSER)
+                if (stat==CGM.CHECK_FAIL):
+                    item.setCheck(STCHKFAIL)
+                    s=""
+                    for e in checkdiag.log[pth]:
+                        s+=checkdiag.log.message(e)+'\n'
+                    item.setDiag(s[:-1])
+                if (stat==CGM.CHECK_WARN):
+                    item.setCheck(STCHKWARN)
+                    s=""
+                    for e in checkdiag.log[pth]:
+                        s+=checkdiag.log.message(e)+'\n'
+                    item.setDiag(s[:-1])
+                if (stat==CGM.CHECK_USER):
+                    item.setCheck(STCHKUSER)
+                    s=""
+                    for e in checkdiag.log[pth]:
+                        s+=checkdiag.log.message(e)+'\n'
+                    item.setDiag(s[:-1])
         return checkdiag.log
     def hasUserColor(self,k):
         cl=OCTXT.UserColors

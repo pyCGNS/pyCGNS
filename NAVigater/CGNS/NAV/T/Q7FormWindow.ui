@@ -818,6 +818,13 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
+            <widget class="QCheckBox" name="cFortranOrderOff">
+             <property name="text">
+              <string>Fortran order array is transposed</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="horizontalSpacer_3">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>

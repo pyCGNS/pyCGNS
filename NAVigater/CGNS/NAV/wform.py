@@ -46,6 +46,8 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
             self.eType.addItem(t)
         self.bClose.clicked.connect(self.reject)
         self.bInfo.clicked.connect(self.infoFormView)
+        self.cFortranOrderOff.setChecked(False)
+        self.cFortranOrderOff.setDisabled(True)
         for dt in node.sidsDataType(all=True):
             self.cDataType.addItem(dt)
         self.setOperatorValue(1)
@@ -108,7 +110,12 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
             self.tFiles.setDisabled(True)
         self.tPython.setDisabled(True)
         if (self._node.sidsDataType()==CGK.C1):
-            txt=self._node.sidsValue().tostring()
+            if (self._node.sidsValue().ndim>1):
+                txt=self._node.sidsValue().T.tostring()
+                self.cFortranOrderOff.setChecked(True)
+                self.cFortranOrderOff.setDisabled(True)
+            else:
+                txt=self._node.sidsValue().tostring()
             self.eText.initText(txt)
     def resizeTable(self):
         s=self.cRowColSize.currentText()

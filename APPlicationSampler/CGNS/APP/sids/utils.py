@@ -10,7 +10,7 @@ def transformCheckValues(data,cdim):
     adata=map(abs,data)
     if ((cdim==1) and (1 not in adata)): return False
     if ((cdim==2) and (set(adata)!=set((1,2)))): return False
-    if ((cdim==3) and (set(data)!=set((1,2,3)))): return False
+    if ((cdim==3) and (set(adata)!=set((1,2,3)))): return False
     return True
 
 def transformAsVector(data,cdim):

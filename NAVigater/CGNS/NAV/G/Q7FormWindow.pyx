@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created: Mon Dec 17 13:56:09 2012
+# Created: Thu Jan 31 09:44:31 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -315,6 +315,9 @@ class Ui_Q7FormWindow(object):
         self.verticalLayout_10.setObjectName("verticalLayout_10")
         self.horizontalLayout_4 = QtGui.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.cFortranOrderOff = QtGui.QCheckBox(self.tText)
+        self.cFortranOrderOff.setObjectName("cFortranOrderOff")
+        self.horizontalLayout_4.addWidget(self.cFortranOrderOff)
         spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem2)
         self.bRevert = QtGui.QPushButton(self.tText)
@@ -469,6 +472,7 @@ class Ui_Q7FormWindow(object):
         self.checkBox_18.setText(QtGui.QApplication.translate("Q7FormWindow", "File load without following links", None, QtGui.QApplication.UnicodeUTF8))
         self.cChildOfLink.setText(QtGui.QApplication.translate("Q7FormWindow", "Child of a linked node", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tFiles), QtGui.QApplication.translate("Q7FormWindow", "Link", None, QtGui.QApplication.UnicodeUTF8))
+        self.cFortranOrderOff.setText(QtGui.QApplication.translate("Q7FormWindow", "Fortran order array is transposed", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tText), QtGui.QApplication.translate("Q7FormWindow", "Text", None, QtGui.QApplication.UnicodeUTF8))
         self.label_11.setText(QtGui.QApplication.translate("Q7FormWindow", "Type", None, QtGui.QApplication.UnicodeUTF8))
         self.label_26.setText(QtGui.QApplication.translate("Q7FormWindow", "Shape", None, QtGui.QApplication.UnicodeUTF8))

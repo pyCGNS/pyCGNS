@@ -591,7 +591,7 @@ def newZoneBC(parent):
 def newBC(parent,bname,brange=[0,0,0,0,0,0],
           btype=CK.Null_s,bcType=CK.Null_s,
           family=CK.Null_s,pttype=CK.PointRange_s):
-  return newBoundary(parent,bname,brange,btype,bcType,pttype) 
+  return newBoundary(parent,bname,brange,btype,family,pttype) 
 
 def newBoundary(parent,bname,brange,
                 btype=CK.Null_s,
@@ -609,8 +609,9 @@ def newBoundary(parent,bname,brange,
   chapter 9.3 Add IndexRange_t required
   """
   CU.checkDuplicatedName(parent,bname)
-  zbnode=CU.hasChildName(parent,CK.ZoneBC_s)
-  if (zbnode == None):
+  zbnode=parent
+  if ((zbnode is not None) and
+      (zbnode[0]!=CK.ZoneBC_s) and (zbnode[3]!=CK.ZoneBC_ts)):
     zbnode=CU.newNode(CK.ZoneBC_s,None,[],CK.ZoneBC_ts,parent)
   bnode=CU.newNode(bname,CU.setStringAsArray(btype),[],CK.BC_ts,zbnode)
   if (pttype==CK.PointRange_s):
@@ -639,9 +640,7 @@ def newBCDataSet(parent,name,valueType=CK.Null_s):
     node=CU.newNode(name,None,[],CK.BCDataSet_ts,parent)
   if (valueType not in CK.BCTypeSimple_l):
     raise CE.cgnsException(252,valueType)
-  CU.checkDuplicatedName(node,CK.BCTypeSimple_s)    
-  nodeType=CU.newNode(CK.BCTypeSimple_s,CU.setStringAsArray(valueType),
-                   [],CK.BCTypeSimple_ts,node)
+  node[1]=CU.setStringAsArray(valueType)
   return node
 
 # ---------------------------------------------------------------------------  
@@ -791,7 +790,7 @@ def newGridConnectivity1to1(parent,name,dname,window,dwindow,trans):
   
   'newNode:N='*newGridConnectivity1to1*'(parent:N,name:S,dname:S,window:[i*],dwindow:[i*],trans:[i*])'
   
-  Creates a ZoneGridConnectivity1to1_t sub-tree.
+  Creates a GridConnectivity1to1_t sub-tree.
   If a parent is given, the new <node> is added to the parent children list,
   the parent should be a Zone_t.
   The returned node is the GridConnectivity1to1_t
@@ -810,6 +809,26 @@ def newGridConnectivity1to1(parent,name,dname,window,dwindow,trans):
   ## code correction: Modify PointRange shape and order
   CU.newNode(CK.PointRangeDonor_s,NPY.array(dwindow,dtype=NPY.int32,order='Fortran'),[],
           CK.IndexRange_ts,zcnode)   
+  return zcnode
+
+# -----------------------------------------------------------------------------
+def newGridConnectivity(parent,name,dname,ctype=CK.Overset_s):
+  """-GridConnectivity node creation -Grid
+  
+  'newNode:N='*newGridConnectivity*'(parent:N,name:S,dname:S,ctype:S)'
+  
+  Creates a GridConnectivity1to1 sub-tree.
+  If a parent is given, the new <node> is added to the parent children list,
+  the parent should be a ZoneGridConnectivity_t.
+  The returned node is the GridConnectivity_t
+  chapter 8.4
+  """
+  cnode=CU.hasChildName(parent,CK.ZoneGridConnectivity_s)
+  if (cnode == None):
+    cnode=CU.newNode(CK.ZoneGridConnectivity_s,
+                  None,[],CK.ZoneGridConnectivity_ts,parent)
+  zcnode=CU.newNode(name,dname,[],CK.GridConnectivity_ts,cnode)
+  zcnode[1]=CU.setStringAsArray(ctype)
   return zcnode
 
 # -----------------------------------------------------------------------------
@@ -941,9 +960,7 @@ def newGoverningEquations(parent,valueType=CK.Euler_s):
   if (valueType not in CK.GoverningEquationsType_l):
       raise CE.cgnsException(221,valueType)
   CU.checkDuplicatedName(parent,CK.GoverningEquationsType_s,)
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.GoverningEquationsType_s,CU.setStringAsArray(valueType),[],
-                     CK.GoverningEquationsType_ts,node)
+  node[1]=CU.setStringAsArray(valueType)
   return node
   
 # -----------------------------------------------------------------------------
@@ -961,10 +978,10 @@ def newGasModel(parent,valueType=CK.Ideal_s):
   node=CU.hasChildName(parent,CK.GasModel_s)
   if (node == None):       
     node=CU.newNode(CK.GasModel_s,None,[],CK.GasModel_ts,parent)
-  if (valueType not in CK.GasModelType_l): raise CE.cgnsException(224,valueType)
+  if (valueType not in CK.GasModelType_l):
+    raise CE.cgnsException(224,valueType)
   CU.checkDuplicatedName(node,CK.GasModelType_s)  
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.GasModelType_s,CU.setStringAsArray(valueType),[],CK.GasModelType_ts,node)
+  node[1]=CU.setStringAsArray(valueType)
   return node
   
 def newThermalConductivityModel(parent,valueType=CK.SutherlandLaw_s):   
@@ -985,9 +1002,7 @@ def newThermalConductivityModel(parent,valueType=CK.SutherlandLaw_s):
   if (valueType not in CK.ThermalConductivityModelType_l):
     raise CE.cgnsException(227,valueType)
   CU.checkDuplicatedName(node,CK.ThermalConductivityModelType_s)
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.ThermalConductivityModelType_s,CU.setStringAsArray(valueType),[],
-                   CK.ThermalConductivityModelType_ts,node)  
+  node[1]=CU.setStringAsArray(valueType)
   return node
 
 def newViscosityModel(parent,valueType=CK.SutherlandLaw_s): 
@@ -1007,12 +1022,10 @@ def newViscosityModel(parent,valueType=CK.SutherlandLaw_s):
   if (valueType not in CK.ViscosityModelType_l):
     raise CE.cgnsException(230,valueType) 
   CU.checkDuplicatedName(node,CK.ViscosityModelType_s)  
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.ViscosityModelType_s,CU.setStringAsArray(valueType),[],
-                     CK.ViscosityModelType_ts,node)  
+  node[1]=CU.setStringAsArray(valueType)
   return node
 
-def newTurbulenceClosure(parent,valueType=CK.EddyViscosity_s):   
+def newTurbulenceClosure(parent,valueType=CK.Null_s):   
   """-TurbulenceClosure node creation -TurbulenceClosure
   
   'newNode:N='*newTurbulenceClosure*'(parent:N,valueType:CK.TurbulenceClosureType)'  
@@ -1028,9 +1041,7 @@ def newTurbulenceClosure(parent,valueType=CK.EddyViscosity_s):
   if (valueType not in CK.TurbulenceClosureType_l):
     raise CE.cgnsException(233,valueType)
   CU.checkDuplicatedName(node,CK.TurbulenceClosureType_s)
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.TurbulenceClosureType_s,CU.setStringAsArray(valueType),[],
-                     CK.TurbulenceClosure_ts,node)  
+  node[1]=CU.setStringAsArray(valueType)
   return node
 
 def newTurbulenceModel(parent,valueType=CK.OneEquation_SpalartAllmaras_s): 
@@ -1050,12 +1061,10 @@ def newTurbulenceModel(parent,valueType=CK.OneEquation_SpalartAllmaras_s):
   if (valueType not in CK.TurbulenceModelType_l):
     raise CE.cgnsException(236,valueType)  
   CU.checkDuplicatedName(node,CK.TurbulenceModelType_s)
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.TurbulenceModelType_s,CU.setStringAsArray(valueType),[],
-                     CK.TurbulenceModelType_ts,node)
+  node[1]=CU.setStringAsArray(valueType)
   return node
 
-def newThermalRelaxationModel(parent,valueType):
+def newThermalRelaxationModel(parent,valueType=CK.Null_s):
   """-ThermalRelaxationModel node creation -ThermalRelaxationModel
   
   'newNode:N='*newThermalRelaxationModel*'(parent:N,valueType:CK.ThermalRelaxationModelType)'
@@ -1073,9 +1082,7 @@ def newThermalRelaxationModel(parent,valueType):
   if (valueType not in CK.ThermalRelaxationModelType_l):
     raise CE.cgnsException(239,valueType) 
   CU.checkDuplicatedName(node,CK.ThermalRelaxationModelType_s)   
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.ThermalRelaxationModelType_s,CU.setStringAsArray(valueType),[],
-                   CK.ThermalRelaxationModelType_ts,node)
+  node[1]=CU.setStringAsArray(valueType)
   return node
 
 def newChemicalKineticsModel(parent,valueType=CK.Null_s):
@@ -1096,12 +1103,10 @@ def newChemicalKineticsModel(parent,valueType=CK.Null_s):
   if (valueType not in CK.ChemicalKineticsModelType_l):
     raise CE.cgnsException(242,valueType)
   CU.checkDuplicatedName(node,CK.ChemicalKineticsModelType_s)     
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.ChemicalKineticsModelType_s,CU.setStringAsArray(valueType),[],
-                     CK.ChemicalKineticsModelType_ts,node)
+  node[1]=CU.setStringAsArray(valueType)
   return node
 
-def newEMElectricFieldModel(parent,valueType=CK.UserDefined_s):
+def newEMElectricFieldModel(parent,valueType=CK.Null_s):
   """-EMElectricFieldModel node creation -EMElectricFieldModel
   
   'newNode:N='*newEMElectricFieldModel*'(parent:N,valueType:CK.EMElectricFieldModelType)'
@@ -1119,12 +1124,10 @@ def newEMElectricFieldModel(parent,valueType=CK.UserDefined_s):
   if (valueType not in CK.EMElectricFieldModelType_l):
     raise CE.cgnsException(245,valueType)
   CU.checkDuplicatedName(node,CK.EMElectricFieldModelType_s)  
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.EMElectricFieldModelType_s,CU.setStringAsArray(valueType),[],
-                   CK.EMElectricFieldModelType_ts,node)
+  node[1]=CU.setStringAsArray(valueType)
   return node
 
-def newEMMagneticFieldModel(parent,valueType=CK.UserDefined_s):
+def newEMMagneticFieldModel(parent,valueType=CK.Null_s):
   """-EMMagneticFieldModel node creation -EMMagneticFieldModel
   
   'newNode:N='*newEMMagneticFieldModel*'(parent:N,valueType:CK.EMMagneticFieldModelType)'
@@ -1142,12 +1145,10 @@ def newEMMagneticFieldModel(parent,valueType=CK.UserDefined_s):
   if (valueType not in CK.EMMagneticFieldModelType_l):
     raise CE.cgnsException(248,valueType)  
   CU.checkDuplicatedName(node,CK.EMMagneticFieldModelType_s) 
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.EMMagneticFieldModelType_s,CU.setStringAsArray(valueType),[],
-                   CK.EMMagneticFieldModelType_ts,node)
+  node[1]=CU.setStringAsArray(valueType)
   return node
 
-def newEMConductivityModel(parent,valueType=CK.UserDefined_s):
+def newEMConductivityModel(parent,valueType=CK.Null_s):
   """-EMConductivityModel node creation -EMConductivityModel
   
   'newNode:N='*newEMConductivityModel*'(parent:N,valueType:CK.EMConductivityModelType)'
@@ -1165,9 +1166,7 @@ def newEMConductivityModel(parent,valueType=CK.UserDefined_s):
   if (valueType not in CK.EMConductivityModelType_l):
     raise CE.cgnsException(218,stype)  
   CU.checkDuplicatedName(node,CK.EMConductivityModelType_s)  
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.EMConductivityModelType_s,CU.setStringAsArray(valueType),[],
-                   CK.EMConductivityModelType_ts,node)
+  node[1]=CU.setStringAsArray(valueType)
   return node
 
 # -----------------------------------------------------------------------------
@@ -1229,10 +1228,7 @@ def newRigidGridMotion(parent,name,
   
   if (valueType not in CK.RigidGridMotionType_l):
       raise CE.cgnsException(254,valueType)
-  CU.checkDuplicatedName(parent,CK.RigidGridMotionType_s,)
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.RigidGridMotionType_s,CU.setStringAsArray(valueType),[],
-                   CK.RigidGridMotionType_ts,node)
+  node[1]=CU.setStringAsArray(valueType)
   n=CU.hasChildName(parent,CK.OriginLocation_s)
   if (n == None): 
     n=newDataArray(node,CK.OriginLocation_s,NPY.array(vector))
@@ -1380,10 +1376,7 @@ def newArbitraryGridMotion(parent,name,valuetype=CK.Null_s):
   if (valuetype not in CK.ArbitraryGridMotionType_l):
     raise CE.cgnsException(255,valuetype) 
   CU.checkDuplicatedName(node,CK.ArbitraryGridMotionType_s)     
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.ArbitraryGridMotionType_s,
-                   CU.setStringAsArray(valuetype),[],
-                   CK.ArbitraryGridMotionType_ts,node)
+  node[1]=CU.setStringAsArray(valuetype)
   return node
   
 # -----------------------------------------------------------------------------

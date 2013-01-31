@@ -532,21 +532,21 @@ the second as the subsitution pattern. For example:
 """),
 
 # --- Find Elements_t
-('QUADs',
+('Elements QUAD',
  'Find Elements_t',
  """if (SIDSTYPE==CGK.Elements_ts):
    RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)
  """,
  """Find all <b>Elements_t</b> nodes of type <b>QUAD</b>"""),
 
-('TRIs',
+('Elements TRI',
  'Find Elements_t',
  """if (SIDSTYPE==CGK.Elements_ts):
    RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)
  """,
  """Find all <b>Elements_t</b> nodes of type <b>TRI</b>"""),
 
-('NGONs',
+('Elements NGON',
  'Find Elements_t',
  """if (SIDSTYPE==CGK.Elements_ts):
    RESULT=VALUE[0] in (CGK.NGON_n,)

@@ -182,7 +182,9 @@ def checkName(name,dienow=False):
   if (len(name) == 0):
     if (dienow): raise CE.cgnsNameError(23)
     return False
-  if ('/' in name):
+  sname=set(name)
+  rname=set(string.digits+string.letters+'!"#$%&\'()*+,-.:;<=>?@[^_`{|}~\'')
+  if (not sname.issubset(rname)):
     if (dienow): raise CE.cgnsNameError(24,name)
     return False
   if (len(name) > 32):
@@ -372,7 +374,7 @@ def checkNode(node,dienow=False):
   if (node in [ [], None ]):
     if (dienow): raise CE.cgnsException(1)
     return False
-  if (type(node) != type([3,])):
+  if (type(node) != list):
     if (dienow): raise CE.cgnsException(2)
     return False
   if (len(node) != 4):
@@ -381,10 +383,10 @@ def checkNode(node,dienow=False):
   if (type(node[0]) not in [str, unicode]):
     if (dienow): raise CE.cgnsException(3)
     return False
-  if (type(node[2]) != type([3,])):
+  if (type(node[2]) != list):
     if (dienow): raise CE.cgnsException(4,node[0])
     return False
-  if ((node[1] != None) and (type(node[1])) != type(NPY.array([3,]))):
+  if ((node[1] != None) and (type(node[1]) != NPY.ndarray)):
     if (dienow): raise CE.cgnsException(5,node[0])
     return False
   return True
@@ -548,8 +550,11 @@ def checkArray(a,dienow=False):
    * Raises error codes 109,170 if `dienow` is True
 
   """
-  if (type(a) != type(NPY.array((1)))):
+  if (type(a)!=NPY.ndarray):
     if (dienow): raise CE.cgnsException(109)
+    return False
+  if (getValueType(a) is None):
+    if (dienow): raise CE.cgnsException(111)
     return False
   if ((len(a.shape)>1) and not NPY.isfortran(a)):
     if (dienow): raise CE.cgnsException(710)
@@ -558,21 +563,24 @@ def checkArray(a,dienow=False):
 
 # -----------------------------------------------------------------------------
 def checkArrayChar(a,dienow=False):
-  checkArray(a)
-  if (a.dtype.char not in ['S','a']):  raise CE.cgnsException(105)
-  return a
+  if (checkArray(a) and (a.dtype.kind not in ['S','a'])):
+    if (dienow): raise CE.cgnsException(105)
+    return False
+  return True
 
 # -----------------------------------------------------------------------------
 def checkArrayReal(a,dienow=False):
-  checkArray(a)
-  if (a.dtype.char not in ['d','f']):  raise CE.cgnsException(106)
-  return a
+  if (checkArray(a) and (a.dtype.kind not in ['d','f'])):
+    if (dienow): raise CE.cgnsException(106)
+    return False
+  return True
 
 # -----------------------------------------------------------------------------
 def checkArrayInteger(a,dienow=False):
-  checkArray(a)
-  if (a.dtype.char not in ['i','u']):  raise CE.cgnsException(107)
-  return a
+  if (checkArray(a) and (a.dtype.kind not in ['i','u','l'])):
+    if (dienow):  raise CE.cgnsException(107)
+    return False
+  return True
 
 # -----------------------------------------------------------------------------
 def checkNodeCompliant(node,parent,dienow=False):
@@ -602,7 +610,7 @@ def checkNodeCompliant(node,parent,dienow=False):
   r=checkNode(node,dienow=dienow)\
     and checkNodeName(node,dienow=dienow)\
     and checkDuplicatedName(parent,node[0],dienow=dienow)\
-    and checkArray(node[2],dienow=dienow)\
+    and checkArray(node[1],dienow=dienow)\
     and checkNodeType(node,dienow=dienow)
   return r
 
@@ -645,26 +653,26 @@ def concatenateForArrayChar3D(nlist):
 # -----------------------------------------------------------------------------
 def getValueType(v):
   if (v == None): return None
-  if (type(v) == type(NPY.array((1,)))):
+  if (type(v) == NPY.ndarray):
     if (v.dtype.kind in ['S','a']): return CK.Character_s
     if (v.dtype.char in ['f']):     return CK.RealSingle_s
     if (v.dtype.char in ['d']):     return CK.RealDouble_s
     if (v.dtype.char in ['i']):     return CK.Integer_s
-    if (v.dtype.char in ['l']):     return CK.Integer_s
+    if (v.dtype.char in ['l']):     return CK.LongInteger_s
   return None
    
 # -----------------------------------------------------------------------------
 def setValue(node,value):
   t=getValueType(value)
   if (t == None): node[1]=None
-  if (t in [CK.Integer_s,CK.RealDouble_s,
+  if (t in [CK.Integer_s,CK.LongInteger_s,CK.RealDouble_s,
             CK.RealSingle_s,CK.Character_s]): node[1]=value
   return node
   
 # -----------------------------------------------------------------------------
 def setStringAsArray(a):
   if ((type(a)==type(NPY.array((1))))
-      and (a.shape != ()) and (a.dtype.char=='S')):
+      and (a.shape != ()) and (a.dtype.kind=='S')):
     return a
   if ((type(a) in [str, unicode]) or (type(a)==type(NPY.array((1))))):
     return NPY.array(tuple(a),dtype='|S',order='Fortran')
@@ -675,8 +683,9 @@ def setStringAsArray(a):
 def getValue(node):
   v=node[1]
   t=getValueType(v)
-  if (t == None):           return None
+  if (t == None):            return None
   if (t == CK.Integer_s):    return v
+  if (t == CK.LongInteger_s):return v
   if (t == CK.RealDouble_s): return v
   if (t == CK.Character_s):  return v
   return v
@@ -754,8 +763,8 @@ def getNodeType(node):
     return CK.R4 # ONLY ONE R4 IN ALL SIDS !
   if ( data in [None, []] ):
     return CK.MT
-  if ( (type(data) == type(NPY.ones((1,)))) ):
-    if (data.dtype.char in ['S','c','s']):    return CK.C1
+  if (type(data)==NPY.ndarray):
+    if (data.dtype.kind in ['S','a']):        return CK.C1
     if (data.dtype.char in ['f','F']):        return CK.R4
     if (data.dtype.char in ['D','d']):        return CK.R8
     if (data.dtype.char in ['i','I']):        return CK.I4
@@ -1149,6 +1158,27 @@ def getAllNodesByTypeOrNameList(tree,typeornamelist):
   return n
   
 # --------------------------------------------------
+def getAllParentTypePathsAux(ntype,path,plist):
+  tlist=CT.types[ntype].parents
+  for pt in tlist:
+    plist.append(path+'/'+pt)
+    getAllParentTypePathsAux(pt,path+'/'+pt,plist)
+
+# --------------------------------------------------
+def getAllParentTypePaths(nodetype):
+  r=[]
+  p=''
+  l=[]
+  getAllParentTypePathsAux(nodetype,p,r)
+  for tp in r:
+    s=tp.split('/')
+    if (s[-1]==CK.CGNSTree_ts):
+      s.reverse()
+      s[-1]=nodetype
+      l.append(s)
+  return l
+
+# --------------------------------------------------
 def getAllNodesFromTypeOrNameList(tnlist,node,path,result):
   for c in node:
     if ((c[0]==tnlist[0]) or (c[3]==tnlist[0])):
@@ -1205,8 +1235,9 @@ def getAllNodesFromTypeList(typelist,node,path,result):
 # --------------------------------------------------
 def getPaths(tree,path,plist):
   for c in tree[2]:
-    plist.append(path+'/'+c[0])
-    getPaths(c,path+'/'+c[0],plist)
+    if ((len(c)>1) and (type(c[0])==str)):
+      plist.append(path+'/'+c[0])
+      getPaths(c,path+'/'+c[0],plist)
  
 # --------------------------------------------------   
 def getAllPaths(tree):
@@ -1724,7 +1755,7 @@ def stringValueMatches(node,reval):
   if (getNodeType(node)!=CK.C1): return 0
   tn=type(node[1])
   if   (tn==type('')): vn=node[1]
-  elif (tn == type(NPY.ones((1,))) and (node[1].dtype.char in ['S','c','s'])):
+  elif (tn == type(NPY.ones((1,))) and (node[1].dtype.kind in ['S','a'])):
     vn=node[1].tostring()
   else: return 0
   return re.match(reval,vn)
@@ -1736,7 +1767,7 @@ def stringValueInList(node,listval):
   if (getNodeType(node)!=CK.C1): return 0
   tn=type(node[1])
   if   (tn==type('')): vn=node[1]
-  elif (tn == type(NPY.ones((1,))) and (node[1].dtype.char in ['S','c','s'])):
+  elif (tn == type(NPY.ones((1,))) and (node[1].dtype.kind in ['S','s'])):
     vn=node[1].tostring()
   else: return 0
   return vn in listval

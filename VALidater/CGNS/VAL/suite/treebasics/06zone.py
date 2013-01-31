@@ -11,7 +11,7 @@ import numpy as NPY
 TESTS=[]
 
 #  -------------------------------------------------------------------------
-tag='zone structured #1'
+tag='zone structured'
 diag=True
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base}',3,3)
@@ -19,7 +19,17 @@ z=CGL.newZone(b,'{Zone}',NPY.array([[5,4,0],[7,6,0],[9,8,0]],order='F'))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
-tag='zone structured bad dims #1'
+tag='zone bad zonetype'
+diag=False
+T=CGL.newCGNSTree()
+b=CGL.newBase(T,'{Base}',3,3)
+z=CGL.newZone(b,'{Zone}',NPY.array([[5,4,0],[7,6,0],[9,8,0]],order='F'))
+zt=CGU.hasChildName(z,CGK.ZoneType_s)
+zt[1]=CGU.setStringAsArray('Untruscutred')
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='zone structured bad dims'
 diag=False
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base}',3,3)
@@ -27,7 +37,7 @@ z=CGL.newZone(b,'{Zone}',NPY.array([[5,4,0],[7,7,0],[9,8,0]],order='F'))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
-tag='zone structured bad ordering #1'
+tag='zone structured bad numpy array order'
 diag=False
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base}',3,3)
