@@ -55,53 +55,113 @@ The `legacy` argument is set to `False` as default.
 
 The list below gives an overview of publicly available functions.
 
- * Node life cycle: :py:func:`nodeCreate <CGNS.PAT.cgnsutils.nodeCreate>` -
-   :py:func:`nodeCopy <CGNS.PAT.cgnsutils.nodeCopy>` -
-   :py:func:`nodeDelete <CGNS.PAT.cgnsutils.nodeDelete>` -
-
- * Check functions: :py:func:`checkNode <CGNS.PAT.cgnsutils.checkNode>` -
-   :py:func:`checkRootNode <CGNS.PAT.cgnsutils.checkRootNode>` -
-   :py:func:`checkNodeType <CGNS.PAT.cgnsutils.checkNodeType>` -
-   :py:func:`checkNodeName <CGNS.PAT.cgnsutils.checkNodeName>` -
-   :py:func:`checkSameNode <CGNS.PAT.cgnsutils.checkSameNode>` -
-   :py:func:`checkDuplicatedName <CGNS.PAT.cgnsutils.checkDuplicatedName>` -
-   :py:func:`checkPath <CGNS.PAT.cgnsutils.checkPath>` -
-
- * Node true/false tests: :py:func:`hasChildType <CGNS.PAT.cgnsutils.hasChildType>` -
-   :py:func:`hasAncestorType <CGNS.PAT.cgnsutils.hasAncestorType>` -
-   :py:func:`hasChildName <CGNS.PAT.cgnsutils.hasChildName>` -
-   :py:func:`hasAncestorName <CGNS.PAT.cgnsutils.hasAncestorName>` -
-   :py:func:`hasValue <CGNS.PAT.cgnsutils.hasValue>` -
-   :py:func:`hasValueDataType <CGNS.PAT.cgnsutils.hasValueDataType>` -
-   :py:func:`hasValueFlags <CGNS.PAT.cgnsutils.hasValueFlags>` -	
-
- * Data retrieval simple functions: :py:func:`getNodeByPath <CGNS.PAT.cgnsutils.getNodeByPath>` -
-   :py:func:`getValueByPath <CGNS.PAT.cgnsutils.getValueByPath>` -
-   :py:func:`getChildrenByPath <CGNS.PAT.cgnsutils.getChildrenByPath>` -
-   :py:func:`getTypeByPath <CGNS.PAT.cgnsutils.getTypeByPath>`
-
- * Data retrieval specialized functions: :py:func:`getAllNodesByTypeSet <CGNS.PAT.cgnsutils.getAllNodesByTypeSet>` -
-   :py:func:`getNodeAllowedChildrenTypes <CGNS.PAT.cgnsutils.getNodeAllowedChildrenTypes>` -
-   :py:func:`getNodeAllowedDataTypes <CGNS.PAT.cgnsutils.getNodeAllowedDataTypes>` -
-
- * Node value manipulation: :py:func:`getValueShape <CGNS.PAT.cgnsutils.getValueShape>` -
-   :py:func:`getValueDataType <CGNS.PAT.cgnsutils.getValueDataType>` -
-   :py:func:`hasValue <CGNS.PAT.cgnsutils.hasValue>` -
-   :py:func:`hasValueDataType <CGNS.PAT.cgnsutils.hasValueDataType>` -
-   :py:func:`getValueByPath <CGNS.PAT.cgnsutils.getValueByPath>` -
-
-
- * Path retrieval functions: :py:func:`getPathFromNode <CGNS.PAT.cgnsutils.getPathFromNode>` -
-   :py:func:`getPathFullTree <CGNS.PAT.cgnsutils.getPathFullTree>` -
-   :py:func:`getPathByNameFilter <CGNS.PAT.cgnsutils.getPathByNameFilter>` -
-   :py:func:`getPathByTypeFilter <CGNS.PAT.cgnsutils.getPathByTypeFilter>` -
-
- * Path manipulation: :py:func:`getPathToList <CGNS.PAT.cgnsutils.getPathToList>` -
-   :py:func:`getPathAncestor <CGNS.PAT.cgnsutils.getPathAncestor>` -
-   :py:func:`getPathLeaf <CGNS.PAT.cgnsutils.getPathLeaf>` -
-   :py:func:`getPathNoRoot <CGNS.PAT.cgnsutils.getPathNoRoot>` -
-   :py:func:`getPathAsTypes <CGNS.PAT.cgnsutils.getPathAsTypes>` -
-   :py:func:`getPathNormalize <CGNS.PAT.cgnsutils.getPathNormalize>` -
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             |                                                                                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             | **Node Life Cycle**                                                                     |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Create a new node                                           | :py:func:`nodeCreate <CGNS.PAT.cgnsutils.nodeCreate>`                                   |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Deep copy of node                                           | :py:func:`nodeCopy <CGNS.PAT.cgnsutils.nodeCopy>`                                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Delete node and its children                                | :py:func:`nodeDelete <CGNS.PAT.cgnsutils.nodeDelete>`                                   |                 
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             |                                                                                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             | **Node structure and contents**                                                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Checks basic node structure                                 | :py:func:`checkNode <CGNS.PAT.cgnsutils.checkNode>`                                     |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Returns True if the node is a CGNS/Python tree root         | :py:func:`checkRootNode <CGNS.PAT.cgnsutils.checkRootNode>`                             |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Returns True if the node is of arg CGNS/SIDS type           | :py:func:`checkNodeType <CGNS.PAT.cgnsutils.checkNodeType>`                             |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Checks if the node name has CGNS/SIDS correct syntax        | :py:func:`checkNodeName <CGNS.PAT.cgnsutils.checkNodeName>`                             |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| True if two nodes have same contents                        | :py:func:`checkSameNode <CGNS.PAT.cgnsutils.checkSameNode>`                             |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| True if arg name is not already in the parent children list | :py:func:`checkDuplicatedName <CGNS.PAT.cgnsutils.checkDuplicatedName>`                 |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Checks if arg path is CGNS/SIDS compliant                   | :py:func:`checkPath <CGNS.PAT.cgnsutils.checkPath>`                                     |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             |                                                                                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+               
+|                                                             | **Boolean tests**                                                                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| True if node has a child of arg type                        | :py:func:`hasChildType <CGNS.PAT.cgnsutils.hasChildType>`                               |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| True if any ancestor of node has arg type                   | :py:func:`hasAncestorType <CGNS.PAT.cgnsutils.hasAncestorType>`                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| True if node has child with arg name                        | :py:func:`hasChildName <CGNS.PAT.cgnsutils.hasChildName>`                               |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| True if any ancestor of node has arg name                   | :py:func:`hasAncestorName <CGNS.PAT.cgnsutils.hasAncestorName>`                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| True if node value matches                                  | :py:func:`hasValue <CGNS.PAT.cgnsutils.hasValue>`                                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| True if node value datatype matches                         | :py:func:`hasValueDataType <CGNS.PAT.cgnsutils.hasValueDataType>`                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| True if node value has flags (Numpy flags)                  | :py:func:`hasValueFlags <CGNS.PAT.cgnsutils.hasValueFlags>`                             |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             |                                                                                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+ 
+|                                                             | **Search and Retrieve**                                                                 |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Returns a node from its path                                | :py:func:`getNodeByPath <CGNS.PAT.cgnsutils.getNodeByPath>`                             |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Returns a node value from node path                         | :py:func:`getValueByPath <CGNS.PAT.cgnsutils.getValueByPath>`                           |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Returns list of node children from path                     | :py:func:`getChildrenByPath <CGNS.PAT.cgnsutils.getChildrenByPath>`                     |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Returns a node CGNS/SIDS type from path                     | :py:func:`getTypeByPath <CGNS.PAT.cgnsutils.getTypeByPath>`                             |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| All nodes matching the set of CGNS/SIDS types               | :py:func:`getAllNodesByTypeSet <CGNS.PAT.cgnsutils.getAllNodesByTypeSet>`               |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             |                                                                                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+             
+|                                                             | **CGNS/SIDS information**                                                               |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| List of allowed CGNS/SIDS types as child of node            | :py:func:`getNodeAllowedChildrenTypes <CGNS.PAT.cgnsutils.getNodeAllowedChildrenTypes>` |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| List of allowed CGNS/SIDS data types for this node          | :py:func:`getNodeAllowedDataTypes <CGNS.PAT.cgnsutils.getNodeAllowedDataTypes>`         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             |                                                                                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             | **Value manipulation**                                                                  |               
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Returns node value shape (numpy.ndarray)                    | :py:func:`getValueShape <CGNS.PAT.cgnsutils.getValueShape>`                             |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Returns node value data type as CGNS/SIDS data type         | :py:func:`getValueDataType <CGNS.PAT.cgnsutils.getValueDataType>`                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Returns True if the node has a value                        | :py:func:`hasValue <CGNS.PAT.cgnsutils.hasValue>`                                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Returns True if the node value data type is correct         | :py:func:`hasValueDataType <CGNS.PAT.cgnsutils.hasValueDataType>`                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             |                                                                                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             | **Path functions**                                                                      |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Get the path of a node                                      | :py:func:`getPathFromNode <CGNS.PAT.cgnsutils.getPathFromNode>`                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Get list of all CGNS/Python tree paths                      | :py:func:`getPathFullTree <CGNS.PAT.cgnsutils.getPathFullTree>`                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Get list of all tree paths with name filter                 | :py:func:`getPathByNameFilter <CGNS.PAT.cgnsutils.getPathByNameFilter>`                 |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Get list of all tree paths with type filter                 | :py:func:`getPathByTypeFilter <CGNS.PAT.cgnsutils.getPathByTypeFilter>`                 |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Returns the path string as a list of node names             | :py:func:`getPathToList <CGNS.PAT.cgnsutils.getPathToList>`                             |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Get the parent path of the arg path                         | :py:func:`getPathAncestor <CGNS.PAT.cgnsutils.getPathAncestor>`                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Get the last node name of the arg path                      | :py:func:`getPathLeaf <CGNS.PAT.cgnsutils.getPathLeaf>`                                 |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Get path with CGNS/Python root removed                      | :py:func:`getPathNoRoot <CGNS.PAT.cgnsutils.getPathNoRoot>`                             |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Get list of types of nodes along the arg path               | :py:func:`getPathAsTypes <CGNS.PAT.cgnsutils.getPathAsTypes>`                           |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Normalizes the arg path                                     | :py:func:`getPathNormalize <CGNS.PAT.cgnsutils.getPathNormalize>`                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             |                                                                                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 
 .. automodule:: CGNS.PAT.cgnsutils
    :members:

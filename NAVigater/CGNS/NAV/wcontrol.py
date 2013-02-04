@@ -155,9 +155,14 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         if (self.wOption==None): self.wOption=Q7Option(self)
         self.wOption.show()
     def about(self):
+        try:
+            import CGNS.PRO
+            haspro=' + pyCGNS.PRO v%s'%CGNS.PRO.version
+        except:
+            haspro=''
         MSG.message("About %s"%OCTXT._ToolName,
-               """<b>%s</b><p>%s<p>"""\
-               %(OCTXT._ToolVersion,OCTXT._CopyrightNotice),
+               """<b>pyCGNS v%s%s</b><p>%s<p>"""\
+               %(OCTXT._ToolVersion,haspro,OCTXT._CopyrightNotice),
                MSG.INFO)
     def closeApplication(self):
         reply = MSG.message('Double check...',

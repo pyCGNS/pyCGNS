@@ -53,4 +53,7 @@ latex_use_modindex = True
 
 autodoc_member_order='bysource'
 
+def setup(app):
+   app.add_stylesheet('scrollwide.css')
+            
 # --- last line
