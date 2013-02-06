@@ -67,6 +67,7 @@ STCHKUSER='@@CKUSER@@' # user condition
 
 STCHKLIST=(STCHKUNKN,STCHKGOOD,STCHKWARN,STCHKFAIL,STCHKUSER)
 
+STUSR__='@@USR_%s@@'
 STUSR_P='@@USR_%d@@'
 STUSR_X='@@USR_X@@'
 STUSR_0='@@USR_0@@'
@@ -79,9 +80,13 @@ STUSR_6='@@USR_6@@'
 STUSR_7='@@USR_7@@'
 STUSR_8='@@USR_8@@'
 STUSR_9='@@USR_9@@'
+STUSR_A='@@USR_A@@'
+STUSR_B='@@USR_B@@'
+STUSR_C='@@USR_C@@'
 
 USERSTATES=[STUSR_0,STUSR_1,STUSR_2,STUSR_3,STUSR_4,
-            STUSR_5,STUSR_6,STUSR_7,STUSR_8,STUSR_9]
+            STUSR_5,STUSR_6,STUSR_7,STUSR_8,STUSR_9,
+            STUSR_A,STUSR_B,STUSR_C]
 
 STMARK_ON='@@MARK_ON@@'
 STMARKOFF='@@MARKOFF@@'
@@ -151,6 +156,9 @@ ICONMAPPING={
  STUSR_7:  ":/images/icons/user-7.gif",
  STUSR_8:  ":/images/icons/user-8.gif",
  STUSR_9:  ":/images/icons/user-9.gif",
+ STUSR_A:  ":/images/icons/user-A.gif",
+ STUSR_B:  ":/images/icons/user-B.gif",
+ STUSR_C:  ":/images/icons/user-C.gif",
 }
 
 KEYMAPPING={
@@ -826,12 +834,14 @@ class Q7TreeItem(object):
         return self._diag
     def userState(self):
         return self._states['user']
+    def setUserStatePrivate(self,s):
+        self._states['user']=STUSR__%s
     def setUserState(self,s):
         try:
             if (int(s) not in range(10)): return
         except ValueError: return
         state=STUSR_P%int(s)
-        if (self._states['user'] == state): self._states['user']=STUSR_X
+        if (self._states['user']==state): self._states['user']=STUSR_X
         else: self._states['user']=state
     def lastEdited(self):
         return Q7TreeItem.__lastEdited
@@ -847,8 +857,8 @@ class Q7TreeModel(QAbstractItemModel):
     def __init__(self,fgprint,parent=None):
         QAbstractItemModel.__init__(self,parent)  
         self._extension={}
-        self._rootitem=Q7TreeItem(fgprint,(None),None)  
         self._fingerprint=fgprint
+        self._rootitem=Q7TreeItem(fgprint,(None),None)  
         self._control=self._fingerprint.control
         self._control.loadOptions()
         self._slist=OCTXT._SortedTypeList
@@ -860,6 +870,17 @@ class Q7TreeModel(QAbstractItemModel):
         fgprint.model=self
         for ik in ICONMAPPING:
             Q7TreeModel._icons[ik]=QIcon(QPixmap(ICONMAPPING[ik]))
+        self._selected=[]
+        self._selectedIndex=-1
+    def modelReset(self):
+        self.reset()
+        self._extension={}
+        self._count=0
+        self._movedPaths={}
+        self._rootitem=Q7TreeItem(self._fingerprint,(None),None)  
+        self.parseAndUpdate(self._rootitem,
+                            self._fingerprint.tree,
+                            QModelIndex(),0)
         self._selected=[]
         self._selectedIndex=-1
     def nodeFromPath(self,path):
@@ -1111,10 +1132,12 @@ class Q7TreeModel(QAbstractItemModel):
             child=parentitem.child(r-1)
             self.parseAndRemove(child)
             self.removeItem(parentitem,child,r-1)
+    def itemNew(self,fg,nt,md,tg,pi):
+        return Q7TreeItem(fg,nt,md,tg,pi)
     def parseAndUpdate(self,parentItem,node,parentIndex,row,parenttag=""):
         self._count+=1
         tag=parenttag+SORTTAG%self._count
-        newItem=Q7TreeItem(self._fingerprint,(node),self,tag,parentItem)
+        newItem=self.itemNew(self._fingerprint,(node),self,tag,parentItem)
         self._fingerprint.depth=max(newItem._depth,self._fingerprint.depth)
         self._fingerprint.nodes=max(newItem._nodes,self._fingerprint.nodes)
         if (not parentIndex.isValid()):
@@ -1277,8 +1300,11 @@ class Q7TreeModel(QAbstractItemModel):
         return checkdiag.log
     def hasUserColor(self,k):
         cl=OCTXT.UserColors
-        c=k[-3]
-        if (cl[int(c)] is None): return False
+        try:
+          c=k[-3]
+          if (cl[int(c)] is None): return False
+        except:
+          return False
         return True
     def getUserColor(self,k):
         cb=Qt.black

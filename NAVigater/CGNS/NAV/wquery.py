@@ -210,7 +210,8 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
     def queryRevert(self):
         self.showQuery()
     def reject(self):
-        self._master.qryview=None
+        if (self._master._querywindow is not None):
+            self._master._querywindow=None
         self.close()
     def reset(self):
         gq=set()

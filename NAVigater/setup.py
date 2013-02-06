@@ -64,6 +64,7 @@ if installprocess:
   modnamelist=[
       'Q7TreeWindow',
       'Q7DiffWindow',
+      'Q7MergeWindow',
       'Q7ControlWindow',
       'Q7OptionsWindow',
       'Q7FormWindow',

@@ -75,9 +75,9 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.copyPasteBuffer=None
         self.wOption=None
         self.selectForLink=None
-        self.__newtreecount=1
+        self.newtreecount=1
         self.help=None
-        self.pattern=None
+        self._patternwindow=None
         Q7Query.loadUserQueries()
         Q7Query.fillQueries()
     def clickedLine(self,*args):
@@ -89,9 +89,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             self.popupmenu.popup(self.controlTable.lastPos)
     def closeView(self):
         self.updateLastView()
-        if (self.lastView):
-            fg=Q7FingerPrint.getFingerPrint(self.lastView)
-            fg.closeView(self.lastView)
+        if (self.lastView): Q7FingerPrint.getFingerPrint(self.lastView)
     def raiseView(self):
         self.updateLastView()
         if (self.lastView): Q7FingerPrint.raiseView(self.lastView)
@@ -173,7 +171,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         if (reply == QMessageBox.Yes):
             Q7FingerPrint.closeAllTrees()
             if (self.help is not None): self.help.close()
-            if (self.pattern is not None): self.pattern.close()
+            if (self._patternwindow is not None): self._patternwindow.close()
             return True
         else:
             return False
@@ -197,8 +195,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             hi=QTableWidgetItem(h[i])
             hi.setFont(OCTXT._Label_Font)
             ctw.setHorizontalHeaderItem(i,hi)
-            cth.setResizeMode(i,QHeaderView.ResizeToContents)
-        cth.setResizeMode(len(h)-1,QHeaderView.Stretch)
+            #cth.setResizeMode(i,QHeaderView.ResizeToContents)
+#        cth.setResizeMode(len(h)-1,QHeaderView.Stretch)
     def updateViews(self):
         for i in self.getAllIdx():
             f=Q7FingerPrint.getFingerPrint(i)
@@ -248,8 +246,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             tpitem=QTableWidgetItem(self.I_DIAG,'')
         if (l[1]==Q7Window.VIEW_LINK):
             tpitem=QTableWidgetItem(self.I_LINK,'')
-        if (l[1]==Q7Window.VIEW_DIFF):
-            tpitem=QTableWidgetItem(self.I_DIFF,'')
+        if (l[1]==Q7Window.VIEW_TOOLS):
+            tpitem=QTableWidgetItem(self.I_TOOLS,'')
         tpitem.setTextAlignment(Qt.AlignCenter)
         ctw.setItem(r,1,tpitem)
         for i in range(len(l)-2):
@@ -259,8 +257,9 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             it.setFont(OCTXT._Table_Font)
             ctw.setItem(r,i+2,it)
         self.modifiedLine(r,l[0],fg)
-        for i in (0,1,2):
-            ctw.resizeColumnToContents(i)
+        ctw.setColumnWidth(0,25)
+        ctw.setColumnWidth(1,25)
+        ctw.setColumnWidth(2,50)
         for i in range(self.controlTable.rowCount()):
             ctw.resizeRowToContents(i)
     def selectLine(self,idx):
@@ -286,8 +285,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             all.append(self.controlTable.item(n,2).text())
         return all
     def clearOtherSelections(self):
-        if (self.pattern is not None):
-            self.pattern.clearSelection()
+        if (self._patternwindow is not None):
+            self._patternwindow.clearSelection()
     def loadStart(self,*args):
         self._T('loading: [%s]'%self.signals.buffer)
         self.busyCursor()
@@ -337,14 +336,14 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
     def edit(self):
         self._T('edit new')
         tree=CGL.newCGNSTree()
-        tc=self.__newtreecount
+        tc=self.newtreecount
         self.busyCursor()
         fgprint=Q7FingerPrint(self,'.','new#%.3d.hdf'%tc,tree,[],[])
         Q7TreeModel(fgprint)
         child=Q7Tree(self,'/',fgprint)
         fgprint._status=[Q7FingerPrint.STATUS_MODIFIED]
         self.readyCursor()
-        self.__newtreecount+=1
+        self.newtreecount+=1
         child.show()
 
    

@@ -105,7 +105,8 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
         for i in range(v.rowCount()):
           v.resizeRowToContents(i)
     def reject(self):
-        self._master.linkview=None
+        if (self._master._linkwindow is not None):
+            self._master._linkwindow=None
         self.close()
          
 # -----------------------------------------------------------------

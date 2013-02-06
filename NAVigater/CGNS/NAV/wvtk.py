@@ -70,6 +70,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._hpix=QIcon(QPixmap(":/images/icons/hidden.gif"))
       self._T=self._fgprint.tree
       self._parent=parent
+      self._master=parent
       self.lut=None
       self.grid_dims=None
       self.mincolor=None
@@ -1046,11 +1047,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtkren.ResetCamera()
       self._iren.Render()
         
-  def close(self):
-      self._vtk.GetRenderWindow().Finalize()
-      QWidget.close(self)
-      self._parent._vtkwindow=None
-
+  def reject(self):
+      if (self._master._vtkwindow is not None):
+          self._vtk.GetRenderWindow().Finalize()
+          self._master._vtkwindow=None
+      self.close()
+        
   def changeCurrentActor(self,atp,combo=True):
       self.resetSpinBox()
       if (self.planeWidget is not None):

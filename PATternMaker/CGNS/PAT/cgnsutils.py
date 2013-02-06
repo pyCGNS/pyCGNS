@@ -202,6 +202,9 @@ def checkName(name,dienow=False):
   return True
 
 # --------------------------------------------------
+def setAsChild(parent,node):
+   return setChild(parent,node)
+ 
 def setChild(parent,node):
   """
   Adds a child node to the parent node children list::

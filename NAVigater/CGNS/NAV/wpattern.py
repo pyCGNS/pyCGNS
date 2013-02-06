@@ -37,6 +37,7 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
         self._modified=False
         self._initialized=False
         self._selected=None
+        self._master=control
         self.patternTable._panel=self
     def infoPatternView(self):
         self._control.helpWindow('Pattern')
@@ -117,6 +118,8 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
             v.resizeRowToContents(i)
         self._initialized=True
     def reject(self):
+        if (self._master._patternwindow is not None):
+            self._master._patternwindow=None
         self.close()
 
 # -----------------------------------------------------------------

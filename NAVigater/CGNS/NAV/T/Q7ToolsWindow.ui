@@ -3,7 +3,7 @@
  <class>Q7ToolsWindow</class>
  <widget class="QWidget" name="Q7ToolsWindow">
   <property name="windowModality">
-   <enum>Qt::ApplicationModal</enum>
+   <enum>Qt::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -173,11 +173,603 @@
         <attribute name="title">
          <string>Merge</string>
         </attribute>
+        <widget class="QGroupBox" name="gdiff_2">
+         <property name="geometry">
+          <rect>
+           <x>5</x>
+           <y>5</y>
+           <width>541</width>
+           <height>266</height>
+          </rect>
+         </property>
+         <property name="title">
+          <string>All tree identifications use view number</string>
+         </property>
+         <widget class="QPushButton" name="bMerge">
+          <property name="geometry">
+           <rect>
+            <x>415</x>
+            <y>130</y>
+            <width>25</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="../R/Res.qrc">
+            <normaloff>:/images/icons/operate-execute.gif</normaloff>:/images/icons/operate-execute.gif</iconset>
+          </property>
+         </widget>
+         <widget class="QGroupBox" name="groupBox_5">
+          <property name="geometry">
+           <rect>
+            <x>150</x>
+            <y>20</y>
+            <width>386</width>
+            <height>81</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Version A</string>
+          </property>
+          <widget class="QComboBox" name="cTreeA">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>20</y>
+             <width>81</width>
+             <height>22</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QRadioButton" name="rForceA">
+           <property name="geometry">
+            <rect>
+             <x>160</x>
+             <y>15</y>
+             <width>201</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Force A values when different</string>
+           </property>
+          </widget>
+          <widget class="QRadioButton" name="rAncestorA">
+           <property name="geometry">
+            <rect>
+             <x>160</x>
+             <y>35</y>
+             <width>226</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>A replaces the common ancestor</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="ePrefixA">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>50</y>
+             <width>76</width>
+             <height>22</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_5">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>50</y>
+             <width>58</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Prefix</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QGroupBox" name="groupBox_6">
+          <property name="geometry">
+           <rect>
+            <x>150</x>
+            <y>180</y>
+            <width>386</width>
+            <height>81</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Version B</string>
+          </property>
+          <widget class="QComboBox" name="cTreeB">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>20</y>
+             <width>81</width>
+             <height>22</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QRadioButton" name="rForceB">
+           <property name="geometry">
+            <rect>
+             <x>155</x>
+             <y>15</y>
+             <width>201</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Force B values when different</string>
+           </property>
+          </widget>
+          <widget class="QRadioButton" name="rAncestorB">
+           <property name="geometry">
+            <rect>
+             <x>155</x>
+             <y>35</y>
+             <width>226</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>B replaces the common ancestor</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="ePrefixB">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>50</y>
+             <width>76</width>
+             <height>22</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_6">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>55</y>
+             <width>58</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Prefix</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QGroupBox" name="groupBox_7">
+          <property name="geometry">
+           <rect>
+            <x>5</x>
+            <y>100</y>
+            <width>381</width>
+            <height>76</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Ancestor</string>
+          </property>
+          <widget class="QComboBox" name="cTreeAncestor">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>30</y>
+             <width>81</width>
+             <height>22</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QRadioButton" name="rForceNone">
+           <property name="geometry">
+            <rect>
+             <x>115</x>
+             <y>10</y>
+             <width>216</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Keep both values when different</string>
+           </property>
+          </widget>
+          <widget class="QRadioButton" name="rAncestor">
+           <property name="geometry">
+            <rect>
+             <x>115</x>
+             <y>30</y>
+             <width>211</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Use common ancestor</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QCheckBox" name="cAutoMerge">
+          <property name="geometry">
+           <rect>
+            <x>450</x>
+            <y>130</y>
+            <width>86</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Auto</string>
+          </property>
+         </widget>
+        </widget>
        </widget>
        <widget class="QWidget" name="process">
         <attribute name="title">
          <string>Process</string>
         </attribute>
+        <widget class="QWidget" name="verticalLayoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>5</x>
+           <y>5</y>
+           <width>541</width>
+           <height>271</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <widget class="QComboBox" name="cProcess">
+             <property name="geometry">
+              <rect>
+               <x>75</x>
+               <y>5</y>
+               <width>416</width>
+               <height>22</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="bFileProcess">
+             <property name="geometry">
+              <rect>
+               <x>500</x>
+               <y>5</y>
+               <width>25</width>
+               <height>25</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Open Form view on selected node</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../R/Res.qrc">
+               <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="bApply">
+             <property name="geometry">
+              <rect>
+               <x>25</x>
+               <y>230</y>
+               <width>25</width>
+               <height>25</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Run process</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../R/Res.qrc">
+               <normaloff>:/images/icons/operate-execute.gif</normaloff>:/images/icons/operate-execute.gif</iconset>
+             </property>
+            </widget>
+            <widget class="QGroupBox" name="groupBox_2">
+             <property name="geometry">
+              <rect>
+               <x>5</x>
+               <y>30</y>
+               <width>120</width>
+               <height>91</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>Run on :</string>
+             </property>
+             <widget class="QRadioButton" name="rUser">
+              <property name="geometry">
+               <rect>
+                <x>5</x>
+                <y>15</y>
+                <width>94</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>User args</string>
+              </property>
+             </widget>
+             <widget class="QRadioButton" name="rSelection">
+              <property name="geometry">
+               <rect>
+                <x>5</x>
+                <y>35</y>
+                <width>94</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Selection list</string>
+              </property>
+             </widget>
+             <widget class="QRadioButton" name="rTree">
+              <property name="geometry">
+               <rect>
+                <x>5</x>
+                <y>55</y>
+                <width>94</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Whole tree</string>
+              </property>
+             </widget>
+            </widget>
+            <widget class="QLabel" name="label_4">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>5</y>
+               <width>58</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Process:</string>
+             </property>
+            </widget>
+            <widget class="QGroupBox" name="groupBox_3">
+             <property name="geometry">
+              <rect>
+               <x>75</x>
+               <y>120</y>
+               <width>456</width>
+               <height>146</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>Args:</string>
+             </property>
+             <widget class="Q7PythonEditor" name="eText">
+              <property name="geometry">
+               <rect>
+                <x>5</x>
+                <y>20</y>
+                <width>441</width>
+                <height>116</height>
+               </rect>
+              </property>
+             </widget>
+            </widget>
+            <widget class="QGroupBox" name="groupBox_4">
+             <property name="geometry">
+              <rect>
+               <x>130</x>
+               <y>30</y>
+               <width>401</width>
+               <height>91</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>System :</string>
+             </property>
+             <widget class="QCheckBox" name="cAsynchroneous">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>15</y>
+                <width>116</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Asynchroneous</string>
+              </property>
+             </widget>
+             <widget class="QCheckBox" name="rDir">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>40</y>
+                <width>86</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Run in dir:</string>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="eDir">
+              <property name="geometry">
+               <rect>
+                <x>95</x>
+                <y>35</y>
+                <width>266</width>
+                <height>22</height>
+               </rect>
+              </property>
+             </widget>
+             <widget class="QCheckBox" name="rLog">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>65</y>
+                <width>86</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Log file:</string>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="eLog">
+              <property name="geometry">
+               <rect>
+                <x>95</x>
+                <y>60</y>
+                <width>266</width>
+                <height>22</height>
+               </rect>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="bFileDir">
+              <property name="geometry">
+               <rect>
+                <x>365</x>
+                <y>30</y>
+                <width>25</width>
+                <height>25</height>
+               </rect>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>25</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Open Form view on selected node</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="../R/Res.qrc">
+                <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="bFileLog">
+              <property name="geometry">
+               <rect>
+                <x>365</x>
+                <y>60</y>
+                <width>25</width>
+                <height>25</height>
+               </rect>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>25</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Open Form view on selected node</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="../R/Res.qrc">
+                <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+              </property>
+             </widget>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </widget>
      </item>
@@ -232,8 +824,16 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Q7PythonEditor</class>
+   <extends>QPlainTextEdit</extends>
+   <header>CGNS.NAV.mtable</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../R/Res.qrc"/>
+  <include location="../../../../../../../../home/poinot/src/pyCGNS/NAVigater/CGNS/NAV/R/Res.qrc"/>
  </resources>
  <connections/>
  <designerdata>

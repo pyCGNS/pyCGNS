@@ -67,7 +67,7 @@ class Q7CHLoneThread(QThread):
         if ("%s/%s"%(filedir,filename) in Q7FingerPrint.getExpandedFilenameList()):
             Q7FingerPrint.Unlock()
             txt="""The current file is already open:"""
-            self._data=(None,(txt,"%s/%s"%(filedir,filename),MSG.INFO))
+            self._data=(None,(0,txt,"%s/%s"%(filedir,filename)))
             self.datacompleted.emit(self._data)
             control.readyCursor()
             return 
@@ -117,7 +117,7 @@ class Q7CHLoneThread(QThread):
 class Q7Window(QWidget,object):
     VIEW_CONTROL='C'
     VIEW_DIAG='D'
-    VIEW_DIFF='X'
+    VIEW_TOOLS='X'
     VIEW_TREE='T'
     VIEW_OPTION='O'
     VIEW_VTK='G'
@@ -127,7 +127,6 @@ class Q7Window(QWidget,object):
     VIEW_PATTERN='P'
     VIEW_INFO='I'
     VIEW_LINK='L'
-    VIEW_TOOLS='Z'
     HISTORYLASTKEY='///LAST///'
     def __init__(self,vtype,control,path,fgprint):
         QWidget.__init__(self,None)
@@ -140,11 +139,11 @@ class Q7Window(QWidget,object):
         self.I_VTK=QIcon(QPixmap(":/images/icons/vtkview.gif"))
         self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.gif"))
         self.I_FORM=QIcon(QPixmap(":/images/icons/form.gif"))
-        self.I_SELECT=QIcon(QPixmap(":/images/icons/operate-list.gif"))
+        self.I_SELECT=QIcon(QPixmap(":/images/icons/mark-node.gif"))
         self.I_PATTERN=QIcon(QPixmap(":/images/icons/pattern.gif"))
         self.I_DIAG=QIcon(QPixmap(":/images/icons/check-all.gif"))
-        self.I_DIFF=QIcon(QPixmap(":/images/icons/diff.gif"))
-        self.I_LINK=QIcon(QPixmap(":/images/icons/link.gif"))
+        self.I_TOOLS=QIcon(QPixmap(":/images/icons/toolsview.gif"))
+        self.I_LINK=QIcon(QPixmap(":/images/icons/link-node.gif"))
         self.I_D_INF=QIcon(QPixmap(":/images/icons/subtree-sids-warning.gif"))
         self.I_D_ERR=QIcon(QPixmap(":/images/icons/subtree-sids-failed.gif"))
         self.I_L_OKL=QIcon(QPixmap(":/images/icons/link.gif"))
@@ -291,6 +290,8 @@ class Q7Window(QWidget,object):
     def _T(self,msg):
         if (self.getOptionValue('NAVTrace')):
             print '### CGNS.NAV:', msg
+    def reject(self):
+        pass
 # -----------------------------------------------------------------
 class Q7FingerPrint:
     __viewscounter=0
@@ -451,6 +452,7 @@ class Q7FingerPrint:
         self.converted=False
         self.isfile=False
         self.tmpfile=''
+        self._kw=kw
         self._status=[]
         self._locked=False
         if (checkFilePermission(filedir+'/'+filename,write=True)):
@@ -571,10 +573,10 @@ class Q7FingerPrint:
         fg=self.getFingerPrint(idx)
         vw=self.getView(idx)
         vt=self.getViewType(idx)
-        if (vw is not None): vw.close()
         if ((vw is not None) and self.views.has_key(vt)):
           self.views[vt].remove((vw,idx))
           if (self.views[vt]==[]): del self.views[vt]
+        if (vw is not None): vw.reject()
         if ((self.views=={}) and (fg in self.__extension)):
             self.__extension.remove(fg)
     def unlockAllViews(self):

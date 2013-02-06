@@ -186,7 +186,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bSaveAs.clicked.connect(self.savetreeas)
         self.lockable(self.bSaveAs)
         self.bApply.clicked.connect(self.forceapply)
-        self.bClose.clicked.connect(self.leave)
+        self.bClose.clicked.connect(self.reject)
         self.bInfo.clicked.connect(self.infoTreeView)
         self.bZoomIn.clicked.connect(self.expandLevel)
         self.bZoomOut.clicked.connect(self.collapseLevel)
@@ -415,8 +415,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.treeview.selectionModel().clearSelection()
         return None
     def clearOtherSelections(self):
-        if (self._control.pattern is not None):
-            self._control.pattern.clearSelection()
+        if (self._control._patternwindow is not None):
+            self._control._patternwindow.clearSelection()
     def clickedNode(self,index):
         if (self.updateMenu(index)):
             if (self.treeview.lastButton==Qt.RightButton):
@@ -475,10 +475,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         else:
             self._linkwindow.raise_()
     def patternlist(self):
-        if (self._control.pattern is None):
-            self._control.pattern=Q7PatternList(self._control,self._fgprint)
-            self._control.pattern.show()
-        self._control.pattern.raise_()
+        if (self._control._patternwindow is None):
+            self._control._patternwindow=Q7PatternList(self._control,self._fgprint)
+            self._control._patternwindow.show()
+        self._control._patternwindow.raise_()
     def check(self):
         self.busyCursor()
         if (self.diagview is not None):
@@ -574,7 +574,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         pass
     def forceapply(self):
         pass
-    def leave(self):
+    def reject(self):
         self.close()
     def updateTreeStatus(self):
         if (    (Q7FingerPrint.STATUS_MODIFIED in self._fgprint._status)
