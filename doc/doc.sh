@@ -43,7 +43,7 @@ cp build/doc/pdf/* ./build/doc/html/_pdf
 fi
 mkdir build/doc/html/images 2>/dev/null
 cp doc/images/* build/doc/html/images
-(cd build/doc/html; tar cvf ../pyCGNS-html.tar .)
+(cd build/doc/html; tar cvf ../pyCGNS-html.tar .) 1>/dev/null
 
 # --- web site update
 #

@@ -6,12 +6,13 @@
 #  ---------------------------------------------------------------------------
 
 TAG="\n### pyCGNS:"
+TAG_ERROR=" ERROR "
 
 def perr(id, *tp):
   try:
-    msg=TAG+" ERROR [%.3d]- %s"%(id,errorTable[id])
+    msg=TAG+TAG_ERROR+"[%.3d] %s"%(id,errorTable[id])
   except TypeError,KeyError:
-    msg=TAG+" ERROR [%.3d]- %s"%(id,errorTable[999])
+    msg=TAG+TAG_ERROR+"[%.3d] %s"%(id,errorTable[999])
   ret=msg
   if tp: 
     if ((type(tp) == type((1,))) and (len(tp) > 0)):
@@ -65,7 +66,9 @@ errorTable={
    29 : "Node name cannot be '.' or '..'",
    30 : "Nodes [%s] and [%s] are different",
    31 : "Node name cannot be only ' '",
-   32 : "Node name cannot start with  ' '",
+   32 : "Node name should not have prefix or suffix ' 's",
+   33 : "Node name contains unsafe chars",
+   34 : "Node name contains two consecutive spaces",
    40 : "Node [%s] has type [%s] which is not a CGNS/SIDS type",
    90 : "Node is None!",
    91 : "Root node can have only CGNSBase_t or CGNSLibraryVersion_t children",
