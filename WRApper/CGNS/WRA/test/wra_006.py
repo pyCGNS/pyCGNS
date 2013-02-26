@@ -4,7 +4,7 @@
 #  -------------------------------------------------------------------------
 #  $Release$
 #  -------------------------------------------------------------------------
-import CGNS.WRA.mll as Mll
+import CGNS.WRA.mll as MLL
 import numpy as NPY
 import CGNS.PAT.cgnskeywords as CK
 
@@ -30,7 +30,7 @@ c03=acube(offset=2)
 
 # ------------------------------------------------------------------------
 
-a=Mll.pyCGNS('tmp/testmll06.hdf',Mll.MODE_WRITE)
+a=MLL.pyCGNS('tmp/testmll06.hdf',MLL.MODE_WRITE)
 a.base_write('Base',3,3)
 a.zone_write(1,'Zone 01',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
 a.zone_write(1,'Zone 02',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)

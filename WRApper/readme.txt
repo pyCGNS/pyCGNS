@@ -83,49 +83,18 @@ is no more relationship between the array and MLL::
   db.close()
   print r.shape
 
-ADF Examples
-------------
 
-The following example shows how to create links. A ``secondfile`` is open
-with the *ADF* interface and then we add links to the ``firstfile`` grid.
-This is a typical pattern used to share a large grid between several files::
-
-   import CGNS.WRA.wrapper
-   import CGNS.WRA._adf as ADF
-
-   firstfile="M6grid.cgns"
-   secondfile="M6comput.cgns"
-
-   filesol=CGNS.WRA.wrapper.pyADF(secondfile,ADF.OLD,ADF.NATIVE)
-   for bn in filesol.children_names(filesol.root()):
-     bx=filesol.get_node_id(filesol.root(),bn)
-     if (filesol.get_label(bx) == 'CGNSBase_t'):
-       for zn in filesol.children_names(bx):
-        zx=filesol.get_node_id(bx,zn)
-        if (filesol.get_label(zx) == 'Zone_t'):
-         filesol.link(zx,'GridCoordinates',
-                      firstfile,'/%s/%s/GridCoordinates'%(bn,zn))
-   filesol.database_close()
-
-The next example uses the *CGNS/MLL* calls. Again we are creating links from
-the ``secondfile`` to the ``firstfile``, or more exactly from a list of
-``secondfiles`` to the ``firstfile``. The purpose of the script is to gather 
-a set of *CGNS* files produced by a parallel computation, the ``secondfile``
-is an empty skeletton with links to the actual files.
-
-Contents
---------
+API Reference
+-------------
 
 .. toctree::
    
    API
    fileformats
 
------
-
 .. _wra_index:
 
-WRA Index
+API Index
 ---------
 
 * :ref:`genindex`

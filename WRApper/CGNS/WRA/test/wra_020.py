@@ -8,7 +8,7 @@ import CGNS.WRA.mll as Mll
 import numpy as NPY
 import CGNS.PAT.cgnskeywords as CK
 
-print 'CGNS.WRA.mll','#020 - convergence_write/state_write/equationset_write/governing_write/diffusion_write'
+print 'CGNS.WRA.mll','#020 - convergence/state/equationset/governing/diffusion_write'
 
 # ----------------------------------------------------------------------
 def acube(im=3,jm=5,km=7,offset=0):

@@ -1,9 +1,9 @@
 
-CGNS.WRA.wrapper
-----------------
+CGNS.WRA.mll
+------------
 The CGNS/MLL library wrapper.
 
-.. automodule:: CGNS.WRA.wrapper
+.. automodule:: CGNS.WRA.mll
    :members:
 
 

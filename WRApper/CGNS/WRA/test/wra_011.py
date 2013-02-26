@@ -72,7 +72,7 @@ a.boco_normal_write(1,1,2,NPY.array([0,1,0]),0)
 a.boco_gridlocation_write(1,1,1,2)
 a.dataset_write(1,1,1,"dataset",5)
 a.gopath('/Base/Zone 01/Initialize')
-a.array_write('coordinates',2,3,NPY.array([2,4,6],dtype=NPY.int32),NPY.ones((2,4,6),dtype=NPY.int32))
+a.array_write('coordinates',NPY.ones((2,4,6),dtype=NPY.int32))
 a.user_data_write('user_data')
                   
 a.close()

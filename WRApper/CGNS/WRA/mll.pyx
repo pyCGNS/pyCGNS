@@ -20,8 +20,8 @@ cimport numpy as CNY
 
 MODE_READ   = 0
 MODE_WRITE  = 1
-MODE_CLOSED = 2
-MODE_MODIFY = 3
+MODE_MODIFY = 2
+MODE_CLOSED = 3
 
 CG_OK             = 0
 CG_ERROR          = 1
@@ -35,7 +35,8 @@ UserDefined       = 1
 CG_FILE_NONE      = 0
 CG_FILE_ADF       = 1
 CG_FILE_HDF5      = 2
-CG_FILE_XML       = 3    
+CG_FILE_ADF2      = 3
+CG_FILE_PHDF5     = 4
 
 
 # ------------------------------------------------------------
@@ -63,11 +64,11 @@ cdef asnumpydtype(cgnslib.DataType_t dtype):
     return None
         
 cdef fromnumpydtype(dtype):
-    if (dtype==PNY.float32):  return CK.RealSingle
-    if (dtype==PNY.float64):  return CK.RealDouble
-    if (dtype==PNY.int32):    return CK.Integer
-    if (dtype==PNY.int64):    return CK.LongInteger
-    if (dtype==PNY.uint8):    return CK.Character
+    if (dtype.char=='f'):  return CK.RealSingle
+    if (dtype.char=='d'):  return CK.RealDouble
+    if (dtype.char=='i'):  return CK.Integer
+    if (dtype.char=='l'):  return CK.LongInteger
+    if (dtype.char=='S'):  return CK.Character
     return None
 
 class CGNSException(Exception):
@@ -114,6 +115,14 @@ cdef class pyCGNS(object):
     self._filename=filename
     self._mode=mode
     (self._root,self._error)=cg_open_(filename,mode)
+
+  def error(self):
+    return (self._error, cgnslib.cg_get_error())
+
+  @property
+  def ok(self):
+    if (self._error==0): return True
+    return False
 
   # ---------------------------------------------------------------------------
   cpdef close(self):
@@ -1528,7 +1537,8 @@ cdef class pyCGNS(object):
     ztype=self.zone_type(B,Z)
     pdim=self.base_read(B)[3]
     if (ztype==CK.Unstructured): dim=1
-    elif (ztype==CK.Structured): dim=self.base_read(B)[2]  
+    elif (ztype==CK.Structured): dim=self.base_read(B)[2]
+    else: return None
     pnts=PNY.zeros((npnts,dim),dtype=PNY.int32)
     pntsptr=<int *>CNY.PyArray_DATA(pnts)
     if (nls==0):
@@ -1636,10 +1646,10 @@ cdef class pyCGNS(object):
   cpdef bcdataset_read(self, int n):
     cdef char name[MAXNAMELENGTH]
     cdef cgnslib.BCType_t bct
-    cdef int dir
-    cdef int neu
-    self._error=cgnslib.cg_bcdataset_read(n,name,&bct,&dir,&neu)
-    return (n,name,bct,dir,neu)
+    cdef int fdir
+    cdef int fneu
+    self._error=cgnslib.cg_bcdataset_read(n,name,&bct,&fdir,&fneu)
+    return (n,name,bct,fdir,fneu)
 
   # ---------------------------------------------------------------------------
   cpdef convergence_read(self):
@@ -1661,10 +1671,13 @@ cdef class pyCGNS(object):
   # ---------------------------------------------------------------------------
   cpdef bcdataset_write(self, char * name, cgnslib.BCType_t bct,
                         cgnslib.BCDataType_t bcdt):
-    print 'NOT IMPLEMENTED YET bcdataset_write'
-    return
+    """
+    Create a new BCDataSet::
+
+      db.bcdataset_write("Dataset-1",BCTypeNull,Dirichlet)
+    """
     self._error=cgnslib.cg_bcdataset_write(name,bct,bcdt)
-    print cgnslib.cg_get_error(),self._error
+    return None
 
   # --------------------------------------------------------------------------
   cpdef narrays(self):
@@ -1804,50 +1817,33 @@ cdef class pyCGNS(object):
     return data
               
   # ---------------------------------------------------------------------------
-  cpdef array_write(self, char * aname, cgnslib.DataType_t dt, int dd,
-                    dimv, adata):
+  cpdef array_write(self, char *aname, adata):
     """
     Creates a new data array.
 
     - Args:
     * `aname` : name of the data array (`string`)
-    * `dt` : type of data held in the array (`int`)
-    * `dd` : number of dimensions of the data array (`int`)
-    * `dimv` : number of data elements in each dimension (`numpy.ndarray`)
     * `adata` : data array ('numpy.ndarray`)
 
     - Return:
     * None
 
-    """
-    cdef int * dataptrI
-    cdef float * dataptrF
-    cdef double * dataptrD
-    cdef char * dataptrC
-    cdef cgnslib.cgsize_t * dv
+    - Remarks:
+    * the datatype is guessed from the numpy.ndarray data type
 
-    div=PNY.int32(dimv)
-    dv=<cgnslib.cgsize_t *>CNY.PyArray_DATA(div)
-        
-    if (dt==CK.Integer):
-      data=PNY.int32(adata)
-      dataptrI=<int *>CNY.PyArray_DATA(data)
-      self._error=cgnslib.cg_array_write(aname,dt,dd,dv,dataptrI)
-    if (dt==CK.LongInteger):
-      data=PNY.int64(adata)
-      dataptrI=<int *>CNY.PyArray_DATA(data)
-      self._error=cgnslib.cg_array_write(aname,dt,dd,dv,dataptrI)
-    if (dt==CK.RealSingle):
-      data=PNY.float32(adata)
-      dataptrF=<float *>CNY.PyArray_DATA(data)
-      self._error=cgnslib.cg_array_write(aname,dt,dd,dv,dataptrF)
-    if (dt==CK.RealDouble):
-      data=PNY.float64(adata)
-      dataptrD=<double *>CNY.PyArray_DATA(data)
-      self._error=cgnslib.cg_array_write(aname,dt,dd,dv,dataptrD)
-    if (dt==CK.Character):
-      dataptrC=<char *>CNY.PyArray_DATA(adata)
-      self._error=cgnslib.cg_array_write(aname,dt,dd,dv,dataptrC)
+    """
+    cdef cgnslib.cgsize_t dv[12]
+    cdef cgnslib.DataType_t dt
+    cdef int dd
+    cdef void *ptr
+
+    dd=adata.ndim
+    ptr=<void*>adata.data
+    for n in range(dd):
+      dv[n]=adata.shape[n]
+    dt=fromnumpydtype(adata.dtype)
+    self._error=cgnslib.cg_array_write(aname,dt,dd,dv,ptr)
+    return None
 
   # ---------------------------------------------------------------------------
   cpdef int nfields(self, int B, int Z, int S):
@@ -1930,13 +1926,25 @@ cdef class pyCGNS(object):
     return nfield
 
   # ---------------------------------------------------------------------------
-  cpdef int sol_ptset_info(self, int B, int Z, int S):
-    print 'NOT IMPLEMENTED YET sol_ptset_info'
-    return 0
+  cpdef sol_ptset_info(self, int B, int Z, int S):
+    cdef cgnslib.PointSetType_t pst 
+    cdef cgnslib.cgsize_t       npnts
+    self._error=cgnslib.cg_sol_ptset_info(self._root,B,Z,S,&pst,&npnts)
+    return (B,Z,S,pst,npnts)
 
-  cpdef int sol_ptset_read(self, int B, int Z, int S):
-    print 'NOT IMPLEMENTED YET sol_ptset_read'
-    return 0
+  cpdef sol_ptset_read(self, int B, int Z, int S):
+    cdef cgnslib.PointSetType_t pst 
+    cdef cgnslib.cgsize_t       npnts
+    cdef CNY.ndarray[dtype=CNY.int32_t,ndim=1] pnts
+    cdef cgnslib.cgsize_t *pntsptr
+    self._error=cgnslib.cg_sol_ptset_info(self._root,B,Z,S,&pst,&npnts)
+    if (self.ok):
+      pnts=PNY.zeros((npnts,),dtype=PNY.int32)
+      pntsptr=<cgnslib.cgsize_t *>pnts.data
+      self._error=cgnslib.cg_sol_ptset_read(self._root,B,Z,S,pntsptr)
+    else:
+      pnts=None
+    return (B,Z,S,pnts)
 
   cpdef int sol_ptset_write(self, int B, int Z, char *solname,
                             cgnslib.GridLocation_t location, 
@@ -2004,6 +2012,7 @@ cdef class pyCGNS(object):
     cdef char name[MAXNAMELENGTH]
     cdef cgnslib.GridLocation_t gloc
     cdef cgnslib.PointSetType_t ptst
+    cdef cgnslib.cgsize_t *pntsptr
     self._error=cgnslib.cg_hole_info(self._root,B,Z,I,name,&gloc,&ptst,&nps,&np)
     pnts=PNY.zeros((np,),dtype=PNY.int32) # should check for 64
     pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(pnts)

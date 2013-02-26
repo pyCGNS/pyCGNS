@@ -7,7 +7,7 @@
 import CGNS.WRA.mll as Mll
 import numpy as N
 
-print 'CGNS.WRA.mll','#116 - equationset_read/equationset_chemistry_read/equationset_elecmagn_read/governing_read'
+print 'CGNS.WRA.mll','#116 - equationset/equationset_chemistry/equationset_elecmagn/governing_read'
 
 # ----------------------------------------------------------------------
 a=Mll.pyCGNS('tmp/testmll20.hdf',Mll.MODE_READ)

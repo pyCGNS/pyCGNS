@@ -14,7 +14,7 @@ print 'CGNS.WRA.mll','#015 - array_write'
 a=Mll.pyCGNS('tmp/testmll14.hdf',Mll.MODE_WRITE)
 
 a.gopath("/Base/Zone 01/discrete")
-a.array_write('coordinates',2,3,NPY.array([2,4,6],dtype=NPY.int32),NPY.ones((2,4,6),dtype=NPY.int32))
+a.array_write('coordinates',NPY.ones((2,4,6),dtype=NPY.int32))
 
 a.close()
 
