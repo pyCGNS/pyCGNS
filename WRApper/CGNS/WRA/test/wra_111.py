@@ -12,5 +12,5 @@ print 'CGNS.WRA.mll','#111 - n1to1_global/conn_1to1_read_global'
 # ----------------------------------------------------------------------
 a=Mll.pyCGNS('tmp/cgns/001Disk.cgns',Mll.MODE_READ)
 t=a.n1to1_global(1)
-p=a.conn_1to1_read_global(1)
+#p=a.conn_1to1_read_global(1)
 a.close()

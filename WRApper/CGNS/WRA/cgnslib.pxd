@@ -5,6 +5,8 @@
 #  $Release: v4.0.1 $
 #  -------------------------------------------------------------------------
 #
+#  CGNS/MLL API v3.2.01
+#
 cdef extern from "cgnslib.h":
   
   ctypedef int cgsize_t
@@ -235,6 +237,22 @@ cdef extern from "cgnslib.h":
       PYRA_13=21
       NGON_n=22
       NFACE_n=23
+      BAR_4=24
+      TRI_9=25
+      TRI_10=26
+      QUAD_12=27
+      QUAD_16=28
+      TETRA_16=29
+      TETRA_20=30
+      PYRA_21=31
+      PYRA_29=32
+      PYRA_30=33
+      PENTA_24=34
+      PENTA_38=35
+      PENTA_40=36
+      HEXA_32=37
+      HEXA_56=38
+      HEXA_64=39
       
   ctypedef enum GridLocation_t:
       GridLocationNull=0
@@ -272,42 +290,47 @@ cdef extern from "cgnslib.h":
       Abutting1to1=4           
 
   # ------------------------------------------------------------------------
-  int cg_1to1_average_read(int fn,int B,int Z,int I,AverageInterfaceType_t *AverageInterfaceType)
-  int cg_1to1_average_write(int fn,int B,int Z,int I,AverageInterfaceType_t AverageInterfaceType)
+  # Please keep one liners here so that we can use a grep to check list
+  # Alphabetical sort (including return type)
+  #
+
+  char *cg_AngleUnitsName(AngleUnits_t vtype)
+  char *cg_ArbitraryGridMotionTypeName(ArbitraryGridMotionType_t vtype)
+  char *cg_AreaTypeName(AreaType_t vtype)
+  char *cg_AverageInterfaceTypeName(AverageInterfaceType_t vtype)
+  char *cg_BCDataTypeName(BCDataType_t vtype)
+  char *cg_BCTypeName(BCType_t vtype)
+  char *cg_DataClassName(DataClass_t vtype)
+  char *cg_DataTypeName(DataType_t vtype)
+  char *cg_ElectricCurrentUnitsName(ElectricCurrentUnits_t vtype)
+  char *cg_ElementTypeName(ElementType_t vtype)
+  char *cg_GoverningEquationsTypeName(GoverningEquationsType_t vtype)
+  char *cg_GridConnectivityTypeName(GridConnectivityType_t vtype)
+  char *cg_GridLocationName(GridLocation_t vtype)
+  char *cg_LengthUnitsName(LengthUnits_t vtype)
+  char *cg_LuminousIntensityUnitsName(LuminousIntensityUnits_t vtype)
+  char *cg_MassUnitsName(MassUnits_t vtype)
+  char *cg_ModelTypeName(ModelType_t vtype)
+  char *cg_PointSetTypeName(PointSetType_t vtype)
+  char *cg_RigidGridMotionTypeName(RigidGridMotionType_t vtype)
+  char *cg_SimulationTypeName(SimulationType_t vtype)
+  char *cg_SubstanceAmountUnitsName(SubstanceAmountUnits_t vtype)
+  char *cg_TemperatureUnitsName(TemperatureUnits_t vtype)
+  char *cg_TimeUnitsName(TimeUnits_t vtype)
+  char *cg_WallFunctionTypeName(WallFunctionType_t vtype)
+  char *cg_ZoneTypeName(ZoneType_t vtype)
+  char *cg_get_error()
+  int cg_1to1_average_read(int fn,int B,int Z,int I,AverageInterfaceType_t *A)
+  int cg_1to1_average_write(int fn,int B,int Z,int I,AverageInterfaceType_t A)
   int cg_1to1_id(int fn,int B,int Z,int I,double *one21_id)
-  int cg_1to1_periodic_read(int fn,int B,int Z,int I,float *RotationCenter,float *RotationAngle,float *Translation)
-  int cg_1to1_periodic_write(int fn,int B,int Z,int I,float *RotationCenter,float *RotationAngle,float *Translation)
+  int cg_1to1_periodic_read(int fn,int B,int Z,int I,float *Rc,float *Ra,float *T)
+  int cg_1to1_periodic_write(int fn,int B,int Z,int I,float *Rc,float *Ra,float *T)
   int cg_1to1_read(int fn,int B,int Z,int I,char *connectname,char *donorname,cgsize_t *range,cgsize_t *donor_range,int *transform)
   int cg_1to1_read_global(int fn,int B,char **connectname,char **zonename,char **donorname,cgsize_t **range,cgsize_t **donor_range,int **transform)
   int cg_1to1_write(int fn,int B,int Z,char *connectname,char *donorname,cgsize_t *range,cgsize_t *donor_range,int *transform,int *I)
-# cg_AngleUnitsName
-# cg_ArbitraryGridMotionTypeName
-# cg_AreaTypeName
-# cg_AverageInterfaceTypeName
-# cg_BCDataTypeName
-# cg_BCTypeName
-# cg_DataClassName
-# cg_DataTypeName
-# cg_ElectricCurrentUnitsName
   int cg_ElementDataSize(int fn,int B,int Z,int S,cgsize_t *ElementDataSize)
   int cg_ElementPartialSize(int fn,int B,int Z,int S,cgsize_t start,cgsize_t end,cgsize_t *ElementDataSize)
-# cg_ElementTypeName
-# cg_GoverningEquationsTypeName
-# cg_GridConnectivityTypeName
-# cg_GridLocationName
-# cg_LengthUnitsName
-# cg_LuminousIntensityUnitsName
-# cg_MassUnitsName
-# cg_ModelTypeName
-# cg_PointSetTypeName
-# cg_RigidGridMotionTypeName
-# cg_SimulationTypeName
-# cg_SubstanceAmountUnitsName
-# cg_TemperatureUnitsName
-# cg_TimeUnitsName
-# cg_WallFunctionTypeName
-# cg_ZoneTypeName
-# cg_add_path
+  int cg_add_path(char *path)
   int cg_arbitrary_motion_read(int fn,int B,int Z,int A,char *name,ArbitraryGridMotionType_t *type)
   int cg_arbitrary_motion_write(int fn,int B,int Z,char *amotionname,ArbitraryGridMotionType_t type,int*A)
   int cg_array_info(int A,char *ArrayName,DataType_t *DataType,int *DataDimension,cgsize_t *DimensionVector)
@@ -338,7 +361,7 @@ cdef extern from "cgnslib.h":
   int cg_boco_write(int fn,int B,int Z,char *boconame,BCType_t bocotype,PointSetType_t ptset_type,cgsize_t npnts,cgsize_t *pnts,int *BC)
   int cg_cell_dim(int fn,int B,int *cell_dim)
   int cg_close(int db)
-# cg_configure
+  int cg_configure(int what, void *value)
   int cg_conn_average_read(int fn,int B,int Z,int I,AverageInterfaceType_t *AverageInterfaceType)
   int cg_conn_average_write(int fn,int B,int Z,int I,AverageInterfaceType_t AverageInterfaceType)
   int cg_conn_id(int fn,int B,int Z,int I,double *conn_id)
@@ -381,9 +404,7 @@ cdef extern from "cgnslib.h":
   int cg_equationset_elecmagn_read(int *ElecFldModelFlag,int *MagnFldModelFlag,int *ConductivityModelFlag)
   int cg_equationset_read(int *EquationDimension,int *GoverningEquationsFlag,int *GasModelFlag,int *ViscosityModelFlag,int *ThermalConductivityModelFlag,int *TurbulenceClosureFlag,int *TurbulenceModelFlag)
   int cg_equationset_write(int EquationDimension)
-# cg_error_exit
-# cg_error_handler
-# cg_error_print
+  int cg_error_handler(void (*)(int, char *))
   int cg_expfull_read(void *exponents)
   int cg_expfull_write(DataType_t DataType,void *exponents)
   int cg_exponents_info(DataType_t *DataType)
@@ -405,17 +426,14 @@ cdef extern from "cgnslib.h":
   int cg_free(void *data)
   int cg_geo_read(int fn,int B,int F,int G,char *geo_name,char **geo_file,char *CAD_name,int *npart)
   int cg_geo_write(int fn,int B,int F,char *geo_name,char *filename,char *CADname,int *G)
-# cg_get_cgio
-# cg_get_compress
-  char *cg_get_error()
-# cg_get_file_type
-# cg_get_name
+  int cg_get_cgio(int fn, int *cgio_num)
+  int cg_get_compress(int *compress)
+  int cg_get_file_type(int fn, int *file_type)
   int cg_golist(int fn,int B,int depth,char **label,int *num)
   int cg_gopath(int fn,char *path)
   int cg_gorel(int fn,...)
   int cg_goto(int fn,int B,...)
   int cg_governing_read(GoverningEquationsType_t *EquationsType)
-# cg_governing_read
   int cg_governing_write(GoverningEquationsType_t Equationstype)
   int cg_gravity_read(int fn,int B,float *gravity_vector)
   int cg_gravity_write(int fn,int B,float *gravity_vector)
@@ -430,7 +448,7 @@ cdef extern from "cgnslib.h":
   int cg_index_dim(int fn,int B,int Z,int *index_dim)
   int cg_integral_read(int IntegralDataIndex,char *IntegralDataName)
   int cg_integral_write(char *IntegralDataName)
-# cg_is_cgns
+  int cg_is_cgns(char *filename, int *file_type)
   int cg_is_link(int *path_length)
   int cg_link_read(char **filename,char **link_path)
   int cg_link_write(char *nodename,char *filename,char *name_in_file)
@@ -472,23 +490,24 @@ cdef extern from "cgnslib.h":
   int cg_parent_data_write(int fn,int B,int Z,int S,cgsize_t *parent_data)
   int cg_part_read(int fn,int B,int F,int G,int P,char *part_name)
   int cg_part_write(int fn,int B,int F,int G,char *part_name,int *P)
+  int cg_precision(int fn, int *precision)
   int cg_ptset_info(PointSetType_t *ptset_type,cgsize_t *npnts)
-  int cg_ptset_read(cgsize_t pnts)
-  int cg_ptset_write(PointSetType_t ptset_type,cgsize_t npnts,pnts)
+  int cg_ptset_read(cgsize_t *pnts)
+  int cg_ptset_write(PointSetType_t ptset_type,cgsize_t npnts,cgsize_t *pnts)
   int cg_rigid_motion_read(int fn,int B,int Z,int R,char *name,RigidGridMotionType_t *type)
   int cg_rigid_motion_write(int fn,int B,int Z,char *name,RigidGridMotionType_t type,int *R)
   int cg_rind_read(int *RindData)
   int cg_rind_write(int *RindData)
-# cg_root_id
+  int cg_root_id(int fn, double *rootid)
   int cg_rotating_read(float *rot_rate,float *rot_center)
   int cg_rotating_write(float *rot_rate,float *rot_center)
-# cg_save_as
+  int cg_save_as(int fn, char *filename, int file_type,int follow_links)
   int cg_section_partial_write(int fn,int B,int Z,char *SectionName,ElementType_t type,cgsize_t start,cgsize_t end,int nbndry,int *S)
   int cg_section_read(int fn,int B,int Z,int S,char *SectionName,ElementType_t *type,cgsize_t *start,cgsize_t *end,int *nbndry,int *parent_flag)
   int cg_section_write(int fn,int B,int Z,char *SectionName,ElementType_t type,cgsize_t start,cgsize_t end,int nbndry,cgsize_t *elements,int *S)
-# cg_set_compress
-# cg_set_file_type
-# cg_set_path
+  int cg_set_compress(int compress)
+  int cg_set_file_type(int file_type)
+  int cg_set_path(char *path)
   int cg_simulation_type_read(int fn,int B,SimulationType_t *type)
   int cg_simulation_type_write(int fn,int B,SimulationType_t type)
   int cg_sol_id(int fn,int B,int Z,int S,double *sol_id)
@@ -525,5 +544,7 @@ cdef extern from "cgnslib.h":
   int cg_zone_read(int fn,int B,int Z,char *zonename,int *size)
   int cg_zone_type(int fn,int B,int Z,ZoneType_t *type)
   int cg_zone_write(int fn,int B,char *zonename,int *size,ZoneType_t type,int *Z)
+  void cg_error_exit()
+  void cg_error_print()
 
 # --- last line

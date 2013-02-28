@@ -57,9 +57,9 @@ a.field_write(1,1,1,2,'data array3',NPY.ones((2,4,6)))
 a.subreg_bcname_write(1,1,'zone subregion3',3,'bcname')
 a.subreg_bcname_write(1,1,'zone subregion4',3,'gcname')
 a.gopath('/Base/Zone 01/zone subregion3')
-a.ptset_write(4,2,NPY.array([[1,1,1],[1,2,3]]))
+a.ptset_write(4,NPY.array([[1,1,1],[1,2,3]]))
 a.gopath('/Base/Zone 01/zone subregion4')
-a.ptset_write(4,2,NPY.array([[1,1,1],[1,2,3]]))
+a.ptset_write(4,NPY.array([[1,1,1],[1,2,3]]))
 a.close()
 
 # ---

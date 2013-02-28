@@ -7,10 +7,10 @@
 import CGNS.WRA.mll as Mll
 import numpy as N
 
-print 'CGNS.WRA.mll','#132 - sol_ptset_info/sol_ptset_read'
+print 'CGNS.WRA.mll','#154 - rind_read'
 
 # ----------------------------------------------------------------------
-a=Mll.pyCGNS('tmp/testmll33.hdf',Mll.MODE_READ)
-b=a.sol_ptset_info(1,1,3)
-t=a.sol_ptset_read(1,1,3)
+a=Mll.pyCGNS('tmp/testmll50.hdf',Mll.MODE_READ)
+a.gopath('/Base/Zone 01/GridCoordinates')
+r=a.rind_read()
 a.close()

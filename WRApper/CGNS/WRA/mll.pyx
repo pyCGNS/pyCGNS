@@ -10,6 +10,10 @@ subsequent calls.
 
 CGNS.WRA.mll is using a Cython wrapping, it replaces the CGNS.WRA._mll which
 was an old hand-coded wrapper, difficult to maintain.
+
+To get the actual list of CGNS/MLL functions wrapped::
+  python -c 'import CGNS.WRA.mll;CGNS.WRA.mll.getCGNSMLLAPIlist()'
+
 """
 import os.path
 import CGNS.PAT.cgnskeywords as CK
@@ -18,10 +22,13 @@ import numpy as PNY
 cimport cgnslib
 cimport numpy as CNY
 
-MODE_READ   = 0
-MODE_WRITE  = 1
-MODE_MODIFY = 2
-MODE_CLOSED = 3
+# -----------------------------------------------------------------------------
+# CGNS/MLL API v3.2.01
+
+CG_MODE_READ  = MODE_READ   = 0
+CG_MODE_WRITE = MODE_WRITE  = 1
+CG_MODE_MODIFY= MODE_MODIFY = 2
+CG_MODE_CLOSED= MODE_CLOSED = 3
 
 CG_OK             = 0
 CG_ERROR          = 1
@@ -29,8 +36,8 @@ CG_NODE_NOT_FOUND = 2
 CG_INCORRECT_PATH = 3
 CG_NO_INDEX_DIM   = 4
 
-Null              = 0
-UserDefined       = 1
+CG_Null           = Null              = 0
+CG_UserDefined    = UserDefined       = 1
 
 CG_FILE_NONE      = 0
 CG_FILE_ADF       = 1
@@ -38,7 +45,22 @@ CG_FILE_HDF5      = 2
 CG_FILE_ADF2      = 3
 CG_FILE_PHDF5     = 4
 
+CG_MAX_GOTO_DEPTH = 20
 
+CG_CONFIG_ERROR           =   1
+CG_CONFIG_COMPRESS        =   2
+CG_CONFIG_SET_PATH        =   3
+CG_CONFIG_ADD_PATH        =   4
+CG_CONFIG_FILE_TYPE       =   5
+CG_CONFIG_HDF5_COMPRESS   = 201
+
+def getCGNSMLLAPIlist():
+  import CGNS.WRA.mll as M
+  lf=dir(M.pyCGNS)
+  for f in lf:
+    if ((f[0]!='_') and (f not in ['error'])):
+      print 'cg_'+f
+  
 # ------------------------------------------------------------
 cdef cg_open_(char *filename, int mode):
   """
@@ -120,9 +142,26 @@ cdef class pyCGNS(object):
     return (self._error, cgnslib.cg_get_error())
 
   @property
-  def ok(self):
+  def _ok(self):
     if (self._error==0): return True
     return False
+
+  # ---------------------------------------------------------------------------
+  cdef asCharPtrInList(self,char **ar,nstring,dstring):
+    ns=[]
+    for n in xrange(nstring):
+      ns.append(' '*dstring)
+      ar[n]=<char *>ns[n]
+    return ns
+
+  # ---------------------------------------------------------------------------
+  cdef fromCharPtrInList(self,char **ar,lstring):
+    rlablist=[]
+    for n in xrange(len(lstring)):
+        if (len(ar[n].strip())>0): 
+            rlab=ar[n].strip()
+            rlablist.append(rlab)
+    return rlablist
 
   # ---------------------------------------------------------------------------
   cpdef close(self):
@@ -130,7 +169,7 @@ cdef class pyCGNS(object):
     Closes the CGNS/MLL file descriptor.
 
     - Remarks:
-    * The Python object is still there, however you cannot call any CGNS/MLL
+    * The pyCGNS object is still there, however you cannot call any CGNS/MLL
     function with it. The `__del__` of the Python object calls the `close`.
     """
     cgnslib.cg_close(self._root)
@@ -162,33 +201,22 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_gopath(self._root,path)
 
   # ---------------------------------------------------------------------------
-  cdef asCharPtrInList(self,char **ar,nstring,dstring):
-    ns=[]
-    for n in xrange(nstring):
-      ns.append(' '*dstring)
-      ar[n]=<char *>ns[n]
-    return ns
-
-  # ---------------------------------------------------------------------------
-  cdef fromCharPtrInList(self,char **ar,lstring):
-    rlablist=[]
-    for n in xrange(len(lstring)):
-        if (len(ar[n].strip())>0): 
-            rlab=ar[n].strip()
-            rlablist.append(rlab[:-1])
-    return rlablist
-
-  # ---------------------------------------------------------------------------
   cpdef where(self):
     cdef int depth
-    cdef int num
+    cdef CNY.ndarray num
+    cdef int *numptr
     cdef int B
     cdef int fn
     cdef char *lab[MAXGOTODEPTH]
+    num=PNY.ones((MAXGOTODEPTH,),dtype=PNY.int32)
+    numptr=<int *>num.data
     lablist=self.asCharPtrInList(lab,MAXGOTODEPTH,32)
-    cgnslib.cg_where(&fn,&B,&depth,lab,&num)
+    cgnslib.cg_where(&fn,&B,&depth,lab,numptr)
     lablist=self.fromCharPtrInList(lab,lablist)
-    return (B, depth, lablist, num)
+    rlab=[]
+    for i in range(depth):
+      rlab.append((lablist[i],num[i]))
+    return (B, rlab)
     
   # ---------------------------------------------------------------------------
   cpdef nbases(self):
@@ -1932,13 +1960,14 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_sol_ptset_info(self._root,B,Z,S,&pst,&npnts)
     return (B,Z,S,pst,npnts)
 
+  # ---------------------------------------------------------------------------
   cpdef sol_ptset_read(self, int B, int Z, int S):
     cdef cgnslib.PointSetType_t pst 
     cdef cgnslib.cgsize_t       npnts
     cdef CNY.ndarray[dtype=CNY.int32_t,ndim=1] pnts
     cdef cgnslib.cgsize_t *pntsptr
     self._error=cgnslib.cg_sol_ptset_info(self._root,B,Z,S,&pst,&npnts)
-    if (self.ok):
+    if (self._ok):
       pnts=PNY.zeros((npnts,),dtype=PNY.int32)
       pntsptr=<cgnslib.cgsize_t *>pnts.data
       self._error=cgnslib.cg_sol_ptset_read(self._root,B,Z,S,pntsptr)
@@ -1946,18 +1975,18 @@ cdef class pyCGNS(object):
       pnts=None
     return (B,Z,S,pnts)
 
+  # ---------------------------------------------------------------------------
   cpdef int sol_ptset_write(self, int B, int Z, char *solname,
                             cgnslib.GridLocation_t location, 
                             cgnslib.PointSetType_t ptset_type, 
-                            npnts, pnts):
-    print 'NOT IMPLEMENTED YET sol_ptset_write'
-    return 0
-
-  cpdef int subreg_ptset_write(self, int B, int Z, char *regname,
-                               int dimension, cgnslib.GridLocation_t location,
-                               cgnslib.PointSetType_t ptset_type, npnts, pnts):
-    print 'NOT IMPLEMENTED YET subreg_ptset_write'
-    return 0
+                            cgnslib.cgsize_t npnts,
+                            CNY.ndarray pnts):
+    cdef int S
+    cdef cgnslib.cgsize_t * pntsptr
+    pntsptr=<cgnslib.cgsize_t *>pnts.data
+    self._error=cgnslib.cg_sol_ptset_write(self._root,B,Z,solname,location,
+                                           ptset_type,npnts,pntsptr,&S)
+    return S
 
   # ---------------------------------------------------------------------------
   cpdef int nsubregs(self, int B, int Z):
@@ -1965,31 +1994,79 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_nsubregs(self._root,B,Z,&n)
     return n
 
-  cpdef int subreg_info(self, int B, int Z, int S, char *regname):
-    print 'NOT IMPLEMENTED YET subreg_info'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef int subreg_ptset_write(self, int B, int Z, char *regname,
+                               int dimension, cgnslib.GridLocation_t location,
+                               cgnslib.PointSetType_t ptset_type,
+                               cgnslib.cgsize_t npnts,
+                               CNY.ndarray pnts):
+    cdef int S
+    cdef cgnslib.cgsize_t *pntsptr
+    pntsptr=<cgnslib.cgsize_t *>pnts.data
+    self._error=cgnslib.cg_subreg_ptset_write(self._root,B,Z,regname,dimension,
+                                              location,ptset_type,
+                                              npnts,pntsptr,&S)
+    return S
 
-  cpdef int subreg_ptset_read(self, int B, int Z, int S):
-    print 'NOT IMPLEMENTED YET subreg_ptset_read'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef subreg_info(self, int B, int Z, int S):
+    cdef char regname[MAXNAMELENGTH]
+    cdef int dim,bcname_len,gcname_len
+    cdef cgnslib.cgsize_t npnts
+    cdef cgnslib.PointSetType_t ptset_type
+    cdef cgnslib.GridLocation_t loc
+    self._error=cgnslib.cg_subreg_info(self._root,B,Z,S,regname,
+                                       &dim,&loc,&ptset_type,&npnts,
+                                       &bcname_len,&gcname_len)
+    return (B,Z,S,regname,dim,loc,ptset_type,npnts,bcname_len,gcname_len)
 
-  cpdef int subreg_bcname_read(self, int B, int Z, int S, char *bcname):
-    print 'NOT IMPLEMENTED YET subreg_bcname_read'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef subreg_ptset_read(self, int B, int Z, int S):
+    cdef char regname[MAXNAMELENGTH]
+    cdef int dim,bcname_len,gcname_len
+    cdef cgnslib.cgsize_t npnts
+    cdef cgnslib.PointSetType_t ptset_type
+    cdef cgnslib.GridLocation_t loc
+    cdef CNY.ndarray[dtype=CNY.int32_t,ndim=1] pnts
+    cdef cgnslib.cgsize_t *pntsptr
+    self._error=cgnslib.cg_subreg_info(self._root,B,Z,S,regname,
+                                       &dim,&loc,&ptset_type,&npnts,
+                                       &bcname_len,&gcname_len)
+    if (self._ok):
+      pnts=PNY.zeros((npnts,),dtype=PNY.int32)
+      pntsptr=<cgnslib.cgsize_t *>pnts.data
+      self._error=cgnslib.cg_subreg_ptset_read(self._root,B,Z,S,pntsptr)
+    else:
+      pnts=None
+    return pnts
 
-  cpdef int subreg_gcname_read(self, int B, int Z, int S, char *gcname):
-    print 'NOT IMPLEMENTED YET subreg_gcname_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef subreg_bcname_read(self, int B, int Z, int S):
+    cdef char bcname[MAXNAMELENGTH]
+    self._error=cgnslib.cg_subreg_bcname_read(self._root,B,Z,S,bcname)
+    return bcname
 
-  cpdef int subreg_gcname_write(self, int B, int Z, char *regname,
-                             int dimension, char *gcname):
-    print 'NOT IMPLEMENTED YET subreg_gcname_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef subreg_gcname_read(self, int B, int Z, int S):
+    cdef char gcname[MAXNAMELENGTH]
+    self._error=cgnslib.cg_subreg_gcname_read(self._root,B,Z,S,gcname)
+    return gcname
 
+  # ---------------------------------------------------------------------------
   cpdef int subreg_bcname_write(self, int B, int Z, char *regname,
-                                int dimension, char *bcname):
-    print 'NOT IMPLEMENTED YET subreg_bcname_write'
-    return 0
+                                int dim, char *bcname):
+    cdef int S
+    self._error=cgnslib.cg_subreg_bcname_write(self._root,B,Z,regname,dim,
+                                               bcname,&S)
+    return S
+
+  # ---------------------------------------------------------------------------
+  cpdef int subreg_gcname_write(self, int B, int Z, char *regname,
+                                int dim, char *gcname):
+    cdef int S
+    self._error=cgnslib.cg_subreg_gcname_write(self._root,B,Z,regname,dim,
+                                               gcname,&S)
+    return S
 
   # ---------------------------------------------------------------------------
   cpdef int nholes(self, int B, int Z):
@@ -2013,7 +2090,8 @@ cdef class pyCGNS(object):
     cdef cgnslib.GridLocation_t gloc
     cdef cgnslib.PointSetType_t ptst
     cdef cgnslib.cgsize_t *pntsptr
-    self._error=cgnslib.cg_hole_info(self._root,B,Z,I,name,&gloc,&ptst,&nps,&np)
+    self._error=cgnslib.cg_hole_info(self._root,B,Z,I,name,
+                                     &gloc,&ptst,&nps,&np)
     pnts=PNY.zeros((np,),dtype=PNY.int32) # should check for 64
     pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(pnts)
     self._error=cgnslib.cg_hole_read(self._root,B,Z,I,pntsptr)
@@ -2031,12 +2109,19 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_hole_id(self._root,B,Z,I,&id)
     return id
 
+  # ---------------------------------------------------------------------------
   cpdef int hole_write(self, int B, int Z, char * holename,
                        cgnslib.GridLocation_t location, 
                        cgnslib.PointSetType_t ptset_type,
-                       int nptsets, npnts, pnts):
-    print 'NOT IMPLEMENTED YET hole_write'
-    return 0
+                       int nptsets, cgnslib.cgsize_t npnts,
+                       CNY.ndarray pnts):
+    cdef int H
+    cdef cgnslib.cgsize_t *pntsptr
+    pntsptr=<cgnslib.cgsize_t *>pnts.data
+    self._error=cgnslib.cg_hole_write(self._root,B,Z,holename,location,
+                                      ptset_type,nptsets,
+                                      npnts,pntsptr,&H)
+    return H
 
   # ---------------------------------------------------------------------------
   cpdef int n_rigid_motions(self, int B, int Z):
@@ -2085,10 +2170,11 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_simulation_type_read(self._root,B,&t)
     return t
 
-  cpdef int simulation_type_write(self, int B,
-                                  cgnslib.SimulationType_t type):
-    print 'NOT IMPLEMENTED YET simulation_type_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef simulation_type_write(self, int B,
+                                  cgnslib.SimulationType_t stype):
+    self._error=cgnslib.cg_simulation_type_write(self._root,B,stype)
+    return None
 
   # ---------------------------------------------------------------------------
   cpdef biter_read(self, int B):
@@ -2110,6 +2196,7 @@ cdef class pyCGNS(object):
   # ---------------------------------------------------------------------------
   cpdef ziter_write(self, int B, int Z, char *name):
     self._error=cgnslib.cg_ziter_write(self._root,B,Z,name)
+    return None
 
   # ---------------------------------------------------------------------------
   cpdef gravity_read(self, int B):
@@ -2120,9 +2207,12 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_gravity_read(self._root,B,gravity_vectorPtr)
     return (B,gravity_vector)
 
-  cpdef int gravity_write(self, int B, gravity_vector):
-    print 'NOT IMPLEMENTED YET gravity_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef gravity_write(self, int B, CNY.ndarray gravityvector):
+    cdef float *gvector
+    gvector=<float *>gravityvector.data
+    self._error=cgnslib.cg_gravity_write(self._root,B,gvector)
+    return None
 
   # ---------------------------------------------------------------------------
   cpdef axisym_read(self, int B):
@@ -2135,97 +2225,194 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_axisym_read(self._root,B,ref_pointPtr,axisPtr)
     return (B,ref_point,axis)
 
-  cpdef int axisym_write(self, int B, ref_point, axis):
-    print 'NOT IMPLEMENTED YET axisym_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef axisym_write(self, int B, CNY.ndarray refpoint, CNY.ndarray axis):
+    cdef float *refpointptr,*axisptr
+    refpointptr=<float *>refpoint.data
+    axisptr=<float *>axis.data
+    self._error=cgnslib.cg_axisym_write(self._root,B,refpointptr,axisptr)
+    return None
 
   # ---------------------------------------------------------------------------
-  cpdef int rotating_read(self):
-    print 'NOT IMPLEMENTED YET rotating_read'
-    return 0
+  cpdef rotating_read(self):
+    cdef int dv,B
+    cdef float *rotrateptr,*rotcenterptr
+    cdef CNY.ndarray rotrate
+    cdef CNY.ndarray rotcenter
+    B=self.where()[0]
+    cgnslib.cg_cell_dim(self._root,B,&dv)
+    rotrate=PNY.ones(dv,dtype=PNY.float32)
+    rotrateptr=<float *>rotrate.data
+    rotcenter=PNY.ones(dv,dtype=PNY.float32)
+    rotcenterptr=<float *>rotcenter.data
+    self._error=cgnslib.cg_rotating_read(rotrateptr,rotcenterptr)
+    return (rotrate,rotcenter)
 
-  cpdef int rotating_write(self, rot_rate, rot_center):
-    print 'NOT IMPLEMENTED YET rotating_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef rotating_write(self, CNY.ndarray rotrate, CNY.ndarray rotcenter):
+    cdef float *rotrateptr,*rotcenterptr
+    rotrateptr=<float *>rotrate.data
+    rotcenterptr=<float *>rotcenter.data
+    self._error=cgnslib.cg_rotating_write(rotrateptr,rotcenterptr)
+    return None
 
+  # ---------------------------------------------------------------------------
   cpdef int bc_wallfunction_read(self, int B, int Z, int BC):
-    print 'NOT IMPLEMENTED YET bc_wallfunction_read'
-    return 0
+    cdef cgnslib.WallFunctionType_t wallfctype
+    self._error=cgnslib.cg_bc_wallfunction_read(self._root,B,Z,BC,&wallfctype)
+    return wallfctype
 
-  cpdef int bc_wallfunction_write(self, int B, int Z, int BC,
-                                     cgnslib.WallFunctionType_t WallFunctionType):
-    print 'NOT IMPLEMENTED YET bc_wallfunction_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef bc_wallfunction_write(self, int B, int Z, int BC,
+                              cgnslib.WallFunctionType_t wallfctype):
+    self._error=cgnslib.cg_bc_wallfunction_write(self._root,B,Z,BC,wallfctype)
+    return None
 
-  cpdef  int bc_area_read(self, int B, int Z, int BC):
-    print 'NOT IMPLEMENTED YET bc_area_read'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef bc_area_read(self, int B, int Z, int BC):
+    cdef cgnslib.AreaType_t areatype
+    cdef char regname[MAXNAMELENGTH]
+    cdef float areasurf
+    self._error=cgnslib.cg_bc_area_read(self._root,B,Z,BC,&areatype,
+                                        &areasurf,regname)
+    return (areatype,areasurf,regname)
 
-  cpdef int bc_area_write(self, int B, int Z, int BC,
-                             cgnslib.AreaType_t AreaType, float SurfaceArea, 
-                             char *RegionName):
-    print 'NOT IMPLEMENTED YET bc_area_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef bc_area_write(self, int B, int Z, int BC,
+                          cgnslib.AreaType_t areatype, float areasurf, 
+                          char *regname):
+    self._error=cgnslib.cg_bc_area_write(self._root,B,Z,BC,areatype,
+                                        areasurf,regname)
+    return None
 
-  cpdef  int conn_periodic_read(self, int B, int Z, int I):
-    print 'NOT IMPLEMENTED YET conn_periodic_read'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef conn_periodic_read(self, int B, int Z, int I):
+    cdef int dv
+    cdef CNY.ndarray rotcenter,rotangle,translation
+    cdef float *rotcenterptr,*rotangleptr,*translationptr
+    cgnslib.cg_cell_dim(self._root,B,&dv)
+    rotcenter=PNY.ones(dv,dtype=PNY.float32)
+    rotangle=PNY.ones(dv,dtype=PNY.float32)
+    translation=PNY.ones(dv,dtype=PNY.float32)
+    rotcenterptr=<float *>rotcenter.data
+    rotangleptr=<float *>rotangle.data
+    translationptr=<float *>translation.data
+    self._error=cgnslib.cg_conn_periodic_read(self._root,B,Z,I,
+                                              rotcenterptr,rotangleptr,
+                                              translationptr)
+    return (B,Z,I,rotcenter,rotangle,translation)
 
-  cpdef int conn_periodic_write(self, int B, int Z, int I,
-                                   RotationCenter, RotationAngle,
-                                   Translation):
-    print 'NOT IMPLEMENTED YET conn_periodic_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef conn_periodic_write(self, int B, int Z, int I,
+                                CNY.ndarray rotcenter, CNY.ndarray rotangle,
+                                CNY.ndarray translation):
+    cdef float *rotcenterptr,*rotangleptr,*translationptr
+    rotcenterptr=<float *>rotcenter.data
+    rotangleptr=<float *>rotangle.data
+    translationptr=<float *>translation.data
+    self._error=cgnslib.cg_conn_periodic_write(self._root,B,Z,I,
+                                               rotcenterptr,rotangleptr,
+                                               translationptr)
+    return None
 
-  cpdef int conn_1to1_periodic_write(self, int B, int Z, int I,
-                                   RotationCenter, RotationAngle,
-                                   Translation):
-    print 'NOT IMPLEMENTED YET conn_1to1_periodic_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef conn_1to1_periodic_read(self, int B, int Z, int I):
+    cdef int dv
+    cdef CNY.ndarray rotcenter,rotangle,translation
+    cdef float *rotcenterptr,*rotangleptr,*translationptr
+    cgnslib.cg_cell_dim(self._root,B,&dv)
+    rotcenter=PNY.ones(dv,dtype=PNY.float32)
+    rotangle=PNY.ones(dv,dtype=PNY.float32)
+    translation=PNY.ones(dv,dtype=PNY.float32)
+    rotcenterptr=<float *>rotcenter.data
+    rotangleptr=<float *>rotangle.data
+    translationptr=<float *>translation.data
+    self._error=cgnslib.cg_1to1_periodic_read(self._root,B,Z,I,
+                                              rotcenterptr,rotangleptr,
+                                              translationptr)
+    return (B,Z,I,rotcenter,rotangle,translation)
 
-  cpdef int conn_1to1_periodic_read(self, int B, int Z, int I):
-    print 'NOT IMPLEMENTED YET conn_1to1_periodic_read'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef conn_1to1_periodic_write(self, int B, int Z, int I,
+                                 CNY.ndarray rotcenter, CNY.ndarray rotangle,
+                                 CNY.ndarray translation):
+    cdef float *rotcenterptr,*rotangleptr,*translationptr
+    rotcenterptr=<float *>rotcenter.data
+    rotangleptr=<float *>rotangle.data
+    translationptr=<float *>translation.data
+    self._error=cgnslib.cg_1to1_periodic_write(self._root,B,Z,I,
+                                               rotcenterptr,rotangleptr,
+                                               translationptr)
+    return None
 
-  cpdef  int conn_average_read(self, int B, int Z, int I):
-    print 'NOT IMPLEMENTED YET conn_average_read'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef int conn_average_read(self, int B, int Z, int I):
+    cdef cgnslib.AverageInterfaceType_t averagetype
+    self._error=cgnslib.cg_conn_average_read(self._root,B,Z,I,&averagetype)
+    return averagetype
 
-  cpdef int conn_average_write(self, int B, int Z, int I,
-                            cgnslib.AverageInterfaceType_t AverageInterfaceType):
-    print 'NOT IMPLEMENTED YET conn_average_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef conn_average_write(self, int B, int Z, int I,
+                           cgnslib.AverageInterfaceType_t averagetype):
+    self._error=cgnslib.cg_conn_average_write(self._root,B,Z,I,averagetype)
+    return None
 
-  cpdef int conn_1to1_average_write(self, int B, int Z, int I,
-                            cgnslib.AverageInterfaceType_t AverageInterfaceType):
-    print 'NOT IMPLEMENTED YET conn_1to1_average_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef conn_1to1_average_write(self, int B, int Z, int I,
+                                cgnslib.AverageInterfaceType_t averagetype):
+    self._error=cgnslib.cg_1to1_average_write(self._root,B,Z,I,averagetype)
+    return None
 
   cpdef int conn_1to1_average_read(self, int B, int Z, int I):
-    print 'NOT IMPLEMENTED YET conn_1to1_average_read'
-    return 0
+    cdef cgnslib.AverageInterfaceType_t averagetype
+    self._error=cgnslib.cg_1to1_average_read(self._root,B,Z,I,&averagetype)
+    return averagetype
 
-  cpdef int rind_read(self, RindData):
-    print 'NOT IMPLEMENTED YET rind_read'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef rind_read(self):
+    cdef CNY.ndarray rind
+    cdef int *rindptr,cdim
+    W=self.where()
+    B=W[0]
+    Z=W[1][0][1]
+    ztype=self.zone_type(B,Z)
+    if (ztype==CK.Unstructured): cdim=1
+    elif (ztype==CK.Structured): cdim=self.base_read(B)[2]  
+    else: return -1
+    rind=PNY.ones((cdim*2,),dtype=PNY.int32)
+    rindptr=<int *>rind.data
+    self._error=cgnslib.cg_rind_read(rindptr)
+    return rind
 
-  cpdef int rind_write(self, RindData):
-    print 'NOT IMPLEMENTED YET rind_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef rind_write(self, CNY.ndarray rind):
+    self._error=cgnslib.cg_rind_write(<int *>rind.data)
+    return None
 
-  cpdef int ptset_write(self, cgnslib.PointSetType_t ptset_type,
-                     cgnslib.cgsize_t npnts, pnts):
-    print 'NOT IMPLEMENTED YET ptset_write'
-    return 0
+  # ---------------------------------------------------------------------------
+  cpdef ptset_write(self, cgnslib.PointSetType_t ptset_type, CNY.ndarray pnts):
+    cdef int npnts
+    npnts=pnts.size
+    self._error=cgnslib.cg_ptset_write(ptset_type,npnts,<int *>pnts.data)
+    return None
 
-  cpdef int ptset_read(self, cgnslib.cgsize_t pnts):
-    print 'NOT IMPLEMENTED YET ptset_read'
-    return 0
+
+  # ---------------------------------------------------------------------------
+  cpdef int ptset_read(self):
+    cdef cgnslib.PointSetType_t pst
+    cdef cgnslib.cgsize_t npnts
+    cdef cgnslib.cgsize_t *pntsptr
+    cdef CNY.ndarray pnts
+    self._error=cgnslib.cg_ptset_info(&pst,&npnts)
+    pnts=PNY.ones((npnts,),dtype=PNY.int32)
+    pntsptr=<cgnslib.cgsize_t *>pnts.data
+    self._error=cgnslib.cg_ptset_read(pntsptr)
+    return pnts
 
   # ---------------------------------------------------------------------------
   cpdef delete_node(self, char *path):
     self._error=cgnslib.cg_delete_node(path)
-    return 0
+    return None
 
   # ---------------------------------------------------------------------------
   cpdef cell_dim(self, int B):
@@ -2319,7 +2506,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_user_data_read(Index,usn)
     return usn
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef discrete_write(self, int B, int Z, char * name):
     """
     Creates a new `DiscreteData_t` node.
@@ -2354,7 +2541,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_ndiscrete(self._root,B,Z,&n)
     return n
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef discrete_read(self, int B, int Z, int D):
     """
     Returns the name of a given `DiscreteData_t` node.
@@ -2400,7 +2587,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_discrete_size(self._root,B,Z,D,&dd,dvptr)
     return (dd,dv[0:dd])
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef discrete_ptset_info(self, int B, int Z, int D):
     """
     Returns a tuple with information about a given discrete data node.
@@ -2423,7 +2610,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_discrete_ptset_info(self._root,B,Z,D,&pst,&npnts)
     return (pst,npnts)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef discrete_ptset_read(self, int B, int Z, int D):
     """
     Reads a point set of a given discrete data node.
@@ -2452,7 +2639,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_discrete_ptset_read(self._root,B,Z,D,pntsptr)
     return pnts
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef discrete_ptset_write(self, int B, int Z, char * name, 
                              cgnslib.GridLocation_t location,
                              cgnslib.PointSetType_t pst, 
@@ -2480,7 +2667,7 @@ cdef class pyCGNS(object):
                                                 pntsptr,&D)
     return D
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef nzconns(self, int B, int Z):
     """
     Returns the number of `ZoneGridConnectivity_t` nodes.
@@ -2497,7 +2684,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_nzconns(self._root,B,Z,&n)
     return n
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef zconn_read(self, int B, int Z, int C):
     """
     Returns the name of the `ZoneGridConnectivity_t` node.
@@ -2515,7 +2702,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_zconn_read(self._root,B,Z,C,name)
     return name
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef zconn_write(self, int B, int Z, char * name):
     """
     Creates a new `ZoneGridConnectivity_t` node.
@@ -2533,7 +2720,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_zconn_write(self._root,B,Z,name,&ZC)
     return ZC
 
-  # ------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef zconn_get(self, int B, int Z):
     """
     Gets the current `ZoneGridConnectivity_t` node.
@@ -2550,7 +2737,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_zconn_get(self._root,B,Z,&ZC)
     return ZC
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef zconn_set(self, int B, int Z, int ZC):
     """
     Gets the current `ZoneGridConnectivity_t` node.
@@ -2566,7 +2753,7 @@ cdef class pyCGNS(object):
     """
     self._error=cgnslib.cg_zconn_set(self._root,B,Z,ZC)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef n1to1(self, int B, int Z):
     """
     Returns the number of 1-to-1 interfaces in a zone.
@@ -2678,8 +2865,7 @@ cdef class pyCGNS(object):
 
   # --------------------------------------------------------------------------
   cpdef conn_1to1_read_global(self, int B):
-    print 'NOT IMPLEMENTED YET conn_1to1_read_global'
-    return
+    raise CGNSException(99,"conn_1to1_read_global not implemented")
 
   # -----------------------------------------------------------------------    
   cpdef nconns(self, int B, int Z):
@@ -2698,10 +2884,10 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_nconns(self._root,B,Z,&n)
     return n
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef conn_info(self, int B, int Z, int I):
     """
-    Returns a tuple with information about a generalized connectivity data node.
+    Generalized connectivity data node info.
 
     - Args:
     * `B` : base id (`int`)
@@ -2745,7 +2931,7 @@ cdef class pyCGNS(object):
   # ---------------------------------------------------------------------------
   cpdef conn_read(self, int B, int Z, int I):
     """
-    Returns a tuple with information about a generalized connectivity data node.
+    Generalized connectivity data node.
 
     - Args:
     * `B` : base id (`int`)
@@ -2766,6 +2952,7 @@ cdef class pyCGNS(object):
     ndd=self.conn_info(B,Z,I)[9]
     pnts=PNY.ones((np,dim),dtype=PNY.int32)
     dd=PNY.ones((ndd,dim),dtype=PNY.int32)
+    ddt=fromnumpydtype(PNY.int32)
     pntsptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(pnts)
     ddptr=<cgnslib.cgsize_t *>CNY.PyArray_DATA(dd)
     self._error=cgnslib.cg_conn_read(self._root,B,Z,I,pntsptr,ddt,ddptr)
@@ -2823,13 +3010,13 @@ cdef class pyCGNS(object):
                                       dzt,dpst,ddt,ndd,ddataptr,&I)
     return I
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef conn_id(self, int B, int Z, int I):
     cdef double id=-1
     self._error=cgnslib.cg_conn_id(self._root,B,Z,I,&id)
     return id
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef conn_read_short(self, int B, int Z, int I):
     """
     Reads generalized connectivity data without donor information.
@@ -2851,7 +3038,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_conn_read_short(self._root,B,Z,I,pntsptr)
     return pnts
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef conn_write_short(self, int B, int Z, char * name, 
                          cgnslib.GridLocation_t location,
                          cgnslib.GridConnectivityType_t gct, 
@@ -3001,7 +3188,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_equationset_elecmagn_read(&eflag,&mflag,&cflag)
     return (eflag,mflag,cflag)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef governing_read(self):
     """
     Returns type of the governing equations.
@@ -3018,7 +3205,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_governing_read(&etype)
     return etype
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef governing_write(self, cgnslib.GoverningEquationsType_t etype):
     """
     Creates type of the governing equations.
@@ -3048,7 +3235,7 @@ cdef class pyCGNS(object):
     """
     self._error=cgnslib.cg_diffusion_write(&dmodel)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef diffusion_read(self):
     """
     Reads a diffusion model node.
@@ -3064,7 +3251,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_diffusion_read(&dmodel)
     return dmodel
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef model_write(self, char * label, cgnslib.ModelType_t mtype):
     """
     Writes auxiliary model types.
@@ -3090,7 +3277,7 @@ cdef class pyCGNS(object):
     """
     self._error=cgnslib.cg_model_write(label,mtype)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef model_read(self, char * label ):
     """
     Reads auxiliary model types.
@@ -3117,7 +3304,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_model_read(label,&mtype)
     return mtype
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef nintegrals(self):
     """
     Returns the number of integral data nodes.
@@ -3147,7 +3334,7 @@ cdef class pyCGNS(object):
     """
     self._error=cgnslib.cg_integral_write(name)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef integral_read(self, int idx):
     """
     Returns the name of a integral data node.
@@ -3171,7 +3358,7 @@ cdef class pyCGNS(object):
     #cgnslib.cg_free(<void *>sptr)
     return s
   
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef descriptor_write(self, char * dname, char * dtext):
     """
     Writes descriptive text.
@@ -3186,7 +3373,7 @@ cdef class pyCGNS(object):
     """
     self._error=cgnslib.cg_descriptor_write(dname,dtext)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef ndescriptors(self):
     """
     Returns the number of descriptor nodes contained in the current node.
@@ -3202,7 +3389,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_ndescriptors(&n)
     return n
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef units_write(self, cgnslib.MassUnits_t m,cgnslib.LengthUnits_t l, 
                     cgnslib.TimeUnits_t tps,
                     cgnslib.TemperatureUnits_t t, cgnslib.AngleUnits_t a):
@@ -3230,7 +3417,7 @@ cdef class pyCGNS(object):
     
     self._error=cgnslib.cg_units_write(m,l,tps,t,a)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef nunits(self):
     """
     Returns the number of dimensional units.
@@ -3246,7 +3433,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_nunits(&n)
     return n
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef units_read(self):
     """
     Reads the first five dimensional units.
@@ -3271,7 +3458,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_units_read(&m,&l,&tps,&t,&a)
     return (m,l,tps,t,a)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef unitsfull_write(self, cgnslib.MassUnits_t m,
                         cgnslib.LengthUnits_t l, cgnslib.TimeUnits_t tps,
                         cgnslib.TemperatureUnits_t t, cgnslib.AngleUnits_t a, 
@@ -3283,21 +3470,26 @@ cdef class pyCGNS(object):
 
     - Args:
     * `m` : mass units (`int`)
-      The admissible values are CG_Null, CG_UserDefined, Kilogram, Gram, Slug, and PoundMass. 
+      Value in CG_Null, CG_UserDefined, Kilogram, Gram, Slug and PoundMass. 
     * `l` : length units (`int`)
-      The admissible values are CG_Null, CG_UserDefined, Meter, Centimeter, Millimeter, Foot, and Inch. 
+      Value in CG_Null, CG_UserDefined, Meter, Centimeter, Millimeter,
+      Foot and Inch. 
     * `tps`: mass units (`int`)
-      The admissible values are CG_Null, CG_UserDefined, and Second. 
+      Value in CG_Null, CG_UserDefined and Second. 
     * `t`: mass units (`int`)
-      The admissible values are CG_Null, CG_UserDefined, Kelvin, Celsius, Rankine, and Fahrenheit. 
+      Value in CG_Null, CG_UserDefined, Kelvin, Celsius,
+      Rankine and Fahrenheit. 
     * `a`: mass units (`int`)
-      The admissible values are CG_Null, CG_UserDefined, Degree, and Radian.
+      Value in CG_Null, CG_UserDefined, Degree and Radian.
     * `c`: electric current units (`int`)
-      The admissible values are CG_Null, CG_UserDefined, Ampere, Abampere, Statampere, Edison, and auCurrent. 
+      Value in CG_Null, CG_UserDefined, Ampere, Abampere, Statampere,
+      Edison and auCurrent. 
     * `sa`: admissible value units (`int`)
-      The admissible values are CG_Null, CG_UserDefined, Mole, Entities, StandardCubicFoot, and StandardCubicMeter.
+      Value in CG_Null, CG_UserDefined, Mole, Entities,
+      StandardCubicFoot and StandardCubicMeter.
     * `i`: luminous intensity units (`int`)
-      The admissible values are CG_Null, CG_UserDefined, Candela, Candle, Carcel, Hefner, and Violle. 
+      Value in CG_Null, CG_UserDefined, Candela, Candle, Carcel,
+      Hefner and Violle. 
     
     - Return:
     * None
@@ -3305,7 +3497,7 @@ cdef class pyCGNS(object):
     """
     self._error=cgnslib.cg_unitsfull_write(m,l,tps,t,a,c,sa,i)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef unitsfull_read(self):
     """
     Returns all eight dimensional units.
@@ -3354,8 +3546,7 @@ cdef class pyCGNS(object):
     cdef float * sexptr
     cdef double * dexptr
     if (e.shape!=(5,)):
-      print "Bad 2nd arg size: should be 5"
-      return 
+      raise CGNSException(98,"exponents_write requires 5 exponent values")
     if (dt==CK.RealSingle):
       exp=PNY.float32(e)
       sexptr=<float *>CNY.PyArray_DATA(exp)
@@ -3365,8 +3556,7 @@ cdef class pyCGNS(object):
       dexptr=<double *>CNY.PyArray_DATA(exp)
       self._error=cgnslib.cg_exponents_write(dt,dexptr)
     else:
-      print "First arg should be CG_RealDouble or CG_RealSingle"
-      return            
+      raise CGNSException(98,"exponents_write requires RealSingle/RealDouble")
 
   # ---------------------------------------------------------------------------
   cpdef exponents_info(self):
@@ -3384,7 +3574,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_exponents_info(&dtype)
     return dtype
   
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef nexponents(self):
     """
     Returns the number of dimensional exponents.
@@ -3400,7 +3590,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_nexponents(&n)
     return n
   
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef exponents_read(self):
     """
     Reads the first five dimensional exponents.
@@ -3427,7 +3617,7 @@ cdef class pyCGNS(object):
       self._error=cgnslib.cg_exponents_read(dexptr)
     return exp
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef expfull_write(self, cgnslib.DataType_t dt, e):
     """
     Writes all height dimensional exponents.
@@ -3447,8 +3637,7 @@ cdef class pyCGNS(object):
     cdef float * sexptr
     cdef double * dexptr
     if (e.shape!=(8,)):
-      print "Bad 2nd arg size: should be 8"
-      return 
+      raise CGNSException(98,"expfull_write requires 8 exponent values")
     if (dt==CK.RealSingle):
       exp=PNY.float32(e)
       sexptr=<float *>CNY.PyArray_DATA(exp)
@@ -3458,10 +3647,9 @@ cdef class pyCGNS(object):
       dexptr=<double *>CNY.PyArray_DATA(exp)
       self._error=cgnslib.cg_expfull_write(dt,dexptr)
     else:
-      print "First arg should be CG_RealDouble or CG_RealSingle"
-      return
+      raise CGNSException(98,"expfull_write requires RealSingle/RealDouble")
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef expfull_read(self):
     """
     Reads all eight dimensional exponents.
@@ -3489,7 +3677,7 @@ cdef class pyCGNS(object):
       self._error=cgnslib.cg_expfull_read(dexptr)
     return exp
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef conversion_write(self, cgnslib.DataType_t dt, fact):
     """
     Writes the conversion factors in a new node.
@@ -3516,10 +3704,9 @@ cdef class pyCGNS(object):
       dfactptr=<double *>CNY.PyArray_DATA(cfact)
       self._error=cgnslib.cg_conversion_write(dt,dfactptr)
     else:
-      print "First arg should be CG_RealDouble or CG_RealSingle"
-      return
+      raise CGNSException(98,"conversion_write requires RealSingle/RealDouble")
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef conversion_info(self):
     """
     Returns the conversion factors data type.
@@ -3535,7 +3722,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_conversion_info(&dt)
     return dt
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef conversion_read(self):
     """
      Returns the conversion factors.
@@ -3561,7 +3748,7 @@ cdef class pyCGNS(object):
       self._error=cgnslib.cg_conversion_read(dfactptr)
     return cfact
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef dataclass_write(self, cgnslib.DataClass_t dclass):
     """
     Writes the data class in a new node.
@@ -3579,7 +3766,7 @@ cdef class pyCGNS(object):
     
     self._error=cgnslib.cg_dataclass_write(dclass)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef dataclass_read(self):
     """
     Returns the data class.
@@ -3595,7 +3782,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_dataclass_read(&dclass)
     return dclass
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef gridlocation_write(self, cgnslib.GridLocation_t gloc):
     """
     Writes the grid location in a new node.
@@ -3611,7 +3798,7 @@ cdef class pyCGNS(object):
     """
     self._error=cgnslib.cg_gridlocation_write(gloc)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef gridlocation_read(self):
     """
     Reads the grid location.
@@ -3627,7 +3814,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_gridlocation_read(&gloc)
     return gloc
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef ordinal_write(self, int ord):
     """
     Writes the ordinal value in a new node.
@@ -3641,7 +3828,7 @@ cdef class pyCGNS(object):
     """
     self._error=cgnslib.cg_ordinal_write(ord)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef ordinal_read(self):
     """
     Reads the ordinal value.
@@ -3657,7 +3844,7 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_ordinal_read(&o)
     return o
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef ptset_info(self):
     """
     Returns a tuple with information about the point set.
@@ -3680,29 +3867,50 @@ cdef class pyCGNS(object):
     self._error=cgnslib.cg_ptset_info(&pst,&npnts)
     return (pst,npnts)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef famname_write(self, char * name):
     self._error=cgnslib.cg_famname_write(name)
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef famname_read(self):
-    cdef char * name = " "
+    cdef char name[MAXNAMELENGTH]
     self._error=cgnslib.cg_famname_read(name)
     return name
 
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   cpdef multifam_write(self, char * name, char * fam):
       self._error=cgnslib.cg_multifam_write(name,fam)
     
-##   cpdef family_name_write(self, int B, int F, char * name, char * family):
-##     self._error=cgnslib.cg_family_name_write(self._root,B,F,name,family)
-##     print cgnslib.cg_get_error()
-
-  # ----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  cpdef multifam_read(self, int F):
+      cdef char name[MAXNAMELENGTH]
+      cdef char fam[MAXNAMELENGTH]
+      self._error=cgnslib.cg_multifam_read(F,name,fam)
+      return (name,fam)
+    
+  # ---------------------------------------------------------------------------
+  cpdef nmultifam(self):
+    cdef int nfam
+    self._error=cgnslib.cg_nmultifam(&nfam)
+    return nfam
+    
+  # ---------------------------------------------------------------------------
   cpdef nfamily_names(self, int B, int F):
     cdef int n=0
     self._error=cgnslib.cg_nfamily_names(self._root,B,F,&n)
     return n
+  
+  # ---------------------------------------------------------------------------
+  cpdef family_name_write(self, int B, int F, char *name, char *fam):
+    self._error=cgnslib.cg_family_name_write(self._root,B,F,name,fam)
+    return None
+  
+  # ---------------------------------------------------------------------------
+  cpdef family_name_read(self, int B, int F, int N):
+    cdef char name[MAXNAMELENGTH]
+    cdef char fam[MAXNAMELENGTH]
+    self._error=cgnslib.cg_family_name_read(self._root,B,F,N,name,fam)
+    return (name,fam)
   
   # ---------------------------------------------------------------------------
   cpdef goto(self, int B, lpath):
@@ -3772,8 +3980,193 @@ cdef class pyCGNS(object):
       return
     raise CGNSException(92,"goto depth larger than expected")
 
+  # ---------------------------------------------------------------------------
+  cpdef golist(self, a, b, c, d):
+    raise CGNSException(99,"cg_golist not implemented: use goto")
+
+  # ---------------------------------------------------------------------------
+  cpdef gorel(self, args):
+    raise CGNSException(99,"cg_gorel not implemented: use goto")
+
+  # ---------------------------------------------------------------------------
+  cpdef ArbitraryGridMotionTypeName(self, cgnslib.ArbitraryGridMotionType_t v):
+    return cgnslib.cg_ArbitraryGridMotionTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef AreaTypeName(self, cgnslib.AreaType_t v):
+    return cgnslib.AreaTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef AverageInterfaceTypeName(self, cgnslib.AverageInterfaceType_t v):
+    return cgnslib.AverageInterfaceTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef BCDataTypeName(self, cgnslib.BCDataType_t v):
+    return cgnslib.BCDataTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef BCTypeName(self, cgnslib.BCType_t v):
+    return cgnslib.BCTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef DataClassName(self, cgnslib.DataClass_t v):
+    return cgnslib.DataClassName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef DataTypeName(self, cgnslib.DataType_t v):
+    return cgnslib.DataTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef ElectricCurrentUnitsName(self, cgnslib.ElectricCurrentUnits_t v):
+    return cgnslib.ElectricCurrentUnitsName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef ElementTypeName(self, cgnslib.ElementType_t v):
+    return cgnslib.ElementTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef GoverningEquationsTypeName(self, cgnslib.GoverningEquationsType_t v):
+    return cgnslib.GoverningEquationsTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef GridConnectivityTypeName(self, cgnslib.GridConnectivityType_t v):
+    return cgnslib.GridConnectivityTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef GridLocationName(self, cgnslib.GridLocation_t v):
+    return cgnslib.GridLocationName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef LengthUnitsName(self, cgnslib.LengthUnits_t v):
+    return cgnslib.LengthUnitsName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef LuminousIntensityUnitsName(self, cgnslib.LuminousIntensityUnits_t v):
+    return cgnslib.LuminousIntensityUnitsName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef MassUnitsName(self, cgnslib.MassUnits_t v):
+    return cgnslib.MassUnitsName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef ModelTypeName(self, cgnslib.ModelType_t v):
+    return cgnslib.ModelTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef PointSetTypeName(self, cgnslib.PointSetType_t v):
+    return cgnslib.PointSetTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef RigidGridMotionTypeName(self, cgnslib.RigidGridMotionType_t v):
+    return cgnslib.RigidGridMotionTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef SimulationTypeName(self, cgnslib.SimulationType_t v):
+    return cgnslib.SimulationTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef SubstanceAmountUnitsName(self, cgnslib.SubstanceAmountUnits_t v):
+    return cgnslib.SubstanceAmountUnitsName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef TemperatureUnitsName(self, cgnslib.TemperatureUnits_t v):
+    return cgnslib.TemperatureUnitsName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef TimeUnitsName(self, cgnslib.TimeUnits_t v):
+    return cgnslib.TimeUnitsName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef WallFunctionTypeName(self, cgnslib.WallFunctionType_t v):
+    return cgnslib.WallFunctionTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef ZoneTypeName(self, cgnslib.ZoneType_t v):
+    return cgnslib.ZoneTypeName(v)
+  
+  # ---------------------------------------------------------------------------
+  cpdef get_error(self):
+    return cgnslib.get_error()
+
+  # ---------------------------------------------------------------------------
+  cpdef add_path(self, char *path):
+    self._error=cgnslib.cg_add_path(path)
+    return None
+
+  # ---------------------------------------------------------------------------
+  cpdef set_path(self, char *path):
+    self._error=cgnslib.cg_set_path(path)
+    return None
+
+  # ---------------------------------------------------------------------------
+  cpdef configure(self, int what, value):
+    cdef int   ival
+    cdef char *sval
+    if (what in [CG_CONFIG_ERROR]):
+      raise CGNSException(99,"cg_configure cannot set Python error handler")
+    elif (what in [CG_CONFIG_SET_PATH, CG_CONFIG_ADD_PATH]):
+      sval=value
+      ptr=<void *>sval
+    else:
+      ival=value
+      ptr=<void *>ival
+    self._error=cgnslib.cg_configure(what,ptr)
+    return None
+  
+  # ---------------------------------------------------------------------------
+  cpdef int precision(self):
+    cdef int p
+    cgnslib.cg_get_compress(&p)
+    return p
+
+  cpdef free(self,args):
+    raise CGNSException(99,"cg_free not implemented on Python objects")
+  
+  cpdef error_exit(self):
+    raise CGNSException(99,"cg_error_exit not implemented")
+  
+  cpdef error_print(self):
+    cgnslib.cg_error_print()
+    return None
+
+  cpdef int get_filetype(self):
+    cdef int ftype
+    self._error=cgnslib.cg_get_file_type(self._root,&ftype)
+    return ftype
+
+  cpdef int get_cgio(self):
+    cdef int cgio
+    self._error=cgnslib.cg_get_cgio(self._root,&cgio)
+    return cgio
+
+  cpdef root_id(self):
+    cdef double r
+    self._error=cgnslib.cg_root_id(self._root, &r)
+    return r
+
+  cpdef save_as(self, char *filename, int file_type,int follow_links):
+    self._error=cgnslib.cg_save_as(self._root,filename,file_type,follow_links)
+    return None
+  
+# ---------------------------------------------------------------------------
+# config functions to be called without a pyCGNS object
+#
+cpdef cg_set_compress(int compress):
+  cgnslib.cg_set_compress(compress)
+  return None
+
+cpdef int cg_get_compress():
+  cdef int compress
+  cgnslib.cg_get_compress(&compress)
+  return compress
+
+cpdef cg_set_filetype(int filetype):
+  cgnslib.cg_set_filetype(filetype)
+  return None
+
+cpdef int cg_is_cgns(char *filename):
+  cdef int file_type
+  cgnslib.cg_is_cgns(filename,&file_type)
+  return file_type
+
 # ---
-
-
-    
-
