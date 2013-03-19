@@ -1,9 +1,8 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  pyCGNS - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
+# 
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
 import glob
@@ -115,12 +114,10 @@ else:
   cmdclassdict={'clean':setuputils.clean}
   modextlist=[]
 
-# print pyCGNSconfig.NUMPY_PATH_LIBRARIES
-
 setup (
 name         = "CGNS.NAV",
 version      = pyCGNSconfig.NAV_VERSION,
-description  = "pyCGNS NAVigator - CGNS/Python trees navigator and editor",
+description  = "pyCGNS - CGNS/Python trees navigator and editor",
 author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",

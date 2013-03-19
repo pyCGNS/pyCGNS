@@ -1,10 +1,8 @@
 #  ---------------------------------------------------------------------------
-#  pyCGNS.PAT - Python package for CFD General Notation System - PATternMaker
+#  pyCGNS - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
 #  ---------------------------------------------------------------------------
-#  $Release$
-#  ---------------------------------------------------------------------------
-
+#  
 import CGNS
 import CGNS.PAT.cgnskeywords as CK
 import CGNS.PAT.cgnstypes    as CT
@@ -13,7 +11,7 @@ import CGNS.PAT.cgnsutils    as CU
 
 import numpy as NPY
 
-__CGNS_LIBRARY_VERSION__=3.1
+__CGNS_LIBRARY_VERSION__=3.2
 
 # =============================================================================
 # MLL-like calls

@@ -10,6 +10,8 @@
 # CGNS.NAV is a CGNS/Python tree browser 
 # CGNS.WRA wraps CGNS/MLL in Python
 # CGNS.VAL checks CGNS/SIDS compliance of CGNS/Python trees
+# CGNS.APP is a set of all-purpose utilities
+# CGNS.DAT is not maintained today
 #
 # pyCGNS is released under LGPL v2.1 license
 #

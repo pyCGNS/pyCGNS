@@ -1,5 +1,5 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.VAL - Python package for CFD General Notation System - VALidater
+#  pyCGNS - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
@@ -102,10 +102,11 @@ class GenericParser(object):
     status1=self.checkSingleNode(T,path,node,parent)
     status2=status1
     ntype=CGU.getTypeAsGrammarToken(node[3])
-    if ((len(node)==4) and (ntype in self.methods)):
-      status2=apply(getattr(self,ntype),[path,node,parent,T,self.log])
-    else:
-      if (ntype in CGK.cgnstypes): print 'SKIP ',ntype
+    if (status1==CGM.CHECK_GOOD):
+      if ((len(node)==4) and (ntype in self.methods)):
+        status2=apply(getattr(self,ntype),[path,node,parent,T,self.log])
+      else:
+        if (ntype in CGK.cgnstypes): print 'SKIP ',ntype
     status1=CGM.getWorst(status1,status2)
     return status1
   # --------------------------------------------------------------------

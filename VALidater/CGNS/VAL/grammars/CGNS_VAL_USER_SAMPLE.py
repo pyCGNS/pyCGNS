@@ -1,5 +1,5 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
@@ -36,16 +36,17 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     rs=CGM.CHECK_OK
     zt=CGU.hasChildName(node,CGK.ZoneType_s)
     if (zt is not None):
-      if (CGU.stringValueMatches(zt,CGK.Structured_s)):
-        self.context[CGK.IndexDimension_s]=self.context[CGK.CellDimension_s]
-      elif (CGU.stringValueMatches(zt,CGK.Unstructured_s)):
-        self.context[CGK.IndexDimension_s]=1
-      shp=(self.context[CGK.IndexDimension_s],3)
+      if (CGU.stringValueMatches(zt,CGK.Structured_s)):    
+        shp=(parent[1][0],3)
+        idxdim=3
+      else:
+        shp=(1,)
+        idxdim=1
       if (CGU.getShape(node)!=shp):
         rs=log.push(pth,'S009',CGU.getShape(node))
       elif (CGU.stringValueMatches(zt,CGK.Structured_s)):
         zd=node[1]
-        for nd in range(self.context[CGK.IndexDimension_s]):
+        for nd in range(idxdim):
           if ((zd[nd][1]!=zd[nd][0]-1) or (zd[nd][2]!=0)):
             rs=log.push(pth,'S010')
     return rs

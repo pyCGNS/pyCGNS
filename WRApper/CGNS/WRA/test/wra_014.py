@@ -1,8 +1,6 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  pyCGNS - Python package for CFD General Notation Sy
 #  See license.txt file in the root directory of this Python module source  
-#  -------------------------------------------------------------------------
-#  $Release$
 #  -------------------------------------------------------------------------
 import CGNS.WRA.mll as Mll
 import numpy as NPY

@@ -1,8 +1,8 @@
 #  ---------------------------------------------------------------------------
-#  pyCGNS.PAT - Python package for CFD General Notation System - PATternMaker
+#  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  ---------------------------------------------------------------------------
-
+#
 import unittest
 
 # --------------------------------------------------
@@ -96,9 +96,9 @@ class CGUTestCase(unittest.TestCase):
     B=['B',None,[],None]
     C=['C',None,[],None]
     D=['D',None,[],None]
-    self.assertTrue(CGU.hasChildName())
     A[2]+=[B]
     A[2]+=[C]
+    self.assertTrue(CGU.hasChildName(A,'B'))
     self.assertTrue(CGU.checkDuplicatedName(A,'D'))
     self.assertFalse(CGU.checkHasChildName(A,'D'))
     A[2]+=[D]    

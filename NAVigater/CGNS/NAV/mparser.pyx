@@ -1,10 +1,8 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
+#  pyCGNS - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
-
+#  
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU
 import CGNS.APP.probe.arrayutils as CGA
@@ -21,7 +19,6 @@ from vtk.util import numpy_support
 class CGNSactor(vtk.vtkActor):
   __actortypes=['Zone','BC','Min/Max']
   def __init__(self,*args):
-    vtk.vtkActor.__init__(self,*args)
     self.__type=None
   def setType(self,atype):
     if (atype in self.__actortypes):
@@ -164,7 +161,8 @@ class Mesh(CGNSparser):
     return self._actors                 
 
   def getPathList(self,filter=None):
-    if (file is None): return [a[3] for a in self._actors]
+    return [a[3] for a in self._actors]
+    if (filter is None): return [a[3] for a in self._actors]
     else:
       r=[]
       for a in self._actors:

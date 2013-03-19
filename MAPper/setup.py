@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------
-# pyCGNS.MAP - Python package for CFD General Notation System - MAPper
+# pyCGNS - Python package for CFD General Notation System -
 # See license.txt file in the root directory of this Python module source  
 # -------------------------------------------------------------------------
 import os
@@ -22,11 +22,12 @@ setuputils.installConfigFiles()
 # -------------------------------------------------------------------------
 setup (
 name         = "CGNS.MAP",
-description  = "pyCGNS MAPper - CGNS/Python mapping with HDF5 load/save",
+version      = pyCGNSconfig.MAP_VERSION,
+description  = "pyCGNS - CGNS/Python mapping with HDF5 load/save",
 author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",
-packages=['CGNS.MAP'],
+packages=['CGNS.MAP','CGNS.MAP.test'],
 )
 
 # --- last line

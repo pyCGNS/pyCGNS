@@ -5,4 +5,4 @@
 # tree for license information. 
 # =============================================================================
 
-print 'pyCGNS ERROR: please import now CGNS.WRA'
+print '### pyCGNS ERROR: please import now CGNS.WRA'

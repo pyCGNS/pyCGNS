@@ -1,5 +1,5 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #  $Release$
@@ -21,7 +21,7 @@ setuputils.installConfigFiles()
 setup(
 name         = "CGNS.DAT",
 version      = pyCGNSconfig.DAT_VERSION,
-description  = "pyCGNS DATaTracer - DBMS archival and CGNS files tracability",
+description  = "pyCGNS - DBMS archival and CGNS files tracability",
 author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",

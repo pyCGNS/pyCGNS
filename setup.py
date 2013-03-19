@@ -2,8 +2,7 @@
 #  pyCGNS - Python package for CFD General Notation System 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
+#
 import os
 import sys
 import string
@@ -15,9 +14,6 @@ import setuputils
 #
 # OLD (bad) ssh://poinot@pycgns.hg.sourceforge.net/hgroot/pycgns/pycgns
 pcom=sys.executable
-
-#version=4
-#versionList=[4]
 
 # order IS significant
 CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater',

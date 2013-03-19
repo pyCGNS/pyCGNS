@@ -1,10 +1,8 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.VAL - Python package for CFD General Notation System - NAVigater
+#  pyCGNS - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
-
+# 
 import CGNS.VAL.grammars.CGNS_VAL_USER_SAMPLE as CGV
 import CGNS.VAL.parse.messages as CGM
 import CGNS.VAL.parse.findgrammar
@@ -49,7 +47,10 @@ def run(T,trace,userlist):
       diag.merge(parser.log)
     return diag
 
-def compliant(T,trace=False,userlist=[]):
+def compliant(T,trace=False,userlist=['SAMPLE']):
+    """Checks the compliance of a CGNS/Python tree with respect to
+    a basic CGNS/Python grammar. The default checks are based on
+    the 'SAMPLE' grammar which is NOT the full CGNS/SIDS checks"""
     ipath='%s/lib/python%s.%s/site-packages/CGNS/PRO'%\
            (sys.prefix,sys.version_info[0],sys.version_info[1])
     sys.path.append(ipath)
