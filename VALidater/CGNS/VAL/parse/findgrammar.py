@@ -8,6 +8,27 @@ import os
 import fnmatch
 import imp
 
+PROFILENAME='grammars'
+
+#  -------------------------------------------------------------------------
+def readProfile():
+  try:
+    hdir=os.environ['HOME']
+  except:
+    return {}
+  pdir='%s/.CGNS.NAV'%hdir
+  if (not os.exists(pdir)):
+    return {}
+  sys.path.append(pdir)
+  fp, pth, des = imp.find_module('grammars')
+  try:
+    mod=imp.load_module('grammars', fp, pth, des)
+  finally:
+    if fp:
+      fp.close()
+  return mod.Grammars
+  
+#  -------------------------------------------------------------------------
 def findAllUserGrammars(verbose=False):
   kdict={}
   for pth in [p for p in sys.path if p!='']:
@@ -29,6 +50,7 @@ def findAllUserGrammars(verbose=False):
     except OSError: pass
   return kdict
 
+#  -------------------------------------------------------------------------
 def findOneUserGrammar(tag,verbose=False):
   kdict={}
   found=False
@@ -46,6 +68,7 @@ def findOneUserGrammar(tag,verbose=False):
     if found: break
   return kdict
 
+#  -------------------------------------------------------------------------
 def importUserGrammars(key,recurse=False,verbose=False):
   mod=None
   modname='CGNS_VAL_USER_%s'%key

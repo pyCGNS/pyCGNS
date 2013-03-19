@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7LinkWindow.ui'
 #
-# Created: Thu Dec 13 11:37:19 2012
+# Created: Thu Feb 28 17:06:17 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -19,7 +19,7 @@ class Ui_Q7LinkWindow(object):
         sizePolicy.setHeightForWidth(Q7LinkWindow.sizePolicy().hasHeightForWidth())
         Q7LinkWindow.setSizePolicy(sizePolicy)
         Q7LinkWindow.setMinimumSize(QtCore.QSize(715, 350))
-        Q7LinkWindow.setMaximumSize(QtCore.QSize(1200, 350))
+        Q7LinkWindow.setMaximumSize(QtCore.QSize(3000, 750))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7LinkWindow.setWindowIcon(icon)

@@ -260,6 +260,10 @@ GridLocation_  = enumAsKeyDict(GridLocation_l)
 (Null,UserDefined,Vertex,CellCenter,FaceCenter,
  IFaceCenter,JFaceCenter,KFaceCenter,EdgeCenter)=GridLocation_.keys()
 
+VertexSize_s         = "VertexSize"
+CellSize_s           = "CellSize"
+VertexSizeBoundary_s = "VertexSizeBoundary"
+
 # ------------------------------------------------------------
 PointSetType_ts = "PointSetType_t"
 

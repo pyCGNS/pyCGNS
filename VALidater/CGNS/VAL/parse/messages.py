@@ -75,7 +75,7 @@ class DiagnosticLog(dict):
         DiagnosticLog.__messages[k]=DiagnosticMessageInstance(*m)
     def addMessages(self,d):
         for e in d:
-            DiagnosticLog.__messages[e]=DiagnosticMessagePattern(e,d[e][0],d[e][1])
+          DiagnosticLog.__messages[e]=DiagnosticMessagePattern(e,d[e][0],d[e][1])
     def push(self,path,messagekey,*tp):
         if (path is None): return
         if (path not in self): self[path]=[]

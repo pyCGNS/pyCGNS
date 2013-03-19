@@ -9,6 +9,8 @@ import CGNS.VAL.grammars.CGNS_VAL_USER_SAMPLE as CGV
 import CGNS.VAL.parse.messages as CGM
 import CGNS.VAL.parse.findgrammar
 
+import sys
+
 def listuserkeys(trace):
     s=''
     dk=CGNS.VAL.parse.findgrammar.findAllUserGrammars(trace)
@@ -42,12 +44,15 @@ def listdiags(trace,userlist):
 def run(T,trace,userlist):
     diag=CGM.DiagnosticLog()
     for user in userlist:
-        parser=getParser(trace,user)
-        parser.checkTree(T,trace)
-        diag.merge(parser.log)
+      parser=getParser(trace,user)
+      parser.checkTree(T,trace)
+      diag.merge(parser.log)
     return diag
 
 def compliant(T,trace=False,userlist=[]):
+    ipath='%s/lib/python%s.%s/site-packages/CGNS/PRO'%\
+           (sys.prefix,sys.version_info[0],sys.version_info[1])
+    sys.path.append(ipath)
     diag=run(T,trace,userlist)
     ok=[True,[]]
     for p in diag:

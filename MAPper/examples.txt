@@ -8,165 +8,248 @@
 MAP Examples
 ++++++++++++
 
-The *CGNS.MAP* provides the user with the two functions ``load`` and ``save``.
+The *CGNS.MAP* provides the user with the two functions ``load`` and ``save``,
+these are direct mapping of 
+the `CHLone <http://chlone.sourceforge.net/pythonCHLone.html#pythonchlone>`_ 
+functions.
 The actual actions these functions are performing heavily depends on the
-arguments you pass to these functions, the ``load`` takes a CGNS/HDF5 tree
-and returns at least a CGNS/Python tree, while the ``save`` takes a
-CGNS/Python tree and writes (modifies) a CGNS/HDF5 tree.
+arguments you pass to these functions, the ``load`` takes a *CGNS/HDF5* tree
+and returns at least a *CGNS/Python* tree, while the ``save`` takes a
+*CGNS/Python* tree and writes (modifies) a *CGNS/HDF5* tree.
 Rather than listing all options, we suggest your try to figure out how to
 use these functions reading the examples.
 
 All the examples are assuming the following imports::
 
-  import CGNS.MAP
+  import CGNS.MAP              
   import CGNS.PAT.cgnsutils    as CGU
   import CGNS.PAT.cgnskeywords as CGK
   import CGNS.PAT.cgnslib      as CGL
 
   import numpy as NPY
 
-Complete load of a *CGNS/HDF* file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The translation of a CNS/HDF5 file into a CGNS/Python tree is
+Complete load of a *CGNS/HDF5* file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The translation of a *CGNS/HDF5* file into a *CGNS/Python* tree is
 performed with the simple line::
 
-  (tree,links)=CGNS.MAP.load("testfile.cgns")
+  (tree,links,paths)=CGNS.MAP.load("mesh.cgns")
 
-.. code-block:: python
-   :emphasize-lines: 3,5
+If the ``testfile.cgns`` has no link the ``links`` and ``paths`` are
+empty lists and ``tree`` contains the *CGNS/Python* tree.
+The file name extension is not required, if the file doesn't exist
+or if it is not a *CGNS/HDF5* file exceptions are raised::
 
-   (tree,links)=CGNS.MAP.load("001Disk.hdf",CGNS.MAP.S2P_DEFAULT|)
+  >>> T=CGNS.MAP.load('a.hdf')
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "pyCHLone.pyx", line 137, in CHLone.load (pyCHLone.c:2130)
+  CHLone.CHLoneException: (900, 'No such file [a.hdf]')
 
-   print tree
+  >>> T=CGNS.MAP.load('cgnscheck.pdf')
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "pyCHLone.pyx", line 151, in CHLone.load (pyCHLone.c:2398)
+  CHLone.CHLoneException: (101, 'Target is not an HDF5 file [cgnscheck.pdf]')
 
+You can see here the exception are coming from ``CHLone`` interface,
+but as *CGNS.MAP* wraps *CHLone* you can also catch them as a *CGNS.MAP*
+error::
 
-To be more precise, you can add the *depth*, the *path* and the *linkpath* of the file. In our case, the *depth* is worth 0 and the 
-string's *path* is '' because we want to load entirely the tree. Here, the *linkpath* is an empty list because this file has'nt *links*.
-As we are located in the same directory as the file, we don't owe necessarily write the *path*.
+  >>> try:
+  ...   T=CGNS.MAP.load('cgnscheck.pdf')
+  ... except CGNS.MAP.error, e:
+  ...   print e
+  ... 
+  (101, 'Target is not an HDF5 file [cgnscheck.pdf]')
 
-::
+And if you write your own function, this leads to::
 
- import CGNS.MAP 
+  def myload(filename):
+    try:
+      T=CGNS.MAP.load('cgnscheck.pdf')[0]
+    except CGNS.MAP.error, e:
+      T=None
+    return T
 
- (tree,links)=CGNS.MAP.load("001Disk.hdf", CGNS.MAP.S2P_DEFAULT,0, '', [], None)
-
- print tree
+In this latter example, we are forgetting ``links`` and ``paths``.
 
 Complete save of a *CGNS/Python* tree
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To save a *CGNS/Python* tree, you have to use the *save* function which takes a CGNS/Python tree and writes the contents in a CGNS/HDF5 
-file.
-As the previous case, it's necessary to specify the file's name and its flags.   
+Now you have a *CGNS/Python* tree of your own, use the ``save`` 
+to write the contents in a *CGNS/HDF5* file::
 
+ CGNS.MAP.save("solution.hdf", tree)
 
-::
+Again, the file extension is not significant. You can save your file with 
+the name you want as far as the file system is happy with it::
 
- import CGNS.MAP
+  CGNS.MAP.save('../solution.cgns',T)
+  CGNS.MAP.save('RESULT',T)
+  CGNS.MAP.save('solution.doc',T)
 
- status=CGNS.MAP.save("filename.hdf", tree, links, CGNS.MAP.S2P_DEFAULT)
+Of course, all these files are *HDF5* files, and you may have problem
+with tools is you play with file names. Then we strongly suggest you
+stay with usual file extensions such as ``cgns`` or ``hdf``.
+
+If the file exist or if your file system doesn't want you to write
+for any reason, you have an exception.
+
+.. code-block:: python
+
+   >>> T=CGNS.MAP.load('r.hdf')[0]
+   >>> CGNS.MAP.save('r.hdf',T)
+   Traceback (most recent call last):
+     File "<stdin>", line 1, in <module>
+     File "pyCHLone.pyx", line 159, in CHLone.save (pyCHLone.c:2718)
+   CHLone.CHLoneException: (901, 'File already exists [r.hdf]')
+
+   >>> CGNS.MAP.save('tmp/solution.cgns',T)
+   Traceback (most recent call last):
+     File "<stdin>", line 1, in <module>
+     File "pyCHLone.pyx", line 169, in CHLone.save (pyCHLone.c:2918)
+   CHLone.CHLoneException: (104, 'Cannot create new file [tmp/solution.cgns]')
+
 
 Load of a *CGNS/HDF* file skeletton
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You want to parse a GCNS/Python tree without the actual data (numpy arrays).
-This is usefull when you want to find out specific nodes before actually
-load them::
 
-  flags=CGNS.MAP.S2P_DEFAULT|CGNS.MAP.S2P_NODATA
-  (tree,lk)=CGNS.MAP.load("data/T0.cgns",flags,0,None,[],None)
+One of the big advantage of *CGNS* is to provide a complete and consistent
+tree in data. Then you often want to parse it to get some information about
+its structure or about a particuliar data. You do not want to load all
+cooridnates and solution arrays, you just want the targetted information.
+The *CGNS.MAP* load allows you to filter your target in the *CGNS/HDF5* file.
 
-  # find all zones
-  zlist=CGU.getAllNodesByTypeList2([CGK.Zone_ts],tree)
+In this first exemaple we load only the zone layout of the tree. You want 
+to distribute your zones on a cluster processors and you need to now the number
+of zones and their sizes::
 
-In this example, we can also set the *depth* to 3 instead of 0. Then
-the parse would stop at the zone level.
-If you set *depth* to 0 there is no depth limit, 
-a level of 1 means only `CGNSTree_t`,
-a level of 2 means `CGNSLibraryVersion_t`, `CGNSBase_t` and so on...
+  T=CGNS.MAP.load('z.hdf',depth=3)
 
-In order to load the skeletton of a *CGNS/HDF* file, we use the *load* function with the *S2P_NODATA* flag. This flag acts by removing
-all the data contained in the tree.
+The ``depth`` argument tells *CGNS.MAP* to stop loading at level 3, which is
+the ``Zone_t`` level; The first level is the root of the tree (``CGNSTree_t``)
+then you have the base level (``CGNSBase_t``) and the zones.
 
-::
+Note you have all nodes at level 3, not only the zones. You need to
+select the zones::
 
- import CGNS.MAP
+  zlist=CGU.getAllNodesByTypeSet(T[0],['Zone_t'])
 
- flags=CGNS.MAP.S2P_DEFAULT|CGNS.MAP.S2P_NODATA
+In the case you have several ``CGNSBase_t`` you may want to filter
+a specific base, use the ``subtree`` to tell to ``load`` to select only
+the nodes with the given prefix, all together this leads to the following
+lines.
 
- (tree,link)=CGNS.MAP.load("001Disk.hdf", flags, 0, '', [], None)
+.. code-block:: python
 
- print tree
+   >>> T=CGNS.MAP.load('z.hdf',subtree='/Base_1',depth=3)
+   >>> print CGU.getAllPaths(T[0])
+   ['/Base_1', '/Base_1/About', '/Base_1/Zone_0001', '/Base_1/Zone_0002']
+   >>> zlist=CGU.getAllNodesByTypeSet(T[0],['Zone_t'])
 
+Load of a *CGNS/HDF* file skeletton without data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The previous example actually reads all the data of the *CGNS/HDF5* file,
+its stops parsing the tree but every node is retrieved with its associated
+array. Now we would like to find out the coordinates names, the node names
+of the children of ``GridCoordinates_t``, but we do not want to load a
+probably large amount of data. We use the ``madata`` threshold parameter,
+all data above this size is returned as a *no-data* node::
+
+ T=CGNS.MAP.load('mesh.hdf',maxdata=20,flags=CGNS.MAP.S2P_NODATA)
+
+The ``CGNS.MAP.S2P_NODATA`` is required, without it the ``maxdata`` is
+ignored. Here all the *CGNS/HDF5* tree is retrieved but nodes with a
+data array with more than 20 entries is set as an ``MT`` (*empty*) node.
+We can still parse the node names::
+
+ >>> g=CGU.getNodeByPath(T[0],'/Mesh/Zone-004/GridCoordinates')
+ ['GridCoordinates', None, [['CoordinateX', None, [], 'DataArray_t'], 
+ ['CoordinateY', None, [], 'DataArray_t'], 
+ ['CoordinateZ', None, [], 'DataArray_t']], 'GridCoordinates_t']
+
+You should **not** save this tree, because you would overwrite the
+coordinates nodes with empty arrays.
+
+When you use the ``S2P_NODATA`` flag your result tree may contain ``MT``
+nodes that actually have no data in the *CGNS/HDF5* file or node arrays that
+have been ignored because of the ``maxdata`` threshold. The third entry
+in the ``load`` return tuple is the ``paths``, it contains the paths of the
+nodes that were ignored::
+
+  >>> T=CGNS.MAP.load('mesh.hdf',maxdata=20,flags=CGNS.MAP.S2P_NODATA)
+  >>> print T[2]
+  [('/Mesh/Zone-004/GridCoordinates/CoordinateX',1),
+   ('/Mesh/Zone-004/GridCoordinates/CoordinateY',1)
+   ('/Mesh/Zone-004/GridCoordinates/CoordinateZ',1)]
+
+The ``1`` associated with the path is the integer value corresponding to
+the ``NODATA`` flag, it is useless at this time.
+
+Load a tree without links
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*to add: example with trunctated tree*
+
+Save a tree with links
+~~~~~~~~~~~~~~~~~~~~~~
+
+*to add: example with recursive tree save per link*
 
 Update a sub-tree
 ~~~~~~~~~~~~~~~~~
 
-An existing CGNS/Python tree is read again from a file. The *update*
-dictionnary declares the nodes you want to update instead of creating
-new ones::
+You have an existing *CGNS/Python* tree and you want to update a single node
+from a *CGNS/HDF5* file, you do not want to load the complete file again or
+even overwrite some modifications i nthe tree you have in memory. The
+``updatedict`` argument of the ``load`` contains the actual *CGNS/Python*
+nodes you want to update with respect to the associated path you give.
 
-  updict={}
-  path='/Disk/zone1/GridCoordinates/CoordinateZ'
-  updict[path]=CGU.getValueByPath(tree,path)
-  path='/Disk/zone2/GridCoordinates/CoordinateX'
-  updict[path]=CGU.getValueByPath(tree,path)
+For example, you have a *CGNS/Python* tree with three coordinate nodes
+you want to update, because you know some data has changed on the disk.
+First you add an entry in ``updatedict`` with the target path as key,
+then you set the value of this dictionary entry as the already existing
+node you want to update. Be sure to set the node, *not the array* which
+is the second entry in the node list::
 
-  (tree,lk)=CGNS.MAP.load("data/T0.cgns",CGNS.MAP.S2P_DEFAULT,0,None,[],updict)
+  >>> T1=CGNS.MAP.load("mesh.cgns")
+  >>> mydict={}
+  >>> nodepath='/Mesh/Zone-001/GridCoordinates/CoordinateZ'
+  >>> mydict[path]=CGU.getValueByPath(T1,nodepath)
+  >>> T2=CGNS.MAP.load("mesh.cgns",updatedict=mydict)
 
-Then, we modify the data contained in the node whose the label is
-'fluid' by replacing 'ideal' instead of 'perfect'.
+The returned ``T2`` tree in the second ``load`` is a completely new one 
+except the ``/Mesh/Zone-001/GridCoordinates/CoordinateZ`` node which is
+now updated and shared by both ``T1`` and ``T2``.
 
- >>> tree[2][1][2][1][2][5]
- ['fluid',array(['I','d','e','a','l'],dtype='|S1'),[],'DataArray_t']
+If you want to load only this node and nothing else, use the ``subtree``
+argument::
 
- >>> import numpy
- >>> tree[2][1][2][1][2][5][1]=numpy.array(tuple('parfait'),'|S1')
+  >>> T1=CGNS.MAP.load("mesh.cgns")
+  >>> mydict={}
+  >>> nodepath='/Mesh/Zone-001/GridCoordinates/CoordinateZ'
+  >>> mydict[path]=CGU.getValueByPath(T1,nodepath)
+  >>> T2=CGNS.MAP.load("mesh.cgns",subtree=nodepath,updatedict=mydict)
 
- >>> tree[2][1][2][1][2][5]
- ['fluid',array(['p','a','r','f','a','i','t'],dtype='|S1'),[],'DataArray_t']
+Again you have updated the node in ``T1``, but you don't really need
+the sub-tree you retrieve in ``T2``, which is a small copy of the nodes
+along the path you give as argument.
+To get rid of it, you forget the reference to the output, Python would
+garbage by itself the unused data::
 
-Copy a part of a tree
-~~~~~~~~~~~~~~~~~~~~~
+  >>> T1=CGNS.MAP.load("mesh.cgns")
+  >>> mydict={}
+  >>> nodepath='/Mesh/Zone-001/GridCoordinates/CoordinateZ'
+  >>> mydict[path]=CGU.getValueByPath(T1,nodepath)
+  >>> CGNS.MAP.load("mesh.cgns",subtree=nodepath,updatedict=mydict)
 
-To copy only a part of a tree, you have to use the *load* function by
-mentioning the *path* which defines the start node of the load. In our
-example, we load only the node whose label is 'fluid' because this
-node has no children and the nodes '.SOLVER#Compute' and 'Disk' which
-are parents of the node 'fluid'.
-
- import CGNS.MAP
-
- path='/Disk/.Solver#Compute/fluid'
- (tree,links)=CGNS.MAP.load("001Disk.hdf",CGNS.MAP.S2P_DEFAULT,0,path,[],None)
-
- >>> print tree
-
- ['CGNSTree', None, [['Disk', array([3, 3], dtype=int32), [['.Solver#Compute', None, 
- [['fluid', array(['I', 'd', 'e', 'a', 'l'], dtype='|S1'), [], 'DataArray_t']], 
- 'UserDefinedData_t']], 'CGNSBase_t']], 'CGNSTree_t']
-
-
-Copy and merge links
-~~~~~~~~~~~~~~~~~~~~
-
-In order to extract the *links*, you have to specify the path where are situated the other files which are linked to our file in a list.
-For example, we are looking for the link files which are in the directory 'liens'.
+You are done, the node is updated into ``T1``.
 
 Some usual issues
 ~~~~~~~~~~~~~~~~~
 
-Your load leads to an empty tree::
-
- >>>import CGNS.MAP
- >>>(tree,links)=CGNS.MAP.load("./T0.cgns",CGNS.MAP.S2P_FOLLOWLINKS)
- >>>tree
- ['CGNSTree', None, None, 'CGNSTree_t']
-
- import CGNS.MAP
-
-your file is an ADF file, not an HDF5 file.
- (tree, links)=CGNS.MAP.load("./liens/3element_airfoll_msh_cfd.hdf", CGNS.MAP.S2P_DEFAULT,0,'',['./liens/'],None)
-
- print links
+*to do: add here users\' usual mistakes*
 
 

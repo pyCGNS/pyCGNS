@@ -1427,11 +1427,11 @@ def newModel(parent,name,label,value):
   return node
     
 # -----------------------------------------------------------------------------
-def newDiffusionModel(parent):
+def newDiffusionModel(parent,value=None):
   # the diffusion_t doesn't exist. We use the cgnspatch file to keep
   # track of this...
   CU.checkDuplicatedName(parent,CK.DiffusionModel_s)
-  node=CU.newNode(CK.DiffusionModel_s,None,[],CK.DiffusionModel_ts,parent)
+  node=CU.newNode(CK.DiffusionModel_s,value,[],CK.DiffusionModel_ts,parent)
   return node
 
 # -----------------------------------------------------------------------------
