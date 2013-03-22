@@ -18,11 +18,15 @@ class Q7Info(Q7Window,Ui_Q7InfoWindow):
         Q7Window.__init__(self,Q7Window.VIEW_INFO,parent,None,None)
         self.bClose.clicked.connect(self.reject)
         self.bInfo.clicked.connect(self.infoInfoView)
+        self._fgprint=fgprint
         self._data=data
     def infoInfoView(self):
         self._control.helpWindow('Info')
     def show(self):
         self.reset()
+        self.bHasBeenModified.setVisible(False)
+        if (self._fgprint.fileHasChanged()):
+            self.bHasBeenModified.setVisible(True)
         super(Q7Info, self).show()
     def reset(self):
         for k in dir(self):

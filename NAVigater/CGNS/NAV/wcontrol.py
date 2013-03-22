@@ -89,10 +89,13 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             self.popupmenu.popup(self.controlTable.lastPos)
     def closeView(self):
         self.updateLastView()
-        if (self.lastView): Q7FingerPrint.getFingerPrint(self.lastView)
+        if (self.lastView is not None):
+            fg=Q7FingerPrint.getFingerPrint(self.lastView)
+            fg.closeView(self.lastView)
     def raiseView(self):
         self.updateLastView()
-        if (self.lastView): Q7FingerPrint.raiseView(self.lastView)
+        if (self.lastView is not None):
+            Q7FingerPrint.raiseView(self.lastView)
     def infoControl(self):
         self.helpWindow('Control')
     def helpWindowDoc(self,doc):
@@ -105,12 +108,14 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.help.show()
     def info(self):
         self.updateLastView()
-        (f,v,d)=Q7FingerPrint.infoView(self.lastView)
-        if (not f.isFile()): return
-        self.w=Q7Info(self,d,f)
-        self.w.show()
+        if (self.lastView is not None):
+            (f,v,d)=Q7FingerPrint.infoView(self.lastView)
+            if (not f.isFile()): return
+            self.w=Q7Info(self,d,f)
+            self.w.show()
     def closeTree(self):
         self.updateLastView()
+        if (self.lastView is None): return
         (f,v,d)=Q7FingerPrint.infoView(self.lastView)
         reply = MSG.message('Double check...',
                             """Do you want to close the tree and all its views,<br>
@@ -126,8 +131,12 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         if (reply == QMessageBox.Yes):
             Q7FingerPrint.closeAllTrees()
     def updateLastView(self):
-        r=self.controlTable.currentItem().row()
-        self.lastView=self.getIdxFromLine(r)
+        it=self.controlTable.currentItem()
+        if (it is None):
+            self.lastView=None
+        else:
+            r=it.row()
+            self.lastView=self.getIdxFromLine(r)
         return self.lastView
     def updateMenu(self,idx):
         lv=self.getIdxFromLine(idx.row())
@@ -302,6 +311,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         child.show()
         self.setHistory(fgprint.filedir,fgprint.filename)
         self.updateViews()
+        fgprint.getInfo(force=True)
         self.readyCursor()
     def saving(self,*args):
         self._T('saving as: [%s]'%self.signals.buffer)
@@ -311,6 +321,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.setHistory(self.signals.fgprint.filedir,
                         self.signals.fgprint.filename)
         self.updateViews()
+        self.signals.fgprint.getInfo(force=True)
         self.readyCursor()
     def load(self):
         self.fdialog=Q7File(self)

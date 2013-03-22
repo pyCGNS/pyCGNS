@@ -413,12 +413,12 @@
          <rect>
           <x>10</x>
           <y>20</y>
-          <width>86</width>
+          <width>201</width>
           <height>21</height>
          </rect>
         </property>
         <property name="text">
-         <string>NO DATA</string>
+         <string>Partial data mode</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -694,6 +694,32 @@
         </property>
         <property name="text">
          <string>Group</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="bHasBeenModified">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>4</x>
+          <y>250</y>
+          <width>251</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>WARNING: File has changed on disk</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../R/Res.qrc">
+          <normaloff>:/images/icons/subtree-sids-failed.gif</normaloff>:/images/icons/subtree-sids-failed.gif</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
         </property>
        </widget>
       </widget>

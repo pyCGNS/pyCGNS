@@ -399,7 +399,7 @@ class Q7FingerPrint:
         v=cls.getView(idx)
         if (f is None): return (None,None,None)
         if (not f.isfile): return (f,None,None)
-        return (f,v,f.getInfo(v))
+        return (f,v,f.getInfo())
     @classmethod
     def getView(cls,idx):
         for x in cls.__extension:
@@ -451,6 +451,7 @@ class Q7FingerPrint:
         self.control=control
         self.converted=False
         self.isfile=False
+        self.infoData={}
         self.tmpfile=''
         self._kw=kw
         self._status=[]
@@ -506,8 +507,15 @@ class Q7FingerPrint:
         for lk in self.links:
             if (lk[3]==pth): return lk
         return False
-    def getInfo(self,view):
-        d={}
+    def fileHasChanged(self):
+        dnow={}
+        self.readInfoFromOS(dnow)
+        for k in dnow:
+            if (dnow[k]!=self.infoData[k]):
+                print k,dnow[k],self.infoData[k]
+                return True
+        return False
+    def readInfoFromOS(self,d):
         f='%s/%s'%(self.filedir,self.filename)
         d['eFilename']=f
         d['eDirSource']=self.filedir
@@ -560,6 +568,10 @@ class Q7FingerPrint:
         d['cNODATA']=False
         d['cHasInt64']=False
         return d
+    def getInfo(self,force=False):
+        if (force or not self.infoData): 
+            self.readInfoFromOS(self.infoData)
+        return self.infoData
     def raiseControlView(self):
         self.control.raise_()
     def addChild(self,viewtype,view):

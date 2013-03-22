@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7InfoWindow.ui'
 #
-# Created: Mon Nov 12 15:52:20 2012
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Fri Mar 22 16:49:36 2013
+#      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -135,7 +135,7 @@ class Ui_Q7InfoWindow(object):
         self.cHasInt64.setCheckable(True)
         self.cHasInt64.setObjectName("cHasInt64")
         self.cNODATA = QtGui.QCheckBox(self.groupBox_6)
-        self.cNODATA.setGeometry(QtCore.QRect(10, 20, 86, 21))
+        self.cNODATA.setGeometry(QtCore.QRect(10, 20, 201, 21))
         self.cNODATA.setCheckable(True)
         self.cNODATA.setObjectName("cNODATA")
         self.cNoFollow = QtGui.QCheckBox(self.groupBox_6)
@@ -215,6 +215,15 @@ class Ui_Q7InfoWindow(object):
         self.label_11 = QtGui.QLabel(self.groupBox_3)
         self.label_11.setGeometry(QtCore.QRect(10, 190, 58, 16))
         self.label_11.setObjectName("label_11")
+        self.bHasBeenModified = QtGui.QPushButton(self.groupBox_3)
+        self.bHasBeenModified.setEnabled(True)
+        self.bHasBeenModified.setGeometry(QtCore.QRect(4, 250, 251, 25))
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/subtree-sids-failed.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bHasBeenModified.setIcon(icon1)
+        self.bHasBeenModified.setCheckable(True)
+        self.bHasBeenModified.setFlat(True)
+        self.bHasBeenModified.setObjectName("bHasBeenModified")
         self.horizontalLayout_3.addWidget(self.groupBox_3)
         self.gridLayout.addLayout(self.horizontalLayout_3, 4, 0, 1, 1)
         self.horizontalLayout = QtGui.QHBoxLayout()
@@ -263,7 +272,7 @@ class Ui_Q7InfoWindow(object):
         self.cBadLinks.setText(QtGui.QApplication.translate("Q7InfoWindow", "Bad links detected", None, QtGui.QApplication.UnicodeUTF8))
         self.cModeProp.setText(QtGui.QApplication.translate("Q7InfoWindow", "Mode propagated", None, QtGui.QApplication.UnicodeUTF8))
         self.cHasInt64.setText(QtGui.QApplication.translate("Q7InfoWindow", "Has double integers (int64)", None, QtGui.QApplication.UnicodeUTF8))
-        self.cNODATA.setText(QtGui.QApplication.translate("Q7InfoWindow", "NO DATA", None, QtGui.QApplication.UnicodeUTF8))
+        self.cNODATA.setText(QtGui.QApplication.translate("Q7InfoWindow", "Partial data mode", None, QtGui.QApplication.UnicodeUTF8))
         self.cNoFollow.setText(QtGui.QApplication.translate("Q7InfoWindow", "Links not followed", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("Q7InfoWindow", "Number of nodes", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setText(QtGui.QApplication.translate("Q7InfoWindow", "Max depth", None, QtGui.QApplication.UnicodeUTF8))
@@ -275,6 +284,7 @@ class Ui_Q7InfoWindow(object):
         self.label_7.setText(QtGui.QApplication.translate("Q7InfoWindow", "Owner", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("Q7InfoWindow", "Rights", None, QtGui.QApplication.UnicodeUTF8))
         self.label_11.setText(QtGui.QApplication.translate("Q7InfoWindow", "Group", None, QtGui.QApplication.UnicodeUTF8))
+        self.bHasBeenModified.setText(QtGui.QApplication.translate("Q7InfoWindow", "WARNING: File has changed on disk", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7InfoWindow", "File: ", None, QtGui.QApplication.UnicodeUTF8))
         self.label_13.setText(QtGui.QApplication.translate("Q7InfoWindow", "TMP:", None, QtGui.QApplication.UnicodeUTF8))
 
