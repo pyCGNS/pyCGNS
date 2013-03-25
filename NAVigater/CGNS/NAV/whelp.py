@@ -438,6 +438,8 @@ as NODE[3]</td></tr>
 same as NODE[2]</td></tr>
 <tr><td><b>PARENT</b></td><td>the PARENT node of current NODE</td></tr>
 <tr><td><b>TREE</b></td><td>the complete CGNS/Python TREE</td></tr>
+<tr><td><b>LINKS</b></td><td>the list of links info</td></tr>
+<tr><td><b>SKIPS</b></td><td>the list of skips info</td></tr>
 <tr><td><b>PATH</b></td><td>the PATH to the current NODE</td></tr>
 <tr><td><b>ARGS</b></td><td>The arguments tuple you may have passed (in
 the Tree view for example). Please note this is always a tuple, even if you

@@ -241,7 +241,8 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         v=self.eUserVariable.text()
         q=Q7QueryEntry('__tmp__query__')
         q.setScript(com)
-        r=q.run(self._fgprint.tree,True,v)
+        skp=self._fgprint.lazy.keys()
+        r=q.run(self._fgprint.tree,self._fgprint.links,skp,True,v)
         self.eResult.initText(str(r))
     @classmethod
     def fillQueries(self):

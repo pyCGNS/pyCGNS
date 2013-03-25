@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Wed Jan 30 11:06:52 2013
+# Created: Mon Mar 25 16:14:08 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -221,6 +221,7 @@ class Ui_Q7OptionsWindow(object):
         self.__O_table_family.setGeometry(QtCore.QRect(180, 110, 216, 26))
         self.__O_table_family.setObjectName("__O_table_family")
         self.__O_nname_family = QtGui.QFontComboBox(self.tab_3)
+        self.__O_nname_family.setEnabled(False)
         self.__O_nname_family.setGeometry(QtCore.QRect(180, 140, 216, 26))
         self.__O_nname_family.setObjectName("__O_nname_family")
         self.__O_rname_family = QtGui.QFontComboBox(self.tab_3)
@@ -245,6 +246,7 @@ class Ui_Q7OptionsWindow(object):
         self.__O_table_size.setProperty("value", 10)
         self.__O_table_size.setObjectName("__O_table_size")
         self.__O_nname_size = QtGui.QSpinBox(self.tab_3)
+        self.__O_nname_size.setEnabled(False)
         self.__O_nname_size.setGeometry(QtCore.QRect(395, 140, 46, 27))
         self.__O_nname_size.setMinimum(6)
         self.__O_nname_size.setMaximum(18)
@@ -269,6 +271,7 @@ class Ui_Q7OptionsWindow(object):
         self.__O_table_bold.setText("")
         self.__O_table_bold.setObjectName("__O_table_bold")
         self.__O_nname_bold = QtGui.QCheckBox(self.tab_3)
+        self.__O_nname_bold.setEnabled(False)
         self.__O_nname_bold.setGeometry(QtCore.QRect(455, 145, 86, 21))
         self.__O_nname_bold.setText("")
         self.__O_nname_bold.setObjectName("__O_nname_bold")
@@ -289,6 +292,7 @@ class Ui_Q7OptionsWindow(object):
         self.__O_table_italic.setText("")
         self.__O_table_italic.setObjectName("__O_table_italic")
         self.__O_nname_italic = QtGui.QCheckBox(self.tab_3)
+        self.__O_nname_italic.setEnabled(False)
         self.__O_nname_italic.setGeometry(QtCore.QRect(500, 145, 86, 21))
         self.__O_nname_italic.setText("")
         self.__O_nname_italic.setObjectName("__O_nname_italic")
@@ -296,6 +300,9 @@ class Ui_Q7OptionsWindow(object):
         self.__O_rname_italic.setGeometry(QtCore.QRect(500, 175, 86, 21))
         self.__O_rname_italic.setText("")
         self.__O_rname_italic.setObjectName("__O_rname_italic")
+        self.bResetFonts = QtGui.QPushButton(self.tab_3)
+        self.bResetFonts.setGeometry(QtCore.QRect(10, 215, 166, 26))
+        self.bResetFonts.setObjectName("bResetFonts")
         self.tabs.addTab(self.tab_3, "")
         self.tab_4 = QtGui.QWidget()
         self.tab_4.setObjectName("tab_4")
@@ -542,11 +549,12 @@ class Ui_Q7OptionsWindow(object):
         self.label.setText(QtGui.QApplication.translate("Q7OptionsWindow", "label", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("Q7OptionsWindow", "button", None, QtGui.QApplication.UnicodeUTF8))
         self.label_12.setText(QtGui.QApplication.translate("Q7OptionsWindow", "text edit", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_26.setText(QtGui.QApplication.translate("Q7OptionsWindow", "table", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_27.setText(QtGui.QApplication.translate("Q7OptionsWindow", "node.name", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_28.setText(QtGui.QApplication.translate("Q7OptionsWindow", "node.name.reserved", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_26.setText(QtGui.QApplication.translate("Q7OptionsWindow", "table (Form view)", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_27.setText(QtGui.QApplication.translate("Q7OptionsWindow", "graphic (VTK view)", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_28.setText(QtGui.QApplication.translate("Q7OptionsWindow", "node name (Tree view)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_29.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Bold", None, QtGui.QApplication.UnicodeUTF8))
         self.label_30.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Italic", None, QtGui.QApplication.UnicodeUTF8))
+        self.bResetFonts.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Reset to default fonts", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.tab_3), QtGui.QApplication.translate("Q7OptionsWindow", "Fonts", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_showtableindex.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Show table index", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_oneviewpertreenode.setText(QtGui.QApplication.translate("Q7OptionsWindow", "One view per tree/node", None, QtGui.QApplication.UnicodeUTF8))

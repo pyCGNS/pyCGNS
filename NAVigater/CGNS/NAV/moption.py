@@ -24,6 +24,8 @@ Q_VAR_CGNSTYPE='SIDSTYPE'
 Q_VAR_CHILDREN='CHILDREN'
 Q_VAR_TREE='TREE'
 Q_VAR_PATH='PATH'
+Q_VAR_LINKS='LINKS'
+Q_VAR_SKIPS='SKIPS'
 Q_VAR_RESULT='RESULT'
 Q_VAR_USER='ARGS'
 Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
@@ -107,30 +109,33 @@ All rights reserved in accordance with GPL v2 <br><br>
 Check GPL v2 sections 15 and 16<br>
 about loss of data or corrupted data<br>
 """
-    Label_Family='arial'
-    Label_Size=10
-    Label_Bold=False
-    Label_Italic=False
-    Edit_Family='courier'
-    Edit_Size=10
-    Edit_Bold=False
-    Edit_Italic=False
-    Table_Family='courier'
-    Table_Size=10
-    Table_Bold=False
-    Table_Italic=False
-    Button_Family='arial'
-    Button_Size=10
-    Button_Bold=False
-    Button_Italic=False
-    RName_Family='arial'
-    RName_Size=10
-    RName_Bold=False
-    RName_Italic=False
-    NName_Family='arial'
-    NName_Size=10
-    NName_Bold=False
-    NName_Italic=False
+
+    _Default_Fonts={
+        'Label_Family':'DejaVu Sans',
+        'Label_Size':12,
+        'Label_Bold':False,
+        'Label_Italic':False,
+        'Edit_Family':'courier',
+        'Edit_Size':12,
+        'Edit_Bold':False,
+        'Edit_Italic':False,
+        'Table_Family':'courier',
+        'Table_Size':12,
+        'Table_Bold':False,
+        'Table_Italic':False,
+        'Button_Family':'DejaVu Sans',
+        'Button_Size':12,
+        'Button_Bold':False,
+        'Button_Italic':False,
+        'RName_Family':'DejaVu Sans',
+        'RName_Size':12,
+        'RName_Bold':False,
+        'RName_Italic':False,
+        'NName_Family':'DejaVu Sans',
+        'NName_Size':12,
+        'NName_Bold':False,
+        'NName_Italic':False,
+     }
 
     _Label_Font=None
     _Table_Font=None
@@ -451,6 +456,13 @@ BC* would fail
  'Search by',
  'RESULT=(SIDSTYPE==ARGS[0])',
  """search all nodes with argument SIDS type."""),
+
+('Node with truncated data',
+ 'Search by',
+ 'if (PATH in SKIPS): RESULT=PATH',
+ """search all nodes with truncated or unread data, for example if you have set
+ the maximum data argument for the load, or if you release the memory of a
+ node."""),
 
 ('Wildcard node type',
  'Search by',

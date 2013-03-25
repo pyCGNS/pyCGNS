@@ -667,7 +667,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>table</string>
+          <string>table (Form view)</string>
          </property>
         </widget>
         <widget class="QLabel" name="label_27">
@@ -680,7 +680,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>node.name</string>
+          <string>graphic (VTK view)</string>
          </property>
         </widget>
         <widget class="QLabel" name="label_28">
@@ -693,7 +693,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>node.name.reserved</string>
+          <string>node name (Tree view)</string>
          </property>
         </widget>
         <widget class="QLabel" name="label_29">
@@ -753,6 +753,9 @@
          </property>
         </widget>
         <widget class="QFontComboBox" name="__O_nname_family">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -830,6 +833,9 @@
          </property>
         </widget>
         <widget class="QSpinBox" name="__O_nname_size">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>395</x>
@@ -907,6 +913,9 @@
          </property>
         </widget>
         <widget class="QCheckBox" name="__O_nname_bold">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>455</x>
@@ -972,6 +981,9 @@
          </property>
         </widget>
         <widget class="QCheckBox" name="__O_nname_italic">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>500</x>
@@ -995,6 +1007,19 @@
          </property>
          <property name="text">
           <string/>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="bResetFonts">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>215</y>
+           <width>166</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Reset to default fonts</string>
          </property>
         </widget>
        </widget>

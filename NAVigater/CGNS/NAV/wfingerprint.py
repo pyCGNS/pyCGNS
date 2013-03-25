@@ -90,10 +90,12 @@ class Q7CHLoneThread(QThread):
             flags|=CGNS.MAP.S2P_FOLLOWLINKS
         try:
             if (maxdataload):
-                (tree,links,paths)=CGNS.MAP.load(loadfilename,flags,lksearch=slp,
+                (tree,links,paths)=CGNS.MAP.load(loadfilename,flags,
+                                                 lksearch=slp,
                                                  maxdata=maxdataload)
             else:
-                (tree,links,paths)=CGNS.MAP.load(loadfilename,flags,lksearch=slp)
+                (tree,links,paths)=CGNS.MAP.load(loadfilename,flags,
+                                                 lksearch=slp)
         except (CGNS.MAP.error,),chlex:
             Q7FingerPrint.Unlock()
             txt="""The current load operation has been aborted:"""
@@ -110,7 +112,8 @@ class Q7CHLoneThread(QThread):
             return 
         kw['isfile']=True
         Q7FingerPrint.Unlock()
-        self._data=(Q7FingerPrint(control,filedir,filename,tree,links,paths,**kw),)
+        self._data=(Q7FingerPrint(control,filedir,filename,
+                                  tree,links,paths,**kw),)
         self.datacompleted.emit(self._data)
 
 # -----------------------------------------------------------------
@@ -194,6 +197,8 @@ class Q7Window(QWidget,object):
             self._options={}
         user_options=OCTXT._readOptions(self)
         for k in dir(OCTXT):   self.setOptionValue(k,getattr(OCTXT,k))
+        for k in OCTXT._Default_Fonts:
+            self.setOptionValue(k,OCTXT._Default_Fonts[k])
         if (user_options is not None):
             for k in user_options: self.setOptionValue(k,user_options[k])
         return self._options
@@ -309,7 +314,8 @@ class Q7FingerPrint:
         cls.Lock()
         if (cls.__chloneproxy is None):
             thrd=OCTXT.ActivateMultiThreading
-            cls.__chloneproxy=Q7CHLoneProxy(thrd) # BLOCK ACTUAL MULTI-THREADING HERE
+            # BLOCK ACTUAL MULTI-THREADING HERE
+            cls.__chloneproxy=Q7CHLoneProxy(thrd) 
         cls.Unlock()
         return cls.__chloneproxy
     @classmethod
@@ -349,8 +355,9 @@ class Q7FingerPrint:
         if (not saveas):        flags|=CGNS.MAP.S2P_UPDATE
         tree=fgprint.tree
         lk=[]
+        lazylist=[ CGU.getPathNoRoot(path) for path in fgprint.lazy.keys() ]
         try:
-            CGNS.MAP.save(f,tree,lk,flags)
+            CGNS.MAP.save(f,tree,lk,flags,skip=lazylist)
         except (CGNS.MAP.error,),chlex:
             txt="""The current save operation has been aborted (CHLone):"""
             control.readyCursor()

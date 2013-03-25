@@ -139,7 +139,8 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         elif (index.column() in [NMT.COLUMN_VALUE,NMT.COLUMN_DATATYPE]):
           option.font.setFamily(OCTXT.Table_Family)
           if (index.column() == NMT.COLUMN_DATATYPE):
-              option.font.setPointSize(8)
+              #option.font.setPointSize(8)
+              pass
           QStyledItemDelegate.paint(self, painter, option, index)
         elif (index.column() in NMT.COLUMN_FLAGS):
           option.decorationPosition=QStyleOptionViewItem.Top
@@ -449,7 +450,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             return
         qry=Q7Query
         if (q in qry.queriesNamesList()):
-            sl=qry.getQuery(q).run(self._fgprint.tree,False,v)
+            sl=qry.getQuery(q).run(self._fgprint.tree,self._fgprint.links,
+                                   self._fgprint.lazy.keys(),
+                                   False,v)
             self.model().markExtendToList(sl)
             self.model().updateSelected()
         self.treeview.refreshView()

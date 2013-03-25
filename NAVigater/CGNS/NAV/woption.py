@@ -22,9 +22,9 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
     labdict={'Label':['QLabel','QTabWidget','QGroupBox','QCheckBox'],
              'Button':['QPushButton'],
              'Edit':['QLineEdit','QSpinBox','QComboBox'],
-             'RName':[],
+             'RName':['Q7TreeView'],
              'NName':[],
-             'Table':[]}
+             'Table':['Q7TableView']}
     combos=combonames
     def __init__(self,parent):
         Q7Window.__init__(self,Q7Window.VIEW_OPTION,parent,None,None)
@@ -32,6 +32,7 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
         self.bInfo.clicked.connect(self.infoOptionView)
         self.bClose.clicked.connect(self.reject)
         self.bReset.clicked.connect(self.reset)
+        self.bResetFonts.clicked.connect(self.resetFonts)
         self.getOptions()
     def infoOptionView(self):
         self._control.helpWindow('Option')
@@ -74,6 +75,11 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
               self.getopt(k).setPlainText(s)
         self.checkDeps()
         self.updateFonts()
+    def resetFonts(self):
+        for k in OCTXT._Default_Fonts:
+          self.setOptionValue(k,OCTXT._Default_Fonts[k])
+        self.updateFonts()
+        self.accept()
     def show(self):
         self.reset()
         super(Q7Option, self).show()
@@ -119,14 +125,23 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
             data['%s_Size'%kfont]=sz
             data['%s_Bold'%kfont]=bd
             data['%s_Italic'%kfont]=it
-          fm=getattr(OCTXT,'%s_Family'%kfont)
-          sz=getattr(OCTXT,'%s_Size'%kfont)
-          bd=getattr(OCTXT,'%s_Bold'%kfont)
-          it=getattr(OCTXT,'%s_Italic'%kfont)
-          if (bd): wg=QFont.Bold
-          else: wg=QFont.Normal
+          fm=self._options['%s_Family'%kfont]
+          sz=self._options['%s_Size'%kfont]
+          bd=self._options['%s_Bold'%kfont]
+          it=self._options['%s_Italic'%kfont]
+          if (bd):
+            wg=QFont.Bold
+            self.getopt('%s_Bold'%kfont).setCheckState(Qt.Checked)
+          else:
+            wg=QFont.Normal
+            self.getopt('%s_Bold'%kfont).setCheckState(Qt.Unchecked)
+          if (it):
+            self.getopt('%s_Italic'%kfont).setCheckState(Qt.Checked)
+          else:
+            self.getopt('%s_Italic'%kfont).setCheckState(Qt.Unchecked)
+          self.getopt('%s_Size'%kfont).setValue(sz)
           qf=QFont(fm,italic=it,weight=wg,pointSize=sz)
-          setattr(OCTXT,'_%s_Font'%kfont,qf)
+          self._options['_%s_Font'%kfont]=qf
           self.getopt('%s_Family'%kfont).setCurrentFont(qf)
           for wtype in Q7Option.labdict[kfont]:
               bf=''
