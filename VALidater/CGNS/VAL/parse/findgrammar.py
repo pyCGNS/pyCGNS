@@ -72,6 +72,12 @@ def findOneUserGrammar(tag,verbose=False):
 def importUserGrammars(key,recurse=False,verbose=False):
   mod=None
   modname='CGNS_VAL_USER_%s'%key
+  ipath='%s/lib/python%s.%s/site-packages/CGNS/VAL/grammars'%\
+         (sys.prefix,sys.version_info[0],sys.version_info[1])
+  sys.path.append(ipath)
+  ipath='%s/lib/python%s.%s/site-packages/CGNS/PRO'%\
+         (sys.prefix,sys.version_info[0],sys.version_info[1])
+  sys.path.append(ipath)
   try:
     tp=imp.find_module(modname)
   except ImportError:

@@ -354,10 +354,9 @@ class Q7FingerPrint:
         if (OCTXT.CHLoneTrace): flags|=CGNS.MAP.S2P_TRACE
         if (not saveas):        flags|=CGNS.MAP.S2P_UPDATE
         tree=fgprint.tree
-        lk=[]
         lazylist=[ CGU.getPathNoRoot(path) for path in fgprint.lazy.keys() ]
         try:
-            CGNS.MAP.save(f,tree,lk,flags,skip=lazylist)
+            CGNS.MAP.save(f,tree,fgprint.links,flags,skip=lazylist)
         except (CGNS.MAP.error,),chlex:
             txt="""The current save operation has been aborted (CHLone):"""
             control.readyCursor()

@@ -17,6 +17,7 @@ CGNSCHECK=False
 try:
   import CGNS.PRO
   KEY='SIDS'
+  KEY='elsA'
 except ImportError:
   pass
 
@@ -81,7 +82,7 @@ def valTree(suite,t,tag,T,diag,trace,count):
       print sr
     return sr
 
-tlist=('treebasics',)
+tlist=('treebasics','Onera')
 for s in tlist:
     runSuite(s,True,FILES,CGNSCHECK)
 

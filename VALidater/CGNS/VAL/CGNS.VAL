@@ -21,7 +21,7 @@ def usage():
   -p <path>   : Start check at this node
   -f          : Flat mode, do not recurse on tree
   -u <key>    : Check user requirements identified by <key>
-  -k          : Gives list of known user requirements keys
+  -k          : Gives list of known user requirements keys (*long*)
   -l          : List all known diagnostics
   -r <idlist> : remove the list of ids ( -r U012:U023:U001 )
   -m          : Output by message id instead of path
@@ -64,10 +64,15 @@ try:
 except IndexError:
   if ((not mlist) and (not klist)): usage()
 
+if (userlist==[]): userlist=['DEFAULT']
+
 if (mlist):
+  print '### CGNS.VAL %s'%__vid__
   ml=CGV.listdiags(verbose,userlist)
   print ml
 elif (klist):
+  print '### CGNS.VAL v%s'%__vid__
+  print '### Looking for keys, parsing PYTHONPATH may be long...'
   kl=CGV.listuserkeys(verbose)
   print kl
 else:

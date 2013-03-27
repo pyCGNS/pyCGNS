@@ -729,6 +729,26 @@ def setStringAsArray(a):
   return None
 
 # -----------------------------------------------------------------------------
+def setIntegerAsArray(*i):
+  """Creates a 1D numpy.ndarray from one or more integers"""
+  return NPY.array(i,dtype='i')
+
+# -----------------------------------------------------------------------------
+def setLongAsArray(*l):
+  """Creates a 1D numpy.ndarray from one or more longs"""
+  return NPY.array(l,dtype='l')
+
+# -----------------------------------------------------------------------------
+def setFloatAsArray(*f):
+  """Creates a 1D numpy.ndarray from one or more floats"""
+  return NPY.array(f,dtype='f')
+
+# -----------------------------------------------------------------------------
+def setDoubleAsArray(*d):
+  """Creates a 1D numpy.ndarray from one or more doubles"""
+  return NPY.array(d,dtype='d')
+
+# -----------------------------------------------------------------------------
 def getValue(node):
   """Returns node value"""
   v=node[1]

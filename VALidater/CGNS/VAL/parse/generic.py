@@ -105,7 +105,8 @@ class GenericParser(object):
     if ((len(node)==4) and (ntype in self.methods)):
       status2=apply(getattr(self,ntype),[path,node,parent,T,self.log])
     else:
-      if (ntype in CGK.cgnstypes): print 'SKIP ',ntype
+      # if (ntype in CGK.cgnstypes): print '\nSKIP ',ntype
+      pass
     status1=CGM.getWorst(status1,status2)
     return status1
   # --------------------------------------------------------------------
@@ -138,7 +139,6 @@ class GenericParser(object):
   # --------------------------------------------------------------------
   def checkTreeStructure(self,T,path='',trace=False):
     status=CGM.CHECK_GOOD
-    if (trace): print '### Checking whole tree structure...'
     status=self.checkLeafStructure(T,path,T,None)
     if (status==CGM.CHECK_GOOD):
       path=path+'/'+T[0]
@@ -152,7 +152,7 @@ class GenericParser(object):
     status1=self.checkTreeStructure(T,trace=trace)
     if (status1!=CGM.CHECK_GOOD): return status1
     paths=CGU.getPathFullTree(T,width=True)
-    sz=len(paths)
+    sz=len(paths)+1
     ct=1
     if (not hasattr(self,'methods')):
       self.methods=[]
@@ -169,6 +169,7 @@ class GenericParser(object):
         status2=self.checkLeaf(T,path,node)
       status1=status2
       ct+=1
+    if (trace): print
     return status1
   # --------------------------------------------------
   def checkCardinalityOfChildren(self,T,path,node,parent):

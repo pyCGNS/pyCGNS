@@ -44,6 +44,8 @@ class DiagnosticMessagePattern(object):
     return self.__levelstr[self._lvl]
   def __str__(self):
     return '[%s:%s] %s'%(self._key,self.levelAsStr(),self._str)
+  def notSubst(self):
+    return '%' in self._str
     
 class DiagnosticMessageInstance(DiagnosticMessagePattern):
   def __init__(self,pattern):
@@ -63,14 +65,13 @@ class DiagnosticLog(dict):
     __messages={}
     def __init__(self):
         dict.__init__(self)
-        #DiagnosticLog.__messages
     def merge(self,log):
         self.update(log)
     def listMessages(self):
         return self.__messages
     def noContextMessage(self,m):
-        if ('%' in DiagnosticLog.__messages[m]): return None
-        return DiagnosticLog.__messages[m]
+        if (DiagnosticLog.__messages[m].notSubst()): return None
+        return DiagnosticLog.__messages[m].message
     def addMessage(self,k,m):
         DiagnosticLog.__messages[k]=DiagnosticMessageInstance(*m)
     def addMessages(self,d):
@@ -131,7 +132,7 @@ class DiagnosticLog(dict):
         plist.sort()
         for path in plist:
             for diag in self[path]:
-                if (diag.message==msg): yield (diag,path)
+                if (diag.key==msg): yield (diag,path)
     def __str__(self):
       s="{\n"
       for path in self:

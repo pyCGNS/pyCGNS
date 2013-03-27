@@ -334,8 +334,10 @@ class Q7TreeView(QTreeView):
                   self._model.copyNode(last)
                   self.exclusiveSelectRow(nix)
                 if (kval==KEYMAPPING[CUT]):
-                  self._model.cutNode(last)
-                  self.exclusiveSelectRow(pix)
+                  if (self._model.cutNode(last)):
+                      self.exclusiveSelectRow(pix)
+                  else:
+                      self.exclusiveSelectRow(nix)                      
                 if (kval==KEYMAPPING[PASTECHILD]):
                   self._model.pasteAsChild(last)
                   nix=self._model.indexByPath(last.sidsPath())
@@ -1196,7 +1198,8 @@ class Q7TreeModel(QAbstractItemModel):
             self.cutNode(nodeitem)
         self._control.clearOtherSelections()
     def cutNode(self,nodeitem):
-        if (nodeitem is None): return
+        if (nodeitem is None): return False
+        if (nodeitem.sidsIsLink() or nodeitem.sidsIsLinkChild()): return False
         self._control.copyPasteBuffer=CGU.nodeCopy(nodeitem._itemnode)
         parentitem=nodeitem.parentItem()
         path=CGU.getPathAncestor(nodeitem.sidsPath())
@@ -1206,6 +1209,7 @@ class Q7TreeModel(QAbstractItemModel):
         self.refreshModel(pix)
         self._fingerprint.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)
         self._control.clearOtherSelections()
+        return True
     def pasteAsChildAllSelectedNodes(self):
         for pth in self._selected:
             nodeitem=self.nodeFromPath(pth)
@@ -1213,6 +1217,7 @@ class Q7TreeModel(QAbstractItemModel):
     def pasteAsChild(self,nodeitem):
         if (nodeitem is None): return False
         if (self._control.copyPasteBuffer is None): return False
+        if (nodeitem.sidsIsLink() or nodeitem.sidsIsLinkChild()): return
         nix=self.indexByPath(nodeitem.sidsPath())
         (ntree,npath,nrow)=nodeitem.sidsAddChild(self._control.copyPasteBuffer)
         self.parseAndUpdate(nodeitem,ntree,nix,nrow,nodeitem._tag)
@@ -1230,6 +1235,7 @@ class Q7TreeModel(QAbstractItemModel):
             self.pasteAsBrother(nodeitem)
     def pasteAsBrother(self,nodeitem):
         if (nodeitem is None): return False
+        if (nodeitem.sidsIsLink() or nodeitem.sidsIsLinkChild()): return
         nix=self.indexByPath(nodeitem.sidsPath())
         self.pasteAsChild(nix.parent().internalPointer())
         self._fingerprint.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)

@@ -3,7 +3,4 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-__version__=0
-__release__=4
-__vid__="%d.%d"%(__version__,__release__)
-
+pass

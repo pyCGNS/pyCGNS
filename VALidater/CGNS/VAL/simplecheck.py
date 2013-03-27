@@ -5,7 +5,7 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 
-import CGNS.VAL.grammars.CGNS_VAL_USER_SAMPLE as CGV
+import CGNS.VAL.grammars.CGNS_VAL_USER_DEFAULT as CGV
 import CGNS.VAL.parse.messages as CGM
 import CGNS.VAL.parse.findgrammar
 
@@ -24,6 +24,7 @@ def getParser(trace,user):
         if (mod is None):
             parser=CGV.CGNS_VAL_USER_Checks(None)
         else:
+            print '### Using grammar:',user
             parser=mod.CGNS_VAL_USER_Checks(None)
     else:
         parser=CGV.CGNS_VAL_USER_Checks(None)
@@ -50,6 +51,9 @@ def run(T,trace,userlist):
     return diag
 
 def compliant(T,trace=False,userlist=[]):
+    ipath='%s/lib/python%s.%s/site-packages/CGNS/VAL/grammars'%\
+           (sys.prefix,sys.version_info[0],sys.version_info[1])
+    sys.path.append(ipath)
     ipath='%s/lib/python%s.%s/site-packages/CGNS/PRO'%\
            (sys.prefix,sys.version_info[0],sys.version_info[1])
     sys.path.append(ipath)
@@ -86,7 +90,7 @@ def showDiag(diag,idlist,bypath=True):
                   if (ctxt is None):
                       if (not first): skip='\n'
                       else: skip=''
-                      print '%s  %s\n  > %s'%(skip,dp,d[1])
+                      print '%s  %s\n  > %s'%(skip,dp,d.message)
                   else: print '  %s'%(dp)
                   first=False
                   if (diag.status(d)==CGM.CHECK_FAIL): ok=False
