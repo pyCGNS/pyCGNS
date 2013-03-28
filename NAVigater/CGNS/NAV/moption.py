@@ -76,6 +76,7 @@ class Q7OptionContext(object):
     ForceFortranFlag=True
     FilterCGNSFiles=True
     FilterHDFFiles=True
+    FileUpdateRemovesChildren=True
     TransposeArrayForView=True
     Show1DAsPlain=True
     SelectionListDirectory='~/.CGNS.NAV/selections'

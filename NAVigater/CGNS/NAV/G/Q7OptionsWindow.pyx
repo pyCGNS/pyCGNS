@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Mon Mar 25 16:14:08 2013
+# Created: Thu Mar 28 14:27:42 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -43,16 +43,16 @@ class Ui_Q7OptionsWindow(object):
         self.__O_recursivetreedisplay.setGeometry(QtCore.QRect(10, 15, 274, 22))
         self.__O_recursivetreedisplay.setObjectName("__O_recursivetreedisplay")
         self.__O_recursivesidspatternsload = QtGui.QCheckBox(self.tab_1)
-        self.__O_recursivesidspatternsload.setGeometry(QtCore.QRect(10, 240, 274, 22))
+        self.__O_recursivesidspatternsload.setGeometry(QtCore.QRect(10, 230, 274, 22))
         self.__O_recursivesidspatternsload.setObjectName("__O_recursivesidspatternsload")
         self.__O_donotdisplaylargedata = QtGui.QCheckBox(self.tab_1)
         self.__O_donotdisplaylargedata.setGeometry(QtCore.QRect(10, 120, 274, 22))
         self.__O_donotdisplaylargedata.setObjectName("__O_donotdisplaylargedata")
         self.__O_followlinksatload = QtGui.QCheckBox(self.tab_1)
-        self.__O_followlinksatload.setGeometry(QtCore.QRect(10, 180, 274, 22))
+        self.__O_followlinksatload.setGeometry(QtCore.QRect(10, 170, 274, 22))
         self.__O_followlinksatload.setObjectName("__O_followlinksatload")
         self.__O_donotfollowlinksatsave = QtGui.QCheckBox(self.tab_1)
-        self.__O_donotfollowlinksatsave.setGeometry(QtCore.QRect(10, 220, 274, 22))
+        self.__O_donotfollowlinksatsave.setGeometry(QtCore.QRect(10, 210, 274, 22))
         self.__O_donotfollowlinksatsave.setObjectName("__O_donotfollowlinksatsave")
         self.__O_donotloadlargearrays = QtGui.QCheckBox(self.tab_1)
         self.__O_donotloadlargearrays.setGeometry(QtCore.QRect(10, 65, 274, 22))
@@ -74,7 +74,7 @@ class Ui_Q7OptionsWindow(object):
         self.__O_maxloaddatasize.setProperty("value", -1)
         self.__O_maxloaddatasize.setObjectName("__O_maxloaddatasize")
         self.__O_stoploadbrokenlinks = QtGui.QCheckBox(self.tab_1)
-        self.__O_stoploadbrokenlinks.setGeometry(QtCore.QRect(10, 200, 274, 22))
+        self.__O_stoploadbrokenlinks.setGeometry(QtCore.QRect(10, 190, 274, 22))
         self.__O_stoploadbrokenlinks.setObjectName("__O_stoploadbrokenlinks")
         self.__O_filterhdffiles = QtGui.QCheckBox(self.tab_1)
         self.__O_filterhdffiles.setGeometry(QtCore.QRect(320, 10, 274, 22))
@@ -105,6 +105,9 @@ class Ui_Q7OptionsWindow(object):
         self.label_9 = QtGui.QLabel(self.tab_1)
         self.label_9.setGeometry(QtCore.QRect(10, 80, 217, 27))
         self.label_9.setObjectName("label_9")
+        self.__O_fileupdateremoveschildren = QtGui.QCheckBox(self.tab_1)
+        self.__O_fileupdateremoveschildren.setGeometry(QtCore.QRect(10, 250, 271, 21))
+        self.__O_fileupdateremoveschildren.setObjectName("__O_fileupdateremoveschildren")
         self.tabs.addTab(self.tab_1, "")
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName("tab_2")
@@ -528,6 +531,7 @@ class Ui_Q7OptionsWindow(object):
         self.__O_filtercgnsfiles.setText(QtGui.QApplication.translate("Q7OptionsWindow", "filter *.cgns files", None, QtGui.QApplication.UnicodeUTF8))
         self.label_23.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Display nodes with data size below:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Do not load node data if above:", None, QtGui.QApplication.UnicodeUTF8))
+        self.__O_fileupdateremoveschildren.setText(QtGui.QApplication.translate("Q7OptionsWindow", "File update removes missing children", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.tab_1), QtGui.QApplication.translate("Q7OptionsWindow", "Load/Save", None, QtGui.QApplication.UnicodeUTF8))
         self.__O_addcurrentdirinsearch.setToolTip(QtGui.QApplication.translate("Q7OptionsWindow", "Set to always add the current directory as the first in the linked-to files search.", "Set to always add the current directory as the first in the linked-to files search.", QtGui.QApplication.UnicodeUTF8))
         self.__O_addcurrentdirinsearch.setText(QtGui.QApplication.translate("Q7OptionsWindow", "Add current dir in link search path", None, QtGui.QApplication.UnicodeUTF8))

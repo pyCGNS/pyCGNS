@@ -15,7 +15,7 @@ from CGNS.NAV.wfingerprint import Q7FingerPrint
 import CGNS.VAL.simplecheck as CGV
 import CGNS.NAV.wmessages as MSG
 import CGNS.VAL.parse.messages as CGM
-import CGNS.VAL.grammars.CGNS_VAL_USER_SAMPLE as CGV
+import CGNS.VAL.grammars.CGNS_VAL_USER_DEFAULT as CGV
 import CGNS.VAL.parse.findgrammar
 
 HIDEVALUE='@@HIDE@@'
