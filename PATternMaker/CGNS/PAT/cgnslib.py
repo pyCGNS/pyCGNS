@@ -779,9 +779,9 @@ def newZoneGridConnectivity(parent,name=CK.ZoneGridConnectivity_s):
   """
   CU.checkDuplicatedName(parent,name)
   cnode=CU.hasChildName(parent,CK.ZoneGridConnectivity_s)  
-  if (cnode == None):   
+  if (cnode is None):   
     cnode=CU.newNode(CK.ZoneGridConnectivity_s,
-                  None,[],CK.ZoneGridConnectivity_ts,parent)
+                     None,[],CK.ZoneGridConnectivity_ts,parent)
   return cnode
   
 # -----------------------------------------------------------------------------
@@ -796,19 +796,16 @@ def newGridConnectivity1to1(parent,name,dname,window,dwindow,trans):
   The returned node is the GridConnectivity1to1_t
   chapter 8.2
   """
-  cnode=CU.hasChildName(parent,CK.ZoneGridConnectivity_s)
-  if (cnode == None):
-    cnode=CU.newNode(CK.ZoneGridConnectivity_s,
-                  None,[],CK.ZoneGridConnectivity_ts,parent)
-  zcnode=CU.newNode(name,dname,[],CK.GridConnectivity1to1_ts,cnode)
+  zcnode=CU.newNode(name,CU.setStringAsArray(dname),[],
+                    CK.GridConnectivity1to1_ts,parent)
   CU.newNode(CK.Transform_s,NPY.array(list(trans),dtype=NPY.int32),[],
-          "int[IndexDimension]",zcnode)
-  ## code correction: Modify PointRange shape and order
-  CU.newNode(CK.PointRange_s,NPY.array(window,dtype=NPY.int32,order='Fortran'),[],
-          CK.IndexRange_ts,zcnode)   
-  ## code correction: Modify PointRange shape and order
-  CU.newNode(CK.PointRangeDonor_s,NPY.array(dwindow,dtype=NPY.int32,order='Fortran'),[],
-          CK.IndexRange_ts,zcnode)   
+             CK.Transform_ts,zcnode)
+  CU.newNode(CK.PointRange_s,
+             NPY.array(window,dtype=NPY.int32,order='Fortran'),[],
+             CK.IndexRange_ts,zcnode)   
+  CU.newNode(CK.PointRangeDonor_s,
+             NPY.array(dwindow,dtype=NPY.int32,order='Fortran'),[],
+             CK.IndexRange_ts,zcnode)   
   return zcnode
 
 # -----------------------------------------------------------------------------
@@ -817,17 +814,14 @@ def newGridConnectivity(parent,name,dname,ctype=CK.Overset_s):
   
   'newNode:N='*newGridConnectivity*'(parent:N,name:S,dname:S,ctype:S)'
   
-  Creates a GridConnectivity1to1 sub-tree.
+  Creates a GridConnectivity sub-tree.
   If a parent is given, the new <node> is added to the parent children list,
   the parent should be a ZoneGridConnectivity_t.
   The returned node is the GridConnectivity_t
   chapter 8.4
   """
-  cnode=CU.hasChildName(parent,CK.ZoneGridConnectivity_s)
-  if (cnode == None):
-    cnode=CU.newNode(CK.ZoneGridConnectivity_s,
-                  None,[],CK.ZoneGridConnectivity_ts,parent)
-  zcnode=CU.newNode(name,dname,[],CK.GridConnectivity_ts,cnode)
+  zcnode=CU.newNode(name,CU.setStringAsArray(dname),
+                    [],CK.GridConnectivity_ts,parent)
   zcnode[1]=CU.setStringAsArray(ctype)
   return zcnode
 
