@@ -32,7 +32,7 @@ def readProfile():
 def findAllUserGrammars(verbose=False):
   kdict={}
   for pth in [p for p in sys.path if p!='']:
-    if (verbose): print '### CGNS.VAL: scanning',pth
+    if (verbose): print '### scanning',pth
     try:
       for pthroot, dirs, files in os.walk(pth):
           for fn in files:
@@ -41,12 +41,19 @@ def findAllUserGrammars(verbose=False):
                 gkey=fn[14:-3]
                 if (gkey in kdict):
                   if (verbose):
-                    print '### CGNS.VAL:          found grammar:',
+                    print '### * found grammar:',
                     print gkey,'already found, ignore this one'
                 else:
                   if (verbose):
-                    print '### CGNS.VAL:          found grammar:',gkey
+                    print '### * found grammar:',gkey
                   kdict[fn[14:-3]]=pthroot
+                if (verbose):
+                  print '### * found in :',pthroot
+                  if (pthroot not in sys.path): 
+                    print '### * previous path is NOT in PYTHONPATH'
+                  else:
+                    print '### * previous path already is in PYTHONPATH'
+                    
     except OSError: pass
   return kdict
 
@@ -55,7 +62,7 @@ def findOneUserGrammar(tag,verbose=False):
   kdict={}
   found=False
   for pth in sys.path:
-    if (verbose): print '### CGNS.VAL: scanning',pth
+    if (verbose): print '### scanning',pth
     try:
       for pthroot, dirs, files in os.walk(pth):
           for fn in files:
@@ -75,18 +82,16 @@ def importUserGrammars(key,recurse=False,verbose=False):
   ipath='%s/lib/python%s.%s/site-packages/CGNS/VAL/grammars'%\
          (sys.prefix,sys.version_info[0],sys.version_info[1])
   sys.path.append(ipath)
-  ipath='%s/lib/python%s.%s/site-packages/CGNS/PRO'%\
-         (sys.prefix,sys.version_info[0],sys.version_info[1])
-  sys.path.append(ipath)
+  if (verbose): print '### Looking for grammar [%s]'%key
   try:
     tp=imp.find_module(modname)
   except ImportError:
-    print '### CGNS.VAL [warning]: grammar [%s] not found\n'%key
+    if (verbose): print '### Error: grammar [%s] not found'%key
     if (recurse):
       dk=findOneUserGrammar(key)
       if (key in dk):
           sys.path.append(dk[key])
-          print '### CGNS.VAL [warning]: not in search path [%s]\n'%dk[key]
+          if (verbose): print '### Warning: not in search path [%s]'%dk[key]
           try:
               tp=imp.find_module(modname)
           except ImportError:
@@ -100,8 +105,10 @@ def importUserGrammars(key,recurse=False,verbose=False):
     if (tp[2][2]!=imp.C_EXTENSION):
       mod=imp.load_module(modname, *tp)
     else:
-      mod=imp.load_dynamic(modname,tp[1],tp[0])      
-    # print '### CGNS.VAL [info]: Module info',tp
+      #print '### CGNS.VAL [info]: Module info',tp
+      mod=imp.load_dynamic(modname,tp[1],tp[0])
+  except:
+    pass
   finally:
     if fp:
        fp.close()

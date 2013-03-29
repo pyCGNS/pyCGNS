@@ -2,9 +2,7 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
-
+#
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU
 import CGNS.APP.probe.arrayutils as CGA
@@ -14,21 +12,23 @@ cimport cython
 cimport cpython
 cimport numpy as CNPY
 
+from PySide.QtCore import QCoreApplication
+
 import vtk
 from vtk.util import numpy_support
 
 # ----------------------------------------------------------------------------
-class CGNSactor(vtk.vtkActor):
+class Q7vtkActor(vtk.vtkActor):
   __actortypes=['Zone','BC','Min/Max']
-  def __init__(self,*args):
-    vtk.vtkActor.__init__(self,*args)
-    self.__type=None
-  def setType(self,atype):
-    if (atype in self.__actortypes):
-      self.__type=atype
-  def getType(self):
+  def __init__(self,topo=None):
+    if (topo in self.__actortypes):
+        self.__type=topo
+    else: self.__type='Zone'
+  def topo(self):
     return self.__type
-  
+
+# ----------------------------------------------------------------------------
+
 class CGNSparser:
   
   def __init__(self,T):    
@@ -37,6 +37,9 @@ class CGNSparser:
     self._tree=T
     self._rsd=None
     
+  def resfreshScreen():
+    QCoreApplication.processEvents()
+
   def parseZones(self,zlist=[]):
     T=self._tree
     if (T[0]==None):
@@ -47,86 +50,90 @@ class CGNSparser:
     for z in CGU.getAllNodesByTypeSet(T,[CGK.Zone_ts]):
       zT=CGU.nodeByPath(z,T)
       if ((zlist==[]) or (z in zlist)):
-        meshpath=z
         gnode=CGU.getAllNodesByTypeSet(zT,[CGK.GridCoordinates_ts])
         if (gnode==[]): return False
-        g=gnode[0] # first found
-        gT=CGU.nodeByPath(g,zT)
-        cx=CGU.nodeByPath("%s/CoordinateX"%gT[0],gT)
-        cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
-        cz=CGU.nodeByPath("%s/CoordinateZ"%gT[0],gT)
-        if ((cx is None) or (cy is None) or (cz is None)): return False
-        if ((cx[1] is None) or (cy[1] is None) or (cz[1] is None)):
-          return False
-        zonetype=CGU.getAllNodesByTypeSet(zT,[CGK.ZoneType_ts])
-        ztype=CGU.nodeByPath(zonetype[0],zT)
-        if (ztype[1].tostring()==CGK.Structured_s):
-          if (cx[1]==None) : return False
-          shx=cx[1].shape
-          scx=cx[1].reshape(shx)
-          scy=cy[1].reshape(shx)
-          scz=cz[1].reshape(shx)        
-          simin=[scx[0,:,:], scy[0,:,:], scz[0,:,:]]
-          simax=[scx[-1,:,:],scy[-1,:,:],scz[-1,:,:]]
-          sjmin=[scx[:,0,:], scy[:,0,:], scz[:,0,:]]
-          sjmax=[scx[:,-1,:],scy[:,-1:], scz[:,-1,:]]
-          skmin=[scx[:,:,0], scy[:,:,0], scz[:,:,0]]
-          skmax=[scx[:,:,-1],scy[:,:,-1],scz[:,:,-1]]
-          zp=z
-          surfpaths=[zp+' {imin}',zp+' {imax}',
-                     zp+' {jmin}',zp+' {jmax}',
-                     zp+' {kmin}',zp+' {kmax}']
-          bndlist=[]
-          bcpaths=[]
-          solutions=[]
-          for sol in CGU.getAllNodesByTypeSet(zT,[CGK.FlowSolution_ts]):
-            zsol=CGU.nodeByPath(sol,zT)
-            for data in CGU.getAllNodesByTypeSet(zsol,[CGK.DataArray_ts]):
-              dsol=CGU.nodeByPath(data,zsol)
-              solutions+=[dsol]
-          for nzbc in CGU.getAllNodesByTypeSet(zT,[CGK.ZoneBC_ts]):
-            zbcT=CGU.nodeByPath(nzbc,zT)
-            for nbc in CGU.getAllNodesByTypeSet(zbcT,[CGK.BC_ts]):
-              bcpaths+=['%s/ZoneBC/%s'%(zp,nbc.split('/')[1])]
-              bcT=CGU.nodeByPath(nbc,zbcT)
-              for rbc in CGU.getAllNodesByTypeSet(bcT,[CGK.IndexRange_ts]):
-                ptr=CGU.nodeByPath(rbc,bcT)[1].T.flat
-                brg=[scx[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],
-                     scy[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],
-                     scz[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]]]
-                bndlist+=[brg]
-          self._zones[z]=([cx[1],cy[1],cz[1]],
-                          [simin,simax,sjmin,sjmax,skmin,skmax],bndlist,
-                          meshpath,surfpaths,bcpaths,solutions)
-        elif (ztype[1].tostring()==CGK.Unstructured_s):
-          volume={}
-          surface={}
-          typeset=[CGK.Elements_ts]
-          elist=CGU.getAllNodesByTypeSet(zT,typeset)
-          sp=CGA.SectionParse()
-          mr=1
-          sn=0
-          sl=[]
-          for e in elist:
-            sn+=1
-            ne=CGU.getNodeByPath(zT,e)[1]
-            et=ne[0]
-            eb=ne[1]
-            ea=CGU.getNodeByPath(zT,e+'/'+CGK.ElementConnectivity_s)[1]
-            if ((ea is not None) and (et in sp.QUAD_SURFACE)):
-              pth=CGU.getPathAncestor(meshpath)+e+' {QUAD}'
-              sl.append(list(sp.extQuadFacesPoints(ea,et,sn,mr,eb))+[pth])
-            if ((ea is not None) and (et in sp.TRI_SURFACE)):
-              pth=e+' {TRI}'
-              sl.append(list(sp.extTriFacesPoints(ea,et,sn,mr,eb))+[pth])
-          self._zones_ns[z]=([cx[1],cy[1],cz[1]],meshpath,et,sl)
+        for g in gnode:
+          zg=g
+          meshpath=zg
+          gT=CGU.nodeByPath(g,zT)
+          cx=CGU.nodeByPath("%s/CoordinateX"%gT[0],gT)
+          cy=CGU.nodeByPath("%s/CoordinateY"%gT[0],gT)
+          cz=CGU.nodeByPath("%s/CoordinateZ"%gT[0],gT)
+          if ((cx is None) or (cy is None) or (cz is None)): return False
+          if ((cx[1] is None) or (cy[1] is None) or (cz[1] is None)):
+            return False
+          zonetype=CGU.getAllNodesByTypeSet(zT,[CGK.ZoneType_ts])
+          ztype=CGU.nodeByPath(zonetype[0],zT)
+          if (ztype[1].tostring()==CGK.Structured_s):
+            if (cx[1]==None) : return False
+            acx=cx[1]
+            acy=cy[1]
+            acz=cz[1]
+            shx=cx[1].shape
+            scx=cx[1].reshape(shx)
+            scy=cy[1].reshape(shx)
+            scz=cz[1].reshape(shx)        
+            simin=[scx[0,:,:], scy[0,:,:], scz[0,:,:]]
+            simax=[scx[-1,:,:],scy[-1,:,:],scz[-1,:,:]]
+            sjmin=[scx[:,0,:], scy[:,0,:], scz[:,0,:]]
+            sjmax=[scx[:,-1,:],scy[:,-1,:], scz[:,-1,:]]
+            skmin=[scx[:,:,0], scy[:,:,0], scz[:,:,0]]
+            skmax=[scx[:,:,-1],scy[:,:,-1],scz[:,:,-1]]
+            zp=zg
+            surfpaths=[zp+' {imin}',zp+' {imax}',
+                       zp+' {jmin}',zp+' {jmax}',
+                       zp+' {kmin}',zp+' {kmax}']
+            bndlist=[]
+            bcpaths=[]
+            solutions=[]
+            for sol in CGU.getAllNodesByTypeSet(zT,[CGK.FlowSolution_ts]):
+              zsol=CGU.nodeByPath(sol,zT)
+              for data in CGU.getAllNodesByTypeSet(zsol,[CGK.DataArray_ts]):
+                dsol=CGU.nodeByPath(data,zsol)
+                solutions+=[dsol]
+            for nzbc in CGU.getAllNodesByTypeSet(zT,[CGK.ZoneBC_ts]):
+              zbcT=CGU.nodeByPath(nzbc,zT)
+              for nbc in CGU.getAllNodesByTypeSet(zbcT,[CGK.BC_ts]):
+                bcpaths+=['%s/ZoneBC/%s'%(zp,nbc.split('/')[1])]
+                bcT=CGU.nodeByPath(nbc,zbcT)
+                for rbc in CGU.getAllNodesByTypeSet(bcT,[CGK.IndexRange_ts]):
+                  ptr=CGU.nodeByPath(rbc,bcT)[1].T.flat
+                  brg=[scx[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],
+                       scy[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],
+                       scz[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]]]
+                  bndlist+=[brg]
+            self._zones[zg]=([acx,acy,acz],
+                            [simin,simax,sjmin,sjmax,skmin,skmax],bndlist,
+                            meshpath,surfpaths,bcpaths,solutions)
+          elif (ztype[1].tostring()==CGK.Unstructured_s):
+            volume={}
+            surface={}
+            typeset=[CGK.Elements_ts]
+            elist=CGU.getAllNodesByTypeSet(zT,typeset)
+            sp=CGA.SectionParse()
+            mr=1
+            sn=0
+            sl=[]
+            for e in elist:
+              sn+=1
+              ne=CGU.getNodeByPath(zT,e)[1]
+              et=ne[0]
+              eb=ne[1]
+              ea=CGU.getNodeByPath(zT,e+'/'+CGK.ElementConnectivity_s)[1]
+              if ((ea is not None) and (et in sp.QUAD_SURFACE)):
+                pth=CGU.getPathAncestor(meshpath)+e+' {QUAD}'
+                sl.append(list(sp.extQuadFacesPoints(ea,et,sn,mr,eb))+[pth])
+              if ((ea is not None) and (et in sp.TRI_SURFACE)):
+                pth=e+' {TRI}'
+                sl.append(list(sp.extTriFacesPoints(ea,et,sn,mr,eb))+[pth])
+            self._zones_ns[z]=([cx[1],cy[1],cz[1]],meshpath,et,sl)
     return True
 
 #----------------------------------------------------------------------------
 class Mesh(CGNSparser):
 
   def __init__(self,T,zlist):
-    
+
     CGNSparser.__init__(self,T)    
     self._color=(1,0,0)
     self._actors=[]
@@ -145,7 +152,10 @@ class Mesh(CGNSparser):
                    CGK.HEXA_8:  (vtk.vtkHexahedron,(8,8)),
                    CGK.HEXA_20: (vtk.vtkHexahedron,(8,20)),
                    CGK.HEXA_27: (vtk.vtkHexahedron,(8,27))}
-    self._status=self.parseZones(zlist)
+    try:
+      self._status=self.parseZones(zlist)
+    except:
+      self._status=False
 
   def getResidus(self):
     return self._rsd
@@ -153,6 +163,7 @@ class Mesh(CGNSparser):
   def createActors(self):
     for z in self._zones.values():      
       self.do_vtk(z)
+      QCoreApplication.processEvents()
     self._actors+=self.createActors_ns()
     return self._actors
 
@@ -163,12 +174,17 @@ class Mesh(CGNSparser):
   def getObjectList(self):    
     return self._actors                 
 
-  def getPathList(self,filter=None):
-    if (file is None): return [a[3] for a in self._actors]
+  # self._actor := [ vtk.vtkActor, bbox, vtk.vtk<grid>, path, dims ]
+  def getPathList(self,filter=[]):
+    if (filter==[]):
+        r=[a[3] for a in self._actors]
+        r.sort()
+        return r
     else:
       r=[]
       for a in self._actors:
-        if (a.getType() in filter): r=a[3]
+        if (a[0].topo() in filter): r.append(a[3])
+      r.sort()
       return r
 
   def getPathFromObject(self,selectedobject):
@@ -224,8 +240,7 @@ class Mesh(CGNSparser):
     g.SetExtent(0,idim-1,0,jdim-1,0,kdim-1)
     d=vtk.vtkDataSetMapper()
     d.SetInput(g)
-    a=CGNSactor()
-    a.setType('Zone')
+    a=Q7vtkActor('Zone')
     a.SetMapper(d)
     a.GetProperty().SetRepresentationToWireframe()
     g.GetPointData().AddArray(data)
@@ -241,13 +256,23 @@ class Mesh(CGNSparser):
     return (a,a.GetBounds(),g,path,(0,(idim,jdim,kdim)))
 
 #  @cython.boundscheck(False)
-  def do_surface(self,surf,path):
-    cdef int i, j, imax, jmax, p1, p2, p3, p4
+  def do_surface_double_3d(self,path,surf):
+    cdef int n, np, i, j, imax, jmax, p1, p2, p3, p4
+    cdef double xs,ys,zs
+    cdef CNPY.ndarray[CNPY.float64_t, ndim=2] _tx
+    cdef CNPY.ndarray[CNPY.float64_t, ndim=2] _ty
+    cdef CNPY.ndarray[CNPY.float64_t, ndim=2] _tz
+    cdef double* tx
+    cdef double* ty
+    cdef double* tz
     imax=surf[0].shape[0]
     jmax=surf[0].shape[1]
-    tx=surf[0].flat
-    ty=surf[1].flat
-    tz=surf[2].flat
+    _tx=surf[0]
+    _ty=surf[1]
+    _tz=surf[2]
+    tx=<double*>_tx.data
+    ty=<double*>_ty.data
+    tz=<double*>_tz.data
     sg=vtk.vtkUnstructuredGrid()
     sg.Allocate(1, 1)
     n=0
@@ -258,28 +283,36 @@ class Mesh(CGNSparser):
       p2=j+      i*jmax +1
       p3=j+jmax+ i*jmax +1
       p4=j+jmax+ i*jmax +0
-      qp.InsertPoint(n*4+0,tx[p1],ty[p1],tz[p1])
-      qp.InsertPoint(n*4+1,tx[p2],ty[p2],tz[p2])
-      qp.InsertPoint(n*4+2,tx[p3],ty[p3],tz[p3])
-      qp.InsertPoint(n*4+3,tx[p4],ty[p4],tz[p4])
-      aq = vtk.vtkQuad()
-      aq.GetPointIds().SetId(0, n*4+0)
-      aq.GetPointIds().SetId(1, n*4+1)
-      aq.GetPointIds().SetId(2, n*4+2)
-      aq.GetPointIds().SetId(3, n*4+3)
-      sg.InsertNextCell(aq.GetCellType(), aq.GetPointIds())
+      aq=vtk.vtkQuad()
+      aqp=aq.GetPointIds()
+      np=n*4
+      xs=tx[p1]
+      ys=ty[p1]
+      zs=tz[p1]
+      qp.InsertPoint(np,xs,ys,zs)
+      aqp.SetId(0,np)
+      np+=1
+      qp.InsertPoint(np,tx[p2],ty[p2],tz[p2])
+      aqp.SetId(1,np)
+      np+=1
+      qp.InsertPoint(np,tx[p3],ty[p3],tz[p3])
+      aqp.SetId(2,np)
+      np+=1
+      qp.InsertPoint(np,tx[p4],ty[p4],tz[p4])
+      aqp.SetId(3,np)
+      sg.InsertNextCell(aq.GetCellType(), aqp)
       n+=1
+    qp=vtk.vtkPoints()
     sg.SetPoints(qp)
     am = vtk.vtkDataSetMapper()
     am.SetInput(sg)
-    a = CGNSactor()
-    a.setType('Min/Max')
+    a = Q7vtkActor('Min/Max')
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
     return (a,None,sg,path,(1,None),None)
 
   def do_boundaries(self,bnd,path):
-    cdef int i, j, imax, jmax, p1, p2, p3, p4    
+    cdef int i, j, imax, jmax, p1, p2, p3, p4
     max=[x for x in bnd[0].shape if x!=1]
     imax=max[0]
     jmax=max[1]
@@ -310,8 +343,7 @@ class Mesh(CGNSparser):
     sg.SetPoints(qp)
     am = vtk.vtkDataSetMapper()
     am.SetInput(sg)
-    a = CGNSactor()
-    a.setType('BC')
+    a = Q7vtkActor('BC')
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
     return (a,None,sg,path,(1,None),None)
@@ -319,7 +351,7 @@ class Mesh(CGNSparser):
   def do_vtk(self,z):
       self._actors+=[self.do_volume(z[3],z[0][0],z[0][1],z[0][2],z[6])]
       for (s,sp) in zip(z[1],z[4]):
-        self._actors+=[self.do_surface(s,sp)]
+        self._actors+=[self.do_surface_double_3d(sp,s)]
       for (b,sb) in zip(z[2],z[5]):
         self._actors+=[self.do_boundaries(b,sb)]
       return
@@ -357,7 +389,7 @@ class Mesh(CGNSparser):
         sg.SetPoints(qp)    
         am = vtk.vtkDataSetMapper()
         am.SetInput(sg)
-        a = CGNSactor()
+        a = Q7vtkActor()
         a.SetMapper(am)
         a.GetProperty().SetRepresentationToWireframe()
         actors+=[(a,a.GetBounds(),sg,path,(2,None))]

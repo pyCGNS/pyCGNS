@@ -66,18 +66,18 @@ except IndexError:
 
 if (userlist==[]): userlist=['DEFAULT']
 
+if (verbose):
+  print '### CGNS.VAL v%s'%__vid__
+
 if (mlist):
-  print '### CGNS.VAL %s'%__vid__
   ml=CGV.listdiags(verbose,userlist)
   print ml
 elif (klist):
-  print '### CGNS.VAL v%s'%__vid__
   print '### Looking for keys, parsing PYTHONPATH may be long...'
   kl=CGV.listuserkeys(verbose)
   print kl
 else:
   if (verbose):
-    print '### CGNS.VAL %s'%__vid__
     print '### Loading file [%s]'%filename
   (tree,links,paths)=CGNS.MAP.load(filename,CGNS.MAP.S2P_DEFAULTS,
                                         lksearch=['.'],maxdata=200)

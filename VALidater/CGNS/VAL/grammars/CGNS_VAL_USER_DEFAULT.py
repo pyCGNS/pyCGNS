@@ -35,19 +35,58 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
   def Zone_t(self,pth,node,parent,tree,log):
     rs=CGM.CHECK_OK
     zt=CGU.hasChildName(node,CGK.ZoneType_s)
+    zv=[]
     if (zt is not None):
       if (CGU.stringValueMatches(zt,CGK.Structured_s)):
-        self.context[CGK.IndexDimension_s]=self.context[CGK.CellDimension_s]
+        cd=self.context[CGK.CellDimension_s][pth]
+        self.context[CGK.IndexDimension_s][pth]=cd
       elif (CGU.stringValueMatches(zt,CGK.Unstructured_s)):
-        self.context[CGK.IndexDimension_s]=1
-      shp=(self.context[CGK.IndexDimension_s],3)
+        self.context[CGK.IndexDimension_s][pth]=1
+      shp=(self.context[CGK.IndexDimension_s][pth],3)
       if (CGU.getShape(node)!=shp):
         rs=log.push(pth,'S009',CGU.getShape(node))
       elif (CGU.stringValueMatches(zt,CGK.Structured_s)):
         zd=node[1]
-        for nd in range(self.context[CGK.IndexDimension_s]):
+        for nd in range(self.context[CGK.IndexDimension_s][pth]):
+          zv.append(zd[nd][0])
           if ((zd[nd][1]!=zd[nd][0]-1) or (zd[nd][2]!=0)):
             rs=log.push(pth,'S010')
+      else:
+        zv.append(node[1][0][0])
+      self.context[CGK.VertexSize_s][pth]=tuple(zv)
+    if (CGU.hasChildNodeOfType(node,CGK.FamilyName_ts)):
+      basepath=[CGK.CGNSTree_ts,parent[0],node[0]]
+      searchpath=basepath+[CGK.FamilyName_ts]
+      famlist1=CGU.getAllNodesByTypeOrNameList(tree,searchpath)
+      searchpath=basepath+[CGK.AdditionalFamilyName_ts]
+      famlist2=CGU.getAllNodesByTypeOrNameList(tree,searchpath)
+      for (famlist, diagmessage) in ((famlist1,'S301'),
+                                     (famlist2,'S302')):
+        for fampath in famlist:
+          famdefinition=CGU.getNodeByPath(tree,fampath)
+          if (famdefinition[1] is None):
+            rs=log.push(pth,'S300')
+          else:
+            famtarget=famdefinition[1].tostring().rstrip()
+            famtargetpath="/%s/%s"%(parent[0],famtarget)
+            if (not self.context.has_key(famtargetpath)):
+              famtargetnode=CGU.getNodeByPath(tree,famtargetpath)
+              if (famtargetnode is None):
+                rs=log.push(pth,diagmessage,famtarget)
+              else:
+                self.context[famtargetpath][pth]=True
+    if (not CGU.hasChildType(node,CGK.GridCoordinates_ts)):
+      rs=log.push(pth,'S602')
+    elif (not CGU.hasChildName(node,CGK.GridCoordinates_s)):
+      rs=log.push(pth,'S603')      
+    if (not CGU.hasChildType(node,CGK.ZoneBC_ts)):
+      rs=log.push(pth,'S604')
+    return rs
+  # --------------------------------------------------------------------
+  def ZoneType_t(self,pth,node,parent,tree,log):
+    rs=CGM.CHECK_OK
+    if (not CGU.stringValueInList(node,CGK.ZoneType_l)):
+      rs=log.push(pth,'S101')
     return rs
   # --------------------------------------------------------------------
   def CGNSBase_t(self,pth,node,parent,tree,log):

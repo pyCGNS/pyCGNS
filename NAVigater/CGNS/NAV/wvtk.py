@@ -633,8 +633,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def wCGNSTreeParse(self,T,zlist):
       self._parser=Mesh(T,zlist)
       if (not self._parser._status):
-          MSG.wError(0,'No data to display',
-                     'Parser did not found mesh coordinates')
+          MSG.wError(823,'Cannot create VTK view',
+                     'No data or bad data for a VTK display')
           return False
       return True
 

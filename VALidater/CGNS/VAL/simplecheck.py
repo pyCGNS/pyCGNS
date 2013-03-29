@@ -10,9 +10,14 @@ import CGNS.VAL.parse.messages as CGM
 import CGNS.VAL.parse.findgrammar
 
 import sys
+import os
 
 def listuserkeys(trace):
     s=''
+    if (not trace):
+        print '### Use -v (verbose) option to check if the found paths'
+        print '### are into your PYTHONPATH. If not, grammar would not be'
+        print "### used by CGNS.VAL even if detected..."
     dk=CGNS.VAL.parse.findgrammar.findAllUserGrammars(trace)
     for key in dk:
         s+='%-16s: %s\n'%(key,dk[key])
@@ -22,9 +27,11 @@ def getParser(trace,user):
     if (user is not None):
         mod=CGNS.VAL.parse.findgrammar.importUserGrammars(user)
         if (mod is None):
+            if (trace): print '### Using grammar [DEFAULT]'
             parser=CGV.CGNS_VAL_USER_Checks(None)
         else:
-            print '### Using grammar:',user
+            if (trace): print '### Using grammar [%s]'%user
+            if (trace): print '### Found in [%s]'%os.path.dirname(mod.__file__)
             parser=mod.CGNS_VAL_USER_Checks(None)
     else:
         parser=CGV.CGNS_VAL_USER_Checks(None)
@@ -52,9 +59,6 @@ def run(T,trace,userlist):
 
 def compliant(T,trace=False,userlist=[]):
     ipath='%s/lib/python%s.%s/site-packages/CGNS/VAL/grammars'%\
-           (sys.prefix,sys.version_info[0],sys.version_info[1])
-    sys.path.append(ipath)
-    ipath='%s/lib/python%s.%s/site-packages/CGNS/PRO'%\
            (sys.prefix,sys.version_info[0],sys.version_info[1])
     sys.path.append(ipath)
     diag=run(T,trace,userlist)

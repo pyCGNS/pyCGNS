@@ -534,11 +534,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
           node=self.modelData(ix)
           self._vtkwindow=Q7VTK(self._control,self,node,self._fgprint,self.model(),zlist)
           if (self._vtkwindow._vtkstatus): self._vtkwindow.show()
-          else:
-              MSG.message("VTK 3D view:",
-                          """<b>Fail to parse or to interpret CGNSTree data</b>""",
-                          MSG.INFO)
-              self._vtkwindow=None
+          else: self._vtkwindow=None
           self.readyCursor()
         else:
           self._vtkwindow.raise_()
