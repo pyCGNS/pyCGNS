@@ -118,12 +118,45 @@ class Q7OptionContext(object):
     _CopyrightNotice="""
 Copyright (c) Marc Poinot <br>
 Copyright (c) Onera - The French Aerospace Labs<br>
+<b>all other copyrights at the end of this page</b>
 
-<br>
-All rights reserved in accordance with GPL v2 <br><br>
+<hr>
+All <b>pyCGNS</b> (including <b>CGNS.NAV</b>)
+rights reserved in accordance with GPL v2 <br><br>
 <b>NO WARRANTY :</b><br>
 Check GPL v2 sections 15 and 16<br>
 about loss of data or corrupted data<br>
+
+<hr>
+PySide Copyright (c) <br>
+<hr>
+Qt Copyright (c)<br>
+<hr>
+Python Copyright (c)<br>
+Copyright (c) 2001-2011 Python Software Foundation.<br>
+All Rights Reserved.<br>
+<br>
+Copyright (c) 2000 BeOpen.com.<br>
+All Rights Reserved.<br>
+<br>
+Copyright (c) 1995-2001 Corporation for National Research Initiatives.<br>
+All Rights Reserved.<br>
+<br>
+Copyright (c) 1991-1995 Stichting Mathematisch Centrum, Amsterdam.<br>
+All Rights Reserved.<br>
+<br>
+<hr>
+Numpy Copyright (c)<br>
+<hr>
+HDF5 Copyright (c)<br>
+<hr>
+CHLone Copyright (c)<br>
+Copyright (c) Marc Poinot <br>
+Copyright (c) Onera - The French Aerospace Labs<br>
+<hr>
+VTK Copyright (c)<br>
+<hr>
+Cython Copyright (c)<br>
 """
     if (WINOPTS):
       _Default_Fonts={

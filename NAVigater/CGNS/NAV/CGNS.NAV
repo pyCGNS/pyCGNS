@@ -1,4 +1,4 @@
-#!c:\Python27\python.exe
+#!/usr/bin/env python
 #  -------------------------------------------------------------------------
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
@@ -51,8 +51,8 @@ try:
 except:
   print """CGNS.NAV: FATAL error, cannot import vtk..."""
   sys.exit(-1)
-  
-import CGNS.NAV.temputils
+
+if (sys.platform=='win32'): import CGNS.NAV.temputils
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 def usage():

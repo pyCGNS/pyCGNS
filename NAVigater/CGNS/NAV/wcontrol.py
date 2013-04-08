@@ -117,17 +117,15 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.updateLastView()
         if (self.lastView is None): return
         (f,v,d)=Q7FingerPrint.infoView(self.lastView)
-        reply = MSG.message('Double check...',
+        reply = MSG.wQuestion(self,'Double check...',
                             """Do you want to close the tree and all its views,<br>
-                            and <b>forget unsaved</b> modifications?""",
-                            MSG.YESNO)
+                            and <b>forget unsaved</b> modifications?""")
         if (reply == QMessageBox.Yes):
             f.closeAllViews()
     def closeAllTrees(self):
-        reply = MSG.message('Double check...',
+        reply = MSG.wQuestion(self,'Double check...',
                             """Do you want to close all the views,<br>
-                            and <b>forget unsaved</b> modifications?""",
-                            MSG.YESNO)
+                            and <b>forget unsaved</b> modifications?""")
         if (reply == QMessageBox.Yes):
             Q7FingerPrint.closeAllTrees()
     def updateLastView(self):
@@ -167,17 +165,14 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             haspro=' + pyCGNS.PRO v%s'%CGNS.PRO.version
         except:
             haspro=''
-        MSG.message("About %s"%OCTXT._ToolName,
-               """<b>pyCGNS v%s%s</b><p>%s<p>"""\
-               %(OCTXT._ToolVersion,haspro,OCTXT._CopyrightNotice),
-               MSG.INFO)
+        MSG.wInfo(self,"pyCGNS v%s%s"%(OCTXT._ToolVersion,haspro),
+                  OCTXT._CopyrightNotice,again=False)
     def closeApplication(self):
-        reply = MSG.message('Double check...',
-                            """Do you want to <b>quit</b> %s, close all views
+        reply = MSG.wQuestion(self,'Double check...',
+                            """Do you want to quit %s,<b>close all views</b>
                             and forget unsaved modifications?""" \
-                            %OCTXT._ToolName,
-                            MSG.YESNO)
-        if (reply == QMessageBox.Yes):
+                            %OCTXT._ToolName)
+        if (reply == MSG.OK):
             Q7FingerPrint.closeAllTrees()
             if (self.help is not None): self.help.close()
             if (self._patternwindow is not None): self._patternwindow.close()
@@ -204,8 +199,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             hi=QTableWidgetItem(h[i])
             hi.setFont(OCTXT._Label_Font)
             ctw.setHorizontalHeaderItem(i,hi)
-            #cth.setResizeMode(i,QHeaderView.ResizeToContents)
-#        cth.setResizeMode(len(h)-1,QHeaderView.Stretch)
+            cth.setResizeMode(i,QHeaderView.ResizeToContents)
+        cth.setResizeMode(len(h)-1,QHeaderView.Stretch)
     def updateViews(self):
         for i in self.getAllIdx():
             f=Q7FingerPrint.getFingerPrint(i)
@@ -304,7 +299,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
     def loadCompleted(self,*args):
         fgprint=self.signals.fgprint
         if (len(fgprint)>1):
-            MSG.wError(*fgprint[1])
+            MSG.wError(self,*fgprint[1])
             return
         Q7TreeModel(fgprint)
         child=Q7Tree(self,'/',fgprint)

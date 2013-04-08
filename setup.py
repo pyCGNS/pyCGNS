@@ -2,8 +2,7 @@
 #  pyCGNS - Python package for CFD General Notation System 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release:  $
-#  -------------------------------------------------------------------------
+#
 import os
 import sys
 import string
@@ -12,24 +11,22 @@ sys.path=['./lib']+sys.path
 import setuputils
 
 # hg pull ssh://poinot@hg.code.sf.net/p/pycgns/code
-#
 # OLD (bad) ssh://poinot@pycgns.hg.sourceforge.net/hgroot/pycgns/pycgns
 pcom=sys.executable
-
-#version=4
-#versionList=[4]
 
 # order IS significant
 CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater',
              'DATaTracer','VALidater','APPlicationSampler']
 
+comcompiler=[]
 modList=CGNSmodList[:]
 modList.remove('DATaTracer')
 if (sys.platform=='win32'):
   modList.remove('WRApper')
+  comcompiler=' --compiler=mingw32 '
 
 solist='m:'
-lolist=["without-mod=","single-mod=","prefix=","force"]
+lolist=["without-mod=","single-mod=","prefix=","force","dist"]
 
 try:
   opts, args = getopt.gnu_getopt(sys.argv[1:],solist,lolist)
@@ -43,6 +40,7 @@ except getopt.GetoptError:
   print "###       :   --single-mod='MMM'  to install only this module"
   print "###       :   --prefix='/path'    to install in the specified path"
   print "###       :   --force             force all rebuilds, update version"
+  print "###       :   --dist              distribution build"
   sys.exit(2)
 
 for o,a in opts:
@@ -59,7 +57,7 @@ for o,a in opts:
 
 bdir=os.path.normpath(os.path.abspath('./build'))
   
-modArgs=[]
+modArgs=comcompiler
 for opt in sys.argv[1:]:
   if (opt[:12] not in ['--without-mod','--single-mod']): modArgs.append(opt)
 

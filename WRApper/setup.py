@@ -52,7 +52,6 @@ include_dirs=mllpinc+hdfpinc+pyCGNSconfig.INCLUDE_DIRS
 library_dirs=mllplib+hdfplib+pyCGNSconfig.LIBRARY_DIRS
 optional_libs=mlllib+hdflib
 
-print 'OPT',optional_libs
 configdict={}
 #setuputils.updateConfig("..","../build/lib/CGNS",configdict)
   

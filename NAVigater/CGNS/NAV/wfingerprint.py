@@ -2,7 +2,7 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release:  $
+#  $Release$
 #  -------------------------------------------------------------------------
 from PySide.QtCore import QCoreApplication
 from PySide.QtCore import *
@@ -138,6 +138,7 @@ class Q7Window(QWidget,object):
     VIEW_PATTERN='P'
     VIEW_INFO='I'
     VIEW_LINK='L'
+    VIEW_MESSAGE='M'
     HISTORYLASTKEY='///LAST///'
     def __init__(self,vtype,control,path,fgprint):
         QWidget.__init__(self,None)

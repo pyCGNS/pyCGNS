@@ -2,7 +2,7 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release:  $
+#  $Release$
 #  -------------------------------------------------------------------------
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
@@ -52,6 +52,8 @@ if installprocess:
   parser = OptionParser()
   parser.add_option("--force",dest="forcerebuild",action="store_true")
   parser.add_option("--prefix",dest="prefix")
+  parser.add_option("--dist",dest="dist")
+  parser.add_option("--compiler",dest="compiler")
   parser.add_option("--build-base",dest="build-base")
   try:
     (options, args) = parser.parse_args(sys.argv)
@@ -77,6 +79,7 @@ if installprocess:
       'Q7ToolsWindow',
       'Q7PatternWindow',
       'Q7AnimationWindow',
+      'Q7MessageWindow',
       'Q7VTKWindow'
       ]
   modgenlist=[]

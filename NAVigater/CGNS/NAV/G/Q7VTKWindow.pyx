@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Fri Jan 18 14:53:58 2013
+# Created: Mon Apr  8 10:04:09 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,12 +12,13 @@ from PySide import QtCore, QtGui
 class Ui_Q7VTKWindow(object):
     def setupUi(self, Q7VTKWindow):
         Q7VTKWindow.setObjectName("Q7VTKWindow")
-        Q7VTKWindow.resize(803, 679)
+        Q7VTKWindow.resize(700, 402)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Q7VTKWindow.sizePolicy().hasHeightForWidth())
         Q7VTKWindow.setSizePolicy(sizePolicy)
+        Q7VTKWindow.setMinimumSize(QtCore.QSize(700, 400))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7VTKWindow.setWindowIcon(icon)

@@ -575,6 +575,16 @@ shows you which is the actual original file name and the temporary filename.
 
 """),
 # --------------------------------------------------------------------------
+'Message':('Message window',
+"""
+<h2>About Messages</h2>
+
+Some info messages have the <i>don't show again</b> check box.
+If you set this once, you would never see the message again, unless you
+re-activate it in the <b>Option Panel</b>
+
+"""),
+# --------------------------------------------------------------------------
 }
 
 # --- last line
