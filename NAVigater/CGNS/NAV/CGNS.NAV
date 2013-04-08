@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!c:\Python27\python.exe
 #  -------------------------------------------------------------------------
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
@@ -8,38 +8,52 @@
 import getopt
 import sys
 import os
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
+try:
+  import numpy
+except:
+  print """CGNS.NAV: FATAL error, cannot import numpy..."""
+  sys.exit(-1)
+  
+prog=sys.argv[0]
+dpref='./'
+if (prog[0]=='/'):
+  dpref=os.path.dirname(prog)
+else:
+  for pp in os.environ['PATH'].split(':'):
+    if (os.path.exists("%s/%s"%(pp,prog))):
+      dpref=os.path.dirname("%s/%s"%(pp,prog))
+      break
+ppref=dpref+'/../lib/python%s/site-packages'%sys.version[:3]
+ppref=os.path.normpath(os.path.abspath(ppref))
+if (ppref not in sys.path):
+  sys.path.append(ppref)
+
+ppref=dpref+'/../Lib/site-packages'
+ppref=os.path.normpath(os.path.abspath(ppref))
+if (ppref not in sys.path):
+  sys.path.append(ppref)
+
+try:
+  import CGNS.MAP
+except:
+  print """CGNS.NAV: FATAL error, cannot import CGNS.MAP..."""
+  sys.exit(-1)
+  
 try:
   import PySide.QtCore
 except:
-  print """%s: cannot import PySide.QtCore..."""%(OCTXT._ToolName)
+  print """CGNS.NAV: FATAL error, cannot import PySide.QtCore..."""
   sys.exit(-1)
   
 try:
   import vtk
 except:
-  print """%s: cannot import vtk..."""%(OCTXT._ToolName)
+  print """CGNS.NAV: FATAL error, cannot import vtk..."""
   sys.exit(-1)
   
-try:
-  import numpy
-except:
-  print """%s: cannot import numpy..."""%(OCTXT._ToolName)
-  sys.exit(-1)
-  
-prog=sys.argv[0]
-ppref='./'
-if (prog[0]=='/'):
-  ppref=os.path.dirname(prog)
-else:
-  for pp in os.environ['PATH'].split(':'):
-    if (os.path.exists("%s/%s"%(pp,prog))):
-      ppref=os.path.dirname("%s/%s"%(pp,prog))
-      break
-ppref=ppref+'/../lib/python%s/site-packages'%sys.version[:3]
-if (ppref not in sys.path):
-  sys.path.append(ppref)
+import CGNS.NAV.temputils
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 def usage():
   print """%s v%s
@@ -53,12 +67,13 @@ def usage():
   -v : verbose (trace)
   """%(OCTXT._ToolName,OCTXT._ToolVersion)
   sys.exit(-1)
-
+ 
 try:
   os.environ['DISPLAY']
 except KeyError:
-  print """%s: you should define a DISPLAY variable..."""%(OCTXT._ToolName)
-  sys.exit(-1)
+  pass
+  #print """%s: you should define a DISPLAY variable..."""%(OCTXT._ToolName)
+  #sys.exit(-1)
   
 try:
   ppath=os.environ['CGNSPROFILEPATH']

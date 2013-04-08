@@ -27,10 +27,9 @@ Changes by Phil Thompson, Mar. 2008
  Added cursor support.
 """
 
-
 from PySide import QtCore, QtGui
 import vtk
-
+import sys
 
 class Q7VTKRenderWindowInteractor(QtGui.QWidget):
 
@@ -149,7 +148,7 @@ class Q7VTKRenderWindowInteractor(QtGui.QWidget):
         else:
             self._RenderWindow = vtk.vtkRenderWindow()
 
-        self._RenderWindow.SetWindowInfo(str(int(self.winId())))
+        self._RenderWindow.SetWindowInfo(str(int(self.winId(self))))
 
         if stereo: # stereo mode
             self._RenderWindow.StereoCapableWindowOn()
@@ -220,8 +219,12 @@ class Q7VTKRenderWindowInteractor(QtGui.QWidget):
         self._RenderWindow.Render()
 
     def resizeEvent(self, ev):
-        w = self.width()
-        h = self.height()
+        if (sys.platform=='win32'):
+          w = self.width()
+          h = self.height()-25
+        else:
+          w = self.width()
+          h = self.height()
 
         self._RenderWindow.SetSize(w, h)
         self._Iren.SetSize(w, h)

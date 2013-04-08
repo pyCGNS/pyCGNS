@@ -2,7 +2,7 @@
 #  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
+#  $Release:  $
 #  -------------------------------------------------------------------------
 # Change these values to fit your installation
 # See notes at end of file about config values

@@ -2,7 +2,7 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
+#  $Release:  $
 #  -------------------------------------------------------------------------
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
@@ -52,15 +52,13 @@ if installprocess:
   parser = OptionParser()
   parser.add_option("--force",dest="forcerebuild",action="store_true")
   parser.add_option("--prefix",dest="prefix")
+  parser.add_option("--build-base",dest="build-base")
   try:
     (options, args) = parser.parse_args(sys.argv)
     if (options.forcerebuild): setuputils.touch(fakefile)
   except OptionError: pass
 
-  if (not os.path.exists("build")): os.system("ln -sf ../build build")
   setuputils.installConfigFiles()
-
-    
   modnamelist=[
       'Q7TreeWindow',
       'Q7DiffWindow',
@@ -101,6 +99,13 @@ if installprocess:
      if (not os.path.exists(g[1])
          or os.path.getmtime(g[0])>os.path.getmtime(g[1])): modgenlist+=[m]
                   
+  modextlist+=[Extension("CGNS.NAV.temputils",["CGNS/NAV/temputils.pyx",
+                                               fakefile],
+                         include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
+                         library_dirs = pyCGNSconfig.NUMPY_PATH_LIBRARIES,
+                         libraries    = pyCGNSconfig.NUMPY_LINK_LIBRARIES,
+                       )]
+
   for m in modgenlist:
       print 'Generate from updated GUI templates: ',m
       com="(%s -o CGNS/NAV/G/%s.pyx CGNS/NAV/T/%s.ui;(cd CGNS/NAV/G;%s -a %s.pyx))"%(cui,m,m,ccy,m)

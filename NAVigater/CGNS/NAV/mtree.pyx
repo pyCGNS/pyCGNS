@@ -281,7 +281,7 @@ class Q7TreeView(QTreeView):
     def setLastEntered(self,ix=None):
         if (self._control is not None): self._control.setLastEntered(ix)
     def selectionChanged(self,old,new):
-        QTreeView.selectionChanged(self,old,new)
+        #QTreeView.selectionChanged(self,old,new)
         if (old.count()):
             n=self.modelData(old[0].topLeft())
             self._parent.updateStatus(n)
@@ -311,15 +311,6 @@ class Q7TreeView(QTreeView):
           lastpath=last.sidsPath()
           nix=self._model.indexByPath(last.sidsPath())
           pix=self._model.indexByPath(last.parentItem().sidsPath())
-          # if (not nix.isValid()):
-#               if (last.sidsType()==CGK.CGNSTree_ts):
-#                  if (kval==KEYMAPPING[PASTECHILD]):
-#                      self._model.pasteAsChild(last)
-#                      self.exclusiveSelectRow()
-#                  if (kval==KEYMAPPING[NEWCHILDNODE]):
-#                      self._model.newNodeChild(last)
-#                      self.exclusiveSelectRow()
-#               return
           if (kval in EDITKEYMAPPINGS):
               if (kmod==Qt.ControlModifier):
                 if (kval==KEYMAPPING[NEWCHILDNODE]):
@@ -459,11 +450,13 @@ class Q7TreeView(QTreeView):
         if (index.internalPointer() is None): return
         pth=index.internalPointer().sidsPath()
         nix=self.M().indexByPath(pth)
+        self.selectionModel().clearSelection()
         self.selectionModel().setCurrentIndex(nix,mod)
         if (setlast):
             self.clearLastEntered()
             self.setLastEntered(index)
         self.scrollTo(index)
+        self.refreshView()
     def changeSelectedMark(self,delta):
         if (self.M()._selected==[]): return
         sidx=self.M()._selectedIndex
@@ -1040,7 +1033,8 @@ class Q7TreeModel(QAbstractItemModel):
     def getSortedChildRow(self,path,nosort=False):
         trace=0
         npath=CGU.getPathNoRoot(path)
-        if (npath=='/'): return -1
+        if (npath=='/'): 
+           return -1
         targetname=CGU.getPathLeaf(npath)
         parentpath=CGU.getPathAncestor(npath)
         node=CGU.getNodeByPath(self._fingerprint.tree,parentpath)

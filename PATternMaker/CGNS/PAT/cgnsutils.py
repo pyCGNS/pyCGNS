@@ -10,9 +10,12 @@ import CGNS.PAT.cgnserrors   as CE
 
 import numpy as NPY
 
-import os.path
+import os.path as PTH
 import string
 import re
+
+# -----------------------------------------------------------------------------
+
 
 # -----------------------------------------------------------------------------
 def nodeCreate(name,value,children,type,parent=None,dienow=False):
@@ -1676,11 +1679,11 @@ def getPathNormalize(path):
    * The simplified path
 
   - Remarks:
-   * Uses *os.path.normpath*
+   * Uses *os.path.normpath* and replaces \\ if windows os.path
    * Before its normalization a path can be **non-compliant**
    
   """
-  path=os.path.normpath(path)
+  path=PTH.normpath(path).replace('\\','/')
   return path
 
 # --------------------------------------------------
@@ -1908,9 +1911,9 @@ def checkLinkFile(lkfile,lksearch=['']):
   found=(None,None)
   if (lksearch==[]): lksearch=['']
   for spath in lksearch:
-    sfile=os.path.normpath(spath+'/'+lkfile)
-    if (os.path.exists(sfile)):
-      found=(os.path.normpath(spath),os.path.normpath(lkfile))
+    sfile=PTH.normpath(spath+'/'+lkfile)
+    if (PTH.exists(sfile)):
+      found=(PTH.normpath(spath),PTH.normpath(lkfile))
       break
   return found
     

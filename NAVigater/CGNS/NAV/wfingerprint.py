@@ -2,15 +2,23 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
+#  $Release:  $
 #  -------------------------------------------------------------------------
 from PySide.QtCore import QCoreApplication
 from PySide.QtCore import *
 from PySide.QtGui  import *
 import os
 import os.path
-import pwd
-import grp
+try:
+  from pwd import getpwuid
+except ImportError:
+  def getpwuid(a):
+    return (0,)
+try:
+    from grp import getgrgid
+except ImportError:
+  def getgrgid(a):
+    return (0,)
 import time
 import stat
 import sys
@@ -537,8 +545,8 @@ class Q7FingerPrint:
         dfmt="%Y-%m-%d %H:%M"
         d['eLastDate']=time.strftime(dfmt,time.localtime(int(st[7])))
         d['eModifDate']=time.strftime(dfmt,time.localtime(int(st[8])))
-        e=pwd.getpwuid(st[4])
-        g=grp.getgrgid(st[5])
+        e=getpwuid(st[4])
+        g=getgrgid(st[5])
         d['eOwner']=e[0]
         d['eGroup']=g[0]
         d['cNoFollow']=False

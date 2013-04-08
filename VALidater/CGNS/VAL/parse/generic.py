@@ -116,9 +116,8 @@ class GenericParser(object):
       stt=self.log.push(path,'G003',node[0])
     lchildren=CGU.childNames(parent)
     if (lchildren):
-      lchildren.remove(node[0])
-      if (node[0] in lchildren):
-        stt=self.log.push(path,'G004',node[0])
+      if (node[0] in lchildren): lchildren.remove(node[0])
+      if (node[0] in lchildren): stt=self.log.push(path,'G004',node[0])
     tlist=CGU.getNodeAllowedChildrenTypes(parent,node)
     if ((CGU.getTypeAsGrammarToken(node[3]) not in tlist)
         and (node[3]!=CGK.CGNSTree_ts)):

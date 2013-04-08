@@ -2,7 +2,7 @@
 #  pyCGNS - Python package for CFD General Notation System 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
+#  $Release:  $
 #  -------------------------------------------------------------------------
 import os
 import sys
@@ -25,6 +25,8 @@ CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater',
 
 modList=CGNSmodList[:]
 modList.remove('DATaTracer')
+if (sys.platform=='win32'):
+  modList.remove('WRApper')
 
 solist='m:'
 lolist=["without-mod=","single-mod=","prefix=","force"]
@@ -54,17 +56,29 @@ for o,a in opts:
   if (o == "--force"):
     os.system('hg parents --template="{rev}\n" > ./lib/revision.tmp')
     setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py')
+
+bdir=os.path.normpath(os.path.abspath('./build'))
   
 modArgs=[]
 for opt in sys.argv[1:]:
   if (opt[:12] not in ['--without-mod','--single-mod']): modArgs.append(opt)
+
+bopt=''
+if ('build' in sys.argv):
+  modArgs.remove('build')
+  bopt=' build --build-base=%s '%bdir
+
+if ('install' in sys.argv):
+  modArgs.remove('install')
+  bopt=' build --build-base=%s install '%bdir
+
 modArgs=string.join(modArgs)
 
 for mod in modList:
   print '\n',mod, (69-len(mod))*'-'
   if os.path.exists('./%s/setup.py'%mod):
     os.chdir(mod)
-    com='%s setup.py %s'%(pcom,modArgs)
+    com='%s setup.py %s %s'%(pcom,bopt,modArgs)
     print com
     os.system(com)
     os.chdir('..')

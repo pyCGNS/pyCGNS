@@ -20,6 +20,7 @@ SAVEBUTTON='Save'
 (LOADMODE,SAVEMODE)=(0,1)
 
 def checkFilePermission(path,write=False):
+    return True
     if (not os.path.exists(path)): return False
     r=False
     w=False

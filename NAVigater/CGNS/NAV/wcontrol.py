@@ -173,7 +173,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
                MSG.INFO)
     def closeApplication(self):
         reply = MSG.message('Double check...',
-                            """Do you want to quit %s,<b>close all views<b><br>
+                            """Do you want to <b>quit</b> %s, close all views
                             and forget unsaved modifications?""" \
                             %OCTXT._ToolName,
                             MSG.YESNO)

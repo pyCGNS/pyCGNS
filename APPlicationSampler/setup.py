@@ -18,10 +18,13 @@ import setuputils
 if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
 
+import numpy
+
 incdirs=['%s/lib/python%s/site-packages/numpy/core/include'\
          %(os.path.normpath(sys.exec_prefix),sys.version[:3]),
          '.',
          'CGNS/APP/probe']
+incdirs+=[numpy.get_include()]
 
 x_mods=[Extension("CGNS.APP.probe.arrayutils",
                   ["CGNS/APP/probe/arrayutils.pyx",

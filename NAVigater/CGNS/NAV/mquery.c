@@ -4523,7 +4523,7 @@ PyMODINIT_FUNC PyInit_mquery(void)
   /*--- Execution code ---*/
 
   /* "CGNS/NAV/mquery.pyx":7
- * #  $Release$
+ * #  $Release:  $
  * #  -------------------------------------------------------------------------
  * import sys             # <<<<<<<<<<<<<<
  * import numpy

@@ -1,0 +1,15 @@
+
+from PySide.QtGui import *
+import ctypes
+
+print 'pySIDE/WIndows BUG FIX'
+
+_QWidget_winId = QtGui.QWidget.winId
+
+
+def _winId(self):
+  ctypes.pythonapi.PyCObject_AsVoidPtr.restype = ctypes.c_void_p
+  ctypes.pythonapi.PyCObject_AsVoidPtr.argtypes = [ctypes.py_object]
+  return ctypes.pythonapi.PyCObject_AsVoidPtr(_QWidget_winId(self))
+
+QtGui.QWidget.winId = _winId

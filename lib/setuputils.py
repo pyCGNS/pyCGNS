@@ -2,7 +2,7 @@
 #  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
+#  $Release:  $
 #  -------------------------------------------------------------------------
 MAJORVERSION=4
 MINORVERSION=3
@@ -29,7 +29,10 @@ pfx='### pyCGNS: '
 def prodtag():
   from time import gmtime, strftime
   proddate=strftime("%Y-%m-%d %H:%M:%S", gmtime())
-  prodhost=os.uname()
+  try:
+    prodhost=os.uname()
+  except AttributeError:
+    prodhost='win32'
   return (proddate,prodhost)
   
 # --------------------------------------------------------------------
@@ -49,7 +52,7 @@ def search(tag,deps=[]):
     tg="%s/../build/lib.%s-%s/CGNS"%(os.getcwd(),pt,vv)
     lg="%s/../build/lib/CGNS"%(os.getcwd())
     os.makedirs(tg)
-    os.symlink(tg,lg)
+#    os.symlink(tg,lg)
   oldsyspath=sys.path
   sys.path=['../lib']
   cfgdict={}
@@ -157,7 +160,7 @@ def search(tag,deps=[]):
 # --------------------------------------------------------------------
 def installConfigFiles():
   lptarget='..'
-  bptarget='./build/lib/CGNS'  
+  bptarget='../build/lib/CGNS'  
   for ff in rootfiles:
     shutil.copy("%s/lib/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
   for ff in compfiles:
@@ -255,6 +258,7 @@ def updateConfig(pfile,gfile,config_default,config_previous=None):
     import pyCGNSconfig_user
     for ck in dir(pyCGNSconfig_user):
       if (ck[0]!='_'): config_default[ck]=pyCGNSconfig_user.__dict__[ck]
+    os.makedirs('%s'%gfile)
     f=open("%s/pyCGNSconfig.py"%(gfile),'w+')
     f.writelines(config_default['file_pattern']%config_default)
     f.close()
@@ -406,6 +410,7 @@ def find_CHLone(pincs,plibs,libs):
 
 # --------------------------------------------------------------------
 def find_numpy(pincs,plibs,libs):
+  import numpy
   vers=''
   extraargs=[]
   pdir=os.path.normpath(sys.prefix)
@@ -414,6 +419,7 @@ def find_numpy(pincs,plibs,libs):
          %(xdir,sys.version[:3])]
   pincs+=['%s/lib/python%s/site-packages/numpy/core/include'\
          %(pdir,sys.version[:3])]
+  pincs+=[numpy.get_include()]
   notfound=1      
   for pth in pincs:
     if (os.path.exists(pth+'/numpy/ndarrayobject.h')):

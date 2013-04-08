@@ -2,16 +2,19 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
+#
 import shutil
 import os
 import os.path as OP
 import sys
 import imp
+import tempfile
 from time import time,gmtime,strftime
 
 from CGNS.pyCGNSconfig import version as __vid__
+
+WINOPTS=False
+if (sys.platform=='win32'):  WINOPTS=True
 
 import CGNS.PAT.cgnskeywords as CGK
 
@@ -46,6 +49,18 @@ import numpy
 Q_SCRIPT_POST="""
 %s[0]=%s
 """%(Q_VAR_RESULT_LIST,Q_VAR_RESULT)
+
+def removeSubDirAndFiles(path):
+  shutil.rmtree(path)
+
+def copyOneFile(src,dst):
+  f1=open(src,'r')
+  l1=f1.readlines()
+  f1.close()
+  if (os.path.exists(dst)): os.remove(dst)
+  f2=open(dst,'w')
+  l2=f2.writelines(l1)
+  f2.close()
 
 # -----------------------------------------------------------------
 class Q7OptionContext(object):
@@ -91,7 +106,7 @@ class Q7OptionContext(object):
     ValKeyList=['sample']
     CGNSFileExtension=['.cgns','.adf']
     HDFFileExtension=['.hdf','.hdf5']
-    MaxLoadDataSize=1000
+    MaxLoadDataSize=1e9
     MaxDisplayDataSize=5000
     MaxRecursionLevel=7
     ADFConversionCom='cgnsconvert'
@@ -110,33 +125,60 @@ All rights reserved in accordance with GPL v2 <br><br>
 Check GPL v2 sections 15 and 16<br>
 about loss of data or corrupted data<br>
 """
-
-    _Default_Fonts={
-        'Label_Family':'DejaVu Sans',
-        'Label_Size':12,
-        'Label_Bold':False,
-        'Label_Italic':False,
-        'Edit_Family':'courier',
-        'Edit_Size':12,
-        'Edit_Bold':False,
-        'Edit_Italic':False,
-        'Table_Family':'courier',
-        'Table_Size':12,
-        'Table_Bold':False,
-        'Table_Italic':False,
-        'Button_Family':'DejaVu Sans',
-        'Button_Size':12,
-        'Button_Bold':False,
-        'Button_Italic':False,
-        'RName_Family':'DejaVu Sans',
-        'RName_Size':12,
-        'RName_Bold':False,
-        'RName_Italic':False,
-        'NName_Family':'DejaVu Sans',
-        'NName_Size':12,
-        'NName_Bold':False,
-        'NName_Italic':False,
-     }
+    if (WINOPTS):
+      _Default_Fonts={
+          'Label_Family':'Microsoft Sans Serif',
+          'Label_Size':12,
+          'Label_Bold':False,
+          'Label_Italic':False,
+          'Edit_Family':'courier',
+          'Edit_Size':12,
+          'Edit_Bold':False,
+          'Edit_Italic':False,
+          'Table_Family':'courier',
+          'Table_Size':12,
+          'Table_Bold':False,
+          'Table_Italic':False,
+          'Button_Family':'Microsoft Sans Serif',
+          'Button_Size':12,
+          'Button_Bold':False,
+          'Button_Italic':False,
+          'RName_Family':'DejaVu Sans',
+          'RName_Size':12,
+          'RName_Bold':False,
+          'RName_Italic':False,
+          'NName_Family':'DejaVu Sans',
+          'NName_Size':12,
+          'NName_Bold':False,
+          'NName_Italic':False,
+       }
+    else:
+      _Default_Fonts={
+          'Label_Family':'DejaVu Sans',
+          'Label_Size':12,
+          'Label_Bold':False,
+          'Label_Italic':False,
+          'Edit_Family':'courier',
+          'Edit_Size':12,
+          'Edit_Bold':False,
+          'Edit_Italic':False,
+          'Table_Family':'courier',
+          'Table_Size':12,
+          'Table_Bold':False,
+          'Table_Italic':False,
+          'Button_Family':'DejaVu Sans',
+          'Button_Size':12,
+          'Button_Bold':False,
+          'Button_Italic':False,
+          'RName_Family':'DejaVu Sans',
+          'RName_Size':12,
+          'RName_Bold':False,
+          'RName_Italic':False,
+          'NName_Family':'DejaVu Sans',
+          'NName_Size':12,
+          'NName_Bold':False,
+          'NName_Italic':False,
+       }
 
     _Label_Font=None
     _Table_Font=None
@@ -574,7 +616,7 @@ the second as the subsitution pattern. For example:
         setattr(cls,name,value)
     @classmethod
     def _writeFile(cls,tag,name,udata,filename,prefix=""):
-      #print '### CGNS.NAV update',filename
+      #print '### CGNS.NAV write',filename
       gdate=strftime("%Y-%m-%d %H:%M:%S", gmtime())
       s="""# %s - %s file - Generated %s\n%s\n%s="""%\
          (cls._ToolName,tag,gdate,prefix,name)
@@ -597,30 +639,26 @@ the second as the subsitution pattern. For example:
       f.close()
     @classmethod
     def _readFile(cls,name,filename):
-      #print '### CGNS.NAV read  ',filename
-      dpath='/tmp/pyCGNS.tmp:%d.%s'%(os.getpid(),time())
+      #print '### CGNS.NAV read ',filename
+      dpath=tempfile.mkdtemp()
+      if (not os.path.exists(filename)): return None
       try:
-        os.mkdir(dpath)
-      except OSError:
-        pass
-      try:
-        shutil.copyfile(filename,dpath+'/%s.py'%name)
+        copyOneFile(filename,'%s/%s.py'%(dpath,name))
       except IOError:
-        shutil.rmtree(dpath)    
+        removeSubDirAndFiles(dpath)    
         return None
       sprev=sys.path
       sys.path=[dpath]+sys.path
-      #try:
-      #  return sys.modules[name]
-      #except KeyError:
-      #  pass
-      fp, pathname, description = imp.find_module(name)
+      try:
+        fp, pathname, description = imp.find_module(name)
+      except IndexError: #ImportError:
+        return None
       try:
         mod=imp.load_module(name, fp, pathname, description)
       finally:
         if fp:
            fp.close()
-      shutil.rmtree(dpath)
+      removeSubDirAndFiles(dpath)    
       sys.path=sprev
       return mod
     @classmethod

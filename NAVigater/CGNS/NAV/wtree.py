@@ -2,7 +2,7 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
+#  $Release:  $
 #  -------------------------------------------------------------------------
 
 from PySide.QtCore import Slot as pyqtSlot
@@ -264,7 +264,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.updateTreeStatus()
     def tools(self):
         if (not OCTXT._HasProPackage): return
-        from CGNS.PRO.wtools import Q7ToolsView
+        try:
+          from CGNS.PRO.wtools import Q7ToolsView
+        except ImportError: return
         if (self._toolswindow is None):
             self._toolswindow=Q7ToolsView(self._control,self._fgprint,self)
             self._toolswindow.show()

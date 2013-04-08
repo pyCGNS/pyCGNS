@@ -6965,7 +6965,7 @@ PyMODINIT_FUNC PyInit_mtable(void)
   /*--- Execution code ---*/
 
   /* "CGNS/NAV/mtable.pyx":7
- * #  $Release$
+ * #  $Release:  $
  * #  -------------------------------------------------------------------------
  * import sys             # <<<<<<<<<<<<<<
  * import re

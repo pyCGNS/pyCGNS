@@ -12,7 +12,7 @@ def message(text,info,btype=INFO,fixed=False):
   msgBox = QMessageBox()
   msgBox.setText(text)
   msgBox.setInformativeText(info)
-  msgBox.setFixedWidth(375)
+  msgBox.setFixedWidth(675)
   if (btype == INFO):
       msgBox.setStandardButtons(QMessageBox.Ok)
       msgBox.setDefaultButton(QMessageBox.Ok)
