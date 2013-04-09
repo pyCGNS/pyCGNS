@@ -66,32 +66,32 @@ the <b>Info panel</b>.
 The <b>status</b> icons are:
 
 <table>
-<tr><td><img source=":/images/icons/save-S-UM.gif"></td>
+<tr><td><img source=":/images/icons/save-S-UM.png"></td>
 <td>File can be saved, no modification to save now</td></tr>
-<tr><td><img source=":/images/icons/save-S-M.gif"></td>
+<tr><td><img source=":/images/icons/save-S-M.png"></td>
 <td>File can be saved, some modifications are not saved yet</td></tr>
-<tr><td><img source=":/images/icons/save-US-UM.gif"></td>
+<tr><td><img source=":/images/icons/save-US-UM.png"></td>
 <td>File cannot be saved, no modification to save now. You have no write access to the file, you should use <b>save as</b> button.</td></tr>
-<tr><td><img source=":/images/icons/save-US-M.gif"></td>
+<tr><td><img source=":/images/icons/save-US-M.png"></td>
 <td>File cannot be saved, some modifications are not saved yet. You have no write access to the file, you should use <b>save as</b> button.</td></tr>
 </table>
 <p>
 The second column of a control panel line is the view type:
 
 <table>
-<tr><td><img source=":/images/icons/tree-load.gif"></td>
+<tr><td><img source=":/images/icons/tree-load.png"></td>
 <td> Tree view - Open from control panel</td></tr>
-<tr><td><img source=":/images/icons/vtkview.gif"></td>
+<tr><td><img source=":/images/icons/vtkview.png"></td>
 <td> VTK view - Open from tree view</td></tr>
-<tr><td><img source=":/images/icons/operate-execute.gif"></td>
+<tr><td><img source=":/images/icons/operate-execute.png"></td>
 <td> Query view - Open from tree view</td></tr>
-<tr><td><img source=":/images/icons/form.gif"></td>
+<tr><td><img source=":/images/icons/form.png"></td>
 <td> Form view - Open from tree view</td></tr>
-<tr><td><img source=":/images/icons/operate-list.gif"></td>
+<tr><td><img source=":/images/icons/operate-list.png"></td>
 <td> Selection view - Open from tree view</td></tr>
-<tr><td><img source=":/images/icons/check-all.gif"></td>
+<tr><td><img source=":/images/icons/check-all.png"></td>
 <td> Diagnosis view - Open from tree view</td></tr>
-<tr><td><img source=":/images/icons/link.gif"></td>
+<tr><td><img source=":/images/icons/link.png"></td>
 <td> Link view - Open from tree view</td></tr>
 </table>
 
@@ -102,7 +102,7 @@ These values may be empty if not relevant. For example if you create
 a tree from scratch, the directory and the file name are generated and thus
 would require a <b>save as</b> to set these values.
 
-All <b>CGNS.NAV</b> windows have a <img source=":/images/icons/top.gif">
+All <b>CGNS.NAV</b> windows have a <img source=":/images/icons/top.png">
 button that raises the control panel window. The other way, you select
 a view line in the control panel and press <i>[space]</i> to raise the
 corresponding view.
@@ -113,21 +113,21 @@ using the right click menu, on a row.
 <h3>Buttons</h3>
 <p>
 <table>
-<tr><td><img source=":/images/icons/tree-load-g.gif"></td>
+<tr><td><img source=":/images/icons/tree-load-g.png"></td>
 <td> load last used file</td></tr>
-<tr><td><img source=":/images/icons/tree-load.gif"></td>
+<tr><td><img source=":/images/icons/tree-load.png"></td>
 <td> load a file, open the file dialog window</td></tr>
-<tr><td><img source=":/images/icons/tree-new.gif"></td>
+<tr><td><img source=":/images/icons/tree-new.png"></td>
 <td> create a new CGNS/Python tree from scratch</td></tr>
-<tr><td><img source=":/images/icons/pattern.gif"></td>
+<tr><td><img source=":/images/icons/pattern.png"></td>
 <td> open the pattern database</td></tr>
-<tr><td><img source=":/images/icons/options-view.gif"></td>
+<tr><td><img source=":/images/icons/options-view.png"></td>
 <td> open the user options panel</td></tr>
-<tr><td><img source=":/images/icons/help-view.gif"></td>
+<tr><td><img source=":/images/icons/help-view.png"></td>
 <td> help</td></tr>
-<tr><td><img source=":/images/icons/view-help.gif"></td>
+<tr><td><img source=":/images/icons/view-help.png"></td>
 <td> about CGNS.NAV</td></tr>
-<tr><td><img source=":/images/icons/close-view.gif"></td>
+<tr><td><img source=":/images/icons/close-view.png"></td>
 <td> close CGNS.NAV and all its views</td></tr>
 </table>
 
@@ -162,15 +162,15 @@ selected nodes, or example the check, or the <i>paste as child for each selected
 There a 4 flag columns: <b>L</b> is for link flag, <b>M</b> is mark flag,
 <b>C</b> is check flag and the last <b>U</b> is user flag.<br><br>
 
-There are two link flags, <img source=":/images/icons/link.gif"> indicates
+There are two link flags, <img source=":/images/icons/link.png"> indicates
 the root node of a linked-to node. The actual node is in file used for the
 current tree, but the node value and its children are located into another
-file. Use the <img source=":/images/icons/link-view.gif"> icon to open the
+file. Use the <img source=":/images/icons/link-view.png"> icon to open the
 link view, that shows all existing links for the current tree. Or you can move
 the mouse pointer on the link icon, the actual linked-to reference would
 be displayed.
 The second link flag is
-<img source=":/images/icons/link-child.gif"> that indicates the node has a
+<img source=":/images/icons/link-child.png"> that indicates the node has a
 linked-to ancestor node (its direct parent or any other parent). Depending
 on the options you set, you may or may not have the right to change this
 child-link node name, type or value.<br><br>
@@ -178,23 +178,23 @@ child-link node name, type or value.<br><br>
 The mark flag is set when you run a selection, or when you mark it by
 yourself by pressing <i>[space]</i>. The list of all selected nodes, for
 example after running a large query, is displayed using the
-<img source=":/images/icons/operate-list.gif"> icon.<br><br>
+<img source=":/images/icons/operate-list.png"> icon.<br><br>
 
 The check flag is set when you run a check with 
-<img source=":/images/icons/check-all.gif">, the diagnosis list is
-open with <img source=":/images/icons/check-list.gif">.
-Nodes can have a warning <img source=":/images/icons/check-warn.gif">
-or an error <img source=":/images/icons/check-fail.gif"> flag. Node without
+<img source=":/images/icons/check-all.png">, the diagnosis list is
+open with <img source=":/images/icons/check-list.png">.
+Nodes can have a warning <img source=":/images/icons/check-warn.png">
+or an error <img source=":/images/icons/check-fail.png"> flag. Node without
 flags are ok.<br><br>
 
 The last flag column is for the user flag. The user sets/unsets the flag
 for each node by selecting the node and pressing one of the <i>[0-9]</i> keys.
 Then, by default, the corresponding number is set as flag (for example you
-have a <img source=":/images/icons/user-5.gif"> if you press <i>[5]</i>.
+have a <img source=":/images/icons/user-5.png"> if you press <i>[5]</i>.
 The flag is an informative flag, it is not used by CGNS.NAV functions.<br><br>
 
 The snapshot below shows the flag columns with various flag settings.<br><br>
-<img source=":/images/icons/help-01.gif"><br>
+<img source=":/images/icons/help-01.png"><br>
 
 
 <h3>Editing nodes</h3>
@@ -224,62 +224,62 @@ The <i>Tree views</i> support the copy/cut/paste of sub-trees.
 <h3>Top Buttons</h3>
 <p>
 <table>
-<tr><td><img source=":/images/icons/save.gif"></td>
+<tr><td><img source=":/images/icons/save.png"></td>
 <td> save file using the last used file name and save parameters</td></tr>
-<tr><td><img source=":/images/icons/tree-save.gif"></td>
+<tr><td><img source=":/images/icons/tree-save.png"></td>
 <td> save as, as a new directory and/or file name, allows to change save
 parameters such as link management</td></tr>
-<tr><td><img source=":/images/icons/pattern-save.gif"></td>
+<tr><td><img source=":/images/icons/pattern-save.png"></td>
 <td> save as a pattern (not available yet)</td></tr>
-<tr><td><img source=":/images/icons/level-out.gif"></td>
+<tr><td><img source=":/images/icons/level-out.png"></td>
 <td> expand one level of children nodes</td></tr>
-<tr><td><img source=":/images/icons/level-all.gif"></td>
+<tr><td><img source=":/images/icons/level-all.png"></td>
 <td> switch expand all / unexpand all</td></tr>
-<tr><td><img source=":/images/icons/level-in.gif"></td>
+<tr><td><img source=":/images/icons/level-in.png"></td>
 <td> unexpand one level of children nodes</td></tr>
-<tr><td><img source=":/images/icons/flag-all.gif"></td>
+<tr><td><img source=":/images/icons/flag-all.png"></td>
 <td> set the selection flag on all the nodes. If a node is not visible, then it is flagged as well and all subsequent operation on selection list would take this invisible node as argument. Note that such an invisble node is actually in the CGNS/Python tree but it is not displayed</td></tr>
-<tr><td><img source=":/images/icons/flag-revert.gif"></td>
+<tr><td><img source=":/images/icons/flag-revert.png"></td>
 <td> revert nodes selection flag</td></tr>
-<tr><td><img source=":/images/icons/flag-none.gif"></td>
+<tr><td><img source=":/images/icons/flag-none.png"></td>
 <td> remove all selection flags</td></tr>
-<tr><td><img source=":/images/icons/operate-list.gif"></td>
+<tr><td><img source=":/images/icons/operate-list.png"></td>
 <td> open the selection view, gives the list of all selected nodes</td></tr>
-<tr><td><img source=":/images/icons/check-all.gif"></td>
+<tr><td><img source=":/images/icons/check-all.png"></td>
 <td> check nodes using <b>CGNS.VAL</b> tool. If the selection list is not
 empty, then only the selected nodes are checked. If the selection list is
 empty, all nodes of the tree are checked.</td></tr>
-<tr><td><img source=":/images/icons/check-clear.gif"></td>
+<tr><td><img source=":/images/icons/check-clear.png"></td>
 <td> remove all check flags</td></tr>
-<tr><td><img source=":/images/icons/check-list.gif"></td>
+<tr><td><img source=":/images/icons/check-list.png"></td>
 <td> open the diagnosis view which details the check log</td></tr>
-<tr><td><img source=":/images/icons/link-select.gif"></td>
+<tr><td><img source=":/images/icons/link-select.png"></td>
 <td> not available yet</td></tr>
-<tr><td><img source=":/images/icons/link-add.gif"></td>
+<tr><td><img source=":/images/icons/link-add.png"></td>
 <td> not available yet</td></tr>
-<tr><td><img source=":/images/icons/link-delete.gif"></td>
+<tr><td><img source=":/images/icons/link-delete.png"></td>
 <td> not available yet</td></tr>
-<tr><td><img source=":/images/icons/form-open.gif"></td>
+<tr><td><img source=":/images/icons/form-open.png"></td>
 <td> open the form view, gives details on a node including its data</td></tr>
-<tr><td><img source=":/images/icons/vtk.gif"></td>
+<tr><td><img source=":/images/icons/vtk.png"></td>
 <td> open the VTK view, a 3D view on the actual mesh and its associated data.
 This requires a correct parsing of CGNS/Python tree, if the tool is not able
 to understand the data (for example if your tree is not CGNS/SIDS compliant,
 then no window is open.</td></tr>
-<tr><td><img source=":/images/icons/plot.gif"></td>
+<tr><td><img source=":/images/icons/plot.png"></td>
 <td> open the Plot view, a 2D view on some tree data.
 Same remarks as VTK view.</td></tr>
-<tr><td><img source=":/images/icons/pattern-view.gif"></td>
+<tr><td><img source=":/images/icons/pattern-view.png"></td>
 <td> not available yet</td></tr>
-<tr><td><img source=":/images/icons/link-view.gif"></td>
+<tr><td><img source=":/images/icons/link-view.png"></td>
 <td> open the Link view, gives details on the links</td></tr>
-<tr><td><img source=":/images/icons/operate-view.gif"></td>
+<tr><td><img source=":/images/icons/operate-view.png"></td>
 <td> open the Query view, a powerful mean to edit and run Python commands on the tree</td></tr>
-<tr><td><img source=":/images/icons/check-view.gif"></td>
+<tr><td><img source=":/images/icons/check-view.png"></td>
 <td> not available yet</td></tr>
-<tr><td><img source=":/images/icons/tools-view.gif"></td>
+<tr><td><img source=":/images/icons/tools-view.png"></td>
 <td> not available yet</td></tr>
-<tr><td><img source=":/images/icons/snapshot.gif"></td>
+<tr><td><img source=":/images/icons/snapshot.png"></td>
 <td> creates a bitmap file with the snapshot of the current tree view.
 See user options for directory and file used for this snapshot.</td></tr>
 </table>
@@ -293,11 +293,11 @@ See user options for directory and file used for this snapshot.</td></tr>
 <h3>Selection list</h3>
 <p>
 <table>
-<tr><td><img source=":/images/icons/selected.gif"></td>
+<tr><td><img source=":/images/icons/selected.png"></td>
 <td>The selection list entry is selected for operations</td></tr>
-<tr><td><img source=":/images/icons/unselected.gif"></td>
+<tr><td><img source=":/images/icons/unselected.png"></td>
 <td>The selection list entry is NOT selected for operations</td></tr>
-<tr><td><img source=":/images/icons/hidden.gif"></td>
+<tr><td><img source=":/images/icons/hidden.png"></td>
 <td>The selection list entry is hidden, the data is still there but it is not
 displayed in the window.</td></tr>
 </table>
@@ -305,20 +305,20 @@ displayed in the window.</td></tr>
 <h3>Icons and buttons</h3>
 <p>
 <table>
-<tr><td><img source=":/images/icons/zoompoint.gif"></td>
+<tr><td><img source=":/images/icons/zoompoint.png"></td>
 <td>Switch to the zoom-window mode. You draw a window using the mouse left
 button and the zoom would fit to the defined window.</td></tr>
-<tr><td><img source=":/images/icons/zoom-actor.gif"></td>
+<tr><td><img source=":/images/icons/zoom-actor.png"></td>
 <td>Reset the view to fit the object in the window</td></tr>
-<tr><td><img source=":/images/icons/lock-legend.gif"></td>
+<tr><td><img source=":/images/icons/lock-legend.png"></td>
 <td>Switch to move legend mode, used to mose the reference axis draw, the
 legend and other extra information displayed on the view.</td></tr>
-<tr><td><img source=":/images/icons/value.gif"></td>
+<tr><td><img source=":/images/icons/value.png"></td>
 <td>Switch to the show value mode, in the case you have actual values,
 the pick of a node would show corresponding value.</td></tr>
-<tr><td><img source=":/images/icons/colors.gif"></td>
+<tr><td><img source=":/images/icons/colors.png"></td>
 <td>Randomly change the colors of view objects.</td></tr>
-<tr><td><img source=":/images/icons/colors-bw.gif"></td>
+<tr><td><img source=":/images/icons/colors-bw.png"></td>
 <td>Switch the view background to balck/white.</td></tr>
 </table>
 
@@ -331,7 +331,7 @@ the pick of a node would show corresponding value.</td></tr>
 <p>
 You can the current camera and reset to this stored point of view later on.
 <table>
-<tr><td><img source=":/images/icons/camera-snap.gif"></td>
+<tr><td><img source=":/images/icons/camera-snap.png"></td>
 <td>Sotre an existing camera</td></tr>
 </table>
 
@@ -455,11 +455,11 @@ want to find back which result matches which value (see example)</td></tr>
 <h3>Buttons</h3>
 <p>
 <table>
-<tr><td><img source=":/images/icons/operate-add.gif"></td>
+<tr><td><img source=":/images/icons/operate-add.png"></td>
 <td>Add a new query</td></tr>
-<tr><td><img source=":/images/icons/operate-delete.gif"></td>
+<tr><td><img source=":/images/icons/operate-delete.png"></td>
 <td>Remove an existing query</td></tr>
-<tr><td><img source=":/images/icons/operate-save.gif"></td>
+<tr><td><img source=":/images/icons/operate-save.png"></td>
 <td>Save all queries</td></tr>
 </table>
 
@@ -471,7 +471,7 @@ want to find back which result matches which value (see example)</td></tr>
 
 <h3>Buttons</h3>
 <p>
-<img source=":/images/icons/unselected.gif">
+<img source=":/images/icons/unselected.png">
 """),
 # --------------------------------------------------------------------------
 'File':('File panel',
@@ -480,7 +480,7 @@ want to find back which result matches which value (see example)</td></tr>
 
 <h3>Buttons</h3>
 <p>
-<img source=":/images/icons/unselected.gif">
+<img source=":/images/icons/unselected.png">
 """),
 # --------------------------------------------------------------------------
 'Selection':('Selection view',
@@ -489,7 +489,7 @@ want to find back which result matches which value (see example)</td></tr>
 
 <h3>Buttons</h3>
 <p>
-<img source=":/images/icons/unselected.gif">
+<img source=":/images/icons/unselected.png">
 """),
 # --------------------------------------------------------------------------
 'Diagnosis':('Diagnosis view',
@@ -513,15 +513,15 @@ checkbox.
 <h3>Buttons</h3>
 <p>
 <table>
-<tr><td><img source=":/images/icons/level-in.gif"></td>
+<tr><td><img source=":/images/icons/level-in.png"></td>
 <td> expand all errors/warnings</td></tr>
-<tr><td><img source=":/images/icons/level-out.gif"></td>
+<tr><td><img source=":/images/icons/level-out.png"></td>
 <td> collapse all errors/warnings</td></tr>
-<tr><td><img source=":/images/icons/node-sids-opened.gif"></td>
+<tr><td><img source=":/images/icons/node-sids-opened.png"></td>
 <td> go to previous filtered error/warning</td></tr>
-<tr><td><img source=":/images/icons/selected.gif"></td>
+<tr><td><img source=":/images/icons/selected.png"></td>
 <td> go to next filtered error/warning</td></tr>
-<tr><td><img source=":/images/icons/check-save.gif"></td>
+<tr><td><img source=":/images/icons/check-save.png"></td>
 <td> save errors/warnings as a Python importable file (see hereafter)</td></tr>
 </table>
 

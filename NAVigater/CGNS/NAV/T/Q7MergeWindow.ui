@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../R/Res.qrc">
-    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+    <normaloff>:/images/icons/cgSpy.png</normaloff>:/images/icons/cgSpy.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -55,7 +55,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/level-out.gif</normaloff>:/images/icons/level-out.gif</iconset>
+         <normaloff>:/images/icons/level-out.png</normaloff>:/images/icons/level-out.png</iconset>
        </property>
       </widget>
      </item>
@@ -87,7 +87,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/level-all.gif</normaloff>:/images/icons/level-all.gif</iconset>
+         <normaloff>:/images/icons/level-all.png</normaloff>:/images/icons/level-all.png</iconset>
        </property>
       </widget>
      </item>
@@ -113,7 +113,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/level-in.gif</normaloff>:/images/icons/level-in.gif</iconset>
+         <normaloff>:/images/icons/level-in.png</normaloff>:/images/icons/level-in.png</iconset>
        </property>
       </widget>
      </item>
@@ -152,7 +152,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/select-save.gif</normaloff>:/images/icons/select-save.gif</iconset>
+         <normaloff>:/images/icons/select-save.png</normaloff>:/images/icons/select-save.png</iconset>
        </property>
       </widget>
      </item>
@@ -217,7 +217,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/top.gif</normaloff>:/images/icons/top.gif</iconset>
+         <normaloff>:/images/icons/top.png</normaloff>:/images/icons/top.png</iconset>
        </property>
       </widget>
      </item>
@@ -240,7 +240,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/help-view.gif</normaloff>:/images/icons/help-view.gif</iconset>
+         <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
        </property>
       </widget>
      </item>
@@ -282,7 +282,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/node-sids-opened.gif</normaloff>:/images/icons/node-sids-opened.gif</iconset>
+         <normaloff>:/images/icons/node-sids-opened.png</normaloff>:/images/icons/node-sids-opened.png</iconset>
        </property>
       </widget>
      </item>
@@ -308,7 +308,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/node-sids-leaf.gif</normaloff>:/images/icons/node-sids-leaf.gif</iconset>
+         <normaloff>:/images/icons/node-sids-leaf.png</normaloff>:/images/icons/node-sids-leaf.png</iconset>
        </property>
       </widget>
      </item>
@@ -334,7 +334,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/node-sids-closed.gif</normaloff>:/images/icons/node-sids-closed.gif</iconset>
+         <normaloff>:/images/icons/node-sids-closed.png</normaloff>:/images/icons/node-sids-closed.png</iconset>
        </property>
       </widget>
      </item>

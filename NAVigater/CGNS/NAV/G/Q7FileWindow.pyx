@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FileWindow.ui'
 #
-# Created: Fri Jan 25 14:29:49 2013
+# Created: Tue Apr  9 11:00:03 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -22,7 +22,7 @@ class Ui_Q7FileWindow(object):
         Q7FileWindow.setMinimumSize(QtCore.QSize(720, 400))
         Q7FileWindow.setMaximumSize(QtCore.QSize(720, 400))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7FileWindow.setWindowIcon(icon)
         self.verticalLayout = QtGui.QVBoxLayout(Q7FileWindow)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -83,7 +83,7 @@ class Ui_Q7FileWindow(object):
         self.bAction.setMaximumSize(QtCore.QSize(25, 25))
         self.bAction.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/mandatory-sids-node.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/mandatory-sids-node.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bAction.setIcon(icon1)
         self.bAction.setObjectName("bAction")
         self.cShowAll = QtGui.QCheckBox(self.Selection)
@@ -95,7 +95,7 @@ class Ui_Q7FileWindow(object):
         self.bBack.setMaximumSize(QtCore.QSize(25, 25))
         self.bBack.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/images/icons/control.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/images/icons/control.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bBack.setIcon(icon2)
         self.bBack.setObjectName("bBack")
         self.cShowDirs = QtGui.QCheckBox(self.Selection)
@@ -111,7 +111,7 @@ class Ui_Q7FileWindow(object):
         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
         self.bInfo.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bInfo.setIcon(icon3)
         self.bInfo.setObjectName("bInfo")
         self.cAutoDir = QtGui.QCheckBox(self.Selection)

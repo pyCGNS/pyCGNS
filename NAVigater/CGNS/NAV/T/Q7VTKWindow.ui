@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../R/Res.qrc">
-    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+    <normaloff>:/images/icons/cgSpy.png</normaloff>:/images/icons/cgSpy.png</iconset>
   </property>
   <property name="toolTip">
    <string>Show value</string>
@@ -76,7 +76,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/camera-add.gif</normaloff>:/images/icons/camera-add.gif</iconset>
+         <normaloff>:/images/icons/camera-add.png</normaloff>:/images/icons/camera-add.png</iconset>
        </property>
       </widget>
      </item>
@@ -102,7 +102,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/camera-snap.gif</normaloff>:/images/icons/camera-snap.gif</iconset>
+         <normaloff>:/images/icons/camera-snap.png</normaloff>:/images/icons/camera-snap.png</iconset>
        </property>
       </widget>
      </item>
@@ -128,7 +128,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/camera-remove.gif</normaloff>:/images/icons/camera-remove.gif</iconset>
+         <normaloff>:/images/icons/camera-remove.png</normaloff>:/images/icons/camera-remove.png</iconset>
        </property>
       </widget>
      </item>
@@ -170,7 +170,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/colors-first.gif</normaloff>:/images/icons/colors-first.gif</iconset>
+         <normaloff>:/images/icons/colors-first.png</normaloff>:/images/icons/colors-first.png</iconset>
        </property>
       </widget>
      </item>
@@ -196,7 +196,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/colors-last.gif</normaloff>:/images/icons/colors-last.gif</iconset>
+         <normaloff>:/images/icons/colors-last.png</normaloff>:/images/icons/colors-last.png</iconset>
        </property>
       </widget>
      </item>
@@ -245,7 +245,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+         <normaloff>:/images/icons/save.png</normaloff>:/images/icons/save.png</iconset>
        </property>
       </widget>
      </item>
@@ -277,7 +277,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/snapshot.gif</normaloff>:/images/icons/snapshot.gif</iconset>
+         <normaloff>:/images/icons/snapshot.png</normaloff>:/images/icons/snapshot.png</iconset>
        </property>
       </widget>
      </item>
@@ -421,7 +421,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/zoompoint.gif</normaloff>:/images/icons/zoompoint.gif</iconset>
+         <normaloff>:/images/icons/zoompoint.png</normaloff>:/images/icons/zoompoint.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -453,7 +453,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/lock-legend.gif</normaloff>:/images/icons/lock-legend.gif</iconset>
+         <normaloff>:/images/icons/lock-legend.png</normaloff>:/images/icons/lock-legend.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -482,7 +482,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/value.gif</normaloff>:/images/icons/value.gif</iconset>
+         <normaloff>:/images/icons/value.png</normaloff>:/images/icons/value.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -533,7 +533,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/colors.gif</normaloff>:/images/icons/colors.gif</iconset>
+         <normaloff>:/images/icons/colors.png</normaloff>:/images/icons/colors.png</iconset>
        </property>
       </widget>
      </item>
@@ -565,7 +565,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/colors-bw.gif</normaloff>:/images/icons/colors-bw.gif</iconset>
+         <normaloff>:/images/icons/colors-bw.png</normaloff>:/images/icons/colors-bw.png</iconset>
        </property>
       </widget>
      </item>
@@ -601,7 +601,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/anim-view.gif</normaloff>:/images/icons/anim-view.gif</iconset>
+         <normaloff>:/images/icons/anim-view.png</normaloff>:/images/icons/anim-view.png</iconset>
        </property>
       </widget>
      </item>
@@ -640,7 +640,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/zoom-actor.gif</normaloff>:/images/icons/zoom-actor.gif</iconset>
+         <normaloff>:/images/icons/zoom-actor.png</normaloff>:/images/icons/zoom-actor.png</iconset>
        </property>
       </widget>
      </item>
@@ -691,7 +691,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/undo-last-modification.gif</normaloff>:/images/icons/undo-last-modification.gif</iconset>
+         <normaloff>:/images/icons/undo-last-modification.png</normaloff>:/images/icons/undo-last-modification.png</iconset>
        </property>
       </widget>
      </item>
@@ -730,7 +730,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/flag-revert.gif</normaloff>:/images/icons/flag-revert.gif</iconset>
+         <normaloff>:/images/icons/flag-revert.png</normaloff>:/images/icons/flag-revert.png</iconset>
        </property>
       </widget>
      </item>
@@ -817,7 +817,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/top.gif</normaloff>:/images/icons/top.gif</iconset>
+         <normaloff>:/images/icons/top.png</normaloff>:/images/icons/top.png</iconset>
        </property>
       </widget>
      </item>
@@ -840,7 +840,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/help-view.gif</normaloff>:/images/icons/help-view.gif</iconset>
+         <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
        </property>
       </widget>
      </item>
@@ -905,7 +905,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/control.gif</normaloff>:/images/icons/control.gif</iconset>
+         <normaloff>:/images/icons/control.png</normaloff>:/images/icons/control.png</iconset>
        </property>
       </widget>
      </item>
@@ -931,7 +931,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/node-sids-leaf.gif</normaloff>:/images/icons/node-sids-leaf.gif</iconset>
+         <normaloff>:/images/icons/node-sids-leaf.png</normaloff>:/images/icons/node-sids-leaf.png</iconset>
        </property>
       </widget>
      </item>
@@ -957,7 +957,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/node-sids-closed.gif</normaloff>:/images/icons/node-sids-closed.gif</iconset>
+         <normaloff>:/images/icons/node-sids-closed.png</normaloff>:/images/icons/node-sids-closed.png</iconset>
        </property>
       </widget>
      </item>

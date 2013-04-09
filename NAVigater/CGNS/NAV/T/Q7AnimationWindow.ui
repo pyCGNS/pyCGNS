@@ -33,7 +33,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../R/Res.qrc">
-    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+    <normaloff>:/images/icons/cgSpy.png</normaloff>:/images/icons/cgSpy.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="6" column="0">
@@ -57,7 +57,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/top.gif</normaloff>:/images/icons/top.gif</iconset>
+         <normaloff>:/images/icons/top.png</normaloff>:/images/icons/top.png</iconset>
        </property>
       </widget>
      </item>
@@ -80,7 +80,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/help-view.gif</normaloff>:/images/icons/help-view.gif</iconset>
+         <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
        </property>
       </widget>
      </item>
@@ -155,7 +155,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/level-in.gif</normaloff>:/images/icons/level-in.gif</iconset>
+         <normaloff>:/images/icons/level-in.png</normaloff>:/images/icons/level-in.png</iconset>
        </property>
       </widget>
      </item>
@@ -184,7 +184,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/level-out.gif</normaloff>:/images/icons/level-out.gif</iconset>
+         <normaloff>:/images/icons/level-out.png</normaloff>:/images/icons/level-out.png</iconset>
        </property>
       </widget>
      </item>
@@ -220,7 +220,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/anim-add.gif</normaloff>:/images/icons/anim-add.gif</iconset>
+         <normaloff>:/images/icons/anim-add.png</normaloff>:/images/icons/anim-add.png</iconset>
        </property>
       </widget>
      </item>
@@ -243,7 +243,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/anim-del.gif</normaloff>:/images/icons/anim-del.gif</iconset>
+         <normaloff>:/images/icons/anim-del.png</normaloff>:/images/icons/anim-del.png</iconset>
        </property>
       </widget>
      </item>
@@ -282,7 +282,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/anim-auto-sids.gif</normaloff>:/images/icons/anim-auto-sids.gif</iconset>
+         <normaloff>:/images/icons/anim-auto-sids.png</normaloff>:/images/icons/anim-auto-sids.png</iconset>
        </property>
       </widget>
      </item>
@@ -318,7 +318,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/anim-save.gif</normaloff>:/images/icons/anim-save.gif</iconset>
+         <normaloff>:/images/icons/anim-save.png</normaloff>:/images/icons/anim-save.png</iconset>
        </property>
       </widget>
      </item>
@@ -345,7 +345,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/anim-item-first.gif</normaloff>:/images/icons/anim-item-first.gif</iconset>
+         <normaloff>:/images/icons/anim-item-first.png</normaloff>:/images/icons/anim-item-first.png</iconset>
        </property>
       </widget>
      </item>
@@ -368,7 +368,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/anim-item-prev.gif</normaloff>:/images/icons/anim-item-prev.gif</iconset>
+         <normaloff>:/images/icons/anim-item-prev.png</normaloff>:/images/icons/anim-item-prev.png</iconset>
        </property>
       </widget>
      </item>
@@ -391,7 +391,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/anim-item-next.gif</normaloff>:/images/icons/anim-item-next.gif</iconset>
+         <normaloff>:/images/icons/anim-item-next.png</normaloff>:/images/icons/anim-item-next.png</iconset>
        </property>
       </widget>
      </item>
@@ -414,7 +414,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/anim-item-last.gif</normaloff>:/images/icons/anim-item-last.gif</iconset>
+         <normaloff>:/images/icons/anim-item-last.png</normaloff>:/images/icons/anim-item-last.png</iconset>
        </property>
       </widget>
      </item>
@@ -440,7 +440,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/anim-item-add.gif</normaloff>:/images/icons/anim-item-add.gif</iconset>
+         <normaloff>:/images/icons/anim-item-add.png</normaloff>:/images/icons/anim-item-add.png</iconset>
        </property>
       </widget>
      </item>
@@ -463,7 +463,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/anim-item-del.gif</normaloff>:/images/icons/anim-item-del.gif</iconset>
+         <normaloff>:/images/icons/anim-item-del.png</normaloff>:/images/icons/anim-item-del.png</iconset>
        </property>
       </widget>
      </item>

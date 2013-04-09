@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../R/Res.qrc">
-    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+    <normaloff>:/images/icons/cgSpy.png</normaloff>:/images/icons/cgSpy.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -48,7 +48,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/tree-load-g.gif</normaloff>:/images/icons/tree-load-g.gif</iconset>
+         <normaloff>:/images/icons/tree-load-g.png</normaloff>:/images/icons/tree-load-g.png</iconset>
        </property>
       </widget>
      </item>
@@ -74,7 +74,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/tree-load.gif</normaloff>:/images/icons/tree-load.gif</iconset>
+         <normaloff>:/images/icons/tree-load.png</normaloff>:/images/icons/tree-load.png</iconset>
        </property>
       </widget>
      </item>
@@ -113,7 +113,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/tree-new.gif</normaloff>:/images/icons/tree-new.gif</iconset>
+         <normaloff>:/images/icons/tree-new.png</normaloff>:/images/icons/tree-new.png</iconset>
        </property>
       </widget>
      </item>
@@ -139,7 +139,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/pattern.gif</normaloff>:/images/icons/pattern.gif</iconset>
+         <normaloff>:/images/icons/pattern.png</normaloff>:/images/icons/pattern.png</iconset>
        </property>
       </widget>
      </item>
@@ -204,7 +204,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/options-view.gif</normaloff>:/images/icons/options-view.gif</iconset>
+         <normaloff>:/images/icons/options-view.png</normaloff>:/images/icons/options-view.png</iconset>
        </property>
       </widget>
      </item>
@@ -227,7 +227,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/help-view.gif</normaloff>:/images/icons/help-view.gif</iconset>
+         <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
        </property>
       </widget>
      </item>
@@ -253,7 +253,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/view-help.gif</normaloff>:/images/icons/view-help.gif</iconset>
+         <normaloff>:/images/icons/view-help.png</normaloff>:/images/icons/view-help.png</iconset>
        </property>
       </widget>
      </item>
@@ -279,7 +279,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/close-view.gif</normaloff>:/images/icons/close-view.gif</iconset>
+         <normaloff>:/images/icons/close-view.png</normaloff>:/images/icons/close-view.png</iconset>
        </property>
       </widget>
      </item>

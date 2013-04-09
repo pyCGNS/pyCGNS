@@ -93,7 +93,7 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
                   it2=QTableWidgetItem(node.data(COLUMN_DATATYPE))
                   val=node.data(COLUMN_VALUE)
                   if (val==HIDEVALUE):
-                      val=QIcon(QPixmap(":/images/icons/data-array-large.gif"))
+                      val=QIcon(QPixmap(":/images/icons/data-array-large.png"))
                       it3=QTableWidgetItem(val,'')
                   else:
                       it3=QTableWidgetItem(val)

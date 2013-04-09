@@ -129,36 +129,36 @@ USERFLAGS=[USERFLAG_0,USERFLAG_1,USERFLAG_2,USERFLAG_3,USERFLAG_4,
            USERFLAG_5,USERFLAG_6,USERFLAG_7,USERFLAG_8,USERFLAG_9]
 
 ICONMAPPING={
- STLKNOLNK:":/images/icons/empty.gif",
- STLKTOPOK:":/images/icons/link.gif",
- STLKCHDOK:":/images/icons/link-child.gif",
- STLKTOPBK:":/images/icons/link-break.gif",
- STLKTOPNF:":/images/icons/link-error.gif",
- STLKIGNOD:":/images/icons/link-ignore.gif",
+ STLKNOLNK:":/images/icons/empty.png",
+ STLKTOPOK:":/images/icons/link.png",
+ STLKCHDOK:":/images/icons/link-child.png",
+ STLKTOPBK:":/images/icons/link-break.png",
+ STLKTOPNF:":/images/icons/link-error.png",
+ STLKIGNOD:":/images/icons/link-ignore.png",
 
- STCHKUNKN:":/images/icons/empty.gif",
- STCHKGOOD:":/images/icons/check-ok.gif",
- STCHKFAIL:":/images/icons/check-fail.gif",
- STCHKWARN:":/images/icons/check-warn.gif",
+ STCHKUNKN:":/images/icons/empty.png",
+ STCHKGOOD:":/images/icons/check-ok.png",
+ STCHKFAIL:":/images/icons/check-fail.png",
+ STCHKWARN:":/images/icons/check-warn.png",
 
- STUSR_X:  ":/images/icons/empty.gif",   
- STSHRUNKN:":/images/icons/empty.gif",   
- STMARKOFF:":/images/icons/empty.gif",
- STMARK_ON:":/images/icons/mark-node.gif",
+ STUSR_X:  ":/images/icons/empty.png",   
+ STSHRUNKN:":/images/icons/empty.png",   
+ STMARKOFF:":/images/icons/empty.png",
+ STMARK_ON:":/images/icons/mark-node.png",
 
- STUSR_0:  ":/images/icons/user-0.gif",   
- STUSR_1:  ":/images/icons/user-1.gif",
- STUSR_2:  ":/images/icons/user-2.gif",
- STUSR_3:  ":/images/icons/user-3.gif",
- STUSR_4:  ":/images/icons/user-4.gif",
- STUSR_5:  ":/images/icons/user-5.gif",
- STUSR_6:  ":/images/icons/user-6.gif",
- STUSR_7:  ":/images/icons/user-7.gif",
- STUSR_8:  ":/images/icons/user-8.gif",
- STUSR_9:  ":/images/icons/user-9.gif",
- STUSR_A:  ":/images/icons/user-A.gif",
- STUSR_B:  ":/images/icons/user-B.gif",
- STUSR_C:  ":/images/icons/user-C.gif",
+ STUSR_0:  ":/images/icons/user-0.png",   
+ STUSR_1:  ":/images/icons/user-1.png",
+ STUSR_2:  ":/images/icons/user-2.png",
+ STUSR_3:  ":/images/icons/user-3.png",
+ STUSR_4:  ":/images/icons/user-4.png",
+ STUSR_5:  ":/images/icons/user-5.png",
+ STUSR_6:  ":/images/icons/user-6.png",
+ STUSR_7:  ":/images/icons/user-7.png",
+ STUSR_8:  ":/images/icons/user-8.png",
+ STUSR_9:  ":/images/icons/user-9.png",
+ STUSR_A:  ":/images/icons/user-A.png",
+ STUSR_B:  ":/images/icons/user-B.png",
+ STUSR_C:  ":/images/icons/user-C.png",
 }
 
 KEYMAPPING={
@@ -979,9 +979,9 @@ class Q7TreeModel(QAbstractItemModel):
         disp = item.data(index.column())
         if ((index.column()==COLUMN_VALUE) and (role == Qt.DecorationRole)):
             if (disp == HIDEVALUE):
-                disp=QIcon(QPixmap(":/images/icons/data-array-large.gif"))
+                disp=QIcon(QPixmap(":/images/icons/data-array-large.png"))
             elif (disp == LAZYVALUE):
-                disp=QIcon(QPixmap(":/images/icons/data-array-lazy.gif"))
+                disp=QIcon(QPixmap(":/images/icons/data-array-lazy.png"))
             else:
                 return None
         if ((index.column()==COLUMN_VALUE) and (role == Qt.DisplayRole)):

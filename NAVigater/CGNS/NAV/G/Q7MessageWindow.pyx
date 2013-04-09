@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7MessageWindow.ui'
 #
-# Created: Mon Apr  8 13:38:29 2013
+# Created: Tue Apr  9 11:00:24 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,7 +21,7 @@ class Ui_Q7MessageWindow(object):
         Q7MessageWindow.setMinimumSize(QtCore.QSize(500, 140))
         Q7MessageWindow.setMaximumSize(QtCore.QSize(500, 140))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7MessageWindow.setWindowIcon(icon)
         self.eMessage = QtGui.QTextEdit(Q7MessageWindow)
         self.eMessage.setGeometry(QtCore.QRect(9, 9, 482, 91))
@@ -43,7 +43,7 @@ class Ui_Q7MessageWindow(object):
         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
         self.bInfo.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bInfo.setIcon(icon1)
         self.bInfo.setObjectName("bInfo")
         self.horizontalLayout_2.addWidget(self.bInfo)

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7InfoWindow.ui'
 #
-# Created: Fri Mar 22 16:49:36 2013
+# Created: Tue Apr  9 11:00:10 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -30,7 +30,7 @@ class Ui_Q7InfoWindow(object):
         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
         self.bInfo.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bInfo.setIcon(icon)
         self.bInfo.setObjectName("bInfo")
         self.horizontalLayout_2.addWidget(self.bInfo)
@@ -219,7 +219,7 @@ class Ui_Q7InfoWindow(object):
         self.bHasBeenModified.setEnabled(True)
         self.bHasBeenModified.setGeometry(QtCore.QRect(4, 250, 251, 25))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/subtree-sids-failed.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/subtree-sids-failed.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bHasBeenModified.setIcon(icon1)
         self.bHasBeenModified.setCheckable(True)
         self.bHasBeenModified.setFlat(True)

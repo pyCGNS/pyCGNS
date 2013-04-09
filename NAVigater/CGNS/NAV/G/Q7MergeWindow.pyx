@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7MergeWindow.ui'
 #
-# Created: Tue Feb  5 15:59:49 2013
+# Created: Tue Apr  9 10:59:55 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_Q7MergeWindow(object):
         Q7MergeWindow.setObjectName("Q7MergeWindow")
         Q7MergeWindow.resize(1124, 300)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7MergeWindow.setWindowIcon(icon)
         self.verticalLayout_2 = QtGui.QVBoxLayout(Q7MergeWindow)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
@@ -26,7 +26,7 @@ class Ui_Q7MergeWindow(object):
         self.bZoomOut.setMinimumSize(QtCore.QSize(25, 25))
         self.bZoomOut.setMaximumSize(QtCore.QSize(25, 25))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/level-out.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/level-out.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bZoomOut.setIcon(icon1)
         self.bZoomOut.setObjectName("bZoomOut")
         self.horizontalLayout.addWidget(self.bZoomOut)
@@ -40,7 +40,7 @@ class Ui_Q7MergeWindow(object):
         self.bZoomAll.setMaximumSize(QtCore.QSize(25, 25))
         self.bZoomAll.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/images/icons/level-all.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/images/icons/level-all.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bZoomAll.setIcon(icon2)
         self.bZoomAll.setObjectName("bZoomAll")
         self.horizontalLayout.addWidget(self.bZoomAll)
@@ -48,7 +48,7 @@ class Ui_Q7MergeWindow(object):
         self.bZoomIn.setMinimumSize(QtCore.QSize(25, 25))
         self.bZoomIn.setMaximumSize(QtCore.QSize(25, 25))
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/images/icons/level-in.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/icons/level-in.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bZoomIn.setIcon(icon3)
         self.bZoomIn.setObjectName("bZoomIn")
         self.horizontalLayout.addWidget(self.bZoomIn)
@@ -58,7 +58,7 @@ class Ui_Q7MergeWindow(object):
         self.bSaveDiff.setMinimumSize(QtCore.QSize(25, 25))
         self.bSaveDiff.setMaximumSize(QtCore.QSize(25, 25))
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/images/icons/select-save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/images/icons/select-save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bSaveDiff.setIcon(icon4)
         self.bSaveDiff.setObjectName("bSaveDiff")
         self.horizontalLayout.addWidget(self.bSaveDiff)
@@ -85,7 +85,7 @@ class Ui_Q7MergeWindow(object):
         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
         self.bBackControl.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/images/icons/top.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bBackControl.setIcon(icon5)
         self.bBackControl.setObjectName("bBackControl")
         self.horizontalLayout_3.addWidget(self.bBackControl)
@@ -94,7 +94,7 @@ class Ui_Q7MergeWindow(object):
         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
         self.bInfo.setText("")
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bInfo.setIcon(icon6)
         self.bInfo.setObjectName("bInfo")
         self.horizontalLayout_3.addWidget(self.bInfo)
@@ -104,7 +104,7 @@ class Ui_Q7MergeWindow(object):
         self.bPreviousMark.setMinimumSize(QtCore.QSize(25, 25))
         self.bPreviousMark.setMaximumSize(QtCore.QSize(25, 25))
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-opened.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-opened.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bPreviousMark.setIcon(icon7)
         self.bPreviousMark.setObjectName("bPreviousMark")
         self.horizontalLayout_3.addWidget(self.bPreviousMark)
@@ -112,7 +112,7 @@ class Ui_Q7MergeWindow(object):
         self.bUnmarkAll_1.setMinimumSize(QtCore.QSize(25, 25))
         self.bUnmarkAll_1.setMaximumSize(QtCore.QSize(25, 25))
         icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-leaf.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon8.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-leaf.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bUnmarkAll_1.setIcon(icon8)
         self.bUnmarkAll_1.setObjectName("bUnmarkAll_1")
         self.horizontalLayout_3.addWidget(self.bUnmarkAll_1)
@@ -120,7 +120,7 @@ class Ui_Q7MergeWindow(object):
         self.bNextMark.setMinimumSize(QtCore.QSize(25, 25))
         self.bNextMark.setMaximumSize(QtCore.QSize(25, 25))
         icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-closed.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon9.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-closed.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bNextMark.setIcon(icon9)
         self.bNextMark.setObjectName("bNextMark")
         self.horizontalLayout_3.addWidget(self.bNextMark)

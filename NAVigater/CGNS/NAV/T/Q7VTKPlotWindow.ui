@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../R/Res.qrc">
-    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+    <normaloff>:/images/icons/cgSpy.png</normaloff>:/images/icons/cgSpy.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -67,7 +67,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/camera-add.gif</normaloff>:/images/icons/camera-add.gif</iconset>
+         <normaloff>:/images/icons/camera-add.png</normaloff>:/images/icons/camera-add.png</iconset>
        </property>
       </widget>
      </item>
@@ -93,7 +93,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/camera-snap.gif</normaloff>:/images/icons/camera-snap.gif</iconset>
+         <normaloff>:/images/icons/camera-snap.png</normaloff>:/images/icons/camera-snap.png</iconset>
        </property>
       </widget>
      </item>
@@ -119,7 +119,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/camera-remove.gif</normaloff>:/images/icons/camera-remove.gif</iconset>
+         <normaloff>:/images/icons/camera-remove.png</normaloff>:/images/icons/camera-remove.png</iconset>
        </property>
       </widget>
      </item>
@@ -158,7 +158,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+         <normaloff>:/images/icons/save.png</normaloff>:/images/icons/save.png</iconset>
        </property>
       </widget>
      </item>
@@ -190,7 +190,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/snapshot.gif</normaloff>:/images/icons/snapshot.gif</iconset>
+         <normaloff>:/images/icons/snapshot.png</normaloff>:/images/icons/snapshot.png</iconset>
        </property>
       </widget>
      </item>
@@ -308,7 +308,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/top.gif</normaloff>:/images/icons/top.gif</iconset>
+         <normaloff>:/images/icons/top.png</normaloff>:/images/icons/top.png</iconset>
        </property>
       </widget>
      </item>

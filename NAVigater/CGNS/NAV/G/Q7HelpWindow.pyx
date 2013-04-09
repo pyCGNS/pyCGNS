@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7HelpWindow.ui'
 #
-# Created: Tue Nov 20 09:38:26 2012
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Tue Apr  9 11:00:16 2013
+#      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -36,7 +36,7 @@ class Ui_Q7HelpWindow(object):
         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
         self.bBackControl.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/top.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bBackControl.setIcon(icon)
         self.bBackControl.setObjectName("bBackControl")
         self.horizontalLayout_2.addWidget(self.bBackControl)

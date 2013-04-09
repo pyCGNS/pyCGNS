@@ -64,10 +64,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtkstatus=True
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,fgprint)
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
-      self._epix=QIcon(QPixmap(":/images/icons/empty.gif"))
-      self._spix=QIcon(QPixmap(":/images/icons/selected.gif"))
-      self._npix=QIcon(QPixmap(":/images/icons/unselected.gif"))
-      self._hpix=QIcon(QPixmap(":/images/icons/hidden.gif"))
+      self._epix=QIcon(QPixmap(":/images/icons/empty.png"))
+      self._spix=QIcon(QPixmap(":/images/icons/selected.png"))
+      self._npix=QIcon(QPixmap(":/images/icons/unselected.png"))
+      self._hpix=QIcon(QPixmap(":/images/icons/hidden.png"))
       self._T=self._fgprint.tree
       self._parent=parent
       self._master=parent

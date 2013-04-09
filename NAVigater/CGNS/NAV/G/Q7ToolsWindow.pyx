@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ToolsWindow.ui'
 #
-# Created: Tue Feb  5 18:01:11 2013
+# Created: Tue Apr  9 11:00:17 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -22,7 +22,7 @@ class Ui_Q7ToolsWindow(object):
         Q7ToolsWindow.setMinimumSize(QtCore.QSize(580, 364))
         Q7ToolsWindow.setMaximumSize(QtCore.QSize(580, 364))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7ToolsWindow.setWindowIcon(icon)
         self.verticalLayout = QtGui.QVBoxLayout(Q7ToolsWindow)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -60,7 +60,7 @@ class Ui_Q7ToolsWindow(object):
         self.bDiff.setMaximumSize(QtCore.QSize(25, 25))
         self.bDiff.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/operate-execute.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/operate-execute.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bDiff.setIcon(icon1)
         self.bDiff.setObjectName("bDiff")
         self.tabWidget.addTab(self.diff, "")
@@ -162,7 +162,7 @@ class Ui_Q7ToolsWindow(object):
         self.bFileProcess.setMaximumSize(QtCore.QSize(25, 25))
         self.bFileProcess.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/images/icons/save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/images/icons/save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bFileProcess.setIcon(icon2)
         self.bFileProcess.setObjectName("bFileProcess")
         self.bApply = QtGui.QPushButton(self.groupBox)
@@ -246,7 +246,7 @@ class Ui_Q7ToolsWindow(object):
         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
         self.bInfo.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bInfo.setIcon(icon3)
         self.bInfo.setObjectName("bInfo")
         self.horizontalLayout.addWidget(self.bInfo)

@@ -33,7 +33,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../R/Res.qrc">
-    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+    <normaloff>:/images/icons/cgSpy.png</normaloff>:/images/icons/cgSpy.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="7" column="1">
@@ -57,7 +57,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/top.gif</normaloff>:/images/icons/top.gif</iconset>
+         <normaloff>:/images/icons/top.png</normaloff>:/images/icons/top.png</iconset>
        </property>
       </widget>
      </item>
@@ -80,7 +80,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/help-view.gif</normaloff>:/images/icons/help-view.gif</iconset>
+         <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
        </property>
       </widget>
      </item>
@@ -161,7 +161,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/operate-add.gif</normaloff>:/images/icons/operate-add.gif</iconset>
+         <normaloff>:/images/icons/operate-add.png</normaloff>:/images/icons/operate-add.png</iconset>
        </property>
       </widget>
      </item>
@@ -184,7 +184,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/operate-delete.gif</normaloff>:/images/icons/operate-delete.gif</iconset>
+         <normaloff>:/images/icons/operate-delete.png</normaloff>:/images/icons/operate-delete.png</iconset>
        </property>
       </widget>
      </item>
@@ -223,7 +223,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/operate-edit.gif</normaloff>:/images/icons/operate-edit.gif</iconset>
+         <normaloff>:/images/icons/operate-edit.png</normaloff>:/images/icons/operate-edit.png</iconset>
        </property>
       </widget>
      </item>
@@ -249,7 +249,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/operate-save.gif</normaloff>:/images/icons/operate-save.gif</iconset>
+         <normaloff>:/images/icons/operate-save.png</normaloff>:/images/icons/operate-save.png</iconset>
        </property>
       </widget>
      </item>
@@ -343,7 +343,7 @@
           </property>
           <property name="icon">
            <iconset resource="../R/Res.qrc">
-            <normaloff>:/images/icons/undo-at-most.gif</normaloff>:/images/icons/undo-at-most.gif</iconset>
+            <normaloff>:/images/icons/undo-at-most.png</normaloff>:/images/icons/undo-at-most.png</iconset>
           </property>
          </widget>
         </item>
@@ -369,7 +369,7 @@
           </property>
           <property name="icon">
            <iconset resource="../R/Res.qrc">
-            <normaloff>:/images/icons/save-log.gif</normaloff>:/images/icons/save-log.gif</iconset>
+            <normaloff>:/images/icons/save-log.png</normaloff>:/images/icons/save-log.png</iconset>
           </property>
          </widget>
         </item>
@@ -441,7 +441,7 @@
           </property>
           <property name="icon">
            <iconset resource="../R/Res.qrc">
-            <normaloff>:/images/icons/undo-at-most.gif</normaloff>:/images/icons/undo-at-most.gif</iconset>
+            <normaloff>:/images/icons/undo-at-most.png</normaloff>:/images/icons/undo-at-most.png</iconset>
           </property>
          </widget>
         </item>
@@ -467,7 +467,7 @@
           </property>
           <property name="icon">
            <iconset resource="../R/Res.qrc">
-            <normaloff>:/images/icons/save-log.gif</normaloff>:/images/icons/save-log.gif</iconset>
+            <normaloff>:/images/icons/save-log.png</normaloff>:/images/icons/save-log.png</iconset>
           </property>
          </widget>
         </item>
@@ -513,7 +513,7 @@
           </property>
           <property name="icon">
            <iconset resource="../R/Res.qrc">
-            <normaloff>:/images/icons/operate-execute.gif</normaloff>:/images/icons/operate-execute.gif</iconset>
+            <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
           </property>
          </widget>
         </item>
@@ -569,7 +569,7 @@
           </property>
           <property name="icon">
            <iconset resource="../R/Res.qrc">
-            <normaloff>:/images/icons/select-save.gif</normaloff>:/images/icons/select-save.gif</iconset>
+            <normaloff>:/images/icons/select-save.png</normaloff>:/images/icons/select-save.png</iconset>
           </property>
          </widget>
         </item>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7LinkWindow.ui'
 #
-# Created: Thu Feb 28 17:06:17 2013
+# Created: Tue Apr  9 11:00:13 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,7 +21,7 @@ class Ui_Q7LinkWindow(object):
         Q7LinkWindow.setMinimumSize(QtCore.QSize(715, 350))
         Q7LinkWindow.setMaximumSize(QtCore.QSize(3000, 750))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7LinkWindow.setWindowIcon(icon)
         self.gridLayout = QtGui.QGridLayout(Q7LinkWindow)
         self.gridLayout.setObjectName("gridLayout")
@@ -32,7 +32,7 @@ class Ui_Q7LinkWindow(object):
         self.bAddLink.setMaximumSize(QtCore.QSize(25, 25))
         self.bAddLink.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/link-add.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/link-add.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bAddLink.setIcon(icon1)
         self.bAddLink.setObjectName("bAddLink")
         self.horizontalLayout.addWidget(self.bAddLink)
@@ -41,7 +41,7 @@ class Ui_Q7LinkWindow(object):
         self.bDeleteLink.setMaximumSize(QtCore.QSize(25, 25))
         self.bDeleteLink.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/images/icons/link-delete.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/images/icons/link-delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bDeleteLink.setIcon(icon2)
         self.bDeleteLink.setObjectName("bDeleteLink")
         self.horizontalLayout.addWidget(self.bDeleteLink)
@@ -52,7 +52,7 @@ class Ui_Q7LinkWindow(object):
         self.bLoadTree.setMaximumSize(QtCore.QSize(25, 25))
         self.bLoadTree.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/images/icons/tree-load.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/icons/tree-load.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bLoadTree.setIcon(icon3)
         self.bLoadTree.setObjectName("bLoadTree")
         self.horizontalLayout.addWidget(self.bLoadTree)
@@ -63,7 +63,7 @@ class Ui_Q7LinkWindow(object):
         self.bSave.setMaximumSize(QtCore.QSize(25, 25))
         self.bSave.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/images/icons/link-save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/images/icons/link-save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bSave.setIcon(icon4)
         self.bSave.setObjectName("bSave")
         self.horizontalLayout.addWidget(self.bSave)
@@ -89,7 +89,7 @@ class Ui_Q7LinkWindow(object):
         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
         self.bBackControl.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/images/icons/top.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bBackControl.setIcon(icon5)
         self.bBackControl.setObjectName("bBackControl")
         self.horizontalLayout_2.addWidget(self.bBackControl)
@@ -98,7 +98,7 @@ class Ui_Q7LinkWindow(object):
         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
         self.bInfo.setText("")
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bInfo.setIcon(icon6)
         self.bInfo.setObjectName("bInfo")
         self.horizontalLayout_2.addWidget(self.bInfo)

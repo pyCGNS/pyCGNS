@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created: Thu Jan 31 09:44:31 2013
+# Created: Tue Apr  9 11:00:01 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,7 +21,7 @@ class Ui_Q7FormWindow(object):
         Q7FormWindow.setMinimumSize(QtCore.QSize(550, 600))
         Q7FormWindow.setMaximumSize(QtCore.QSize(999999, 999999))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7FormWindow.setWindowIcon(icon)
         self.verticalLayout_3 = QtGui.QVBoxLayout(Q7FormWindow)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
@@ -195,7 +195,7 @@ class Ui_Q7FormWindow(object):
         self.bPrevious.setMaximumSize(QtCore.QSize(25, 25))
         self.bPrevious.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-opened.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-opened.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bPrevious.setIcon(icon1)
         self.bPrevious.setObjectName("bPrevious")
         self.bNext = QtGui.QPushButton(self.frame_4)
@@ -204,7 +204,7 @@ class Ui_Q7FormWindow(object):
         self.bNext.setMaximumSize(QtCore.QSize(25, 25))
         self.bNext.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-closed.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-closed.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bNext.setIcon(icon2)
         self.bNext.setObjectName("bNext")
         self.label_4 = QtGui.QLabel(self.frame_4)
@@ -225,7 +225,7 @@ class Ui_Q7FormWindow(object):
         self.pushButton_2.setMaximumSize(QtCore.QSize(25, 25))
         self.pushButton_2.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/images/icons/operate-execute.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/icons/operate-execute.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_2.setIcon(icon3)
         self.pushButton_2.setObjectName("pushButton_2")
         self.verticalLayout.addWidget(self.frame_4)
@@ -325,7 +325,7 @@ class Ui_Q7FormWindow(object):
         self.bRevert.setMaximumSize(QtCore.QSize(25, 25))
         self.bRevert.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/images/icons/subtree-sids-failed.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/images/icons/subtree-sids-failed.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bRevert.setIcon(icon4)
         self.bRevert.setObjectName("bRevert")
         self.horizontalLayout_4.addWidget(self.bRevert)
@@ -334,7 +334,7 @@ class Ui_Q7FormWindow(object):
         self.bCommit.setMaximumSize(QtCore.QSize(25, 25))
         self.bCommit.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/images/icons/save-log.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/images/icons/save-log.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bCommit.setIcon(icon5)
         self.bCommit.setObjectName("bCommit")
         self.horizontalLayout_4.addWidget(self.bCommit)
@@ -423,7 +423,7 @@ class Ui_Q7FormWindow(object):
         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
         self.bBackControl.setText("")
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/images/icons/top.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bBackControl.setIcon(icon6)
         self.bBackControl.setObjectName("bBackControl")
         self.horizontalLayout_3.addWidget(self.bBackControl)
@@ -432,7 +432,7 @@ class Ui_Q7FormWindow(object):
         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
         self.bInfo.setText("")
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bInfo.setIcon(icon7)
         self.bInfo.setObjectName("bInfo")
         self.horizontalLayout_3.addWidget(self.bInfo)

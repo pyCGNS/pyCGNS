@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ControlWindow.ui'
 #
-# Created: Wed Feb  6 16:07:57 2013
+# Created: Tue Apr  9 10:59:56 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -19,7 +19,7 @@ class Ui_Q7ControlWindow(object):
         sizePolicy.setHeightForWidth(Q7ControlWindow.sizePolicy().hasHeightForWidth())
         Q7ControlWindow.setSizePolicy(sizePolicy)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7ControlWindow.setWindowIcon(icon)
         self.verticalLayout_2 = QtGui.QVBoxLayout(Q7ControlWindow)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
@@ -30,7 +30,7 @@ class Ui_Q7ControlWindow(object):
         self.bTreeLoadLast.setMaximumSize(QtCore.QSize(25, 25))
         self.bTreeLoadLast.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/tree-load-g.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/tree-load-g.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bTreeLoadLast.setIcon(icon1)
         self.bTreeLoadLast.setObjectName("bTreeLoadLast")
         self.horizontalLayout.addWidget(self.bTreeLoadLast)
@@ -39,7 +39,7 @@ class Ui_Q7ControlWindow(object):
         self.bTreeLoad.setMaximumSize(QtCore.QSize(25, 25))
         self.bTreeLoad.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/images/icons/tree-load.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/images/icons/tree-load.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bTreeLoad.setIcon(icon2)
         self.bTreeLoad.setObjectName("bTreeLoad")
         self.horizontalLayout.addWidget(self.bTreeLoad)
@@ -49,7 +49,7 @@ class Ui_Q7ControlWindow(object):
         self.bEditTree.setMinimumSize(QtCore.QSize(25, 25))
         self.bEditTree.setMaximumSize(QtCore.QSize(25, 25))
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/images/icons/tree-new.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/icons/tree-new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bEditTree.setIcon(icon3)
         self.bEditTree.setObjectName("bEditTree")
         self.horizontalLayout.addWidget(self.bEditTree)
@@ -57,7 +57,7 @@ class Ui_Q7ControlWindow(object):
         self.bPatternView.setMinimumSize(QtCore.QSize(25, 25))
         self.bPatternView.setMaximumSize(QtCore.QSize(25, 25))
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/images/icons/pattern.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/images/icons/pattern.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bPatternView.setIcon(icon4)
         self.bPatternView.setObjectName("bPatternView")
         self.horizontalLayout.addWidget(self.bPatternView)
@@ -71,7 +71,7 @@ class Ui_Q7ControlWindow(object):
         self.bOptionView.setMinimumSize(QtCore.QSize(25, 25))
         self.bOptionView.setMaximumSize(QtCore.QSize(25, 25))
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/images/icons/options-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/images/icons/options-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bOptionView.setIcon(icon5)
         self.bOptionView.setObjectName("bOptionView")
         self.horizontalLayout.addWidget(self.bOptionView)
@@ -80,7 +80,7 @@ class Ui_Q7ControlWindow(object):
         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
         self.bInfo.setText("")
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bInfo.setIcon(icon6)
         self.bInfo.setObjectName("bInfo")
         self.horizontalLayout.addWidget(self.bInfo)
@@ -88,7 +88,7 @@ class Ui_Q7ControlWindow(object):
         self.bAbout.setMinimumSize(QtCore.QSize(25, 25))
         self.bAbout.setMaximumSize(QtCore.QSize(25, 25))
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/images/icons/view-help.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap(":/images/icons/view-help.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bAbout.setIcon(icon7)
         self.bAbout.setObjectName("bAbout")
         self.horizontalLayout.addWidget(self.bAbout)
@@ -97,7 +97,7 @@ class Ui_Q7ControlWindow(object):
         self.bClose.setMaximumSize(QtCore.QSize(25, 25))
         self.bClose.setText("")
         icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(":/images/icons/close-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon8.addPixmap(QtGui.QPixmap(":/images/icons/close-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bClose.setIcon(icon8)
         self.bClose.setObjectName("bClose")
         self.horizontalLayout.addWidget(self.bClose)

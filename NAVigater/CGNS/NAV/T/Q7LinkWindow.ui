@@ -33,7 +33,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../R/Res.qrc">
-    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+    <normaloff>:/images/icons/cgSpy.png</normaloff>:/images/icons/cgSpy.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="0">
@@ -57,7 +57,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/link-add.gif</normaloff>:/images/icons/link-add.gif</iconset>
+         <normaloff>:/images/icons/link-add.png</normaloff>:/images/icons/link-add.png</iconset>
        </property>
       </widget>
      </item>
@@ -80,7 +80,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/link-delete.gif</normaloff>:/images/icons/link-delete.gif</iconset>
+         <normaloff>:/images/icons/link-delete.png</normaloff>:/images/icons/link-delete.png</iconset>
        </property>
       </widget>
      </item>
@@ -116,7 +116,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/tree-load.gif</normaloff>:/images/icons/tree-load.gif</iconset>
+         <normaloff>:/images/icons/tree-load.png</normaloff>:/images/icons/tree-load.png</iconset>
        </property>
       </widget>
      </item>
@@ -152,7 +152,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/link-save.gif</normaloff>:/images/icons/link-save.gif</iconset>
+         <normaloff>:/images/icons/link-save.png</normaloff>:/images/icons/link-save.png</iconset>
        </property>
       </widget>
      </item>
@@ -213,7 +213,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/top.gif</normaloff>:/images/icons/top.gif</iconset>
+         <normaloff>:/images/icons/top.png</normaloff>:/images/icons/top.png</iconset>
        </property>
       </widget>
      </item>
@@ -236,7 +236,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/help-view.gif</normaloff>:/images/icons/help-view.gif</iconset>
+         <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
        </property>
       </widget>
      </item>

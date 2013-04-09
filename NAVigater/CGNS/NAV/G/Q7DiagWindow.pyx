@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7DiagWindow.ui'
 #
-# Created: Tue Nov 20 09:38:24 2012
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Tue Apr  9 11:00:12 2013
+#      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -21,7 +21,7 @@ class Ui_Q7DiagWindow(object):
         Q7DiagWindow.setMinimumSize(QtCore.QSize(715, 350))
         Q7DiagWindow.setMaximumSize(QtCore.QSize(1200, 350))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7DiagWindow.setWindowIcon(icon)
         self.gridLayout = QtGui.QGridLayout(Q7DiagWindow)
         self.gridLayout.setObjectName("gridLayout")
@@ -32,7 +32,7 @@ class Ui_Q7DiagWindow(object):
         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
         self.bBackControl.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/top.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bBackControl.setIcon(icon1)
         self.bBackControl.setObjectName("bBackControl")
         self.horizontalLayout_2.addWidget(self.bBackControl)
@@ -41,7 +41,7 @@ class Ui_Q7DiagWindow(object):
         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
         self.bInfo.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/images/icons/help-view.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bInfo.setIcon(icon2)
         self.bInfo.setObjectName("bInfo")
         self.horizontalLayout_2.addWidget(self.bInfo)
@@ -58,7 +58,7 @@ class Ui_Q7DiagWindow(object):
         self.bExpandAll.setMaximumSize(QtCore.QSize(25, 25))
         self.bExpandAll.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/images/icons/level-in.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/icons/level-in.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bExpandAll.setIcon(icon3)
         self.bExpandAll.setObjectName("bExpandAll")
         self.horizontalLayout.addWidget(self.bExpandAll)
@@ -72,7 +72,7 @@ class Ui_Q7DiagWindow(object):
         self.bCollapseAll.setMaximumSize(QtCore.QSize(25, 25))
         self.bCollapseAll.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/images/icons/level-out.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/images/icons/level-out.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bCollapseAll.setIcon(icon4)
         self.bCollapseAll.setObjectName("bCollapseAll")
         self.horizontalLayout.addWidget(self.bCollapseAll)
@@ -83,7 +83,7 @@ class Ui_Q7DiagWindow(object):
         self.bPrevious.setMaximumSize(QtCore.QSize(25, 25))
         self.bPrevious.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-opened.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-opened.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bPrevious.setIcon(icon5)
         self.bPrevious.setObjectName("bPrevious")
         self.horizontalLayout.addWidget(self.bPrevious)
@@ -103,7 +103,7 @@ class Ui_Q7DiagWindow(object):
         self.bNext.setMaximumSize(QtCore.QSize(25, 25))
         self.bNext.setText("")
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/images/icons/selected.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/images/icons/selected.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bNext.setIcon(icon6)
         self.bNext.setObjectName("bNext")
         self.horizontalLayout.addWidget(self.bNext)
@@ -128,7 +128,7 @@ class Ui_Q7DiagWindow(object):
         self.bSave.setMaximumSize(QtCore.QSize(25, 25))
         self.bSave.setText("")
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/images/icons/check-save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap(":/images/icons/check-save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bSave.setIcon(icon7)
         self.bSave.setObjectName("bSave")
         self.horizontalLayout.addWidget(self.bSave)

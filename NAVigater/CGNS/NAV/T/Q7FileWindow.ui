@@ -36,7 +36,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../R/Res.qrc">
-    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+    <normaloff>:/images/icons/cgSpy.png</normaloff>:/images/icons/cgSpy.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -206,7 +206,7 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/mandatory-sids-node.gif</normaloff>:/images/icons/mandatory-sids-node.gif</iconset>
+           <normaloff>:/images/icons/mandatory-sids-node.png</normaloff>:/images/icons/mandatory-sids-node.png</iconset>
          </property>
         </widget>
         <widget class="QCheckBox" name="cShowAll">
@@ -251,7 +251,7 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/control.gif</normaloff>:/images/icons/control.gif</iconset>
+           <normaloff>:/images/icons/control.png</normaloff>:/images/icons/control.png</iconset>
          </property>
         </widget>
         <widget class="QCheckBox" name="cShowDirs">
@@ -309,7 +309,7 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/help-view.gif</normaloff>:/images/icons/help-view.gif</iconset>
+           <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
          </property>
         </widget>
         <widget class="QCheckBox" name="cAutoDir">

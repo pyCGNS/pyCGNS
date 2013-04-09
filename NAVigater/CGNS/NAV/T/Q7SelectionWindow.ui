@@ -163,7 +163,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/control.gif</normaloff>:/images/icons/control.gif</iconset>
+         <normaloff>:/images/icons/control.png</normaloff>:/images/icons/control.png</iconset>
        </property>
       </widget>
      </item>
@@ -186,7 +186,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/node-sids-closed.gif</normaloff>:/images/icons/node-sids-closed.gif</iconset>
+         <normaloff>:/images/icons/node-sids-closed.png</normaloff>:/images/icons/node-sids-closed.png</iconset>
        </property>
       </widget>
      </item>
@@ -212,7 +212,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/operate-execute.gif</normaloff>:/images/icons/operate-execute.gif</iconset>
+         <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
        </property>
       </widget>
      </item>
@@ -248,7 +248,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/select-save.gif</normaloff>:/images/icons/select-save.gif</iconset>
+         <normaloff>:/images/icons/select-save.png</normaloff>:/images/icons/select-save.png</iconset>
        </property>
       </widget>
      </item>

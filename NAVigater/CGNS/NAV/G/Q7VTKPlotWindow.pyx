@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKPlotWindow.ui'
 #
-# Created: Mon Nov 12 15:52:23 2012
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Tue Apr  9 11:00:15 2013
+#      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -19,7 +19,7 @@ class Ui_Q7VTKPlotWindow(object):
         sizePolicy.setHeightForWidth(Q7VTKPlotWindow.sizePolicy().hasHeightForWidth())
         Q7VTKPlotWindow.setSizePolicy(sizePolicy)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7VTKPlotWindow.setWindowIcon(icon)
         self.verticalLayout = QtGui.QVBoxLayout(Q7VTKPlotWindow)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -41,7 +41,7 @@ class Ui_Q7VTKPlotWindow(object):
         self.bAddView.setMaximumSize(QtCore.QSize(25, 25))
         self.bAddView.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/camera-add.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/camera-add.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bAddView.setIcon(icon1)
         self.bAddView.setObjectName("bAddView")
         self.horizontalLayout.addWidget(self.bAddView)
@@ -50,7 +50,7 @@ class Ui_Q7VTKPlotWindow(object):
         self.bSaveView.setMaximumSize(QtCore.QSize(25, 25))
         self.bSaveView.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/images/icons/camera-snap.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/images/icons/camera-snap.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bSaveView.setIcon(icon2)
         self.bSaveView.setObjectName("bSaveView")
         self.horizontalLayout.addWidget(self.bSaveView)
@@ -59,7 +59,7 @@ class Ui_Q7VTKPlotWindow(object):
         self.bRemoveView.setMaximumSize(QtCore.QSize(25, 25))
         self.bRemoveView.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/images/icons/camera-remove.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/icons/camera-remove.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bRemoveView.setIcon(icon3)
         self.bRemoveView.setObjectName("bRemoveView")
         self.horizontalLayout.addWidget(self.bRemoveView)
@@ -70,7 +70,7 @@ class Ui_Q7VTKPlotWindow(object):
         self.bSaveVTK.setMaximumSize(QtCore.QSize(25, 25))
         self.bSaveVTK.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/images/icons/save.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/images/icons/save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bSaveVTK.setIcon(icon4)
         self.bSaveVTK.setObjectName("bSaveVTK")
         self.horizontalLayout.addWidget(self.bSaveVTK)
@@ -84,7 +84,7 @@ class Ui_Q7VTKPlotWindow(object):
         self.bScreenShot.setMaximumSize(QtCore.QSize(25, 25))
         self.bScreenShot.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/images/icons/snapshot.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/images/icons/snapshot.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bScreenShot.setIcon(icon5)
         self.bScreenShot.setObjectName("bScreenShot")
         self.horizontalLayout.addWidget(self.bScreenShot)
@@ -135,7 +135,7 @@ class Ui_Q7VTKPlotWindow(object):
         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
         self.bBackControl.setText("")
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/images/icons/top.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bBackControl.setIcon(icon6)
         self.bBackControl.setObjectName("bBackControl")
         self.horizontalLayout_2.addWidget(self.bBackControl)

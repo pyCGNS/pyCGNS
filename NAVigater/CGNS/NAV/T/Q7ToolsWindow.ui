@@ -36,7 +36,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../R/Res.qrc">
-    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+    <normaloff>:/images/icons/cgSpy.png</normaloff>:/images/icons/cgSpy.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -159,7 +159,7 @@
           </property>
           <property name="icon">
            <iconset resource="../R/Res.qrc">
-            <normaloff>:/images/icons/operate-execute.gif</normaloff>:/images/icons/operate-execute.gif</iconset>
+            <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
           </property>
          </widget>
         </widget>
@@ -211,7 +211,7 @@
           </property>
           <property name="icon">
            <iconset resource="../R/Res.qrc">
-            <normaloff>:/images/icons/operate-execute.gif</normaloff>:/images/icons/operate-execute.gif</iconset>
+            <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
           </property>
          </widget>
          <widget class="QGroupBox" name="groupBox_5">
@@ -495,7 +495,7 @@
              </property>
              <property name="icon">
               <iconset resource="../R/Res.qrc">
-               <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+               <normaloff>:/images/icons/save.png</normaloff>:/images/icons/save.png</iconset>
              </property>
             </widget>
             <widget class="QPushButton" name="bApply">
@@ -527,7 +527,7 @@
              </property>
              <property name="icon">
               <iconset resource="../R/Res.qrc">
-               <normaloff>:/images/icons/operate-execute.gif</normaloff>:/images/icons/operate-execute.gif</iconset>
+               <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
              </property>
             </widget>
             <widget class="QGroupBox" name="groupBox_2">
@@ -724,7 +724,7 @@
               </property>
               <property name="icon">
                <iconset resource="../R/Res.qrc">
-                <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+                <normaloff>:/images/icons/save.png</normaloff>:/images/icons/save.png</iconset>
               </property>
              </widget>
              <widget class="QPushButton" name="bFileLog">
@@ -762,7 +762,7 @@
               </property>
               <property name="icon">
                <iconset resource="../R/Res.qrc">
-                <normaloff>:/images/icons/save.gif</normaloff>:/images/icons/save.gif</iconset>
+                <normaloff>:/images/icons/save.png</normaloff>:/images/icons/save.png</iconset>
               </property>
              </widget>
             </widget>
@@ -796,7 +796,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/help-view.gif</normaloff>:/images/icons/help-view.gif</iconset>
+         <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
        </property>
       </widget>
      </item>

@@ -52,7 +52,7 @@ class Q7MessageBox(QDialog,Ui_Q7MessageWindow):
         self.exec_()
   
 def wError(control,code,info,error):
-  txt="""<img source=":/images/icons/user-G.gif">  <big>ERROR #%d</big><hr>
+  txt="""<img source=":/images/icons/user-G.png">  <big>ERROR #%d</big><hr>
          %s<br>%s"""%(code,error,info)
   msg=Q7MessageBox(control)
   msg.setLayout(txt,btype=ERROR,cancel=False,again=False,buttons=('Close',))
@@ -60,7 +60,7 @@ def wError(control,code,info,error):
   return msg._result
 
 def wQuestion(control,title,question,again=True,buttons=('OK','Cancel')):
-  txt="""<img source=":/images/icons/user-M.gif">
+  txt="""<img source=":/images/icons/user-M.png">
          <b> <big>%s</big></b><hr>%s"""%(title,question)
   msg=Q7MessageBox(control)
   msg.setLayout(txt,btype=QUESTION,cancel=True,again=again,buttons=buttons)
@@ -68,7 +68,7 @@ def wQuestion(control,title,question,again=True,buttons=('OK','Cancel')):
   return msg._result
 
 def wInfo(control,title,info,again=True,buttons=('Close',)):
-  txt="""<img source=":/images/icons/user-S.gif">
+  txt="""<img source=":/images/icons/user-S.png">
          <b> <big>%s</big></b><hr>%s"""%(title,info)
   msg=Q7MessageBox(control)
   msg.setLayout(txt,btype=INFO,cancel=False,again=again,buttons=buttons)

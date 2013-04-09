@@ -33,7 +33,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../R/Res.qrc">
-    <normaloff>:/images/icons/cgSpy.gif</normaloff>:/images/icons/cgSpy.gif</iconset>
+    <normaloff>:/images/icons/cgSpy.png</normaloff>:/images/icons/cgSpy.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="5" column="0">
@@ -57,7 +57,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/help-view.gif</normaloff>:/images/icons/help-view.gif</iconset>
+         <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
        </property>
       </widget>
      </item>
@@ -106,7 +106,7 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/pattern-open.gif</normaloff>:/images/icons/pattern-open.gif</iconset>
+           <normaloff>:/images/icons/pattern-open.png</normaloff>:/images/icons/pattern-open.png</iconset>
          </property>
         </widget>
        </item>
@@ -129,7 +129,7 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/pattern-close.gif</normaloff>:/images/icons/pattern-close.gif</iconset>
+           <normaloff>:/images/icons/pattern-close.png</normaloff>:/images/icons/pattern-close.png</iconset>
          </property>
         </widget>
        </item>
@@ -165,7 +165,7 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/mark-node.gif</normaloff>:/images/icons/mark-node.gif</iconset>
+           <normaloff>:/images/icons/mark-node.png</normaloff>:/images/icons/mark-node.png</iconset>
          </property>
         </widget>
        </item>
@@ -201,7 +201,7 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/pattern-save.gif</normaloff>:/images/icons/pattern-save.gif</iconset>
+           <normaloff>:/images/icons/pattern-save.png</normaloff>:/images/icons/pattern-save.png</iconset>
          </property>
         </widget>
        </item>
