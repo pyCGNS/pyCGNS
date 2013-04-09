@@ -55,6 +55,7 @@ if installprocess:
   parser.add_option("--dist",dest="dist")
   parser.add_option("--compiler",dest="compiler")
   parser.add_option("--build-base",dest="build-base")
+  parser.add_option("--format",dest="format")
   try:
     (options, args) = parser.parse_args(sys.argv)
     if (options.forcerebuild): setuputils.touch(fakefile)

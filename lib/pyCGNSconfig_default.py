@@ -73,19 +73,19 @@ PFX='### pyCGNS:'
 #
 __version__=4 # @@UPDATEVERSION@@
 __release__=3 # @@UPDATERELEASE@@
-__revision__=398 # @@UPDATEREVISION@@
+__revision__=401 # @@UPDATEREVISION@@
 __vid__="%s.%s.%s"%(__version__,__release__,__revision__)
 __doc__="""pyCGNS - %s - Python package for CFD General Notation System"""\
         %(__vid__)
 version=__vid__
 #
-WRA_VERSION=__vid__+'.0'
-VAL_VERSION=__vid__+'.0'
-MAP_VERSION=__vid__+'.0'
-NAV_VERSION=__vid__+'.0'
-PAT_VERSION=__vid__+'.0'
-DAT_VERSION=__vid__+'.0'
-APP_VERSION=__vid__+'.0'
+WRA_VERSION=__vid__
+VAL_VERSION=__vid__
+MAP_VERSION=__vid__
+NAV_VERSION=__vid__
+PAT_VERSION=__vid__
+DAT_VERSION=__vid__
+APP_VERSION=__vid__
 #
 file_pattern="""#  -------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System
@@ -146,7 +146,7 @@ NUMPY_EXTRA_ARGS=%(NUMPY_EXTRA_ARGS)s
 
 __version__=4 # @@UPDATEVERSION@@
 __release__=3 # @@UPDATERELEASE@@
-__revision__=398 # @@UPDATEREVISION@@
+__revision__=401 # @@UPDATEREVISION@@
 __vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
 __doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
         %%(__vid__)
