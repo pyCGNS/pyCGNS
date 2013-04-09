@@ -29,7 +29,7 @@ if (sys.platform=='win32'):
   modList.remove('WRApper')
 
 solist='m:'
-lolist=["without-mod=","single-mod=","prefix=","force"]
+lolist=["without-mod=","single-mod=","prefix=","force","bdist",'format=']
 
 try:
   opts, args = getopt.gnu_getopt(sys.argv[1:],solist,lolist)
@@ -67,6 +67,10 @@ bopt=''
 if ('build' in sys.argv):
   modArgs.remove('build')
   bopt=' build --build-base=%s '%bdir
+
+if ('bdist' in sys.argv):
+  modArgs.remove('bdist')
+  bopt=' bdist '
 
 if ('install' in sys.argv):
   modArgs.remove('install')

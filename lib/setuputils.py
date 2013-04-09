@@ -54,7 +54,8 @@ def search(tag,deps=[]):
     os.makedirs(tg)
 #    os.symlink(tg,lg)
   oldsyspath=sys.path
-  sys.path=['../lib']
+  sys.path =[os.path.abspath(os.path.normpath('../lib'))]
+  sys.path+=[os.path.abspath(os.path.normpath('./lib'))]
   cfgdict={}
   import pyCGNSconfig_default as C_D
   sys.path=oldsyspath
@@ -246,7 +247,10 @@ def updateConfig(pfile,gfile,config_default,config_previous=None):
     newconf=1
   else:
     f1=os.stat("%s/pyCGNSconfig.py"%(gfile))
-    f2=os.stat("%s/pyCGNSconfig_user.py"%(pfile))
+    if (os.path.exists("%s/pyCGNSconfig_user.py"%(pfile))):
+      f2=os.stat("%s/pyCGNSconfig_user.py"%(pfile))
+    else:
+      f2=os.stat("./pyCGNSconfig_user.py")
     if (f1.st_mtime < f2.st_mtime):
       newconf=1
       print "### pyCGNS: use modified pyCGNSconfig_user.py file"
@@ -254,7 +258,7 @@ def updateConfig(pfile,gfile,config_default,config_previous=None):
       newconf=0
       print "### pyCGNS: use existing pyCGNSconfig.py file"
   if newconf:
-    sys.path=['..']+sys.path
+    sys.path=['..']+['.']+sys.path
     import pyCGNSconfig_user
     for ck in dir(pyCGNSconfig_user):
       if (ck[0]!='_'): config_default[ck]=pyCGNSconfig_user.__dict__[ck]

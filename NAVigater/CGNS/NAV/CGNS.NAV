@@ -9,6 +9,7 @@ import getopt
 import sys
 import os
 
+print "STARTING..."
 try:
   import numpy
 except:
@@ -52,6 +53,14 @@ except:
   print """CGNS.NAV: FATAL error, cannot import vtk..."""
   sys.exit(-1)
   
+try:
+  import PySide
+  import PySide.QtCore
+  import PySide.QTGui
+except:
+  print """CGNS.NAV: FATAL error, cannot import PySide..."""
+  sys.exit(-1)
+
 import CGNS.NAV.temputils
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
