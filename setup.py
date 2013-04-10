@@ -23,7 +23,7 @@ modList=CGNSmodList[:]
 modList.remove('DATaTracer')
 if (sys.platform=='win32'):
   modList.remove('WRApper')
-  comcompiler=' --compiler=mingw32 '
+  comcompiler=['--compiler=mingw32']
 
 solist='m:'
 lolist=["without-mod=","single-mod=","prefix=","force","dist"]
@@ -68,6 +68,8 @@ if ('build' in sys.argv):
 
 if ('install' in sys.argv):
   modArgs.remove('install')
+  if (comcompiler): 
+    modArgs.remove(comcompiler[0])
   bopt=' build --build-base=%s install '%bdir
 
 modArgs=string.join(modArgs)
