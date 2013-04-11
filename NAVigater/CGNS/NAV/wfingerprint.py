@@ -91,6 +91,7 @@ class Q7CHLoneThread(QThread):
         maxdataload=-1
         if (OCTXT.CHLoneTrace):
             flags|=CGNS.MAP.S2P_TRACE
+            flags|=CGNS.MAP.S2P_DEBUG
         if (OCTXT.DoNotLoadLargeArrays):
             flags|=CGNS.MAP.S2P_NODATA
             maxdataload=OCTXT.MaxLoadDataSize
