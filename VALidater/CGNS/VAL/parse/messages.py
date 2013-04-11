@@ -106,7 +106,10 @@ class DiagnosticLog(dict):
         return s
     def getWorstDiag(self,path):
         s=set([e.level for e in self[path]])
-        r=reduce(getWorst,s)
+        if (s):
+          r=reduce(getWorst,s)
+        else:
+          r=CHECK_GOOD
         return r
     def diagForPath(self,path):
         if (path in self): return self[path]
