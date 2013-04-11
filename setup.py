@@ -18,12 +18,12 @@ pcom=sys.executable
 CGNSmodList=['MAPper','WRApper','PATternMaker','NAVigater',
              'DATaTracer','VALidater','APPlicationSampler']
 
-comcompiler=[]
+comcompiler=''
 modList=CGNSmodList[:]
 modList.remove('DATaTracer')
 if (sys.platform=='win32'):
   modList.remove('WRApper')
-  comcompiler=['--compiler=mingw32']
+  comcompiler='--compiler=mingw32'
 
 solist='m:'
 lolist=["without-mod=","single-mod=","prefix=","force","dist"]
@@ -56,8 +56,9 @@ for o,a in opts:
     setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py')
 
 bdir=os.path.normpath(os.path.abspath('./build'))
-  
-modArgs=comcompiler
+
+modArgs=[]
+modArgs.append(comcompiler)
 for opt in sys.argv[1:]:
   if (opt[:12] not in ['--without-mod','--single-mod']): modArgs.append(opt)
 
@@ -68,7 +69,7 @@ if ('build' in sys.argv):
 
 if ('install' in sys.argv):
   modArgs.remove('install')
-  if (comcompiler): 
+  if (comcompiler):
     modArgs.remove(comcompiler[0])
   bopt=' build --build-base=%s install '%bdir
 

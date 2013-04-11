@@ -49,7 +49,6 @@ class CGNSparser:
       self._rsd=CGU.nodeByPath(r,T)
     for z in CGU.getAllNodesByTypeSet(T,[CGK.Zone_ts]):
       zT=CGU.nodeByPath(z,T)
-      print z
       if ((zlist==[]) or (z in zlist)):
         gnode=CGU.getAllNodesByTypeSet(zT,[CGK.GridCoordinates_ts])
         if (gnode==[]): return False

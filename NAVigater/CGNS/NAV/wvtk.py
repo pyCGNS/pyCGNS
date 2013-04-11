@@ -714,6 +714,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                        'W'     :self.b_wire,
                        'r'     :self.resetCam,
                        'R'     :self.resetCam,
+                       'u'     :self.b_reset,
+                       'U'     :self.b_reset,
                        'd'     :self.hideActor,
                        'D'     :self.hideActor }
       
@@ -774,7 +776,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.fillCurrentPath()
       self.readyCursor()
       
-  def b_reset(self):
+  def b_reset(self,*args):
       self._selected=[]
       for i in self._hidden:
           i[1].VisibilityOn()
@@ -1312,12 +1314,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       keycode=self._iren.GetKeyCode()
       control=self._iren.GetControlKey()        
       vtkkeys=['f','F','r','R']
-      keys=['d','D','s','S','w','W','q','Q','a','A']
+      keys=['d','D','s','S','w','W','q','Q','a','A','u','U']
       if (keycode in vtkkeys):
           self.OnChar()
       if (keycode in keys):
           self.CharCallback()
-      if (keycode=='z' or keycode=='Z'):
+      if (keycode in ['z','Z',' ']):
           self.setPick()
       if (keycode=='p' or keycode=='P'):
           self.pickElement()
@@ -1395,7 +1397,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (control==1): self.controlKey=1     
       return
 
-# ------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
     def __init__(self,parent):
       self._parent=parent
@@ -1403,14 +1405,14 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
       
     def keycode(self,*args):
       keycode=self._parent._iren.GetKeyCode()
-      control=self._parent._iren.GetControlKey()        
+      control=self._parent._iren.GetControlKey()
       vtkkeys=['f','F','r','R']
-      keys=['d','D','s','S','w','W','q','Q','a','A']
+      keys=['d','D','s','S','w','W','q','Q','a','A','u','U']
       if (keycode in vtkkeys):
           self.OnChar()
       if (keycode in keys):
           self._parent.CharCallback()
-      if (keycode=='z' or keycode=='Z'):
+      if (keycode in ['z','Z',' ']):
           self._parent.setPick()
       if (keycode=='p' or keycode=='P'):
           self._parent.pickElement()
@@ -1420,7 +1422,7 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
           self._parent.cutting()      
       if (control==1): self._parent.controlKey=1
 
-# ------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
     def __init__(self,parent):
       self._parent=parent
@@ -1444,12 +1446,12 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
       keycode=self._parent._iren.GetKeyCode()
       control=self._parent._iren.GetControlKey()        
       vtkkeys=['f','F','r','R']
-      keys=['d','D','s','S','w','W','q','Q','a','A']
+      keys=['d','D','s','S','w','W','q','Q','a','A','u','U']
       if (keycode in vtkkeys):
           self.OnChar()
       if (keycode in keys):
           self._parent.CharCallback()
-      if (keycode=='z' or keycode=='Z'):
+      if (keycode in ['z','Z',' ']):
           self._parent.setPick()
       if (keycode=='p' or keycode=='P'):
           self._parent.pickElement()
@@ -1608,9 +1610,9 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
         camera.ApplyTransform(transform)
         camera.OrthogonalizeViewUp()
         self._parent._vtkren.ResetCameraClippingRange()
-        self._parent._iren.Render()                                                               
+        self._parent._iren.Render()                                            
 
-# ------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 class Q7InteractorStyleRubberBandZoom(vtk.vtkInteractorStyleRubberBandZoom):
     def __init__(self,parent):
       self._parent=parent
@@ -1634,12 +1636,12 @@ class Q7InteractorStyleRubberBandZoom(vtk.vtkInteractorStyleRubberBandZoom):
       keycode=self._parent._iren.GetKeyCode()
       control=self._parent._iren.GetControlKey()        
       vtkkeys=['f','F','r','R']
-      keys=['d','D','s','S','w','W','q','Q','a','A']
+      keys=['d','D','s','S','w','W','q','Q','a','A','u','U']
       if (keycode in vtkkeys):
           self.OnChar()
       if (keycode in keys):
           self._parent.CharCallback()
-      if (keycode=='z' or keycode=='Z'):
+      if (keycode in ['z','Z',' ']):
           self._parent.setPick()
       if (keycode=='p' or keycode=='P'):
           self._parent.pickElement()

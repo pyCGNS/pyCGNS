@@ -30,7 +30,7 @@ Changes by Phil Thompson, Mar. 2008
 
 from PySide import QtCore, QtGui
 import vtk
-
+import sys
 
 class Q7VTKRenderWindowInteractor(QtGui.QWidget):
 
@@ -149,7 +149,10 @@ class Q7VTKRenderWindowInteractor(QtGui.QWidget):
         else:
             self._RenderWindow = vtk.vtkRenderWindow()
 
-        self._RenderWindow.SetWindowInfo(str(int(self.winId(self))))
+        if (sys.platform=='win32'):
+            self._RenderWindow.SetWindowInfo(str(int(self.winId(self))))
+        else:
+            self._RenderWindow.SetWindowInfo(str(int(self.winId())))
 
         if stereo: # stereo mode
             self._RenderWindow.StereoCapableWindowOn()

@@ -353,12 +353,16 @@ The <i>Object axis x</i> mode forces a rotation with x as single axis, same
 for y and z.<br>
 
 <h4>Key Bindings</h4>
-<b>s</b> Surface mode rendering<br>
-<b>w</b> Wire mode rendering<br>
-<b>q</b> Surface and wire mode rendering<br>
-<b>r</b> Fit view to object<br>
+Keys are not case-sensitive letters, <b>s</b> and <b>S</b> are the same.
 
-<b>z</b> Select a Zone<br>
+<b>s</b> Surface mode rendering (toggle with wire)<br>
+<b>w</b> Wire mode rendering (toggle with surface)<br>
+<b>q</b> Surface and wire mode rendering (toggle with wire)<br>
+<b>r</b> Reset view to fit to full object<br>
+
+<b>\<space\></b> Throw a ray on the view and select all actors cuting the ray<br>
+<b>z</b> Same as \<space\><br>
+<b>u</b> Unselect all<br>
 <b>p</b> Pick a point in the selected Zone<br>
 """),
 # --------------------------------------------------------------------------

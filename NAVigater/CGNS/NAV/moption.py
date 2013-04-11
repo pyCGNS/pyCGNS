@@ -120,17 +120,33 @@ Copyright (c) Marc Poinot <br>
 Copyright (c) Onera - The French Aerospace Labs<br>
 <b>all other copyrights at the end of this page</b>
 
+<h2>Contributors</h2>
+Grégory Laheurte   - ONERA (DSNA/CS2A)<br>
+Benoit Rodriguez   - ONERA (DAAP/H2T)<br>
+Loic Hauchard      - ONERA (Student INSA Rouen, France)<br>
+Elise Hénaux       - ONERA (Student FIIFO Orsay, France)<br>
+Bill Perkins       - Pacific Northwest National Laboratory, U.S.A.<br>
+Florent Cayré      - SNECMA, France<br>
+Ching-Yang Wang    - U.S.A.<br>
+Alexandre Fayolle  - LOGILAB, France<br>
+Francois Thirifays - CENAERO, Belgique<br>
+
+<h2>Copyrights</h2>
 <hr>
-All <b>pyCGNS</b> (including <b>CGNS.NAV</b>)
+All <b>pyCGNS</b> 
 rights reserved in accordance with GPL v2 <br><br>
 <b>NO WARRANTY :</b><br>
 Check GPL v2 sections 15 and 16<br>
 about loss of data or corrupted data<br>
-
 <hr>
 PySide Copyright (c) <br>
+Copyright (C) 2009-2011 Nokia Corporation and/or its subsidiary(-ies).<br>
+Contact: PySide team <contact@pyside.org><br>
 <hr>
 Qt Copyright (c)<br>
+The Qt4 Library is (c) 2011 Nokia Corporation and/or its subsidiary(-ies),
+and is licensed under the GNU Lesser General Public License version 2.1
+with Nokia Qt LGPL exception version 1.1. 
 <hr>
 Python Copyright (c)<br>
 Copyright (c) 2001-2011 Python Software Foundation.<br>
@@ -147,16 +163,32 @@ All Rights Reserved.<br>
 <br>
 <hr>
 Numpy Copyright (c)<br>
+Copyright (c) 2005, NumPy Developers<br>
 <hr>
 HDF5 Copyright (c)<br>
+HDF5 (Hierarchical Data Format 5) Software Library and Utilities<br>
+Copyright 2006-2013 by The HDF Group.<br>
+
+NCSA HDF5 (Hierarchical Data Format 5) Software Library and Utilities<br>
+Copyright 1998-2006 by the Board of Trustees of the University of Illinois.<br>
 <hr>
 CHLone Copyright (c)<br>
 Copyright (c) Marc Poinot <br>
 Copyright (c) Onera - The French Aerospace Labs<br>
 <hr>
 VTK Copyright (c)<br>
+Copyright (c) 1993-2008 Ken Martin, Will Schroeder, Bill Lorensen <br>
+All rights reserved.<br>
 <hr>
 Cython Copyright (c)<br>
+(c) Copyright 2012, Stefan Behnel, Robert Bradshaw, Dag Sverre Seljebotn,
+Greg Ewing, William Stein, Gabriel Gellner, et al.
+<hr>
+Icons Copyright (c)<br>
+All these nice icons are provided or are modified version of original
+icons provided by Mark James (Birmingham, UK).<br>
+Please visit his web site: http://www.famfamfam.com/<br>
+
 """
     if (WINOPTS):
       _Default_Fonts={
