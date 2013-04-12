@@ -6,8 +6,9 @@
 A Python package for CGNS
 +++++++++++++++++++++++++
 
-.. sidebar:: Release 4.2
+.. sidebar:: Release 4.3
 
+   - pyCGNS available on Microsoft Windows (32 bits)
    - `CGNS.MAP` is now a wrapper 
      to `CHLone <http://chlone.sourceforge.net/>`_ python module
    - `CGNS.WRA` reborn, re-coding using *Cython*
