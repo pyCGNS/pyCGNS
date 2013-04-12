@@ -593,6 +593,10 @@ class Q7TreeItem(object):
             self._itemnode[1]=None
             return True
         if (odt==CGK.C1):
+            if (type(value) not in [str,unicode]): return False
+            try:
+                value=str(value)
+            except UnicodeEncodeError: return False
             self._itemnode[1]=CGU.setStringAsArray(value)
             return True
         return False
@@ -1088,7 +1092,8 @@ class Q7TreeModel(QAbstractItemModel):
                 self.refreshModel(newindex.parent())
                 self.refreshModel(newindex)
             else:
-                MSG.wError(0,"Cannot change name of node: %s"%oldpath,\
+                MSG.wError(self._control,
+                           0,"Cannot change name of node: %s"%oldpath,\
                            "The new name [%s] is rejected"%newname)
         if (index.column()==COLUMN_SIDS):
             newtype=value
@@ -1103,9 +1108,15 @@ class Q7TreeModel(QAbstractItemModel):
                 self.refreshModel(newindex.parent())
                 self.refreshModel(newindex)
             else:
-                MSG.wError(0,"Cannot change SIDS type of node: %s"%oldpath,\
+                MSG.wError(self._control,
+                           0,"Cannot change SIDS type of node: %s"%oldpath,\
                            "The new type [%s] is rejected"%newtype)
-        if (index.column()==COLUMN_VALUE):    st=node.sidsValueSet(value)
+        if (index.column()==COLUMN_VALUE):
+            st=node.sidsValueSet(value)
+            if (not st):
+                MSG.wError(self._control,
+                           0,"Cannot change value of node: %s"%oldpath,\
+                           "The value is rejected")
         if (index.column()==COLUMN_DATATYPE): st=node.sidsDataTypeSet(value)
         if (st):
             self._fingerprint.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)

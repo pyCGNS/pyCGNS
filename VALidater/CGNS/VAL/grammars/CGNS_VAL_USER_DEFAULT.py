@@ -11,7 +11,7 @@ import CGNS.VAL.parse.generic
 
 messagetable=(
 ('U101',CGM.CHECK_WARN,'No Zone in this Base'),
-('U102',CGM.CHECK_WARN,'No GridCoordinates in this Zone'),
+('U102',CGM.CHECK_WARN,'No Structured Zone found'),
 ('U105',CGM.CHECK_FAIL,'At least one structured Zone is required in the Base'),
 ('U103',CGM.CHECK_WARN,'No ReferenceState found at Base level'),
 ('U104',CGM.CHECK_WARN,'No ReferenceState found at Zone level'),
@@ -20,6 +20,14 @@ messagetable=(
 ('U106',CGM.CHECK_FAIL,'Transform is not right-handed (direct)'),
 ('U109',CGM.CHECK_FAIL,'Cannot handle such GridLocation [%s]'),
 ('U110',CGM.CHECK_FAIL,'Cannot handle such ElementType [%s]'),
+
+('S300',CGM.CHECK_FAIL,'FamilyName is empty'),
+('S301',CGM.CHECK_FAIL,'Reference to unknown family [%s]'),
+('S302',CGM.CHECK_FAIL,'Reference to unknown additional family [%s]'),
+
+('S602',CGM.CHECK_FAIL,'Zone has no GridCoordinates'),
+('S603',CGM.CHECK_FAIL,'No GridCoordinates_t of name GridCoordinates in zone'),
+('S604',CGM.CHECK_WARN,'ZoneBC has no BC'),
 )
 
 USER_MESSAGES={}

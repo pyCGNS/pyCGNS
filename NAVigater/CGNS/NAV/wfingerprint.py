@@ -75,7 +75,7 @@ class Q7CHLoneThread(QThread):
         if ("%s/%s"%(filedir,filename) in Q7FingerPrint.getExpandedFilenameList()):
             Q7FingerPrint.Unlock()
             txt="""The current file is already open:"""
-            self._data=(None,(0,txt,"%s/%s"%(filedir,filename)))
+            self._data=(None,(0,"%s/%s"%(filedir,filename),txt))
             self.datacompleted.emit(self._data)
             control.readyCursor()
             return 
@@ -91,7 +91,6 @@ class Q7CHLoneThread(QThread):
         maxdataload=-1
         if (OCTXT.CHLoneTrace):
             flags|=CGNS.MAP.S2P_TRACE
-            flags|=CGNS.MAP.S2P_DEBUG
         if (OCTXT.DoNotLoadLargeArrays):
             flags|=CGNS.MAP.S2P_NODATA
             maxdataload=OCTXT.MaxLoadDataSize
