@@ -9,6 +9,7 @@ import CGNS.MAP
 import importlib
 import sys
 import os
+import string
 
 KEY='SAMPLE'
 FILES=False
@@ -42,7 +43,7 @@ def runSuite(suite,trace,savefile=False,cgnscheck=False):
       p=os.path.split(s.__file__)[0]
       l=os.listdir(p)
       for t in l:
-          if ((t[0]!='_') and (t[-3:]=='.py')): tlist.append(t[:-3])
+          if ((t[0]!='_') and (t[-3:]=='.py') and (t[0] in string.digits)and (t[1] in string.digits)): tlist.append(t[:-3])
   for t in tlist:
       tdlist=loadTree(suite,t)
       for (tag,T,diag) in tdlist:
@@ -82,7 +83,9 @@ def valTree(suite,t,tag,T,diag,trace,count):
       print sr
     return sr
 
-tlist=('treebasics','Onera')
+#tlist=('treebasics','Onera')
+tlist=('Onera',)
 for s in tlist:
     runSuite(s,True,FILES,CGNSCHECK)
+
 
