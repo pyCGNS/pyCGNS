@@ -36,19 +36,24 @@ Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
 Q_SCRIPT_PRE="""
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnslib as CGL
 import numpy
 """
 
 Q_FILE_PRE="""
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnslib as CGL
 import CGNS.NAV.moption as CGO
 import numpy
 """
 
 Q_SCRIPT_POST="""
-%s[0]=%s
-"""%(Q_VAR_RESULT_LIST,Q_VAR_RESULT)
+try:
+  %s[0]=%s
+except NameError:
+  %s[0]=None
+"""%(Q_VAR_RESULT_LIST,Q_VAR_RESULT,Q_VAR_RESULT_LIST)
 
 def removeSubDirAndFiles(path):
   shutil.rmtree(path)
@@ -525,7 +530,7 @@ Please visit his web site: http://www.famfamfam.com/<br>
     _UsualQueries=[
 
 # --- Search -----------------------------------------------------------
-('Node name',
+('001. Node name',
  'Search by',
  'RESULT=(NAME==ARGS[0])',
  """
@@ -542,7 +547,7 @@ ZoneType
 ('ZoneType',)
 """),
 
-('Wildcard node name',
+('002. Wildcard node name',
  'Search by',
 """import fnmatch
 RESULT=fnmatch.fnmatchcase(NAME,ARGS[0])
@@ -560,19 +565,19 @@ Warning: the <b>argument name</b> should be quoted:
 BC* would fail
 """),
         
-('Node type',
+('003. Node type',
  'Search by',
  'RESULT=(SIDSTYPE==ARGS[0])',
  """search all nodes with argument SIDS type."""),
 
-('Node with truncated data',
+('010. Node with truncated data',
  'Search by',
  'if (PATH in SKIPS): RESULT=PATH',
  """search all nodes with truncated or unread data, for example if you have set
  the maximum data argument for the load, or if you release the memory of a
  node."""),
 
-('Wildcard node type',
+('004. Wildcard node type',
  'Search by',
 """
 import fnmatch
@@ -590,7 +595,7 @@ Warning: the <b>argument type</b> should be quoted:
 Turb* would fail
 """),
 
-('Non-MT UserDefinedData',
+('011. Non-MT UserDefinedData',
  'Search by',
 """
 if (    (SIDSTYPE==CGK.UserDefinedData_ts)
@@ -608,7 +613,7 @@ No argument.
 
 # --- Replace
 
-('Valued UserDefinedData',
+('050. Valued UserDefinedData',
  'Replace',"""
 if (     (SIDSTYPE==CGK.UserDefinedData_ts)
      and (CGU.getValueDataType(NODE)!=CGK.MT)):
@@ -622,7 +627,7 @@ Valued UserDefinedData
 Search all <b>UserDefinedData_t</b> nodes with a non-<b>MT</b> data type
  and replace them as <b>DataArray_t</b>."""),
 
-('Substitute Zone name',
+('051. Substitute Zone name',
  'Replace',"""
 l1=len(ARGS[0])
 if ((SIDSTYPE==CGK.Zone_ts) and (NAME[:l1]==ARGS[0])):
@@ -652,26 +657,54 @@ the second as the subsitution pattern. For example:
 """),
 
 # --- Find Elements_t
-('Elements QUAD',
+('020. Elements QUAD',
  'Find Elements_t',
  """if (SIDSTYPE==CGK.Elements_ts):
    RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)
  """,
  """Find all <b>Elements_t</b> nodes of type <b>QUAD</b>"""),
 
-('Elements TRI',
+('021. Elements TRI',
  'Find Elements_t',
  """if (SIDSTYPE==CGK.Elements_ts):
    RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)
  """,
  """Find all <b>Elements_t</b> nodes of type <b>TRI</b>"""),
 
-('Elements NGON',
+('022. Elements NGON',
  'Find Elements_t',
  """if (SIDSTYPE==CGK.Elements_ts):
    RESULT=VALUE[0] in (CGK.NGON_n,)
  """,
  """Find all <b>Elements_t</b> nodes of type <b>NGON_n</b>"""),
+
+# --- External Tools
+('030. Create Cartesian Zone',
+ 'External Tools',
+ """
+if (SIDSTYPE==CGK.CGNSTree_ts):
+    import Generator.PyTree as G
+    z=G.cart((0.,0.,0.), (0.1,0.1,0.2), (10,11,12))
+    b=None
+    base='BASE'
+    if (len(ARGS)>0):
+      base=ARGS[0]
+      b=CGU.hasChildName(NODE,base)
+    if (b is None):
+      base=CGU.checkUniqueChildName(NODE,base)
+      b=CGL.newCGNSBase(NODE,base,3,3)
+    CGU.addChild(b,z)
+ """,
+ """Example of Cartesian zone creation using Cassiopee.
+ The first argument is the base name, if ommitted a name is generated."""),
+('031. Bounding boxes',
+ 'External Tools',
+ """
+if (SIDSTYPE==CGK.Zone_ts):
+    import Generator as G
+    RESULT=G.bbox(NODE)
+ """,
+ """Example of Bounding box computation using Cassiopee"""),
 
     ]
 

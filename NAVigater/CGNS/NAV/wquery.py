@@ -126,7 +126,6 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.bRun.clicked.connect(self.runCurrent)
         self.bAdd.clicked.connect(self.queryAdd)
         self.bDel.clicked.connect(self.queryDel)
-        self.bCommit.clicked.connect(self.queryCommit)
         self.bRevert.clicked.connect(self.queryRevert)
         self.bCommitDoc.clicked.connect(self.queryCommit)
         self.bRevertDoc.clicked.connect(self.queryRevert)
@@ -155,13 +154,16 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.bInfo.clicked.connect(self.infoQueryView)
         self.bAdd.setEnabled(False)
         self.setCurrentQuery()
+        self._modified=False
         self.showQuery()
     def infoQueryView(self):
         self._control.helpWindow('Query')
     def updateTreeStatus(self):
         print 'query up'
     def queriesSave(self):
+        self.queryCommit()
         Q7Query.saveUserQueries()
+        self._modified=False
     def queryScriptSave(self):
         n=self.cQueryName.currentText()
         q=self.getQuery(n)
@@ -176,7 +178,9 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         f.write(s)
         f.close()
         os.chmod(filename[0],0o0750)
+        self._modified=False
     def queryDel(self):
+        self._modified=True
         q=self.cQueryName.currentText()
         i=self.cQueryName.currentIndex()
         reply = MSG.message('Delete query',
@@ -198,18 +202,28 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.queryCommit()
         self.cQueryName.addItem(qname)
     def queryCommit(self):
+        self._modified=True
         q=self.cQueryName.currentText()
+        if (q not in Q7Query._allQueries): self.queryAdd()
         com=self.eText.toPlainText()
         doc=self.eQueryDoc.toPlainText()
         Q7Query._allQueries[q].setScript(com)
         Q7Query._allQueries[q].setDoc(doc)
-        self.bCommit.setEnabled(False)
         self.bRevert.setEnabled(False)
         self.bCommitDoc.setEnabled(False)
         self.bRevertDoc.setEnabled(False)
     def queryRevert(self):
         self.showQuery()
     def reject(self):
+        reply=True
+        if (self._modified):
+            reply = MSG.wQuestion(self._control,'Leave query panel',
+                                """There are unsaved modified queries,
+leave this panel without save?""",again=False)
+        if (not reply):
+            return
+        else:
+            self._modified=False
         if (self._master._querywindow is not None):
             self._master._querywindow=None
         self.close()
@@ -222,6 +236,7 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         for gqn in gq:
             self.cQueryGroup.addItem(gqn)
     def showQuery(self,name=None):
+        pstate=self._modified
         if (name is None):
             name=self.getCurrentQuery().name
         if (name in Q7Query.queriesNamesList()):
@@ -229,10 +244,10 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
           self.eText.initText(txt)
           doc=self.getCurrentQuery().doc
           self.eQueryDoc.initText(doc)
-        self.bCommit.setEnabled(False)
         self.bRevert.setEnabled(False)
         self.bCommitDoc.setEnabled(False)
         self.bRevertDoc.setEnabled(False)
+        self._modified=pstate
     def show(self):
         self.reset()
         super(Q7Query, self).show()
@@ -244,6 +259,7 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         skp=self._fgprint.lazy.keys()
         r=q.run(self._fgprint.tree,self._fgprint.links,skp,True,v)
         self.eResult.initText(str(r))
+        self._fgprint.model.modelReset()
     @classmethod
     def fillQueries(self):
         allqueriestext=Q7Query._userQueriesText+OCTXT._UsualQueries
@@ -301,10 +317,10 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         if (name is None): name=self.queriesNamesList()[0]
         self._currentQuery=Q7Query._allQueries[name]
     def changeText(self):
-        self.bCommit.setEnabled(True)
         self.bRevert.setEnabled(True)
         self.bCommitDoc.setEnabled(True)
         self.bRevertDoc.setEnabled(True)
+        self._modified=True
     @classmethod
     def queries(self):
         return Q7Query.queriesNamesList()

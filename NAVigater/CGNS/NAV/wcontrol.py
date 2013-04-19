@@ -45,6 +45,7 @@ class Q7ControlItemDelegate(QStyledItemDelegate):
 # -----------------------------------------------------------------
 class Q7Main(Q7Window, Ui_Q7ControlWindow):
     def __init__(self, parent=None):
+        Q7Window.control_log=MSG.Q7Log()
         Q7Window.__init__(self,Q7Window.VIEW_CONTROL,self,None,None)
         self.getHistory()
         self.bAbout.clicked.connect(self.about)
@@ -52,6 +53,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.bTreeLoadLast.clicked.connect(self.loadlast)
         self.lockable(self.bTreeLoadLast)
         self.bTreeLoad.clicked.connect(self.load)
+        self.bLog.clicked.connect(self.logView)
         self.lockable(self.bTreeLoad)
         self.bEditTree.clicked.connect(self.edit)
         self.lockable(self.bEditTree)
@@ -96,6 +98,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.updateLastView()
         if (self.lastView is not None):
             Q7FingerPrint.raiseView(self.lastView)
+    def logView(self):
+        self.control_log.show()
     def infoControl(self):
         self.helpWindow('Control')
     def helpWindowDoc(self,doc):
@@ -176,6 +180,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
             Q7FingerPrint.closeAllTrees()
             if (self.help is not None): self.help.close()
             if (self._patternwindow is not None): self._patternwindow.close()
+            self.control_log.close()
             return True
         else:
             return False

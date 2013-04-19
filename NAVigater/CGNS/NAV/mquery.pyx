@@ -15,6 +15,7 @@ import CGNS.NAV.moption as OCST
 
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnslib as CGL
 
 SCRIPT_PATTERN="""#!/usr/bin/env python
 #  -------------------------------------------------------------------------
@@ -122,10 +123,10 @@ def evalScript(node,parent,tree,links,skips,path,val,args):
     l[OCST.Q_VAR_USER]=args
     l[OCST.Q_VAR_NODE]=node
     pre=OCST.Q_SCRIPT_PRE+val+OCST.Q_SCRIPT_POST
-    try:
+    if 1:#try:
       eval(compile(pre,'<string>','exec'),globals(),l)
-    except Exception:
-      RESULT=False
+#    except Exception:
+#      RESULT=False
     RESULT=l[OCST.Q_VAR_RESULT_LIST][0]
     return RESULT
 # -----------------------------------------------------------------
@@ -166,17 +167,18 @@ class Q7QueryEntry(object):
     def setDoc(self,value):
         self._doc=value
     def __str__(self):
-        s='("%s","%s","%s")'%(self.name,self.group,self._script)
+        s='("%s","%s","%s","""%s""")'%\
+        (self.name,self.group,self._script,self._doc)
         return s
     def run(self,tree,links,skips,mode,args):
         v=None
         try:
             if (args): v=eval(args)
             if ((v is not None) and (type(v)!=tuple)): v=(v,)
-        except NameError:
+        except NameError,e:
             v=(str(args),)
-        except:
-            pass
+        except Exception,e:
+            print e
         self._args=v
         result=parseAndSelect(tree,tree,[None,None,[],None],links,skips,'',
                               self._script,self._args,mode)

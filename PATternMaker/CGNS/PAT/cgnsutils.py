@@ -322,6 +322,29 @@ def checkHasChildName(parent,name,dienow=False):
   return not checkDuplicatedName(parent,name,dienow)
 
 # -----------------------------------------------------------------------------
+def checkUniqueChildName(parent,name,dienow=False):
+  """
+  Checks if the name is in the children list of the parent, if the name
+  already exists, a new name is returned. If the name doesn't exist the
+  name itself is returned::
+
+    z=CGU.addChild(T,CGU.checkUniqueName(T,'BASE'))
+
+  - Args:
+   * `parent`: the parent node
+   * `name`:   the child name to look for
+
+  - Return:
+   * arg name is it doesn't exist
+   * a new unique name if arg name already exists
+  
+  """
+  if checkDuplicatedName(parent,name,dienow): return name
+  count=1
+  while (checkHasChildName(parent,'%s#%.d'%(name,count))): count+=1
+  return '%s#%.d'%(name,count)
+
+# -----------------------------------------------------------------------------
 def checkNodeType(node,cgnstype=[],dienow=False):
   """
   Check the CGNS type of a node. The type can be a single value or

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created: Tue Apr  9 11:00:01 2013
+# Created: Fri Apr 19 13:46:05 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -487,5 +487,6 @@ class Ui_Q7FormWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tPython), QtGui.QApplication.translate("Q7FormWindow", "Python", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setText(QtGui.QApplication.translate("Q7FormWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
 
-from CGNS.NAV.mtable import Q7TableView, Q7PythonEditor
+from CGNS.NAV.weditors import Q7PythonEditor
+from CGNS.NAV.mtable import Q7TableView
 import Res_rc

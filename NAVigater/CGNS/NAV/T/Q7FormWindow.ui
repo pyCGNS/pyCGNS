@@ -1186,13 +1186,13 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Q7TableView</class>
-   <extends>QTableView</extends>
-   <header>CGNS.NAV.mtable</header>
-  </customwidget>
-  <customwidget>
    <class>Q7PythonEditor</class>
    <extends>QPlainTextEdit</extends>
+   <header>CGNS.NAV.weditors</header>
+  </customwidget>
+  <customwidget>
+   <class>Q7TableView</class>
+   <extends>QTableView</extends>
    <header>CGNS.NAV.mtable</header>
   </customwidget>
  </customwidgets>

@@ -81,6 +81,7 @@ if installprocess:
       'Q7PatternWindow',
       'Q7AnimationWindow',
       'Q7MessageWindow',
+      'Q7LogWindow',
       'Q7VTKWindow'
       ]
   modgenlist=[]

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7QueryWindow.ui'
 #
-# Created: Tue Apr  9 11:00:05 2013
+# Created: Fri Apr 19 13:44:19 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -144,16 +144,6 @@ class Ui_Q7QueryWindow(object):
         self.bRevert.setIcon(icon7)
         self.bRevert.setObjectName("bRevert")
         self.horizontalLayout_4.addWidget(self.bRevert)
-        self.bCommit = QtGui.QPushButton(self.horizontalLayoutWidget_2)
-        self.bCommit.setEnabled(True)
-        self.bCommit.setMinimumSize(QtCore.QSize(25, 25))
-        self.bCommit.setMaximumSize(QtCore.QSize(25, 25))
-        self.bCommit.setText("")
-        icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(":/images/icons/save-log.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bCommit.setIcon(icon8)
-        self.bCommit.setObjectName("bCommit")
-        self.horizontalLayout_4.addWidget(self.bCommit)
         self.tabWidget.addTab(self.tab, "")
         self.tab_3 = QtGui.QWidget()
         self.tab_3.setObjectName("tab_3")
@@ -186,6 +176,8 @@ class Ui_Q7QueryWindow(object):
         self.bCommitDoc.setMinimumSize(QtCore.QSize(25, 25))
         self.bCommitDoc.setMaximumSize(QtCore.QSize(25, 25))
         self.bCommitDoc.setText("")
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap(":/images/icons/save-log.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bCommitDoc.setIcon(icon8)
         self.bCommitDoc.setObjectName("bCommitDoc")
         self.horizontalLayout_5.addWidget(self.bCommitDoc)
@@ -249,13 +241,18 @@ class Ui_Q7QueryWindow(object):
         Q7QueryWindow.setWindowTitle(QtGui.QApplication.translate("Q7QueryWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setText(QtGui.QApplication.translate("Q7QueryWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Q7QueryWindow", "Group:", None, QtGui.QApplication.UnicodeUTF8))
+        self.cQueryGroup.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Label to caracterize a set of queries", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7QueryWindow", "Query:", None, QtGui.QApplication.UnicodeUTF8))
+        self.cQueryName.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Query name", None, QtGui.QApplication.UnicodeUTF8))
+        self.bAdd.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Add as a new query", None, QtGui.QApplication.UnicodeUTF8))
+        self.bDel.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Delete the query", None, QtGui.QApplication.UnicodeUTF8))
         self.bSaveAsScript.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Write query as single stand-alone python script", None, QtGui.QApplication.UnicodeUTF8))
         self.bSave.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Save all queries in user profile directory", None, QtGui.QApplication.UnicodeUTF8))
+        self.bRevert.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Revert to last saved text", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("Q7QueryWindow", "Python", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("Q7QueryWindow", "Documentation", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("Q7QueryWindow", "Args:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("Q7QueryWindow", "Result", None, QtGui.QApplication.UnicodeUTF8))
 
-from CGNS.NAV.mtable import Q7DocEditor, Q7PythonEditor
+from CGNS.NAV.weditors import Q7DocEditor, Q7PythonEditor
 import Res_rc

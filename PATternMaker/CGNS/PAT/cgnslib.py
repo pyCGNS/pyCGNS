@@ -57,7 +57,7 @@ def newCGNSBase(tree,name,ncell,nphys):
     newBase(T,'Box-1',3,3)
 
     # No parent, you should fetch the new node using a variable
-    B=newBase(None,'Box-2',3,3)
+    B=newCGNSBase(None,'Box-2',3,3)
   
   - Args:
    * `tree`: the parent node (`<node>` or `None`)

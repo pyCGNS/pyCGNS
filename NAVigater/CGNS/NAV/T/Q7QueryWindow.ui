@@ -120,6 +120,9 @@
        <property name="enabled">
         <bool>true</bool>
        </property>
+       <property name="toolTip">
+        <string>Label to caracterize a set of queries</string>
+       </property>
       </widget>
      </item>
      <item>
@@ -136,6 +139,9 @@
          <width>300</width>
          <height>0</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Query name</string>
        </property>
        <property name="editable">
         <bool>true</bool>
@@ -155,6 +161,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Add as a new query</string>
        </property>
        <property name="text">
         <string/>
@@ -178,6 +187,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Delete the query</string>
        </property>
        <property name="text">
         <string/>
@@ -338,38 +350,15 @@
             <height>25</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>Revert to last saved text</string>
+          </property>
           <property name="text">
            <string/>
           </property>
           <property name="icon">
            <iconset resource="../R/Res.qrc">
             <normaloff>:/images/icons/undo-at-most.png</normaloff>:/images/icons/undo-at-most.png</iconset>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="bCommit">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>25</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>25</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset resource="../R/Res.qrc">
-            <normaloff>:/images/icons/save-log.png</normaloff>:/images/icons/save-log.png</iconset>
           </property>
          </widget>
         </item>
@@ -594,12 +583,12 @@
   <customwidget>
    <class>Q7PythonEditor</class>
    <extends>QPlainTextEdit</extends>
-   <header>CGNS.NAV.mtable</header>
+   <header>CGNS.NAV.weditors</header>
   </customwidget>
   <customwidget>
    <class>Q7DocEditor</class>
    <extends>QPlainTextEdit</extends>
-   <header>CGNS.NAV.mtable</header>
+   <header>CGNS.NAV.weditors</header>
   </customwidget>
  </customwidgets>
  <resources>

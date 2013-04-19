@@ -246,8 +246,8 @@
 #define _USE_MATH_DEFINES
 #endif
 #include <math.h>
-#define __PYX_HAVE__CGNS__NAV__Q7HelpWindow
-#define __PYX_HAVE_API__CGNS__NAV__Q7HelpWindow
+#define __PYX_HAVE__CGNS__NAV__Q7LogWindow
+#define __PYX_HAVE_API__CGNS__NAV__Q7LogWindow
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -334,7 +334,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "Q7HelpWindow.pyx",
+  "Q7LogWindow.pyx",
 };
 
 /*--- Type declarations ---*/
@@ -508,35 +508,45 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 
-/* Module declarations from 'CGNS.NAV.Q7HelpWindow' */
-#define __Pyx_MODULE_NAME "CGNS.NAV.Q7HelpWindow"
-int __pyx_module_is_main_CGNS__NAV__Q7HelpWindow = 0;
+/* Module declarations from 'CGNS.NAV.Q7LogWindow' */
+#define __Pyx_MODULE_NAME "CGNS.NAV.Q7LogWindow"
+int __pyx_module_is_main_CGNS__NAV__Q7LogWindow = 0;
 
-/* Implementation of 'CGNS.NAV.Q7HelpWindow' */
+/* Implementation of 'CGNS.NAV.Q7LogWindow' */
 static PyObject *__pyx_builtin_object;
-static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_Q7HelpWindow); /* proto */
-static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_2retranslateUi(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, PyObject *__pyx_v_Q7HelpWindow); /* proto */
+static PyObject *__pyx_pf_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_setupUi(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_Q7LogWindow); /* proto */
+static PyObject *__pyx_pf_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_2retranslateUi(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_Q7LogWindow); /* proto */
 static char __pyx_k_3[] = "setHorizontalStretch";
-static char __pyx_k_14[] = "";
-static char __pyx_k_16[] = ":/images/icons/top.png";
-static char __pyx_k_21[] = "/stck4/stck4.2/poinot/src/pyCGNS/NAVigater/CGNS/NAV/G/Q7HelpWindow.pyx";
-static char __pyx_k_22[] = "CGNS.NAV.Q7HelpWindow";
+static char __pyx_k_8[] = ":/images/icons/cgSpy.png";
+static char __pyx_k_17[] = "";
+static char __pyx_k_19[] = ":/images/icons/help-view.png";
+static char __pyx_k_26[] = "/stck4/stck4.2/poinot/src/pyCGNS/NAVigater/CGNS/NAV/G/Q7LogWindow.pyx";
+static char __pyx_k_27[] = "CGNS.NAV.Q7LogWindow";
+static char __pyx_k_30[] = "CGNS.NAV.weditors";
 static char __pyx_k__Off[] = "Off";
-static char __pyx_k__Form[] = "Form";
+static char __pyx_k__Hide[] = "Hide";
+static char __pyx_k__eLog[] = "eLog";
 static char __pyx_k__icon[] = "icon";
 static char __pyx_k__self[] = "self";
-static char __pyx_k__Fixed[] = "Fixed";
+static char __pyx_k__Clear[] = "Clear";
 static char __pyx_k__QIcon[] = "QIcon";
 static char __pyx_k__QSize[] = "QSize";
 static char __pyx_k__QtGui[] = "QtGui";
-static char __pyx_k__eHelp[] = "eHelp";
+static char __pyx_k__bInfo[] = "bInfo";
+static char __pyx_k__icon1[] = "icon1";
+static char __pyx_k__Dialog[] = "Dialog";
 static char __pyx_k__Normal[] = "Normal";
 static char __pyx_k__PySide[] = "PySide";
+static char __pyx_k__QFrame[] = "QFrame";
 static char __pyx_k__QtCore[] = "QtCore";
+static char __pyx_k__Raised[] = "Raised";
 static char __pyx_k__Res_rc[] = "Res_rc";
+static char __pyx_k__bClear[] = "bClear";
+static char __pyx_k__bClose[] = "bClose";
 static char __pyx_k__object[] = "object";
 static char __pyx_k__resize[] = "resize";
 static char __pyx_k__Minimum[] = "Minimum";
+static char __pyx_k__QLayout[] = "QLayout";
 static char __pyx_k__QPixmap[] = "QPixmap";
 static char __pyx_k__addItem[] = "addItem";
 static char __pyx_k__setIcon[] = "setIcon";
@@ -545,16 +555,13 @@ static char __pyx_k__setupUi[] = "setupUi";
 static char __pyx_k____main__[] = "__main__";
 static char __pyx_k____test__[] = "__test__";
 static char __pyx_k__Expanding[] = "Expanding";
-static char __pyx_k__QTextEdit[] = "QTextEdit";
 static char __pyx_k__addLayout[] = "addLayout";
 static char __pyx_k__addPixmap[] = "addPixmap";
 static char __pyx_k__addWidget[] = "addWidget";
 static char __pyx_k__translate[] = "translate";
-static char __pyx_k__gridLayout[] = "gridLayout";
-static char __pyx_k__setEnabled[] = "setEnabled";
 static char __pyx_k__sizePolicy[] = "sizePolicy";
 static char __pyx_k__spacerItem[] = "spacerItem";
-static char __pyx_k__QGridLayout[] = "QGridLayout";
+static char __pyx_k__Q7LogWindow[] = "Q7LogWindow";
 static char __pyx_k__QHBoxLayout[] = "QHBoxLayout";
 static char __pyx_k__QMetaObject[] = "QMetaObject";
 static char __pyx_k__QPushButton[] = "QPushButton";
@@ -562,51 +569,61 @@ static char __pyx_k__QSizePolicy[] = "QSizePolicy";
 static char __pyx_k__QSpacerItem[] = "QSpacerItem";
 static char __pyx_k__QVBoxLayout[] = "QVBoxLayout";
 static char __pyx_k__UnicodeUTF8[] = "UnicodeUTF8";
-static char __pyx_k__Q7HelpWindow[] = "Q7HelpWindow";
 static char __pyx_k__QApplication[] = "QApplication";
-static char __pyx_k__bBackControl[] = "bBackControl";
+static char __pyx_k__setLineWidth[] = "setLineWidth";
 static char __pyx_k__retranslateUi[] = "retranslateUi";
 static char __pyx_k__setObjectName[] = "setObjectName";
 static char __pyx_k__setSizePolicy[] = "setSizePolicy";
+static char __pyx_k__setWindowIcon[] = "setWindowIcon";
+static char __pyx_k__Q7PythonEditor[] = "Q7PythonEditor";
+static char __pyx_k__Ui_Q7LogWindow[] = "Ui_Q7LogWindow";
+static char __pyx_k__setFrameShadow[] = "setFrameShadow";
 static char __pyx_k__setMaximumSize[] = "setMaximumSize";
 static char __pyx_k__setMinimumSize[] = "setMinimumSize";
 static char __pyx_k__setWindowTitle[] = "setWindowTitle";
 static char __pyx_k__verticalLayout[] = "verticalLayout";
-static char __pyx_k__Ui_Q7HelpWindow[] = "Ui_Q7HelpWindow";
+static char __pyx_k__SetNoConstraint[] = "SetNoConstraint";
 static char __pyx_k__hasHeightForWidth[] = "hasHeightForWidth";
 static char __pyx_k__setHeightForWidth[] = "setHeightForWidth";
+static char __pyx_k__setSizeConstraint[] = "setSizeConstraint";
 static char __pyx_k__connectSlotsByName[] = "connectSlotsByName";
 static char __pyx_k__horizontalLayout_2[] = "horizontalLayout_2";
 static char __pyx_k__setVerticalStretch[] = "setVerticalStretch";
-static PyObject *__pyx_kp_s_14;
-static PyObject *__pyx_kp_s_16;
-static PyObject *__pyx_kp_s_21;
-static PyObject *__pyx_n_s_22;
+static PyObject *__pyx_kp_s_17;
+static PyObject *__pyx_kp_s_19;
+static PyObject *__pyx_kp_s_26;
+static PyObject *__pyx_n_s_27;
 static PyObject *__pyx_n_s_3;
+static PyObject *__pyx_n_s_30;
+static PyObject *__pyx_kp_s_8;
+static PyObject *__pyx_n_s__Clear;
+static PyObject *__pyx_n_s__Dialog;
 static PyObject *__pyx_n_s__Expanding;
-static PyObject *__pyx_n_s__Fixed;
-static PyObject *__pyx_n_s__Form;
+static PyObject *__pyx_n_s__Hide;
 static PyObject *__pyx_n_s__Minimum;
 static PyObject *__pyx_n_s__Normal;
 static PyObject *__pyx_n_s__Off;
 static PyObject *__pyx_n_s__PySide;
-static PyObject *__pyx_n_s__Q7HelpWindow;
+static PyObject *__pyx_n_s__Q7LogWindow;
+static PyObject *__pyx_n_s__Q7PythonEditor;
 static PyObject *__pyx_n_s__QApplication;
-static PyObject *__pyx_n_s__QGridLayout;
+static PyObject *__pyx_n_s__QFrame;
 static PyObject *__pyx_n_s__QHBoxLayout;
 static PyObject *__pyx_n_s__QIcon;
+static PyObject *__pyx_n_s__QLayout;
 static PyObject *__pyx_n_s__QMetaObject;
 static PyObject *__pyx_n_s__QPixmap;
 static PyObject *__pyx_n_s__QPushButton;
 static PyObject *__pyx_n_s__QSize;
 static PyObject *__pyx_n_s__QSizePolicy;
 static PyObject *__pyx_n_s__QSpacerItem;
-static PyObject *__pyx_n_s__QTextEdit;
 static PyObject *__pyx_n_s__QVBoxLayout;
 static PyObject *__pyx_n_s__QtCore;
 static PyObject *__pyx_n_s__QtGui;
+static PyObject *__pyx_n_s__Raised;
 static PyObject *__pyx_n_s__Res_rc;
-static PyObject *__pyx_n_s__Ui_Q7HelpWindow;
+static PyObject *__pyx_n_s__SetNoConstraint;
+static PyObject *__pyx_n_s__Ui_Q7LogWindow;
 static PyObject *__pyx_n_s__UnicodeUTF8;
 static PyObject *__pyx_n_s____main__;
 static PyObject *__pyx_n_s____test__;
@@ -614,26 +631,31 @@ static PyObject *__pyx_n_s__addItem;
 static PyObject *__pyx_n_s__addLayout;
 static PyObject *__pyx_n_s__addPixmap;
 static PyObject *__pyx_n_s__addWidget;
-static PyObject *__pyx_n_s__bBackControl;
+static PyObject *__pyx_n_s__bClear;
+static PyObject *__pyx_n_s__bClose;
+static PyObject *__pyx_n_s__bInfo;
 static PyObject *__pyx_n_s__connectSlotsByName;
-static PyObject *__pyx_n_s__eHelp;
-static PyObject *__pyx_n_s__gridLayout;
+static PyObject *__pyx_n_s__eLog;
 static PyObject *__pyx_n_s__hasHeightForWidth;
 static PyObject *__pyx_n_s__horizontalLayout_2;
 static PyObject *__pyx_n_s__icon;
+static PyObject *__pyx_n_s__icon1;
 static PyObject *__pyx_n_s__object;
 static PyObject *__pyx_n_s__resize;
 static PyObject *__pyx_n_s__retranslateUi;
 static PyObject *__pyx_n_s__self;
-static PyObject *__pyx_n_s__setEnabled;
+static PyObject *__pyx_n_s__setFrameShadow;
 static PyObject *__pyx_n_s__setHeightForWidth;
 static PyObject *__pyx_n_s__setIcon;
+static PyObject *__pyx_n_s__setLineWidth;
 static PyObject *__pyx_n_s__setMaximumSize;
 static PyObject *__pyx_n_s__setMinimumSize;
 static PyObject *__pyx_n_s__setObjectName;
+static PyObject *__pyx_n_s__setSizeConstraint;
 static PyObject *__pyx_n_s__setSizePolicy;
 static PyObject *__pyx_n_s__setText;
 static PyObject *__pyx_n_s__setVerticalStretch;
+static PyObject *__pyx_n_s__setWindowIcon;
 static PyObject *__pyx_n_s__setWindowTitle;
 static PyObject *__pyx_n_s__setupUi;
 static PyObject *__pyx_n_s__sizePolicy;
@@ -641,46 +663,47 @@ static PyObject *__pyx_n_s__spacerItem;
 static PyObject *__pyx_n_s__translate;
 static PyObject *__pyx_n_s__verticalLayout;
 static PyObject *__pyx_int_0;
-static PyObject *__pyx_int_1;
-static PyObject *__pyx_int_3;
-static PyObject *__pyx_int_4;
 static PyObject *__pyx_int_20;
 static PyObject *__pyx_int_25;
-static PyObject *__pyx_int_40;
-static PyObject *__pyx_int_350;
-static PyObject *__pyx_int_715;
-static PyObject *__pyx_int_1200;
+static PyObject *__pyx_int_140;
+static PyObject *__pyx_int_500;
+static PyObject *__pyx_int_868;
+static PyObject *__pyx_int_16777215;
 static PyObject *__pyx_k_tuple_1;
 static PyObject *__pyx_k_tuple_2;
 static PyObject *__pyx_k_tuple_4;
 static PyObject *__pyx_k_tuple_5;
 static PyObject *__pyx_k_tuple_6;
 static PyObject *__pyx_k_tuple_7;
-static PyObject *__pyx_k_tuple_8;
 static PyObject *__pyx_k_tuple_9;
 static PyObject *__pyx_k_tuple_10;
 static PyObject *__pyx_k_tuple_11;
 static PyObject *__pyx_k_tuple_12;
 static PyObject *__pyx_k_tuple_13;
+static PyObject *__pyx_k_tuple_14;
 static PyObject *__pyx_k_tuple_15;
-static PyObject *__pyx_k_tuple_17;
+static PyObject *__pyx_k_tuple_16;
 static PyObject *__pyx_k_tuple_18;
-static PyObject *__pyx_k_tuple_19;
+static PyObject *__pyx_k_tuple_20;
+static PyObject *__pyx_k_tuple_21;
+static PyObject *__pyx_k_tuple_22;
 static PyObject *__pyx_k_tuple_23;
-static PyObject *__pyx_k_codeobj_20;
-static PyObject *__pyx_k_codeobj_24;
+static PyObject *__pyx_k_tuple_24;
+static PyObject *__pyx_k_tuple_28;
+static PyObject *__pyx_k_codeobj_25;
+static PyObject *__pyx_k_codeobj_29;
 
 /* Python wrapper */
-static PyObject *__pyx_pw_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_1setupUi(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_1setupUi = {__Pyx_NAMESTR("setupUi"), (PyCFunction)__pyx_pw_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_1setupUi, METH_VARARGS|METH_KEYWORDS, __Pyx_DOCSTR(0)};
-static PyObject *__pyx_pw_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_1setupUi(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_1setupUi(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_1setupUi = {__Pyx_NAMESTR("setupUi"), (PyCFunction)__pyx_pw_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_1setupUi, METH_VARARGS|METH_KEYWORDS, __Pyx_DOCSTR(0)};
+static PyObject *__pyx_pw_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_1setupUi(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
-  PyObject *__pyx_v_Q7HelpWindow = 0;
+  PyObject *__pyx_v_Q7LogWindow = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("setupUi (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s__self,&__pyx_n_s__Q7HelpWindow,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s__self,&__pyx_n_s__Q7LogWindow,0};
     PyObject* values[2] = {0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
@@ -697,7 +720,7 @@ static PyObject *__pyx_pw_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_1setupUi(P
         if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s__self)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         case  1:
-        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s__Q7HelpWindow)) != 0)) kw_args--;
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s__Q7LogWindow)) != 0)) kw_args--;
         else {
           __Pyx_RaiseArgtupleInvalid("setupUi", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
@@ -712,32 +735,33 @@ static PyObject *__pyx_pw_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_1setupUi(P
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
     __pyx_v_self = values[0];
-    __pyx_v_Q7HelpWindow = values[1];
+    __pyx_v_Q7LogWindow = values[1];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("setupUi", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("CGNS.NAV.Q7HelpWindow.Ui_Q7HelpWindow.setupUi", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("CGNS.NAV.Q7LogWindow.Ui_Q7LogWindow.setupUi", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(__pyx_self, __pyx_v_self, __pyx_v_Q7HelpWindow);
+  __pyx_r = __pyx_pf_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_setupUi(__pyx_self, __pyx_v_self, __pyx_v_Q7LogWindow);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "CGNS/NAV/G/Q7HelpWindow.pyx":13
+/* "CGNS/NAV/G/Q7LogWindow.pyx":13
  * 
- * class Ui_Q7HelpWindow(object):
- *     def setupUi(self, Q7HelpWindow):             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.setObjectName("Q7HelpWindow")
- *         Q7HelpWindow.resize(715, 350)
+ * class Ui_Q7LogWindow(object):
+ *     def setupUi(self, Q7LogWindow):             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setObjectName("Q7LogWindow")
+ *         Q7LogWindow.resize(500, 140)
  */
 
-static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_Q7HelpWindow) {
+static PyObject *__pyx_pf_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_setupUi(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_Q7LogWindow) {
   PyObject *__pyx_v_sizePolicy = NULL;
   PyObject *__pyx_v_icon = NULL;
+  PyObject *__pyx_v_icon1 = NULL;
   PyObject *__pyx_v_spacerItem = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -751,38 +775,38 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("setupUi", 0);
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":14
- * class Ui_Q7HelpWindow(object):
- *     def setupUi(self, Q7HelpWindow):
- *         Q7HelpWindow.setObjectName("Q7HelpWindow")             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.resize(715, 350)
- *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":14
+ * class Ui_Q7LogWindow(object):
+ *     def setupUi(self, Q7LogWindow):
+ *         Q7LogWindow.setObjectName("Q7LogWindow")             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.resize(500, 140)
+ *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
  */
-  __pyx_t_1 = PyObject_GetAttr(__pyx_v_Q7HelpWindow, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 14; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_Q7LogWindow, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 14; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_k_tuple_1), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 14; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":15
- *     def setupUi(self, Q7HelpWindow):
- *         Q7HelpWindow.setObjectName("Q7HelpWindow")
- *         Q7HelpWindow.resize(715, 350)             # <<<<<<<<<<<<<<
- *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":15
+ *     def setupUi(self, Q7LogWindow):
+ *         Q7LogWindow.setObjectName("Q7LogWindow")
+ *         Q7LogWindow.resize(500, 140)             # <<<<<<<<<<<<<<
+ *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
  *         sizePolicy.setHorizontalStretch(0)
  */
-  __pyx_t_2 = PyObject_GetAttr(__pyx_v_Q7HelpWindow, __pyx_n_s__resize); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 15; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_GetAttr(__pyx_v_Q7LogWindow, __pyx_n_s__resize); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 15; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_1 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_k_tuple_2), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 15; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":16
- *         Q7HelpWindow.setObjectName("Q7HelpWindow")
- *         Q7HelpWindow.resize(715, 350)
- *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)             # <<<<<<<<<<<<<<
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":16
+ *         Q7LogWindow.setObjectName("Q7LogWindow")
+ *         Q7LogWindow.resize(500, 140)
+ *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)             # <<<<<<<<<<<<<<
  *         sizePolicy.setHorizontalStretch(0)
  *         sizePolicy.setVerticalStretch(0)
  */
@@ -804,7 +828,7 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
   __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__QSizePolicy); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__Fixed); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__Expanding); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -822,12 +846,12 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
   __pyx_v_sizePolicy = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":17
- *         Q7HelpWindow.resize(715, 350)
- *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":17
+ *         Q7LogWindow.resize(500, 140)
+ *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
  *         sizePolicy.setHorizontalStretch(0)             # <<<<<<<<<<<<<<
  *         sizePolicy.setVerticalStretch(0)
- *         sizePolicy.setHeightForWidth(Q7HelpWindow.sizePolicy().hasHeightForWidth())
+ *         sizePolicy.setHeightForWidth(Q7LogWindow.sizePolicy().hasHeightForWidth())
  */
   __pyx_t_3 = PyObject_GetAttr(__pyx_v_sizePolicy, __pyx_n_s_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
@@ -836,12 +860,12 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":18
- *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":18
+ *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
  *         sizePolicy.setHorizontalStretch(0)
  *         sizePolicy.setVerticalStretch(0)             # <<<<<<<<<<<<<<
- *         sizePolicy.setHeightForWidth(Q7HelpWindow.sizePolicy().hasHeightForWidth())
- *         Q7HelpWindow.setSizePolicy(sizePolicy)
+ *         sizePolicy.setHeightForWidth(Q7LogWindow.sizePolicy().hasHeightForWidth())
+ *         Q7LogWindow.setSizePolicy(sizePolicy)
  */
   __pyx_t_4 = PyObject_GetAttr(__pyx_v_sizePolicy, __pyx_n_s__setVerticalStretch); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 18; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
@@ -850,16 +874,16 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":19
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":19
  *         sizePolicy.setHorizontalStretch(0)
  *         sizePolicy.setVerticalStretch(0)
- *         sizePolicy.setHeightForWidth(Q7HelpWindow.sizePolicy().hasHeightForWidth())             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.setSizePolicy(sizePolicy)
- *         Q7HelpWindow.setMinimumSize(QtCore.QSize(715, 350))
+ *         sizePolicy.setHeightForWidth(Q7LogWindow.sizePolicy().hasHeightForWidth())             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setSizePolicy(sizePolicy)
+ *         Q7LogWindow.setMinimumSize(QtCore.QSize(500, 140))
  */
   __pyx_t_3 = PyObject_GetAttr(__pyx_v_sizePolicy, __pyx_n_s__setHeightForWidth); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 19; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyObject_GetAttr(__pyx_v_Q7HelpWindow, __pyx_n_s__sizePolicy); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 19; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyObject_GetAttr(__pyx_v_Q7LogWindow, __pyx_n_s__sizePolicy); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 19; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_2 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_empty_tuple), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 19; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
@@ -881,14 +905,14 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
   __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":20
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":20
  *         sizePolicy.setVerticalStretch(0)
- *         sizePolicy.setHeightForWidth(Q7HelpWindow.sizePolicy().hasHeightForWidth())
- *         Q7HelpWindow.setSizePolicy(sizePolicy)             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.setMinimumSize(QtCore.QSize(715, 350))
- *         Q7HelpWindow.setMaximumSize(QtCore.QSize(1200, 350))
+ *         sizePolicy.setHeightForWidth(Q7LogWindow.sizePolicy().hasHeightForWidth())
+ *         Q7LogWindow.setSizePolicy(sizePolicy)             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setMinimumSize(QtCore.QSize(500, 140))
+ *         Q7LogWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
  */
-  __pyx_t_2 = PyObject_GetAttr(__pyx_v_Q7HelpWindow, __pyx_n_s__setSizePolicy); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 20; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_GetAttr(__pyx_v_Q7LogWindow, __pyx_n_s__setSizePolicy); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 20; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 20; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
@@ -901,14 +925,14 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
   __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":21
- *         sizePolicy.setHeightForWidth(Q7HelpWindow.sizePolicy().hasHeightForWidth())
- *         Q7HelpWindow.setSizePolicy(sizePolicy)
- *         Q7HelpWindow.setMinimumSize(QtCore.QSize(715, 350))             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.setMaximumSize(QtCore.QSize(1200, 350))
- *         self.gridLayout = QtGui.QGridLayout(Q7HelpWindow)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":21
+ *         sizePolicy.setHeightForWidth(Q7LogWindow.sizePolicy().hasHeightForWidth())
+ *         Q7LogWindow.setSizePolicy(sizePolicy)
+ *         Q7LogWindow.setMinimumSize(QtCore.QSize(500, 140))             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
+ *         icon = QtGui.QIcon()
  */
-  __pyx_t_3 = PyObject_GetAttr(__pyx_v_Q7HelpWindow, __pyx_n_s__setMinimumSize); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyObject_GetAttr(__pyx_v_Q7LogWindow, __pyx_n_s__setMinimumSize); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtCore); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
@@ -929,14 +953,14 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
   __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":22
- *         Q7HelpWindow.setSizePolicy(sizePolicy)
- *         Q7HelpWindow.setMinimumSize(QtCore.QSize(715, 350))
- *         Q7HelpWindow.setMaximumSize(QtCore.QSize(1200, 350))             # <<<<<<<<<<<<<<
- *         self.gridLayout = QtGui.QGridLayout(Q7HelpWindow)
- *         self.gridLayout.setObjectName("gridLayout")
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":22
+ *         Q7LogWindow.setSizePolicy(sizePolicy)
+ *         Q7LogWindow.setMinimumSize(QtCore.QSize(500, 140))
+ *         Q7LogWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))             # <<<<<<<<<<<<<<
+ *         icon = QtGui.QIcon()
+ *         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
  */
-  __pyx_t_4 = PyObject_GetAttr(__pyx_v_Q7HelpWindow, __pyx_n_s__setMaximumSize); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 22; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyObject_GetAttr(__pyx_v_Q7LogWindow, __pyx_n_s__setMaximumSize); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 22; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtCore); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 22; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
@@ -957,409 +981,422 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
   __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":23
- *         Q7HelpWindow.setMinimumSize(QtCore.QSize(715, 350))
- *         Q7HelpWindow.setMaximumSize(QtCore.QSize(1200, 350))
- *         self.gridLayout = QtGui.QGridLayout(Q7HelpWindow)             # <<<<<<<<<<<<<<
- *         self.gridLayout.setObjectName("gridLayout")
- *         self.verticalLayout = QtGui.QVBoxLayout()
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":23
+ *         Q7LogWindow.setMinimumSize(QtCore.QSize(500, 140))
+ *         Q7LogWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
+ *         icon = QtGui.QIcon()             # <<<<<<<<<<<<<<
+ *         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+ *         Q7LogWindow.setWindowIcon(icon)
  */
   __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QGridLayout); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QIcon); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_INCREF(__pyx_v_Q7HelpWindow);
-  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_Q7HelpWindow);
-  __Pyx_GIVEREF(__pyx_v_Q7HelpWindow);
-  __pyx_t_4 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
-  if (PyObject_SetAttr(__pyx_v_self, __pyx_n_s__gridLayout, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":24
- *         Q7HelpWindow.setMaximumSize(QtCore.QSize(1200, 350))
- *         self.gridLayout = QtGui.QGridLayout(Q7HelpWindow)
- *         self.gridLayout.setObjectName("gridLayout")             # <<<<<<<<<<<<<<
- *         self.verticalLayout = QtGui.QVBoxLayout()
- *         self.verticalLayout.setObjectName("verticalLayout")
- */
-  __pyx_t_4 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__gridLayout); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_k_tuple_8), NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":25
- *         self.gridLayout = QtGui.QGridLayout(Q7HelpWindow)
- *         self.gridLayout.setObjectName("gridLayout")
- *         self.verticalLayout = QtGui.QVBoxLayout()             # <<<<<<<<<<<<<<
- *         self.verticalLayout.setObjectName("verticalLayout")
- *         self.eHelp = QtGui.QTextEdit(Q7HelpWindow)
- */
-  __pyx_t_4 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 25; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__QVBoxLayout); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 25; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_empty_tuple), NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 25; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyObject_SetAttr(__pyx_v_self, __pyx_n_s__verticalLayout, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 25; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":26
- *         self.gridLayout.setObjectName("gridLayout")
- *         self.verticalLayout = QtGui.QVBoxLayout()
- *         self.verticalLayout.setObjectName("verticalLayout")             # <<<<<<<<<<<<<<
- *         self.eHelp = QtGui.QTextEdit(Q7HelpWindow)
- *         self.eHelp.setObjectName("eHelp")
- */
-  __pyx_t_4 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__verticalLayout); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_k_tuple_9), NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":27
- *         self.verticalLayout = QtGui.QVBoxLayout()
- *         self.verticalLayout.setObjectName("verticalLayout")
- *         self.eHelp = QtGui.QTextEdit(Q7HelpWindow)             # <<<<<<<<<<<<<<
- *         self.eHelp.setObjectName("eHelp")
- *         self.verticalLayout.addWidget(self.eHelp)
- */
-  __pyx_t_4 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 27; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__QTextEdit); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 27; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 27; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_Q7HelpWindow);
-  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_Q7HelpWindow);
-  __Pyx_GIVEREF(__pyx_v_Q7HelpWindow);
-  __pyx_t_3 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 27; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
-  if (PyObject_SetAttr(__pyx_v_self, __pyx_n_s__eHelp, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 27; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":28
- *         self.verticalLayout.setObjectName("verticalLayout")
- *         self.eHelp = QtGui.QTextEdit(Q7HelpWindow)
- *         self.eHelp.setObjectName("eHelp")             # <<<<<<<<<<<<<<
- *         self.verticalLayout.addWidget(self.eHelp)
- *         self.gridLayout.addLayout(self.verticalLayout, 3, 0, 1, 1)
- */
-  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__eHelp); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_k_tuple_10), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":29
- *         self.eHelp = QtGui.QTextEdit(Q7HelpWindow)
- *         self.eHelp.setObjectName("eHelp")
- *         self.verticalLayout.addWidget(self.eHelp)             # <<<<<<<<<<<<<<
- *         self.gridLayout.addLayout(self.verticalLayout, 3, 0, 1, 1)
- *         self.horizontalLayout_2 = QtGui.QHBoxLayout()
- */
-  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__verticalLayout); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__addWidget); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__eHelp); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_3);
-  __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":30
- *         self.eHelp.setObjectName("eHelp")
- *         self.verticalLayout.addWidget(self.eHelp)
- *         self.gridLayout.addLayout(self.verticalLayout, 3, 0, 1, 1)             # <<<<<<<<<<<<<<
- *         self.horizontalLayout_2 = QtGui.QHBoxLayout()
- *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
- */
-  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__gridLayout); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__addLayout); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_empty_tuple), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__verticalLayout); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyTuple_New(5); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_3);
-  __Pyx_INCREF(__pyx_int_3);
-  PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_int_3);
-  __Pyx_GIVEREF(__pyx_int_3);
-  __Pyx_INCREF(__pyx_int_0);
-  PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_int_0);
-  __Pyx_GIVEREF(__pyx_int_0);
-  __Pyx_INCREF(__pyx_int_1);
-  PyTuple_SET_ITEM(__pyx_t_4, 3, __pyx_int_1);
-  __Pyx_GIVEREF(__pyx_int_1);
-  __Pyx_INCREF(__pyx_int_1);
-  PyTuple_SET_ITEM(__pyx_t_4, 4, __pyx_int_1);
-  __Pyx_GIVEREF(__pyx_int_1);
-  __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":31
- *         self.verticalLayout.addWidget(self.eHelp)
- *         self.gridLayout.addLayout(self.verticalLayout, 3, 0, 1, 1)
- *         self.horizontalLayout_2 = QtGui.QHBoxLayout()             # <<<<<<<<<<<<<<
- *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
- *         self.bBackControl = QtGui.QPushButton(Q7HelpWindow)
- */
-  __pyx_t_3 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__QHBoxLayout); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_empty_tuple), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (PyObject_SetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":32
- *         self.gridLayout.addLayout(self.verticalLayout, 3, 0, 1, 1)
- *         self.horizontalLayout_2 = QtGui.QHBoxLayout()
- *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")             # <<<<<<<<<<<<<<
- *         self.bBackControl = QtGui.QPushButton(Q7HelpWindow)
- *         self.bBackControl.setEnabled(False)
- */
-  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_k_tuple_11), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":33
- *         self.horizontalLayout_2 = QtGui.QHBoxLayout()
- *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
- *         self.bBackControl = QtGui.QPushButton(Q7HelpWindow)             # <<<<<<<<<<<<<<
- *         self.bBackControl.setEnabled(False)
- *         self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))
- */
-  __pyx_t_3 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__QPushButton); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_INCREF(__pyx_v_Q7HelpWindow);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_Q7HelpWindow);
-  __Pyx_GIVEREF(__pyx_v_Q7HelpWindow);
-  __pyx_t_2 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_t_3), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
-  if (PyObject_SetAttr(__pyx_v_self, __pyx_n_s__bBackControl, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":34
- *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
- *         self.bBackControl = QtGui.QPushButton(Q7HelpWindow)
- *         self.bBackControl.setEnabled(False)             # <<<<<<<<<<<<<<
- *         self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))
- *         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
- */
-  __pyx_t_2 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bBackControl); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__setEnabled); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyBool_FromLong(0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":35
- *         self.bBackControl = QtGui.QPushButton(Q7HelpWindow)
- *         self.bBackControl.setEnabled(False)
- *         self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))             # <<<<<<<<<<<<<<
- *         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
- *         self.bBackControl.setText("")
- */
-  __pyx_t_2 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bBackControl); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__setMinimumSize); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtCore); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QSize); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_k_tuple_12), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_t_3), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":36
- *         self.bBackControl.setEnabled(False)
- *         self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))
- *         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))             # <<<<<<<<<<<<<<
- *         self.bBackControl.setText("")
- *         icon = QtGui.QIcon()
- */
-  __pyx_t_2 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bBackControl); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__setMaximumSize); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtCore); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QSize); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_k_tuple_13), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":37
- *         self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))
- *         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
- *         self.bBackControl.setText("")             # <<<<<<<<<<<<<<
- *         icon = QtGui.QIcon()
- *         icon.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
- */
-  __pyx_t_2 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bBackControl); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__setText); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_k_tuple_15), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":38
- *         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
- *         self.bBackControl.setText("")
- *         icon = QtGui.QIcon()             # <<<<<<<<<<<<<<
- *         icon.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
- *         self.bBackControl.setIcon(icon)
- */
-  __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QIcon); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_empty_tuple), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_icon = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":39
- *         self.bBackControl.setText("")
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":24
+ *         Q7LogWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
  *         icon = QtGui.QIcon()
- *         icon.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)             # <<<<<<<<<<<<<<
- *         self.bBackControl.setIcon(icon)
- *         self.bBackControl.setObjectName("bBackControl")
+ *         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setWindowIcon(icon)
+ *         self.verticalLayout = QtGui.QVBoxLayout(Q7LogWindow)
  */
-  __pyx_t_2 = PyObject_GetAttr(__pyx_v_icon, __pyx_n_s__addPixmap); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_GetAttr(__pyx_v_icon, __pyx_n_s__addPixmap); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__QPixmap); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__QPixmap); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_k_tuple_9), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_k_tuple_17), NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_1 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__QIcon); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__QIcon); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__Normal); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__Normal); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__QIcon); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__QIcon); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__Off); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__Off); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
-  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
-  __Pyx_GIVEREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_4);
+  __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_5, 2, __pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
-  __pyx_t_4 = 0;
   __pyx_t_3 = 0;
+  __pyx_t_4 = 0;
+  __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_5), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_5)); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":25
+ *         icon = QtGui.QIcon()
+ *         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+ *         Q7LogWindow.setWindowIcon(icon)             # <<<<<<<<<<<<<<
+ *         self.verticalLayout = QtGui.QVBoxLayout(Q7LogWindow)
+ *         self.verticalLayout.setObjectName("verticalLayout")
+ */
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_Q7LogWindow, __pyx_n_s__setWindowIcon); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 25; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 25; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_INCREF(__pyx_v_icon);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_icon);
+  __Pyx_GIVEREF(__pyx_v_icon);
+  __pyx_t_2 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_t_5), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 25; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_5)); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":26
+ *         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+ *         Q7LogWindow.setWindowIcon(icon)
+ *         self.verticalLayout = QtGui.QVBoxLayout(Q7LogWindow)             # <<<<<<<<<<<<<<
+ *         self.verticalLayout.setObjectName("verticalLayout")
+ *         self.eLog = Q7PythonEditor(Q7LogWindow)
+ */
+  __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QVBoxLayout); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_v_Q7LogWindow);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_Q7LogWindow);
+  __Pyx_GIVEREF(__pyx_v_Q7LogWindow);
+  __pyx_t_1 = PyObject_Call(__pyx_t_5, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  if (PyObject_SetAttr(__pyx_v_self, __pyx_n_s__verticalLayout, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":27
+ *         Q7LogWindow.setWindowIcon(icon)
+ *         self.verticalLayout = QtGui.QVBoxLayout(Q7LogWindow)
+ *         self.verticalLayout.setObjectName("verticalLayout")             # <<<<<<<<<<<<<<
+ *         self.eLog = Q7PythonEditor(Q7LogWindow)
+ *         self.eLog.setMinimumSize(QtCore.QSize(0, 0))
+ */
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__verticalLayout); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 27; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 27; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_k_tuple_10), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 27; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":28
+ *         self.verticalLayout = QtGui.QVBoxLayout(Q7LogWindow)
+ *         self.verticalLayout.setObjectName("verticalLayout")
+ *         self.eLog = Q7PythonEditor(Q7LogWindow)             # <<<<<<<<<<<<<<
+ *         self.eLog.setMinimumSize(QtCore.QSize(0, 0))
+ *         self.eLog.setFrameShadow(QtGui.QFrame.Raised)
+ */
+  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__Q7PythonEditor); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_v_Q7LogWindow);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_Q7LogWindow);
+  __Pyx_GIVEREF(__pyx_v_Q7LogWindow);
+  __pyx_t_5 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  if (PyObject_SetAttr(__pyx_v_self, __pyx_n_s__eLog, __pyx_t_5) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":29
+ *         self.verticalLayout.setObjectName("verticalLayout")
+ *         self.eLog = Q7PythonEditor(Q7LogWindow)
+ *         self.eLog.setMinimumSize(QtCore.QSize(0, 0))             # <<<<<<<<<<<<<<
+ *         self.eLog.setFrameShadow(QtGui.QFrame.Raised)
+ *         self.eLog.setLineWidth(0)
+ */
+  __pyx_t_5 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__eLog); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__setMinimumSize); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtCore); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_1 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__QSize); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_k_tuple_11), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_5);
+  __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_1), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_1)); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":30
+ *         self.eLog = Q7PythonEditor(Q7LogWindow)
+ *         self.eLog.setMinimumSize(QtCore.QSize(0, 0))
+ *         self.eLog.setFrameShadow(QtGui.QFrame.Raised)             # <<<<<<<<<<<<<<
+ *         self.eLog.setLineWidth(0)
+ *         self.eLog.setObjectName("eLog")
+ */
+  __pyx_t_5 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__eLog); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_1 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__setFrameShadow); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__QFrame); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__Raised); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_5);
+  __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":31
+ *         self.eLog.setMinimumSize(QtCore.QSize(0, 0))
+ *         self.eLog.setFrameShadow(QtGui.QFrame.Raised)
+ *         self.eLog.setLineWidth(0)             # <<<<<<<<<<<<<<
+ *         self.eLog.setObjectName("eLog")
+ *         self.verticalLayout.addWidget(self.eLog)
+ */
+  __pyx_t_5 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__eLog); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__setLineWidth); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_k_tuple_12), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":32
+ *         self.eLog.setFrameShadow(QtGui.QFrame.Raised)
+ *         self.eLog.setLineWidth(0)
+ *         self.eLog.setObjectName("eLog")             # <<<<<<<<<<<<<<
+ *         self.verticalLayout.addWidget(self.eLog)
+ *         self.horizontalLayout_2 = QtGui.QHBoxLayout()
+ */
+  __pyx_t_5 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__eLog); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_k_tuple_13), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":33
+ *         self.eLog.setLineWidth(0)
+ *         self.eLog.setObjectName("eLog")
+ *         self.verticalLayout.addWidget(self.eLog)             # <<<<<<<<<<<<<<
+ *         self.horizontalLayout_2 = QtGui.QHBoxLayout()
+ *         self.horizontalLayout_2.setSizeConstraint(QtGui.QLayout.SetNoConstraint)
+ */
+  __pyx_t_5 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__verticalLayout); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__addWidget); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__eLog); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_5);
+  __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_1), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_1)); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":34
+ *         self.eLog.setObjectName("eLog")
+ *         self.verticalLayout.addWidget(self.eLog)
+ *         self.horizontalLayout_2 = QtGui.QHBoxLayout()             # <<<<<<<<<<<<<<
+ *         self.horizontalLayout_2.setSizeConstraint(QtGui.QLayout.SetNoConstraint)
+ *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+ */
+  __pyx_t_5 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_1 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__QHBoxLayout); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_empty_tuple), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (PyObject_SetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2, __pyx_t_5) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":35
+ *         self.verticalLayout.addWidget(self.eLog)
+ *         self.horizontalLayout_2 = QtGui.QHBoxLayout()
+ *         self.horizontalLayout_2.setSizeConstraint(QtGui.QLayout.SetNoConstraint)             # <<<<<<<<<<<<<<
+ *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+ *         self.bInfo = QtGui.QPushButton(Q7LogWindow)
+ */
+  __pyx_t_5 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_1 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__setSizeConstraint); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__QLayout); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__SetNoConstraint); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_5);
+  __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":36
+ *         self.horizontalLayout_2 = QtGui.QHBoxLayout()
+ *         self.horizontalLayout_2.setSizeConstraint(QtGui.QLayout.SetNoConstraint)
+ *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")             # <<<<<<<<<<<<<<
+ *         self.bInfo = QtGui.QPushButton(Q7LogWindow)
+ *         self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
+ */
+  __pyx_t_5 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_k_tuple_14), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":37
+ *         self.horizontalLayout_2.setSizeConstraint(QtGui.QLayout.SetNoConstraint)
+ *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+ *         self.bInfo = QtGui.QPushButton(Q7LogWindow)             # <<<<<<<<<<<<<<
+ *         self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
+ *         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
+ */
+  __pyx_t_5 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__QPushButton); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_INCREF(__pyx_v_Q7LogWindow);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_Q7LogWindow);
+  __Pyx_GIVEREF(__pyx_v_Q7LogWindow);
+  __pyx_t_1 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_5), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_5)); __pyx_t_5 = 0;
+  if (PyObject_SetAttr(__pyx_v_self, __pyx_n_s__bInfo, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":38
+ *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+ *         self.bInfo = QtGui.QPushButton(Q7LogWindow)
+ *         self.bInfo.setMinimumSize(QtCore.QSize(25, 25))             # <<<<<<<<<<<<<<
+ *         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
+ *         self.bInfo.setText("")
+ */
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bInfo); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_5 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__setMinimumSize); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtCore); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__QSize); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_k_tuple_15), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_Call(__pyx_t_5, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":39
+ *         self.bInfo = QtGui.QPushButton(Q7LogWindow)
+ *         self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
+ *         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))             # <<<<<<<<<<<<<<
+ *         self.bInfo.setText("")
+ *         icon1 = QtGui.QIcon()
+ */
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bInfo); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__setMaximumSize); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtCore); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_5 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__QSize); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_Call(__pyx_t_5, ((PyObject *)__pyx_k_tuple_16), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
   __pyx_t_1 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_5), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
@@ -1367,225 +1404,430 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
   __Pyx_DECREF(((PyObject *)__pyx_t_5)); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":40
- *         icon = QtGui.QIcon()
- *         icon.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
- *         self.bBackControl.setIcon(icon)             # <<<<<<<<<<<<<<
- *         self.bBackControl.setObjectName("bBackControl")
- *         self.horizontalLayout_2.addWidget(self.bBackControl)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":40
+ *         self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
+ *         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
+ *         self.bInfo.setText("")             # <<<<<<<<<<<<<<
+ *         icon1 = QtGui.QIcon()
+ *         icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
  */
-  __pyx_t_1 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bBackControl); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bInfo); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__setIcon); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__setText); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_v_icon);
-  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_icon);
-  __Pyx_GIVEREF(__pyx_v_icon);
-  __pyx_t_2 = PyObject_Call(__pyx_t_5, ((PyObject *)__pyx_t_1), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_1)); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":41
- *         icon.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
- *         self.bBackControl.setIcon(icon)
- *         self.bBackControl.setObjectName("bBackControl")             # <<<<<<<<<<<<<<
- *         self.horizontalLayout_2.addWidget(self.bBackControl)
- *         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
- */
-  __pyx_t_2 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bBackControl); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_k_tuple_18), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":42
- *         self.bBackControl.setIcon(icon)
- *         self.bBackControl.setObjectName("bBackControl")
- *         self.horizontalLayout_2.addWidget(self.bBackControl)             # <<<<<<<<<<<<<<
- *         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
- *         self.horizontalLayout_2.addItem(spacerItem)
- */
-  __pyx_t_2 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__addWidget); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bBackControl); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_5);
-  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_t_5), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_5)); __pyx_t_5 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":43
- *         self.bBackControl.setObjectName("bBackControl")
- *         self.horizontalLayout_2.addWidget(self.bBackControl)
- *         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)             # <<<<<<<<<<<<<<
- *         self.horizontalLayout_2.addItem(spacerItem)
- *         self.gridLayout.addLayout(self.horizontalLayout_2, 4, 0, 1, 1)
- */
-  __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QSpacerItem); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QSizePolicy); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__Expanding); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__QSizePolicy); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__Minimum); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_INCREF(__pyx_int_40);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_int_40);
-  __Pyx_GIVEREF(__pyx_int_40);
-  __Pyx_INCREF(__pyx_int_20);
-  PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_20);
-  __Pyx_GIVEREF(__pyx_int_20);
-  PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_3, 3, __pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
-  __pyx_t_2 = 0;
-  __pyx_t_1 = 0;
-  __pyx_t_1 = PyObject_Call(__pyx_t_5, ((PyObject *)__pyx_t_3), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyObject_Call(__pyx_t_5, ((PyObject *)__pyx_k_tuple_18), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
-  __pyx_v_spacerItem = __pyx_t_1;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":41
+ *         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
+ *         self.bInfo.setText("")
+ *         icon1 = QtGui.QIcon()             # <<<<<<<<<<<<<<
+ *         icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+ *         self.bInfo.setIcon(icon1)
+ */
+  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_5 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__QIcon); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_Call(__pyx_t_5, ((PyObject *)__pyx_empty_tuple), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_v_icon1 = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":44
- *         self.horizontalLayout_2.addWidget(self.bBackControl)
- *         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
- *         self.horizontalLayout_2.addItem(spacerItem)             # <<<<<<<<<<<<<<
- *         self.gridLayout.addLayout(self.horizontalLayout_2, 4, 0, 1, 1)
- * 
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":42
+ *         self.bInfo.setText("")
+ *         icon1 = QtGui.QIcon()
+ *         icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)             # <<<<<<<<<<<<<<
+ *         self.bInfo.setIcon(icon1)
+ *         self.bInfo.setObjectName("bInfo")
  */
-  __pyx_t_1 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_icon1, __pyx_n_s__addPixmap); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__addItem); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__QPixmap); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_k_tuple_20), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QIcon); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__Normal); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_3 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__QIcon); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_v_spacerItem);
-  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_spacerItem);
-  __Pyx_GIVEREF(__pyx_v_spacerItem);
-  __pyx_t_5 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_t_1), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__Off); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(((PyObject *)__pyx_t_1)); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":45
- *         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
- *         self.horizontalLayout_2.addItem(spacerItem)
- *         self.gridLayout.addLayout(self.horizontalLayout_2, 4, 0, 1, 1)             # <<<<<<<<<<<<<<
- * 
- *         self.retranslateUi(Q7HelpWindow)
- */
-  __pyx_t_5 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__gridLayout); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_1 = PyObject_GetAttr(__pyx_t_5, __pyx_n_s__addLayout); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = PyTuple_New(5); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_5);
-  __Pyx_INCREF(__pyx_int_4);
-  PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_4);
-  __Pyx_GIVEREF(__pyx_int_4);
-  __Pyx_INCREF(__pyx_int_0);
-  PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_int_0);
-  __Pyx_GIVEREF(__pyx_int_0);
-  __Pyx_INCREF(__pyx_int_1);
-  PyTuple_SET_ITEM(__pyx_t_3, 3, __pyx_int_1);
-  __Pyx_GIVEREF(__pyx_int_1);
-  __Pyx_INCREF(__pyx_int_1);
-  PyTuple_SET_ITEM(__pyx_t_3, 4, __pyx_int_1);
-  __Pyx_GIVEREF(__pyx_int_1);
+  PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_t_4);
+  __Pyx_GIVEREF(__pyx_t_4);
   __pyx_t_5 = 0;
-  __pyx_t_5 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_t_3), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_2 = 0;
+  __pyx_t_4 = 0;
+  __pyx_t_4 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_t_3), NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":47
- *         self.gridLayout.addLayout(self.horizontalLayout_2, 4, 0, 1, 1)
- * 
- *         self.retranslateUi(Q7HelpWindow)             # <<<<<<<<<<<<<<
- *         QtCore.QMetaObject.connectSlotsByName(Q7HelpWindow)
- * 
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":43
+ *         icon1 = QtGui.QIcon()
+ *         icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+ *         self.bInfo.setIcon(icon1)             # <<<<<<<<<<<<<<
+ *         self.bInfo.setObjectName("bInfo")
+ *         self.horizontalLayout_2.addWidget(self.bInfo)
  */
-  __pyx_t_5 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__retranslateUi); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bInfo); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_3 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__setIcon); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_INCREF(__pyx_v_Q7HelpWindow);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_Q7HelpWindow);
-  __Pyx_GIVEREF(__pyx_v_Q7HelpWindow);
-  __pyx_t_1 = PyObject_Call(__pyx_t_5, ((PyObject *)__pyx_t_3), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_INCREF(__pyx_v_icon1);
+  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_icon1);
+  __Pyx_GIVEREF(__pyx_v_icon1);
+  __pyx_t_1 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":44
+ *         icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+ *         self.bInfo.setIcon(icon1)
+ *         self.bInfo.setObjectName("bInfo")             # <<<<<<<<<<<<<<
+ *         self.horizontalLayout_2.addWidget(self.bInfo)
+ *         spacerItem = QtGui.QSpacerItem(868, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+ */
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bInfo); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_k_tuple_21), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":45
+ *         self.bInfo.setIcon(icon1)
+ *         self.bInfo.setObjectName("bInfo")
+ *         self.horizontalLayout_2.addWidget(self.bInfo)             # <<<<<<<<<<<<<<
+ *         spacerItem = QtGui.QSpacerItem(868, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+ *         self.horizontalLayout_2.addItem(spacerItem)
+ */
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__addWidget); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bInfo); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_t_3), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":48
- * 
- *         self.retranslateUi(Q7HelpWindow)
- *         QtCore.QMetaObject.connectSlotsByName(Q7HelpWindow)             # <<<<<<<<<<<<<<
- * 
- *     def retranslateUi(self, Q7HelpWindow):
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":46
+ *         self.bInfo.setObjectName("bInfo")
+ *         self.horizontalLayout_2.addWidget(self.bInfo)
+ *         spacerItem = QtGui.QSpacerItem(868, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)             # <<<<<<<<<<<<<<
+ *         self.horizontalLayout_2.addItem(spacerItem)
+ *         self.bClear = QtGui.QPushButton(Q7LogWindow)
  */
-  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtCore); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__QMetaObject); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__QSpacerItem); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__connectSlotsByName); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__QSizePolicy); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__Expanding); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__QSizePolicy); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__Minimum); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_int_868);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_int_868);
+  __Pyx_GIVEREF(__pyx_int_868);
+  __Pyx_INCREF(__pyx_int_20);
+  PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_int_20);
+  __Pyx_GIVEREF(__pyx_int_20);
+  PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_2, 3, __pyx_t_4);
+  __Pyx_GIVEREF(__pyx_t_4);
+  __pyx_t_1 = 0;
+  __pyx_t_4 = 0;
+  __pyx_t_4 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  __pyx_v_spacerItem = __pyx_t_4;
+  __pyx_t_4 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":47
+ *         self.horizontalLayout_2.addWidget(self.bInfo)
+ *         spacerItem = QtGui.QSpacerItem(868, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+ *         self.horizontalLayout_2.addItem(spacerItem)             # <<<<<<<<<<<<<<
+ *         self.bClear = QtGui.QPushButton(Q7LogWindow)
+ *         self.bClear.setObjectName("bClear")
+ */
+  __pyx_t_4 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__addItem); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_INCREF(__pyx_v_spacerItem);
+  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_spacerItem);
+  __Pyx_GIVEREF(__pyx_v_spacerItem);
+  __pyx_t_3 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":48
+ *         spacerItem = QtGui.QSpacerItem(868, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+ *         self.horizontalLayout_2.addItem(spacerItem)
+ *         self.bClear = QtGui.QPushButton(Q7LogWindow)             # <<<<<<<<<<<<<<
+ *         self.bClear.setObjectName("bClear")
+ *         self.horizontalLayout_2.addWidget(self.bClear)
+ */
+  __pyx_t_3 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__QPushButton); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_INCREF(__pyx_v_Q7HelpWindow);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_Q7HelpWindow);
-  __Pyx_GIVEREF(__pyx_v_Q7HelpWindow);
-  __pyx_t_5 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_t_3), NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_INCREF(__pyx_v_Q7LogWindow);
+  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_Q7LogWindow);
+  __Pyx_GIVEREF(__pyx_v_Q7LogWindow);
+  __pyx_t_2 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_t_3), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  if (PyObject_SetAttr(__pyx_v_self, __pyx_n_s__bClear, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":49
+ *         self.horizontalLayout_2.addItem(spacerItem)
+ *         self.bClear = QtGui.QPushButton(Q7LogWindow)
+ *         self.bClear.setObjectName("bClear")             # <<<<<<<<<<<<<<
+ *         self.horizontalLayout_2.addWidget(self.bClear)
+ *         self.bClose = QtGui.QPushButton(Q7LogWindow)
+ */
+  __pyx_t_2 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bClear); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_k_tuple_22), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":50
+ *         self.bClear = QtGui.QPushButton(Q7LogWindow)
+ *         self.bClear.setObjectName("bClear")
+ *         self.horizontalLayout_2.addWidget(self.bClear)             # <<<<<<<<<<<<<<
+ *         self.bClose = QtGui.QPushButton(Q7LogWindow)
+ *         self.bClose.setObjectName("bClose")
+ */
+  __pyx_t_2 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__addWidget); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bClear); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
+  __pyx_t_2 = 0;
+  __pyx_t_2 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":51
+ *         self.bClear.setObjectName("bClear")
+ *         self.horizontalLayout_2.addWidget(self.bClear)
+ *         self.bClose = QtGui.QPushButton(Q7LogWindow)             # <<<<<<<<<<<<<<
+ *         self.bClose.setObjectName("bClose")
+ *         self.horizontalLayout_2.addWidget(self.bClose)
+ */
+  __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QPushButton); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_v_Q7LogWindow);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_Q7LogWindow);
+  __Pyx_GIVEREF(__pyx_v_Q7LogWindow);
+  __pyx_t_3 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  if (PyObject_SetAttr(__pyx_v_self, __pyx_n_s__bClose, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":52
+ *         self.horizontalLayout_2.addWidget(self.bClear)
+ *         self.bClose = QtGui.QPushButton(Q7LogWindow)
+ *         self.bClose.setObjectName("bClose")             # <<<<<<<<<<<<<<
+ *         self.horizontalLayout_2.addWidget(self.bClose)
+ *         self.verticalLayout.addLayout(self.horizontalLayout_2)
+ */
+  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bClose); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__setObjectName); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_k_tuple_23), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":53
+ *         self.bClose = QtGui.QPushButton(Q7LogWindow)
+ *         self.bClose.setObjectName("bClose")
+ *         self.horizontalLayout_2.addWidget(self.bClose)             # <<<<<<<<<<<<<<
+ *         self.verticalLayout.addLayout(self.horizontalLayout_2)
+ * 
+ */
+  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__addWidget); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bClose); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_3);
+  __pyx_t_3 = 0;
+  __pyx_t_3 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":54
+ *         self.bClose.setObjectName("bClose")
+ *         self.horizontalLayout_2.addWidget(self.bClose)
+ *         self.verticalLayout.addLayout(self.horizontalLayout_2)             # <<<<<<<<<<<<<<
+ * 
+ *         self.retranslateUi(Q7LogWindow)
+ */
+  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__verticalLayout); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__addLayout); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__horizontalLayout_2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_3);
+  __pyx_t_3 = 0;
+  __pyx_t_3 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":56
+ *         self.verticalLayout.addLayout(self.horizontalLayout_2)
+ * 
+ *         self.retranslateUi(Q7LogWindow)             # <<<<<<<<<<<<<<
+ *         QtCore.QMetaObject.connectSlotsByName(Q7LogWindow)
+ * 
+ */
+  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__retranslateUi); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 56; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 56; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_v_Q7LogWindow);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_Q7LogWindow);
+  __Pyx_GIVEREF(__pyx_v_Q7LogWindow);
+  __pyx_t_4 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 56; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":57
+ * 
+ *         self.retranslateUi(Q7LogWindow)
+ *         QtCore.QMetaObject.connectSlotsByName(Q7LogWindow)             # <<<<<<<<<<<<<<
+ * 
+ *     def retranslateUi(self, Q7LogWindow):
+ */
+  __pyx_t_4 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtCore); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__QMetaObject); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__connectSlotsByName); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_v_Q7LogWindow);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_Q7LogWindow);
+  __Pyx_GIVEREF(__pyx_v_Q7LogWindow);
+  __pyx_t_3 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
@@ -1595,11 +1837,12 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("CGNS.NAV.Q7HelpWindow.Ui_Q7HelpWindow.setupUi", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("CGNS.NAV.Q7LogWindow.Ui_Q7LogWindow.setupUi", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_sizePolicy);
   __Pyx_XDECREF(__pyx_v_icon);
+  __Pyx_XDECREF(__pyx_v_icon1);
   __Pyx_XDECREF(__pyx_v_spacerItem);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -1607,16 +1850,16 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_setupUi(CY
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_3retranslateUi(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_3retranslateUi = {__Pyx_NAMESTR("retranslateUi"), (PyCFunction)__pyx_pw_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_3retranslateUi, METH_VARARGS|METH_KEYWORDS, __Pyx_DOCSTR(0)};
-static PyObject *__pyx_pw_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_3retranslateUi(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  CYTHON_UNUSED PyObject *__pyx_v_self = 0;
-  PyObject *__pyx_v_Q7HelpWindow = 0;
+static PyObject *__pyx_pw_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_3retranslateUi(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_3retranslateUi = {__Pyx_NAMESTR("retranslateUi"), (PyCFunction)__pyx_pw_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_3retranslateUi, METH_VARARGS|METH_KEYWORDS, __Pyx_DOCSTR(0)};
+static PyObject *__pyx_pw_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_3retranslateUi(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
+  PyObject *__pyx_v_Q7LogWindow = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("retranslateUi (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s__self,&__pyx_n_s__Q7HelpWindow,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s__self,&__pyx_n_s__Q7LogWindow,0};
     PyObject* values[2] = {0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
@@ -1633,13 +1876,13 @@ static PyObject *__pyx_pw_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_3retransla
         if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s__self)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         case  1:
-        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s__Q7HelpWindow)) != 0)) kw_args--;
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s__Q7LogWindow)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("retranslateUi", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("retranslateUi", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "retranslateUi") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "retranslateUi") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -1648,30 +1891,30 @@ static PyObject *__pyx_pw_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_3retransla
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
     __pyx_v_self = values[0];
-    __pyx_v_Q7HelpWindow = values[1];
+    __pyx_v_Q7LogWindow = values[1];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("retranslateUi", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("retranslateUi", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("CGNS.NAV.Q7HelpWindow.Ui_Q7HelpWindow.retranslateUi", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("CGNS.NAV.Q7LogWindow.Ui_Q7LogWindow.retranslateUi", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_2retranslateUi(__pyx_self, __pyx_v_self, __pyx_v_Q7HelpWindow);
+  __pyx_r = __pyx_pf_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_2retranslateUi(__pyx_self, __pyx_v_self, __pyx_v_Q7LogWindow);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "CGNS/NAV/G/Q7HelpWindow.pyx":50
- *         QtCore.QMetaObject.connectSlotsByName(Q7HelpWindow)
+/* "CGNS/NAV/G/Q7LogWindow.pyx":59
+ *         QtCore.QMetaObject.connectSlotsByName(Q7LogWindow)
  * 
- *     def retranslateUi(self, Q7HelpWindow):             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.setWindowTitle(QtGui.QApplication.translate("Q7HelpWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
- * 
+ *     def retranslateUi(self, Q7LogWindow):             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setWindowTitle(QtGui.QApplication.translate("Q7LogWindow", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+ *         self.bClear.setText(QtGui.QApplication.translate("Q7LogWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
  */
 
-static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_2retranslateUi(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, PyObject *__pyx_v_Q7HelpWindow) {
+static PyObject *__pyx_pf_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_2retranslateUi(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_Q7LogWindow) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -1683,59 +1926,173 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_2retransla
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("retranslateUi", 0);
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":51
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":60
  * 
- *     def retranslateUi(self, Q7HelpWindow):
- *         Q7HelpWindow.setWindowTitle(QtGui.QApplication.translate("Q7HelpWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))             # <<<<<<<<<<<<<<
- * 
- * import Res_rc
+ *     def retranslateUi(self, Q7LogWindow):
+ *         Q7LogWindow.setWindowTitle(QtGui.QApplication.translate("Q7LogWindow", "Dialog", None, QtGui.QApplication.UnicodeUTF8))             # <<<<<<<<<<<<<<
+ *         self.bClear.setText(QtGui.QApplication.translate("Q7LogWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
+ *         self.bClose.setText(QtGui.QApplication.translate("Q7LogWindow", "Hide", None, QtGui.QApplication.UnicodeUTF8))
  */
-  __pyx_t_1 = PyObject_GetAttr(__pyx_v_Q7HelpWindow, __pyx_n_s__setWindowTitle); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_Q7LogWindow, __pyx_n_s__setWindowTitle); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QApplication); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__QApplication); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__translate); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__translate); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__QApplication); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__QApplication); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__UnicodeUTF8); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__UnicodeUTF8); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyTuple_New(4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(((PyObject *)__pyx_n_s__Q7HelpWindow));
-  PyTuple_SET_ITEM(__pyx_t_4, 0, ((PyObject *)__pyx_n_s__Q7HelpWindow));
-  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Q7HelpWindow));
-  __Pyx_INCREF(((PyObject *)__pyx_n_s__Form));
-  PyTuple_SET_ITEM(__pyx_t_4, 1, ((PyObject *)__pyx_n_s__Form));
-  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Form));
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__Q7LogWindow));
+  PyTuple_SET_ITEM(__pyx_t_4, 0, ((PyObject *)__pyx_n_s__Q7LogWindow));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Q7LogWindow));
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__Dialog));
+  PyTuple_SET_ITEM(__pyx_t_4, 1, ((PyObject *)__pyx_n_s__Dialog));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Dialog));
   __Pyx_INCREF(Py_None);
   PyTuple_SET_ITEM(__pyx_t_4, 2, Py_None);
   __Pyx_GIVEREF(Py_None);
   PyTuple_SET_ITEM(__pyx_t_4, 3, __pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_3);
   __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_3);
   __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_t_4), NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(((PyObject *)__pyx_t_4)); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":61
+ *     def retranslateUi(self, Q7LogWindow):
+ *         Q7LogWindow.setWindowTitle(QtGui.QApplication.translate("Q7LogWindow", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+ *         self.bClear.setText(QtGui.QApplication.translate("Q7LogWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))             # <<<<<<<<<<<<<<
+ *         self.bClose.setText(QtGui.QApplication.translate("Q7LogWindow", "Hide", None, QtGui.QApplication.UnicodeUTF8))
+ * 
+ */
+  __pyx_t_3 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bClear); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__setText); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_1 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__QApplication); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__translate); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__QApplication); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_GetAttr(__pyx_t_2, __pyx_n_s__UnicodeUTF8); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__Q7LogWindow));
+  PyTuple_SET_ITEM(__pyx_t_2, 0, ((PyObject *)__pyx_n_s__Q7LogWindow));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Q7LogWindow));
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__Clear));
+  PyTuple_SET_ITEM(__pyx_t_2, 1, ((PyObject *)__pyx_n_s__Clear));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Clear));
+  __Pyx_INCREF(Py_None);
+  PyTuple_SET_ITEM(__pyx_t_2, 2, Py_None);
+  __Pyx_GIVEREF(Py_None);
+  PyTuple_SET_ITEM(__pyx_t_2, 3, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_Call(__pyx_t_3, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_Call(__pyx_t_4, ((PyObject *)__pyx_t_2), NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":62
+ *         Q7LogWindow.setWindowTitle(QtGui.QApplication.translate("Q7LogWindow", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+ *         self.bClear.setText(QtGui.QApplication.translate("Q7LogWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
+ *         self.bClose.setText(QtGui.QApplication.translate("Q7LogWindow", "Hide", None, QtGui.QApplication.UnicodeUTF8))             # <<<<<<<<<<<<<<
+ * 
+ * from CGNS.NAV.weditors import Q7PythonEditor
+ */
+  __pyx_t_1 = PyObject_GetAttr(__pyx_v_self, __pyx_n_s__bClose); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__setText); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_1, __pyx_n_s__QApplication); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__translate); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = __Pyx_GetName(__pyx_m, __pyx_n_s__QtGui); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_3 = PyObject_GetAttr(__pyx_t_4, __pyx_n_s__QApplication); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__UnicodeUTF8); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__Q7LogWindow));
+  PyTuple_SET_ITEM(__pyx_t_3, 0, ((PyObject *)__pyx_n_s__Q7LogWindow));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Q7LogWindow));
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__Hide));
+  PyTuple_SET_ITEM(__pyx_t_3, 1, ((PyObject *)__pyx_n_s__Hide));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Hide));
+  __Pyx_INCREF(Py_None);
+  PyTuple_SET_ITEM(__pyx_t_3, 2, Py_None);
+  __Pyx_GIVEREF(Py_None);
+  PyTuple_SET_ITEM(__pyx_t_3, 3, __pyx_t_4);
+  __Pyx_GIVEREF(__pyx_t_4);
+  __pyx_t_4 = 0;
+  __pyx_t_4 = PyObject_Call(__pyx_t_1, ((PyObject *)__pyx_t_3), NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4);
+  __Pyx_GIVEREF(__pyx_t_4);
+  __pyx_t_4 = 0;
+  __pyx_t_4 = PyObject_Call(__pyx_t_2, ((PyObject *)__pyx_t_3), NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
@@ -1744,7 +2101,7 @@ static PyObject *__pyx_pf_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_2retransla
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("CGNS.NAV.Q7HelpWindow.Ui_Q7HelpWindow.retranslateUi", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("CGNS.NAV.Q7LogWindow.Ui_Q7LogWindow.retranslateUi", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1759,7 +2116,7 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    __Pyx_NAMESTR("Q7HelpWindow"),
+    __Pyx_NAMESTR("Q7LogWindow"),
     0, /* m_doc */
     -1, /* m_size */
     __pyx_methods /* m_methods */,
@@ -1771,35 +2128,41 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_kp_s_14, __pyx_k_14, sizeof(__pyx_k_14), 0, 0, 1, 0},
-  {&__pyx_kp_s_16, __pyx_k_16, sizeof(__pyx_k_16), 0, 0, 1, 0},
-  {&__pyx_kp_s_21, __pyx_k_21, sizeof(__pyx_k_21), 0, 0, 1, 0},
-  {&__pyx_n_s_22, __pyx_k_22, sizeof(__pyx_k_22), 0, 0, 1, 1},
+  {&__pyx_kp_s_17, __pyx_k_17, sizeof(__pyx_k_17), 0, 0, 1, 0},
+  {&__pyx_kp_s_19, __pyx_k_19, sizeof(__pyx_k_19), 0, 0, 1, 0},
+  {&__pyx_kp_s_26, __pyx_k_26, sizeof(__pyx_k_26), 0, 0, 1, 0},
+  {&__pyx_n_s_27, __pyx_k_27, sizeof(__pyx_k_27), 0, 0, 1, 1},
   {&__pyx_n_s_3, __pyx_k_3, sizeof(__pyx_k_3), 0, 0, 1, 1},
+  {&__pyx_n_s_30, __pyx_k_30, sizeof(__pyx_k_30), 0, 0, 1, 1},
+  {&__pyx_kp_s_8, __pyx_k_8, sizeof(__pyx_k_8), 0, 0, 1, 0},
+  {&__pyx_n_s__Clear, __pyx_k__Clear, sizeof(__pyx_k__Clear), 0, 0, 1, 1},
+  {&__pyx_n_s__Dialog, __pyx_k__Dialog, sizeof(__pyx_k__Dialog), 0, 0, 1, 1},
   {&__pyx_n_s__Expanding, __pyx_k__Expanding, sizeof(__pyx_k__Expanding), 0, 0, 1, 1},
-  {&__pyx_n_s__Fixed, __pyx_k__Fixed, sizeof(__pyx_k__Fixed), 0, 0, 1, 1},
-  {&__pyx_n_s__Form, __pyx_k__Form, sizeof(__pyx_k__Form), 0, 0, 1, 1},
+  {&__pyx_n_s__Hide, __pyx_k__Hide, sizeof(__pyx_k__Hide), 0, 0, 1, 1},
   {&__pyx_n_s__Minimum, __pyx_k__Minimum, sizeof(__pyx_k__Minimum), 0, 0, 1, 1},
   {&__pyx_n_s__Normal, __pyx_k__Normal, sizeof(__pyx_k__Normal), 0, 0, 1, 1},
   {&__pyx_n_s__Off, __pyx_k__Off, sizeof(__pyx_k__Off), 0, 0, 1, 1},
   {&__pyx_n_s__PySide, __pyx_k__PySide, sizeof(__pyx_k__PySide), 0, 0, 1, 1},
-  {&__pyx_n_s__Q7HelpWindow, __pyx_k__Q7HelpWindow, sizeof(__pyx_k__Q7HelpWindow), 0, 0, 1, 1},
+  {&__pyx_n_s__Q7LogWindow, __pyx_k__Q7LogWindow, sizeof(__pyx_k__Q7LogWindow), 0, 0, 1, 1},
+  {&__pyx_n_s__Q7PythonEditor, __pyx_k__Q7PythonEditor, sizeof(__pyx_k__Q7PythonEditor), 0, 0, 1, 1},
   {&__pyx_n_s__QApplication, __pyx_k__QApplication, sizeof(__pyx_k__QApplication), 0, 0, 1, 1},
-  {&__pyx_n_s__QGridLayout, __pyx_k__QGridLayout, sizeof(__pyx_k__QGridLayout), 0, 0, 1, 1},
+  {&__pyx_n_s__QFrame, __pyx_k__QFrame, sizeof(__pyx_k__QFrame), 0, 0, 1, 1},
   {&__pyx_n_s__QHBoxLayout, __pyx_k__QHBoxLayout, sizeof(__pyx_k__QHBoxLayout), 0, 0, 1, 1},
   {&__pyx_n_s__QIcon, __pyx_k__QIcon, sizeof(__pyx_k__QIcon), 0, 0, 1, 1},
+  {&__pyx_n_s__QLayout, __pyx_k__QLayout, sizeof(__pyx_k__QLayout), 0, 0, 1, 1},
   {&__pyx_n_s__QMetaObject, __pyx_k__QMetaObject, sizeof(__pyx_k__QMetaObject), 0, 0, 1, 1},
   {&__pyx_n_s__QPixmap, __pyx_k__QPixmap, sizeof(__pyx_k__QPixmap), 0, 0, 1, 1},
   {&__pyx_n_s__QPushButton, __pyx_k__QPushButton, sizeof(__pyx_k__QPushButton), 0, 0, 1, 1},
   {&__pyx_n_s__QSize, __pyx_k__QSize, sizeof(__pyx_k__QSize), 0, 0, 1, 1},
   {&__pyx_n_s__QSizePolicy, __pyx_k__QSizePolicy, sizeof(__pyx_k__QSizePolicy), 0, 0, 1, 1},
   {&__pyx_n_s__QSpacerItem, __pyx_k__QSpacerItem, sizeof(__pyx_k__QSpacerItem), 0, 0, 1, 1},
-  {&__pyx_n_s__QTextEdit, __pyx_k__QTextEdit, sizeof(__pyx_k__QTextEdit), 0, 0, 1, 1},
   {&__pyx_n_s__QVBoxLayout, __pyx_k__QVBoxLayout, sizeof(__pyx_k__QVBoxLayout), 0, 0, 1, 1},
   {&__pyx_n_s__QtCore, __pyx_k__QtCore, sizeof(__pyx_k__QtCore), 0, 0, 1, 1},
   {&__pyx_n_s__QtGui, __pyx_k__QtGui, sizeof(__pyx_k__QtGui), 0, 0, 1, 1},
+  {&__pyx_n_s__Raised, __pyx_k__Raised, sizeof(__pyx_k__Raised), 0, 0, 1, 1},
   {&__pyx_n_s__Res_rc, __pyx_k__Res_rc, sizeof(__pyx_k__Res_rc), 0, 0, 1, 1},
-  {&__pyx_n_s__Ui_Q7HelpWindow, __pyx_k__Ui_Q7HelpWindow, sizeof(__pyx_k__Ui_Q7HelpWindow), 0, 0, 1, 1},
+  {&__pyx_n_s__SetNoConstraint, __pyx_k__SetNoConstraint, sizeof(__pyx_k__SetNoConstraint), 0, 0, 1, 1},
+  {&__pyx_n_s__Ui_Q7LogWindow, __pyx_k__Ui_Q7LogWindow, sizeof(__pyx_k__Ui_Q7LogWindow), 0, 0, 1, 1},
   {&__pyx_n_s__UnicodeUTF8, __pyx_k__UnicodeUTF8, sizeof(__pyx_k__UnicodeUTF8), 0, 0, 1, 1},
   {&__pyx_n_s____main__, __pyx_k____main__, sizeof(__pyx_k____main__), 0, 0, 1, 1},
   {&__pyx_n_s____test__, __pyx_k____test__, sizeof(__pyx_k____test__), 0, 0, 1, 1},
@@ -1807,26 +2170,31 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s__addLayout, __pyx_k__addLayout, sizeof(__pyx_k__addLayout), 0, 0, 1, 1},
   {&__pyx_n_s__addPixmap, __pyx_k__addPixmap, sizeof(__pyx_k__addPixmap), 0, 0, 1, 1},
   {&__pyx_n_s__addWidget, __pyx_k__addWidget, sizeof(__pyx_k__addWidget), 0, 0, 1, 1},
-  {&__pyx_n_s__bBackControl, __pyx_k__bBackControl, sizeof(__pyx_k__bBackControl), 0, 0, 1, 1},
+  {&__pyx_n_s__bClear, __pyx_k__bClear, sizeof(__pyx_k__bClear), 0, 0, 1, 1},
+  {&__pyx_n_s__bClose, __pyx_k__bClose, sizeof(__pyx_k__bClose), 0, 0, 1, 1},
+  {&__pyx_n_s__bInfo, __pyx_k__bInfo, sizeof(__pyx_k__bInfo), 0, 0, 1, 1},
   {&__pyx_n_s__connectSlotsByName, __pyx_k__connectSlotsByName, sizeof(__pyx_k__connectSlotsByName), 0, 0, 1, 1},
-  {&__pyx_n_s__eHelp, __pyx_k__eHelp, sizeof(__pyx_k__eHelp), 0, 0, 1, 1},
-  {&__pyx_n_s__gridLayout, __pyx_k__gridLayout, sizeof(__pyx_k__gridLayout), 0, 0, 1, 1},
+  {&__pyx_n_s__eLog, __pyx_k__eLog, sizeof(__pyx_k__eLog), 0, 0, 1, 1},
   {&__pyx_n_s__hasHeightForWidth, __pyx_k__hasHeightForWidth, sizeof(__pyx_k__hasHeightForWidth), 0, 0, 1, 1},
   {&__pyx_n_s__horizontalLayout_2, __pyx_k__horizontalLayout_2, sizeof(__pyx_k__horizontalLayout_2), 0, 0, 1, 1},
   {&__pyx_n_s__icon, __pyx_k__icon, sizeof(__pyx_k__icon), 0, 0, 1, 1},
+  {&__pyx_n_s__icon1, __pyx_k__icon1, sizeof(__pyx_k__icon1), 0, 0, 1, 1},
   {&__pyx_n_s__object, __pyx_k__object, sizeof(__pyx_k__object), 0, 0, 1, 1},
   {&__pyx_n_s__resize, __pyx_k__resize, sizeof(__pyx_k__resize), 0, 0, 1, 1},
   {&__pyx_n_s__retranslateUi, __pyx_k__retranslateUi, sizeof(__pyx_k__retranslateUi), 0, 0, 1, 1},
   {&__pyx_n_s__self, __pyx_k__self, sizeof(__pyx_k__self), 0, 0, 1, 1},
-  {&__pyx_n_s__setEnabled, __pyx_k__setEnabled, sizeof(__pyx_k__setEnabled), 0, 0, 1, 1},
+  {&__pyx_n_s__setFrameShadow, __pyx_k__setFrameShadow, sizeof(__pyx_k__setFrameShadow), 0, 0, 1, 1},
   {&__pyx_n_s__setHeightForWidth, __pyx_k__setHeightForWidth, sizeof(__pyx_k__setHeightForWidth), 0, 0, 1, 1},
   {&__pyx_n_s__setIcon, __pyx_k__setIcon, sizeof(__pyx_k__setIcon), 0, 0, 1, 1},
+  {&__pyx_n_s__setLineWidth, __pyx_k__setLineWidth, sizeof(__pyx_k__setLineWidth), 0, 0, 1, 1},
   {&__pyx_n_s__setMaximumSize, __pyx_k__setMaximumSize, sizeof(__pyx_k__setMaximumSize), 0, 0, 1, 1},
   {&__pyx_n_s__setMinimumSize, __pyx_k__setMinimumSize, sizeof(__pyx_k__setMinimumSize), 0, 0, 1, 1},
   {&__pyx_n_s__setObjectName, __pyx_k__setObjectName, sizeof(__pyx_k__setObjectName), 0, 0, 1, 1},
+  {&__pyx_n_s__setSizeConstraint, __pyx_k__setSizeConstraint, sizeof(__pyx_k__setSizeConstraint), 0, 0, 1, 1},
   {&__pyx_n_s__setSizePolicy, __pyx_k__setSizePolicy, sizeof(__pyx_k__setSizePolicy), 0, 0, 1, 1},
   {&__pyx_n_s__setText, __pyx_k__setText, sizeof(__pyx_k__setText), 0, 0, 1, 1},
   {&__pyx_n_s__setVerticalStretch, __pyx_k__setVerticalStretch, sizeof(__pyx_k__setVerticalStretch), 0, 0, 1, 1},
+  {&__pyx_n_s__setWindowIcon, __pyx_k__setWindowIcon, sizeof(__pyx_k__setWindowIcon), 0, 0, 1, 1},
   {&__pyx_n_s__setWindowTitle, __pyx_k__setWindowTitle, sizeof(__pyx_k__setWindowTitle), 0, 0, 1, 1},
   {&__pyx_n_s__setupUi, __pyx_k__setupUi, sizeof(__pyx_k__setupUi), 0, 0, 1, 1},
   {&__pyx_n_s__sizePolicy, __pyx_k__sizePolicy, sizeof(__pyx_k__sizePolicy), 0, 0, 1, 1},
@@ -1846,43 +2214,43 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":14
- * class Ui_Q7HelpWindow(object):
- *     def setupUi(self, Q7HelpWindow):
- *         Q7HelpWindow.setObjectName("Q7HelpWindow")             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.resize(715, 350)
- *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":14
+ * class Ui_Q7LogWindow(object):
+ *     def setupUi(self, Q7LogWindow):
+ *         Q7LogWindow.setObjectName("Q7LogWindow")             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.resize(500, 140)
+ *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
  */
   __pyx_k_tuple_1 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 14; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_1);
-  __Pyx_INCREF(((PyObject *)__pyx_n_s__Q7HelpWindow));
-  PyTuple_SET_ITEM(__pyx_k_tuple_1, 0, ((PyObject *)__pyx_n_s__Q7HelpWindow));
-  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Q7HelpWindow));
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__Q7LogWindow));
+  PyTuple_SET_ITEM(__pyx_k_tuple_1, 0, ((PyObject *)__pyx_n_s__Q7LogWindow));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Q7LogWindow));
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_1));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":15
- *     def setupUi(self, Q7HelpWindow):
- *         Q7HelpWindow.setObjectName("Q7HelpWindow")
- *         Q7HelpWindow.resize(715, 350)             # <<<<<<<<<<<<<<
- *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":15
+ *     def setupUi(self, Q7LogWindow):
+ *         Q7LogWindow.setObjectName("Q7LogWindow")
+ *         Q7LogWindow.resize(500, 140)             # <<<<<<<<<<<<<<
+ *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
  *         sizePolicy.setHorizontalStretch(0)
  */
   __pyx_k_tuple_2 = PyTuple_New(2); if (unlikely(!__pyx_k_tuple_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 15; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_2);
-  __Pyx_INCREF(__pyx_int_715);
-  PyTuple_SET_ITEM(__pyx_k_tuple_2, 0, __pyx_int_715);
-  __Pyx_GIVEREF(__pyx_int_715);
-  __Pyx_INCREF(__pyx_int_350);
-  PyTuple_SET_ITEM(__pyx_k_tuple_2, 1, __pyx_int_350);
-  __Pyx_GIVEREF(__pyx_int_350);
+  __Pyx_INCREF(__pyx_int_500);
+  PyTuple_SET_ITEM(__pyx_k_tuple_2, 0, __pyx_int_500);
+  __Pyx_GIVEREF(__pyx_int_500);
+  __Pyx_INCREF(__pyx_int_140);
+  PyTuple_SET_ITEM(__pyx_k_tuple_2, 1, __pyx_int_140);
+  __Pyx_GIVEREF(__pyx_int_140);
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_2));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":17
- *         Q7HelpWindow.resize(715, 350)
- *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":17
+ *         Q7LogWindow.resize(500, 140)
+ *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
  *         sizePolicy.setHorizontalStretch(0)             # <<<<<<<<<<<<<<
  *         sizePolicy.setVerticalStretch(0)
- *         sizePolicy.setHeightForWidth(Q7HelpWindow.sizePolicy().hasHeightForWidth())
+ *         sizePolicy.setHeightForWidth(Q7LogWindow.sizePolicy().hasHeightForWidth())
  */
   __pyx_k_tuple_4 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_4);
@@ -1891,12 +2259,12 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_int_0);
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_4));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":18
- *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":18
+ *         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
  *         sizePolicy.setHorizontalStretch(0)
  *         sizePolicy.setVerticalStretch(0)             # <<<<<<<<<<<<<<
- *         sizePolicy.setHeightForWidth(Q7HelpWindow.sizePolicy().hasHeightForWidth())
- *         Q7HelpWindow.setSizePolicy(sizePolicy)
+ *         sizePolicy.setHeightForWidth(Q7LogWindow.sizePolicy().hasHeightForWidth())
+ *         Q7LogWindow.setSizePolicy(sizePolicy)
  */
   __pyx_k_tuple_5 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 18; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_5);
@@ -1905,216 +2273,278 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_int_0);
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_5));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":21
- *         sizePolicy.setHeightForWidth(Q7HelpWindow.sizePolicy().hasHeightForWidth())
- *         Q7HelpWindow.setSizePolicy(sizePolicy)
- *         Q7HelpWindow.setMinimumSize(QtCore.QSize(715, 350))             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.setMaximumSize(QtCore.QSize(1200, 350))
- *         self.gridLayout = QtGui.QGridLayout(Q7HelpWindow)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":21
+ *         sizePolicy.setHeightForWidth(Q7LogWindow.sizePolicy().hasHeightForWidth())
+ *         Q7LogWindow.setSizePolicy(sizePolicy)
+ *         Q7LogWindow.setMinimumSize(QtCore.QSize(500, 140))             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
+ *         icon = QtGui.QIcon()
  */
   __pyx_k_tuple_6 = PyTuple_New(2); if (unlikely(!__pyx_k_tuple_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_6);
-  __Pyx_INCREF(__pyx_int_715);
-  PyTuple_SET_ITEM(__pyx_k_tuple_6, 0, __pyx_int_715);
-  __Pyx_GIVEREF(__pyx_int_715);
-  __Pyx_INCREF(__pyx_int_350);
-  PyTuple_SET_ITEM(__pyx_k_tuple_6, 1, __pyx_int_350);
-  __Pyx_GIVEREF(__pyx_int_350);
+  __Pyx_INCREF(__pyx_int_500);
+  PyTuple_SET_ITEM(__pyx_k_tuple_6, 0, __pyx_int_500);
+  __Pyx_GIVEREF(__pyx_int_500);
+  __Pyx_INCREF(__pyx_int_140);
+  PyTuple_SET_ITEM(__pyx_k_tuple_6, 1, __pyx_int_140);
+  __Pyx_GIVEREF(__pyx_int_140);
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_6));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":22
- *         Q7HelpWindow.setSizePolicy(sizePolicy)
- *         Q7HelpWindow.setMinimumSize(QtCore.QSize(715, 350))
- *         Q7HelpWindow.setMaximumSize(QtCore.QSize(1200, 350))             # <<<<<<<<<<<<<<
- *         self.gridLayout = QtGui.QGridLayout(Q7HelpWindow)
- *         self.gridLayout.setObjectName("gridLayout")
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":22
+ *         Q7LogWindow.setSizePolicy(sizePolicy)
+ *         Q7LogWindow.setMinimumSize(QtCore.QSize(500, 140))
+ *         Q7LogWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))             # <<<<<<<<<<<<<<
+ *         icon = QtGui.QIcon()
+ *         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
  */
   __pyx_k_tuple_7 = PyTuple_New(2); if (unlikely(!__pyx_k_tuple_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 22; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_7);
-  __Pyx_INCREF(__pyx_int_1200);
-  PyTuple_SET_ITEM(__pyx_k_tuple_7, 0, __pyx_int_1200);
-  __Pyx_GIVEREF(__pyx_int_1200);
-  __Pyx_INCREF(__pyx_int_350);
-  PyTuple_SET_ITEM(__pyx_k_tuple_7, 1, __pyx_int_350);
-  __Pyx_GIVEREF(__pyx_int_350);
+  __Pyx_INCREF(__pyx_int_16777215);
+  PyTuple_SET_ITEM(__pyx_k_tuple_7, 0, __pyx_int_16777215);
+  __Pyx_GIVEREF(__pyx_int_16777215);
+  __Pyx_INCREF(__pyx_int_16777215);
+  PyTuple_SET_ITEM(__pyx_k_tuple_7, 1, __pyx_int_16777215);
+  __Pyx_GIVEREF(__pyx_int_16777215);
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_7));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":24
- *         Q7HelpWindow.setMaximumSize(QtCore.QSize(1200, 350))
- *         self.gridLayout = QtGui.QGridLayout(Q7HelpWindow)
- *         self.gridLayout.setObjectName("gridLayout")             # <<<<<<<<<<<<<<
- *         self.verticalLayout = QtGui.QVBoxLayout()
- *         self.verticalLayout.setObjectName("verticalLayout")
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":24
+ *         Q7LogWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
+ *         icon = QtGui.QIcon()
+ *         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setWindowIcon(icon)
+ *         self.verticalLayout = QtGui.QVBoxLayout(Q7LogWindow)
  */
-  __pyx_k_tuple_8 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_k_tuple_8);
-  __Pyx_INCREF(((PyObject *)__pyx_n_s__gridLayout));
-  PyTuple_SET_ITEM(__pyx_k_tuple_8, 0, ((PyObject *)__pyx_n_s__gridLayout));
-  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__gridLayout));
-  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_8));
-
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":26
- *         self.gridLayout.setObjectName("gridLayout")
- *         self.verticalLayout = QtGui.QVBoxLayout()
- *         self.verticalLayout.setObjectName("verticalLayout")             # <<<<<<<<<<<<<<
- *         self.eHelp = QtGui.QTextEdit(Q7HelpWindow)
- *         self.eHelp.setObjectName("eHelp")
- */
-  __pyx_k_tuple_9 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_k_tuple_9 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_9);
-  __Pyx_INCREF(((PyObject *)__pyx_n_s__verticalLayout));
-  PyTuple_SET_ITEM(__pyx_k_tuple_9, 0, ((PyObject *)__pyx_n_s__verticalLayout));
-  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__verticalLayout));
+  __Pyx_INCREF(((PyObject *)__pyx_kp_s_8));
+  PyTuple_SET_ITEM(__pyx_k_tuple_9, 0, ((PyObject *)__pyx_kp_s_8));
+  __Pyx_GIVEREF(((PyObject *)__pyx_kp_s_8));
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_9));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":28
- *         self.verticalLayout.setObjectName("verticalLayout")
- *         self.eHelp = QtGui.QTextEdit(Q7HelpWindow)
- *         self.eHelp.setObjectName("eHelp")             # <<<<<<<<<<<<<<
- *         self.verticalLayout.addWidget(self.eHelp)
- *         self.gridLayout.addLayout(self.verticalLayout, 3, 0, 1, 1)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":27
+ *         Q7LogWindow.setWindowIcon(icon)
+ *         self.verticalLayout = QtGui.QVBoxLayout(Q7LogWindow)
+ *         self.verticalLayout.setObjectName("verticalLayout")             # <<<<<<<<<<<<<<
+ *         self.eLog = Q7PythonEditor(Q7LogWindow)
+ *         self.eLog.setMinimumSize(QtCore.QSize(0, 0))
  */
-  __pyx_k_tuple_10 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_k_tuple_10 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 27; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_10);
-  __Pyx_INCREF(((PyObject *)__pyx_n_s__eHelp));
-  PyTuple_SET_ITEM(__pyx_k_tuple_10, 0, ((PyObject *)__pyx_n_s__eHelp));
-  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__eHelp));
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__verticalLayout));
+  PyTuple_SET_ITEM(__pyx_k_tuple_10, 0, ((PyObject *)__pyx_n_s__verticalLayout));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__verticalLayout));
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_10));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":32
- *         self.gridLayout.addLayout(self.verticalLayout, 3, 0, 1, 1)
- *         self.horizontalLayout_2 = QtGui.QHBoxLayout()
- *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")             # <<<<<<<<<<<<<<
- *         self.bBackControl = QtGui.QPushButton(Q7HelpWindow)
- *         self.bBackControl.setEnabled(False)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":29
+ *         self.verticalLayout.setObjectName("verticalLayout")
+ *         self.eLog = Q7PythonEditor(Q7LogWindow)
+ *         self.eLog.setMinimumSize(QtCore.QSize(0, 0))             # <<<<<<<<<<<<<<
+ *         self.eLog.setFrameShadow(QtGui.QFrame.Raised)
+ *         self.eLog.setLineWidth(0)
  */
-  __pyx_k_tuple_11 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_k_tuple_11 = PyTuple_New(2); if (unlikely(!__pyx_k_tuple_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_11);
-  __Pyx_INCREF(((PyObject *)__pyx_n_s__horizontalLayout_2));
-  PyTuple_SET_ITEM(__pyx_k_tuple_11, 0, ((PyObject *)__pyx_n_s__horizontalLayout_2));
-  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__horizontalLayout_2));
+  __Pyx_INCREF(__pyx_int_0);
+  PyTuple_SET_ITEM(__pyx_k_tuple_11, 0, __pyx_int_0);
+  __Pyx_GIVEREF(__pyx_int_0);
+  __Pyx_INCREF(__pyx_int_0);
+  PyTuple_SET_ITEM(__pyx_k_tuple_11, 1, __pyx_int_0);
+  __Pyx_GIVEREF(__pyx_int_0);
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_11));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":35
- *         self.bBackControl = QtGui.QPushButton(Q7HelpWindow)
- *         self.bBackControl.setEnabled(False)
- *         self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))             # <<<<<<<<<<<<<<
- *         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
- *         self.bBackControl.setText("")
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":31
+ *         self.eLog.setMinimumSize(QtCore.QSize(0, 0))
+ *         self.eLog.setFrameShadow(QtGui.QFrame.Raised)
+ *         self.eLog.setLineWidth(0)             # <<<<<<<<<<<<<<
+ *         self.eLog.setObjectName("eLog")
+ *         self.verticalLayout.addWidget(self.eLog)
  */
-  __pyx_k_tuple_12 = PyTuple_New(2); if (unlikely(!__pyx_k_tuple_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_k_tuple_12 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_12);
-  __Pyx_INCREF(__pyx_int_25);
-  PyTuple_SET_ITEM(__pyx_k_tuple_12, 0, __pyx_int_25);
-  __Pyx_GIVEREF(__pyx_int_25);
-  __Pyx_INCREF(__pyx_int_25);
-  PyTuple_SET_ITEM(__pyx_k_tuple_12, 1, __pyx_int_25);
-  __Pyx_GIVEREF(__pyx_int_25);
+  __Pyx_INCREF(__pyx_int_0);
+  PyTuple_SET_ITEM(__pyx_k_tuple_12, 0, __pyx_int_0);
+  __Pyx_GIVEREF(__pyx_int_0);
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_12));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":36
- *         self.bBackControl.setEnabled(False)
- *         self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))
- *         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))             # <<<<<<<<<<<<<<
- *         self.bBackControl.setText("")
- *         icon = QtGui.QIcon()
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":32
+ *         self.eLog.setFrameShadow(QtGui.QFrame.Raised)
+ *         self.eLog.setLineWidth(0)
+ *         self.eLog.setObjectName("eLog")             # <<<<<<<<<<<<<<
+ *         self.verticalLayout.addWidget(self.eLog)
+ *         self.horizontalLayout_2 = QtGui.QHBoxLayout()
  */
-  __pyx_k_tuple_13 = PyTuple_New(2); if (unlikely(!__pyx_k_tuple_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_k_tuple_13 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_13);
-  __Pyx_INCREF(__pyx_int_25);
-  PyTuple_SET_ITEM(__pyx_k_tuple_13, 0, __pyx_int_25);
-  __Pyx_GIVEREF(__pyx_int_25);
-  __Pyx_INCREF(__pyx_int_25);
-  PyTuple_SET_ITEM(__pyx_k_tuple_13, 1, __pyx_int_25);
-  __Pyx_GIVEREF(__pyx_int_25);
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__eLog));
+  PyTuple_SET_ITEM(__pyx_k_tuple_13, 0, ((PyObject *)__pyx_n_s__eLog));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__eLog));
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_13));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":37
- *         self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))
- *         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
- *         self.bBackControl.setText("")             # <<<<<<<<<<<<<<
- *         icon = QtGui.QIcon()
- *         icon.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":36
+ *         self.horizontalLayout_2 = QtGui.QHBoxLayout()
+ *         self.horizontalLayout_2.setSizeConstraint(QtGui.QLayout.SetNoConstraint)
+ *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")             # <<<<<<<<<<<<<<
+ *         self.bInfo = QtGui.QPushButton(Q7LogWindow)
+ *         self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
  */
-  __pyx_k_tuple_15 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_k_tuple_14 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_k_tuple_14);
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__horizontalLayout_2));
+  PyTuple_SET_ITEM(__pyx_k_tuple_14, 0, ((PyObject *)__pyx_n_s__horizontalLayout_2));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__horizontalLayout_2));
+  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_14));
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":38
+ *         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+ *         self.bInfo = QtGui.QPushButton(Q7LogWindow)
+ *         self.bInfo.setMinimumSize(QtCore.QSize(25, 25))             # <<<<<<<<<<<<<<
+ *         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
+ *         self.bInfo.setText("")
+ */
+  __pyx_k_tuple_15 = PyTuple_New(2); if (unlikely(!__pyx_k_tuple_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_15);
-  __Pyx_INCREF(((PyObject *)__pyx_kp_s_14));
-  PyTuple_SET_ITEM(__pyx_k_tuple_15, 0, ((PyObject *)__pyx_kp_s_14));
-  __Pyx_GIVEREF(((PyObject *)__pyx_kp_s_14));
+  __Pyx_INCREF(__pyx_int_25);
+  PyTuple_SET_ITEM(__pyx_k_tuple_15, 0, __pyx_int_25);
+  __Pyx_GIVEREF(__pyx_int_25);
+  __Pyx_INCREF(__pyx_int_25);
+  PyTuple_SET_ITEM(__pyx_k_tuple_15, 1, __pyx_int_25);
+  __Pyx_GIVEREF(__pyx_int_25);
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_15));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":39
- *         self.bBackControl.setText("")
- *         icon = QtGui.QIcon()
- *         icon.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)             # <<<<<<<<<<<<<<
- *         self.bBackControl.setIcon(icon)
- *         self.bBackControl.setObjectName("bBackControl")
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":39
+ *         self.bInfo = QtGui.QPushButton(Q7LogWindow)
+ *         self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
+ *         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))             # <<<<<<<<<<<<<<
+ *         self.bInfo.setText("")
+ *         icon1 = QtGui.QIcon()
  */
-  __pyx_k_tuple_17 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_k_tuple_17);
-  __Pyx_INCREF(((PyObject *)__pyx_kp_s_16));
-  PyTuple_SET_ITEM(__pyx_k_tuple_17, 0, ((PyObject *)__pyx_kp_s_16));
-  __Pyx_GIVEREF(((PyObject *)__pyx_kp_s_16));
-  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_17));
+  __pyx_k_tuple_16 = PyTuple_New(2); if (unlikely(!__pyx_k_tuple_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_k_tuple_16);
+  __Pyx_INCREF(__pyx_int_25);
+  PyTuple_SET_ITEM(__pyx_k_tuple_16, 0, __pyx_int_25);
+  __Pyx_GIVEREF(__pyx_int_25);
+  __Pyx_INCREF(__pyx_int_25);
+  PyTuple_SET_ITEM(__pyx_k_tuple_16, 1, __pyx_int_25);
+  __Pyx_GIVEREF(__pyx_int_25);
+  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_16));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":41
- *         icon.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
- *         self.bBackControl.setIcon(icon)
- *         self.bBackControl.setObjectName("bBackControl")             # <<<<<<<<<<<<<<
- *         self.horizontalLayout_2.addWidget(self.bBackControl)
- *         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":40
+ *         self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
+ *         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
+ *         self.bInfo.setText("")             # <<<<<<<<<<<<<<
+ *         icon1 = QtGui.QIcon()
+ *         icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
  */
-  __pyx_k_tuple_18 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_k_tuple_18 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_k_tuple_18);
-  __Pyx_INCREF(((PyObject *)__pyx_n_s__bBackControl));
-  PyTuple_SET_ITEM(__pyx_k_tuple_18, 0, ((PyObject *)__pyx_n_s__bBackControl));
-  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__bBackControl));
+  __Pyx_INCREF(((PyObject *)__pyx_kp_s_17));
+  PyTuple_SET_ITEM(__pyx_k_tuple_18, 0, ((PyObject *)__pyx_kp_s_17));
+  __Pyx_GIVEREF(((PyObject *)__pyx_kp_s_17));
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_18));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":13
- * 
- * class Ui_Q7HelpWindow(object):
- *     def setupUi(self, Q7HelpWindow):             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.setObjectName("Q7HelpWindow")
- *         Q7HelpWindow.resize(715, 350)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":42
+ *         self.bInfo.setText("")
+ *         icon1 = QtGui.QIcon()
+ *         icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)             # <<<<<<<<<<<<<<
+ *         self.bInfo.setIcon(icon1)
+ *         self.bInfo.setObjectName("bInfo")
  */
-  __pyx_k_tuple_19 = PyTuple_New(5); if (unlikely(!__pyx_k_tuple_19)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_k_tuple_19);
+  __pyx_k_tuple_20 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_k_tuple_20);
+  __Pyx_INCREF(((PyObject *)__pyx_kp_s_19));
+  PyTuple_SET_ITEM(__pyx_k_tuple_20, 0, ((PyObject *)__pyx_kp_s_19));
+  __Pyx_GIVEREF(((PyObject *)__pyx_kp_s_19));
+  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_20));
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":44
+ *         icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+ *         self.bInfo.setIcon(icon1)
+ *         self.bInfo.setObjectName("bInfo")             # <<<<<<<<<<<<<<
+ *         self.horizontalLayout_2.addWidget(self.bInfo)
+ *         spacerItem = QtGui.QSpacerItem(868, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+ */
+  __pyx_k_tuple_21 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_21)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_k_tuple_21);
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__bInfo));
+  PyTuple_SET_ITEM(__pyx_k_tuple_21, 0, ((PyObject *)__pyx_n_s__bInfo));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__bInfo));
+  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_21));
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":49
+ *         self.horizontalLayout_2.addItem(spacerItem)
+ *         self.bClear = QtGui.QPushButton(Q7LogWindow)
+ *         self.bClear.setObjectName("bClear")             # <<<<<<<<<<<<<<
+ *         self.horizontalLayout_2.addWidget(self.bClear)
+ *         self.bClose = QtGui.QPushButton(Q7LogWindow)
+ */
+  __pyx_k_tuple_22 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_22)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_k_tuple_22);
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__bClear));
+  PyTuple_SET_ITEM(__pyx_k_tuple_22, 0, ((PyObject *)__pyx_n_s__bClear));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__bClear));
+  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_22));
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":52
+ *         self.horizontalLayout_2.addWidget(self.bClear)
+ *         self.bClose = QtGui.QPushButton(Q7LogWindow)
+ *         self.bClose.setObjectName("bClose")             # <<<<<<<<<<<<<<
+ *         self.horizontalLayout_2.addWidget(self.bClose)
+ *         self.verticalLayout.addLayout(self.horizontalLayout_2)
+ */
+  __pyx_k_tuple_23 = PyTuple_New(1); if (unlikely(!__pyx_k_tuple_23)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_k_tuple_23);
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__bClose));
+  PyTuple_SET_ITEM(__pyx_k_tuple_23, 0, ((PyObject *)__pyx_n_s__bClose));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__bClose));
+  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_23));
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":13
+ * 
+ * class Ui_Q7LogWindow(object):
+ *     def setupUi(self, Q7LogWindow):             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setObjectName("Q7LogWindow")
+ *         Q7LogWindow.resize(500, 140)
+ */
+  __pyx_k_tuple_24 = PyTuple_New(6); if (unlikely(!__pyx_k_tuple_24)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_k_tuple_24);
   __Pyx_INCREF(((PyObject *)__pyx_n_s__self));
-  PyTuple_SET_ITEM(__pyx_k_tuple_19, 0, ((PyObject *)__pyx_n_s__self));
+  PyTuple_SET_ITEM(__pyx_k_tuple_24, 0, ((PyObject *)__pyx_n_s__self));
   __Pyx_GIVEREF(((PyObject *)__pyx_n_s__self));
-  __Pyx_INCREF(((PyObject *)__pyx_n_s__Q7HelpWindow));
-  PyTuple_SET_ITEM(__pyx_k_tuple_19, 1, ((PyObject *)__pyx_n_s__Q7HelpWindow));
-  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Q7HelpWindow));
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__Q7LogWindow));
+  PyTuple_SET_ITEM(__pyx_k_tuple_24, 1, ((PyObject *)__pyx_n_s__Q7LogWindow));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Q7LogWindow));
   __Pyx_INCREF(((PyObject *)__pyx_n_s__sizePolicy));
-  PyTuple_SET_ITEM(__pyx_k_tuple_19, 2, ((PyObject *)__pyx_n_s__sizePolicy));
+  PyTuple_SET_ITEM(__pyx_k_tuple_24, 2, ((PyObject *)__pyx_n_s__sizePolicy));
   __Pyx_GIVEREF(((PyObject *)__pyx_n_s__sizePolicy));
   __Pyx_INCREF(((PyObject *)__pyx_n_s__icon));
-  PyTuple_SET_ITEM(__pyx_k_tuple_19, 3, ((PyObject *)__pyx_n_s__icon));
+  PyTuple_SET_ITEM(__pyx_k_tuple_24, 3, ((PyObject *)__pyx_n_s__icon));
   __Pyx_GIVEREF(((PyObject *)__pyx_n_s__icon));
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__icon1));
+  PyTuple_SET_ITEM(__pyx_k_tuple_24, 4, ((PyObject *)__pyx_n_s__icon1));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__icon1));
   __Pyx_INCREF(((PyObject *)__pyx_n_s__spacerItem));
-  PyTuple_SET_ITEM(__pyx_k_tuple_19, 4, ((PyObject *)__pyx_n_s__spacerItem));
+  PyTuple_SET_ITEM(__pyx_k_tuple_24, 5, ((PyObject *)__pyx_n_s__spacerItem));
   __Pyx_GIVEREF(((PyObject *)__pyx_n_s__spacerItem));
-  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_19));
-  __pyx_k_codeobj_20 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_k_tuple_19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_21, __pyx_n_s__setupUi, 13, __pyx_empty_bytes); if (unlikely(!__pyx_k_codeobj_20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_24));
+  __pyx_k_codeobj_25 = (PyObject*)__Pyx_PyCode_New(2, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_k_tuple_24, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_26, __pyx_n_s__setupUi, 13, __pyx_empty_bytes); if (unlikely(!__pyx_k_codeobj_25)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":50
- *         QtCore.QMetaObject.connectSlotsByName(Q7HelpWindow)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":59
+ *         QtCore.QMetaObject.connectSlotsByName(Q7LogWindow)
  * 
- *     def retranslateUi(self, Q7HelpWindow):             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.setWindowTitle(QtGui.QApplication.translate("Q7HelpWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
- * 
+ *     def retranslateUi(self, Q7LogWindow):             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setWindowTitle(QtGui.QApplication.translate("Q7LogWindow", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+ *         self.bClear.setText(QtGui.QApplication.translate("Q7LogWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
  */
-  __pyx_k_tuple_23 = PyTuple_New(2); if (unlikely(!__pyx_k_tuple_23)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_k_tuple_23);
+  __pyx_k_tuple_28 = PyTuple_New(2); if (unlikely(!__pyx_k_tuple_28)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_k_tuple_28);
   __Pyx_INCREF(((PyObject *)__pyx_n_s__self));
-  PyTuple_SET_ITEM(__pyx_k_tuple_23, 0, ((PyObject *)__pyx_n_s__self));
+  PyTuple_SET_ITEM(__pyx_k_tuple_28, 0, ((PyObject *)__pyx_n_s__self));
   __Pyx_GIVEREF(((PyObject *)__pyx_n_s__self));
-  __Pyx_INCREF(((PyObject *)__pyx_n_s__Q7HelpWindow));
-  PyTuple_SET_ITEM(__pyx_k_tuple_23, 1, ((PyObject *)__pyx_n_s__Q7HelpWindow));
-  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Q7HelpWindow));
-  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_23));
-  __pyx_k_codeobj_24 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_k_tuple_23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_21, __pyx_n_s__retranslateUi, 50, __pyx_empty_bytes); if (unlikely(!__pyx_k_codeobj_24)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__Q7LogWindow));
+  PyTuple_SET_ITEM(__pyx_k_tuple_28, 1, ((PyObject *)__pyx_n_s__Q7LogWindow));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Q7LogWindow));
+  __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_28));
+  __pyx_k_codeobj_29 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_k_tuple_28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_26, __pyx_n_s__retranslateUi, 59, __pyx_empty_bytes); if (unlikely(!__pyx_k_codeobj_29)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -2125,26 +2555,23 @@ static int __Pyx_InitCachedConstants(void) {
 static int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-  __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-  __pyx_int_3 = PyInt_FromLong(3); if (unlikely(!__pyx_int_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-  __pyx_int_4 = PyInt_FromLong(4); if (unlikely(!__pyx_int_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __pyx_int_20 = PyInt_FromLong(20); if (unlikely(!__pyx_int_20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __pyx_int_25 = PyInt_FromLong(25); if (unlikely(!__pyx_int_25)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-  __pyx_int_40 = PyInt_FromLong(40); if (unlikely(!__pyx_int_40)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-  __pyx_int_350 = PyInt_FromLong(350); if (unlikely(!__pyx_int_350)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-  __pyx_int_715 = PyInt_FromLong(715); if (unlikely(!__pyx_int_715)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-  __pyx_int_1200 = PyInt_FromLong(1200); if (unlikely(!__pyx_int_1200)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_int_140 = PyInt_FromLong(140); if (unlikely(!__pyx_int_140)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_int_500 = PyInt_FromLong(500); if (unlikely(!__pyx_int_500)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_int_868 = PyInt_FromLong(868); if (unlikely(!__pyx_int_868)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_int_16777215 = PyInt_FromLong(16777215); if (unlikely(!__pyx_int_16777215)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   return 0;
   __pyx_L1_error:;
   return -1;
 }
 
 #if PY_MAJOR_VERSION < 3
-PyMODINIT_FUNC initQ7HelpWindow(void); /*proto*/
-PyMODINIT_FUNC initQ7HelpWindow(void)
+PyMODINIT_FUNC initQ7LogWindow(void); /*proto*/
+PyMODINIT_FUNC initQ7LogWindow(void)
 #else
-PyMODINIT_FUNC PyInit_Q7HelpWindow(void); /*proto*/
-PyMODINIT_FUNC PyInit_Q7HelpWindow(void)
+PyMODINIT_FUNC PyInit_Q7LogWindow(void); /*proto*/
+PyMODINIT_FUNC PyInit_Q7LogWindow(void)
 #endif
 {
   PyObject *__pyx_t_1 = NULL;
@@ -2160,7 +2587,7 @@ PyMODINIT_FUNC PyInit_Q7HelpWindow(void)
           Py_FatalError("failed to import 'refnanny' module");
   }
   #endif
-  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_Q7HelpWindow(void)", 0);
+  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_Q7LogWindow(void)", 0);
   if ( __Pyx_check_binary_version() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_empty_tuple = PyTuple_New(0); if (unlikely(!__pyx_empty_tuple)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_empty_bytes = PyBytes_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_bytes)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -2182,7 +2609,7 @@ PyMODINIT_FUNC PyInit_Q7HelpWindow(void)
   #endif
   /*--- Module creation code ---*/
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4(__Pyx_NAMESTR("Q7HelpWindow"), __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4(__Pyx_NAMESTR("Q7LogWindow"), __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -2194,7 +2621,7 @@ PyMODINIT_FUNC PyInit_Q7HelpWindow(void)
   if (__Pyx_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   /*--- Initialize various global constants etc. ---*/
   if (unlikely(__Pyx_InitGlobals() < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__pyx_module_is_main_CGNS__NAV__Q7HelpWindow) {
+  if (__pyx_module_is_main_CGNS__NAV__Q7LogWindow) {
     if (__Pyx_SetAttrString(__pyx_m, "__name__", __pyx_n_s____main__) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   }
   /*--- Builtin init code ---*/
@@ -2210,12 +2637,12 @@ PyMODINIT_FUNC PyInit_Q7HelpWindow(void)
   /*--- Function import code ---*/
   /*--- Execution code ---*/
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":10
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":10
  * # WARNING! All changes made in this file will be lost!
  * 
  * from PySide import QtCore, QtGui             # <<<<<<<<<<<<<<
  * 
- * class Ui_Q7HelpWindow(object):
+ * class Ui_Q7LogWindow(object):
  */
   __pyx_t_1 = PyList_New(2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
@@ -2246,88 +2673,112 @@ PyMODINIT_FUNC PyInit_Q7HelpWindow(void)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":12
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":12
  * from PySide import QtCore, QtGui
  * 
- * class Ui_Q7HelpWindow(object):             # <<<<<<<<<<<<<<
- *     def setupUi(self, Q7HelpWindow):
- *         Q7HelpWindow.setObjectName("Q7HelpWindow")
+ * class Ui_Q7LogWindow(object):             # <<<<<<<<<<<<<<
+ *     def setupUi(self, Q7LogWindow):
+ *         Q7LogWindow.setObjectName("Q7LogWindow")
  */
   __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(((PyObject *)__pyx_t_2));
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":13
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":13
  * 
- * class Ui_Q7HelpWindow(object):
- *     def setupUi(self, Q7HelpWindow):             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.setObjectName("Q7HelpWindow")
- *         Q7HelpWindow.resize(715, 350)
+ * class Ui_Q7LogWindow(object):
+ *     def setupUi(self, Q7LogWindow):             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setObjectName("Q7LogWindow")
+ *         Q7LogWindow.resize(500, 140)
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_1setupUi, 0, NULL, __pyx_n_s_22, ((PyObject *)__pyx_k_codeobj_20)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_1setupUi, 0, NULL, __pyx_n_s_27, ((PyObject *)__pyx_k_codeobj_25)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (PyObject_SetItem(__pyx_t_2, __pyx_n_s__setupUi, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":50
- *         QtCore.QMetaObject.connectSlotsByName(Q7HelpWindow)
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":59
+ *         QtCore.QMetaObject.connectSlotsByName(Q7LogWindow)
  * 
- *     def retranslateUi(self, Q7HelpWindow):             # <<<<<<<<<<<<<<
- *         Q7HelpWindow.setWindowTitle(QtGui.QApplication.translate("Q7HelpWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
- * 
+ *     def retranslateUi(self, Q7LogWindow):             # <<<<<<<<<<<<<<
+ *         Q7LogWindow.setWindowTitle(QtGui.QApplication.translate("Q7LogWindow", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+ *         self.bClear.setText(QtGui.QApplication.translate("Q7LogWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_4CGNS_3NAV_12Q7HelpWindow_15Ui_Q7HelpWindow_3retranslateUi, 0, NULL, __pyx_n_s_22, ((PyObject *)__pyx_k_codeobj_24)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_4CGNS_3NAV_11Q7LogWindow_14Ui_Q7LogWindow_3retranslateUi, 0, NULL, __pyx_n_s_27, ((PyObject *)__pyx_k_codeobj_29)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyObject_SetItem(__pyx_t_2, __pyx_n_s__retranslateUi, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_2, __pyx_n_s__retranslateUi, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":12
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":12
  * from PySide import QtCore, QtGui
  * 
- * class Ui_Q7HelpWindow(object):             # <<<<<<<<<<<<<<
- *     def setupUi(self, Q7HelpWindow):
- *         Q7HelpWindow.setObjectName("Q7HelpWindow")
+ * class Ui_Q7LogWindow(object):             # <<<<<<<<<<<<<<
+ *     def setupUi(self, Q7LogWindow):
+ *         Q7LogWindow.setObjectName("Q7LogWindow")
  */
   __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_builtin_object);
   PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_builtin_object);
   __Pyx_GIVEREF(__pyx_builtin_object);
-  __pyx_t_3 = __Pyx_CreateClass(((PyObject *)__pyx_t_1), ((PyObject *)__pyx_t_2), __pyx_n_s__Ui_Q7HelpWindow, __pyx_n_s_22); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_CreateClass(((PyObject *)__pyx_t_1), ((PyObject *)__pyx_t_2), __pyx_n_s__Ui_Q7LogWindow, __pyx_n_s_27); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(((PyObject *)__pyx_t_1)); __pyx_t_1 = 0;
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s__Ui_Q7HelpWindow, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s__Ui_Q7LogWindow, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":53
- *         Q7HelpWindow.setWindowTitle(QtGui.QApplication.translate("Q7HelpWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":64
+ *         self.bClose.setText(QtGui.QApplication.translate("Q7LogWindow", "Hide", None, QtGui.QApplication.UnicodeUTF8))
  * 
+ * from CGNS.NAV.weditors import Q7PythonEditor             # <<<<<<<<<<<<<<
+ * import Res_rc
+ */
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(((PyObject *)__pyx_n_s__Q7PythonEditor));
+  PyList_SET_ITEM(__pyx_t_2, 0, ((PyObject *)__pyx_n_s__Q7PythonEditor));
+  __Pyx_GIVEREF(((PyObject *)__pyx_n_s__Q7PythonEditor));
+  __pyx_t_3 = __Pyx_Import(((PyObject *)__pyx_n_s_30), ((PyObject *)__pyx_t_2), -1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  __pyx_t_2 = PyObject_GetAttr(__pyx_t_3, __pyx_n_s__Q7PythonEditor);
+  if (__pyx_t_2 == NULL) {
+    if (PyErr_ExceptionMatches(PyExc_AttributeError)) __Pyx_RaiseImportError(__pyx_n_s__Q7PythonEditor);
+    if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  }
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s__Q7PythonEditor, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":65
+ * 
+ * from CGNS.NAV.weditors import Q7PythonEditor
  * import Res_rc             # <<<<<<<<<<<<<<
  */
-  __pyx_t_2 = __Pyx_Import(((PyObject *)__pyx_n_s__Res_rc), 0, -1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s__Res_rc, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_3 = __Pyx_Import(((PyObject *)__pyx_n_s__Res_rc), 0, -1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s__Res_rc, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "CGNS/NAV/G/Q7HelpWindow.pyx":1
+  /* "CGNS/NAV/G/Q7LogWindow.pyx":1
  * # -*- coding: utf-8 -*-             # <<<<<<<<<<<<<<
  * 
- * # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7HelpWindow.ui'
+ * # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7LogWindow.ui'
  */
-  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(((PyObject *)__pyx_t_2));
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s____test__, ((PyObject *)__pyx_t_2)) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
+  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(((PyObject *)__pyx_t_3));
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s____test__, ((PyObject *)__pyx_t_3)) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   if (__pyx_m) {
-    __Pyx_AddTraceback("init CGNS.NAV.Q7HelpWindow", __pyx_clineno, __pyx_lineno, __pyx_filename);
+    __Pyx_AddTraceback("init CGNS.NAV.Q7LogWindow", __pyx_clineno, __pyx_lineno, __pyx_filename);
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init CGNS.NAV.Q7HelpWindow");
+    PyErr_SetString(PyExc_ImportError, "init CGNS.NAV.Q7LogWindow");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
