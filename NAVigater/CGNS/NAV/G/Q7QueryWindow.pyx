@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7QueryWindow.ui'
 #
-# Created: Fri Apr 19 15:01:38 2013
+# Created: Wed Apr 24 13:56:04 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -127,6 +127,9 @@ class Ui_Q7QueryWindow(object):
         self.horizontalLayout_4 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_2)
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.cRequireUpdate = QtGui.QCheckBox(self.horizontalLayoutWidget_2)
+        self.cRequireUpdate.setObjectName("cRequireUpdate")
+        self.horizontalLayout_4.addWidget(self.cRequireUpdate)
         spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem2)
         self.bRevert = QtGui.QPushButton(self.horizontalLayoutWidget_2)
@@ -248,6 +251,7 @@ class Ui_Q7QueryWindow(object):
         self.bDel.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Delete the query", None, QtGui.QApplication.UnicodeUTF8))
         self.bSaveAsScript.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Write query as single stand-alone python script", None, QtGui.QApplication.UnicodeUTF8))
         self.bSave.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Save all queries in user profile directory", None, QtGui.QApplication.UnicodeUTF8))
+        self.cRequireUpdate.setText(QtGui.QApplication.translate("Q7QueryWindow", "Script modifies tree and requires all views to update", None, QtGui.QApplication.UnicodeUTF8))
         self.bRevert.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Revert to last saved text", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("Q7QueryWindow", "Python", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("Q7QueryWindow", "Documentation", None, QtGui.QApplication.UnicodeUTF8))

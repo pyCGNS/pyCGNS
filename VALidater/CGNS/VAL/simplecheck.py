@@ -57,7 +57,7 @@ def run(T,trace,userlist):
       diag.merge(parser.log)
     return diag
 
-def compliant(T,trace=False,userlist=[]):
+def compliant(T,trace=False,userlist=['DEFAULT']):
     ipath='%s/lib/python%s.%s/site-packages/CGNS/VAL/grammars'%\
            (sys.prefix,sys.version_info[0],sys.version_info[1])
     sys.path.append(ipath)

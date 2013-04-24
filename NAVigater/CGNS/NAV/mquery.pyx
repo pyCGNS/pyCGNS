@@ -54,7 +54,7 @@ def evalScript(node,parent,tree,links,skips,path,val,args):
     try:
       eval(compile(pre,'<string>','exec'),globals(),l)
     except Exception:
-      RESULT=False
+      l[OCST.Q_VAR_RESULT_LIST][0]=False
     RESULT=l['%(Q_VAR_RESULT_LIST)s'][0]
     return RESULT
 # -----------------------------------------------------------------
@@ -123,10 +123,10 @@ def evalScript(node,parent,tree,links,skips,path,val,args):
     l[OCST.Q_VAR_USER]=args
     l[OCST.Q_VAR_NODE]=node
     pre=OCST.Q_SCRIPT_PRE+val+OCST.Q_SCRIPT_POST
-    if 1:#try:
+    try:
       eval(compile(pre,'<string>','exec'),globals(),l)
-#    except Exception:
-#      RESULT=False
+    except Exception:
+      l[OCST.Q_VAR_RESULT_LIST][0]=False
     RESULT=l[OCST.Q_VAR_RESULT_LIST][0]
     return RESULT
 # -----------------------------------------------------------------
@@ -145,11 +145,12 @@ def parseAndSelect(tree,node,parent,links,skips,path,script,args,result):
 
 # -----------------------------------------------------------------
 class Q7QueryEntry(object):
-    def __init__(self,name,group=None,script='',doc=''):
+    def __init__(self,name,group=None,script='',doc='',update=False):
         self._name=name
         self._group=group
         self._script=script
         self._doc=doc
+        self._update=update
     @property
     def name(self):
         return self._name
@@ -162,13 +163,17 @@ class Q7QueryEntry(object):
     @property
     def script(self):
         return self._script
+    def requireTreeUpdate(self):
+        return self._update
+    def setRequireTreeUpdate(self,value):
+        self._update=value
     def setScript(self,value):
         self._script=value
     def setDoc(self,value):
         self._doc=value
     def __str__(self):
-        s='("%s","%s","%s","""%s""")'%\
-        (self.name,self.group,self._script,self._doc)
+        s='("%s","%s","%s","""%s""",%s)'%\
+        (self.name,self.group,self._script,self._doc,self._update)
         return s
     def run(self,tree,links,skips,mode,args):
         v=None
@@ -182,6 +187,7 @@ class Q7QueryEntry(object):
         self._args=v
         result=parseAndSelect(tree,tree,[None,None,[],None],links,skips,'',
                               self._script,self._args,mode)
+        print result
         return result
     def getFullScript(self,filename,text,args):
         datadict={}

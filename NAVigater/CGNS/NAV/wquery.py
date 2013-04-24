@@ -2,8 +2,7 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
+#
 import sys
 import numpy
 import os
@@ -207,6 +206,10 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         if (q not in Q7Query._allQueries): self.queryAdd()
         com=self.eText.toPlainText()
         doc=self.eQueryDoc.toPlainText()
+        if (self.cRequireUpdate.checkState()==Qt.Checked):
+            self.setRequireTreeUpdate(True)
+        else:
+            self.setRequireTreeUpdate(False)
         Q7Query._allQueries[q].setScript(com)
         Q7Query._allQueries[q].setDoc(doc)
         self.bRevert.setEnabled(False)
@@ -244,6 +247,10 @@ leave this panel without save?""",again=False)
           self.eText.initText(txt)
           doc=self.getCurrentQuery().doc
           self.eQueryDoc.initText(doc)
+        if (self.getCurrentQuery().requireTreeUpdate()):
+            self.cRequireUpdate.setCheckState(Qt.Checked)
+        else:
+            self.cRequireUpdate.setCheckState(Qt.Unchecked)            
         self.bRevert.setEnabled(False)
         self.bCommitDoc.setEnabled(False)
         self.bRevertDoc.setEnabled(False)
@@ -259,14 +266,18 @@ leave this panel without save?""",again=False)
         skp=self._fgprint.lazy.keys()
         r=q.run(self._fgprint.tree,self._fgprint.links,skp,True,v)
         self.eResult.initText(str(r))
-        self._fgprint.model.modelReset()
+        if (q.requireTreeUpdate()):
+            self._fgprint.model.modelReset()
     @classmethod
     def fillQueries(self):
         allqueriestext=Q7Query._userQueriesText+OCTXT._UsualQueries
         Q7Query._defaultQueriesNames=[n[0] for n in OCTXT._UsualQueries]
         for qe in allqueriestext:
             try:
-                q=Q7QueryEntry(qe[0],qe[1],qe[2],qe[3])
+                if (len(qe)<5):
+                    q=Q7QueryEntry(qe[0],qe[1],qe[2],qe[3])
+                else:
+                    q=Q7QueryEntry(qe[0],qe[1],qe[2],qe[3],qe[4])
                 Q7Query._allQueries[qe[0]]=q
             except IndexError: pass
     @classmethod

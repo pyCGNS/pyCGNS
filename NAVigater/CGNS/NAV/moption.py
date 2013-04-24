@@ -696,7 +696,8 @@ if (SIDSTYPE==CGK.CGNSTree_ts):
     CGU.addChild(b,z)
  """,
  """Example of Cartesian zone creation using Cassiopee.
- The first argument is the base name, if ommitted a name is generated."""),
+ The first argument is the base name, if ommitted a name is generated.""",
+ True),
 ('031. Bounding boxes',
  'External Tools',
  """

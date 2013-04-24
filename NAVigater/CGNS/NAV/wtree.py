@@ -457,7 +457,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                                    False,v)
             self.model().markExtendToList(sl)
             self.model().updateSelected()
-            self.model().modelReset()
+            if (qry.getQuery(q).requireTreeUpdate()):
+                self.model().modelReset()
         self.treeview.refreshView()
     def linkselect(self):
         ix=self.treeview.modelCurrentIndex()

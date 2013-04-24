@@ -315,6 +315,13 @@
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
+         <widget class="QCheckBox" name="cRequireUpdate">
+          <property name="text">
+           <string>Script modifies tree and requires all views to update</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer_5">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
