@@ -922,9 +922,13 @@ def getNodeByPath(tree,path):
   if (path=='/'): return tree
   if (not checkPath(path)): return None
   if (path[0]=='/'): path=path[1:]
-  if (tree[3]==CK.CGNSTree_ts): T=tree
+  lpath=path.split('/')
+  if (tree[3]==CK.CGNSTree_ts):
+    T=tree
+    if (lpath[0]==CK.CGNSTree_s):
+      lpath=lpath[1:]
   else: T=[CK.CGNSTree_s,None,[tree],CK.CGNSTree_ts]
-  n=getNodeFromPath(path.split('/'),T)
+  n=getNodeFromPath(lpath,T)
   if (n==-1): return None
   return n
 
