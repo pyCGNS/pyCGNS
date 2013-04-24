@@ -14,6 +14,7 @@ import string
 KEY='SAMPLE'
 FILES=False
 CGNSCHECK=False
+TRACE=True
 
 try:
   import CGNS.PRO
@@ -43,7 +44,9 @@ def runSuite(suite,trace,savefile=False,cgnscheck=False):
       p=os.path.split(s.__file__)[0]
       l=os.listdir(p)
       for t in l:
-          if ((t[0]!='_') and (t[-3:]=='.py') and (t[0] in string.digits)and (t[1] in string.digits)): tlist.append(t[:-3])
+          if ((t[0]!='_') and (t[-3:]=='.py')
+              and (t[0] in string.digits)
+              and (t[1] in string.digits)): tlist.append(t[:-3])
   for t in tlist:
       tdlist=loadTree(suite,t)
       for (tag,T,diag) in tdlist:
@@ -68,24 +71,23 @@ def loadTree(key,test):
   return (m.TESTS)
 
 def valTree(suite,t,tag,T,diag,trace,count):
-    r=CGV.compliant(T,False,[KEY])
     sr=''
+    r=CGV.compliant(T,False,[KEY])
     if (diag): k='pass'
     else: k='fail'
     if (r[0]==diag): (v1,v2)=('pass','expected')
     else:            (v1,v2)=('FAIL','UNEXPECTED')
     if (trace): sr+='###\n'
-    sr='### [%s] %.4d-%s-%s-%s (%s)\n'%(v1,count,k,suite,t,tag)
+    sr+='### [%s/%s] %.4d-%s-%s-%s (%s)\n'%(KEY,v1,count,k,suite,t,tag)
     for m in r[1]:
       sr+='### > %s error on: %s\n'%(v2,m[0])
       sr+='### > %s\n'%(m[1])
-    if (trace):
-      print sr
+    if (trace): print sr
     return sr
 
-#tlist=('treebasics','Onera')
-tlist=('Onera',)
+tlist=('SIDS','elsA')
 for s in tlist:
-    runSuite(s,True,FILES,CGNSCHECK)
+  KEY=s
+  runSuite(s,TRACE,FILES,CGNSCHECK)
 
 

@@ -7,24 +7,19 @@ import CGNS.PAT.cgnslib as CGL
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import numpy as NPY
-import disk3sectors
+import CGNS.VAL.suite.Onera._disk3sectors as DISK
 
 TESTS=[]
 
 #  -------------------------------------------------------------------------
-tag='simple 3 sector disk'
-diag=True
-T=disk3sectors.T
-TESTS.append((tag,T,diag))
-
-#  -------------------------------------------------------------------------
 tag='complete reference state'
 diag=True
-T=disk3sectors.T
-b=CGU.getNodeByPath(T,'/CGNSTree')
+T=DISK.T
+b=CGU.getNodeByPath(T,'/CGNSTree/Disk')
 
+c=CGL.newUserDefinedData(b,'.Solver#Compute')
 rs=CGL.newReferenceState(b,CGK.ReferenceState_s)
-d=CGL.newDataArray(rs,CGK.ReferenceStateDescription_s,CGU.setStringAsArray("Global reference state"))
+d=CGL.newDescriptor(rs,CGK.ReferenceStateDescription_s,CGU.setStringAsArray("Global reference state"))
 d=CGL.newDataArray(rs,CGK.Mach_s,CGU.setDoubleAsArray(0.2))
 d=CGL.newDataArray(rs,'AngleofAttack',CGU.setDoubleAsArray(7.0))
 d=CGL.newDataArray(rs,'BetaAngle',CGU.setDoubleAsArray(1.0))
@@ -50,6 +45,7 @@ tag='complete reference state'
 diag=True
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base#1}',3,3)
+c=CGL.newUserDefinedData(b,'.Solver#Compute')
 rs=CGL.newReferenceState(b,CGK.ReferenceState_s)
 d=CGL.newDescriptor(rs,CGK.ReferenceStateDescription_s,CGU.setStringAsArray("Global reference state"))
 d=CGL.newDataArray(rs,CGK.Mach_s,CGU.setDoubleAsArray(0.2))
@@ -73,7 +69,7 @@ d=CGL.newDataArray(rs,CGK.Coef_PressureDynamic_s,CGU.setDoubleAsArray(1.0))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
-tag='bad reference state description attribute'
+tag='bad reference state Description attribute type'
 diag=False
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base#1}',3,3)
@@ -86,37 +82,16 @@ d=CGL.newDataArray(rs,CGK.Reynolds_s,CGU.setDoubleAsArray(1.0))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
-tag='bad reference state Mach attribute'
+tag='bad reference state Mach attribute type'
 diag=False
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base#1}',3,3)
 rs=CGL.newReferenceState(b,CGK.ReferenceState_s)
 d=CGL.newDescriptor(rs,CGK.ReferenceStateDescription_s,CGU.setStringAsArray("Global reference state"))
 d=CGL.newDataArray(rs,CGK.Mach_s,CGU.setStringAsArray("0.2"))
-## The name Mach does not trigger any error
 d=CGL.newDataArray(rs,'AngleofAttack',CGU.setDoubleAsArray(7.0))
 d=CGL.newDataArray(rs,'BetaAngle',CGU.setDoubleAsArray(1.0))
 d=CGL.newDataArray(rs,CGK.Reynolds_s,CGU.setDoubleAsArray(1.0))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
-# TODO :tag='bad reference state Mach attribute'
-diag=False
-T=CGL.newCGNSTree()
-b=CGL.newBase(T,'{Base#1}',3,3)
-rs=CGL.newReferenceState(b,CGK.ReferenceState_s)
-d=CGL.newDescriptor(rs,CGK.ReferenceStateDescription_s,CGU.setStringAsArray("Global reference state"))
-d=CGL.newDataArray(rs,CGK.Mach_s,CGU.setStringAsArray("0.2"))
-d=CGL.newDataArray(rs,'AngleofAttack',CGU.setDoubleAsArray(7.0))
-d=CGL.newDataArray(rs,'BetaAngle',CGU.setDoubleAsArray(1.0))
-d=CGL.newDataArray(rs,CGK.Reynolds_s,CGU.setDoubleAsArray(1.0))
-TESTS.append((tag,T,diag)) 
-
-## #  -------------------------------------------------------------------------
-## tag='bad compute attributes #1'
-## diag=False
-## T=CGL.newCGNSTree()
-## b=CGL.newBase(T,'{Base#1}',3,3)
-## TESTS.append((tag,T,diag))
-
-## #  -------------------------------------------------------------------------

@@ -926,6 +926,7 @@ def getNodeByPath(tree,path):
   if (tree[3]==CK.CGNSTree_ts):
     T=tree
     if (lpath[0]==CK.CGNSTree_s):
+      if (len(lpath)==1): return T
       lpath=lpath[1:]
   else: T=[CK.CGNSTree_s,None,[tree],CK.CGNSTree_ts]
   n=getNodeFromPath(lpath,T)

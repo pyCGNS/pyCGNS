@@ -26,14 +26,6 @@ tag='missing compute node'
 diag=False
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base#1}',3,3)
-c=CGL.newUserDefinedData(b,'.Solver#compute')
-TESTS.append((tag,T,diag))
-
-#  -------------------------------------------------------------------------
-tag='bad compute attributes #1'
-diag=False
-T=CGL.newCGNSTree()
-b=CGL.newBase(T,'{Base#1}',3,3)
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
