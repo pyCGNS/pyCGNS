@@ -7,7 +7,7 @@ import CGNS.PAT.cgnslib as CGL
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import numpy as NPY
-import CGNS.VAL.suite.Onera._disk3sectors as DISK
+import CGNS.VAL.suite.elsA._disk3sectors as DISK
 
 TESTS=[]
 

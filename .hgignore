@@ -13,3 +13,5 @@ APPlicationSampler/build
 *~
 log
 *.*.orig
+.project
+.pydevproject

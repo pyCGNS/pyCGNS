@@ -833,6 +833,56 @@ def getShape(node):
   else: r=node[1].shape
   return r
 
+def getAuthNames(node):
+  """
+  Returns the authorized names for a CGNS/Python node.
+  If the names cannot be determined a None is returned.
+
+  .. code-block:: python
+         
+     if (node[0] not in getAuthNames(node)):
+       # do something
+
+  - Args:
+   * `node`: CGNS/Python node
+
+  - Return:
+   * A list of authorized names
+
+  """
+  r=None
+  if   (node[1]==None): r=None
+  elif (node[1]==[]):   r=None
+  elif (node[3]==''):   r=None
+  elif (CT.types[node[3]].names in ['',None,CT.UD]): r=None
+  else: r=CT.types[node[3]].names
+  return r
+
+def getAuthTypes(node):
+  """
+  Returns the authorized types for a CGNS/Python node.
+  If the types cannot be determined a None is returned.
+
+  .. code-block:: python
+         
+     if (getValueDataType(node) not in getAuthTypes(node)):
+       # do something
+
+  - Args:
+   * `node`: CGNS/Python node
+
+  - Return:
+   * A list of authorized names
+
+  """
+  r=None
+  if   (node[1]==None): r=None
+  elif (node[1]==[]):   r=None
+  elif (node[3]==''):   r=None
+  elif (CT.types[node[3]].datatype in ['',None,[CK.LK]]): r=None
+  else: r=CT.types[node[3]].datatype
+  return r
+
 # --------------------------------------------------
 def getValueDataType(node):
   """
