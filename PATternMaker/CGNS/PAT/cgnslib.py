@@ -1466,3 +1466,48 @@ def nextRange(previous,etype,earray):
   start=r[1]+1
   end  =start+nelems-1
   return NPY.array([start,end],dtype='i')
+
+# -----------------------------------------------------------------------------
+def getElementTypes(level,physicaldimension):
+  eltype_3D = [CK.TETRA_4_s, CK.TETRA_10_s, CK.PYRA_5_s, CK.PYRA_14_s,
+               CK.PENTA_6_s, CK.PENTA_15_s, CK.PENTA_18_s,
+               CK.HEXA_8_s, CK.HEXA_20_s, CK.HEXA_27_s, CK.MIXED_s, CK.PYRA_13_s,
+               CK.TETRA_16_s, CK.TETRA_20_s, CK.PYRA_21_s, CK.PYRA_29_s,
+               CK.PYRA_30_s, CK.PENTA_24_s, CK.PENTA_38_s, CK.PENTA_40_s, CK.HEXA_32_s,
+               CK.HEXA_56_s, CK.HEXA_64_s ]
+  eltype_2D = [CK.TRI_3_s, CK.TRI_6_s, CK.QUAD_4_s, CK.QUAD_8_s, CK.QUAD_9_s,
+               CK.TRI_9_s, CK.TRI_10_s, CK.QUAD_12_s, CK.QUAD_16_s ]
+  eltype_1D = [CK.BAR_2_s, CK.BAR_3_s, CK.BAR_4_s ]
+  eltype_0D = [CK.NODE_s ]
+  
+  if   (level == 'cell' and physicaldimension == 3):
+    eltype = eltype_3D
+    eltype.append(CK.NFACE_n_s)
+  elif (level == 'cell' and physicaldimension == 2):
+    eltype = eltype_2D
+    eltype.append(CK.NFACE_n_s)
+  elif (level == 'cell' and physicaldimension == 1):
+    eltype = eltype_1D
+    eltype.append(CK.NFACE_n_s)
+    
+  elif (level == 'face' and physicaldimension == 3):
+    eltype = eltype_2D
+    eltype.append(CK.NGON_n_s)    
+  elif (level == 'face' and physicaldimension == 2):
+    eltype = eltype_1D
+    eltype.append(CK.NGON_n_s) 
+  elif (level == 'face' and physicaldimension == 1):
+    eltype = eltype_0D
+    eltype.append(CK.NGON_n_s) 
+
+  elif (level == 'edge' and physicaldimension == 3):
+    eltype = eltype_1D 
+  elif (level == 'edge' and physicaldimension == 2):
+    eltype = eltype_0D
+  
+  elif (level == 'node' and physicaldimension == 3):
+    eltype = eltype_0D   
+        
+  else :
+    eltype = []  
+  return eltype

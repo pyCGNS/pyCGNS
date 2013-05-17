@@ -138,15 +138,89 @@ element=CGL.newElements(z,'MIXED',CGK.MIXED_s,
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
-tag='elements FACE number of faces out of range'
-diag=False
+tag='elements FACE'
+diag=True
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
-element=CGL.newElements(z,'NFACE',CGK.NFACE_n_s,
+nface=CGL.newElements(z,'NFACE',CGK.NFACE_n_s,
+                        NPY.array([4,1,2,-3,4,
+                                   5,1,2,3,4,5,
+                                   3,1,-2,3,
+                                   5,1,2,3,4,-5,
+                                   3,1,2,3,
+                                   5,1,2,3,4,5,
+                                   4,1,2,-3,4],dtype='i',order='F'),
+                        NPY.array([[1,cellsize]],'i',order='F'))
+ngon=CGL.newElements(z,'NGON',CGK.NGON_n_s,
                         NPY.array([4,9,9,9,9,
-                                   99999999,9,9,9,9,9,
+                                   5,9,9,9,9,9,
                                    3,9,9,9,
                                    5,9,9,9,9,9,
                                    4,9,9,9,9],dtype='i',order='F'),
-                        NPY.array([[cellsize+1,cellsize+cellsize]],'i',order='F'))
+                        NPY.array([[cellsize+1,cellsize+5]],'i',order='F'))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements FACE inconsistent dataarray'
+diag=False
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+nface=CGL.newElements(z,'NFACE',CGK.NFACE_n_s,
+                        NPY.array([4,1,2,-3,4,
+                                   9999999,1,2,3,4,5,
+                                   3,1,-2,3,
+                                   5,1,2,3,4,-5,
+                                   3,1,2,3,
+                                   5,1,2,3,4,5,
+                                   4,1,2,-3,4],dtype='i',order='F'),
+                        NPY.array([[1,cellsize]],'i',order='F'))
+ngon=CGL.newElements(z,'NGON',CGK.NGON_n_s,
+                        NPY.array([4,9,9,9,9,
+                                   5,9,9,9,9,9,
+                                   3,9,9,9,
+                                   5,9,9,9,9,9,
+                                   4,9,9,9,9],dtype='i',order='F'),
+                        NPY.array([[cellsize+1,cellsize+5]],'i',order='F'))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements FACE bad node shape'
+diag=False
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+nface=CGL.newElements(z,'NFACE',CGK.NFACE_n_s,
+                        NPY.array([4,1,2,-3,4,
+                                   5,1,2,3,4,5,
+                                   3,1,-2,3,
+                                   5,1,2,3,4,-5,
+                                   3,1,2,3,
+                                   5,1,2,3,4,5,
+                                   4,1,2,-3,4],dtype='i',order='F'),
+                        NPY.array([[1,cellsize-1]],'i',order='F'))
+ngon=CGL.newElements(z,'NGON',CGK.NGON_n_s,
+                        NPY.array([4,9,9,9,9,
+                                   5,9,9,9,9,9,
+                                   3,9,9,9,
+                                   5,9,9,9,9,9,
+                                   4,9,9,9,9],dtype='i',order='F'),
+                        NPY.array([[cellsize+1,cellsize+5]],'i',order='F'))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements FACE face index out of range'
+diag=False
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+nface=CGL.newElements(z,'NFACE',CGK.NFACE_n_s,
+                        NPY.array([4,1,2,-3,4,
+                                   5,1,2,99999,4,5,
+                                   3,1,-2,3,
+                                   5,1,2,3,4,-5,
+                                   3,1,2,3,
+                                   5,1,2,3,4,5,
+                                   4,1,2,-3,4],dtype='i',order='F'),
+                        NPY.array([[1,cellsize]],'i',order='F'))
+ngon=CGL.newElements(z,'NGON',CGK.NGON_n_s,
+                        NPY.array([4,9,9,9,9,
+                                   5,9,9,9,9,9,
+                                   3,9,9,9,
+                                   5,9,9,9,9,9,
+                                   4,9,9,9,9],dtype='i',order='F'),
+                        NPY.array([[cellsize+1,cellsize+5]],'i',order='F'))
 TESTS.append((tag,T,diag))
