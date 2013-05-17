@@ -559,7 +559,7 @@ def newElements(parent,name,
   - Args:
    * `parent`: the parent node (`<node>` or `None`)
    * `name`: element node name (`string`)
-   * `etype`: the type of element (`string`)
+   * `etype`: the type of element (`string` or 'int')
    * `econnectivity`: actual array of point connectivities (`numpy.ndarray`)
    * `erange`: the first and last index of the connectivity (`numpy.ndarray`)
    * `eboundary`: number of boundary elements (`int`)
@@ -571,14 +571,22 @@ def newElements(parent,name,
    * If a parent is given, the new node is added to the parent children list.
    * The `elementsrange` *should* insure a unique and continuous index for
      all elements nodes in the same parent zone.
+   * Element type can be set as `int` such as `CGK.QUAD_4` or 7, or
+     as `string` such as `CGK.QUAD_4_s` or `"QUAD_4"`
      
   - Children:
    * :py:func:`newDescriptor`
   """
-  CU.checkDuplicatedName(parent,name)   
-  if (etype not in CK.ElementType_l):
-    raise CE.cgnsException(250,etype)
-  v=NPY.array([CK.ElementType[etype],eboundary],dtype='i')
+  CU.checkDuplicatedName(parent,name)
+  if (type(etype) in [int]):
+    if (etype not in CK.ElementType.values()):
+      raise CE.cgnsException(250,etype)
+    etp=etype
+  if (type(etype) in [str]):
+    if (etype not in CK.ElementType_l):
+      raise CE.cgnsException(250,etype)
+    etp=CK.ElementType[etype]
+  v=NPY.array([etp,eboundary],dtype='i')
   enode=CU.newNode(name,v,[],CK.Elements_ts,parent)
   newDataArray(enode,CK.ElementConnectivity_s,econnectivity)
   newPointRange(enode,CK.ElementRange_s,erange)
