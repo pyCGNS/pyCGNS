@@ -552,7 +552,7 @@ def newElements(parent,name,
                 ):
   """*Elements_t* node creation::
 
-   quads=newElements(None,'QUADS',CGK.QUAD_4,quad_array,NPY.array(start,end))'
+   quads=newElements(None,'QUADS',CGK.QUAD_4,quad_array,NPY.array([start,end]))'
   
   - Args:
    * `parent`: the parent node (`<node>` or `None`)
