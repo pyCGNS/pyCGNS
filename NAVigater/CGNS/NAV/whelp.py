@@ -37,25 +37,48 @@ HELPDOCS={
 'Control':('Control panel',
 """
 <h2>Control panel</h2>
-The main panel of CGNS.NAV is a summary of views. The list gives you
-short information about the file/tree being viewed and allows you some
-basic operations.
+This main panel of CGNS.NAV is a manager of CGNS/Python tree views, it is 
+the first window to be open and and the last to be closed.
+You open and close CGNS/Python trees from file with this panel.
+The <i>Control panel</i> keeps track of all views you will open in
+CGNS.NAV and displays it in a list. A contextual menu on the list allows
+you to have short information about the file/tree being viewed and allows some
+other basic operations.
 <p>
-You can open new trees, close views or close all <i>CGNS.NAV</i> from this
-panel. 
+You use the <i>Control panel</i> to manage all the trees you are editing
+and to find out which views you have on these trees.
+
+<p>
+We use the term <b>view</b>
+when a CGNS.NAV window appears in this list
+and <b>panel</b> when the window doesn't appear in the list.
+Most of the time, a <b>panel</b> is a single instance of a window, while
+many <b>view</b>s of the same type can be open at the same time.
+<p>
+Most views or panels have buttons instead of menus. When you move you mouse
+on the button a tooltip appears, you can also use this help. Some button
+are not available because the function is not developped yet or because
+the context you actually are in doesn't allow to use it.
+<p>
+
+When you close the <i>Control panel</i> you leave CGNS.NAV and you close all 
+its children windows.
 
 <h3>Table entries</h3>
 Each line of the control panel is a view. Each view has a number, which
-counts from 001 up to the max number of views you have. The status and the
-type of the view are indicated by an icon.<i>We use the term <b>view</b>
-when a CGNS.NAV window appears in this list
-and <b>panel</b> when the window doesn't appear.
+counts from 001 up to the max number of views you have open. When you close
+a view there is no view re-numbering. Some tools, such as the diff or the
+merge tools, are using this view number as id to identify an actual
+CGNS/Python tree. Many views can be open on the same CGNS/Python tree,
+so any view id on the same tree is relevant to identify this tree.
 <p>
-
+The status and the type of the view are indicated by an icon. It gives you
+information about the ability to read/write the file associated with the
+corresponding CGNS/Python tree.
 The <b>status</b> changes each time you modify the CGNS/Python tree or
 its links or any other parameter that would lead to save a different file
-than the one that was loaded at first.
-
+than the one that read at first.
+<p>
 The <b>status</b> may indicate you cannot save the file, for example if
 the file is read only, or if the file has been converted; In this latter
 case, the actual file name is a temporary file name. The <b>Info panel</b>
@@ -76,7 +99,8 @@ The <b>status</b> icons are:
 <td>File cannot be saved, some modifications are not saved yet. You have no write access to the file, you should use <b>save as</b> button.</td></tr>
 </table>
 <p>
-The second column of a control panel line is the view type:
+The second column of a control panel line is the view type, some views can
+be open more than once on a given target CGNS/Python tree:
 
 <table>
 <tr><td><img source=":/images/icons/tree-load.gif"></td>
@@ -94,6 +118,10 @@ The second column of a control panel line is the view type:
 <tr><td><img source=":/images/icons/link.gif"></td>
 <td> Link view - Open from tree view</td></tr>
 </table>
+
+<p>
+The third column is the view id. This identifier would be used as
+the CGNS/Python tree identification for some CGNS.NAV embedded tools.
 
 <p>
 The remaining columns of a control panel line are the directory and the 
@@ -114,23 +142,49 @@ using the right click menu, on a row.
 <p>
 <table>
 <tr><td><img source=":/images/icons/tree-load-g.gif"></td>
-<td> load last used file</td></tr>
+<td> load last used file. You can also run CGNS.NAV with the <b>-l</b> option
+which has the same effect</td></tr>
 <tr><td><img source=":/images/icons/tree-load.gif"></td>
-<td> load a file, open the file dialog window</td></tr>
+<td> load a file, open the file dialog window. You can give more than one 
+filename on the CGNS.NAV command line, each file would be open</td></tr>
 <tr><td><img source=":/images/icons/tree-new.gif"></td>
-<td> create a new CGNS/Python tree from scratch</td></tr>
+<td> create a new CGNS/Python tree from scratch. There is no associated
+filename or directory location, you would have to use <b>save as</b> button
+of the <i>Tree view</i>. A default generated filename is set by CGNS.NAV,
+but the file is not saved until you ask CGNS.NAV to do so</td></tr>
 <tr><td><img source=":/images/icons/pattern.gif"></td>
 <td> open the pattern database</td></tr>
 <tr><td><img source=":/images/icons/options-view.gif"></td>
 <td> open the user options panel</td></tr>
 <tr><td><img source=":/images/icons/help-view.gif"></td>
-<td> help</td></tr>
+<td> help, you find this help button on almost all windows of CGNS.NAV,
+each opens the help page for the current window. You can have only one
+help window, then if you open a new one the previous is closed.</td></tr>
 <tr><td><img source=":/images/icons/view-help.gif"></td>
-<td> about CGNS.NAV</td></tr>
+<td> about CGNS.NAV and associated modules. You find here the versions
+you are currently using</td></tr>
 <tr><td><img source=":/images/icons/close-view.gif"></td>
 <td> close CGNS.NAV and all its views</td></tr>
 </table>
 
+<h3>File and CGNS/Python tree relationships</h3>
+
+The CGNS.NAV tool only uses CGNS/Python tree. When you read a file, all
+the CGNS/HDF5 disk data is translated into a CGNS/Python data and the file
+is closed. The tool keeps track of the directory and the filename you used
+to read, but there is no update if the file changes afterwards.
+<p>
+In particular if you read a file, modify the CGNS/Python tree and then
+save this tree back in the original file, you would <b>overwrite any
+other modification that would have been made by another tool meanwhile</b>.
+<p>
+You can check the status of the related file with the <i>Info panel</i> in
+the contextual menu you have by right clicking on a view of the target tree
+you want. The <i>Info panel</i> would tell you if the file has changed since
+the last time you have read/save it. But this does not guarantee that nothing
+would change it between the time you performed this check and the time you
+actually save it...
+<p>
 """),
 # --------------------------------------------------------------------------
 'Tree':('Tree view',

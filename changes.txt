@@ -3,6 +3,12 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 
+
+# v4.3 -
+- NAV on windows
+- fixes in WRA, add old wrapper compatibility for new wrapper
+- adds to PAT.cgnskeywords
+
 # v4.2 -
 - Move MAP to CHLone
 - WRA now uses Cython

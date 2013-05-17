@@ -1905,4 +1905,47 @@ def copyArray(a):
     b=NPY.array(a,copy=True)
   return b
 
+# --------------------------------------------------
+def toStringValue(v):
+  if (v is None): return None
+  ao='C'
+  if (NPY.isfortran(v)): ao='F'
+  at=v.dtype.char
+  av=v.tolist()
+  return "numpy.array(%s,dtype='%s',order='%s')"%(av,at,ao)
+
+# --------------------------------------------------
+def toStringChildren(l):
+  s="["
+  for c in l:
+    s+=toString(c)
+    s+=','
+  s+=']'
+  return s
+
+# --------------------------------------------------
+def toString(tree):
+  """
+  returns the full sub-tree as a single line string.
+
+  .. code-block:: python
+
+     s=toString(tree)
+     print s
+
+  - Args:
+   * `tree`: the CGNS/Python tree to parse
+
+  - Return:
+   * A string
+
+  - Remarks:
+   * the `numpy` module is used, the values strings are actual string
+     representation of a `numpy` array, include `dtype` and `order`
+
+  """
+  n=tree
+  s="['%s',%s,%s,'%s']"%(n[0],toStringValue(n[1]),toStringChildren(n[2]),n[3])
+  return s
+
 # ----

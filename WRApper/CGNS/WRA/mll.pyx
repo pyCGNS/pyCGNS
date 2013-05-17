@@ -138,6 +138,7 @@ cdef class pyCGNS(object):
     self._mode=mode
     (self._root,self._error)=cg_open_(filename,mode)
 
+  @property
   def error(self):
     return (self._error, cgnslib.cg_get_error())
 
@@ -4147,7 +4148,117 @@ cdef class pyCGNS(object):
   cpdef save_as(self, char *filename, int file_type,int follow_links):
     self._error=cgnslib.cg_save_as(self._root,filename,file_type,follow_links)
     return None
+  # ---------------------------------------------------------------------------
+  # old wrapper compatibility methods
+  #
+  cpdef basewrite(self, char *basename, int cdim, int pdim):
+    return self.base_write(basename,cdim,pdim)
+
+  cpdef zonewrite(self, int B, char *zonename, ozsize,  
+                  cgnslib.ZoneType_t ztype):
+    return self.zone_write(B,zonename,PNY.array(ozsize),ztype)
+
+  cpdef coordwrite(self, int B, int Z, cgnslib.DataType_t dtype,
+                   char *coordname, coords):
+    return self.coord_write(B,Z,dtype,coordname,coords)
+
+  cpdef one2onewrite(self, int B, int Z, char * cname, char * dname, 
+                     crange, drange, tr):
+    return self.conn_1to1_write(B,Z,cname,dname,crange,drange,tr)
+
+  cpdef bcwrite(self, int B, int Z, char * boconame, 
+                cgnslib.BCType_t bocotype,
+                cgnslib.PointSetType_t ptset_type,pnts):
+    return self.boco_write(B,Z,boconame,bocotype,ptset_type,len(pnts),pnts)
+
+  cpdef bcdatasetwrite(self, int B, int Z, int BC, char * name, 
+                       cgnslib.BCType_t BCType):
+    return self.dataset_write(B,Z,BC,name,BCType)
+
+  cpdef bcdatawrite(self, int B, int Z, int BC, int Dset,
+                    cgnslib.BCDataType_t bct):
+    return self.bcdata_write(B,Z,BC,Dset,bct)
+
+  cpdef statewrite(self, char *sdes):
+    return self.state_write(sdes)
+
+  cpdef arraywrite(self, char *aname, void1, void2, void3,adata):
+    return self.array_write(aname,adata)
+
+  cpdef equationsetwrite(self, int eqdim):
+    return self.equationset_write(eqdim)
+
+  cpdef governingwrite(self, cgnslib.GoverningEquationsType_t etype):
+    return self.governing_write(etype) 
+
+  cpdef diffusionwrite(self, dmodel):
+    v=0
+    for n in range(len(dmodel)):
+       v+=dmodel[n]*2**n
+    return self.diffusion_write(v)
+
+  cpdef modelwrite(self, char * label, cgnslib.ModelType_t mtype):
+    return self.model_write(label,mtype)
+
+  cpdef simulationtypewrite(self, int B, cgnslib.SimulationType_t stype):
+    return self.simulation_type_write(B,stype)
+
+  cpdef userdatawrite(self, char * usn):
+    return self.user_data_write(usn)
+
+  cpdef descriptorwrite(self, char * dname, char * dtext):
+    return self.descriptor_write( dname,dtext)
+
+  cpdef solwrite(self, int B, int Z, char * solname,
+                 cgnslib.GridLocation_t location ):
+    return self.sol_write(B,Z,solname,location)
+
+  cpdef int fieldwrite(self, int B,int Z,int S,
+                        cgnslib.DataType_t dtype, char *fieldname,
+                        Field_ptr):
+    return self.field_write(B,Z,S,dtype,fieldname,Field_ptr)
+
+  cpdef dataclasswrite(self, cgnslib.DataClass_t dclass):
+    return self.dataclass_write(dclass)
   
+  cpdef unitswrite(self, cgnslib.MassUnits_t m,cgnslib.LengthUnits_t l, 
+                   cgnslib.TimeUnits_t tps,
+                   cgnslib.TemperatureUnits_t t, cgnslib.AngleUnits_t a):
+    return self.units_write(m,l,tps,t,a)
+
+  cpdef exponentswrite(self, cgnslib.DataType_t dt, e):
+    return self.exponents_write(dt, PNY.array(e))
+
+  cpdef conversionwrite(self, cgnslib.DataType_t dt, fact):
+    return self.conversion_write(dt,fact)
+
+  cpdef convergencewrite(self, int iter, char *ndef):
+    return self.convergence_write(iter,ndef)
+
+  cpdef familywrite(self, int B, char *familyname):
+    return self.family_write(B,familyname)
+
+  cpdef familynamewrite(self, char *name):
+    return self.famname_write(name)
+
+  cpdef ordinalwrite(self, int ord):
+    return self.ordinal_write(ord)
+
+  cpdef discretewrite(self, int B, int Z, char * name):
+    return self.discrete_write(B,Z,name)
+
+  cpdef integralwrite(self, char * name):
+    return self.integral_write(name)
+
+  cpdef gridlocationwrite(self, cgnslib.GridLocation_t gloc):
+    return self.gridlocation_write(gloc)
+
+  cpdef rindwrite(self, rind):
+    return self.rind_write(PNY.array(rind))
+
+  cpdef gridwrite(self, int B, int Z, char *gridname):
+    return self.grid_write(B,Z,gridname)
+
 # ---------------------------------------------------------------------------
 # config functions to be called without a pyCGNS object
 #
