@@ -5,7 +5,7 @@
 #  $Release$
 #  -------------------------------------------------------------------------
 MAJORVERSION=4
-MINORVERSION=3
+MINORVERSION=4
 REVISION=0
 # --------------------------------------------------------------------
 
@@ -20,8 +20,8 @@ from distutils.core import setup
 from distutils.util import get_platform
 from distutils.command.clean import clean as _clean
 
-rootfiles=['errors.py']
-compfiles=['__init__.py','midlevel.py','wrap.py','version.py']
+rootfiles=['__init__.py','errors.py','version.py','config.py','test.py']
+compfiles=['midlevel.py','wrap.py']
 
 pfx='### pyCGNS: '
 

@@ -7,6 +7,8 @@
 # Change these values to fit your installation
 # See notes at end of file about config values
 #
+# - Revision numbers are in setuputils.py
+#
 import sys
 
 # --------------------------------------------------------------------
@@ -73,7 +75,7 @@ PFX='### pyCGNS:'
 #
 __version__=4 # @@UPDATEVERSION@@
 __release__=3 # @@UPDATERELEASE@@
-__revision__=413 # @@UPDATEREVISION@@
+__revision__=418 # @@UPDATEREVISION@@
 __vid__="%s.%s.%s"%(__version__,__release__,__revision__)
 __doc__="""pyCGNS - %s - Python package for CFD General Notation System"""\
         %(__vid__)
@@ -146,7 +148,7 @@ NUMPY_EXTRA_ARGS=%(NUMPY_EXTRA_ARGS)s
 
 __version__=4 # @@UPDATEVERSION@@
 __release__=3 # @@UPDATERELEASE@@
-__revision__=413 # @@UPDATEREVISION@@
+__revision__=418 # @@UPDATEREVISION@@
 __vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
 __doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
         %%(__vid__)

@@ -1,9 +1,8 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.APP - Python package for CFD General Notation System - APPlicater
+#  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
+#
 import os
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
@@ -36,7 +35,7 @@ x_mods=[Extension("CGNS.APP.probe.arrayutils",
 setup (
 name         = "CGNS.APP",
 version      = pyCGNSconfig.PAT_VERSION,
-description  = "pyCGNS APPlicater - CGNS/Python Application tools and utilities",
+description  = "pyCGNS - CGNS/Python Application tools and utilities",
 author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",
@@ -46,7 +45,7 @@ packages=['CGNS.APP',
           'CGNS.APP.demos',
           'CGNS.APP.sids',
           'CGNS.APP.probe',          
-          'CGNS.APP.tests'],
+          'CGNS.APP.test'],
  ext_modules = x_mods,
 cmdclass={'clean':setuputils.clean,'build_ext': build_ext}
 )

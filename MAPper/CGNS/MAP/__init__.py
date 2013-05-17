@@ -1,8 +1,6 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.MAP - Python package for CFD General Notation System - NAVigater
+#  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
-#  -------------------------------------------------------------------------
-#  $Release$
 #  -------------------------------------------------------------------------
 #
 # now all the code is in CHLone and its CGNS/Python interface

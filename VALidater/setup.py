@@ -1,10 +1,8 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.VAL - Python package for CFD General Notation System - VALidater
+#  pyCGNS - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
-#
+# 
 from  distutils.core import setup, Extension
 from  distutils.util import get_platform
 import glob
@@ -24,7 +22,7 @@ setuputils.installConfigFiles()
 setup (
 name         = "CGNS.VAL",
 version      = pyCGNSconfig.VAL_VERSION,
-description  = "pyCGNS VALidater - SIDS verification tools",
+description  = "pyCGNS - SIDS and sub-grammars verification tool",
 author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",

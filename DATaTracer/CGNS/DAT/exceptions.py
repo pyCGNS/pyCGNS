@@ -1,9 +1,8 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  pyCGNS - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
+# 
 class DAXException(Exception):
   def __init__(self,message):
     self._message=message

@@ -4,7 +4,6 @@
 #  -------------------------------------------------------------------------
 # Change these values to fit your installation
 #
-
 # --- overall directories and libs
 #
 import subprocess

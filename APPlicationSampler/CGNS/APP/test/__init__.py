@@ -5,4 +5,6 @@
 #  $Release$
 #  ---------------------------------------------------------------------------
 #
-pass
+def run():
+  print '### pyCGNS TEST: starting APP tests'
+# --- last line

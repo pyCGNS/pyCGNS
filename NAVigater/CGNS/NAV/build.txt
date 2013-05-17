@@ -1,11 +1,7 @@
-# -----------------------------------------------------------------
-# All rights reserved, contact marc.poinot@onera.fr
-# Copyright Onera-the French Aerospace Labs, Marc Poinot, 2011-
-# -----------------------------------------------------------------
-#
-# cgSpy - CGNS tree editor
-#
-# -----------------------------------------------------------------
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
 
 Process:
 

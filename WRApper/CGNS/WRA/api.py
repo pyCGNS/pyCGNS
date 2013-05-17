@@ -1,3 +1,8 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS - Python package for CFD General Notation System - 
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#
 fcts=[
 "cg_1to1_average_read",
 "cg_1to1_average_write",

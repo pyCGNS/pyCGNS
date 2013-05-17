@@ -1,9 +1,7 @@
 #
 #  -------------------------------------------------------------------------
-#  pyCGNS.DAT - Python package for CFD General Notation System - DATaTracer
+#  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
-#  -------------------------------------------------------------------------
-#  $Release$
 #  -------------------------------------------------------------------------
 # Add meta data skeletton in a file (uses ADF for efficiency)
 # $Id: cgutils.py 0 2003-06-18 12:29:31Z mpoinot $

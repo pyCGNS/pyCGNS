@@ -83,6 +83,17 @@ is no more relationship between the array and MLL::
   db.close()
   print r.shape
 
+Migration concerns
+------------------
+
+- The module import keeps the `CGNS.WRA.wrapper` module name.
+- All constants have to be changed to fit CGNS.PAT.cgnskeywords variables
+  RealDouble           CGK.RealDouble
+  RealSingle           CGK.RealSingle
+  
+  CoordinateX          CGK.CoordinateX_s
+ 
+  ...
 
 API Reference
 -------------

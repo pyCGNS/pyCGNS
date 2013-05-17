@@ -1,3 +1,9 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#  $Release$
+#
 import sys
 from cx_Freeze import setup, Executable
 sys.path.append("f:\localadmin\Bureau\pyCGNS\dist\Lib\site-packages")
@@ -37,3 +43,5 @@ author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",
 options = {"build_exe": build_exe_options},
     executables = [Executable("NAVigater/CGNS/NAV/CGNSNAV.py",base=base)])
+
+# --- last line

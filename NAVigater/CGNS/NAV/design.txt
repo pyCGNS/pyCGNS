@@ -1,3 +1,7 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
 
 All Q7***Window(s) are created using Qt Designer,
 each produces a Ui_Q7***Window as Cython class,

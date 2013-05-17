@@ -61,12 +61,12 @@ include_dirs+=['CGNS/WRA/modadf']
 
 # ***************************************************************************
 # Setup script for the CGNS Python interface
-ldescription  = "pyCGNS WRApper - CGNS/MLL python wrapping"
+ldescription  = "pyCGNS - CGNS/MLL python wrapping"
 lauthor       = "marc Poinot",
 lauthor_email = "marc.poinot@onera.fr",
 llicense      = "LGPL 2",
 lverbose      = 1
-lpackages     = ['CGNS.WRA']
+lpackages     = ['CGNS.WRA','CGNS.WRA.test']
 lscripts      = []
 ldata_files   = []
 lext_modules  = [

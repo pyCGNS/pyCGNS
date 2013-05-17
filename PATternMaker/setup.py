@@ -1,9 +1,8 @@
 #  ---------------------------------------------------------------------------
-#  pyCGNS.PAT - Python package for CFD General Notation System - PATternMaker
+#  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  ---------------------------------------------------------------------------
-#  $Release$
-#  ---------------------------------------------------------------------------
+#  
 import os
 from distutils.core import setup, Extension
 from distutils import sysconfig
@@ -39,11 +38,11 @@ else:
 setup (
 name         = "CGNS.PAT",
 version      = pyCGNSconfig.PAT_VERSION,
-description  = "pyCGNS PATternMaker - CGNS/Python patterns for SIDS and other",
+description  = "pyCGNS - CGNS/Python base and patterns for SIDS and other",
 author       = "marc Poinot",
 author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",
-packages=['CGNS.PAT','CGNS.PAT.SIDS','CGNS.PAT.tests'],
+packages=['CGNS.PAT','CGNS.PAT.SIDS','CGNS.PAT.test'],
 ext_modules  = extmods,
 cmdclass     = cmdclassdict
 )

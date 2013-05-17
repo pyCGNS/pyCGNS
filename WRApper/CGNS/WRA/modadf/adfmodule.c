@@ -1,10 +1,8 @@
 /* 
 #  -------------------------------------------------------------------------
-#  pyCGNS.WRA - Python package for CFD General Notation System - WRAper
+#  pyCGNS - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  ------------------------------------------------------------------------- 
 */
 #include "Python.h"
 #define  PY_ARRAY_UNIQUE_SYMBOL CGNS_PY_ARRAY_UNIQUE_SYMBOL

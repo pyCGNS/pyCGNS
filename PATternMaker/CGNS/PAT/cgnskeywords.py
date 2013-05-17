@@ -1,9 +1,8 @@
 #  ---------------------------------------------------------------------------
-#  pyCGNS.PAT - Python package for CFD General Notation System - PATternMaker
+#  pyCGNS - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
 #  ---------------------------------------------------------------------------
-#  $Release$
-#  ---------------------------------------------------------------------------
+#  
 """
  TYPES, ENUMERATES, CONSTANTS, NAMES from CGNS/MLL
 
@@ -146,7 +145,7 @@ TimeUnits_l = [Null_s,UserDefined_s,Second_s]
 
 TimeUnits   = stringAsKeyDict(TimeUnits_l)
 TimeUnits_  = enumAsKeyDict(TimeUnits_l)
-(TimeUnitsNull,TimeUnitsUserDefined,Seconds)=TimeUnits_.keys()
+(TimeUnitsNull,TimeUnitsUserDefined,Second)=TimeUnits_.keys()
 
 # --------------------------------------------------
 Kelvin_s           = "Kelvin"
@@ -228,17 +227,23 @@ AllAdditionalUnits_l  = LuminousIntensityUnits_l+SubstanceAmountUnits_l\
 AllUnits_l            = AllDimensionalUnits_l+AllAdditionalUnits_l
 
 # --------------------------------------------------
+DataClass_ts = "DataClass_t"
+DataClass_s  = "DataClass"
+
 Dimensional_s                    = "Dimensional"
 NormalizedByDimensional_s        = "NormalizedByDimensional"
 NormalizedByUnknownDimensional_s = "NormalizedByUnknownDimensional"
 NondimensionalParameter_s        = "NondimensionalParameter"
 DimensionlessConstant_s          = "DimensionlessConstant"
-DataClass_l=[Dimensional_s,NormalizedByDimensional_s,
-             NormalizedByUnknownDimensional_s,NondimensionalParameter_s,
-             DimensionlessConstant_s,Null_s,UserDefined_s]
 
-DataClass_ts = "DataClass_t"
-DataClass_s  = "DataClass"
+DataClass_l=[Null_s,UserDefined_s,Dimensional_s,NormalizedByDimensional_s,
+             NormalizedByUnknownDimensional_s,NondimensionalParameter_s,
+             DimensionlessConstant_s]
+DataClass  = stringAsKeyDict(DataClass_l)
+DataClass_ = enumAsKeyDict(DataClass_l)
+(Null,UserDefined,Dimensional,NormalizedByDimensional,
+ NormalizedByUnknownDimensional,NondimensionalParameter,
+ DimensionlessConstant)=DataClass_.keys()
 
 # ------------------------------------------------------------
 GridLocation_ts= "GridLocation_t"
@@ -814,9 +819,19 @@ RotationCenter_s              = "RotationCenter"
 
 GoverningEquations_s          = "GoverningEquations"
 GoverningEquations_ts         = "GoverningEquations_t"
-GoverningEquationsType_l      = [Euler_s,NSLaminar_s,NSTurbulent_s]
+
+GoverningEquationsType_l      = [Null_s, UserDefined_s,
+                                 FullPotential_s,Euler_s,NSLaminar_s,
+                                 NSTurbulent_s,NSLaminarIncompressible_s,
+                                 NSTurbulentIncompressible_s]
 GoverningEquationsType_s      = "GoverningEquationsType"
 GoverningEquationsType_ts     = "GoverningEquationsType_t"
+GoverningEquationsType        = stringAsKeyDict(GoverningEquationsType_l)
+GoverningEquationsType_       = enumAsKeyDict(GoverningEquationsType_l)
+(GoverningEquationsNull, GoverningEquationUserDefined,
+ FullPotential,Euler,NSLaminar,
+ NSTurbulent,NSLaminarIncompressible,
+ NSTurbulentIncompressible_s)=GoverningEquationsType_.keys()
 
 # --------------------------------------------------
 BCType_s                   = "BCType"
@@ -877,40 +892,56 @@ FamilyBC_  = BCType_
 
 # CAUTION, index of values in the lists below cannot be used as enumerate,
 # the lists are subset of the global list and some index are missing.
-BCTypeSimple_l   =[Null_s,BCGeneral_s,BCDirichlet_s,BCNeumann_s,
+BCTypeSimple_l   =[Null_s,UserDefined_s,BCGeneral_s,BCDirichlet_s,BCNeumann_s,
                    BCExtrapolate_s,BCWallInviscid_s,BCWallViscousHeatFlux_s,
                    BCWallViscousIsothermal_s,BCWallViscous_s,BCWall_s,
                    BCInflowSubsonic_s,BCInflowSupersonic_s,BCOutflowSubsonic_s,
                    BCOutflowSupersonic_s,BCTunnelInflow_s,BCTunnelOutflow_s,
                    BCDegenerateLine_s,BCDegeneratePoint_s,BCSymmetryPlane_s,
-                   BCSymmetryPolar_s,BCAxisymmetricWedge_s,FamilySpecified_s,
-                   UserDefined_s]
-BCTypeCompound_l = [BCInflow_s,BCOutflow_s,BCFarfield_s,
-                    Null_s,UserDefined_s]
+                   BCSymmetryPolar_s,BCAxisymmetricWedge_s,FamilySpecified_s]
+BCTypeCompound_l = [Null_s,UserDefined_s,
+                    BCInflow_s,BCOutflow_s,BCFarfield_s]
 
 # --------------------------------------------------
+# WARNING -
+# - the model sub-list CANNOT be used to define the corresponding enumerate
+#   because the new values are add at the end of a global list (ModelType)
+#   then the ONLY enumerate to use is the ModelType one which has its own list
+#
+GasModelType_l       = [Null_s,UserDefined_s,
+                        Ideal_s,VanderWaals_s,CaloricallyPerfect_s,
+                        ThermallyPerfect_s,ConstantDensity_s,RedlichKwong_s]
+GasModelType_s       = "GasModelType"
+GasModelType_ts      = "GasModelType_t"
+GasModelIdentifier_l = [IdealGasConstant_s,SpecificHeatRatio_s,
+                        SpecificHeatVolume_s,SpecificHeatPressure_s]
+
+ViscosityModel_ts          = "ViscosityModel_t"
+ViscosityModel_s           = "ViscosityModel"
+ViscosityModelType_l       = [Null_s,UserDefined_s,
+                              Constant_s,PowerLaw_s,SutherlandLaw_s]
+ViscosityModelType_s       = "ViscosityModelType"
+ViscosityModelType_ts      = "ViscosityModelType_t"
+ViscosityModelIdentifier_l = [PowerLawExponent_s,SutherlandLawConstant_s,
+                              TemperatureReference_s,
+                              ViscosityMolecularReference_s]
+
 ThermalConductivityModel_ts          = "ThermalConductivityModel_t"
 ThermalConductivityModel_s           = "ThermalConductivityModel"
-ThermalConductivityModelType_l       = [Null_s,ConstantPrandtl_s,PowerLaw_s,
-                                        SutherlandLaw_s,UserDefined_s]
+ThermalConductivityModelType_l       = [Null_s,UserDefined_s,
+                                        ConstantPrandtl_s,PowerLaw_s,
+                                        SutherlandLaw_s]
 ThermalConductivityModelType_s       = "ThermalConductivityModelType"
 ThermalConductivityModelType_ts      = "ThermalConductivityModelType_t"
-ThermalConductivityModelIdentifier_l = [(Prandtl_s),(PowerLawExponent_s),
-                                        (SutherlandLawConstant_s),
-                                        (TemperatureReference_s),
-                                        (ThermalConductivityReference_s)]
-
-TurbulenceClosure_ts          = "TurbulenceClosure_t"
-TurbulenceClosure_s           = "TurbulenceClosure"
-TurbulenceClosureType_l       = [Null_s,EddyViscosity_s,ReynoldsStress_s,
-                                 ReynoldsStressAlgebraic_s,UserDefined_s]
-TurbulenceClosureType_s       = "TurbulenceClosureType"
-TurbulenceClosureType_ts      = "TurbulenceClosureType_t"
-TurbulenceClosureIdentifier_l = [PrandtlTurbulent_s]
+ThermalConductivityModelIdentifier_l = [Prandtl_s,PowerLawExponent_s,
+                                        SutherlandLawConstant_s,
+                                        TemperatureReference_s,
+                                        ThermalConductivityReference_s]
 
 TurbulenceModel_ts     = "TurbulenceModel_t"
 TurbulenceModel_s      = "TurbulenceModel"
-TurbulenceModelType_l  = [Null_s,Algebraic_BaldwinLomax_s,
+TurbulenceModelType_l  = [Null_s,UserDefined_s,
+                          Algebraic_BaldwinLomax_s,
                           Algebraic_CebeciSmith_s,
                           HalfEquation_JohnsonKing_s,
                           OneEquation_BaldwinBarth_s,
@@ -920,72 +951,100 @@ TurbulenceModelType_l  = [Null_s,Algebraic_BaldwinLomax_s,
 TurbulenceModelType_s  = "TurbulenceModelType"
 TurbulenceModelType_ts = "TurbulenceModelType_t"
 
-DiffusionModel_s    = 'DiffusionModel'
-EquationDimension_s = 'EquationDimension'
-
-ViscosityModel_ts          = "ViscosityModel_t"
-ViscosityModel_s           = "ViscosityModel"
-ViscosityModelType_l       = [Constant_s,PowerLaw_s,SutherlandLaw_s,
-                              Null_s,UserDefined_s]
-ViscosityModelType_s       = "ViscosityModelType"
-ViscosityModelType_ts      = "ViscosityModelType_t"
-ViscosityModelIdentifier_l = [(PowerLawExponent_s),(SutherlandLawConstant_s),
-                              (TemperatureReference_s),
-                              (ViscosityMolecularReference_s)]
-
-GasModelType_l       = [Null_s,Ideal_s,VanderWaals_s,CaloricallyPerfect_s,
-                        ThermallyPerfect_s,ConstantDensity_s,RedlichKwong_s,
-                        UserDefined_s]
-GasModelType_s       = "GasModelType"
-GasModelType_ts      = "GasModelType_t"
-GasModelIdentifier_l = [IdealGasConstant_s,SpecificHeatRatio_s,
-                        SpecificHeatVolume_s,SpecificHeatPressure_s]
+TurbulenceClosure_ts          = "TurbulenceClosure_t"
+TurbulenceClosure_s           = "TurbulenceClosure"
+TurbulenceClosureType_l       = [Null_s,UserDefined_s,
+                                 EddyViscosity_s,ReynoldsStress_s,
+                                 ReynoldsStressAlgebraic_s]
+TurbulenceClosureType_s       = "TurbulenceClosureType"
+TurbulenceClosureType_ts      = "TurbulenceClosureType_t"
+TurbulenceClosureIdentifier_l = [PrandtlTurbulent_s]
 
 ThermalRelaxationModel_ts     = "ThermalRelaxationModel_t"
 ThermalRelaxationModel_s      = "ThermalRelaxationModel"
-ThermalRelaxationModelType_l  = [Null_s,Frozen_s,ThermalEquilib_s,
-                                 ThermalNonequilib_s,UserDefined_s]
+ThermalRelaxationModelType_l  = [Null_s,UserDefined_s,
+                                 Frozen_s,ThermalEquilib_s,
+                                 ThermalNonequilib_s]
 ThermalRelaxationModelType_s  = "ThermalRelaxationModelType"
 ThermalRelaxationModelType_ts = "ThermalRelaxationModelType_t"
 
 ChemicalKineticsModel_ts          = "ChemicalKineticsModel_t"
 ChemicalKineticsModel_s           = "ChemicalKineticsModel"
-ChemicalKineticsModelType_l       = [Null_s,Frozen_s,ChemicalEquilibCurveFit_s,
+ChemicalKineticsModelType_l       = [Null_s,UserDefined_s,
+                                     Frozen_s,ChemicalEquilibCurveFit_s,
                                      ChemicalEquilibMinimization_s,
-                                     ChemicalNonequilib_s,
-                                     UserDefined_s]
+                                     ChemicalNonequilib_s]
 ChemicalKineticsModelType_s       = "ChemicalKineticsModelType"
 ChemicalKineticsModelType_ts      = "ChemicalKineticsModelType_t"
 ChemicalKineticsModelIdentifier_l = [FuelAirRatio_s,ReferenceTemperatureHOF_s]
 
 EMElectricFieldModel_s      = "EMElectricFieldModel"
 EMElectricFieldModel_ts     = "EMElectricFieldModel_t"
-EMElectricFieldModelType_l  = [Null_s,Constant_s,Frozen_s,
-                               Interpolated_s,Voltage_s,UserDefined_s]
+EMElectricFieldModelType_l  = [Null_s,UserDefined_s,
+                               Constant_s,Frozen_s,
+                               Interpolated_s,Voltage_s]
 EMElectricFieldModelType_s  = "EMElectricFieldModelType"
 EMElectricFieldModelType_ts = "EMElectricFieldModelType_t"
 
 EMMagneticFieldModel_s      = "EMMagneticFieldModel"
 EMMagneticFieldModel_ts     = "EMMagneticFieldModel_t"
-EMMagneticFieldModelType_l  = [Null_s,Constant_s,Frozen_s,
-                               Interpolated_s,UserDefined_s]
+EMMagneticFieldModelType_l  = [Null_s,UserDefined_s,
+                               Constant_s,Frozen_s,Interpolated_s]
 EMMagneticFieldModelType_s  = "EMMagneticFieldModelType"
 EMMagneticFieldModelType_ts = "EMMagneticFieldModelType_t"
 
 EMConductivityModel_s           = "EMConductivityModel"
 EMConductivityModel_ts          = "EMConductivityModel_t"
-EMConductivityModelType_l       = [Null_s,Constant_s,Frozen_s,
+EMConductivityModelType_l       = [Null_s,UserDefined_s,
+                                   Constant_s,Frozen_s,
                                    Equilibrium_LinRessler_s,
-                                   Chemistry_LinRessler_s,UserDefined_s]
+                                   Chemistry_LinRessler_s]
 EMConductivityModelType_s       = "EMConductivityModelType"
 EMConductivityModelType_ts      = "EMConductivityModelType_t"
-EMConductivityModelIdentifier_l = [ElectricFieldX_s,ElectricFieldY_s,
+EMConductivityModelIdentifier_l = [Null_s,UserDefined_s,
+                                   ElectricFieldX_s,ElectricFieldY_s,
                                    ElectricFieldZ_s,MagneticFieldX_s,
                                    MagneticFieldY_s,MagneticFieldZ_s,
                                    CurrentDensityX_s,CurrentDensityY_s,
                                    CurrentDensityZ_s,ElectricConductivity_s,
                                    LorentzForceX_s,LorentzForceY_s,
                                    LorentzForceZ_s,JouleHeating_s]
+
+ModelType_l = [Null_s,UserDefined_s,
+               Ideal_s,VanderWaals_s,Constant_s,PowerLaw_s,SutherlandLaw_s,
+               ConstantPrandtl_s,EddyViscosity_s,ReynoldsStress_s,
+               ReynoldsStressAlgebraic_s,Algebraic_BaldwinLomax_s,
+               Algebraic_CebeciSmith_s,HalfEquation_JohnsonKing_s,
+               OneEquation_BaldwinBarth_s,OneEquation_SpalartAllmaras_s,
+               TwoEquation_JonesLaunder_s,TwoEquation_MenterSST_s,
+               TwoEquation_Wilcox_s,CaloricallyPerfect_s,ThermallyPerfect_s,
+               ConstantDensity_s,RedlichKwong_s,Frozen_s,ThermalEquilib_s,
+               ThermalNonequilib_s,ChemicalEquilibCurveFit_s,
+               ChemicalEquilibMinimization_s,ChemicalNonequilib_s,
+               EMElectricField_s,EMMagneticField_s,EMConductivity_s,
+               Voltage_s,Interpolated_s,Equilibrium_LinRessler_s,
+               Chemistry_LinRessler_s]
+ModelType   = stringAsKeyDict(ModelType_l)
+ModelType_  = enumAsKeyDict(ModelType_l)
+(Null,UserDefined,
+ Ideal,VanderWaals,Constant,PowerLaw,SutherlandLaw,
+ ConstantPrandtl,EddyViscosity,ReynoldsStress,
+ ReynoldsStressAlgebraic,Algebraic_BaldwinLomax,
+ Algebraic_CebeciSmith,HalfEquation_JohnsonKing,
+ OneEquation_BaldwinBarth,OneEquationpalartAllmaras,
+ TwoEquation_JonesLaunder,TwoEquation_MenterSST,
+ TwoEquation_Wilcox,CaloricallyPerfect,ThermallyPerfect,
+ ConstantDensity,RedlichKwong,Frozen,ThermalEquilib,
+ ThermalNonequilib,ChemicalEquilibCurveFit,
+ ChemicalEquilibMinimization,ChemicalNonequilib,
+ EMElectricField,EMMagneticField,EMConductivity,
+ Voltage,Interpolated,Equilibrium_LinRessler,
+ Chemistry_LinRessler)=ModelType_.keys()
+
+DiffusionModel_s    = 'DiffusionModel'
+EquationDimension_s = 'EquationDimension'
+
+# --------------------------------------------------
 
 AverageInterfaceType_s  = "AverageInterfaceType"
 AverageInterfaceType_ts = "AverageInterfaceType_t"
@@ -1134,6 +1193,28 @@ for k in dir():
 #
 cgnsnames.sort()
 cgnstypes.sort()
+#
+# Compatibility
+# - some constants have no integer/string correspondance, the legacy wrapper
+#   had its own defines, try to set them as long as it doens't collide with
+#   existing constants.
+#
+CoordinateX=CoordinateX_s
+CoordinateY=CoordinateY_s
+CoordinateZ=CoordinateZ_s
+
+Zone_t=Zone_ts
+ReferenceState_t=ReferenceState_ts
+FlowEquationSet_t=FlowEquationSet_ts
+GoverningEquations_t=GoverningEquations_ts
+GasModel_t=GasModel_ts
+ViscosityModel_t=ViscosityModel_ts
+TurbulenceModel_t=TurbulenceModel_ts
+UserDefinedData_t=UserDefinedData_ts
+FlowSolution_t=FlowSolution_ts
+DataArray_t=DataArray_ts
+Family_t=Family_ts
+DiscreteData_t=DiscreteData_ts
 #
 # --- last line
 
