@@ -81,9 +81,41 @@ cellsize   = 7
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
-tag='zone unstructured bad ElementRange combination'
+tag='zone unstructured bad ElementRange combination #1'
 diag=False
 (T,b,z)=makeUnstTree(vertexsize,cellsize)
 quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((3*4),dtype='i'),NPY.array([[1,3]],'i',order='F'))
 tris=CGL.newElements(z,'TRIS',CGK.TRI_3_s,NPY.ones((5*3),dtype='i'),NPY.array([[3,7]],'i',order='F')) # Bad combination of ElementRange
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='zone unstructured bad ElementRange combination #2'
+diag=False
+(T,b,z)=makeUnstTree(vertexsize,cellsize)
+quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+element=CGL.newElements(z,'NGON',CGK.NGON_n_s,
+                        NPY.array([4,9,9,9,9,
+                                   5,9,9,9,9,9,
+                                   3,9,9,9,
+                                   5,9,9,9,9,9,
+                                   3,9,9,9,
+                                   5,9,9,9,9,9,
+                                   4,9,9,9,9],dtype='i',order='F'),
+                        NPY.array([[cellsize+1+1,cellsize+7+1]],'i',order='F')) # should be cellsize+1,cellsize+7
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='zone unstructured bad ElementRange combination #3'
+diag=False
+(T,b,z)=makeUnstTree(vertexsize,cellsize)
+quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+element=CGL.newElements(z,'NGON',CGK.NGON_n_s,
+                        NPY.array([4,9,9,9,9,
+                                   5,9,9,9,9,9,
+                                   3,9,9,9,
+                                   5,9,9,9,9,9,
+                                   3,9,9,9,
+                                   5,9,9,9,9,9,
+                                   4,9,9,9,9],dtype='i',order='F'),
+                        NPY.array([[cellsize,cellsize+7-1]],'i',order='F')) # should be cellsize+1,cellsize+7
 TESTS.append((tag,T,diag))

@@ -18,6 +18,10 @@ def makeCorrectTree(vertexsize,cellsize):
   b=CGL.newBase(T,'Base',3,3)
   s=NPY.array([[vertexsize,cellsize,0]],dtype='i',order='F')
   z=CGL.newZone(b,'Zone',s,CGK.Unstructured_s)
+  g=CGL.newGridCoordinates(z,'GridCoordinates')
+  d=CGL.newDataArray(g,CGK.CoordinateX_s,NPY.ones((vertexsize),dtype='d',order='F'))
+  d=CGL.newDataArray(g,CGK.CoordinateY_s,NPY.ones((vertexsize),dtype='d',order='F'))
+  d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones((vertexsize),dtype='d',order='F'))
   return (T,b,z)
 vertexsize = 20
 cellsize   = 7
