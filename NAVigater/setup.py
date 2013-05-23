@@ -57,7 +57,8 @@ if installprocess:
   parser.add_option("--format",dest="format")
   try:
     (options, args) = parser.parse_args(sys.argv)
-    if (options.forcerebuild): setuputils.touch(fakefile)
+    if (options.forcerebuild):
+      setuputils.touch(fakefile)
   except OptionError: pass
 
   setuputils.installConfigFiles()

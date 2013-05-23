@@ -417,18 +417,70 @@ SimulationType_   = enumAsKeyDict(SimulationType_l)
 (Null,UserDefined,TimeAccurate,NonTimeAccurate)=SimulationType_.keys()
 
 # --------------------------------------------------
-ConstantRate_s        = "ConstantRate"
-VariableRate_s        = "VariableRate"
-NonDeformingGrid_s    = "NonDeformingGrid"
-DeformingGrid_s       = "DeformingGrid"
-RigidGridMotionType_l = [Null_s,ConstantRate_s,VariableRate_s,UserDefined_s]
-
-RigidGridMotionType_s="RigidGridMotionType"
+RigidGridMotionType_s ="RigidGridMotionType"
 RigidGridMotionType_ts="RigidGridMotionType_t"
 
+ConstantRate_s        = "ConstantRate"
+VariableRate_s        = "VariableRate"
+
+RigidGridMotionType_l = [Null_s,UserDefined_s,ConstantRate_s,VariableRate_s]
+RigidGridMotionType   = stringAsKeyDict(RigidGridMotionType_l)
+RigidGridMotionType_  = enumAsKeyDict(RigidGridMotionType_l)
+
+(Null,UserDefined,ConstantRate,VariableRate)=RigidGridMotionType_.keys()
+
+ArbitraryGridMotionType_s     ="ArbitraryGridMotionType"
+ArbitraryGridMotionType_ts    ="ArbitraryGridMotionType_t"
+
+NonDeformingGrid_s    = "NonDeformingGrid"
+DeformingGrid_s       = "DeformingGrid"
+
+ArbitraryGridMotion_ts        = "ArbitraryGridMotion_t"
+ArbitraryGridMotion_s         = "ArbitraryGridMotion"
+ArbitraryGridMotionType_l     = [Null_s,UserDefined_s,
+                                 NonDeformingGrid_s,DeformingGrid_s]
+ArbitraryGridMotion           = stringAsKeyDict(ArbitraryGridMotionType_l)
+ArbitraryGridMotion_          = enumAsKeyDict(ArbitraryGridMotionType_l)
+
+(Null,UserDefined,NonDeformingGrid,DeformingGrid)=ArbitraryGridMotion_.keys()
+
+# --------------------------------------------------
+WallFunction_ts               = "WallFunction_t"
+WallFunction_s                = "WallFunction"
+
 Generic_s                     = "Generic"
-BleedArea_s                   = "BleedArea"
-CaptureArea_s                 = "CaptureArea"
+
+WallFunctionType_ts           = "WallFunctionType_t"
+WallFunctionType_s            = "WallFunctionType"
+
+WallFunctionType_l            = [Null_s,UserDefined_s,Generic_s]
+WallFunctionType              = stringAsKeyDict(WallFunctionType_l)
+WallFunctionType_             = enumAsKeyDict(WallFunctionType_l)
+
+(Null,UserDefined,Generic)=WallFunctionType_.keys()
+
+# --------------------------------------------------
+Area_ts                   = "Area_t"
+Area_s                    = "Area"
+
+BleedArea_s               = "BleedArea"
+CaptureArea_s             = "CaptureArea"
+
+AreaType_ts               = "AreaType_t"
+AreaType_s                = "AreaType"
+AreaType_l                = [Null_s,UserDefined_s,BleedArea_s,CaptureArea_s]
+AreaType                  = stringAsKeyDict(AreaType_l)
+AreaType_                 = enumAsKeyDict(AreaType_l)
+(Null,UserDefined,BleedArea,CaptureArea)=AreaType_.keys()
+
+# --------------------------------------------------
+ZoneBC_ts                     = "ZoneBC_t"
+ZoneBC_s                      = "ZoneBC"
+ZoneIterativeData_ts          = "ZoneIterativeData_t"
+ZoneIterativeData_s           = "ZoneIterativeData"
+
+UserDefinedData_ts            = "UserDefinedData_t"
+
 AverageAll_s                  = "AverageAll"
 AverageCircumferential_s      = "AverageCircumferential"
 AverageRadial_s               = "AverageRadial"
@@ -686,18 +738,6 @@ GridVelocityXi_s              = "GridVelocityXi"
 GridVelocityEta_s             = "GridVelocityEta"
 GridVelocityZeta_s            = "GridVelocityZeta"
 
-ArbitraryGridMotion_ts        = "ArbitraryGridMotion_t"
-ArbitraryGridMotion_s         = "ArbitraryGridMotion"
-ArbitraryGridMotionType_l     = [Null_s,NonDeformingGrid_s,
-                                DeformingGrid_s,UserDefined_s]
-
-ArbitraryGridMotionType_s     ="ArbitraryGridMotionType"
-ArbitraryGridMotionType_ts    ="ArbitraryGridMotionType_t"
-
-Area_ts                       = "Area_t"
-Area_s                        = "Area"
-AreaType_ts                   = "AreaType_t"
-AreaType_s                    = "AreaType"
 SurfaceArea_s                 = "SurfaceArea"
 RegionName_s                  = "RegionName"
 AverageInterface_ts           = "AverageInterface_t"
@@ -1048,9 +1088,16 @@ EquationDimension_s = 'EquationDimension'
 
 AverageInterfaceType_s  = "AverageInterfaceType"
 AverageInterfaceType_ts = "AverageInterfaceType_t"
-AverageInterfaceType_l  = [Null_s,AverageAll_s,AverageCircumferential_s,
-                           AverageRadial_s,AverageI_s,AverageJ_s,AverageK_s,
-                           UserDefined_s]
+AverageInterfaceType_l  = [Null_s,UserDefined_s,
+                           AverageAll_s,AverageCircumferential_s,
+                           AverageRadial_s,AverageI_s,AverageJ_s,AverageK_s]
+
+AverageInterfaceType     = stringAsKeyDict(AverageInterfaceType_l)
+AverageInterfaceType_    = enumAsKeyDict(AverageInterfaceType_l)
+(Null,UserDefined,
+ AverageAll,AverageCircumferential,
+ AverageRadial,AverageI,AverageJ,AverageK)=AverageInterfaceType_.keys()
+
 AverageInterface_s      = "AverageInterface"
 AverageInterface_ts     = "AverageInterface_t"
 
@@ -1173,17 +1220,6 @@ ElementTypeNPE = dict(zip(ElementType_l,ElementTypeNPE_l))
  HEXA_56, HEXA_64)=ElementType_.keys()
 #
 
-WallFunction_ts               = "WallFunction_t"
-WallFunction_s                = "WallFunction"
-WallFunctionType_ts           = "WallFunctionType_t"
-WallFunctionType_s            = "WallFunctionType"
-ZoneBC_ts                     = "ZoneBC_t"
-ZoneBC_s                      = "ZoneBC"
-ZoneIterativeData_ts          = "ZoneIterativeData_t"
-ZoneIterativeData_s           = "ZoneIterativeData"
-
-UserDefinedData_ts            = "UserDefinedData_t"
-
 # ---
 cgnsnames=[globals()[k] for k in dir() if (k[-2:]=='_s')]
 cgnstypes=[globals()[k] for k in dir() if (k[-3:]=='_ts')]
@@ -1202,6 +1238,8 @@ cgnstypes.sort()
 CoordinateX=CoordinateX_s
 CoordinateY=CoordinateY_s
 CoordinateZ=CoordinateZ_s
+CoefLift=CoefLift_s
+Density=Density_s
 
 Zone_t=Zone_ts
 ReferenceState_t=ReferenceState_ts
@@ -1215,6 +1253,7 @@ FlowSolution_t=FlowSolution_ts
 DataArray_t=DataArray_ts
 Family_t=Family_ts
 DiscreteData_t=DiscreteData_ts
+RigidGridMotion_t=RigidGridMotion_ts
 #
 # --- last line
 

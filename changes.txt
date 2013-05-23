@@ -4,9 +4,13 @@
 #  -------------------------------------------------------------------------
 
 
+# v4.4 -
+- fixes in WRA, add old wrapper compatibility for new wrapper
+- adds to PAT.cgnskeywords
+
 # v4.3 -
 - NAV on windows
-- fixes in WRA, add old wrapper compatibility for new wrapper
+- VAL fixes
 - adds to PAT.cgnskeywords
 
 # v4.2 -

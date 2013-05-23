@@ -61,7 +61,8 @@ bdir=os.path.normpath(os.path.abspath('./build'))
 modArgs=[]
 modArgs.append(comcompiler)
 for opt in sys.argv[1:]:
-  if (opt[:12] not in ['--without-mod','--single-mod']): modArgs.append(opt)
+  if (opt[:12] not in ['--without-mod','--single-mod']):
+    modArgs.append(opt)
 
 bopt=''
 if ('build' in sys.argv):

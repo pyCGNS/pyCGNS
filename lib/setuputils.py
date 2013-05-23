@@ -317,7 +317,7 @@ def find_HDF5(pincs,plibs,libs):
 def find_MLL(pincs,plibs,libs,extraargs):
   notfound=1
   vers=''
-  cgnsversion='3130'
+  cgnsversion='3200'
   libs=['cgns','hdf5']+libs
   extraargs=[]#'-DCG_BUILD_SCOPE']
   for pth in pincs:
@@ -329,8 +329,8 @@ def find_MLL(pincs,plibs,libs,extraargs):
       for ll in l:
         if (ll[:20]=="#define CGNS_VERSION"):
           cgnsversion=ll.split()[2]
-          if (cgnsversion<'3000'):
-            print pfx,"ERROR: version should be v3.x for MLL"
+          if (cgnsversion<'3200'):
+            print pfx,"ERROR: version should be v3.2 for MLL"
       break
   if notfound:
     print pfx+"ERROR: cgnslib.h not found, please check paths"

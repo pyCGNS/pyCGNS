@@ -43,7 +43,7 @@ class xFAILED(Exception):
 def tt(s,n=TDBNAME1):
   import posixpath
   import os
-  if posixpath.exists(n): os.unlink(n)
+  if ((n!='') and posixpath.exists(n)): os.unlink(n)
   print "#---#"
   print s
 
@@ -318,9 +318,9 @@ del a
 
 tt("# 27# ADF ids",'')
 # DB should be closed before, otherwise ids are not known !
-a=CGK.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
+a=Mll.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
 print "#   #", a.root
-print "#   #", a.id(1,[(CGK.Zone_t,1),(CGK.FlowSolution_t,2)])
+#print "#   #", a.id(1,[(CGK.Zone_t,1),(CGK.FlowSolution_t,2)])
 print "#   #", a.baseid(1)
 print "#   #", a.zoneid(1,2)
 print "#   #", a.coordid(1,2,1)
@@ -331,18 +331,18 @@ print "#   #", a.bcid(1,1,1)
 ee(a)
 
 tt("# 28# ADF reads",'')
-b=CGK.pyADF(a.root,"","")
-print "#   #", b.nodeAsDict(a.solid(1,2,1))
-print "#   #", b.nodeAsDict(a.fieldid(1,2,1,1))
+#b=Mll.pyADF(a.root,"","")
+#print "#   #", b.nodeAsDict(a.solid(1,2,1))
+#print "#   #", b.nodeAsDict(a.fieldid(1,2,1,1))
 
 tt("# 29# ADF close (MLL Still open)",'')
-b.database_close()
+#b.database_close()
 
 tt("# 30# MLL close",'')
 a.close()
 
 tt("# 31# Reopen",'')
-a=CGK.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
+a=Mll.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
 ee(a)
 
 tt("# 32# Link same file",'')
@@ -354,7 +354,7 @@ a.close()
 ee(a)
 
 tt("# 33# Link other file",'')
-b=CGK.pyCGNS(TDBNAME3,CGNS.WRA.MODE_WRITE)
+b=Mll.pyCGNS(TDBNAME3,CGNS.WRA.MODE_WRITE)
 ee(b)
 b.basewrite("DumbBase",3,3)
 ee(b)
@@ -363,7 +363,7 @@ ee(b)
 b.close()
 ee(b)
 
-a=CGK.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
+a=Mll.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
 ee(a)
 a.goto(1,[])
 ee(a)
@@ -373,14 +373,14 @@ a.close()
 ee(a)
 
 tt("# 34# Close/ Reopen",'')
-a=CGK.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
+a=Mll.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
 ee(a)
 a.close()
 ee(a)
 
 tt("# 35# Get link infos",'')
-a=CGK.pyCGNS(TDBNAME2,CNGS.WRA.MODE_MODIFY)
-for n in range(1,a.nbases+1):
+a=Mll.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
+for n in range(1,a.nbases()+1):
   a.goto(1,[(CGK.Zone_t,n)])
   if (a.islink()):
     print "#   #", a.linkread()
@@ -390,7 +390,7 @@ a.close()
 
 # tt("# 36# Delete link nodes (large stuff in there)",'')
 # print "#   #", "Re-open as ADF file"
-# b=CGK.pyADF(a.root,"","")
+# b=Mll.pyADF(a.root,"","")
 # print "#   #", "Search for links (MLL)"
 # namelist=[]
 # for n in range(1,a.nzones(1)+1):
@@ -411,9 +411,9 @@ a.close()
 #     ee(a)
 
 tt("# 37# Close/ Reopen",'')
-a=CGK.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
+a=Mll.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
 a.close()
-a=CGK.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
+a=Mll.pyCGNS(TDBNAME2,CGNS.WRA.MODE_MODIFY)
 ee(a)
 
 tt("# 38# Arbitrary Grid Motion",'')
@@ -509,7 +509,7 @@ ee(a)
 
 tt("# 90# Ordering dimensions",'')
 a.close()
-a=CGK.pyCGNS(TDBNAME4,CGNS.WRA.MODE_WRITE)
+a=Mll.pyCGNS(TDBNAME4,CGNS.WRA.MODE_WRITE)
 ee(a)
 o=N.ones((1,3,5),'d')
 o[0,2]=2.
@@ -531,18 +531,18 @@ ee(a)
 a.coordwrite(1,2,CGK.RealDouble,CGK.CoordinateY,t)
 ee(a)
 a.close()
-a=CGK.pyCGNS(TDBNAME4,CGNS.WRA.MODE_READ)
+a=Mll.pyCGNS(TDBNAME4,CGNS.WRA.MODE_READ)
 xo=a.coordread(1,1,CGK.CoordinateX)
-print "#   # 1 = ", N.equal(o,xo).min(), xo.shape
+print "#   # 1 = ", N.all(N.equal(o,xo)), xo.shape
 ee(a)
 xo=a.coordread(1,2,CGK.CoordinateX)
-print "#   # 0 = ", N.equal(o,xo).min(), xo.shape
+print "#   # 0 = ", N.all(N.equal(o,xo)), xo.shape
 ee(a)
 xt=a.coordread(1,1,CGK.CoordinateY)
-print "#   # 0 = ", N.equal(t,xt).min(), xt.shape
+print "#   # 0 = ", N.all(N.equal(t,xt)), xt.shape
 ee(a)
 xt=a.coordread(1,2,CGK.CoordinateY)
-print "#   # 1 = ", N.equal(t,xt).min(), xt.shape
+print "#   # 1 = ", N.all(N.equal(t,xt)), xt.shape
 ee(a)
 a.close()
 
@@ -559,14 +559,14 @@ tt("# 99# ",'')
 
 tt("#100# Close/ Reopen",'')
 a.close()
-a=CGK.pyCGNS(TDBNAME2,CGNS.WRA.MODE_READ)
+a=Mll.pyCGNS(TDBNAME2,CGNS.WRA.MODE_READ)
 ee(a)
 
 tt("#101# Version",'')
-print "#   #", U.pnice(a.version)
+print "#   #", U.pnice(a.version())
 
 tt("#102# Base",'')
-print "#   #", a.nbases
+print "#   #", a.nbases()
 print "#   #", a.bases()
 print "#   #", a.baseread(1)
 ee(a)
@@ -586,7 +586,7 @@ tt("#105# Connectivity",'')
 print "#   #", a.none2oneglobal(1)
 print "#   #", a.none2one(1,2)
 print "#   #", a.none2one(1,2)
-print "#   #", a.one2onereadglobal(1)
+#print "#   #", a.one2onereadglobal(1)
 print "#   #", a.one2oneread(1,2,1)
 print "#   #", a.one2oneread(1,2,4)
 
@@ -623,7 +623,7 @@ print "#   #", a.userdataread(1)
 tt("#110# Descriptions",'')
 a.goto(1,[(CGK.UserDefinedData_t,1)])
 ee(a)
-print "#   #", a.ndescriptors
+print "#   #", a.ndescriptors()
 print "#   #", a.descriptors()
 print "#   #", a.descriptorread(1)
 
@@ -772,12 +772,12 @@ ee(a,2)
 
 tt("#150# Element Connectivity ",'')
 for zu in range(1,a.nzones(1)+1):
-  if (a.zonetype(1,zu) == CGK.ZoneType[CGK.Unstructured]):
+  if (a.zonetype(1,zu) == CGK.ZoneType[CGK.Unstructured_s]):
      print "#   #", a.nsections(1,zu)
      ee(a)
      print "#   #", a.elementdatasize(1,zu,1)
      ee(a)
-     print "#   #", a.npe(CGK.ElementType[CGK.HEXA_8])
+     print "#   #", a.npe(CGK.ElementType[CGK.HEXA_8_s])
      ee(a)
      print "#   #", a.sectionread(1,zu,1)
      ee(a)
@@ -786,7 +786,7 @@ for zu in range(1,a.nzones(1)+1):
 a.close()
 
 tt("#900# Tests that should not generate CORE DUMPs...",TDBNAME4)
-a=CGK.pyCGNS(TDBNAME4,CGNS.WRA.MODE_WRITE)
+a=Mll.pyCGNS(TDBNAME4,CGNS.WRA.MODE_WRITE)
 ee(a)
 a.basewrite('Base',3,3)
 ee(a)
