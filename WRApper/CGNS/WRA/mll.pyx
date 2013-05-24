@@ -60,7 +60,7 @@ def getCGNSMLLAPIlist():
   for f in lf:
     if ((f[0]!='_') and (f not in ['error'])):
       print 'cg_'+f
-  
+
 # ------------------------------------------------------------
 cdef cg_open_(char *filename, int mode):
   """
@@ -133,14 +133,21 @@ cdef class pyCGNS(object):
   """
   cdef public object _mode
   cdef public object _root
+  cdef public object _debug
   cdef public object _error
   cdef public object _filename
 
-  def __init__(self,filename,mode):
+  def __init__(self,filename,mode,debug=False):
     self._filename=filename
     self._mode=mode
+    self._debug=debug
+    self.dbg('cg_open [%s][%s]'%(filename,mode))
     (self._root,self._error)=cg_open_(filename,mode)
 
+  def dbg(self,msg):
+    if (self._debug):
+      print '### pyCGNS: %s'%msg
+    
   @property
   def error(self):
     return (self._error, cgnslib.cg_get_error())
@@ -200,7 +207,7 @@ cdef class pyCGNS(object):
       print '%g'%(db.version())
      
     """
-    cdef float v
+    cdef float v=0
     cgnslib.cg_version(self._root,&v)
     return v
 
@@ -210,11 +217,11 @@ cdef class pyCGNS(object):
 
   # ---------------------------------------------------------------------------
   cpdef where(self):
-    cdef int depth
+    cdef int depth=0
     cdef CNY.ndarray num
     cdef int *numptr
-    cdef int B
-    cdef int fn
+    cdef int B=0
+    cdef int fn=0
     cdef char *lab[MAXGOTODEPTH]
     num=PNY.ones((MAXGOTODEPTH,),dtype=PNY.int32,order='F')
     numptr=<int *>num.data
@@ -240,7 +247,7 @@ cdef class pyCGNS(object):
     - Remarks:
      * See also :py:func:`bases`
     """
-    cdef int n
+    cdef int n=0
     self._error=cgnslib.cg_nbases(self._root,&n)
     return n
 
@@ -259,7 +266,7 @@ cdef class pyCGNS(object):
     - Remarks:
      * See also :py:func:`nbases`
     """
-    cdef int n
+    cdef int n=0
     self._error=cgnslib.cg_nbases(self._root,&n)
     if (n!=0): return xrange(1,n+1)
     return []
@@ -279,9 +286,10 @@ cdef class pyCGNS(object):
      * physical dimensions (`int`)
     """
     cdef char basename[MAXNAMELENGTH]
-    cdef int  cdim
-    cdef int  pdim
+    cdef int  cdim=0
+    cdef int  pdim=0
     self._error=cgnslib.cg_base_read(self._root,B,basename,&cdim,&pdim)
+    if (not self._ok): basename=''
     return (B, basename, cdim, pdim)
 
   # ---------------------------------------------------------------------------
@@ -318,7 +326,7 @@ cdef class pyCGNS(object):
     - Return:
      * New base id (`int`)
     """
-    cdef int bid
+    cdef int bid=-1
     self._error=cgnslib.cg_base_write(self._root,basename,cdim,pdim,&bid)
     return bid
 
@@ -341,7 +349,7 @@ cdef class pyCGNS(object):
     - Remarks:
      * See also :py:func:`nzones`
     """
-    cdef int n
+    cdef int n=0
     self._error=cgnslib.cg_nzones(self._root,B,&n)
     if (n!=0): return xrange(1,n+1)
     return []
@@ -363,7 +371,7 @@ cdef class pyCGNS(object):
     - Remarks:
      * See also :py:func:`zones`
     """
-    cdef int n
+    cdef int n=0
     self._error=cgnslib.cg_nzones(self._root,B,&n)
     return n
 
