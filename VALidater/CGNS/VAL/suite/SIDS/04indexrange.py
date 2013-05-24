@@ -26,26 +26,26 @@ def makeCorrectTree(vertexsize,cellsize):
 vertexsize = 20
 cellsize   = 7
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
 tag='indexrange index bad ordered' # this rises a warning, not an error
 diag=True
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[cellsize,1]],'i',order='F')) # element range not ordered
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[cellsize,1]],'i',order='F')) # element range not ordered
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
 tag='indexrange index out of range'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones(((cellsize+1)*4),dtype='i'),NPY.array([[1,cellsize+1]],'i',order='F')) # element index out of range
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones(((cellsize+1)*4),dtype='i'),NPY.array([[1,cellsize+1]],'i',order='F')) # element index out of range
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
 tag='indexrange bad node shape'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([1,cellsize],'i',order='F')) # ElementRange bad node shape
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([1,cellsize],'i',order='F')) # ElementRange bad node shape
 TESTS.append((tag,T,diag))

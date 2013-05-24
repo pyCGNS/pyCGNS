@@ -26,38 +26,38 @@ def makeCorrectTree(vertexsize,cellsize):
 vertexsize = 20
 cellsize   = 7
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
 tag='elements absent children'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
-CGU.removeChildByName(quads,CGK.ElementRange_s) # ElementRange child absent
-CGU.removeChildByName(quads,CGK.ElementConnectivity_s) # ElementConnectivity child absent
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+CGU.removeChildByName(tetras,CGK.ElementRange_s) # ElementRange child absent
+CGU.removeChildByName(tetras,CGK.ElementConnectivity_s) # ElementConnectivity child absent
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
 tag='elements out of range'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
-quads[2][0][1][0]=vertexsize+1 # ElementConnectity element out of range
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+tetras[2][0][1][0]=vertexsize+1 # ElementConnectity element out of range
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
 tag='elements bad child shape'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones(((cellsize-1)*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F')) # bad ElementConnectivity node shape
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones(((cellsize-1)*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F')) # bad ElementConnectivity node shape
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
 tag='elements correct NGON shape'
 diag=True
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
 element=CGL.newElements(z,'NGON',CGK.NGON_n_s,
                         NPY.array([4,9,9,9,9,
                                    5,9,9,9,9,9,
@@ -73,7 +73,7 @@ TESTS.append((tag,T,diag))
 tag='elements uncorrect NGON shape'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
 element=CGL.newElements(z,'NGON',CGK.NGON_n_s,
                         NPY.array([4,9,9,9,9,
                                    5,9,9,9,9,9,
@@ -223,4 +223,45 @@ ngon=CGL.newElements(z,'NGON',CGK.NGON_n_s,
                                    5,9,9,9,9,9,
                                    4,9,9,9,9],dtype='i',order='F'),
                         NPY.array([[cellsize+1,cellsize+5]],'i',order='F'))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements parentelements and parentelementsposition'
+diag=True
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+nquads=3
+quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((nquads*4),dtype='i'),NPY.array([[cellsize+1,cellsize+nquads]],'i',order='F'))
+pe=CGL.newParentElements(quads,NPY.ones((nquads,2),dtype='i',order='F'))
+pp=CGL.newParentElementsPosition(quads,NPY.ones((nquads,2),dtype='i',order='F'))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements bad parentelements shape and parentelementsposition datatype'
+diag=False
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+nquads=3
+quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((nquads*4),dtype='i'),NPY.array([[cellsize+1,cellsize+nquads]],'i',order='F'))
+pe=CGL.newParentElements(quads,NPY.ones((nquads-1,2),dtype='i',order='F'))
+pp=CGL.newParentElementsPosition(quads,NPY.ones((nquads,2),dtype='d',order='F'))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements parentelements and parentelementsposition on bad element type (Warning)'
+diag=True
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+pe=CGL.newParentElements(tetras,NPY.ones((cellsize,2),dtype='i',order='F'))
+pp=CGL.newParentElementsPosition(tetras,NPY.ones((cellsize,2),dtype='i',order='F'))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements parentelements bad values'
+diag=False
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+nquads=3
+quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((nquads*4),dtype='i'),NPY.array([[cellsize+1,cellsize+nquads]],'i',order='F'))
+pe=CGL.newParentElements(quads,NPY.array([[1,2],[1,cellsize+1],[1,2]],dtype='i',order='F'))
 TESTS.append((tag,T,diag))

@@ -22,13 +22,13 @@ def makeCorrectTree(vertexsize,cellsize):
   d=CGL.newDataArray(g,CGK.CoordinateX_s,NPY.ones((vertexsize),dtype='d',order='F'))
   d=CGL.newDataArray(g,CGK.CoordinateY_s,NPY.ones((vertexsize),dtype='d',order='F'))
   d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones((vertexsize),dtype='d',order='F'))
-  quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+  tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
   zbc=CGL.newZoneBC(z)
   return (T,b,z,zbc)
 vertexsize = 20
 cellsize   = 7
 (T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
-n=CGL.newBoundary(zbc,'BC',range(1,cellsize+1),btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
 g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
 TESTS.append((tag,T,diag))
 
@@ -36,7 +36,7 @@ TESTS.append((tag,T,diag))
 tag='indexarray bad parent'
 diag=False
 (T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
-n=CGL.newBoundary(zbc,'BC',range(1,cellsize+1),btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)  
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)  
 g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
 i = n[2][0]
 z[2].append(CGU.copyNode(i,'PointList')) # unauthorized parent node
@@ -46,7 +46,7 @@ TESTS.append((tag,T,diag))
 tag='indexarray bad name'
 diag=False
 (T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
-n=CGL.newBoundary(zbc,'BC',range(1,cellsize+1),btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)  
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)  
 g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
 i = n[2][0]
 i[0] = 'ElementList' # unauthorized name
@@ -56,17 +56,17 @@ TESTS.append((tag,T,diag))
 tag='indexarray bad data type'
 diag=False
 (T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
-n=CGL.newBoundary(zbc,'BC',range(1,cellsize+1),btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)  
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)  
 g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
 i = n[2][0]
-i[1] = NPY.ones((5,0,0),dtype='d',order='F') # unauthorized data type
+i[1] = NPY.ones((1,cellsize),dtype='d',order='F') # unauthorized data type
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
 tag='indexarray bad child'
 diag=False
 (T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
-n=CGL.newBoundary(zbc,'BC',range(1,cellsize+1),btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)  
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)  
 g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
 i = n[2][0]
 CGL.newDataArray(i,'{DataArray}') # unauthorized child
@@ -76,6 +76,14 @@ TESTS.append((tag,T,diag))
 tag='indexarray element index out of range'
 diag=False
 (T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
-n=CGL.newBoundary(zbc,'BC',range(2,cellsize+2),btype=CGK.Null_s,family=None,pttype=CGK.PointList_s) # element index out of range
+n=CGL.newBoundary(zbc,'BC',[range(2,cellsize+2)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s) # element index out of range
+g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='indexarray element appear several times (Warning)'
+diag=True
+(T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
+n=CGL.newBoundary(zbc,'BC',[[1,1,1,1,1,1,1]],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s) # values appear several times in list
 g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
 TESTS.append((tag,T,diag))
