@@ -74,6 +74,10 @@ def makeUnstTree(vertexsize,cellsize):
   b=CGL.newBase(T,'Base',3,3)
   s=NPY.array([[vertexsize,cellsize,0]],dtype='i',order='F')
   z=CGL.newZone(b,'Zone',s,CGK.Unstructured_s)
+  g=CGL.newGridCoordinates(z,'GridCoordinates')
+  d=CGL.newDataArray(g,CGK.CoordinateX_s,NPY.ones((vertexsize),dtype='d',order='F'))
+  d=CGL.newDataArray(g,CGK.CoordinateY_s,NPY.ones((vertexsize),dtype='d',order='F'))
+  d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones((vertexsize),dtype='d',order='F'))  
   return (T,b,z)
 vertexsize = 20
 cellsize   = 7
@@ -94,6 +98,7 @@ element=CGL.newElements(z,'NGON',CGK.NGON_n_s,
                                    3,9,9,9,
                                    4,9,9,9,9],dtype='i',order='F'),
                         NPY.array([[cellsize+1,cellsize+6]],'i',order='F'))
+hexas2=CGL.newElements(z,'HEXAS2',CGK.HEXA_8_s,NPY.ones((2*8),dtype='i'),NPY.array([[cellsize+7,cellsize+8]],'i',order='F'))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------

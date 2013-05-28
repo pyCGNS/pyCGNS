@@ -87,3 +87,17 @@ diag=True
 n=CGL.newBoundary(zbc,'BC',[[1,1,1,1,1,1,1]],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s) # values appear several times in list
 g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
 TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='indexarray gridlocation vertex'
+diag=True
+(T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
+n=CGL.newBoundary(zbc,'BC',[[1,2,3,4,vertexsize]],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s) # element index out of range
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='indexarray gridlocation vertex index out of range'
+diag=False
+(T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
+n=CGL.newBoundary(zbc,'BC',[[1,2,3,4,vertexsize+1]],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s) # element index out of range
+TESTS.append((tag,T,diag))

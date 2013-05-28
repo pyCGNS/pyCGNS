@@ -1480,32 +1480,32 @@ def getElementTypes(level,physicaldimension):
   eltype_1D = [CK.BAR_2_s, CK.BAR_3_s, CK.BAR_4_s ]
   eltype_0D = [CK.NODE_s ]
   
-  if   (level == 'cell' and physicaldimension == 3):
+  if   (level == CK.Cell_s and physicaldimension == 3):
     eltype = eltype_3D
     eltype.append(CK.NFACE_n_s)
-  elif (level == 'cell' and physicaldimension == 2):
+  elif (level == CK.Cell_s and physicaldimension == 2):
     eltype = eltype_2D
     eltype.append(CK.NFACE_n_s)
-  elif (level == 'cell' and physicaldimension == 1):
+  elif (level == CK.Cell_s and physicaldimension == 1):
     eltype = eltype_1D
     eltype.append(CK.NFACE_n_s)
     
-  elif (level == 'face' and physicaldimension == 3):
+  elif (level == CK.Face_s and physicaldimension == 3):
     eltype = eltype_2D
     eltype.append(CK.NGON_n_s)    
-  elif (level == 'face' and physicaldimension == 2):
+  elif (level == CK.Face_s and physicaldimension == 2):
     eltype = eltype_1D
     eltype.append(CK.NGON_n_s) 
-  elif (level == 'face' and physicaldimension == 1):
+  elif (level == CK.Face_s and physicaldimension == 1):
     eltype = eltype_0D
     eltype.append(CK.NGON_n_s) 
 
-  elif (level == 'edge' and physicaldimension == 3):
+  elif (level == CK.Edge_s and physicaldimension == 3):
     eltype = eltype_1D 
-  elif (level == 'edge' and physicaldimension == 2):
+  elif (level == CK.Edge_s and physicaldimension == 2):
     eltype = eltype_0D
   
-  elif (level == 'node' and physicaldimension == 3):
+  elif (level == CK.Vertex_s and physicaldimension == 3):
     eltype = eltype_0D   
         
   else :

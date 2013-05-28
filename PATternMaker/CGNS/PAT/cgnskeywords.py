@@ -250,6 +250,9 @@ GridLocation_ts= "GridLocation_t"
 GridLocation_s = "GridLocation"
 
 Vertex_s       = "Vertex"
+Edge_s         = "Edge"
+Face_s         = "Face"
+Cell_s         = "Cell"
 CellCenter_s   = "CellCenter"
 FaceCenter_s   = "FaceCenter"
 IFaceCenter_s  = "IFaceCenter"
@@ -1171,6 +1174,8 @@ ElementTypeNPE = dict(zip(ElementType_l,ElementTypeNPE_l))
  QUAD_16, TETRA_16, TETRA_20, PYRA_21, PYRA_29,
  PYRA_30, PENTA_24, PENTA_38, PENTA_40, HEXA_32,
  HEXA_56, HEXA_64)=ElementType_.keys()
+ 
+ElementRangeList_s = "ElementRangeList"
 #
 
 WallFunction_ts               = "WallFunction_t"
