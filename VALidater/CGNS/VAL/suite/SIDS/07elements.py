@@ -229,7 +229,7 @@ TESTS.append((tag,T,diag))
 tag='elements parentelements and parentelementsposition'
 diag=True
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+hexas=CGL.newElements(z,'HEXAS',CGK.HEXA_8_s,NPY.ones((cellsize*8),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
 nquads=3
 quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((nquads*4),dtype='i'),NPY.array([[cellsize+1,cellsize+nquads]],'i',order='F'))
 pe=CGL.newParentElements(quads,NPY.ones((nquads,2),dtype='i',order='F'))
@@ -240,7 +240,7 @@ TESTS.append((tag,T,diag))
 tag='elements bad parentelements shape and parentelementsposition datatype'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+hexas=CGL.newElements(z,'HEXAS',CGK.HEXA_8_s,NPY.ones((cellsize*8),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
 nquads=3
 quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((nquads*4),dtype='i'),NPY.array([[cellsize+1,cellsize+nquads]],'i',order='F'))
 pe=CGL.newParentElements(quads,NPY.ones((nquads-1,2),dtype='i',order='F'))
@@ -251,17 +251,30 @@ TESTS.append((tag,T,diag))
 tag='elements parentelements and parentelementsposition on bad element type (Warning)'
 diag=True
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+hexas=CGL.newElements(z,'HEXAS',CGK.HEXA_8_s,NPY.ones((cellsize*8),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
 pe=CGL.newParentElements(tetras,NPY.ones((cellsize,2),dtype='i',order='F'))
 pp=CGL.newParentElementsPosition(tetras,NPY.ones((cellsize,2),dtype='i',order='F'))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
-tag='elements parentelements bad values'
+tag='elements parentelements bad values #1'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
-tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+hexas=CGL.newElements(z,'HEXAS',CGK.HEXA_8_s,NPY.ones((cellsize*8),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
 nquads=3
 quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((nquads*4),dtype='i'),NPY.array([[cellsize+1,cellsize+nquads]],'i',order='F'))
 pe=CGL.newParentElements(quads,NPY.array([[1,2],[1,cellsize+1],[1,2]],dtype='i',order='F'))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements parentelements bad values #2'
+diag=False
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+nhexa=2
+hexas=CGL.newElements(z,'HEXAS',CGK.HEXA_8_s,NPY.ones((nhexa*8),dtype='i'),NPY.array([[1,nhexa]],'i',order='F'))
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones(((cellsize-nhexa)*4),dtype='i'),NPY.array([[nhexa+1,cellsize]],'i',order='F'))
+nquads=3
+quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((nquads*4),dtype='i'),NPY.array([[cellsize+1,cellsize+nquads]],'i',order='F'))
+pe=CGL.newParentElements(quads,NPY.ones((nquads,2),dtype='i',order='F'))
+pe[1][0][1]=nhexa+1
 TESTS.append((tag,T,diag))
