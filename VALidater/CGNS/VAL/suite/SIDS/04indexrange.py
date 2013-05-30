@@ -37,13 +37,6 @@ tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i')
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
-tag='indexrange index out of range'
-diag=False
-(T,b,z)=makeCorrectTree(vertexsize,cellsize)
-tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones(((cellsize+1)*4),dtype='i'),NPY.array([[1,cellsize+1]],'i',order='F')) # element index out of range
-TESTS.append((tag,T,diag))
-
-#  -------------------------------------------------------------------------
 tag='indexrange bad node shape'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)

@@ -99,5 +99,5 @@ TESTS.append((tag,T,diag))
 tag='indexarray gridlocation vertex index out of range'
 diag=False
 (T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
-n=CGL.newBoundary(zbc,'BC',[[1,2,3,4,vertexsize+1]],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s) # element index out of range
+n=CGL.newBoundary(zbc,'BC',[[1,2,0,4,vertexsize+1]],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s) # element index out of range
 TESTS.append((tag,T,diag))
