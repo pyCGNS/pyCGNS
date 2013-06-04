@@ -93,6 +93,7 @@ tag='indexarray gridlocation vertex'
 diag=True
 (T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
 n=CGL.newBoundary(zbc,'BC',[[1,2,3,4,vertexsize]],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s) # element index out of range
+g=CGL.newGridLocation(n,value=CGK.Vertex_s)
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
@@ -100,4 +101,35 @@ tag='indexarray gridlocation vertex index out of range'
 diag=False
 (T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
 n=CGL.newBoundary(zbc,'BC',[[1,2,0,4,vertexsize+1]],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s) # element index out of range
+g=CGL.newGridLocation(n,value=CGK.Vertex_s)
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='indexarray gridlocation face'
+diag=True
+(T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
+ntris = 12
+tris=CGL.newElements(z,'TRIS',CGK.TRI_3_s,NPY.ones((ntris*3),dtype='i'),NPY.array([[cellsize+1,cellsize+ntris]],'i',order='F'))
+n=CGL.newBoundary(zbc,'BC',[range(cellsize+1,cellsize+ntris+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='indexarray gridlocation face index out of range #1'
+diag=False
+(T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
+ntris = 12
+tris=CGL.newElements(z,'TRIS',CGK.TRI_3_s,NPY.ones((ntris*3),dtype='i'),NPY.array([[cellsize+1,cellsize+ntris]],'i',order='F'))
+n=CGL.newBoundary(zbc,'BC',[range(cellsize+1,cellsize+ntris+2)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='indexarray gridlocation face index out of range #2'
+diag=False
+(T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
+ntris = 12
+tris=CGL.newElements(z,'TRIS',CGK.TRI_3_s,NPY.ones((ntris*3),dtype='i'),NPY.array([[cellsize+1,cellsize+ntris]],'i',order='F'))
+n=CGL.newBoundary(zbc,'BC',[range(cellsize,cellsize+ntris+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)
 TESTS.append((tag,T,diag))

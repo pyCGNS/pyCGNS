@@ -271,6 +271,7 @@ GridLocation_  = enumAsKeyDict(GridLocation_l)
 VertexSize_s         = "VertexSize"
 CellSize_s           = "CellSize"
 VertexSizeBoundary_s = "VertexSizeBoundary"
+ElementsSize_s       = "ElementsSize"
 
 # ------------------------------------------------------------
 PointSetType_ts = "PointSetType_t"
