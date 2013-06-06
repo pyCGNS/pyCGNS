@@ -1476,90 +1476,55 @@ def getElementTypes(level,physicaldimension):
     # The physical dimension is within 0-3
   
   - Args:
-   * `level`: may be Cell, Face, Edge or Vertex
+   * `level`: may be Cell, Face, Edge or Vertex (`string`)
    * `physicaldimension`: physical dimension of CFD problem (`int`)
 
   - Return:
    * The list of Element Types of considered level for considered physical dimension
   """
-  eltype_3D = [CK.TETRA_4_s, CK.TETRA_10_s, CK.PYRA_5_s, CK.PYRA_14_s,
-               CK.PENTA_6_s, CK.PENTA_15_s, CK.PENTA_18_s,
-               CK.HEXA_8_s, CK.HEXA_20_s, CK.HEXA_27_s, CK.MIXED_s, CK.PYRA_13_s,
-               CK.TETRA_16_s, CK.TETRA_20_s, CK.PYRA_21_s, CK.PYRA_29_s,
-               CK.PYRA_30_s, CK.PENTA_24_s, CK.PENTA_38_s, CK.PENTA_40_s, CK.HEXA_32_s,
-               CK.HEXA_56_s, CK.HEXA_64_s ]
-  eltype_2D = [CK.TRI_3_s, CK.TRI_6_s, CK.QUAD_4_s, CK.QUAD_8_s, CK.QUAD_9_s,
-               CK.TRI_9_s, CK.TRI_10_s, CK.QUAD_12_s, CK.QUAD_16_s ]
-  eltype_1D = [CK.BAR_2_s, CK.BAR_3_s, CK.BAR_4_s ]
-  eltype_0D = [CK.NODE_s ]
-  
   if   (level == CK.Cell_s and physicaldimension == 3):
-    eltype = eltype_3D
-    eltype.append(CK.NFACE_n_s)
+    return CK.ElementType3D+[CK.NFACE_n]
   elif (level == CK.Cell_s and physicaldimension == 2):
-    eltype = eltype_2D
-    eltype.append(CK.NFACE_n_s)
+    return CK.ElementType2D+[CK.NFACE_n]
   elif (level == CK.Cell_s and physicaldimension == 1):
-    eltype = eltype_1D
-    eltype.append(CK.NFACE_n_s)
+    return CK.ElementType1D+[CK.NFACE_n]
     
   elif (level == CK.Face_s and physicaldimension == 3):
-    eltype = eltype_2D
-    eltype.append(CK.NGON_n_s)    
+    return CK.ElementType2D+[CK.NGON_n]    
   elif (level == CK.Face_s and physicaldimension == 2):
-    eltype = eltype_1D
-    eltype.append(CK.NGON_n_s) 
+    return CK.ElementType1D+[CK.NGON_n] 
   elif (level == CK.Face_s and physicaldimension == 1):
-    eltype = eltype_0D
-    eltype.append(CK.NGON_n_s) 
+    return CK.ElementType0D+[CK.NGON_n] 
 
   elif (level == CK.Edge_s and physicaldimension == 3):
-    eltype = eltype_1D 
+    return CK.ElementType1D
   elif (level == CK.Edge_s and physicaldimension == 2):
-    eltype = eltype_0D
+    return CK.ElementType0D
   
   elif (level == CK.Vertex_s and physicaldimension == 3):
-    eltype = eltype_0D   
+    return CK.ElementType0D 
         
   else :
-    eltype = []  
-  return eltype
+    return []  
 
 # -----------------------------------------------------------------------------
 def getAuthElementTypes(facetype):
   """Authorized Element types for a Face type::
   
   - Args:
-   * `facetype`: Face Type
+   * `facetype`: Face Type (`int`)
 
   - Return:
    * The list of Element Types authorized for the considered face type
   """  
-  eltype_3D = [CK.TETRA_4_s, CK.TETRA_10_s, CK.PYRA_5_s, CK.PYRA_14_s,
-               CK.PENTA_6_s, CK.PENTA_15_s, CK.PENTA_18_s,
-               CK.HEXA_8_s, CK.HEXA_20_s, CK.HEXA_27_s, CK.MIXED_s, CK.PYRA_13_s,
-               CK.TETRA_16_s, CK.TETRA_20_s, CK.PYRA_21_s, CK.PYRA_29_s,
-               CK.PYRA_30_s, CK.PENTA_24_s, CK.PENTA_38_s, CK.PENTA_40_s, CK.HEXA_32_s,
-               CK.HEXA_56_s, CK.HEXA_64_s ]
-  eltype_2D = [CK.TRI_3_s, CK.TRI_6_s, CK.QUAD_4_s, CK.QUAD_8_s, CK.QUAD_9_s,
-               CK.TRI_9_s, CK.TRI_10_s, CK.QUAD_12_s, CK.QUAD_16_s ]
-  
-  eltype_trionly  = [CK.TETRA_4_s, CK.TETRA_10_s, CK.TETRA_16_s, CK.TETRA_20_s]
-  eltype_quadonly = [CK.HEXA_8_s, CK.HEXA_20_s, CK.HEXA_27_s, CK.HEXA_32_s,
-                     CK.HEXA_56_s, CK.HEXA_64_s ]
-  eltype_triquad  = [CK.PYRA_5_s, CK.PYRA_14_s,
-                     CK.PENTA_6_s, CK.PENTA_15_s, CK.PENTA_18_s,
-                     CK.PYRA_13_s, CK.PYRA_21_s, CK.PYRA_29_s,
-                     CK.PYRA_30_s, CK.PENTA_24_s, CK.PENTA_38_s, CK.PENTA_40_s]
-
-  if (facetype in eltype_2D):
-    if (facetype.startswith('TRI')):
-      return eltype_trionly+eltype_triquad+[CK.MIXED_s,CK.NFACE_n_s]
-    elif facetype.startswith('QUAD'):
-      return eltype_quadonly+eltype_triquad+[CK.MIXED_s,CK.NFACE_n_s]
+  if (facetype in CK.ElementType2D):
+    if (facetype in CK.ElementType_tri):
+      return CK.ElementType_trionly+CK.ElementType_triquad+[CK.MIXED,CK.NFACE_n]
+    elif (facetype in CK.ElementType_quad):
+      return CK.ElementType_quadonly+CK.ElementType_triquad+[CK.MIXED,CK.NFACE_n]
     else:
-      return eltype_3D+[CK.NFACE_n_s]
-  elif (facetype==CK.NGON_n_s):
-    return eltype_3D+[CK.NFACE_n_s]
+      return CK.ElementType3D+[CK.NFACE_n]
+  elif (facetype==CK.NGON_n):
+    return CK.ElementType3D+[CK.NFACE_n]
   else:
-    return None
+    return []

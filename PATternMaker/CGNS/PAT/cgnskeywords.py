@@ -1176,6 +1176,26 @@ ElementTypeNPE = dict(zip(ElementType_l,ElementTypeNPE_l))
  PYRA_30, PENTA_24, PENTA_38, PENTA_40, HEXA_32,
  HEXA_56, HEXA_64)=ElementType_.keys()
  
+ElementType3D = [TETRA_4, TETRA_10, PYRA_5, PYRA_14,
+                 PENTA_6, PENTA_15, PENTA_18,
+                 HEXA_8, HEXA_20, HEXA_27, MIXED, PYRA_13,
+                 TETRA_16, TETRA_20, PYRA_21, PYRA_29,
+                 PYRA_30, PENTA_24, PENTA_38, PENTA_40, HEXA_32,
+                 HEXA_56, HEXA_64]
+ElementType2D = [TRI_3, TRI_6, QUAD_4, QUAD_8, QUAD_9,
+                 TRI_9, TRI_10, QUAD_12, QUAD_16 ]
+ElementType1D = [BAR_2, BAR_3, BAR_4]
+ElementType0D = [NODE]
+ElementType_tri   = [TRI_3, TRI_6, TRI_9, TRI_10]
+ElementType_quad  = [QUAD_4, QUAD_8, QUAD_9, QUAD_12, QUAD_16]
+ElementType_tetra = [TETRA_4, TETRA_10, TETRA_16, TETRA_20]
+ElementType_pyra  = [PYRA_13, PYRA_21, PYRA_29, PYRA_30]
+ElementType_penta = [PENTA_6, PENTA_15, PENTA_18, PENTA_24, PENTA_38, PENTA_40]
+ElementType_hexa  = [HEXA_8, HEXA_20, HEXA_27, HEXA_32, HEXA_56, HEXA_64]
+ElementType_trionly  = ElementType_tetra
+ElementType_quadonly = ElementType_hexa
+ElementType_triquad  = ElementType_pyra + ElementType_penta
+ 
 ElementRangeList_s = "ElementRangeList"
 #
 

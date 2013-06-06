@@ -142,13 +142,13 @@ tag='elements FACE'
 diag=True
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
 nface=CGL.newElements(z,'NFACE',CGK.NFACE_n_s,
-                        NPY.array([4,1,2,-3,4,
-                                   5,1,2,3,4,5,
-                                   3,1,-2,3,
-                                   5,1,2,3,4,-5,
-                                   3,1,2,3,
-                                   5,1,2,3,4,5,
-                                   4,1,2,-3,4],dtype='i',order='F'),
+                        NPY.array([4,cellsize+1, cellsize+2,-cellsize-3,cellsize+4,
+                                   5,cellsize+1, cellsize+2, cellsize+3,cellsize+4, cellsize+5,
+                                   3,cellsize+1,-cellsize-2, cellsize+3,
+                                   5,cellsize+1, cellsize+2, cellsize+3,cellsize+4,-cellsize-5,
+                                   3,cellsize+1, cellsize+2, cellsize+3,
+                                   5,cellsize+1, cellsize+2, cellsize+3,cellsize+4, cellsize+5,
+                                   4,cellsize+1, cellsize+2,-cellsize-3,cellsize+4],dtype='i',order='F'),
                         NPY.array([[1,cellsize]],'i',order='F'))
 ngon=CGL.newElements(z,'NGON',CGK.NGON_n_s,
                         NPY.array([4,9,9,9,9,
@@ -164,13 +164,13 @@ tag='elements FACE inconsistent dataarray'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
 nface=CGL.newElements(z,'NFACE',CGK.NFACE_n_s,
-                        NPY.array([4,1,2,-3,4,
-                                   9999999,1,2,3,4,5,
-                                   3,1,-2,3,
-                                   5,1,2,3,4,-5,
-                                   3,1,2,3,
-                                   5,1,2,3,4,5,
-                                   4,1,2,-3,4],dtype='i',order='F'),
+                        NPY.array([4,cellsize+1, cellsize+2,-cellsize-3,cellsize+4,
+                                   9999999,cellsize+1, cellsize+2, cellsize+3,cellsize+4, cellsize+5,
+                                   3,cellsize+1,-cellsize-2, cellsize+3,
+                                   5,cellsize+1, cellsize+2, cellsize+3,cellsize+4,-cellsize-5,
+                                   3,cellsize+1, cellsize+2, cellsize+3,
+                                   5,cellsize+1, cellsize+2, cellsize+3,cellsize+4, cellsize+5,
+                                   4,cellsize+1, cellsize+2,-cellsize-3,cellsize+4],dtype='i',order='F'),
                         NPY.array([[1,cellsize]],'i',order='F'))
 ngon=CGL.newElements(z,'NGON',CGK.NGON_n_s,
                         NPY.array([4,9,9,9,9,
@@ -186,13 +186,13 @@ tag='elements FACE bad node shape'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
 nface=CGL.newElements(z,'NFACE',CGK.NFACE_n_s,
-                        NPY.array([4,1,2,-3,4,
-                                   5,1,2,3,4,5,
-                                   3,1,-2,3,
-                                   5,1,2,3,4,-5,
-                                   3,1,2,3,
-                                   5,1,2,3,4,5,
-                                   4,1,2,-3,4],dtype='i',order='F'),
+                        NPY.array([4,cellsize+1, cellsize+2,-cellsize-3,cellsize+4,
+                                   5,cellsize+1, cellsize+2, cellsize+3,cellsize+4, cellsize+5,
+                                   3,cellsize+1,-cellsize-2, cellsize+3,
+                                   5,cellsize+1, cellsize+2, cellsize+3,cellsize+4,-cellsize-5,
+                                   3,cellsize+1, cellsize+2, cellsize+3,
+                                   5,cellsize+1, cellsize+2, cellsize+3,cellsize+4, cellsize+5,
+                                   4,cellsize+1, cellsize+2,-cellsize-3,cellsize+4],dtype='i',order='F'),
                         NPY.array([[1,cellsize-1]],'i',order='F'))
 ngon=CGL.newElements(z,'NGON',CGK.NGON_n_s,
                         NPY.array([4,9,9,9,9,
@@ -208,13 +208,13 @@ tag='elements FACE face index out of range'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
 nface=CGL.newElements(z,'NFACE',CGK.NFACE_n_s,
-                        NPY.array([4,1,2,-3,4,
-                                   5,1,2,99999,4,5,
-                                   3,1,-2,3,
-                                   5,1,2,3,4,-5,
-                                   3,1,2,3,
-                                   5,1,2,3,4,5,
-                                   4,1,2,-3,4],dtype='i',order='F'),
+                        NPY.array([4,cellsize+1, cellsize+2,-cellsize-3,cellsize+4,
+                                   5,cellsize+1, cellsize+2, 999999    ,cellsize+4, cellsize+5,
+                                   3,cellsize+1,-cellsize-2, cellsize+3,
+                                   5,cellsize+1, cellsize+2, cellsize+3,cellsize+4,-cellsize-5,
+                                   3,cellsize+1, cellsize+2, cellsize+3,
+                                   5,cellsize+1, cellsize+2, cellsize+3,cellsize+4, cellsize+5,
+                                   4,cellsize+1, cellsize+2,-cellsize-3,cellsize+4],dtype='i',order='F'),
                         NPY.array([[1,cellsize]],'i',order='F'))
 ngon=CGL.newElements(z,'NGON',CGK.NGON_n_s,
                         NPY.array([4,9,9,9,9,
