@@ -16,6 +16,10 @@ diag=True
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base}',3,3)
 z=CGL.newZone(b,'{Zone}',NPY.array([[5,4,0],[7,6,0],[9,8,0]],order='F'))
+g=CGL.newGridCoordinates(z,'GridCoordinates')
+d=CGL.newDataArray(g,CGK.CoordinateX_s,NPY.ones((5,7,9),dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateY_s,NPY.ones((5,7,9),dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones((5,7,9),dtype='d',order='F'))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
@@ -24,6 +28,10 @@ diag=False
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base}',3,3)
 z=CGL.newZone(b,'{Zone}',NPY.array([[5,4,0],[7,6,0],[9,8,0]],order='F'))
+g=CGL.newGridCoordinates(z,'GridCoordinates')
+d=CGL.newDataArray(g,CGK.CoordinateX_s,NPY.ones((5,7,9),dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateY_s,NPY.ones((5,7,9),dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones((5,7,9),dtype='d',order='F'))
 zt=CGU.hasChildName(z,CGK.ZoneType_s)
 zt[1]=CGU.setStringAsArray('Untruscutred')
 TESTS.append((tag,T,diag))
@@ -34,6 +42,10 @@ diag=False
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base}',3,3)
 z=CGL.newZone(b,'{Zone}',NPY.array([[5,4,0],[7,6,0],[9,8,0]],order='F'))
+g=CGL.newGridCoordinates(z,'GridCoordinates')
+d=CGL.newDataArray(g,CGK.CoordinateX_s,NPY.ones(5,dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateY_s,NPY.ones(5,dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones(5,dtype='d',order='F'))
 zt=CGU.hasChildName(z,CGK.ZoneType_s)
 zt[1]=CGU.setStringAsArray(CGK.Unstructured_s)
 tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((4*4),dtype='i'),NPY.array([[1,4]],'i',order='F'))
@@ -45,6 +57,10 @@ diag=False
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base}',3,3)
 z=CGL.newZone(b,'{Zone}',NPY.array([[4,5,0]],order='F'))
+g=CGL.newGridCoordinates(z,'GridCoordinates')
+d=CGL.newDataArray(g,CGK.CoordinateX_s,NPY.ones(4,dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateY_s,NPY.ones(4,dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones(4,dtype='d',order='F'))  
 zt=CGU.hasChildName(z,CGK.ZoneType_s)
 zt[1]=CGU.setStringAsArray(CGK.Unstructured_s)
 tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((5*4),dtype='i'),NPY.array([[1,5]],'i',order='F'))
@@ -56,6 +72,10 @@ diag=False
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base}',3,3)
 z=CGL.newZone(b,'{Zone}',NPY.array([[5,4,0],[7,7,0],[9,8,0]],order='F'))
+g=CGL.newGridCoordinates(z,'GridCoordinates')
+d=CGL.newDataArray(g,CGK.CoordinateX_s,NPY.ones((5,7,9),dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateY_s,NPY.ones((5,7,9),dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones((5,7,9),dtype='d',order='F'))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
@@ -63,7 +83,11 @@ tag='zone structured bad numpy array order'
 diag=False
 T=CGL.newCGNSTree()
 b=CGL.newBase(T,'{Base}',3,3)
-z=CGL.newZone(b,'{Zone}',NPY.array([[5,7,8],[4,6,8],[0,0,0]],order='F'))
+z=CGL.newZone(b,'{Zone}',NPY.array([[5,7,9],[4,6,8],[0,0,0]],order='F'))
+g=CGL.newGridCoordinates(z,'GridCoordinates')
+d=CGL.newDataArray(g,CGK.CoordinateX_s,NPY.ones((5,4,0),dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateY_s,NPY.ones((5,4,0),dtype='d',order='F'))
+d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones((5,4,0),dtype='d',order='F'))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
