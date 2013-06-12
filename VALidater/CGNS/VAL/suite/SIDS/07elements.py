@@ -237,6 +237,16 @@ pp=CGL.newParentElementsPosition(quads,NPY.ones((nquads,2),dtype='i',order='F'))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
+tag='elements parentelementsposition without parentelements'
+diag=False
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+hexas=CGL.newElements(z,'HEXAS',CGK.HEXA_8_s,NPY.ones((cellsize*8),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+nquads=3
+quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((nquads*4),dtype='i'),NPY.array([[cellsize+1,cellsize+nquads]],'i',order='F'))
+pp=CGL.newParentElementsPosition(quads,NPY.ones((nquads,2),dtype='i',order='F'))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
 tag='elements bad parentelements shape and parentelementsposition datatype'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)

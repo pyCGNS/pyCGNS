@@ -769,6 +769,8 @@ def newFlowSolution(parent,name='{FlowSolution}',gridlocation=None):
   """
   CU.checkDuplicatedName(parent,name)
   node=CU.newNode(name,None,[],CK.FlowSolution_ts,parent)
+  if (gridlocation):
+    newGridLocation(node,value=gridlocation)
   return node  
   
 # -----------------------------------------------------------------------------
@@ -1466,65 +1468,3 @@ def nextRange(previous,etype,earray):
   start=r[1]+1
   end  =start+nelems-1
   return NPY.array([start,end],dtype='i')
-
-# -----------------------------------------------------------------------------
-def getElementTypes(level,physicaldimension):
-  """Element types of certain level for certain physical dimension::
-
-    # The level may be Cell, Face, Edge or Vertex
-
-    # The physical dimension is within 0-3
-  
-  - Args:
-   * `level`: may be Cell, Face, Edge or Vertex (`string`)
-   * `physicaldimension`: physical dimension of CFD problem (`int`)
-
-  - Return:
-   * The list of Element Types of considered level for considered physical dimension
-  """
-  if   (level == CK.Cell_s and physicaldimension == 3):
-    return CK.ElementType3D+[CK.NFACE_n]
-  elif (level == CK.Cell_s and physicaldimension == 2):
-    return CK.ElementType2D+[CK.NFACE_n]
-  elif (level == CK.Cell_s and physicaldimension == 1):
-    return CK.ElementType1D+[CK.NFACE_n]
-    
-  elif (level == CK.Face_s and physicaldimension == 3):
-    return CK.ElementType2D+[CK.NGON_n]    
-  elif (level == CK.Face_s and physicaldimension == 2):
-    return CK.ElementType1D+[CK.NGON_n] 
-  elif (level == CK.Face_s and physicaldimension == 1):
-    return CK.ElementType0D+[CK.NGON_n] 
-
-  elif (level == CK.Edge_s and physicaldimension == 3):
-    return CK.ElementType1D
-  elif (level == CK.Edge_s and physicaldimension == 2):
-    return CK.ElementType0D
-  
-  elif (level == CK.Vertex_s and physicaldimension == 3):
-    return CK.ElementType0D 
-        
-  else :
-    return []  
-
-# -----------------------------------------------------------------------------
-def getAuthElementTypes(facetype):
-  """Authorized Element types for a Face type::
-  
-  - Args:
-   * `facetype`: Face Type (`int`)
-
-  - Return:
-   * The list of Element Types authorized for the considered face type
-  """  
-  if (facetype in CK.ElementType2D):
-    if (facetype in CK.ElementType_tri):
-      return CK.ElementType_trionly+CK.ElementType_triquad+[CK.MIXED,CK.NFACE_n]
-    elif (facetype in CK.ElementType_quad):
-      return CK.ElementType_quadonly+CK.ElementType_triquad+[CK.MIXED,CK.NFACE_n]
-    else:
-      return CK.ElementType3D+[CK.NFACE_n]
-  elif (facetype==CK.NGON_n):
-    return CK.ElementType3D+[CK.NFACE_n]
-  else:
-    return []
