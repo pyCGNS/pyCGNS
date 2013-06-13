@@ -1203,6 +1203,7 @@ def removeChildByName(parent,name):
    * None
 
   - Remark:
+   * node name to delete is a direct child of the parent node
    * See also :py:func:`nodeDelete`
    
   """

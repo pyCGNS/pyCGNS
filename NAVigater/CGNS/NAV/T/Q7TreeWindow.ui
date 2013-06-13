@@ -455,6 +455,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>select current node as selected link destination</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -478,6 +481,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>create a link to selected link destination</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -500,6 +506,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>remove link</string>
        </property>
        <property name="text">
         <string/>

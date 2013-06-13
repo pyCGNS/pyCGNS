@@ -289,7 +289,6 @@ cdef class pyCGNS(object):
     cdef int  cdim=0
     cdef int  pdim=0
     self._error=cgnslib.cg_base_read(self._root,B,basename,&cdim,&pdim)
-    if (not self._ok): basename=''
     return (B, basename, cdim, pdim)
 
   # ---------------------------------------------------------------------------

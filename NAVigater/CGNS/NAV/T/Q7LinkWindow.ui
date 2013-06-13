@@ -36,6 +36,75 @@
     <normaloff>:/images/icons/cgSpy.png</normaloff>:/images/icons/cgSpy.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="4" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QPushButton" name="bClearSelectedLink">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>clear selected link target</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/clear-entry.png</normaloff>:/images/icons/clear-entry.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="eDirectorySelectedLink">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="eFileSelectedLink">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="eNodeSelectedLink">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
    <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -52,12 +121,67 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>add new link entry</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
          <normaloff>:/images/icons/link-add.png</normaloff>:/images/icons/link-add.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bEditLink">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>add entry for selected node target</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/link-select.png</normaloff>:/images/icons/link-select.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bDuplicateLink">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>duplicate link entry</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/link-dup.png</normaloff>:/images/icons/link-dup.png</iconset>
        </property>
       </widget>
      </item>
@@ -75,6 +199,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>delete link entry</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -88,6 +215,9 @@
       <spacer name="horizontalSpacer_3">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Minimum</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -111,12 +241,15 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>open link target file</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/tree-load.png</normaloff>:/images/icons/tree-load.png</iconset>
+         <normaloff>:/images/icons/tree-load-g.png</normaloff>:/images/icons/tree-load-g.png</iconset>
        </property>
       </widget>
      </item>
@@ -158,7 +291,7 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="0">
+   <item row="5" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QTableWidget" name="linkTable">
@@ -169,7 +302,7 @@
         <enum>Qt::ScrollBarAlwaysOn</enum>
        </property>
        <property name="editTriggers">
-        <set>QAbstractItemView::NoEditTriggers</set>
+        <set>QAbstractItemView::DoubleClicked</set>
        </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::SingleSelection</enum>
@@ -192,7 +325,7 @@
      </item>
     </layout>
    </item>
-   <item row="4" column="0">
+   <item row="7" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QPushButton" name="bBackControl">
@@ -258,7 +391,14 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="eFileSource"/>
+      <widget class="QLineEdit" name="eFileSource">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item>
       <spacer name="horizontalSpacer_2">
@@ -279,6 +419,91 @@
         <string>Close</string>
        </property>
       </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="6" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QPushButton" name="bCheckLink">
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>check and fix link list</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/link-check.png</normaloff>:/images/icons/link-check.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Remove:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cUnreachable">
+       <property name="text">
+        <string>unreachable</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cDuplicates">
+       <property name="text">
+        <string>duplicates</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cBad">
+       <property name="text">
+        <string>bad links</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cExternal">
+       <property name="text">
+        <string>external links</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cInternal">
+       <property name="text">
+        <string>internal links</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

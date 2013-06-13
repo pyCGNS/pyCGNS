@@ -272,8 +272,8 @@ def newGridLocation(parent,value=CK.CellCenter_s):
   """
   CU.checkDuplicatedName(parent,CK.GridLocation_s)
   if (value not in CK.GridLocation_l): raise CE.cgnsException(200,value)
-  ## code correction: Modify value string into NPY string array
-  node=CU.newNode(CK.GridLocation_s,CU.setStringAsArray(value),[],CK.GridLocation_ts,parent)
+  node=CU.newNode(CK.GridLocation_s,
+                  CU.setStringAsArray(value),[],CK.GridLocation_ts,parent)
   return node
   
 # -----------------------------------------------------------------------------
@@ -769,6 +769,8 @@ def newFlowSolution(parent,name='{FlowSolution}',gridlocation=None):
   """
   CU.checkDuplicatedName(parent,name)
   node=CU.newNode(name,None,[],CK.FlowSolution_ts,parent)
+  if (gridlocation is None): newGridLocation(node)
+  else: newGridLocation(node,gridlocation)
   return node  
   
 # -----------------------------------------------------------------------------
@@ -1320,7 +1322,7 @@ def newGeometryReference(parent,name='{GeometryReference}',
    chapter  12.7 Add node CK.GeometryFormat_t is (r) and GeometryFile_t definition not find but is required (CAD file)
   """
   node=CU.hasChildName(parent,CK.GeometryReference_s)
-  if (node == None):    
+  if (node is None):    
     node=CU.newNode(name,None,[],CK.GeometryReference_ts,parent)
   if (valueType not in CK.GeometryFormat_l):
       raise CE.cgnsException(256,valueType)
@@ -1343,15 +1345,15 @@ def newFamilyBC(parent,valueType=CK.UserDefined_s):
    chapter  12.8 Add node BCType is required   
   """ 
   node=CU.hasChildName(parent,CK.FamilyBC_s)
-  if (node == None):    
-    node=CU.newNode(CK.FamilyBC_s,None,[],CK.FamilyBC_ts,parent)
   if (    valueType not in CK.BCTypeSimple_l
       and valueType not in CK.BCTypeCompound_l):
       raise CE.cgnsException(257,valueType)
-  CU.checkDuplicatedName(node,CK.BCType_s)
-  ## code correction: Modify valueType string into NPY string array
-  nodeType=CU.newNode(CK.BCType_s,CU.setStringAsArray(valueType),[],
-                     CK.BCType_ts,node)
+  if (node is None):    
+    node=CU.newNode(CK.FamilyBC_s,
+                    CU.setStringAsArray(valueType),
+                    [],
+                    CK.FamilyBC_ts,
+                    parent)
   return node
 
 # -----------------------------------------------------------------------------

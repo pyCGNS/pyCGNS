@@ -76,7 +76,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.transientVTK=False
         self.copyPasteBuffer=None
         self.wOption=None
-        self.selectForLink=None
+        self.selectForLink=[None]
         self.newtreecount=1
         self.help=None
         self._patternwindow=None
@@ -124,13 +124,13 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         reply = MSG.wQuestion(self,'Double check...',
                             """Do you want to close the tree and all its views,<br>
                             and <b>forget unsaved</b> modifications?""")
-        if (reply == QMessageBox.Yes):
+        if (reply):
             f.closeAllViews()
     def closeAllTrees(self):
         reply = MSG.wQuestion(self,'Double check...',
                             """Do you want to close all the views,<br>
                             and <b>forget unsaved</b> modifications?""")
-        if (reply == QMessageBox.Yes):
+        if (reply):
             Q7FingerPrint.closeAllTrees()
     def updateLastView(self):
         it=self.controlTable.currentItem()

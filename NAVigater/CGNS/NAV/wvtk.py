@@ -59,6 +59,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (not zlist): pth='/'
       else: pth='<partial>'
       self._vtkstatus=False
+      self._control=control
       if (not self.wCGNSTreeParse(fgprint.tree,zlist)): return
       self._vtkstatus=True
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,fgprint)
@@ -632,7 +633,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def wCGNSTreeParse(self,T,zlist):
       self._parser=Mesh(T,zlist)
       if (not self._parser._status):
-          MSG.wError(823,'Cannot create VTK view',
+          MSG.wError(self._control,823,'Cannot create VTK view',
                      'No data or bad data for a VTK display')
           return False
       return True

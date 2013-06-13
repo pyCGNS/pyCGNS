@@ -9,6 +9,7 @@ import copy
 
 from PySide.QtCore    import *
 from PySide.QtGui     import *
+
 from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wfingerprint import Q7FingerPrint
@@ -17,6 +18,9 @@ import CGNS.NAV.wmessages as MSG
 import CGNS.VAL.parse.messages as CGM
 import CGNS.VAL.grammars.CGNS_VAL_USER_DEFAULT as CGV
 import CGNS.VAL.parse.findgrammar
+import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnskeywords as CGK
+
 
 HIDEVALUE='@@HIDE@@'
 LAZYVALUE='@@LAZY@@'
@@ -240,9 +244,6 @@ USERKEYMAPPINGS=[ KEYMAPPING[USERFLAG_0],KEYMAPPING[USERFLAG_1],
                   KEYMAPPING[USERFLAG_8],KEYMAPPING[USERFLAG_9] ]
 
 ALLKEYMAPPINGS=[KEYMAPPING[v] for v in KEYMAPPING]
-
-import CGNS.PAT.cgnsutils as CGU
-import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
 class Q7TreeFilterProxy(QSortFilterProxyModel):

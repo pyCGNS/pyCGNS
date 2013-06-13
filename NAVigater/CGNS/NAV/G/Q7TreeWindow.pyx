@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
-# Created: Wed Apr 24 10:21:05 2013
+# Created: Fri Jun  7 11:41:30 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -422,6 +422,9 @@ class Ui_Q7TreeWindow(object):
         self.bClearChecks.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bCheckList.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Open diagnostics list", None, QtGui.QApplication.UnicodeUTF8))
         self.bCheckList.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.bSelectLink.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "select current node as selected link destination", None, QtGui.QApplication.UnicodeUTF8))
+        self.bAddLink.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "create a link to selected link destination", None, QtGui.QApplication.UnicodeUTF8))
+        self.bDeleteLink.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "remove link", None, QtGui.QApplication.UnicodeUTF8))
         self.bFormView.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Open Form view on selected node", None, QtGui.QApplication.UnicodeUTF8))
         self.bVTKView.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Open VTK view", None, QtGui.QApplication.UnicodeUTF8))
         self.bVTKView.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))

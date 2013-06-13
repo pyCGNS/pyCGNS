@@ -241,7 +241,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.bToolsView.setDisabled(True)
         self.bCheckView.setDisabled(True)
         self.bPatternDB.setDisabled(True)
-        self.bSelectLink.setDisabled(True)
+        self.bSelectLink.clicked.connect(self.linkselect)
         self.cSaveLog.setDisabled(True)
         self.updateTreeStatus()
     def model(self):
@@ -459,20 +459,28 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                 self.model().modelReset()
         self.treeview.refreshView()
     def linkselect(self):
-        ix=self.treeview.modelCurrentIndex()
-        if (not idx.isValid()):
-            self._control.selectForLink=None
-            return 
-        self._control.selectForLink=self.modelData(ix)
+        if (self.getLastEntered() is None): return
+        node=self.getLastEntered()
+        if (node is None):  return
+        if (node.sidsIsLink()): return
+        if (node.sidsType()==CGK.CGNSTree_ts): return
+        self._control.selectForLink=(node,node.sidsPath(),
+                                     self._fgprint.filedir,
+                                     self._fgprint.filename)
+        if (self._linkwindow is not None):
+            n=node.sidsPath()
+            d=self._fgprint.filedir
+            f=self._fgprint.filename
+            self._linkwindow.updateSelected(d,f,n)
     def linkadd(self):
-        node=self._control.selectForLink
+        node=self._control.selectForLink[0]
         if (node is None): return
         if (node.sidsType()==CGK.CGNSTree_ts): return
     def linkdelete(self):
-        node=self._control.selectForLink
+        node=self._control.selectForLink[0]
         if (node is None): return
         if (node.sidsType()==CGK.CGNSTree_ts): return
-        if (not node.isLink()): return
+        if (not node.sidsIsLink()): return
     def linklist(self):
         if (self._linkwindow is None):
             self._linkwindow=Q7LinkList(self._control,self._fgprint,self)
@@ -481,7 +489,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self._linkwindow.raise_()
     def patternlist(self):
         if (self._control._patternwindow is None):
-            self._control._patternwindow=Q7PatternList(self._control,self._fgprint)
+            self._control._patternwindow=Q7PatternList(self._control,
+                                                       self._fgprint)
             self._control._patternwindow.show()
         self._control._patternwindow.raise_()
     def check(self):

@@ -1,5 +1,11 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/clear-entry.png</file>
+    <file>icons/clear-entry.gif</file>
+    <file>icons/link-check.png</file>
+    <file>icons/link-check.gif</file>
+    <file>icons/link-dup.png</file>
+    <file>icons/link-dup.gif</file>
     <file>icons/check-go.png</file>
     <file>icons/check-all.png</file>
     <file>icons/anim-item-last.png</file>

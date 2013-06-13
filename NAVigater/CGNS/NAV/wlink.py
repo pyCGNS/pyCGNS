@@ -5,12 +5,60 @@
 #  
 import sys
 import string
+import os.path
+
 from PySide.QtCore  import *
+from PySide.QtGui   import QFileDialog
 from PySide.QtGui   import *
 from CGNS.NAV.Q7LinkWindow import Ui_Q7LinkWindow
 from CGNS.NAV.wfingerprint import Q7Window
 from CGNS.NAV.moption import Q7OptionContext  as OCTXT
+
+import CGNS.NAV.wmessages as MSG
+
 import CGNS.MAP as CGM
+import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnskeywords as CGK
+
+# -----------------------------------------------------------------
+class Q7LinkItemDelegate(QStyledItemDelegate):
+    def __init__(self, owner, model):
+        QStyledItemDelegate.__init__(self, owner)
+        self._parent=owner
+        self._model=model
+        self._filename=''
+        self._dirname=''
+    def createEditor(self, parent, option, index):
+        ws=option.rect.width()
+        hs=option.rect.height()+4
+        xs=option.rect.x()
+        ys=option.rect.y()-2
+        if (index.column() in [2]):
+          filename=str(QFileDialog.getOpenFileName(self._parent,
+                                                   "Select file")[0])
+          (dname,fname)=os.path.split(filename)
+          itf=QTableWidgetItem(fname)
+          itd=QTableWidgetItem(dname)
+          self._parent.setItem(index.row(),2,itf)
+          self._parent.setItem(index.row(),4,itd)
+          return None
+        if (index.column() in [1,3]):
+          editor=QLineEdit(parent)
+          editor.transgeometry=(xs,ys,ws,hs)
+          editor.installEventFilter(self)
+          self.setEditorData(editor,index)
+          return editor
+        return None
+    def setEditorData(self, editor, index):
+        value=index.data()
+        editor.clear()
+        editor.insert(value)
+    def setModelData(self,editor,model,index):
+        self._parent.reset()
+    def updateEditorGeometry(self, editor, option, index):
+        editor.setGeometry(*editor.transgeometry)
+    def paint(self, painter, option, index):
+        QStyledItemDelegate.paint(self, painter, option, index)
 
 # -----------------------------------------------------------------
 class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
@@ -20,13 +68,19 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
         self._fgprint=fgprint
         self._master=master
         self._links=fgprint.links
+        self.linkTable.setItemDelegate(Q7LinkItemDelegate(self.linkTable,
+                                                          self._fgprint.model))
         self.setLabel(self.eDirSource,fgprint.filedir)
         self.setLabel(self.eFileSource,fgprint.filename)
         self.bInfo.clicked.connect(self.infoLinkView)
-        self.bAddLink.setDisabled(True)
-        self.bDeleteLink.setDisabled(True)
-        self.bSave.setDisabled(True)
+        self.bEditLink.clicked.connect(self.editLink)
+        self.bAddLink.clicked.connect(self.newLink)
+        self.bDeleteLink.clicked.connect(self.removeLink)
+        self.bDuplicateLink.clicked.connect(self.duplicateLink)
+        self.bSave.clicked.connect(self.infoLinkView)
+        self.bCheckLink.clicked.connect(self.checkLinks)
         self.bLoadTree.clicked.connect(self.loadLinkFile)
+        self.bClearSelectedLink.clicked.connect(self.clearSelected)
     def loadLinkFile(self):
         i=self.linkTable.currentItem()
         if (i is None): return
@@ -40,6 +94,38 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
         self.readyCursor()
     def infoLinkView(self):
         self._control.helpWindow('Link')
+    def duplicateLink(self):
+        if (self._links):
+            i=self.linkTable.currentItem()
+            if (i is None): return
+            r=i.row()
+            self._links.append(self._links[r])
+            self.reset()
+        return
+    def removeLink(self):
+        if (not self._links): return
+        i=self.linkTable.currentItem()
+        if (i is None): return
+        reply = MSG.wQuestion(self,'Remove link entry',
+                            """Do you want to remove the selected link entry?
+                               Existing sub-tree would be <b>merged</b> in the
+                               top file during the next save.""")
+        if (reply):
+            r=i.row()
+            self._links.pop(r)
+            self.reset()
+    def checkLinks(self):
+        pass
+    def editLink(self):
+        self._links.append([self.eDirectorySelectedLink.text(),
+                            self.eFileSelectedLink.text(),
+                            self.eNodeSelectedLink.text(),
+                            '',
+                            CGM.S2P_LKIGNORED])
+        self.reset()
+    def newLink(self):
+        self._links.append(['','','','',CGM.S2P_LKIGNORED])
+        self.reset()
     def show(self):
         self.reset()
         super(Q7LinkList, self).show()
@@ -103,6 +189,13 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
           v.resizeColumnToContents(i)
         for i in range(v.rowCount()):
           v.resizeRowToContents(i)
+    def clearSelected(self):
+        self._master.selectedForLink=[None]
+        self.updateSelected('','','')
+    def updateSelected(self,d,f,n):
+        self.eDirectorySelectedLink.setText(d)
+        self.eFileSelectedLink.setText(f)
+        self.eNodeSelectedLink.setText(CGU.getPathNoRoot(n))
     def reject(self):
         if (self._master._linkwindow is not None):
             self._master._linkwindow=None
