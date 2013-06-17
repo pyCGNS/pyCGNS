@@ -30,6 +30,14 @@ tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i')
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
+tag='elements bad elementsizeboundary'
+diag=False
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+tetras[1][1]=cellsize
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
 tag='elements absent children'
 diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
