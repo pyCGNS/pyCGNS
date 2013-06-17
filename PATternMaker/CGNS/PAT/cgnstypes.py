@@ -159,12 +159,12 @@ cgt[t].shape=(0,)
 
 # --------------------------------------------------------
 t=CK.Rind_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4],names=[CK.Rind_s])
+cgt[t]=CGNStype(t,dtype=[CK.I4,CK.I8],names=[CK.Rind_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
 t=CK.IndexRange_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4])
+cgt[t]=CGNStype(t,dtype=[CK.I4,CK.I8])
 cgt[t].shape=(0,2)
 cgt[t].names=[CK.PointRange_s,CK.PointRangeDonor_s,CK.ElementRange_s,UD]
 
@@ -503,17 +503,17 @@ t=CK.ZoneSubRegion_ts
 cgt[t]=CGNStype(t,dtype=[CK.I4])
 cgt[t].shape=(1,)
 cgt[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
-cgt[t].addChild(CK.IndexRange_ts,CK.ElementRange_s,card=C_11)
+cgt[t].addChild(CK.IndexRange_ts,CK.PointRange_s,card=C_01)
+cgt[t].addChild(CK.IndexArray_ts,CK.PointList_s,card=C_01)
 cgt[t].addChild(CK.FamilyName_ts,CK.FamilyName_s,card=C_01)
 cgt[t].addChild(CK.AdditionalFamilyName_ts,card=C_0N)
 cgt[t].addChild(CK.DataArray_ts,card=C_0N)
 cgt[t].addChild(CK.Rind_ts,CK.Rind_s,card=C_01)
 cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s,card=C_01)
 cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s,card=C_01)
-cgt[t].addChild(CK.Descriptor_ts,card=C_0N)
-cgt[t].addChild(CK.UserDefinedData_ts,[CK.BCRegionName_s,
-                                       CK.GridConnectivityRegionName_s],
-                card=C_0N)
+cgt[t].addChild(CK.Descriptor_ts,[CK.BCRegionName_s,CK.GridConnectivityRegionName_s],card=C_0N)
+cgt[t].addChild(CK.UserDefinedData_ts,card=C_0N)
+
 
 # --------------------------------------------------------
 t=CK.Elements_ts

@@ -833,6 +833,7 @@ def getShape(node):
   else: r=node[1].shape
   return r
 
+# --------------------------------------------------
 def getAuthNames(node):
   """
   Returns the authorized names for a CGNS/Python node.
@@ -858,21 +859,22 @@ def getAuthNames(node):
   else: r=CT.types[node[3]].names
   return r
 
-def getAuthTypes(node):
+# --------------------------------------------------
+def getAuthDataTypes(node):
   """
   Returns the authorized types for a CGNS/Python node.
   If the types cannot be determined a None is returned.
 
   .. code-block:: python
          
-     if (getValueDataType(node) not in getAuthTypes(node)):
+     if (getValueType(node) not in getAuthDataTypes(node)):
        # do something
 
   - Args:
    * `node`: CGNS/Python node
 
   - Return:
-   * A list of authorized names
+   * A list of authorized data types
 
   """
   r=None
@@ -881,6 +883,32 @@ def getAuthTypes(node):
   elif (node[3]==''):   r=None
   elif (CT.types[node[3]].datatype in ['',None,[CK.LK]]): r=None
   else: r=CT.types[node[3]].datatype
+  return r
+
+# --------------------------------------------------
+def getAuthParentTypes(node):
+  """
+  Returns the authorized parent types for a CGNS/Python node.
+  If the parent types cannot be determined a None is returned.
+
+  .. code-block:: python
+         
+     if (getParentFromNode(node) not in getAuthParentTypes(node)):
+       # do something
+
+  - Args:
+   * `node`: CGNS/Python node
+
+  - Return:
+   * A list of authorized parent types
+
+  """
+  r=None
+  if   (node[1]==None): r=None
+  elif (node[1]==[]):   r=None
+  elif (node[3]==''):   r=None
+  elif (CT.types[node[3]].parents in ['',None]): r=None
+  else: r=CT.types[node[3]].parents
   return r
 
 # --------------------------------------------------
@@ -904,6 +932,7 @@ def getValueDataType(node):
   """
   return getNodeType(node)
 
+# --------------------------------------------------
 def getNodeType(node):
   data=node[1]
   if (node[0] == 'CGNSLibraryVersion_t'):
