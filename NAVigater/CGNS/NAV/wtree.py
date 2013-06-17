@@ -264,7 +264,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (not OCTXT._HasProPackage): return
         try:
           from CGNS.PRO.wtools import Q7ToolsView
-        except ImportError: return
+        except ValueError: return
         if (self._toolswindow is None):
             self._toolswindow=Q7ToolsView(self._control,self._fgprint,self)
             self._toolswindow.show()

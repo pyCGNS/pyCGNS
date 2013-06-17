@@ -828,12 +828,12 @@
   <customwidget>
    <class>Q7PythonEditor</class>
    <extends>QPlainTextEdit</extends>
-   <header>CGNS.NAV.mtable</header>
+   <header>CGNS.NAV.weditors</header>
   </customwidget>
  </customwidgets>
  <resources>
   <include location="../R/Res.qrc"/>
-  <include location="../../../../../../../../home/poinot/src/pyCGNS/NAVigater/CGNS/NAV/R/Res.qrc"/>
+  <include location="../R/Res.qrc"/>
  </resources>
  <connections/>
  <designerdata>

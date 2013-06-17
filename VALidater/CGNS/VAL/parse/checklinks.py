@@ -3,11 +3,6 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-import CGNS.PAT.cgnsutils      as CGU
-import CGNS.PAT.cgnstypes      as CGT
-import CGNS.PAT.cgnskeywords   as CGK
-
-#  -------------------------------------------------------------------------
 # Get a link list and a search path list and check it, return diag list
 #
 # A link entry is (target dir, target file, target node, local node, status)
@@ -63,4 +58,85 @@ import CGNS.PAT.cgnskeywords   as CGK
 # has to be performed on the resulting merged tree. No diag related to node
 # scoping is emitted by the link check
 #
-# -- Loop detection 
+# -- Graph construction
+# The graph representation requires a unique node identifier as an 1 to N
+# index for N nodes. The convention is to start from 1 with CGNSTree_t node
+# and then to count nodes during a width-first parse using an alphabetical
+# order of the children names.
+# Once this index is set a tuple if formed for each node with the file index
+# as the first element. If a link is found, the node index is replaced by
+# the target file node index. The construction algorithm is:
+# * the top file is open and parsed, the node index are set.
+# * an internal link is found, actual local file node index is set
+# * an external link is found, the target file is added into pending files
+#   list, and an entry in with the target path of the node and the node local
+#   node index of its is pushed in the pending linked nodes list
+# * next pending file is open and parsed the same way
+# * when no more pending file exists, all pending linked nodes are processed
+#   by adding the target node index as child of the parent entry
+# * when no mode pending linked node exists, the graph is built
+#
+# -- Loop detection
+# The graph is parsed with a depth-first algo, if a node index already exists
+# in the current node chain of indices, there is a loop...
+#
+#  -------------------------------------------------------------------------
+import CGNS.MAP
+import CGNS.PAT.cgnsutils      as CGU
+import CGNS.PAT.cgnstypes      as CGT
+import CGNS.PAT.cgnskeywords   as CGK
+import math
+import os
+
+def canonicalName(filename):
+    fn=os.path.expanduser(os.path.expandvars(filename))
+    fn=os.path.realpath(os.path.abspath(fn))
+    fn=os.path.normpath(fn)
+    return fn
+
+class CGNSGraph(object):
+    pending={}
+    fileindex=[]
+    index=[]
+    def __init__(self,filename=None):
+        if (filename is not None):
+            self.parseOneFile(filename)
+    def addCanonicalFilename(self,filename):
+        fn=canonicalName(filename)
+        if (fn not in self.fileindex):
+            self.fileindex+=[fn]
+            return True
+        return False
+    def filenameIndex(self,filename):
+        fn=canonicalName(filename)
+        return self.fileindex.index(fn)+1
+    def parseOneFile(self,filename):
+        if (not self.addCanonicalFilename(filename)): return
+        flags=CGNS.MAP.S2P_NODATA|CGNS.MAP.S2P_FOLLOWLINKS
+        (t,l,p)=CGNS.MAP.load(filename,flags,lksearch=['.'])
+        idx=self.filenameIndex(filename)
+        self.index+=CGU.getAllNodesAsWidthFirstIndex(t,idx)
+        self.fillLinksList(idx,l)
+        for el in l:
+            self.parseOneFile(el[0]+'/'+el[1])
+        self.solveLinks()
+    def fillLinksList(self,idx,l):
+        for lk in l:
+            fn=canonicalName(lk[0]+os.sep+lk[1])
+            print 'FILE',fn
+        print len(self.fileindex)
+        for i in self.fileindex:
+            print i
+    def solveLinks(self):
+        pass
+    def showIndex(self,sort=False):
+        if (sort): self.__index.sort()
+        sz=int(math.log10(max([i[1] for i in self.index]))+1)
+        fmt="%%.2d %%.%dd %%s"%sz
+        for e in self.index:
+            print fmt%(e[0],e[1],e[2])
+
+for i in range(12):
+    g=CGNSGraph('/tmp/CHLone-test-008-%.2d.hdf'%i)
+    g.showIndex()        
+

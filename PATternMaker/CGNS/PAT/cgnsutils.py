@@ -1830,6 +1830,32 @@ def getAllNodesByTypeSet(tree,typeset):
   return n
 
 # --------------------------------------------------
+def getAllNodesAsWidthFirstIndex(tree,fileindex=1):
+  """The order of the names fr a given depth is the alphabetical order of
+     the full path to the node. The width parse goes through all the children
+     of a given depth, for all parents.
+  """
+  lpth=getAllPaths(tree)
+  dpth={}
+  for p in lpth:
+    d=len(p.split('/'))
+    if (not dpth.has_key(d)): dpth[d]=[]
+    dpth[d].append(p)
+  for d in dpth:
+    dpth[d].sort()
+  k=dpth.keys()
+  k.sort()
+  count=0
+  ix=[]
+  for d in k:
+    for p in dpth[d]:
+      ix.append([fileindex,count,p])
+      count+=1
+  return ix
+  
+
+  
+# --------------------------------------------------
 def getAllNodesFromTypeSet(typelist,node,path,result):
   for c in node:
     if (c[3] in typelist):

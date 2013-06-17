@@ -111,8 +111,8 @@ class Q7OptionContext(object):
     ValKeyList=['sample']
     CGNSFileExtension=['.cgns','.adf']
     HDFFileExtension=['.hdf','.hdf5']
-    MaxLoadDataSize=1e9
-    MaxDisplayDataSize=5000
+    MaxLoadDataSize=1000
+    MaxDisplayDataSize=1000
     MaxRecursionLevel=7
     ADFConversionCom='cgnsconvert'
     TemporaryDirectory='/tmp'
@@ -787,6 +787,10 @@ if (SIDSTYPE==CGK.Zone_ts):
       filename=cls._trpath(cls._OptionsFileName)
       m=cls._readFile('options',filename)
       if (m is None): return None
+      try:
+        r=m.options
+      except AttributeError:
+        return None
       return m.options
     @classmethod
     def _writeQueries(cls,control,q):
