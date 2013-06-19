@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Wed Apr 24 10:21:33 2013
+# Created: Tue Jun 18 16:33:58 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -264,7 +264,7 @@ class Ui_Q7VTKWindow(object):
         self.bUpdate.setMaximumSize(QtCore.QSize(25, 25))
         self.bUpdate.setText("")
         icon15 = QtGui.QIcon()
-        icon15.addPixmap(QtGui.QPixmap(":/images/icons/undo-last-modification.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon15.addPixmap(QtGui.QPixmap(":/images/icons/merge.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bUpdate.setIcon(icon15)
         self.bUpdate.setObjectName("bUpdate")
         self.horizontalLayout_4.addWidget(self.bUpdate)
@@ -398,7 +398,7 @@ class Ui_Q7VTKWindow(object):
         self.bBlackColor.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Switch black/white colors", None, QtGui.QApplication.UnicodeUTF8))
         self.bResetCamera.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Zoom and center on selected", None, QtGui.QApplication.UnicodeUTF8))
         self.cRotationAxis.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Rotation axis", None, QtGui.QApplication.UnicodeUTF8))
-        self.bUpdate.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Update selected list from tree view", None, QtGui.QApplication.UnicodeUTF8))
+        self.bUpdate.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Merge tree view & VTK view selected lists", None, QtGui.QApplication.UnicodeUTF8))
         self.bReverse.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Switch seleted and  unselected actors", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7VTKWindow", "Selection :", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowZone.setText(QtGui.QApplication.translate("Q7VTKWindow", "Zones", None, QtGui.QApplication.UnicodeUTF8))

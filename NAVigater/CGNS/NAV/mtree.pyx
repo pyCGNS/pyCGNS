@@ -912,6 +912,8 @@ class Q7TreeModel(QAbstractItemModel):
                 t+=[(n.orderTag(),p)]
         t.sort()
         return [e[1] for e in t]
+    def getSelected(self):
+        return self._selected
     def getSelectedZones(self):
         zlist=[]
         for pth in self._selected:

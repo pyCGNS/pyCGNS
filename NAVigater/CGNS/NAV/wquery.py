@@ -29,7 +29,8 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
         Q7Window.__init__(self,Q7Window.VIEW_SELECT,control,None,fgprint)
         self.bClose.clicked.connect(self.reject)
         self._model=model
-        self._data=model._selected
+        self._data=model.getSelected()
+        print 'Q7SelectionList',self._data
         self._fgprint=fgprint
         self.bSave.clicked.connect(self.selectionsave)
         self.bInfo.clicked.connect(self.infoSelectView)
@@ -264,7 +265,8 @@ leave this panel without save?""",again=False)
         q=Q7QueryEntry('__tmp__query__')
         q.setScript(com)
         skp=self._fgprint.lazy.keys()
-        r=q.run(self._fgprint.tree,self._fgprint.links,skp,True,v)
+        r=q.run(self._fgprint.tree,self._fgprint.links,skp,True,v,
+                self._fgprint.model.getSelected())
         self.eResult.initText(str(r))
         if (q.requireTreeUpdate()):
             self._fgprint.model.modelReset()

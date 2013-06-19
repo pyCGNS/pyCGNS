@@ -452,7 +452,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (q in qry.queriesNamesList()):
             sl=qry.getQuery(q).run(self._fgprint.tree,self._fgprint.links,
                                    self._fgprint.lazy.keys(),
-                                   False,v)
+                                   False,v,self.model().getSelected())
             self.model().markExtendToList(sl)
             self.model().updateSelected()
             if (qry.getQuery(q).requireTreeUpdate()):
@@ -512,6 +512,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.lastdiag=None
         self.bCheckList.setDisabled(True)
     def selectionlist(self):
+        print 'Q7TreeView',self.model().getSelected()
         slist=Q7SelectionList(self._control,self.model(),self._fgprint)
         slist.show()
     def previousmark(self):

@@ -11,12 +11,16 @@ from CGNS.NAV.Q7VTKPlotWindow import Ui_Q7VTKPlotWindow
 from CGNS.NAV.wfingerprint import Q7Window
 try:
     from CGNS.PRO.vtkparser import Mesh
+    from CGNS.PRO.vtkparser import SIZE_PATTERN, LIST_PATTERN
 except:
     from CGNS.NAV.mparser import Mesh
+    from CGNS.NAV.mparser import SIZE_PATTERN, LIST_PATTERN
+
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wfile import Q7File
 
 import CGNS.NAV.wmessages as MSG
+import CGNS.PAT.cgnskeywords as CGK
 
 import numpy as NPY
 
@@ -118,8 +122,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.ColorMapMin=QColorDialog(self)
       self.ColorMapMax=QColorDialog(self)
       self.cCurrentPath.setParent(self)
-      QObject.connect(self.ColorMapMin,SIGNAL("colorSelected(QColor)"),self.getColorMapMin)
-      QObject.connect(self.ColorMapMax,SIGNAL("colorSelected(QColor)"),self.getColorMapMax)
+      QObject.connect(self.ColorMapMin,
+                      SIGNAL("colorSelected(QColor)"),self.getColorMapMin)
+      QObject.connect(self.ColorMapMax,
+                      SIGNAL("colorSelected(QColor)"),self.getColorMapMax)
       self.bZoom.clicked.connect(self.RubberbandZoom)
       self.bColorMapMin.clicked.connect(self.displayColorMapMin)
       self.bColorMapMax.clicked.connect(self.displayColorMapMax)
@@ -174,7 +180,17 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def parseDone(self):
       print 'PARSE DONE'
-      
+
+  def updateSelectedFromVTK(self):
+      s=[]
+      for i in self._selected:
+          p=i[0]
+          if ((len(p)>SIZE_PATTERN) and (p[-SIZE_PATTERN:] in LIST_PATTERN)):
+              p=p[:-SIZE_PATTERN]
+          s+=['/'+CGK.CGNSTree_s+p]
+      print s
+      self._tmodel.markExtendToList(s)
+  
   def setCutPlane(self):
       if (self._currentactor is None): return
       if (not vtk.vtkStructuredGrid().SafeDownCast(self._currentactor[1].GetMapper().GetInput())):
@@ -446,7 +462,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       index=self.cColorSpace.currentIndex()
       if (index==0): return
       colorspaces={1:self.lut.SetColorSpaceToRGB,2:self.lut.SetColorSpaceToHSV,
-              3:self.lut.SetColorSpaceToDiverging}
+                   3:self.lut.SetColorSpaceToDiverging}
       colorspaces[index]()
       self._iren.Render()
       
@@ -766,13 +782,21 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def b_update(self):
       self.busyCursor()
-      self._selected=[]
+      #self._selected=[] # merge instead
       self.textActor.VisibilityOff()
       tlist=self._tmodel.getSelectedShortCut()
       slist=self._parser.getPathList()
       for i in tlist:
           if (i in slist):
               self._selected+=[[i,self.findPathObject(i)]]
+      ptmp=set()
+      stmp=[]
+      for i in self._selected:
+          if (i[0] not in ptmp):
+              ptmp.add(i[0])
+              stmp.append(i)
+      self._selected=stmp
+      self.updateSelectedFromVTK()
       self.fillCurrentPath()
       self.readyCursor()
       

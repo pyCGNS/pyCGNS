@@ -684,14 +684,14 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Update selected list from tree view</string>
+        <string>Merge tree view &amp; VTK view selected lists</string>
        </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/undo-last-modification.png</normaloff>:/images/icons/undo-last-modification.png</iconset>
+         <normaloff>:/images/icons/merge.gif</normaloff>:/images/icons/merge.gif</iconset>
        </property>
       </widget>
      </item>

@@ -46,7 +46,7 @@ class Q7PythonEditorHighlighter(QSyntaxHighlighter):
         constants=r"\bNone\b|\bTrue\b|\bFalse\b|\bself\b"
         autovars =r"\bNODE\b|\bNAME\b|\bVALUE\b|\bSIDSTYPE\b|\bCHILDREN\b"
         autovars+=r"|\bTREE\b|\bPATH\b|\bRESULT\b|\bARGS\b|\bPARENT\b"
-        autovars+=r"|\bLINKS\b|\bSKIPS\b"
+        autovars+=r"|\bLINKS\b|\bSKIPS\b|\bSELECTED\b"
         numbers=r'[-+]?\d+'+'|[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
         comment=r'\#.*$'
         textstring=r'"[^"]*?"|\'[^\']*?\''

@@ -17,6 +17,22 @@ from PySide.QtCore import QCoreApplication
 import vtk
 from vtk.util import numpy_support
 
+EXTRA_PATTERN=' ={%s}'
+IMIN_PATTERN=EXTRA_PATTERN%'imin'
+JMIN_PATTERN=EXTRA_PATTERN%'jmin'
+KMIN_PATTERN=EXTRA_PATTERN%'kmin'
+IMAX_PATTERN=EXTRA_PATTERN%'imax'
+JMAX_PATTERN=EXTRA_PATTERN%'jmax'
+KMAX_PATTERN=EXTRA_PATTERN%'kmax'
+
+QUAD_PATTERN=EXTRA_PATTERN%'quad'
+TRI_PATTERN =EXTRA_PATTERN%'tri ' # mandatory trailing space to have 4 chars
+
+SIZE_PATTERN=len(TRI_PATTERN)
+LIST_PATTERN=(IMIN_PATTERN,JMIN_PATTERN,KMIN_PATTERN,
+              IMAX_PATTERN,JMAX_PATTERN,KMAX_PATTERN,
+              QUAD_PATTERN,TRI_PATTERN)
+
 # ----------------------------------------------------------------------------
 class Q7vtkActor(vtk.vtkActor):
   __actortypes=['Zone','BC','Min/Max']
@@ -80,9 +96,9 @@ class CGNSparser:
             skmin=[scx[:,:,0], scy[:,:,0], scz[:,:,0]]
             skmax=[scx[:,:,-1],scy[:,:,-1],scz[:,:,-1]]
             zp=zg
-            surfpaths=[zp+' {imin}',zp+' {imax}',
-                       zp+' {jmin}',zp+' {jmax}',
-                       zp+' {kmin}',zp+' {kmax}']
+            surfpaths=[zp+IMIN_PATTERN,zp+IMAX_PATTERN,
+                       zp+JMIN_PATTERN,zp+JMAX_PATTERN,
+                       zp+KMIN_PATTERN,zp+KMAX_PATTERN]
             bndlist=[]
             bcpaths=[]
             solutions=[]
@@ -121,10 +137,10 @@ class CGNSparser:
               eb=ne[1]
               ea=CGU.getNodeByPath(zT,e+'/'+CGK.ElementConnectivity_s)[1]
               if ((ea is not None) and (et in sp.QUAD_SURFACE)):
-                pth=CGU.getPathAncestor(meshpath)+e+' {QUAD}'
+                pth=CGU.getPathAncestor(meshpath)+e+QUAD_PATTERN
                 sl.append(list(sp.extQuadFacesPoints(ea,et,sn,mr,eb))+[pth])
               if ((ea is not None) and (et in sp.TRI_SURFACE)):
-                pth=e+' {TRI}'
+                pth=e+TRI_PATTERN
                 sl.append(list(sp.extTriFacesPoints(ea,et,sn,mr,eb))+[pth])
             self._zones_ns[z]=([cx[1],cy[1],cz[1]],meshpath,et,sl)
     return True

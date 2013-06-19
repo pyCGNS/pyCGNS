@@ -29,12 +29,13 @@ import CGNS.MAP as CGM
 FILE='%(Q_VAR_TREE_FILE)s'
 SCRIPT=\"\"\"%(Q_VAR_QUERY_SCRIPT)s\"\"\"
 ARGS=\"\"\"%(Q_VAR_QUERY_ARGS)s\"\"\"
+SELECTED=\"\"\"%(Q_VAR_SELECTED)s\"\"\"
 
 # -----------------------------------------------------------------
 SCRIPT_PRE=\"\"\"%(Q_VAR_SCRIPT_PRE)s\"\"\"
 SCRIPT_POST=\"\"\"%(Q_VAR_SCRIPT_POST)s\"\"\"
 # -----------------------------------------------------------------
-def evalScript(node,parent,tree,links,skips,path,val,args):
+def evalScript(node,parent,tree,links,skips,path,val,args,selected):
     l=locals()
     l['%(Q_VAR_RESULT_LIST)s']=[False]
     l['%(Q_VAR_PARENT)s']=parent
@@ -45,6 +46,7 @@ def evalScript(node,parent,tree,links,skips,path,val,args):
     l['%(Q_VAR_TREE)s']=tree
     l['%(Q_VAR_LINKS)s']=links
     l['%(Q_VAR_SKIPS)s']=skips
+    l['%(Q_VAR_SELECTED)s']=selected
     l['%(Q_VAR_PATH)s']=path
     if (args is None): args=()
     l['%(Q_VAR_USER)s']=args
@@ -57,9 +59,10 @@ def evalScript(node,parent,tree,links,skips,path,val,args):
     RESULT=l['%(Q_VAR_RESULT_LIST)s'][0]
     return RESULT
 # -----------------------------------------------------------------
-def parseAndSelect(tree,node,parent,links,skips,path,script,args,result):
+def parseAndSelect(tree,node,parent,links,skips,path,script,args,selected,
+                   result):
     path=path+'/'+node[0]
-    Q=evalScript(node,parent,tree,links,skips,path,script,args)
+    Q=evalScript(node,parent,tree,links,skips,path,script,args,selected)
     R=[]
     if (Q):
         if (result):
@@ -67,11 +70,12 @@ def parseAndSelect(tree,node,parent,links,skips,path,script,args,result):
         else:
             R=[path]
     for C in node[2]:
-        R+=parseAndSelect(tree,C,node,links,skips,path,script,args,result)
+        R+=parseAndSelect(tree,C,node,links,skips,path,script,args,selected,
+                          result)
     return R
 
 # -----------------------------------------------------------------
-def run(tree,links,skips,mode,args,script):
+def run(tree,links,skips,mode,args,script,selected):
     v=None
     try:
         if (args): v=eval(args)
@@ -82,11 +86,11 @@ def run(tree,links,skips,mode,args,script):
         pass
     _args=v
     result=parseAndSelect(tree,tree,[None,None,[],None],links,skip,'',
-                          script,_args,mode)
+                          script,_args,selected,mode)
     return result
 # -----------------------------------------------------------------
 (t,l,p)=CGM.load(FILE)
-print run(t,l,p,True,ARGS,SCRIPT)
+print run(t,l,p,True,ARGS,SCRIPT,SELECTED)
 
 # -----------------------------------------------------------------
 """
@@ -106,7 +110,7 @@ def sameValType(n,v):
     if (n.dtype.char==v): return True
     return False
 # -----------------------------------------------------------------
-def evalScript(node,parent,tree,links,skips,path,val,args):
+def evalScript(node,parent,tree,links,skips,path,val,args,selected):
     l=locals()
     l[OCST.Q_VAR_RESULT_LIST]=[False]
     l[OCST.Q_VAR_PARENT]=parent
@@ -118,6 +122,7 @@ def evalScript(node,parent,tree,links,skips,path,val,args):
     l[OCST.Q_VAR_LINKS]=links
     l[OCST.Q_VAR_SKIPS]=skips
     l[OCST.Q_VAR_PATH]=path
+    l[OCST.Q_VAR_SELECTED]=selected
     if (args is None): args=()
     l[OCST.Q_VAR_USER]=args
     l[OCST.Q_VAR_NODE]=node
@@ -129,9 +134,10 @@ def evalScript(node,parent,tree,links,skips,path,val,args):
     RESULT=l[OCST.Q_VAR_RESULT_LIST][0]
     return RESULT
 # -----------------------------------------------------------------
-def parseAndSelect(tree,node,parent,links,skips,path,script,args,result):
+def parseAndSelect(tree,node,parent,links,skips,path,script,args,selected,
+                   result):
     path=path+'/'+node[0]
-    Q=evalScript(node,parent,tree,links,skips,path,script,args)
+    Q=evalScript(node,parent,tree,links,skips,path,script,args,selected)
     R=[]
     if (Q):
         if (result):
@@ -139,7 +145,8 @@ def parseAndSelect(tree,node,parent,links,skips,path,script,args,result):
         else:
             R=[path]
     for C in node[2]:
-        R+=parseAndSelect(tree,C,node,links,skips,path,script,args,result)
+        R+=parseAndSelect(tree,C,node,links,skips,path,script,args,selected,
+                          result)
     return R
 
 # -----------------------------------------------------------------
@@ -174,7 +181,7 @@ class Q7QueryEntry(object):
         s='("%s","%s","%s","""%s""",%s)'%\
         (self.name,self.group,self._script,self._doc,self._update)
         return s
-    def run(self,tree,links,skips,mode,args):
+    def run(self,tree,links,skips,mode,args,selected=[]):
         v=None
         try:
             if (args): v=eval(args)
@@ -185,7 +192,7 @@ class Q7QueryEntry(object):
             print e
         self._args=v
         result=parseAndSelect(tree,tree,[None,None,[],None],links,skips,'',
-                              self._script,self._args,mode)
+                              self._script,self._args,selected,mode)
         print result
         return result
     def getFullScript(self,filename,text,args):
@@ -206,6 +213,7 @@ class Q7QueryEntry(object):
         datadict['Q_VAR_SKIPS']=OCST.Q_VAR_SKIPS
         datadict['Q_VAR_USER']=OCST.Q_VAR_USER
         datadict['Q_VAR_NODE']=OCST.Q_VAR_NODE
+        datadict['Q_VAR_SELECTED']=OCST.Q_VAR_SELECTED
         datadict['Q_VAR_QUERY_SCRIPT']=text
         datadict['Q_VAR_QUERY_ARGS']=args
         datadict['Q_VAR_TREE_FILE']=filename

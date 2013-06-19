@@ -31,6 +31,7 @@ Q_VAR_LINKS='LINKS'
 Q_VAR_SKIPS='SKIPS'
 Q_VAR_RESULT='RESULT'
 Q_VAR_USER='ARGS'
+Q_VAR_SELECTED='SELECTED'
 Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
 
 Q_SCRIPT_PRE="""
@@ -126,6 +127,7 @@ Copyright (c) Onera - The French Aerospace Labs<br>
 <b>all other copyrights at the end of this page</b>
 
 <h2>Contributors</h2>
+Tristan Soubrié    - Andheo, France <br>
 Grégory Laheurte   - ONERA (DSNA/CS2A)<br>
 Benoit Rodriguez   - ONERA (DAAP/H2T)<br>
 Loic Hauchard      - ONERA (Student INSA Rouen, France)<br>
