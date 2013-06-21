@@ -101,3 +101,30 @@ CGU.newNode(CGK.BCRegionName_s,CGU.setStringAsArray('BC'),[],CGK.Descriptor_ts,p
 CGL.newDataArray(zsr3,'var',value=NPY.ones(cellsize+1,dtype='d',order='Fortran'))
 TESTS.append((tag,T,diag))
 
+#  -------------------------------------------------------------------------
+tag='zonesubregion bad point list on cell and face subregions'
+diag=False
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+ntris = 12
+tris=CGL.newElements(z,'TRIS',CGK.TRI_3_s,NPY.ones((ntris*3),dtype='i'),NPY.array([[cellsize+1,cellsize+ntris]],'i',order='F'))
+zsr6=CGU.newNode('SubRegion6',NPY.array([3],dtype=NPY.int32,order='Fortran'),[],CGK.ZoneSubRegion_ts,parent=z)
+CGU.newNode(CGK.PointList_s,NPY.array([range(1,cellsize+2)],dtype=NPY.int32,order='Fortran'),[],CGK.IndexArray_ts,parent=zsr6)
+CGL.newGridLocation(zsr6,value=CGK.CellCenter_s)
+zsr7=CGU.newNode('SubRegion7',NPY.array([3],dtype=NPY.int32,order='Fortran'),[],CGK.ZoneSubRegion_ts,parent=z)
+CGU.newNode(CGK.PointList_s,NPY.array([range(cellsize,cellsize+ntris)],dtype=NPY.int32,order='Fortran'),[],CGK.IndexArray_ts,parent=zsr7)
+CGL.newGridLocation(zsr7,value=CGK.FaceCenter_s)
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='zonesubregion bad point range on cell and face subregions'
+diag=False
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+ntris = 12
+tris=CGL.newElements(z,'TRIS',CGK.TRI_3_s,NPY.ones((ntris*3),dtype='i'),NPY.array([[cellsize+1,cellsize+ntris]],'i',order='F'))
+zsr5=CGU.newNode('SubRegion5',NPY.array([3],dtype=NPY.int32,order='Fortran'),[],CGK.ZoneSubRegion_ts,parent=z)
+CGU.newNode(CGK.PointRange_s,NPY.array([[1,cellsize+1]],dtype=NPY.int32,order='Fortran'),[],CGK.IndexRange_ts,parent=zsr5)
+CGL.newGridLocation(zsr5,value=CGK.CellCenter_s)
+zsr8=CGU.newNode('SubRegion8',NPY.array([3],dtype=NPY.int32,order='Fortran'),[],CGK.ZoneSubRegion_ts,parent=z)
+CGU.newNode(CGK.PointRange_s,NPY.array([[cellsize,cellsize+ntris]],dtype=NPY.int32,order='Fortran'),[],CGK.IndexRange_ts,parent=zsr8)
+CGL.newGridLocation(zsr8,value=CGK.FaceCenter_s)
+TESTS.append((tag,T,diag))
