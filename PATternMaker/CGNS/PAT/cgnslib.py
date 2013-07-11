@@ -594,7 +594,7 @@ def newElements(parent,name,
 def newZoneBC(parent):
   return CU.newNode(CK.ZoneBC_s,None,[],CK.ZoneBC_ts,parent)
 
-def newBC(parent,bname,brange=[0,0,0,0,0,0],
+def newBC(parent,bname,brange=[[1,1],[1,1],[1,1]],
           btype=CK.Null_s,bcType=CK.Null_s,
           family=CK.Null_s,pttype=CK.PointRange_s):
   return newBoundary(parent,bname,brange,btype,family,pttype) 
@@ -830,8 +830,24 @@ def newGridConnectivity(parent,name,dname,ctype=CK.Overset_s):
   """
   zcnode=CU.newNode(name,CU.setStringAsArray(dname),
                     [],CK.GridConnectivity_ts,parent)
-  zcnode[1]=CU.setStringAsArray(ctype)
+  newGridConnectivityType(zcnode,ctype)
   return zcnode
+
+# -----------------------------------------------------------------------------
+def newGridConnectivityType(parent,ctype=CK.Overset_s):
+  """-GridConnectivityType node creation -Grid
+  
+  'newNode:N='*newGridConnectivityType*'(parent:N,ctype:S)'
+  
+  Creates a GridConnectivityType sub-tree.
+  If a parent is given, the new <node> is added to the parent children list,
+  the parent should be a GridConnectivity_t.
+  The returned node is the GridConnectivityType_t
+  chapter 8
+  """
+  zctnode=CU.newNode(CK.GridConnectivityType_s,CU.setStringAsArray(ctype),
+                    [],CK.GridConnectivityType_ts,parent)
+  return zctnode
 
 # -----------------------------------------------------------------------------
 def newGridConnectivityProperty(parent): 

@@ -291,6 +291,8 @@ PointSetType  = stringAsKeyDict(PointSetType_l)
 PointSetType_ = enumAsKeyDict(PointSetType_l)
 (Null,UserDefined,PointList,PointListDonor,PointRange,PointRangeDonor,
  ElementRange,ElementList,CellListDonor)=PointSetType_.keys()
+ 
+ZoneDonorName_s = "ZoneDonorName"
 
 # ------------------------------------------------------------
 BCDataType_ts = "BCDataType_t"

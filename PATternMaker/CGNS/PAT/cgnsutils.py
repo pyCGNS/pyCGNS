@@ -912,6 +912,32 @@ def getAuthParentTypes(node):
   return r
 
 # --------------------------------------------------
+def getAuthShapes(node):
+  """
+  Returns the authorized shapes for a CGNS/Python node.
+  If the shapes cannot be determined a None is returned.
+
+  .. code-block:: python
+         
+     if (getShape(node) not in getAuthShapes(node)):
+       # do something
+
+  - Args:
+   * `node`: CGNS/Python node
+
+  - Return:
+   * A list of authorized shapes
+
+  """
+  r=None
+  if   (node[1]==None): r=None
+  elif (node[1]==[]):   r=None
+  elif (node[3]==''):   r=None
+  elif (CT.types[node[3]].shape in ['']): r=None
+  else: r=CT.types[node[3]].shape
+  return r
+
+# --------------------------------------------------
 def getValueDataType(node):
   """
   Returns the value data type for a CGNS/Python node for **display purpose**.
@@ -1674,6 +1700,8 @@ def getPathAncestor(path,level=1):
   elif (len(lp)>1):                   ancestor='/'.join(lp[:-1])
   elif (len(lp)==1):                  ancestor='/'
   else:                               ancestor=None
+  if (level ==0):
+    ancestor=path
   if (level >1):
     ancestor=getPathAncestor(ancestor,level-1)
   return ancestor

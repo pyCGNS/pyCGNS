@@ -45,3 +45,10 @@ diag=False
 (T,b,z,zbc,n,g)=makeCorrectTree(vertexsize,cellsize)
 CGU.removeChildByName(n,CGK.PointList_s)
 TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='bc FamilySpecified but not FamilyName'
+diag=False
+(T,b,z,zbc,n,g)=makeCorrectTree(vertexsize,cellsize)
+n[1]=CGU.setStringAsArray(CGK.FamilySpecified_s)
+TESTS.append((tag,T,diag))

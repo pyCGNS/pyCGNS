@@ -26,7 +26,7 @@ def makeCorrectTree(vertexsize,cellsize,ntris):
   zbc=CGL.newZoneBC(z)
   tris=CGL.newElements(z,'TRIS',CGK.TRI_3_s,NPY.ones((ntris*3),dtype='i'),NPY.array([[cellsize+1,cellsize+ntris]],'i',order='F'))
   n=CGL.newBoundary(zbc,'BC',[range(cellsize+1,cellsize+ntris+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
-  g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)
   return (T,b,z,zbc,n)
 vertexsize = 20
 cellsize   = 7

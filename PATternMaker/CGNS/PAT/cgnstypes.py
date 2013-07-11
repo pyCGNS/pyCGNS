@@ -170,7 +170,7 @@ cgt[t].names=[CK.PointRange_s,CK.PointRangeDonor_s,CK.ElementRange_s,UD]
 
 # --------------------------------------------------------
 t=CK.IndexArray_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4,CK.R4,CK.R8])
+cgt[t]=CGNStype(t,dtype=[CK.I4,CK.I8,CK.R4,CK.R8])
 cgt[t].shape=(0,0)
 cgt[t].names=[CK.PointList_s,CK.PointListDonor_s,CK.CellListDonor_s,
               CK.InwardNormalList_s,UD]

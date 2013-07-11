@@ -35,6 +35,17 @@ diag=False
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
 tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
 tetras[1][1]=cellsize
+zbc=CGL.newZoneBC(z)
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.CellCenter_s)  
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements elementsizeboundary faces not on BC (Warning)'
+diag=True
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+tetras[1][1]=cellsize-1
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
@@ -295,6 +306,18 @@ nquads=3
 quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((nquads*4),dtype='i'),NPY.array([[cellsize+1,cellsize+nquads]],'i',order='F'))
 pe=CGL.newParentElements(quads,NPY.ones((nquads,2),dtype='i',order='F'))
 pe[1][0][1]=nhexa+1
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements parentelements bad boundary face (warning)'
+diag=True
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+nhexa=2
+hexas=CGL.newElements(z,'HEXAS',CGK.HEXA_8_s,NPY.ones((nhexa*8),dtype='i'),NPY.array([[1,nhexa]],'i',order='F'))
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones(((cellsize-nhexa)*4),dtype='i'),NPY.array([[nhexa+1,cellsize]],'i',order='F'))
+nquads=3
+quads=CGL.newElements(z,'QUADS',CGK.QUAD_4_s,NPY.ones((nquads*4),dtype='i'),NPY.array([[cellsize+1,cellsize+nquads]],'i',order='F'))
+pe=CGL.newParentElements(quads,NPY.zeros((nquads,2),dtype='i',order='F'))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
