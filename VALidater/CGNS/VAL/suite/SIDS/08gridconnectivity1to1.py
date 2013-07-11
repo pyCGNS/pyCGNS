@@ -40,9 +40,9 @@ def makeCorrectTree():
   return (T,b,z)
 (T,b,z)=makeCorrectTree()
 zgc=CGL.newZoneGridConnectivity(z[0])
-gc=CGL.newGridConnectivity1to1(zgc,'join1_3','Zone3',NPY.array([[1,5],[1,7],[1,9]]),NPY.array([[1,5],[1,7],[1,9]]),NPY.array([[+1,+2,+3]]))
+gc=CGL.newGridConnectivity1to1(zgc,'join1_3','Zone3',NPY.array([[1,5],[1,7],[1,9]]),NPY.array([[1,5],[1,7],[1,9]]),NPY.array([+1,+2,+3]))
 zgc=CGL.newZoneGridConnectivity(z[2])
-gc=CGL.newGridConnectivity1to1(zgc,'join3_1','Zone1',NPY.array([[1,5],[1,7],[1,9]]),NPY.array([[1,5],[1,7],[1,9]]),NPY.array([[+1,+2,+3]]))
+gc=CGL.newGridConnectivity1to1(zgc,'join3_1','Zone1',NPY.array([[1,5],[1,7],[1,9]]),NPY.array([[1,5],[1,7],[1,9]]),NPY.array([+1,+2,+3]))
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------

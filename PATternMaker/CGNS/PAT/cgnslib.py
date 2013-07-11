@@ -594,7 +594,7 @@ def newElements(parent,name,
 def newZoneBC(parent):
   return CU.newNode(CK.ZoneBC_s,None,[],CK.ZoneBC_ts,parent)
 
-def newBC(parent,bname,brange=[0,0,0,0,0,0],
+def newBC(parent,bname,brange=[[1,1],[1,1],[1,1]],
           btype=CK.Null_s,bcType=CK.Null_s,
           family=CK.Null_s,pttype=CK.PointRange_s):
   return newBoundary(parent,bname,brange,btype,family,pttype) 
