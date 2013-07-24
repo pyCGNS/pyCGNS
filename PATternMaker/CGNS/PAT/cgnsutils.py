@@ -938,6 +938,32 @@ def getAuthShapes(node):
   return r
 
 # --------------------------------------------------
+def getAuthChildren(node):
+  """
+  Returns the authorized children for a CGNS/Python node.
+  If the children types cannot be determined a None is returned.
+
+  .. code-block:: python
+         
+     if (hasChildNodeOfType(node) not in getAuthChildren(node)):
+       # do something
+
+  - Args:
+   * `node`: CGNS/Python node
+
+  - Return:
+   * A list of authorized children 
+
+  """
+  r=None
+  if   (node[3]==None): r=None
+  elif (node[3]==[]):   r=None
+  elif (node[3]==''):   r=None
+  elif (CT.types[node[3]].children in ['',None,[]]): r=None
+  else: r=CT.types[node[3]].children
+  return r
+
+# --------------------------------------------------
 def getValueDataType(node):
   """
   Returns the value data type for a CGNS/Python node for **display purpose**.
