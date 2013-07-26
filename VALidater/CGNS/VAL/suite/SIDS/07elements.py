@@ -41,11 +41,60 @@ g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
-tag='elements elementsizeboundary faces not on BC (Warning)'
+tag='elements elementsizeboundary BC correctly defined'
 diag=True
 (T,b,z)=makeCorrectTree(vertexsize,cellsize)
 tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
 tetras[1][1]=cellsize-1
+zbc=CGL.newZoneBC(z)
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.CellCenter_s)  
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements elementsizeboundary faces not on BC/GC (Warning)'
+diag=True
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+tetras[1][1]=cellsize-1
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements elementsizeboundary bndfaces multiply defined on BC (Warning)'
+diag=True
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+tetras[1][1]=cellsize-1
+zbc=CGL.newZoneBC(z)
+n=CGL.newBoundary(zbc,'BC1',[range(1,cellsize)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.CellCenter_s) 
+n=CGL.newBoundary(zbc,'BC2',[range(2,cellsize-1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.CellCenter_s)   
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='elements elementsizeboundary bndfaces multiply defined on BC/GC (Warning)'
+diag=True
+(T,b,z)=makeCorrectTree(vertexsize,cellsize)
+ntris=12
+tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
+tris=CGL.newElements(z,'TRIS',CGK.TRI_3_s,NPY.ones((ntris*3),dtype='i'),NPY.array([[cellsize+1,cellsize+ntris]],'i',order='F'))
+tris[1][1]=ntris
+zbc=CGL.newZoneBC(z)
+n=CGL.newBoundary(zbc,'BC',[range(cellsize+1,cellsize+ntris+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.FaceCenter_s) 
+z2=CGU.copyNode(z,'Zone2')
+b[2].append(z2)
+zgc=CGL.newZoneGridConnectivity(z)
+gc=CGL.newGridConnectivity(zgc,'join1_2','Zone2',ctype=CGK.Abutting1to1_s)
+CGL.newIndexArray(gc,CGK.PointList_s,value=NPY.array([range(cellsize+2,cellsize+ntris)],order='F'))
+CGL.newIndexArray(gc,CGK.PointListDonor_s,value=NPY.array([range(cellsize+2,cellsize+ntris)],order='F'))
+CGL.newGridLocation(gc,value=CGK.FaceCenter_s)
+zgc=CGL.newZoneGridConnectivity(z2)
+gc=CGL.newGridConnectivity(zgc,'join2_1','Zone',ctype=CGK.Abutting1to1_s)
+CGL.newIndexArray(gc,CGK.PointList_s,value=NPY.array([range(cellsize+2,cellsize+ntris)],order='F'))
+CGL.newIndexArray(gc,CGK.PointListDonor_s,value=NPY.array([range(cellsize+2,cellsize+ntris)],order='F'))
+CGL.newGridLocation(gc,value=CGK.FaceCenter_s)
 TESTS.append((tag,T,diag))
 
 #  -------------------------------------------------------------------------
