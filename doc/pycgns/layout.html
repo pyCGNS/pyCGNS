@@ -3,7 +3,12 @@
 {% set toppycgnspage2 = pathto('index') %}
 {% set indexlink = pathto('genindex') %}
 {% set glosslink = pathto('glossary') %}
-{% set toplinks = [ ['search','search','S','search'],['glossary','glossary','G','glossary']] + rellinks + [ ['index','master_doc','M','top']]%}
+{% if master_doc != "index" %}
+ {% set toplinks = [ ['search','search','S','search'],['../glossary','glossary','G','glossary']] + rellinks + [ ['../index','pyCGNS top page','M','top']]%}
+{% else %}
+ {% set toplinks = [ ['search','search','S','search'],['glossary','glossary','G','glossary']] + rellinks + [ ['index','pyCGNS top page','M','top']]%}
+{% endif %}
+
 
 {% macro pycgnsrelbar() %}
     <div class="related">

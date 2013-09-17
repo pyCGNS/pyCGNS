@@ -2,15 +2,15 @@ import sys, os
 
 extensions = ['sphinx.ext.autodoc','sphinx.ext.intersphinx']
 mapdir='%s/../build/doc/html'%os.path.abspath('.')
-#intersphinx_mapping={'topix': (mapdir+'/',None),
-#                     'wraix': (mapdir+'/WRA',None),
-#                     'mapix': (mapdir+'/MAP',None),
-#                     'patix': (mapdir+'/PAT',None),
-#                     'navix': (mapdir+'/NAV',None),
-#                     'appix': (mapdir+'/APP',None),
-#                     'valix': (mapdir+'/VAL',None),
-#                     'datix': (mapdir+'/DAT',None)
-#                     }
+intersphinx_mapping={'topix': (mapdir+'/',None),
+                     'wraix': (mapdir+'/WRA',None),
+                     'mapix': (mapdir+'/MAP',None),
+                     'patix': (mapdir+'/PAT',None),
+                     'navix': (mapdir+'/NAV',None),
+                     'appix': (mapdir+'/APP',None),
+                     'valix': (mapdir+'/VAL',None),
+                     'datix': (mapdir+'/DAT',None)
+                     }
 
 #templates_path = ['_templates']
 html_theme_path = ['.']
@@ -33,10 +33,12 @@ html_theme = 'pycgns'
 html_title = "%s"%os.environ['PYCGNSMOD']
 html_logo = 'images/%s-logo-small.jpg'%os.environ['PYCGNSMOD']
 html_favicon =  'images/pyCGNS-logo-tiny.ico'
-#html_static_path = ['_static']
 html_use_index = True
 htmlhelp_basename = 'pyCGNSdoc'
 html_show_sourcelink=False
+html_sidebars={
+'**':['localtoc.html','searchbox.html'],
+}
 
 latex_paper_size = 'a4'
 latex_font_size = '10pt'
@@ -53,7 +55,4 @@ latex_use_modindex = True
 
 autodoc_member_order='bysource'
 
-def setup(app):
-   app.add_stylesheet('scrollwide.css')
-            
 # --- last line

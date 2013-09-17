@@ -103,6 +103,8 @@ API Reference
    API
    fileformats
 
+.. include:: ../doc/Intro/glossary.txt
+
 .. _wra_index:
 
 API Index
