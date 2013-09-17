@@ -23,8 +23,8 @@ def makeCorrectTree(vertexsize,cellsize,ntris):
   d=CGL.newDataArray(g,CGK.CoordinateY_s,NPY.ones((vertexsize),dtype='d',order='F'))
   d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones((vertexsize),dtype='d',order='F'))
   tetras=CGL.newElements(z,'TETRAS',CGK.TETRA_4_s,NPY.ones((cellsize*4),dtype='i'),NPY.array([[1,cellsize]],'i',order='F'))
-  zbc=CGL.newZoneBC(z)
   tris=CGL.newElements(z,'TRIS',CGK.TRI_3_s,NPY.ones((ntris*3),dtype='i'),NPY.array([[cellsize+1,cellsize+ntris]],'i',order='F'))
+  zbc=CGL.newZoneBC(z)
   n=CGL.newBoundary(zbc,'BC',[range(cellsize+1,cellsize+ntris+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
   g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)
   return (T,b,z,zbc,n)
@@ -43,3 +43,11 @@ bcd=CGL.newBCDataSet(n,'Data',valueType=CGK.Null_s)
 CGL.newPointRange(bcd,value=NPY.array([[cellsize+1,cellsize+ntris]],'i'))
 CGL.newPointList(bcd,value=NPY.array([range(cellsize+1,cellsize+ntris+1)],'i'))
 TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='bc bad Gridlocation'
+diag=False
+(T,b,z,zbc,n)=makeCorrectTree(vertexsize,cellsize,ntris)
+bcd=CGL.newBCDataSet(n,'Data',valueType=CGK.Null_s)
+g=CGL.newGridLocation(bcd,value=CGK.CellCenter_s)
+

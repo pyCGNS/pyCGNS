@@ -178,3 +178,74 @@ element=CGL.newElements(z,'NFACE',CGK.NFACE_n_s,
                                    4,9,9,9,9],dtype='i',order='F'),
                         NPY.array([[cellsize+1,cellsize+5]],'i',order='F'))
 TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='zone structured full BC and GridConnect'
+diag=True
+def makeStTree():
+  T=CGL.newCGNSTree()
+  b=CGL.newBase(T,'{Base}',3,3)
+  z1=CGL.newZone(b,'{Zone1}',NPY.array([[5,4,0],[7,6,0],[9,8,0]],order='F'))
+  g=CGL.newGridCoordinates(z1,'GridCoordinates')
+  d=CGL.newDataArray(g,CGK.CoordinateX_s,NPY.ones((5,7,9),dtype='d',order='F'))
+  d=CGL.newDataArray(g,CGK.CoordinateY_s,NPY.ones((5,7,9),dtype='d',order='F'))
+  d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones((5,7,9),dtype='d',order='F'))
+  z2=CGU.copyNode(z1,'{Zone2}')
+  b[2].append(z2)
+  zgc=CGL.newZoneGridConnectivity(z1)
+  gc=CGL.newGridConnectivity1to1(zgc,'join1_2','{Zone2}',NPY.array([[1,1],[1,4],[1,9]]),NPY.array([[5,5],[3,7],[1,9]]),NPY.array([-1,+2,+3]))
+  zgc=CGL.newZoneGridConnectivity(z2)
+  gc=CGL.newGridConnectivity1to1(zgc,'join2_1','{Zone1}',NPY.array([[5,5],[3,7],[1,9]]),NPY.array([[1,1],[1,4],[1,9]]),NPY.array([-1,+2,+3]))
+  zbc=CGL.newZoneBC(z1)
+  n=CGL.newBoundary(zbc,'{BC1_1}',[[5,5],[1,7],[1,9]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)  
+  n=CGL.newBoundary(zbc,'{BC1_2}',[[1,5],[1,1],[1,9]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)  
+  n=CGL.newBoundary(zbc,'{BC1_3}',[[1,5],[7,7],[1,9]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)  
+  n=CGL.newBoundary(zbc,'{BC1_4}',[[1,5],[1,7],[1,1]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)  
+  n=CGL.newBoundary(zbc,'{BC1_5}',[[1,5],[1,7],[9,9]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)
+  n=CGL.newBoundary(zbc,'{BC1_6}',[[1,1],[4,7],[1,9]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)  
+  zbc=CGL.newZoneBC(z2)
+  n=CGL.newBoundary(zbc,'{BC2_1}',[[1,1],[1,7],[1,9]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)  
+  n=CGL.newBoundary(zbc,'{BC2_2}',[[1,5],[1,1],[1,9]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)  
+  n=CGL.newBoundary(zbc,'{BC2_3}',[[1,5],[7,7],[1,9]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)  
+  n=CGL.newBoundary(zbc,'{BC2_4}',[[1,5],[1,7],[1,1]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)  
+  n=CGL.newBoundary(zbc,'{BC2_5}',[[1,5],[1,7],[9,9]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)
+  n=CGL.newBoundary(zbc,'{BC2_6}',[[5,5],[1,3],[1,9]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+  g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)
+  z=[z1,z2]
+  return (T,b,z)
+(T,b,z)=makeStTree()
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='zone structured uncomplete BC and GridConnect (warning)'
+diag=False
+(T,b,z)=makeStTree()
+pth=CGU.getAllNodesByTypeOrNameList(z[0],['Zone_t','ZoneBC_t','{BC1_1}'])[0]
+CGU.removeChildByName(CGU.getNodeByPath(z[0],CGU.getPathAncestor(pth)),'{BC1_1}')
+pth=CGU.getAllNodesByTypeOrNameList(z[1],['Zone_t','ZoneGridConnectivity_t','join2_1'])[0]
+CGU.removeChildByName(CGU.getNodeByPath(z[1],CGU.getPathAncestor(pth)),'join2_1')
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='zone structured doubly defined BC and GridConnect (warning)'
+diag=False
+(T,b,z)=makeStTree()
+pth=CGU.getAllNodesByTypeOrNameList(z[0],['Zone_t','ZoneBC_t'])[0]
+zbc=CGU.getNodeByPath(z[0],pth)
+n=CGL.newBoundary(zbc,'{BC1_1b}',[[5,5],[1,2],[1,2]],btype=CGK.Null_s,family=None,pttype=CGK.PointRange_s)
+g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)
+pth=CGU.getAllNodesByTypeOrNameList(z[1],['Zone_t','ZoneGridConnectivity_t'])[0]
+zgc=CGU.getNodeByPath(z[1],pth)
+gc=CGL.newGridConnectivity1to1(zgc,'join2_1b','{Zone1}',NPY.array([[1,1],[1,2],[1,2]]),NPY.array([[1,1],[1,4],[1,9]]),NPY.array([-1,+2,+3]))
+TESTS.append((tag,T,diag))

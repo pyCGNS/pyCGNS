@@ -133,3 +133,49 @@ tris=CGL.newElements(z,'TRIS',CGK.TRI_3_s,NPY.ones((ntris*3),dtype='i'),NPY.arra
 n=CGL.newBoundary(zbc,'BC',[range(cellsize,cellsize+ntris+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
 g=CGL.newGridLocation(n,value=CGK.FaceCenter_s)
 TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='indexarray InwardNormalList'
+diag=True
+(T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
+inl=CGL.newIndexArray(n,CGK.InwardNormalList_s,value=NPY.ones([3,cellsize]))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='indexarray InwardNormalList bad shape #1'
+diag=False
+(T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
+inl=CGL.newIndexArray(n,CGK.InwardNormalList_s,value=NPY.ones([2,cellsize]))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='indexarray InwardNormalList bad shape #2'
+diag=False
+(T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
+inl=CGL.newIndexArray(n,CGK.InwardNormalList_s,value=NPY.ones([3,cellsize+1]))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='indexarray InwardNormalList bad shape #3'
+diag=False
+(T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
+inl=CGL.newIndexArray(n,CGK.InwardNormalList_s,value=NPY.ones([cellsize]))
+TESTS.append((tag,T,diag))
+
+#  -------------------------------------------------------------------------
+tag='indexarray InwardNormalList bad shape #4'
+diag=False
+(T,b,z,zbc)=makeCorrectTree(vertexsize,cellsize)
+n=CGL.newBoundary(zbc,'BC',[range(1,cellsize+1)],btype=CGK.Null_s,family=None,pttype=CGK.PointList_s)
+g=CGL.newGridLocation(n,value=CGK.CellCenter_s)
+CGU.nodeDelete(T,CGU.getNodeByPath(n,'BC/'+CGK.PointList_s))
+inl=CGL.newIndexArray(n,CGK.InwardNormalList_s,value=NPY.ones([2,cellsize]))
+TESTS.append((tag,T,diag))

@@ -807,7 +807,7 @@ def newGridConnectivity1to1(parent,name,dname,window,dwindow,trans):
   zcnode=CU.newNode(name,CU.setStringAsArray(dname),[],
                     CK.GridConnectivity1to1_ts,parent)
   CU.newNode(CK.Transform_s,NPY.array(list(trans),dtype=NPY.int32),[],
-             CK.Transform_ts,zcnode)
+             CK.Transform_ts2,zcnode)
   CU.newNode(CK.PointRange_s,
              NPY.array(window,dtype=NPY.int32,order='Fortran'),[],
              CK.IndexRange_ts,zcnode)   
