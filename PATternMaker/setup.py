@@ -36,13 +36,13 @@ else:
   extmods=[]
 
 setup (
-name         = "CGNS.PAT",
-version      = pyCGNSconfig.PAT_VERSION,
-description  = "pyCGNS - CGNS/Python base and patterns for SIDS and other",
-author       = "marc Poinot",
-author_email = "marc.poinot@onera.fr",
-license      = "LGPL 2",
-packages=['CGNS.PAT','CGNS.PAT.SIDS','CGNS.PAT.test'],
+name         = pyCGNSconfig.NAME,
+version      = pyCGNSconfig.VERSION,
+description  = pyCGNSconfig.DESCRIPTION,
+author       = pyCGNSconfig.AUTHOR,
+author_email = pyCGNSconfig.EMAIL,
+license      = pyCGNSconfig.LICENSE,
+packages     = ['CGNS.PAT','CGNS.PAT.SIDS','CGNS.PAT.test'],
 ext_modules  = extmods,
 cmdclass     = cmdclassdict
 )

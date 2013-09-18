@@ -126,12 +126,12 @@ else:
   modextlist=[]
 
 setup (
-name         = "CGNS.NAV",
-version      = pyCGNSconfig.NAV_VERSION,
-description  = "pyCGNS - CGNS/Python trees navigator and editor",
-author       = "marc Poinot",
-author_email = "marc.poinot@onera.fr",
-license      = "LGPL 2",
+name         = pyCGNSconfig.NAME,
+version      = pyCGNSconfig.VERSION,
+description  = pyCGNSconfig.DESCRIPTION,
+author       = pyCGNSconfig.AUTHOR,
+author_email = pyCGNSconfig.EMAIL,
+license      = pyCGNSconfig.LICENSE,
 packages     = ['CGNS.NAV'],
 scripts      = ['CGNS/NAV/CGNS.NAV'],
 ext_modules  = modextlist,

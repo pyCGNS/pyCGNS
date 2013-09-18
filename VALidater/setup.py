@@ -17,15 +17,17 @@ import setuputils
 if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
 
+cmdclassdict={'clean':setuputils.clean}
+
 # ---
 
 setup (
-name         = "CGNS.VAL",
-version      = pyCGNSconfig.VAL_VERSION,
-description  = "pyCGNS - SIDS and sub-grammars verification tool",
-author       = "marc Poinot",
-author_email = "marc.poinot@onera.fr",
-license      = "LGPL 2",
+name         = pyCGNSconfig.NAME,
+version      = pyCGNSconfig.VERSION,
+description  = pyCGNSconfig.DESCRIPTION,
+author       = pyCGNSconfig.AUTHOR,
+author_email = pyCGNSconfig.EMAIL,
+license      = pyCGNSconfig.LICENSE,
 packages     = ['CGNS.VAL',
                 'CGNS.VAL.grammars',
                 'CGNS.VAL.suite',
@@ -33,6 +35,6 @@ packages     = ['CGNS.VAL',
                 'CGNS.VAL.suite.SIDS',
                 'CGNS.VAL.parse'],
 scripts      = ['CGNS/VAL/CGNS.VAL'],
-cmdclass={'clean':setuputils.clean}
+cmdclass     = cmdclassdict
 ) # close setup
 

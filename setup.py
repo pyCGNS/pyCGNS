@@ -82,7 +82,6 @@ for mod in modList:
   if os.path.exists('./%s/setup.py'%mod):
     os.chdir(mod)
     com='%s setup.py %s %s'%(pcom,bopt,modArgs)
-    print com
     os.system(com)
     os.chdir('..')
 

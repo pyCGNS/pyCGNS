@@ -21,13 +21,13 @@ setuputils.installConfigFiles()
 
 # -------------------------------------------------------------------------
 setup (
-name         = "CGNS.MAP",
-description  = "pyCGNS MAPper - CGNS/Python mapping with HDF5 load/save",
-version      = pyCGNSconfig.MAP_VERSION,
-author       = "marc Poinot",
-author_email = "marc.poinot@onera.fr",
-license      = "LGPL 2",
-packages=['CGNS.MAP'],
+name         = pyCGNSconfig.NAME,
+version      = pyCGNSconfig.VERSION,
+description  = pyCGNSconfig.DESCRIPTION,
+author       = pyCGNSconfig.AUTHOR,
+author_email = pyCGNSconfig.EMAIL,
+license      = pyCGNSconfig.LICENSE,
+packages     = ['CGNS.MAP'],
 )
 
 # --- last line

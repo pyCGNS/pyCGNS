@@ -25,28 +25,30 @@ incdirs=['%s/lib/python%s/site-packages/numpy/core/include'\
          'CGNS/APP/probe']
 incdirs+=[numpy.get_include()]
 
-x_mods=[Extension("CGNS.APP.probe.arrayutils",
+extmods=[Extension("CGNS.APP.probe.arrayutils",
                   ["CGNS/APP/probe/arrayutils.pyx",
                    "CGNS/APP/probe/hashutils.c"],
                   include_dirs = incdirs,
                   extra_compile_args=[])]
 
+cmdclassdict={'clean':setuputils.clean,'build_ext': build_ext}
+
 # -------------------------------------------------------------------------
 setup (
-name         = "CGNS.APP",
-version      = pyCGNSconfig.PAT_VERSION,
-description  = "pyCGNS - CGNS/Python Application tools and utilities",
-author       = "marc Poinot",
-author_email = "marc.poinot@onera.fr",
-license      = "LGPL 2",
-packages=['CGNS.APP',
-          'CGNS.APP.embedded',
-          'CGNS.APP.parse',
-          'CGNS.APP.demos',
-          'CGNS.APP.sids',
-          'CGNS.APP.probe',          
-          'CGNS.APP.test'],
- ext_modules = x_mods,
-cmdclass={'clean':setuputils.clean,'build_ext': build_ext}
+name         = pyCGNSconfig.NAME,
+version      = pyCGNSconfig.VERSION,
+description  = pyCGNSconfig.DESCRIPTION,
+author       = pyCGNSconfig.AUTHOR,
+author_email = pyCGNSconfig.EMAIL,
+license      = pyCGNSconfig.LICENSE,
+packages     = ['CGNS.APP',
+                'CGNS.APP.embedded',
+                'CGNS.APP.parse',
+                'CGNS.APP.demos',
+                'CGNS.APP.sids',
+                'CGNS.APP.probe',          
+                'CGNS.APP.test'],
+ext_modules  = extmods,
+cmdclass     = cmdclassdict
 )
 # --- last line

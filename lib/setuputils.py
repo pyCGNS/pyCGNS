@@ -14,6 +14,7 @@ import sys
 import shutil
 import re
 import time
+import subprocess
 
 from distutils.dir_util import remove_tree
 from distutils.core import setup
@@ -35,6 +36,22 @@ def prodtag():
     prodhost='win32'
   return (proddate,prodhost)
   
+# --------------------------------------------------------------------
+def check_local_config():
+  print setuputils.check_command(['pyside-uic'])
+  print setuputils.check_command(['pyside-rcc'])
+  print setuputils.check_command(['cython'])
+
+# --------------------------------------------------------------------
+def check_command(args):
+  try:
+    r=subprocess.check_output(args,stderr=subprocess.STDOUT)
+  except subprocess.CalledProcessError:
+    return False
+  except OSError:
+    return False
+  return True
+
 # --------------------------------------------------------------------
 def search(tag,deps=[]):
   import sys

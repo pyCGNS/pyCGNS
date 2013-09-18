@@ -81,14 +81,6 @@ __doc__="""pyCGNS - %s - Python package for CFD General Notation System"""\
         %(__vid__)
 version=__vid__
 #
-WRA_VERSION=__vid__+'.0'
-VAL_VERSION=__vid__+'.0'
-MAP_VERSION=__vid__+'.0'
-NAV_VERSION=__vid__+'.0'
-PAT_VERSION=__vid__+'.0'
-DAT_VERSION=__vid__+'.0'
-APP_VERSION=__vid__+'.0'
-#
 file_pattern="""#  -------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System
 #  See license.txt file in the root directory of this Python module source  
@@ -156,3 +148,12 @@ version=__vid__
 """
 #
 
+# common meta data
+NAME='pyCGNS'
+VERSION=__vid__
+DESCRIPTION=__doc__
+AUTHOR='Marc Poinot'
+EMAIL="marc.poinot@onera.fr"
+LICENSE="LGPL 2"
+
+# --- last line

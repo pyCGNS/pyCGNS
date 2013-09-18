@@ -61,10 +61,6 @@ include_dirs+=['CGNS/WRA/modadf']
 
 # ***************************************************************************
 # Setup script for the CGNS Python interface
-ldescription  = "pyCGNS - CGNS/MLL python wrapping"
-lauthor       = "marc Poinot",
-lauthor_email = "marc.poinot@onera.fr",
-llicense      = "LGPL 2",
 lverbose      = 1
 lpackages     = ['CGNS.WRA','CGNS.WRA.test']
 lscripts      = []
@@ -107,20 +103,19 @@ else:
   cmdclassdict={'clean':setuputils.clean}
 
 setup (
-  name         = 'pyCGNS.WRA',
-  version      = lversion,
-  description  = ldescription,
-  author       = lauthor,
-  author_email = lauthor_email,
-  license      = llicense,
-  verbose      = lverbose,
-  ext_modules  = lext_modules,
-  packages     = lpackages,
-  scripts      = lscripts,
-  data_files   = ldata_files,
-  cmdclass=cmdclassdict
-
-) # close setup
+name         = pyCGNSconfig.NAME,
+version      = pyCGNSconfig.VERSION,
+description  = pyCGNSconfig.DESCRIPTION,
+author       = pyCGNSconfig.AUTHOR,
+author_email = pyCGNSconfig.EMAIL,
+license      = pyCGNSconfig.LICENSE,
+#  verbose      = lverbose,
+ext_modules  = lext_modules,
+packages     = lpackages,
+scripts      = lscripts,
+data_files   = ldata_files,
+cmdclass     = cmdclassdict
+)
 
 # --- last line
   

@@ -17,14 +17,15 @@ import setuputils
 
 if (not os.path.exists("build")): os.system("ln -sf ../build build")
 setuputils.installConfigFiles()
+cmdclassdict={'clean':setuputils.clean}
 
 setup(
-name         = "CGNS.DAT",
-version      = pyCGNSconfig.DAT_VERSION,
-description  = "pyCGNS - DBMS archival and CGNS files tracability",
-author       = "marc Poinot",
-author_email = "marc.poinot@onera.fr",
-license      = "LGPL 2",
+name         = pyCGNSconfig.NAME,
+version      = pyCGNSconfig.VERSION,
+description  = pyCGNSconfig.DESCRIPTION,
+author       = pyCGNSconfig.AUTHOR,
+author_email = pyCGNSconfig.EMAIL,
+license      = pyCGNSconfig.LICENSE,
 packages     = ['CGNS.DAT',
                 'CGNS.DAT.db',
                 'CGNS.DAT.db.dbdrivers',                
@@ -32,6 +33,6 @@ packages     = ['CGNS.DAT',
 scripts      = ['CGNS/DAT/tools/CGNS.DAT',
                 'CGNS/DAT/tools/daxQT',
                 'CGNS/DAT/tools/CGNS.DAT.create'],
-cmdclass={'clean':setuputils.clean}
-) # close setup
-
+cmdclass     = cmdclassdict
+)
+# --- last line
