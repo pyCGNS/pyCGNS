@@ -10,7 +10,6 @@
     <file>icons/check-all.png</file>
     <file>icons/anim-item-last.png</file>
     <file>icons/camera-remove.png</file>
-    <file>icons/bullet_star.png</file>
     <file>icons/anim-view.png</file>
     <file>icons/check-bwd.png</file>
     <file>icons/check-save.png</file>
@@ -27,7 +26,7 @@
     <file>icons/anim.png</file>
     <file>icons/branch-more.png</file>
     <file>icons/anim-item-del.png</file>
-    <file>icons/bullet_star.png.png</file>
+    <file>icons/bullet_star.png</file>
     <file>icons/anim-del.png</file>
     <file>icons/anim-auto-sids.png</file>
     <file>icons/check-view.png</file>

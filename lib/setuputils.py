@@ -279,16 +279,50 @@ def updateConfig(pfile,gfile,config_default,config_previous=None):
     import pyCGNSconfig_user
     for ck in dir(pyCGNSconfig_user):
       if (ck[0]!='_'): config_default[ck]=pyCGNSconfig_user.__dict__[ck]
-    os.makedirs('%s'%gfile)
+    if (not os.path.exists('%s'%gfile)):
+      os.makedirs('%s'%gfile)
     f=open("%s/pyCGNSconfig.py"%(gfile),'w+')
     f.writelines(config_default['file_pattern']%config_default)
     f.close()
+
+# --------------------------------------------------------------------
+def frompath_HDF5():
+  try:
+   h5p=subprocess.check_output(["which","h5dump"])
+  except:
+    try:
+      h5p=subprocess.check_output(["whence","h5dump"])
+    except:
+      h5p=None
+  if (h5p is not None):
+    h5root='/'.join(h5p.split('/')[:-2])
+  else:
+    h5root='/usr/local'
+  return h5root
+
+# --------------------------------------------------------------------
+def frompath_MLL():
+  try:
+   mllp=subprocess.check_output(["which","cgnsview"],stderr=STDOUT)
+  except:
+    try:
+      mllp=subprocess.check_output(["whence","cgnsview"],stderr=STDOUT)
+    except:
+      mllp=None
+  if (mllp is not None):
+    mllroot='/'.join(mllp.split('/')[:-2])
+  else:
+    mllroot='/usr/local'
+  return mllroot
 
 # --------------------------------------------------------------------
 def find_HDF5(pincs,plibs,libs):
   notfound=1
   extraargs=[]
   vers=''
+  h5root=frompath_HDF5()
+  pincs+=[h5root,'%s/include'%h5root]
+  plibs+=[h5root,'%s/lib'%h5root]
   for pth in plibs:
     if (    (os.path.exists(pth+'/libhdf5.a'))
          or (os.path.exists(pth+'/libhdf5.so'))
@@ -298,13 +332,15 @@ def find_HDF5(pincs,plibs,libs):
       break
   if notfound:
     print pfx+"ERROR: libhdf5 not found, please check paths:"
-    print pfx,plibs
+    for ppl in plibs:
+      print pfx,ppl
   notfound=1
   for pth in pincs:
     if (os.path.exists(pth+'/hdf5.h')): notfound=0
   if notfound:
     print pfx,"ERROR: hdf5.h not found, please check paths"
-    print pfx,pincs
+    for ppi in pincs:
+      print pfx,ppi
     return None
 
   ifh='HDF5 library version: unknown'
@@ -325,7 +361,8 @@ def find_HDF5(pincs,plibs,libs):
         break
   if notfound:
       print pfx,"ERROR: cannot find hdf5 version, please check paths"
-      print pfx,pincs
+      for ppi in pincs:
+        print pfx,pincs
       return None
 
   return (vers,pincs,plibs,libs,extraargs)
@@ -335,6 +372,9 @@ def find_MLL(pincs,plibs,libs,extraargs):
   notfound=1
   vers=''
   cgnsversion='3200'
+  mllroot=frompath_MLL()
+  pincs+=[mllroot,'%s/include'%mllroot]
+  plibs+=[mllroot,'%s/lib'%mllroot]
   libs=['cgns','hdf5']+libs
   extraargs=[]#'-DCG_BUILD_SCOPE']
   for pth in pincs:
@@ -351,7 +391,8 @@ def find_MLL(pincs,plibs,libs,extraargs):
       break
   if notfound:
     print pfx+"ERROR: cgnslib.h not found, please check paths"
-    print pfx,pincs
+    for ppi in pincs:
+      print pfx,ppi
     return None
 
   notfound=1
@@ -364,7 +405,8 @@ def find_MLL(pincs,plibs,libs,extraargs):
       break
   if notfound:
     print pfx,"ERROR: libcgns not found, please check paths:"
-    print pfx,plibs
+    for ppl in plibs:
+      print pfx,ppl
     return None
 
   notfound=1
@@ -399,7 +441,8 @@ def find_CHLone(pincs,plibs,libs):
       break
   if notfound:
     print pfx,"ERROR: libCHlone not found, please check paths:"
-    print pfx,plibs
+    for ppl in plibs:
+      print pfx,ppl
     return None
 
   notfound=1      
@@ -424,7 +467,8 @@ def find_CHLone(pincs,plibs,libs):
         break
   if notfound:
     print pfx,"ERROR: CHLone/CHLone.h not found, please check paths"
-    print pfx,pincs
+    for ppi in pincs:
+      print pfx,ppi
     return None
 
   return (vers,pincs,plibs,libs,extraargs)

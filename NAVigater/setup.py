@@ -112,13 +112,13 @@ if installprocess:
                        )]
 
   for m in modgenlist:
-      print 'Generate from updated GUI templates: ',m
-      com="(%s -o CGNS/NAV/G/%s.pyx CGNS/NAV/T/%s.ui;(cd CGNS/NAV/G;%s -a %s.pyx))"%(cui,m,m,ccy,m)
+      print '### pyCGNS: Generate from updated GUI templates: ',m
+      com="(%s -g cython -o CGNS/NAV/G/%s.pyx CGNS/NAV/T/%s.ui;(cd CGNS/NAV/G;%s -a %s.pyx))2>/dev/null"%(cui,m,m,ccy,m)
       os.system(com)
          
   if (os.path.getmtime('CGNS/NAV/R/Res.qrc')>os.path.getmtime('CGNS/NAV/Res_rc.py')):
-      print 'Generate from updated GUI Ressources'
-      com="(%s -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc)"%(crc)
+      print '### pyCGNS: Generate from updated GUI Ressources'
+      com="(%s -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc)2>/dev/null"%(crc)
       os.system(com)
   cmdclassdict={'clean':setuputils.clean,'build_ext':build_ext}
 else:
