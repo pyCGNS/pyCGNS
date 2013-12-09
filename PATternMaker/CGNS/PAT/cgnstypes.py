@@ -405,6 +405,11 @@ cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.FamilyName_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
+t=CK.AdditionalFamilyName_ts
+cgt[t]=CGNStype(t,dtype=[CK.C1])
+cgt[t].shape=(0,)
+
+# --------------------------------------------------------
 t=CK.FamilyBC_ts
 cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.FamilyBC_s])
 cgt[t].shape=(0,)

@@ -27,7 +27,7 @@ description  = pyCGNSconfig.DESCRIPTION,
 author       = pyCGNSconfig.AUTHOR,
 author_email = pyCGNSconfig.EMAIL,
 license      = pyCGNSconfig.LICENSE,
-packages     = ['CGNS.MAP'],
+packages     = ['CGNS.MAP','CGNS.MAP.test'],
 )
 
 # --- last line

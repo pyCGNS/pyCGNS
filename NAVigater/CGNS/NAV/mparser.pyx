@@ -15,9 +15,11 @@ cimport numpy as CNPY
 from PySide.QtCore import QCoreApplication
 
 import vtk
-from vtk.util import numpy_support
+import vtk.util.numpy_support as vtknpy
 
-EXTRA_PATTERN=' ={%s}'
+FAMILY_PATTERN=' :[%s]'
+
+EXTRA_PATTERN=' :{%s}'
 IMIN_PATTERN=EXTRA_PATTERN%'imin'
 JMIN_PATTERN=EXTRA_PATTERN%'jmin'
 KMIN_PATTERN=EXTRA_PATTERN%'kmin'
@@ -44,6 +46,27 @@ class Q7vtkActor(vtk.vtkActor):
     return self.__type
 
 # ----------------------------------------------------------------------------
+class ZoneData(object):
+  __zones=[]
+  def __init__(self,meshcoords,surfcoords,bndlist,path,surfpaths,bcpaths,sols,
+               bcfams):
+    self.meshcoordinates=meshcoords # 0
+    self.surfcoordinates=surfcoords # 1
+    self.bndlist=bndlist            # 2
+    self.path=path                  # 3
+    self.surfpaths=surfpaths        # 4
+    self.bcpaths=bcpaths            # 5
+    self.sols=sols                  # 6
+    self.bcfams=bcfams
+    self.X=self.meshcoordinates[0]
+    self.Y=self.meshcoordinates[1]
+    self.Z=self.meshcoordinates[2]
+    self.surfaces=zip(self.surfpaths,self.surfcoordinates)
+    self.boundaries=zip(self.bcpaths,self.bndlist,self.bcfams)
+    ZoneData.__zones.append(self)
+  @classmethod
+  def zonelist(cls):
+    for z in cls.__zones: yield z
 
 class CGNSparser:
   
@@ -63,6 +86,7 @@ class CGNSparser:
       T[3]=CGK.CGNSTree_ts
     for r in CGU.getAllNodesByTypeSet(T,[CGK.ConvergenceHistory_ts]):
       self._rsd=CGU.nodeByPath(r,T)
+    allfamilies=CGU.getAllFamilies(T)
     for z in CGU.getAllNodesByTypeSet(T,[CGK.Zone_ts]):
       zT=CGU.nodeByPath(z,T)
       if ((zlist==[]) or (z in zlist)):
@@ -101,6 +125,7 @@ class CGNSparser:
                        zp+KMIN_PATTERN,zp+KMAX_PATTERN]
             bndlist=[]
             bcpaths=[]
+            bcfams=[]
             solutions=[]
             for sol in CGU.getAllNodesByTypeSet(zT,[CGK.FlowSolution_ts]):
               zsol=CGU.nodeByPath(sol,zT)
@@ -111,6 +136,13 @@ class CGNSparser:
               zbcT=CGU.nodeByPath(nzbc,zT)
               for nbc in CGU.getAllNodesByTypeSet(zbcT,[CGK.BC_ts]):
                 bcpaths+=['%s/ZoneBC/%s'%(zp,nbc.split('/')[1])]
+                bcnode=CGU.getNodeByPath(zbcT,nbc)
+                lfbc =CGU.hasChildType(bcnode,CGK.FamilyName_ts)
+                lfbc+=CGU.hasChildType(bcnode,CGK.AdditionalFamilyName_ts)
+                nflbcs=[]
+                for nlfbc in lfbc:
+                  nflbcs+=[nlfbc[1].tostring()]
+                bcfams+=[nflbcs]
                 bcT=CGU.nodeByPath(nbc,zbcT)
                 for rbc in CGU.getAllNodesByTypeSet(bcT,[CGK.IndexRange_ts]):
                   ptr=CGU.nodeByPath(rbc,bcT)[1].T.flat
@@ -118,9 +150,13 @@ class CGNSparser:
                        scy[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],
                        scz[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]]]
                   bndlist+=[brg]
-            self._zones[zg]=([acx,acy,acz],
+            # self._zones[zg]=([acx,acy,acz],
+            #                 [simin,simax,sjmin,sjmax,skmin,skmax],bndlist,
+            #                 meshpath,surfpaths,bcpaths,solutions)
+            self._zones[zg]=ZoneData([acx,acy,acz],
                             [simin,simax,sjmin,sjmax,skmin,skmax],bndlist,
-                            meshpath,surfpaths,bcpaths,solutions)
+                            meshpath,surfpaths,bcpaths,solutions,
+                            bcfams)
           elif (ztype[1].tostring()==CGK.Unstructured_s):
             volume={}
             surface={}
@@ -170,14 +206,14 @@ class Mesh(CGNSparser):
                    CGK.HEXA_27: (vtk.vtkHexahedron,(8,27))}
     try:
       self._status=self.parseZones(zlist)
-    except:
+    except ValueError:
       self._status=False
 
   def getResidus(self):
     return self._rsd
 
   def createActors(self):
-    for z in self._zones.values():      
+    for z in ZoneData.zonelist():      
       self.do_vtk(z)
       QCoreApplication.processEvents()
     self._actors+=self.createActors_ns()
@@ -202,6 +238,9 @@ class Mesh(CGNSparser):
         if (a[0].topo() in filter): r.append(a[3])
       r.sort()
       return r
+
+  def getFamilyList(self):
+    return ('A','B','C')
 
   def getPathFromObject(self,selectedobject):
     for (o,p) in [(a[2],a[3]) for a in self._actors]:                  
@@ -231,6 +270,7 @@ class Mesh(CGNSparser):
     kdim = dx.shape[2]
     pts=vtk.vtkPoints()
     pts.SetNumberOfPoints(idim*jdim*kdim)
+    #pts.setData
     if (dx.dtype==NPY.float32):
       for k in range(kdim):
        for j in range(jdim):
@@ -292,7 +332,7 @@ class Mesh(CGNSparser):
     sg=vtk.vtkUnstructuredGrid()
     sg.Allocate(1, 1)
     n=0
-    qp = vtk.vtkPoints()
+    qp = vtk.vtkPoints() # TODO: add family label as attribute
     for j in range(jmax-1):
      for i in range(imax-1):
       p1=j+      i*jmax +0
@@ -327,7 +367,7 @@ class Mesh(CGNSparser):
     a.GetProperty().SetRepresentationToWireframe()
     return (a,None,sg,path,(1,None),None)
 
-  def do_boundaries(self,bnd,path):
+  def do_boundaries(self,path,bnd,fams):
     cdef int i, j, imax, jmax, p1, p2, p3, p4
     max=[x for x in bnd[0].shape if x!=1]
     imax=max[0]
@@ -360,16 +400,16 @@ class Mesh(CGNSparser):
     am = vtk.vtkDataSetMapper()
     am.SetInput(sg)
     a = Q7vtkActor('BC')
-    a.SetMapper(am)
+    a.SetMapper(am) 
     a.GetProperty().SetRepresentationToWireframe()
     return (a,None,sg,path,(1,None),None)
 
   def do_vtk(self,z):
-      self._actors+=[self.do_volume(z[3],z[0][0],z[0][1],z[0][2],z[6])]
-      for (s,sp) in zip(z[1],z[4]):
-        self._actors+=[self.do_surface_double_3d(sp,s)]
-      for (b,sb) in zip(z[2],z[5]):
-        self._actors+=[self.do_boundaries(b,sb)]
+      self._actors+=[self.do_volume(z.path,z.X,z.Y,z.Z,z.sols)]
+      for (path,coords) in z.surfaces:
+        self._actors+=[self.do_surface_double_3d(path,coords)]
+      for (path,coords,fams) in z.boundaries:
+        self._actors+=[self.do_boundaries(path,coords,fams)]
       return
 
 #  @cython.boundscheck(False)

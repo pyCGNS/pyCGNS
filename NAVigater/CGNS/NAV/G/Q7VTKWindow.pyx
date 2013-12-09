@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
-#
+# 
 # Created: Tue Jun 18 16:33:58 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #

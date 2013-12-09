@@ -360,10 +360,15 @@ Keys are not case-sensitive letters, <b>s</b> and <b>S</b> are the same.
 <b>q</b> Surface and wire mode rendering (toggle with wire)<br>
 <b>r</b> Reset view to fit to full object<br>
 
-<b>\<space\></b> Throw a ray on the view and select all actors cuting the ray<br>
-<b>z</b> Same as \<space\><br>
+<b>[space]</b> Throw a ray on the view and select all actors cuting the ray<br>
+<b>z</b> Same as [space]<br>
 <b>u</b> Unselect all<br>
 <b>p</b> Pick a point in the selected Zone<br>
+
+<h4>Tips</h4>
+
+To unselect all and clear the list of selected actors, just move the mouse on
+the graphic window background and press [space].
 """),
 # --------------------------------------------------------------------------
 'Link':('Link view',

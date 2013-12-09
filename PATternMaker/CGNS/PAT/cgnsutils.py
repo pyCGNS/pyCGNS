@@ -1977,6 +1977,7 @@ def getNodeAllowedChildrenTypes(pnode,node):
     pass
   return tlist
 
+
 # --------------------------------------------------
 def getNodeAllowedDataTypes(node):
   """
@@ -2001,6 +2002,51 @@ def getNodeAllowedDataTypes(node):
   except:
     pass
   return tlist
+
+# --------------------------------------------------
+def getAllFamilies(tree):
+  fpth=[CK.CGNSTree_ts,CK.CGNSBase_ts,CK.Family_ts]
+  famlist=getAllNodesByTypeOrNameList(tree,fpth)
+  return [getPathLeaf(f) for f in famlist]
+
+# --------------------------------------------------
+def getZoneFromFamily(tree,families,additional=True):
+  fpth1=[CK.CGNSTree_ts,CK.CGNSBase_ts,CK.Zone_ts,CK.FamilyName_ts]
+  fpth2=[CK.CGNSTree_ts,CK.CGNSBase_ts,CK.Zone_ts,CK.AdditionalFamilyName_ts]
+  zlist=getAllNodesByTypeOrNameList(tree,fpth1)
+  if (additional): zlist+=getAllNodesByTypeOrNameList(tree,fpth2)
+  r=[]
+  for pth in zlist:
+    if (getValueByPath(pth).toString() in families):
+      r+=[getPathAncestor(pth)]
+  return r
+
+# --------------------------------------------------
+def getBCFromFamily(tree,families,additional=True):
+  fpth0=[CK.CGNSTree_ts,CK.CGNSBase_ts,CK.Zone_ts,CK.ZoneBC_ts,CK.BC_ts]
+  fpth1=fpth0+[CK.FamilyName_ts]
+  fpth2=fpth0+[CK.AdditionalFamilyName_ts]
+  zlist=getAllNodesByTypeOrNameList(tree,fpth1)
+  if (additional): zlist+=getAllNodesByTypeOrNameList(tree,fpth2)
+  r=[]
+  for pth in zlist:
+    if (getValueByPath(tree,pth).tostring() in families): 
+      r+=[getPathAncestor(pth)]
+  return r
+
+# --------------------------------------------------
+def getZoneSubRegionFromFamily(tree,families):
+  fpth0=[CK.CGNSTree_ts,CK.CGNSBase_ts,CK.Zone_ts,CK.ZoneBC_ts,
+         CK.ZoneSubRegion_ts]
+  fpth1=fpth0+[CK.FamilyName_ts]
+  fpth2=fpth0+[CK.AdditionalFamilyName_ts]
+  zlist=getAllNodesByTypeOrNameList(tree,fpth1)
+  if (additional): zlist+=getAllNodesByTypeOrNameList(tree,fpth2)
+  r=[]
+  for pth in zlist:
+    if (getValueByPath(tree,pth).tostring() in families): 
+      r+=[getPathAncestor(pth)]
+  return r
 
 # -----------------------------------------------------------------------------
 def hasChildType(parent,ntype):

@@ -137,6 +137,14 @@ __vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
 __doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
         %%(__vid__)
 version=__vid__
+
+NAME='%(NAME)s'
+VERSION=__vid__
+DESCRIPTION=__doc__
+AUTHOR='%(AUTHOR)s'
+EMAIL="%(EMAIL)s"
+LICENSE="%(LICENSE)s"
+
 """
 #
 

@@ -743,7 +743,7 @@ class Q7TreeItem(object):
         if (not self._lazy): return
         nodetab=self.sidsValue()
         npath=CGU.getPathNoRoot(self.sidsPath())
-        if (nodetab==None):
+        if ((nodetab==None) and (partialtree[2] is not None)):
             nval=CGU.getNodeByPath(partialtree,npath)
             if (nval is not None):
               self.updateData(nval[1])
@@ -1257,6 +1257,7 @@ class Q7TreeModel(QAbstractItemModel):
             udict[CGU.getPathNoRoot(nodeitem.sidsPath())]=nodeitem.sidsValue()
         if (udict):
             (t,l,p)=self._fingerprint.updateNodeData(udict)
+            print (t,l,p)
         for pth in pthlist:
             nodeitem=self.nodeFromPath(pth)
             nodeitem.dataLoad(t)

@@ -97,11 +97,11 @@ class Q7CHLoneThread(QThread):
             flags|=CGNS.MAP.S2P_FOLLOWLINKS
         try:
             if (maxdataload):
-                (tree,links,paths)=CGNS.MAP.load(loadfilename,flags,
+                (tree,links,paths)=CGNS.MAP.load(loadfilename,flags=flags,
                                                  lksearch=slp,
                                                  maxdata=maxdataload)
             else:
-                (tree,links,paths)=CGNS.MAP.load(loadfilename,flags,
+                (tree,links,paths)=CGNS.MAP.load(loadfilename,flags=flags,
                                                  lksearch=slp)
         except (CGNS.MAP.error,),chlex:
             Q7FingerPrint.Unlock()
@@ -362,21 +362,22 @@ class Q7FingerPrint:
     @classmethod
     def treeSave(cls,control,fgprint,f,saveas):
         flags=CGNS.MAP.S2P_DEFAULT
-        if (OCTXT.CHLoneTrace): flags|=CGNS.MAP.S2P_TRACE
+        if (OCTXT.CHLoneTrace): 
+          flags|=CGNS.MAP.S2P_TRACE
         if (not saveas):        flags|=CGNS.MAP.S2P_UPDATE
         tree=fgprint.tree
         lazylist=[ CGU.getPathNoRoot(path) for path in fgprint.lazy.keys() ]
         try:
-            CGNS.MAP.save(f,tree,fgprint.links,flags,skip=lazylist)
+            CGNS.MAP.save(f,tree,links=fgprint.links,flags=flags,skip=lazylist)
         except (CGNS.MAP.error,),chlex:
             txt="""The current save operation has been aborted (CHLone):"""
             control.readyCursor()
-            MSG.wError(chlex[0],txt,chlex[1])
+            MSG.wError(control,chlex[0],txt,chlex[1])
             return None
         except (Exception,), e:
             txt="""The current save operation has been aborted: %s"""%e
             control.readyCursor()
-            MSG.wError(0,txt,'')
+            MSG.wError(control,0,txt,'')
             return None
         fgprint.updateFileStats(f,saveas=True)
     @classmethod
@@ -500,7 +501,7 @@ class Q7FingerPrint:
             flags|=CGNS.MAP.S2P_TRACE
         if (OCTXT.FollowLinksAtLoad):
             flags|=CGNS.MAP.S2P_FOLLOWLINKS
-        (t,l,p)=CGNS.MAP.load(tfile,flags,path=minpath,lksearch=slp,
+        (t,l,p)=CGNS.MAP.load(tfile,flags=flags,path=minpath,lksearch=slp,
                               update=pathdict)
         return (t,l,p)
     def updateFileStats(self,fname,saveas=False):

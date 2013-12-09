@@ -122,6 +122,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.ColorMapMin=QColorDialog(self)
       self.ColorMapMax=QColorDialog(self)
       self.cCurrentPath.setParent(self)
+#      self.cFamilies.setParent(self)
       QObject.connect(self.ColorMapMin,
                       SIGNAL("colorSelected(QColor)"),self.getColorMapMin)
       QObject.connect(self.ColorMapMax,
@@ -141,6 +142,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       QObject.connect(self.cCurrentPath,
                       SIGNAL("currentIndexChanged(int)"),
                       self.changeCurrentPath)
+#      QObject.connect(self.cFamilies,
+#                      SIGNAL("currentIndexChanged(int)"),
+#                      self.changeCurrentFamily)
       QObject.connect(self.sIndex1, SIGNAL("valueChanged(int)"),
                       self.highlightPoint)
       QObject.connect(self.sIndex2, SIGNAL("valueChanged(int)"),
@@ -714,6 +718,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.planeWidget=vtk.vtkImplicitPlaneWidget()
       self.planeWidget.SetInteractor(self._iren)
       self.fillCurrentPath()
+#      self.fillCurrentFamily()
       
       self._vtkren.AddObserver("StartEvent", self.posWidgets)
       self.setCameraMode()
@@ -890,7 +895,26 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def b_zaxis(self,pos=None):
       if (self.cMirror.isChecked()): self.setAxis(pos,-3)
       else: self.setAxis(pos,3)
-    
+
+  def changeCurrentFamily(self, *args):
+      print args
+
+  def fillCurrentFamily(self):
+      self.cFamilies.clear()
+#      sel=[n[0] for n in self._fselected]
+#      hid=[n[0] for n in self._fhidden]
+      self.cFamilies.addItem(self._epix,'')
+      for i in self._parser.getFamilyList():
+          pix=self._npix
+#          if (i in sel): pix=self._spix
+#          if (i in hid): pix=self._hpix
+          self.cFamilies.addItem(pix,i)
+      self.cFamilies.model().sort(0)
+      self._iren.Render()
+
+  def setCurrentFamily(self, family):
+      pass
+
   def changeCurrentPath(self, *args):
       path=self.cCurrentPath.currentText()
       if (path==''):

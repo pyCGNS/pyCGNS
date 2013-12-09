@@ -735,13 +735,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Selection :</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QCheckBox" name="cShowZone">
        <property name="text">
         <string>Zones</string>
@@ -783,6 +776,16 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QComboBox" name="cFamilies">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
