@@ -43,16 +43,10 @@ Python application developpers. The main object of *pyCGNS* is to provide the
 application developpers with a Python interface to :term:`CGNS/SIDS`, the data
 model. 
 
-.. sidebar:: Release 4.3
+.. sidebar:: Release 4.4
 
-   - pyCGNS available on Microsoft Windows (32 bits)
-   - `CGNS.MAP` is now a wrapper 
-     to `CHLone <http://chlone.sourceforge.net/>`_ python module
-   - `CGNS.WRA` reborn, re-coding using *Cython*
-   - `CGNS.VAL` reborn
-   - completely new `CGNS.NAV` using *Qt*, *VTK* and *Cython*
-   - YouTube demos `here <http://www.youtube.com/user/pyCGNS?feature=watch>`_
-
+   - pyCGNS available on Anaconda (Linux/Windows)
+   - Enhanced testing (see :ref:`testsupport`)
 
 The *MAP* and *PAT* modules are dedicated to this goal: map the 
 :term:`CGNS/SIDS` data model the :term:`CGNS/Python` implementation. 

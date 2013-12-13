@@ -59,10 +59,13 @@ There are two functions: the ``load`` and the ``save``. The ``load`` reads
 a *CGNS/HDF5* file and produces a *CGNS/Python* tree. The ``save`` takes a 
 *CGNS/Python* tree and writes the contents in a *CGNS/HDF5* file::
 
- (tree,links,paths)=CGNS.MAP.load(filename,flags,depth,path,linkpaths,updatepaths)
+ (tree,links,paths)=CGNS.MAP.load(filename,flags,depth,maxdata,subtree,linkpaths,updatepaths)
 
- status=CGNS.MAP.save(filename,tree,links,flags,depth,path)
+ status=CGNS.MAP.save(filename,tree,links,flags,depth,linkpaths,updatepaths,skiplist)
 
+The ``load`` and ``save`` arguments are python *named* arguments, you have
+to set them with the correct key. Except ``filename`` for ``load`` 
+and ``filename`` and ``tree`` for ``save``, all others arguments are optional.
 The arguments and the return values are:
 
  * **tree**:
@@ -96,6 +99,11 @@ The arguments and the return values are:
    tree can load/save in a completely different way depending 
    on these ``flags``.
 
+ * **maxdata**:
+   Sets the threshold for array creation. If the array size (``ndarray.size``)
+   is greater than ``maxdata``, the returned node value is ``None`` and the
+   path is added into the ``paths`` return of the ``load``.
+
  * **depth**:
    This positive integer value sets the level of children the load/save
    takes into account. For example, a depth of 2 would stop load/save
@@ -104,8 +112,8 @@ The arguments and the return values are:
    If you want to have all the children, use a 0 ``depth`` which means
    no limit on depth.
 
- * **path**:
-   The ``path`` defines the start node of the load/save. It should be
+ * **subtree**:
+   This ``path`` defines the start node of the load/save. It should be
    an absolute path of an existing node in the argument filename.
    All the nodes along this path are taken into account for load/save
    actions.
@@ -122,6 +130,12 @@ The arguments and the return values are:
    When the load reaches a node with the path in the keys, the numpy value
    is updated instead of creating a new array. You can pass your own array
    with an already allocated memory zone or update and already loaded numpy.
+
+ * **skiplist**:
+   A list of paths of nodes that should not be updated. For exemple if you
+   ``load`` a tree without data, you do not want the ``save`` to overwrite
+   actual data on disk with empty arrays. This list can be retrieved from
+   the ``paths`` return of the ``load`` function.
 
 .. warning::
    The current directory is **not** in the link search path. So if your

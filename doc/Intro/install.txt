@@ -221,5 +221,17 @@ check your cython is present using::
 
 That should not fail...
 
+.. _testsupport:
+
+Test
+++++
+
+Some of the pyCGNS modules have embedded tests. Once you have installed
+pyCGNS, you can run each test suite from another user account/directory::
+
+ python -c 'import CGNS.MAP.test.cgu'
+ python -c 'import CGNS.PAT.test.cgu'
+
+
 
 .. -------------------------------------------------------------------------
