@@ -102,10 +102,12 @@ class Q7OptionContext(object):
     Show1DAsPlain=True
     SelectionListDirectory='~/.CGNS.NAV/selections'
     QueriesDirectory='~/.CGNS.NAV/queries'
+    FunctionsDirectory='~/.CGNS.NAV/functions'
     SnapShotDirectory='~/.CGNS.NAV/snapshots'
     _HistoryFileName='~/.CGNS.NAV/historyfile.py'
     _OptionsFileName='~/.CGNS.NAV/optionsfile.py'
-    _QueriesDefaultFile='defaultqueries.py'
+    _QueriesDefaultFile='default.py'
+    _FunctionsDefaultFile='default.py'
     LinkSearchPathList=[]
     ProfileSearchPathList=[]
     GrammarSearchPathList=[]
@@ -437,6 +439,7 @@ Please visit his web site: http://www.famfamfam.com/<br>
     CGK.CGNSTree_ts,
     CGK.Family_ts,
     CGK.FamilyName_ts,
+    CGK.AdditionalFamilyName_ts,
     CGK.CGNSBase_ts,
     CGK.Zone_ts,
     CGK.ZoneType_ts,
@@ -708,6 +711,13 @@ if (SIDSTYPE==CGK.Zone_ts):
     RESULT=G.bbox(NODE)
  """,
  """Example of Bounding box computation using Cassiopee"""),
+('100. .Solver#Compute children',
+ 'Edit filters',
+ """
+if (PARENT[0]=='.Solver#Compute'):
+    RESULT=PATH
+ """,
+ """Selects all children nodes of the .Solver#Compute elsA userdefined node"""),
 
     ]
 
@@ -804,6 +814,19 @@ if (SIDSTYPE==CGK.Zone_ts):
       m=cls._readFile('queries',filename)
       if (m is None): return None
       return m.queries
+    @classmethod
+    def _writeFunctions(cls,control,f):
+      filename=cls._trpath(cls.FunctionsDirectory+'/'+cls._FunctionsDefaultFile)
+      cls._writeFile('User functions','functions',q,filename,Q_FILE_PRE)
+    @classmethod
+    def _readFunctions(cls,control):
+      filename=cls._trpath(cls.FunctionsDirectory+'/'+cls._FunctionsDefaultFile)
+      m=cls._readFile('functions',filename)
+      if (m is None): return None
+      try:
+        return m.Q7UserFunction
+      except:
+        return None
     def __init__(self):
       pass
     def __getitem__(self,name):
@@ -818,5 +841,5 @@ if (SIDSTYPE==CGK.Zone_ts):
     def _nextName(self):
       for o in dir(self):
         if (o[0]!='_'): yield o
-      
+
 # -----------------------------------------------------------------

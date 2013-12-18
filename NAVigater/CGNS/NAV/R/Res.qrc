@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/query-xor.png</file>
+    <file>icons/query-xor.gif</file>
     <file>icons/clear-entry.png</file>
     <file>icons/clear-entry.gif</file>
     <file>icons/link-check.png</file>

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
-# 
-# Created: Tue Jun 18 16:33:58 2013
+#
+# Created: Tue Dec 17 08:36:54 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.0.9
 #
 # WARNING! All changes made in this file will be lost!
@@ -286,9 +286,6 @@ class Ui_Q7VTKWindow(object):
         self.bReverse.setIcon(icon16)
         self.bReverse.setObjectName("bReverse")
         self.horizontalLayout_4.addWidget(self.bReverse)
-        self.label = QtGui.QLabel(Q7VTKWindow)
-        self.label.setObjectName("label")
-        self.horizontalLayout_4.addWidget(self.label)
         self.cShowZone = QtGui.QCheckBox(Q7VTKWindow)
         self.cShowZone.setChecked(True)
         self.cShowZone.setObjectName("cShowZone")
@@ -303,6 +300,14 @@ class Ui_Q7VTKWindow(object):
         self.horizontalLayout_4.addWidget(self.cShowMinMax)
         spacerItem6 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem6)
+        self.cFamilies = QtGui.QComboBox(Q7VTKWindow)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.cFamilies.sizePolicy().hasHeightForWidth())
+        self.cFamilies.setSizePolicy(sizePolicy)
+        self.cFamilies.setObjectName("cFamilies")
+        self.horizontalLayout_4.addWidget(self.cFamilies)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
         self.line_2 = QtGui.QFrame(Q7VTKWindow)
         self.line_2.setFrameShape(QtGui.QFrame.HLine)
@@ -400,7 +405,6 @@ class Ui_Q7VTKWindow(object):
         self.cRotationAxis.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Rotation axis", None, QtGui.QApplication.UnicodeUTF8))
         self.bUpdate.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Merge tree view & VTK view selected lists", None, QtGui.QApplication.UnicodeUTF8))
         self.bReverse.setToolTip(QtGui.QApplication.translate("Q7VTKWindow", "Switch seleted and  unselected actors", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("Q7VTKWindow", "Selection :", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowZone.setText(QtGui.QApplication.translate("Q7VTKWindow", "Zones", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowBC.setText(QtGui.QApplication.translate("Q7VTKWindow", "BCs", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowMinMax.setText(QtGui.QApplication.translate("Q7VTKWindow", "Min/Max", None, QtGui.QApplication.UnicodeUTF8))

@@ -196,8 +196,9 @@ class Q7Window(QWidget,object):
         except AttributeError:
             pass
         self._readonly=False
-        sys.stdout=self.control_log
-        sys.stderr=self.control_log
+        if (not control.verbose):
+          sys.stdout=self.control_log
+          sys.stderr=self.control_log
     def validateOption(self,name,value):
         #if (name[0]=='_'): return False
         return True

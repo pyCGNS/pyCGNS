@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7LogWindow.ui'
 #
-# Created: Wed Apr 24 10:21:32 2013
-#      by: pyside-uic 0.2.13 running on PySide 1.0.9
+# Created: Tue Dec 17 16:08:14 2013
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_Q7LogWindow(object):
     def setupUi(self, Q7LogWindow):
         Q7LogWindow.setObjectName("Q7LogWindow")
-        Q7LogWindow.resize(500, 140)
+        Q7LogWindow.resize(600, 400)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)

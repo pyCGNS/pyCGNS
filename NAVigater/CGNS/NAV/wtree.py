@@ -51,7 +51,11 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         if (index.column() in [NMT.COLUMN_VALUE]):
           node=self._parent.modelData(index)
           if (node.hasValueView()):
-            en=node.sidsValueEnum()
+            pt=node.sidsPath().split('/')[1:]
+            lt=node.sidsTypePath()
+            fc=self._parent._control._control.userFunctionFromPath(pt,lt)
+            if (fc is not None): en=fc.getEnumerate(pt,lt)
+            else:                en=node.sidsValueEnum()
             if (en is None):
               self._mode=CELLTEXT
               editor=QLineEdit(parent)
@@ -120,6 +124,8 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         if (node is not None):
             nindex=self._parent.model().indexByPath(node.sidsPath())
             self._parent.setLastEntered(nindex)
+        if (self._parent._control._selectwindow is not None):
+            self._parent._control._selectwindow.reset()
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(*editor.transgeometry)
     def paint(self, painter, option, index):
@@ -158,6 +164,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._toolswindow=None
         self._querywindow=None
         self._vtkwindow=None
+        self._selectwindow=None
+
         QObject.connect(self.treeview,
                         SIGNAL("expanded(QModelIndex)"),
                         self.expandNode)
@@ -244,6 +252,12 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bSelectLink.clicked.connect(self.linkselect)
         self.cSaveLog.setDisabled(True)
         self.updateTreeStatus()
+        if (self._control.query is not None):
+            ix=self.cQuery.findText(self._control.query)
+            if (ix!=-1):
+                self.cQuery.setCurrentIndex(ix)
+            self.applyquery()
+            self.selectionlist()
     def model(self):
         return self._fgprint.model
     def modelIndex(self,idx):
@@ -512,9 +526,12 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.lastdiag=None
         self.bCheckList.setDisabled(True)
     def selectionlist(self):
-        print 'Q7TreeView',self.model().getSelected()
-        slist=Q7SelectionList(self._control,self.model(),self._fgprint)
-        slist.show()
+        if (self._selectwindow is not None):
+            self._selectwindow.close()
+            self._selectwindow=None
+        self._selectwindow=Q7SelectionList(self,self.model(),
+                                           self._fgprint)
+        self._selectwindow.show()
     def previousmark(self):
         self.treeview.changeSelectedMark(-1)
     def nextmark(self):

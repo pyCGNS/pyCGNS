@@ -1705,7 +1705,7 @@ def getPathToList(path,nofirst=False,noroot=True):
   return lp
 
 # --------------------------------------------------   
-def getPathAncestor(path,level=1):
+def getPathAncestor(path,level=1,noroot=True):
   """
   Return the path of the node parent of the argument node path::
 
@@ -1721,7 +1721,7 @@ def getPathAncestor(path,level=1):
    * If the path is '/' its ancestor is None.
    
   """
-  lp=getPathToList(path)
+  lp=getPathToList(path,noroot=noroot)
   if ((len(lp)==2) and (lp[0]=='')):  ancestor='/'
   elif (len(lp)>1):                   ancestor='/'.join(lp[:-1])
   elif (len(lp)==1):                  ancestor='/'
@@ -1785,7 +1785,7 @@ def getPathNoRoot(path):
   return path
 
 # --------------------------------------------------   
-def getPathAsTypes(tree,path):
+def getPathAsTypes(tree,path,legacy=True):
   """
   Return the list of types corresponding to the argument path in the tree::
 
@@ -1802,18 +1802,17 @@ def getPathAsTypes(tree,path):
    
   """
   ltypes=[]
-  leg=True
   if (checkRootNode(tree,legacy=False)):
-    p=getPathToList(path)
-    if (p and (p[0] != CK.CGNSTree_ts)):
+    p=getPathToList(path,noroot=False,nofirst=True)
+    if (p and (p[0] != CK.CGNSTree_s)):
       path='/'+CK.CGNSTree_s+'/'+path
-      leg=False
+      legacy=False
   path=getPathNormalize(path)
   while path not in ['/', None]:
     t=getTypeByPath(tree,path)
     ltypes+=[t]
-    path=getPathAncestor(path)
-  if (leg and (len(ltypes)>0)): ltypes=ltypes[:-1]
+    path=getPathAncestor(path,noroot=False)
+  if (legacy and (len(ltypes)>0)): ltypes=ltypes[:-1]
   ltypes.reverse()
   return ltypes
 
