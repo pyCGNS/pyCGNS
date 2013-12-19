@@ -532,6 +532,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._selectwindow=Q7SelectionList(self,self.model(),
                                            self._fgprint)
         self._selectwindow.show()
+        self._selectwindow.raise_()
     def previousmark(self):
         self.treeview.changeSelectedMark(-1)
     def nextmark(self):

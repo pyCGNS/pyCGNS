@@ -29,7 +29,7 @@ CELLEDITMODE=(CELLCOMBO,CELLTEXT)
 # -----------------------------------------------------------------
 class Q7SelectionItemDelegate(QStyledItemDelegate):
     def __init__(self,owner,model):
-        QStyledItemDelegate.__init__(self,owner.selectionTable)
+        QStyledItemDelegate.__init__(self,owner._tb)
         self._parent=owner
         self._mode=CELLTEXT
         self._model=model
@@ -109,17 +109,34 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
         else:
             pass
     def setModelData(self,editor,model,index):
-        value=None
-        if (self._mode==CELLCOMBO):
-            value=editor.currentText()
-        if (self._mode==CELLTEXT):
-            value=editor.text()
-        tnode=self._model.nodeFromPath(self._parent._data[index.row()])
         col=self._lastCol
         if (col is None): return
-        nix=self._model.createIndex(index.row(),col,tnode)
-        self._model.setData(nix,value,role=Qt.EditRole)
-        self._parent.updateRowData(index.row(),self._parent._data[index.row()])
+        value=None
+        nodelist=[]
+        dt=self._parent._data
+        if (self._mode==CELLCOMBO): value=editor.currentText()
+        if (self._mode==CELLTEXT):  value=editor.text()
+        if (self._parent.setToAll()):
+          reply=MSG.wQuestion(self._parent,'Apply changes to all...',
+          """The same value is going to be set to all selected nodes,<br>
+             Do we continue and perform the modification on all selected?<br>
+             This may fail on some nodes if the data type is not the same
+             as the original node for example. In that case some of the
+             nodes would be modified but not the others, you would not
+             have any status on the actual result of the modification.<br>
+             """)
+          if (reply == MSG.OK):
+            for rw in self._parent.selectedRows():
+              nodelist.append((rw,self._model.nodeFromPath(dt[rw])))
+          else:
+              return
+        else:
+          nodelist.append((index.row(),
+                           self._model.nodeFromPath(dt[index.row()])))
+        for ndr in nodelist:
+          nix=self._model.createIndex(ndr[0],col,ndr[1])
+          self._model.setData(nix,value,role=Qt.EditRole)
+          self._parent.updateRowData(ndr[0],dt[ndr[0]])
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(*editor.transgeometry)
 
@@ -133,6 +150,7 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
         self._model=model
         self._data=model.getSelected()
         self._fgprint=fgprint
+        self._tb=self.selectionTable
         self.bSave.clicked.connect(self.selectionsave)
         self.bInfo.clicked.connect(self.infoSelectView)
         QObject.connect(self.cShowPath,
@@ -140,40 +158,49 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
         QObject.connect(self.cShowSIDS,
                         SIGNAL("stateChanged(int)"),self.colCheck)
         self.bFirst.clicked.connect(self.sClear)
-        self.selectionTable.setItemDelegate(Q7SelectionItemDelegate(self,self._fgprint.model))
+        self._tb.setItemDelegate(Q7SelectionItemDelegate(self,self._fgprint.model))
         self.bRemoveToSelect.clicked.connect(self.sRemove)
         self.bReverse.clicked.connect(self.sReverse)
         self.bSelectAll.clicked.connect(self.sAll)
         self.bUnselectAll.clicked.connect(self.sClear)
     def colCheck(self):
         if (self.cShowPath.checkState()==Qt.Checked):
-            self.selectionTable.showColumn(0)
+            self._tb.showColumn(0)
         else:
-            self.selectionTable.hideColumn(0)
+            self._tb.hideColumn(0)
         if (self.cShowSIDS.checkState()==Qt.Checked):
-            self.selectionTable.showColumn(2)
+            self._tb.showColumn(2)
         else:
-            self.selectionTable.hideColumn(2)
+            self._tb.hideColumn(2)
+    def setToAll(self):
+        if (self.cApplyToAll.checkState()==Qt.Checked): return True
+        return False
+    def selectedRows(self):
+        ixl=self._tb.selectionModel().selection().indexes()
+        sr=set()
+        for ix in ixl:
+            sr.add(ix.row())
+        return list(sr)
     def sRemove(self):
         dsel=[]
-        for r in self.selectionTable.selectionModel().selectedRows():
+        for r in self._tb.selectionModel().selectedRows():
             dsel.append(self._data[r.row()])
         for p in dsel:
             self._data.remove(p)
         self.reset()
     def sReverse(self):
-        rall=set(range(self.selectionTable.rowCount()))
+        rall=set(range(self._tb.rowCount()))
         rsel=set()
-        for r in self.selectionTable.selectionModel().selectedRows():
+        for r in self._tb.selectionModel().selectedRows():
             rsel.add(r.row())
         runs=rall.difference(rsel)
-        self.selectionTable.clearSelection()
+        self._tb.clearSelection()
         for r in runs:
-            self.selectionTable.selectRow(r)
+            self._tb.selectRow(r)
     def sAll(self):
-        self.selectionTable.selectAll()
+        self._tb.selectAll()
     def sClear(self):
-        self.selectionTable.clearSelection()
+        self._tb.clearSelection()
     def infoSelectView(self):
         self._control.helpWindow('Selection')
     def show(self):
@@ -206,37 +233,35 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
         pass
     def reset(self):
         tlvcolsnames=['Path','Name','SIDS type','DT','Value']
-        v=self.selectionTable
-        v.clear()
-        v.setColumnCount(len(tlvcolsnames))
-        v.setRowCount(0)
-        lh=v.horizontalHeader()
-        lv=v.verticalHeader()
+        self._tb.clear()
+        self._tb.setColumnCount(len(tlvcolsnames))
+        self._tb.setRowCount(0)
+        lh=self._tb.horizontalHeader()
+        lv=self._tb.verticalHeader()
         for i in xrange(len(tlvcolsnames)):
             hi=QTableWidgetItem(tlvcolsnames[i])
-            v.setHorizontalHeaderItem(i,hi)
+            self._tb.setHorizontalHeaderItem(i,hi)
         for path in self._data:
-            v.setRowCount(v.rowCount()+1)
-            r=v.rowCount()-1
+            self._tb.setRowCount(self._tb.rowCount()+1)
+            r=self._tb.rowCount()-1
             self.updateRowData(r,path)
         self.colCheck()
-        for i in xrange(v.rowCount()):
-            v.resizeRowToContents(i)
+        for i in xrange(self._tb.rowCount()):
+            self._tb.resizeRowToContents(i)
         for i in xrange(len(tlvcolsnames)):
-            v.resizeColumnToContents(i)
-        self.setFixedSize(v.horizontalHeader().length()+70,
-                          v.verticalHeader().length()+180)
+            self._tb.resizeColumnToContents(i)
+        self.resize(self._tb.horizontalHeader().length()+70,
+                    self._tb.verticalHeader().length()+180)
         self._parent.treeview.refreshView()
     def updateRowData(self,r,path):
-        v=self.selectionTable
         it0=QTableWidgetItem('%s '%'/'.join(path.split('/')[:-1]))
         it0.setFont(QFont("Courier"))
-        v.setItem(r,0,it0)
+        self._tb.setItem(r,0,it0)
         it1=QTableWidgetItem('%s '%path.split('/')[-1])
         ft=QFont("Courier")
         ft.setWeight(QFont.Bold)
         it1.setFont(ft)
-        v.setItem(r,1,it1)
+        self._tb.setItem(r,1,it1)
         node=self._model.nodeFromPath(path)
         if (node):
           it1=QTableWidgetItem(node.data(COLUMN_SIDS))
@@ -251,9 +276,9 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
           it1.setFont(QFont("Courier"))
           it2.setFont(QFont("Courier"))
           it3.setFont(QFont("Courier"))
-          v.setItem(r,2,it1)
-          v.setItem(r,3,it2)
-          v.setItem(r,4,it3)
+          self._tb.setItem(r,2,it1)
+          self._tb.setItem(r,3,it2)
+          self._tb.setItem(r,4,it3)
     def reject(self):
         self.close()
 

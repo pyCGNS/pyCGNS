@@ -218,8 +218,8 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         if (os.path.isdir(p)): self.updateView()
         else:
             reply=MSG.wQuestion(self.parent,'Directory not found...',
-                              """The path doesn't exist, do you wan to remove<br>
-                              it from the history?""")
+                  """The path doesn't exist, do you want to remove<br>
+                     it from the history?""")
             if (reply == MSG.OK):
                 ix=self.direntries.currentIndex()
                 self.direntries.removeItem(ix)

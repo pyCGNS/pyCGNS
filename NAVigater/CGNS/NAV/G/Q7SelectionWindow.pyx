@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7SelectionWindow.ui'
 #
-# Created: Wed Dec 18 15:36:13 2013
+# Created: Thu Dec 19 08:52:04 2013
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -54,6 +54,7 @@ class Ui_Q7SelectionWindow(object):
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.bPrevious = QtGui.QPushButton(Q7SelectionWindow)
+        self.bPrevious.setEnabled(False)
         self.bPrevious.setMinimumSize(QtCore.QSize(25, 25))
         self.bPrevious.setMaximumSize(QtCore.QSize(25, 25))
         self.bPrevious.setText("")
@@ -63,6 +64,7 @@ class Ui_Q7SelectionWindow(object):
         self.bPrevious.setObjectName("bPrevious")
         self.horizontalLayout.addWidget(self.bPrevious)
         self.bFirst = QtGui.QPushButton(Q7SelectionWindow)
+        self.bFirst.setEnabled(False)
         self.bFirst.setMinimumSize(QtCore.QSize(25, 25))
         self.bFirst.setMaximumSize(QtCore.QSize(25, 25))
         self.bFirst.setText("")
@@ -72,6 +74,7 @@ class Ui_Q7SelectionWindow(object):
         self.bFirst.setObjectName("bFirst")
         self.horizontalLayout.addWidget(self.bFirst)
         self.bNext = QtGui.QPushButton(Q7SelectionWindow)
+        self.bNext.setEnabled(False)
         self.bNext.setMinimumSize(QtCore.QSize(25, 25))
         self.bNext.setMaximumSize(QtCore.QSize(25, 25))
         self.bNext.setText("")
@@ -167,13 +170,13 @@ class Ui_Q7SelectionWindow(object):
         self.horizontalLayout_3.addWidget(self.cShowPath)
         spacerItem4 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem4)
-        self.cApplytoall = QtGui.QCheckBox(Q7SelectionWindow)
-        self.cApplytoall.setEnabled(False)
+        self.cApplyToAll = QtGui.QCheckBox(Q7SelectionWindow)
+        self.cApplyToAll.setEnabled(True)
         icon11 = QtGui.QIcon()
         icon11.addPixmap(QtGui.QPixmap(":/images/icons/user-G.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.cApplytoall.setIcon(icon11)
-        self.cApplytoall.setObjectName("cApplytoall")
-        self.horizontalLayout_3.addWidget(self.cApplytoall)
+        self.cApplyToAll.setIcon(icon11)
+        self.cApplyToAll.setObjectName("cApplyToAll")
+        self.horizontalLayout_3.addWidget(self.cApplyToAll)
         self.gridLayout.addLayout(self.horizontalLayout_3, 5, 0, 1, 1)
         self.line = QtGui.QFrame(Q7SelectionWindow)
         self.line.setFrameShape(QtGui.QFrame.HLine)
@@ -192,6 +195,6 @@ class Ui_Q7SelectionWindow(object):
         self.label.setText(QtGui.QApplication.translate("Q7SelectionWindow", "Show:", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowSIDS.setText(QtGui.QApplication.translate("Q7SelectionWindow", "SIDS", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowPath.setText(QtGui.QApplication.translate("Q7SelectionWindow", "Path", None, QtGui.QApplication.UnicodeUTF8))
-        self.cApplytoall.setText(QtGui.QApplication.translate("Q7SelectionWindow", "Apply to All Selected", None, QtGui.QApplication.UnicodeUTF8))
+        self.cApplyToAll.setText(QtGui.QApplication.translate("Q7SelectionWindow", "Apply to All Selected", None, QtGui.QApplication.UnicodeUTF8))
 
 import Res_rc
