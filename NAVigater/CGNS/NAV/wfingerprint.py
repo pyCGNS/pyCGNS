@@ -81,8 +81,9 @@ class Q7CHLoneThread(QThread):
         slp=OCTXT.LinkSearchPathList
         slp+=[filedir]
         loadfilename=selectedfile
-        if (   (os.path.splitext(filename)[1] in OCTXT.CGNSFileExtension)
-            and OCTXT._ConvertADFFiles):
+        if (not CGNS.MAP.probe(loadfilename)):
+          if ((os.path.splitext(filename)[1] in OCTXT.CGNSFileExtension)
+              and OCTXT._ConvertADFFiles):
             loadfilename=Q7FingerPrint.fileconversion(filedir,filename,control)
             kw['converted']=True
             kw['convertedAs']=loadfilename

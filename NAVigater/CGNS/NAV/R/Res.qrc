@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/link-slist.png</file>
+    <file>icons/link-slist.gif</file>
     <file>icons/query-xor.png</file>
     <file>icons/query-xor.gif</file>
     <file>icons/clear-entry.png</file>
@@ -37,7 +39,6 @@
     <file>icons/add.png</file>
     <file>icons/check-warn.png</file>
     <file>icons/branch-end.png</file>
-    <file>icons/cgSpy-anim.png</file>
     <file>icons/anim-save.png</file>
     <file>icons/cgSpy.png</file>
     <file>icons/camera-snap.png</file>

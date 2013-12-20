@@ -375,6 +375,8 @@ the graphic window background and press [space].
 """
 <h2>Link view</h2>
 
+<b>When you copy a node path you SHOULD NOT add the CGNSTree root</b>
+
 <h3>Buttons</h3>
 <p>
 

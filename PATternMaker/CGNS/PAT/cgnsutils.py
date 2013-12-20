@@ -1756,8 +1756,8 @@ def getPathLeaf(path):
 # --------------------------------------------------   
 def getPathNoRoot(path):
   """
-  Return the path without the implementation node 'HDF5 Mother node'
-  if detected as first element::
+  Return the path without the implementation nodes 'HDF5 Mother node'
+  or 'CGNSTree' if detected as first element::
 
     >>>print getPathNoRoot('/HDF5 Mother Node/Base/Zone/ZoneBC')
     ['Base','Zone','ZoneBC']
@@ -1766,7 +1766,7 @@ def getPathNoRoot(path):
    * `path`: path string to check
 
   - Return:
-   * The new path without `HDF5 Mother node` if found
+   * The new path without root implementation node if found
 
   - Remarks:
    * The path is processed by :py:func:`getPathNormalize`
