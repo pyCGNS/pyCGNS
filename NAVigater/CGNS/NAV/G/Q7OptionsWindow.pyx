@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Tue Dec 17 08:36:41 2013
-#      by: pyside-uic 0.2.13 running on PySide 1.0.9
+# Created: Wed Jan  8 15:14:22 2014
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -88,10 +88,10 @@ class Ui_Q7OptionsWindow(object):
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName("line")
         self.__O_cgnsfileextension = QtGui.QPlainTextEdit(self.tab_1)
-        self.__O_cgnsfileextension.setGeometry(QtCore.QRect(340, 30, 211, 41))
+        self.__O_cgnsfileextension.setGeometry(QtCore.QRect(335, 100, 211, 41))
         self.__O_cgnsfileextension.setObjectName("__O_cgnsfileextension")
         self.__O_hdffileextension = QtGui.QPlainTextEdit(self.tab_1)
-        self.__O_hdffileextension.setGeometry(QtCore.QRect(340, 100, 211, 41))
+        self.__O_hdffileextension.setGeometry(QtCore.QRect(335, 30, 211, 41))
         self.__O_hdffileextension.setObjectName("__O_hdffileextension")
         self.label_23 = QtGui.QLabel(self.tab_1)
         self.label_23.setGeometry(QtCore.QRect(10, 135, 217, 27))

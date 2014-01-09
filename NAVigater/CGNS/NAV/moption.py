@@ -97,6 +97,7 @@ class Q7OptionContext(object):
     ForceFortranFlag=True
     FilterCGNSFiles=True
     FilterHDFFiles=True
+    FilterOwnFiles=True
     FileUpdateRemovesChildren=True
     TransposeArrayForView=True
     Show1DAsPlain=True
@@ -114,6 +115,7 @@ class Q7OptionContext(object):
     ValKeyList=['sample']
     CGNSFileExtension=['.cgns','.adf']
     HDFFileExtension=['.hdf','.hdf5']
+    OwnFileExtension=['.cgh']
     MaxLoadDataSize=1000
     MaxDisplayDataSize=1000
     MaxRecursionLevel=7

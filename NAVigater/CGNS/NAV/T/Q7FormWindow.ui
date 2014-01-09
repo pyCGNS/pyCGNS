@@ -42,9 +42,35 @@
       <enum>QLayout::SetFixedSize</enum>
      </property>
      <item>
+      <widget class="QPushButton" name="bLockPanel">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/panel-lock.png</normaloff>:/images/icons/panel-lock.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLineEdit" name="ePath">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -56,19 +82,6 @@
         </size>
        </property>
       </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
     </layout>
    </item>
@@ -154,6 +167,9 @@
      </property>
      <item>
       <widget class="QTabWidget" name="tabWidget">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
@@ -414,161 +430,15 @@
                 <attribute name="verticalHeaderCascadingSectionResizes">
                  <bool>false</bool>
                 </attribute>
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>false</bool>
+                </attribute>
+                <attribute name="verticalHeaderCascadingSectionResizes">
+                 <bool>false</bool>
+                </attribute>
                </widget>
               </item>
              </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QFrame" name="frame_4">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>600</width>
-               <height>65</height>
-              </size>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Plain</enum>
-             </property>
-             <widget class="QPushButton" name="bPrevious">
-              <property name="geometry">
-               <rect>
-                <x>270</x>
-                <y>10</y>
-                <width>25</width>
-                <height>25</height>
-               </rect>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>25</width>
-                <height>25</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>25</width>
-                <height>25</height>
-               </size>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="../R/Res.qrc">
-                <normaloff>:/images/icons/node-sids-opened.png</normaloff>:/images/icons/node-sids-opened.png</iconset>
-              </property>
-             </widget>
-             <widget class="QPushButton" name="bNext">
-              <property name="geometry">
-               <rect>
-                <x>300</x>
-                <y>10</y>
-                <width>25</width>
-                <height>25</height>
-               </rect>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>25</width>
-                <height>25</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>25</width>
-                <height>25</height>
-               </size>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="../R/Res.qrc">
-                <normaloff>:/images/icons/node-sids-closed.png</normaloff>:/images/icons/node-sids-closed.png</iconset>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_4">
-              <property name="geometry">
-               <rect>
-                <x>7</x>
-                <y>43</y>
-                <width>56</width>
-                <height>14</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Enum</string>
-              </property>
-             </widget>
-             <widget class="QComboBox" name="cEnumType">
-              <property name="geometry">
-               <rect>
-                <x>45</x>
-                <y>39</y>
-                <width>217</width>
-                <height>22</height>
-               </rect>
-              </property>
-             </widget>
-             <widget class="QComboBox" name="cEnumValue">
-              <property name="geometry">
-               <rect>
-                <x>266</x>
-                <y>39</y>
-                <width>235</width>
-                <height>22</height>
-               </rect>
-              </property>
-             </widget>
-             <widget class="QComboBox" name="cOperator">
-              <property name="geometry">
-               <rect>
-                <x>46</x>
-                <y>11</y>
-                <width>215</width>
-                <height>22</height>
-               </rect>
-              </property>
-             </widget>
-             <widget class="QPushButton" name="pushButton_2">
-              <property name="geometry">
-               <rect>
-                <x>9</x>
-                <y>10</y>
-                <width>25</width>
-                <height>25</height>
-               </rect>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>25</width>
-                <height>25</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>25</width>
-                <height>25</height>
-               </size>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="../R/Res.qrc">
-                <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
-              </property>
-             </widget>
             </widget>
            </item>
           </layout>

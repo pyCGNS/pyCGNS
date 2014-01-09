@@ -49,7 +49,6 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.cFortranOrderOff.setDisabled(True)
         for dt in node.sidsDataType(all=True):
             self.cDataType.addItem(dt)
-        self.setOperatorValue(1)
     def infoFormView(self):
         self._control.helpWindow('Form')
     def updateTreeStatus(self):
@@ -126,8 +125,7 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.tableView.setModel(self.model)
         self.tableView.setStyleSheet(self._stylesheet)
     def clickedNode(self,index):
-        tp=self.model.getEnumeratedValueIfPossible(index)
-        if (tp): self.setEnumerateValue(*tp)
+        pass
     def minimizeCells(self,*args):
         self.tableView.resizeColumnsToContents()
         self.tableView.resizeRowsToContents()
@@ -147,20 +145,5 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.model.headerDataChanged.emit(Qt.Horizontal, 1, 1)
     def addControlLine(self):
         pass
-    def setOperatorValue(self,opidx):
-        self.cOperator.clear()
-        for et in self._operatorlist:
-            self.cOperator.addItem(et)
-        self.cOperator.setCurrentIndex(opidx)
-        self.cOperator.setDisabled(True)
-    def setEnumerateValue(self,etype,evalue,etypeidx,evalueidx):
-        self.cEnumType.clear()
-        self.cEnumValue.clear()
-        for et in etype:
-            self.cEnumType.addItem(et)
-        for ev in evalue:
-            self.cEnumValue.addItem(ev)
-        self.cEnumType.setCurrentIndex(etypeidx)
-        self.cEnumValue.setCurrentIndex(evalueidx)
             
 # -----------------------------------------------------------------

@@ -8,6 +8,8 @@ from PySide.QtCore import *
 from PySide.QtGui  import *
 import os
 import os.path
+import re
+
 try:
   from pwd import getpwuid
 except ImportError:
@@ -81,12 +83,6 @@ class Q7CHLoneThread(QThread):
         slp=OCTXT.LinkSearchPathList
         slp+=[filedir]
         loadfilename=selectedfile
-        if (not CGNS.MAP.probe(loadfilename)):
-          if ((os.path.splitext(filename)[1] in OCTXT.CGNSFileExtension)
-              and OCTXT._ConvertADFFiles):
-            loadfilename=Q7FingerPrint.fileconversion(filedir,filename,control)
-            kw['converted']=True
-            kw['convertedAs']=loadfilename
         flags=CGNS.MAP.S2P_NONE&~CGNS.MAP.S2P_REVERSEDIMS
         maxdataload=-1
         if (OCTXT.CHLoneTrace):
@@ -97,6 +93,13 @@ class Q7CHLoneThread(QThread):
         if (OCTXT.FollowLinksAtLoad):
             flags|=CGNS.MAP.S2P_FOLLOWLINKS
         try:
+            if (not CGNS.MAP.probe(loadfilename)):
+              if ((os.path.splitext(filename)[1] in OCTXT.CGNSFileExtension)
+                  and OCTXT._ConvertADFFiles):
+                loadfilename=Q7FingerPrint.fileconversion(filedir,
+                                                          filename,control)
+                kw['converted']=True
+                kw['convertedAs']=loadfilename
             if (maxdataload):
                 (tree,links,paths)=CGNS.MAP.load(loadfilename,flags=flags,
                                                  lksearch=slp,
@@ -224,22 +227,62 @@ class Q7Window(QWidget,object):
             self._options[name]=value
             return value
         return self._options[name]
+    def matchFileExtensions(self,filename):
+        xl=self.getFileExtensions()
+        (name,ext)=os.path.splitext(os.path.basename(filename))
+        return ((xl==[]) or (ext in xl))
+    def getFileExtensions(self):
+        xlist=[]
+        if (OCTXT.FilterCGNSFiles): xlist+=OCTXT.CGNSFileExtension
+        if (OCTXT.FilterHDFFiles):  xlist+=OCTXT.HDFFileExtension
+        if (OCTXT.FilterOwnFiles):  xlist+=OCTXT.OwnFileExtension
+        return xlist
     def getHistoryLastKey(self):
         return Q7Window.HISTORYLASTKEY
-    def getHistory(self):
-        self._history=OCTXT._readHistory(self)
-        if (self._history is None): self._history={}
+    def getHistory(self,fromfile=True):
+        if (fromfile):
+          self._history=OCTXT._readHistory(self)
+          if (self._history is None): self._history={}
         return self._history
     def getHistoryFile(self,file):
         if (self._history is None): return None
         for d in self._history:
             if (file in self._history[d]): return (d,file)
         return None
+    def destroyHistory(self):
+        self._history={}
+        OCTXT._writeHistory(self)
+        return self._history
+    def getDirNotFoundFromHistory(self):
+        nf=[]
+        for d in self._history.keys():
+          if (not os.path.exists(d) and not (d==Q7Window.HISTORYLASTKEY)):
+            nf.append(d)
+        return nf
+    def getDirNoHDFFromHistory(self):
+        nf=[]
+        for d in self._history.keys():
+          if (not os.path.exists(d) or (d==Q7Window.HISTORYLASTKEY)):
+            pass
+          else:
+            fl=[f for f in os.listdir(d) if self.matchFileExtensions(f)]
+            if (not fl): nf.append(d)
+        return nf
     def removeDirFromHistory(self,filedir):
-        if (self._history.has_key(filedir)): del self._history[filedir]
+        if (self._history.has_key(filedir)):
+          del self._history[filedir]
         if ((self.getLastFile() is not None)
             and (self._history[Q7Window.HISTORYLASTKEY][0]==filedir)):
             del self._history[Q7Window.HISTORYLASTKEY]
+        OCTXT._writeHistory(self)
+    def removeFileFromHistory(self,filedir,filename):
+        if (self._history.has_key(filedir)
+            and (filename in self._history[filedir])):
+            self._history[filedir].remove(filename)
+        if ((self.getLastFile() is not None)
+            and (self._history[Q7Window.HISTORYLASTKEY][1]==filename)):
+            del self._history[Q7Window.HISTORYLASTKEY]
+        OCTXT._writeHistory(self)
     def setHistory(self,filedir,filename):
         for d in self._history.keys():
             if (d==filedir):

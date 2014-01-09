@@ -255,8 +255,8 @@
         <widget class="QPlainTextEdit" name="__O_cgnsfileextension">
          <property name="geometry">
           <rect>
-           <x>340</x>
-           <y>30</y>
+           <x>335</x>
+           <y>100</y>
            <width>211</width>
            <height>41</height>
           </rect>
@@ -265,8 +265,8 @@
         <widget class="QPlainTextEdit" name="__O_hdffileextension">
          <property name="geometry">
           <rect>
-           <x>340</x>
-           <y>100</y>
+           <x>335</x>
+           <y>30</y>
            <width>211</width>
            <height>41</height>
           </rect>

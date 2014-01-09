@@ -86,14 +86,5 @@ class Q7TableModel(QAbstractTableModel):
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable
     def getValue(self,index):
         return self.flatarray[self.flatindex(index)]
-    def getEnumeratedValueIfPossible(self,index):
-        if (self.node.sidsType()==CGK.Elements_ts):
-            if ((index.row()==0) and (index.column()==0)):
-                ev=CGK.ElementType_l
-                et=[s[:-1]+'t' for s in CGK.cgnsenums]
-                eti=et.index(CGK.ElementType_ts)
-                evi=self.flatarray[self.flatindex(index)]
-                return (et,ev,eti,evi)
-        return None
 
 # -----------------------------------------------------------------

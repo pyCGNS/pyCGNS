@@ -253,7 +253,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.cSaveLog.setDisabled(True)
         self.updateTreeStatus()
         if (self._control.query is not None):
-            ix=self.cQuery.findText(self._control.query)
+            ix=self.cQuery.findText(self._control.query,
+                                    flags=Qt.MatchStartsWith)
             if (ix!=-1):
                 self.cQuery.setCurrentIndex(ix)
             self.applyquery()
@@ -552,7 +553,11 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def formview(self):
         ix=self.treeview.modelCurrentIndex()
         node=self.modelData(ix)
-        if (node is None): return
+        if (node is None):
+            MSG.wInfo(self,"Form view:",
+                      """You have to select a node to open its form view""",
+                      again=False)
+            return
         if (node.sidsType()==CGK.CGNSTree_ts): return
         form=Q7Form(self._control,node,self._fgprint)
         form.show()
@@ -570,16 +575,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
           self._vtkwindow.raise_()
     def plotview(self):
         return 
-        ix=self.treeview.modelCurrentIndex()
-        zlist=self.model().getSelectedZones()
-        node=self.modelData(ix)
-        self.busyCursor()
-        plot=Q7VTKPlot(self._control,node,self._fgprint,self.model(),zlist)
-        self.readyCursor()
-        if (plot._vtkstatus): plot.show()
-        else:  MSG.message("VTK 2D plot view:",
-               """<b>Fail to parse or to interpret CGNSTree data</b>""",
-               MSG.INFO)
     def queryview(self):
         if (self._querywindow is None):
             self._querywindow=Q7Query(self._control,self._fgprint,self)

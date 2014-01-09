@@ -2074,6 +2074,54 @@ def hasChildType(parent,ntype):
   return []
 
 # -----------------------------------------------------------------------------
+def getEnumAsString(node):
+  """
+  Return the node value as corresponding SIDS enumerate string::
+
+    if (hasEnumValue(node)):
+      print getEnumAsString(node)
+
+  - Args:
+   * `node`: the node to get the value from
+
+  - Return:
+   * A string corresponding to the SIDS enumerate value
+
+  - Remarks:
+   * returns empty string if something wrong happens
+   * See also :py:func:`hasEnumValue`
+  
+  """
+  try:
+    e=CK.cgnsenums[node[3]]
+    d=getattr(CK,e[:-1])
+    v=d[node[1].flat[0]]
+    return v
+  except:
+    return ''
+    
+# -----------------------------------------------------------------------------
+def hasEnumValue(node):
+  """
+  Checks if the node type allows a SIDS enum value::
+
+    if (hasEnumValue(node)):
+      print getEnumAsString(node)
+
+  - Args:
+   * `node`: the node to check
+
+  - Return:
+   * True if the node value is a SIDS enumerate
+
+  - Remarks:
+    See also :py:func:`getEnumAsString`
+  
+  """
+  if (node[3] in CK.cgnsenums.keys()): return True
+  return False
+    
+# -----------------------------------------------------------------------------
 def hasChildName(parent,name,dienow=False):
   """
   Checks if the name is in the children list of the parent::
