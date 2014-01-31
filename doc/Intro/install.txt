@@ -229,9 +229,10 @@ Test
 Some of the pyCGNS modules have embedded tests. Once you have installed
 pyCGNS, you can run each test suite from another user account/directory::
 
- python -c 'import CGNS.MAP.test.cgu'
- python -c 'import CGNS.PAT.test.cgu'
+ python -c 'import CGNS.MAP.test;CGNS.MAP.test.run()'
 
+All modules tests can be run the same way, replace ``MAP`` by any of
+``PAT``, ``WRA``, ``VAL``, ``NAV``, ``APP``, ``DAT``.
 
 
 .. -------------------------------------------------------------------------
