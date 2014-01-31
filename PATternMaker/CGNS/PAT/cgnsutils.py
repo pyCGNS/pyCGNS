@@ -1118,12 +1118,16 @@ def hasFirstPathItem(path,sidstype=CK.CGNSTree_s):
     
 # --------------------------------------------------
 def removeFirstPathItem(path):
-  """Return the path without the first item::
+  """
+  Return the path without the first item::
 
-       >>> print removeFirstPathItem('/{Base#1}/{Zone-A}/ZoneGridConnectivity')
-       '/{Zone-A}/ZoneGridConnectivity'
+    >>> print removeFirstPathItem('/{Base#1}/{Zone-A}/ZoneGridConnectivity')
+    '/{Zone-A}/ZoneGridConnectivity'
 
-     There is no call to :py:func:`getPathNormalize`.
+  :arg str path: path to process
+  :return: path without first token
+  :Remarks:
+    - There is no call to :py:func:`getPathNormalize`.
 
   """
   p=path.split('/')
@@ -1159,6 +1163,11 @@ def getNodeByPath(tree,path):
   :Remarks:
     - No wildcards allowed (see :py:func:`getPathByNameFilter`
       and :py:func:`getPathByNameFilter` )
+
+  .. warning::
+
+     Does not work with relative paths today. If you want to have the list
+     of children for a leaf node, please use :py:func:`hasChildName`.
      
   """
   if (path=='/'): return tree
