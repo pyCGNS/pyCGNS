@@ -13,6 +13,11 @@ class CGUTestCase(unittest.TestCase):
   def eStr(self,code):
     import CGNS.PAT.cgnserrors as CGE
     return CGE.TAG+CGE.TAG_ERROR+"\[%.3d\].*$"%code
+  def genTree(self):
+    # should not self reference for test
+    # then load tree
+    import CGNS.PAT.test.disk
+    self.T=CGNS.PAT.test.disk.T
   def test_00Module(self):
     pass
   def test_01Check(self):
@@ -145,7 +150,13 @@ class CGUTestCase(unittest.TestCase):
     import CGNS.PAT.cgnsutils as CGU
     import CGNS.PAT.cgnserrors as CGE
     import CGNS.PAT.cgnskeywords as CGK
-    pass
+    self.genTree()
+    filter='/.*/.*/Zone.*'
+    v1=['/{Base#1}/{Zone-B}/ZoneBC', '/{Base#1}/{Zone-B}/ZoneGridConnectivity']
+    self.assertEqual(CGU.getPathByNameFilter(self.T,filter)[3:5],v1)
+    filter='/.*/.*/.*/GridConnectivity.*'
+    v2='/{Base#1}/{Zone-D2}/ZoneGridConnectivity/{CT-D2-C}'
+    self.assertEqual(CGU.getPathByTypeFilter(self.T,filter)[-2],v2)
   def test_09NodeDelete(self):
     import CGNS.PAT.cgnsutils as CGU
     import CGNS.PAT.cgnserrors as CGE

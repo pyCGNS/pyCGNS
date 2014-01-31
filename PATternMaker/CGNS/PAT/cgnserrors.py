@@ -83,6 +83,7 @@ errorTable={
   109 : "Value should be an array",
   110 : "Value should be a string in [%s]",
   111 : "Bad value type",
+  112 : "Empty args is not allowed as value",
   200 : "Bad GridLocation value [%s]",
   201 : "Bad ConvergenceHistory name [%s]",
   202 : "Units specification list should have 5 values (one per unit)",

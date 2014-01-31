@@ -32,6 +32,14 @@ patterns gathered as
 *PAT.cgnslib* calls. These patterns, used for creation only, are building 
 in a recursive way the whole sub-tree for a given *SIDS* type.
 
+Direct link to modules documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. toctree::
+
+   utils
+   lib
+
 .. _pat_cgnsutils:
 
 Utilities
@@ -176,9 +184,29 @@ The list below gives an overview of publicly available functions.
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | Create a numpy.ndarray from a string                        | :py:func:`setStringAsArray <CGNS.PAT.cgnsutils.setStringAsArray>`                       |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
-| Create a numpy.ndarray from list of strings                 | :py:func:`concatenateForCharArray2D <CGNS.PAT.cgnsutils.concatenateForCharArray2D>`     |
+| Create a numpy.ndarray from a integer tuple (numpy.int32)   | :py:func:`setIntegerAsArray  <CGNS.PAT.cgnsutils.setIntegerAsArray>`                    |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
-| Create a numpy.ndarray from list of list of strings         | :py:func:`concatenateForCharArray3D <CGNS.PAT.cgnsutils.concatenateForCharArray3D>`     |
+| Create a numpy.ndarray from a integer tuple (numpy.int64)   | :py:func:`setLongAsArray  <CGNS.PAT.cgnsutils.setLongAsArray>`                          |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Create a numpy.ndarray from a float tuple (numpy.float32)   | :py:func:`setFloatAsArray  <CGNS.PAT.cgnsutils.setFloatAsArray>`                        |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Create a numpy.ndarray from a float tuple (numpy.float64)   | :py:func:`setDoubleAsArray  <CGNS.PAT.cgnsutils.setDoubleAsArray>`                      |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Update a numpy.ndarray from a string                        | :py:func:`setStringByPath <CGNS.PAT.cgnsutils.setStringByPath>`                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Update a numpy.ndarray from a integer tuple (numpy.int32)   | :py:func:`setIntegerByPath  <CGNS.PAT.cgnsutils.setIntegerByPath>`                      |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Update a numpy.ndarray from a integer tuple (numpy.int64)   | :py:func:`setLongByPath  <CGNS.PAT.cgnsutils.setLongByPath>`                            |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Update a numpy.ndarray from a float tuple (numpy.float32)   | :py:func:`setFloatByPath  <CGNS.PAT.cgnsutils.setFloatByPath>`                          |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Update a numpy.ndarray from a float tuple (numpy.float64)   | :py:func:`setDoubleByPath  <CGNS.PAT.cgnsutils.setDoubleByPath>`                        |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Create a numpy.ndarray from string                          | :py:func:`concatenateForArrayChar <CGNS.PAT.cgnsutils.concatenateForArrayChar>`         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Create a numpy.ndarray from list of strings                 | :py:func:`concatenateForArrayChar2D <CGNS.PAT.cgnsutils.concatenateForArrayChar2D>`     |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Create a numpy.ndarray from list of list of strings         | :py:func:`concatenateForArrayChar3D <CGNS.PAT.cgnsutils.concatenateForArrayChar3D>`     |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | Get the node value                                          | :py:func:`getValue <CGNS.PAT.cgnsutils.getValue>`                                       |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
@@ -223,8 +251,6 @@ The list below gives an overview of publicly available functions.
 |                                                             |                                                                                         |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 
-.. automodule:: CGNS.PAT.cgnsutils
-   :members:
 
 .. _pat_cgnslib:
 
@@ -371,10 +397,6 @@ or less the same interface but with Python values.
 +-----------+----------------------------------------------------------------------------------------+
 |           | :py:func:`newParentElementsPosition  <CGNS.PAT.cgnslib.newParentElementsPosition>`     | 
 +-----------+----------------------------------------------------------------------------------------+
-
-
-.. automodule:: CGNS.PAT.cgnslib
-   :members:
 
 .. _sids_patterns:
 

@@ -257,11 +257,22 @@ dl.function em {
     font-family: 'Courier', monospace;
 }
 
-dl.function ul li {
-    margin-top: 1px;
+dl.function ul {
+    padding-top: 0px;
+    padding-bottom: 0.0em;
+    margin-top: 0.0em;
+    margin-bottom: 0.1em;
+}
+dl.function li {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 0.0em;
+    margin-bottom: 0.0em;
     list-style-type: square;
-    padding: 0;
-    height: 1.0em;
+}
+
+th.field-name {
+    color: #BFD1D4;
 }
 
 tt {

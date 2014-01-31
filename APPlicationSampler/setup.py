@@ -25,6 +25,8 @@ incdirs=['%s/lib/python%s/site-packages/numpy/core/include'\
          'CGNS/APP/probe']
 incdirs+=[numpy.get_include()]
 
+slist=['cg_grep','cg_list','cg_link','cg_gather','cg_scatter','cg_stats']
+
 extmods=[Extension("CGNS.APP.probe.arrayutils",
                   ["CGNS/APP/probe/arrayutils.pyx",
                    "CGNS/APP/probe/hashutils.c"],
@@ -43,11 +45,13 @@ author_email = pyCGNSconfig.EMAIL,
 license      = pyCGNSconfig.LICENSE,
 packages     = ['CGNS.APP',
                 'CGNS.APP.embedded',
+                'CGNS.APP.tools',
                 'CGNS.APP.parse',
                 'CGNS.APP.demos',
                 'CGNS.APP.sids',
                 'CGNS.APP.probe',          
                 'CGNS.APP.test'],
+scripts      = [ 'CGNS/APP/tools/%s'%f for f in slist],
 ext_modules  = extmods,
 cmdclass     = cmdclassdict
 )
