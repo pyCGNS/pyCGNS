@@ -12,7 +12,6 @@ sys.path=['./lib']+sys.path
 import setuputils
 
 # hg pull ssh://poinot@hg.code.sf.net/p/pycgns/code
-# OLD (bad) ssh://poinot@pycgns.hg.sourceforge.net/hgroot/pycgns/pycgns
 pcom=sys.executable
 
 # order IS significant

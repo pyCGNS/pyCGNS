@@ -6,6 +6,7 @@
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU
 import CGNS.APP.probe.arrayutils as CGA
+import CGNS.NAV.wmessages as MSG
 import numpy as NPY
 
 cimport cython
@@ -16,6 +17,10 @@ from PySide.QtCore import QCoreApplication
 
 import vtk
 import vtk.util.numpy_support as vtknpy
+
+vers=vtk.vtkVersion()
+VTK_VERSION_MINOR=vers.GetVTKMinorVersion()
+
 
 FAMILY_PATTERN=' :[%s]'
 
@@ -198,12 +203,18 @@ class Mesh(CGNSparser):
                    CGK.TETRA_10:(vtk.vtkTetra,     (4,10)),
                    CGK.PYRA_5:  (vtk.vtkPyramid,   (5,5)),
                    CGK.PYRA_14: (vtk.vtkPyramid,   (5,14)),
-                   CGK.PENTA_6: (vtk.vtkPolyhedron,(6,6)),
-                   CGK.PENTA_15:(vtk.vtkPolyhedron,(6,15)),
-                   CGK.PENTA_18:(vtk.vtkPolyhedron,(6,18)),
+                   #CGK.PENTA_6: (vtk.vtkPolyhedron,(6,6)),
+                   #CGK.PENTA_15:(vtk.vtkPolyhedron,(6,15)),
+                   #CGK.PENTA_18:(vtk.vtkPolyhedron,(6,18)),
                    CGK.HEXA_8:  (vtk.vtkHexahedron,(8,8)),
                    CGK.HEXA_20: (vtk.vtkHexahedron,(8,20)),
                    CGK.HEXA_27: (vtk.vtkHexahedron,(8,27))}
+
+    if (VTK_VERSION_MINOR>8):
+      self._vtkelts[CGK.PENTA_6]=(vtk.vtkPolyhedron,(6,6))
+      self._vtkelts[CGK.PENTA_15]=(vtk.vtkPolyhedron,(6,15))
+      self._vtkelts[CGK.PENTA_18]=(vtk.vtkPolyhedron,(6,18))
+   
     try:
       self._status=self.parseZones(zlist)
     except ValueError:

@@ -1164,14 +1164,21 @@ def getNodeByPath(tree,path):
   """
   if (path=='/'): return tree
   if (not checkPath(path)): return None
-  if (path[0]=='/'): path=path[1:]
+  if (path[0]=='/'):
+    absolutepath=True
+    path=path[1:]
+  else:
+    absolutepath=False
   lpath=path.split('/')
   if (tree[3]==CK.CGNSTree_ts):
     T=tree
     if (lpath[0]==CK.CGNSTree_s):
       if (len(lpath)==1): return T
       lpath=lpath[1:]
-  else: T=[CK.CGNSTree_s,None,[tree],CK.CGNSTree_ts]
+  elif (absolutepath):
+    T=[CK.CGNSTree_s,None,[tree],CK.CGNSTree_ts]
+  else:
+    T=tree
   n=getNodeFromPath(lpath,T)
   if (n==-1): return None
   return n

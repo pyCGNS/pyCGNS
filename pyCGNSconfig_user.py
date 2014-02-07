@@ -11,24 +11,24 @@
 #
 # --- stuff to add for HDF5 
 #HDF5_VERSION          = ''
-#HDF5_PATH_INCLUDES    = ['/tools/local/include']
-#HDF5_PATH_LIBRARIES   = ['/tools/local/lib']
+#HDF5_PATH_INCLUDES    = ['']
+#HDF5_PATH_LIBRARIES   = ['']
 #HDF5_LINK_LIBRARIES   = []
 #HDF5_EXTRA_ARGS       = []
 #
 # --- stuff to add for numpy
 #NUMPY_VERSION         = ''
 #NUMPY_PATH_INCLUDES   = []
-#NUMPY_PATH_LIBRARIES  = ['/opt/intel/Compiler/11.1/072/lib/intel64']
-#NUMPY_LINK_LIBRARIES  = ['irc']
+#NUMPY_PATH_LIBRARIES  = ['']
+#NUMPY_LINK_LIBRARIES  = ['']
 #NUMPY_EXTRA_ARGS      = [] 
 #
 # --- stuff to add for CGNS/MLL (set the HAS_MLL to True)
 #HAS_MLL               = True 
 #MLL_VERSION           = '' 
-#MLL_PATH_INCLUDES     = ['/tools/include'] 
-#MLL_PATH_LIBRARIES    = ['/tools/lib']
-#MLL_LINK_LIBRARIES    = ['irc']
+#MLL_PATH_INCLUDES     = [''] 
+#MLL_PATH_LIBRARIES    = ['']
+#MLL_LINK_LIBRARIES    = ['']
 #MLL_EXTRA_ARGS        = []
 #
 # --- stuff to add for Python
@@ -40,8 +40,8 @@
 #
 # --- stuff to add for CHLone
 #CHLONE_VERSION          = ''
-CHLONE_PATH_INCLUDES    = ['/tmp_user/eos043z/poinot/v3.5-CGNS/Install/include']
-CHLONE_PATH_LIBRARIES   = ['/tmp_user/eos043z/poinot/v3.5-CGNS/Install/lib']
+#CHLONE_PATH_INCLUDES    = ['']
+#CHLONE_PATH_LIBRARIES   = ['']
 #CHLONE_LINK_LIBRARIES   = [] 
 #CHLONE_EXTRA_ARGS       = []
 #

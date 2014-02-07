@@ -40,13 +40,14 @@ PYTHON_EXTRA_ARGS       = []
 hdf5path=pathfromexec('h5dump')
 HDF5_VERSION          = '1.8'
 HDF5_PATH_INCLUDES    = [hdf5path+'../include']
-HDF5_PATH_LIBRARIES   = [hdf5path+'..:lib']
+HDF5_PATH_LIBRARIES   = [hdf5path+'../lib']
 HDF5_LINK_LIBRARIES   = ['hdf5'] 
 HDF5_EXTRA_ARGS       = []
 
-MLL_PATH_LIBRARIES    = []
-MLL_LINK_LIBRARIES    = []
-MLL_PATH_INCLUDES     = []
+mllpath=pathfromexec('cgnsconvert')
+MLL_PATH_LIBRARIES    = [mllpath+'../lib']
+MLL_LINK_LIBRARIES    = ['cgns']
+MLL_PATH_INCLUDES     = [mllpath+'../include']
 MLL_VERSION           = ''
 MLL_EXTRA_ARGS        = []
 
@@ -75,7 +76,7 @@ PFX='### pyCGNS:'
 #
 __version__=4 # @@UPDATEVERSION@@
 __release__=4 # @@UPDATERELEASE@@
-__revision__=442 # @@UPDATEREVISION@@
+__revision__=469 # @@UPDATEREVISION@@
 __vid__="%s.%s.%s"%(__version__,__release__,__revision__)
 __doc__="""pyCGNS - %s - Python package for CFD General Notation System"""\
         %(__vid__)
@@ -132,7 +133,7 @@ NUMPY_EXTRA_ARGS=%(NUMPY_EXTRA_ARGS)s
 
 __version__=4 # @@UPDATEVERSION@@
 __release__=4 # @@UPDATERELEASE@@
-__revision__=442 # @@UPDATEREVISION@@
+__revision__=469 # @@UPDATEREVISION@@
 __vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
 __doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
         %%(__vid__)

@@ -303,10 +303,10 @@ def frompath_HDF5():
 # --------------------------------------------------------------------
 def frompath_MLL():
   try:
-   mllp=subprocess.check_output(["which","cgnsview"],stderr=STDOUT)
-  except:
+   mllp=subprocess.check_output(["which","cgnsview"],stderr=subprocess.STDOUT)
+  except AttributeError:
     try:
-      mllp=subprocess.check_output(["whence","cgnsview"],stderr=STDOUT)
+      mllp=subprocess.check_output(["whence","cgnsview"],stderr=subprocess.STDOUT)
     except:
       mllp=None
   if (mllp is not None):

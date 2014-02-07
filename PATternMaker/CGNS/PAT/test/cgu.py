@@ -68,12 +68,15 @@ class CGUTestCase(unittest.TestCase):
     import CGNS.PAT.cgnsutils as CGU
     import CGNS.PAT.cgnserrors as CGE
     import CGNS.PAT.cgnskeywords as CGK
+    self.genTree()
     p='/Base/Zone/ZoneBC'
     self.assertEqual(p,CGU.getPathNoRoot(p))
     self.assertEqual(CGU.getPathNormalize('/./Base/Zone/ZoneBC'),p)
     self.assertEqual(CGU.getPathNormalize('/./Base/Zone/ZoneBC//'),p)
     self.assertEqual(CGU.getPathToList(p),['','Base', 'Zone', 'ZoneBC'])
     self.assertEqual(CGU.getPathToList(p,True),['Base', 'Zone', 'ZoneBC'])
+
+    
   def test_03NodeStructure(self):
     import CGNS.PAT.cgnsutils as CGU
     import CGNS.PAT.cgnserrors as CGE

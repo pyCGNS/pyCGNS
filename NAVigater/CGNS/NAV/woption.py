@@ -66,7 +66,10 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
             elif (type(data[k]) is int):
               self.getopt(k).setValue(data[k])
             elif (type(data[k]) is str):
-              self.getopt(k).setText(data[k])
+              try:
+                self.getopt(k).setText(data[k])
+              except AttributeError:
+                self.getopt(k).setEditText(data[k])
             elif (type(data[k]) is list):
               s=''
               for l in data[k]:

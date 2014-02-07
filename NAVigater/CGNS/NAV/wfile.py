@@ -49,7 +49,7 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         locale.setlocale(locale.LC_ALL, 'C')
     def filterAcceptsRow(self,row,parentindex):
         idx=self.model.index(row,1,parentindex)
-        p=self.model.filePath(idx)
+        p=str(self.model.filePath(idx))
         if not self.checkPermission(p): return False
         if (os.path.isdir(p)):
             if (self.wparent.cShowDirs.checkState()!=Qt.Checked):
@@ -196,7 +196,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.changeDir(args)
     def changeDir(self,*args):
         if (self.updateMode): return
-        p=self.direntries.currentText()
+        p=str(self.direntries.currentText())
         if (os.path.isdir(p)): self.updateView()
         else:
             reply=MSG.wQuestion(self.parent,'Directory not found...',
@@ -206,7 +206,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
                 ix=self.direntries.currentIndex()
                 self.direntries.removeItem(ix)
     def changeFile(self,*args):
-        self.selectedfile=self.fileentries.lineEdit().text()
+        self.selectedfile=str(self.fileentries.lineEdit().text())
         d=None
         if (self.cAutoDir.checkState()==Qt.Checked):
             d=self.parent.getHistoryFile(self.selectedfile)
@@ -250,10 +250,10 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.fileentries.addItem("")
         for i in hlist.keys():
             if (i != self.parent.getHistoryLastKey()):
-                self.direntries.addItem(i)
+                self.direntries.addItem(str(i))
                 flist=flist+hlist[i]
         for i in flist:
-            self.fileentries.addItem(i)
+            self.fileentries.addItem(str(i))
         self.historyfiles=flist
         self.historydirs=hlist.keys()
         if (self.parent.getHistoryLastKey() in hlist.keys()):
@@ -355,9 +355,9 @@ class Q7File(QWidget,Ui_Q7FileWindow):
     def path(self,index=None):
         if (index==None):
             idx=self.treeview.currentIndex()
-            p=self.model.filePath(self.proxy.mapToSource(idx))
+            p=str(self.model.filePath(self.proxy.mapToSource(idx)))
         else:
-            p=self.model.filePath(self.proxy.mapToSource(index))
+            p=str(self.model.filePath(self.proxy.mapToSource(index)))
         return p
     def clickedNodeAndLoad(self,index):
         self.clickedNode(index)
