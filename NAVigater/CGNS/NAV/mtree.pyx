@@ -605,6 +605,9 @@ class Q7TreeItem(object):
         return self._itemnode[2]
     def sidsType(self):
         return self._itemnode[3]
+    def sidsTypePath(self):
+        return CGU.getPathAsTypes(self._fingerprint.tree,self._path,
+                                  legacy=False)
     def sidsTypeSet(self,value):
         if (type(value) not in [str,unicode]): return False
         try:
@@ -1120,7 +1123,8 @@ class Q7TreeModel(QAbstractItemModel):
                 MSG.wError(self._control,
                            0,"Cannot change value of node: %s"%oldpath,\
                            "The value is rejected")
-        if (index.column()==COLUMN_DATATYPE): st=node.sidsDataTypeSet(value)
+        if (index.column()==COLUMN_DATATYPE):
+            st=node.sidsDataTypeSet(value)
         if (st):
             self._fingerprint.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)
         return st

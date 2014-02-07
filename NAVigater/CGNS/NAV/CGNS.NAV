@@ -60,6 +60,9 @@ def usage():
   -l : open last file used
   -g : open VTK view
 
+  -q <query> : run query and open selection view
+  -Q         : displays the list of known queries
+
   -P <profiles-paths> : override CGNSPROFILEPATH variable for profile search
                         path variable. It is a ':' separated list of paths.
   -h : help
@@ -80,7 +83,7 @@ except KeyError:
   ppath=""
   
 try:
- opts, args = getopt.getopt(sys.argv[1:], "lgRhvP:")
+ opts, args = getopt.getopt(sys.argv[1:], "lgRhvP:q:Q")
 except getopt.GetoptError:
  usage()
 
@@ -89,19 +92,23 @@ verbose=False
 last=False
 recurse=False
 wvtk=False
+query=None
 olist=[]
+qlist=False
 
 for o, a in opts:
+  if (o == "-Q"): qlist=True
   if (o == "-R"): recurse=True
   if (o == "-l"): last=True
   if (o == "-P"): ppath=a
+  if (o == "-q"): query=a
   if (o == "-v"): verbose=True
   if (o == "-g"): wvtk=True
   if (o in ("-h", "--help")): usage()
 
-flags=(recurse,last,verbose,wvtk)
+flags=(recurse,last,verbose,wvtk,qlist)
 
 import CGNS.NAV.script
-CGNS.NAV.script.run(sys.argv,args,flags,ppath)
+CGNS.NAV.script.run(sys.argv,args,flags,ppath,query)
 
 # --------------------------------------------------------------------

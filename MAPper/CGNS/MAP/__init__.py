@@ -7,6 +7,7 @@
 #
 from CHLone import load
 from CHLone import save
+from CHLone import probe
 from CHLone import CHLoneException as error
 #
 import CHLone

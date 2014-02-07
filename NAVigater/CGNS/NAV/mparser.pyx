@@ -301,7 +301,7 @@ class Mesh(CGNSparser):
     a.GetProperty().SetRepresentationToWireframe()
     g.GetPointData().AddArray(data)
     for s in solution:
-      if (s[1].shape==(idim-1,jdim-1,kdim-1)):
+      if ((s[1] is not None) and (s[1].shape==(idim-1,jdim-1,kdim-1))):
         array=vtk.vtkFloatArray()
         array.SetName(s[0])
         for k in range(kdim-1):          

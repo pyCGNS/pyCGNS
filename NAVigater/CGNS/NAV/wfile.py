@@ -55,14 +55,9 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
             if (self.wparent.cShowDirs.checkState()!=Qt.Checked):
                 if (len(p)>len(self.wparent.selecteddir)): return False
             return True
-        (fname,ext)=os.path.splitext(os.path.basename(p))
-        xlist=[]
         self.wparent.getBoxes()
-        if (OCTXT.FilterCGNSFiles): xlist+=OCTXT.CGNSFileExtension
-        if (OCTXT.FilterHDFFiles):  xlist+=OCTXT.HDFFileExtension
-        if (self.wparent.cShowAll.checkState()==Qt.Checked): xlist=[]
-        if ((xlist == []) or (ext in xlist)): return True
-        return False
+        #if (self.wparent.cShowAll.checkState()==Qt.Checked): xlist=[]
+        return self.control.matchFileExtensions(p)
     def checkPermission(self,path,write=False):
         return checkFilePermission(path,write)
     def lessThan(self,left,right):
@@ -116,15 +111,6 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.model.setIconProvider(self.iconProvider)
         self.proxy = Q7FileFilterProxy(self)
         self.proxy.setSourceModel(self.model)
-        hlist=self.parent.getHistory()
-        flist=[]
-        self.fileentries.addItem("")
-        for i in hlist.keys():
-            if (i != self.parent.getHistoryLastKey()):
-                self.direntries.addItem(i)
-                flist=flist+hlist[i]
-        for i in flist:
-            self.fileentries.addItem(i)
         self.treeview.setModel(self.proxy)
         siglist=[
         (self.model,"directoryLoaded(QString)",self.expandCols),
@@ -138,29 +124,27 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         (self.fileentries.lineEdit(),"editingFinished()",self.changeFile),
         (self.tabs,"currentChanged(int)",self.currentTabChanged),
         (self.cShowAll,"stateChanged(int)",self.updateView),
-        (self.cShowDirs,"stateChanged(int)",self.updateView)
+        (self.cShowDirs,"stateChanged(int)",self.updateView),
+        (self.rClearSelectedDirs,"toggled(bool)",self.updateClearDirs),
+        (self.rClearSelectedFiles,"toggled(bool)",self.updateClearFiles),
+        (self.rClearAllDirs,"toggled(bool)",self.updateClearNone),
+        (self.rClearNoHDF,"toggled(bool)",self.updateClearNoHDF),
+        (self.rClearNotFound,"toggled(bool)",self.updateClearNotFound),
             ]
         for (o,s,f) in siglist:
             QObject.connect(o,SIGNAL(s),f)
         self.bClose.clicked.connect(self.close)
         self.bBack.clicked.connect(self.backDir)
         self.bInfo.clicked.connect(self.infoFileView)
+        self.bInfo2.clicked.connect(self.infoFileView)
+        self.bClearHistory.clicked.connect(self.doClearHistory)
         self.mode=mode
         if (self.mode==SAVEMODE): self.setMode(False)
         else:                     self.setMode(True)
         self.setBoxes()
-        if (self.parent.getHistoryLastKey() in hlist.keys()):
-            self.selecteddir=hlist[self.parent.getHistoryLastKey()][0]
-            self.selectedfile=hlist[self.parent.getHistoryLastKey()][1]
-            #ixd=self.direntries.findText(self.selecteddir)
-            self.setCurrentDir(self.selecteddir)
-            ixf=self.fileentries.findText(self.selectedfile)
-            self.fileentries.setCurrentIndex(ixf)
-            self.changeFile()
-        else:
-            self.selecteddir=os.getcwd()
-            self.selectedfile=""
-            self.setCurrentDir(self.selecteddir)
+        self.parent.getHistory()
+        self.updateHistory()
+        self.updateClearNotFound()
     def infoFileView(self):
         self.control.helpWindow('File')
     def updateView(self):
@@ -205,25 +189,22 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         p=os.path.split(self.path())[0]
         self.setCurrentDir(p)
     def changeDirEdit(self,*args):
-        #print 'EDIT'
         self.changeDir(args)
     def changeDirText(self,*args):
-        #print 'TEXT'
         self.changeDir(args)
     def changeDirIndex(self,*args):
-        #print 'INDEX'
         self.changeDir(args)
     def changeDir(self,*args):
+        if (self.updateMode): return
         p=self.direntries.currentText()
         if (os.path.isdir(p)): self.updateView()
         else:
             reply=MSG.wQuestion(self.parent,'Directory not found...',
-                              """The path doesn't exist, do you wan to remove<br>
-                              it from the history?""")
+                  """The path below doesn't exist, do you want to remove<br>
+                     it from the history?<br>%s"""%p)
             if (reply == MSG.OK):
                 ix=self.direntries.currentIndex()
                 self.direntries.removeItem(ix)
-                
     def changeFile(self,*args):
         self.selectedfile=self.fileentries.lineEdit().text()
         d=None
@@ -260,6 +241,94 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         else:
             self.bAction.clicked.connect(self.save)
             self.bAction.setToolTip(SAVEBUTTON)
+    def updateHistory(self):
+        self.updateMode=True
+        self.direntries.clear()
+        self.fileentries.clear()
+        hlist=self.parent.getHistory(fromfile=False)
+        flist=[]
+        self.fileentries.addItem("")
+        for i in hlist.keys():
+            if (i != self.parent.getHistoryLastKey()):
+                self.direntries.addItem(i)
+                flist=flist+hlist[i]
+        for i in flist:
+            self.fileentries.addItem(i)
+        self.historyfiles=flist
+        self.historydirs=hlist.keys()
+        if (self.parent.getHistoryLastKey() in hlist.keys()):
+            self.selecteddir=hlist[self.parent.getHistoryLastKey()][0]
+            self.selectedfile=hlist[self.parent.getHistoryLastKey()][1]
+            #ixd=self.direntries.findText(self.selecteddir)
+            self.setCurrentDir(self.selecteddir)
+            ixf=self.fileentries.findText(self.selectedfile)
+            self.fileentries.setCurrentIndex(ixf)
+            self.changeFile()
+        else:
+            self.selecteddir=os.getcwd()
+            self.selectedfile=""
+            self.setCurrentDir(self.selecteddir)
+        self.updateMode=False
+    def doClearHistory(self):
+        if (self.rClearNoHDF.isChecked()):
+            reply=MSG.wQuestion(self.parent,'Clear history',
+                """You really want to remove directory entries from history<br>
+                   where no file with defined extensions has been found?<br>""")
+            if (reply == MSG.OK):
+                for d in self.parent.getDirNoHDFFromHistory():
+                    self.parent.removeDirFromHistory(d)
+                    self.updateHistory()
+                    self.lClear.clear()
+        if (self.rClearNotFound.isChecked()):
+            reply=MSG.wQuestion(self.parent,'Clear history',
+                  """You really want to remove <b>NOT FOUND</b> entries from<br>
+                     the history of used directories?<br>""")
+            if (reply == MSG.OK):
+                for d in self.parent.getDirNotFoundFromHistory():
+                    self.parent.removeDirFromHistory(d)
+                    self.updateHistory()
+                    self.lClear.clear()
+        if (self.rClearAllDirs.isChecked()):
+            reply=MSG.wQuestion(self.parent,'Clear history',
+                  """You really want to remove <b>ALL</b> entries from the<br>
+                     the history of used files and directories?<br>""")
+            if (reply == MSG.OK):
+              self.parent.destroyHistory()
+              self.updateHistory()
+        if (self.rClearSelectedDirs.isChecked()):
+            for it in self.lClear.selectedItems():
+                self.parent.removeDirFromHistory(it.text())
+            self.updateHistory()
+            self.updateClearDirs()
+        if (self.rClearSelectedFiles.isChecked()):
+            for it in self.lClear.selectedItems():
+                fd=self.parent.getHistoryFile(it.text())
+                if (fd is not None):
+                    self.parent.removeFileFromHistory(*fd)
+            self.updateHistory()
+            self.updateClearFiles()
+    def updateClearNone(self):
+        self.lClear.clear()
+    def updateClearNoHDF(self):
+        self.lClear.clear()
+        self.lClear.setSelectionMode(QAbstractItemView.NoSelection)
+        for d in self.parent.getDirNoHDFFromHistory():
+            self.lClear.addItem(d)
+    def updateClearNotFound(self):
+        self.lClear.clear()
+        self.lClear.setSelectionMode(QAbstractItemView.NoSelection)
+        for d in self.parent.getDirNotFoundFromHistory():
+            self.lClear.addItem(d)
+    def updateClearDirs(self):
+        self.lClear.clear()
+        self.lClear.setSelectionMode(QAbstractItemView.MultiSelection)
+        for d in self.historydirs:
+            self.lClear.addItem(d)
+    def updateClearFiles(self):
+        self.lClear.clear()
+        self.lClear.setSelectionMode(QAbstractItemView.MultiSelection)
+        for d in self.historyfiles:
+            self.lClear.addItem(d)
     def load(self):
         diag=self.checkTarget(self.selectedPath())
         if (diag is None):
@@ -294,7 +363,6 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.clickedNode(index)
         if (self.mode==SAVEMODE): self.save()
         else:                     self.load()
-        
     def clickedNode(self,index):
         self.treeview.resizeColumnToContents(0)
         p=self.path(index)

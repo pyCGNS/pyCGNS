@@ -1,0 +1,11 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System -
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
+Utility functions (cgnsutils.py)
+================================
+
+.. automodule:: CGNS.PAT.cgnsutils
+   :members:
+   :no-undoc-members:	

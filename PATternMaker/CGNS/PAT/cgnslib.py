@@ -27,28 +27,28 @@ __CGNS_LIBRARY_VERSION__=3.2
 
 # -----------------------------------------------------------------------------
 def newCGNSTree():
-  """Top CGNS/Python tree node creation::
+  """
+  Top CGNS/Python tree node creation::
 
-   T=newCGNSTree()
+    T=newCGNSTree()
 
-  - Return:
-   * The new :ref:`XCGNSTree_t` node
-
-  - Remarks:
-   * You *should* keep the returned node in a variable or reference to it in
+  :return: a new :ref:`XCGNSTree_t` node
+  :Remarks:
+   - You *should* keep the returned node in a variable or reference to it in
      any other way, this tree root is a Python object that would be garbagged
      if its reference count reaches zero.
-   * The `CGNSTree` node is a CGNS/Python node which has no existence in a
+   - The `CGNSTree` node is a CGNS/Python node which has no existence in a
      disk HDF5 file.
    
-  - Children:
-   * :py:func:`newCGNSBase`
+  :Children:
+    - :py:func:`newCGNSBase`
 
   """
   return newCGNS()
 
 def newCGNSBase(tree,name,ncell,nphys):
-  """*CGNSBase* node creation::
+  """
+  *CGNSBase* node creation::
 
     # The base is put in the `T` children list
     T=newCGNSTree()
@@ -57,20 +57,15 @@ def newCGNSBase(tree,name,ncell,nphys):
     # No parent, you should fetch the new node using a variable
     B=newCGNSBase(None,'Box-2',3,3)
   
-  - Args:
-   * `tree`: the parent node (`<node>` or `None`)
-   * `name`: base name (`string`)
-   * `cdim`: cell dimensions (`int`)
-   * `pdim`: physical dimensions (`int`)
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: base name 
+  :arg int cdim: cell dimensions
+  :arg int pdim: physical dimensions
+  :return: a new :ref:`XCGNSBase_t` node
+  :Children:
+    - :py:func:`newZone`
+  :raise: 10,11,12,6
 
-  - Return:
-   * The new :ref:`XCGNSBase_t` node
-
-  - Remarks:
-   * If a parent is given, the new node is added to the parent children list.
-
-  - Children:
-   * :py:func:`newZone`
   """
   return newBase(tree,name,ncell,nphys)
 

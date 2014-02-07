@@ -32,6 +32,14 @@ patterns gathered as
 *PAT.cgnslib* calls. These patterns, used for creation only, are building 
 in a recursive way the whole sub-tree for a given *SIDS* type.
 
+Direct links to modules documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. toctree::
+
+   utils
+   lib
+
 .. _pat_cgnsutils:
 
 Utilities
@@ -66,7 +74,7 @@ The list below gives an overview of publicly available functions.
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | Delete node and its children                                | :py:func:`nodeDelete <CGNS.PAT.cgnsutils.nodeDelete>`                                   |                 
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
-| Add child                                                   | :py:func:`addChild <CGNS.PAT.cgnsutils.addChild>`                                       |                 
+| Add child                                                   | :py:func:`setAsChild <CGNS.PAT.cgnsutils.setAsChild>`                                   |                 
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | List of children names                                      | :py:func:`childrenNames <CGNS.PAT.cgnsutils.childrenNames>`                             |                 
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
@@ -176,9 +184,29 @@ The list below gives an overview of publicly available functions.
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | Create a numpy.ndarray from a string                        | :py:func:`setStringAsArray <CGNS.PAT.cgnsutils.setStringAsArray>`                       |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
-| Create a numpy.ndarray from list of strings                 | :py:func:`concatenateForCharArray2D <CGNS.PAT.cgnsutils.concatenateForCharArray2D>`     |
+| Create a numpy.ndarray from a integer tuple (numpy.int32)   | :py:func:`setIntegerAsArray  <CGNS.PAT.cgnsutils.setIntegerAsArray>`                    |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
-| Create a numpy.ndarray from list of list of strings         | :py:func:`concatenateForCharArray3D <CGNS.PAT.cgnsutils.concatenateForCharArray3D>`     |
+| Create a numpy.ndarray from a integer tuple (numpy.int64)   | :py:func:`setLongAsArray  <CGNS.PAT.cgnsutils.setLongAsArray>`                          |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Create a numpy.ndarray from a float tuple (numpy.float32)   | :py:func:`setFloatAsArray  <CGNS.PAT.cgnsutils.setFloatAsArray>`                        |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Create a numpy.ndarray from a float tuple (numpy.float64)   | :py:func:`setDoubleAsArray  <CGNS.PAT.cgnsutils.setDoubleAsArray>`                      |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Update a numpy.ndarray from a string                        | :py:func:`setStringByPath <CGNS.PAT.cgnsutils.setStringByPath>`                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Update a numpy.ndarray from a integer tuple (numpy.int32)   | :py:func:`setIntegerByPath  <CGNS.PAT.cgnsutils.setIntegerByPath>`                      |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Update a numpy.ndarray from a integer tuple (numpy.int64)   | :py:func:`setLongByPath  <CGNS.PAT.cgnsutils.setLongByPath>`                            |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Update a numpy.ndarray from a float tuple (numpy.float32)   | :py:func:`setFloatByPath  <CGNS.PAT.cgnsutils.setFloatByPath>`                          |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Update a numpy.ndarray from a float tuple (numpy.float64)   | :py:func:`setDoubleByPath  <CGNS.PAT.cgnsutils.setDoubleByPath>`                        |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Create a numpy.ndarray from string                          | :py:func:`concatenateForArrayChar <CGNS.PAT.cgnsutils.concatenateForArrayChar>`         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Create a numpy.ndarray from list of strings                 | :py:func:`concatenateForArrayChar2D <CGNS.PAT.cgnsutils.concatenateForArrayChar2D>`     |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Create a numpy.ndarray from list of list of strings         | :py:func:`concatenateForArrayChar3D <CGNS.PAT.cgnsutils.concatenateForArrayChar3D>`     |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | Get the node value                                          | :py:func:`getValue <CGNS.PAT.cgnsutils.getValue>`                                       |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
@@ -222,9 +250,15 @@ The list below gives an overview of publicly available functions.
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 |                                                             |                                                                                         |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             | **Miscellaneous**                                                                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Get a tree as a string                                      | :py:func:`toString <CGNS.PAT.cgnsutils.toString>`                                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Write tree as a string in an importable file                | :py:func:`toFile <CGNS.PAT.cgnsutils.toFile>`                                           |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             |                                                                                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 
-.. automodule:: CGNS.PAT.cgnsutils
-   :members:
 
 .. _pat_cgnslib:
 
@@ -235,6 +269,15 @@ The so-called `CGNSlib` or `MLL` or `Mid-level` library, is set of functions
 for used to read/write/modify a set of nodes matching a CGNS/SIDS type.
 The Pythonish flavour of this library declares a set of functions with more
 or less the same interface but with Python values.
+
+Each function takes a parent as argument. If the parent is present, the new
+sub-tree is inserted in the parent child list. In all cases the call
+returns the created sub-tree
+The function names patterns are:
+
+ * ``newXXX``:   creates a new ``XXX_t`` type node
+ * ``updateXXX``: updates fields in the ``XXX_t`` node
+ * ``checkXXX``:  check if node is ok for SIDS and for CGNS/Python
 
 +-----------+----------------------------------------------------------------------------------------+
 |   SIDS    | Function                                                                               |
@@ -371,10 +414,6 @@ or less the same interface but with Python values.
 +-----------+----------------------------------------------------------------------------------------+
 |           | :py:func:`newParentElementsPosition  <CGNS.PAT.cgnslib.newParentElementsPosition>`     | 
 +-----------+----------------------------------------------------------------------------------------+
-
-
-.. automodule:: CGNS.PAT.cgnslib
-   :members:
 
 .. _sids_patterns:
 

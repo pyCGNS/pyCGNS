@@ -47,6 +47,7 @@ model.
 
    - pyCGNS available on Anaconda (Linux/Windows)
    - Enhanced testing (see :ref:`testsupport`)
+   - `DOWNLOAD pyCGNS v4.4 <http://sourceforge.net/projects/pycgns/files>`_
 
 The *MAP* and *PAT* modules are dedicated to this goal: map the 
 :term:`CGNS/SIDS` data model the :term:`CGNS/Python` implementation. 

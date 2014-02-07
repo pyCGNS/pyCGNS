@@ -44,6 +44,7 @@ class Q7ControlItemDelegate(QStyledItemDelegate):
 
 # -----------------------------------------------------------------
 class Q7Main(Q7Window, Ui_Q7ControlWindow):
+    verbose=False
     def __init__(self, parent=None):
         Q7Window.control_log=MSG.Q7Log()
         Q7Window.__init__(self,Q7Window.VIEW_CONTROL,self,None,None)
@@ -80,8 +81,10 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.newtreecount=1
         self.help=None
         self._patternwindow=None
+        self.query=None
         Q7Query.loadUserQueries()
         Q7Query.fillQueries()
+        Q7Query.loadUserFunctions()
     def clickedLine(self,*args):
         if (self.controlTable.lastButton==Qt.LeftButton):
             #Q7FingerPrint.raiseView(self.getIdxFromLine(args[0]))
@@ -356,7 +359,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.readyCursor()
         self.newtreecount+=1
         child.show()
-
-   
+    def userFunctionFromPath(self,path,types):
+        return Q7Query._userFunction
 
 # -----------------------------------------------------------------

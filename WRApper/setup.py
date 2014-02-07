@@ -44,8 +44,7 @@ hdf=False
 cgnslib=""
 hdfversion=cgnsversion='unknown'
 
-lname         = "CGNS.WRA"
-lversion      = pyCGNSconfig.WRA_VERSION
+lname    = "CGNS.WRA"
 
 extraargs=pyCGNSconfig.MLL_EXTRA_ARGS
 include_dirs=mllpinc+hdfpinc+pyCGNSconfig.INCLUDE_DIRS

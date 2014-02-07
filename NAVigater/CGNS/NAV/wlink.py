@@ -23,7 +23,8 @@ import CGNS.PAT.cgnskeywords as CGK
 # -----------------------------------------------------------------
 class Q7LinkItemDelegate(QStyledItemDelegate):
     def __init__(self, owner, model):
-        QStyledItemDelegate.__init__(self, owner)
+        self._table=owner.linkTable
+        QStyledItemDelegate.__init__(self, self._table)
         self._parent=owner
         self._model=model
         self._filename=''
@@ -34,13 +35,16 @@ class Q7LinkItemDelegate(QStyledItemDelegate):
         xs=option.rect.x()
         ys=option.rect.y()-2
         if (index.column() in [2]):
-          filename=str(QFileDialog.getOpenFileName(self._parent,
-                                                   "Select file")[0])
+          filt="CGNS Files (*.hdf *.cgns)"
+          filename=str(QFileDialog.getOpenFileName(self._table,
+                                                   "Select file",
+                                                   filter=filt)[0])
           (dname,fname)=os.path.split(filename)
+          if (not dname or not fname): return None
           itf=QTableWidgetItem(fname)
           itd=QTableWidgetItem(dname)
-          self._parent.setItem(index.row(),2,itf)
-          self._parent.setItem(index.row(),4,itd)
+          self._table.setItem(index.row(),2,itf)
+          self._table.setItem(index.row(),4,itd)
           return None
         if (index.column() in [1,3]):
           editor=QLineEdit(parent)
@@ -54,6 +58,11 @@ class Q7LinkItemDelegate(QStyledItemDelegate):
         editor.clear()
         editor.insert(value)
     def setModelData(self,editor,model,index):
+        col=index.column()
+        row=index.row()
+        v=str(editor.text())
+        if (col in [1,3]): v=CGU.getPathNoRoot(v)
+        self._parent._links[row][self._parent._col2lk[col]]=v
         self._parent.reset()
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(*editor.transgeometry)
@@ -65,22 +74,22 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
     def __init__(self,parent,fgprint,master):
         Q7Window.__init__(self,Q7Window.VIEW_LINK,parent,None,fgprint)
         self.bClose.clicked.connect(self.reject)
+        self._lk2col=[4,2,3,1,0]
+        self._col2lk=[4,3,1,2,0]
         self._fgprint=fgprint
         self._master=master
         self._links=fgprint.links
-        self.linkTable.setItemDelegate(Q7LinkItemDelegate(self.linkTable,
+        self.linkTable.setItemDelegate(Q7LinkItemDelegate(self,
                                                           self._fgprint.model))
         self.setLabel(self.eDirSource,fgprint.filedir)
         self.setLabel(self.eFileSource,fgprint.filename)
         self.bInfo.clicked.connect(self.infoLinkView)
-        self.bEditLink.clicked.connect(self.editLink)
         self.bAddLink.clicked.connect(self.newLink)
         self.bDeleteLink.clicked.connect(self.removeLink)
         self.bDuplicateLink.clicked.connect(self.duplicateLink)
         self.bSave.clicked.connect(self.infoLinkView)
         self.bCheckLink.clicked.connect(self.checkLinks)
         self.bLoadTree.clicked.connect(self.loadLinkFile)
-        self.bClearSelectedLink.clicked.connect(self.clearSelected)
     def loadLinkFile(self):
         i=self.linkTable.currentItem()
         if (i is None): return
@@ -116,13 +125,6 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
             self.reset()
     def checkLinks(self):
         pass
-    def editLink(self):
-        self._links.append([self.eDirectorySelectedLink.text(),
-                            self.eFileSelectedLink.text(),
-                            self.eNodeSelectedLink.text(),
-                            '',
-                            CGM.S2P_LKIGNORED])
-        self.reset()
     def newLink(self):
         self._links.append(['','','','',CGM.S2P_LKIGNORED])
         self.reset()
@@ -168,7 +170,9 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
         lh.setResizeMode(len(h)-1,QHeaderView.Stretch)
         v.setRowCount(len(self._links))
         r=0
+        print "RESET"
         for lk in self._links:
+          print lk
           (ld,lf,ln,sn,st)=lk
           t1item=self.statusIcon(st)
           t2item=QTableWidgetItem(sn)
@@ -189,13 +193,6 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
           v.resizeColumnToContents(i)
         for i in range(v.rowCount()):
           v.resizeRowToContents(i)
-    def clearSelected(self):
-        self._master.selectedForLink=[None]
-        self.updateSelected('','','')
-    def updateSelected(self,d,f,n):
-        self.eDirectorySelectedLink.setText(d)
-        self.eFileSelectedLink.setText(f)
-        self.eNodeSelectedLink.setText(CGU.getPathNoRoot(n))
     def reject(self):
         if (self._master._linkwindow is not None):
             self._master._linkwindow=None

@@ -375,6 +375,8 @@ the graphic window background and press [space].
 """
 <h2>Link view</h2>
 
+<b>When you copy a node path you SHOULD NOT add the CGNSTree root</b>
+
 <h3>Buttons</h3>
 <p>
 
@@ -496,9 +498,66 @@ want to find back which result matches which value (see example)</td></tr>
 """
 <h2>Selection view</h2>
 
+The <i>Selection view</i> lists the selected nodes resulting from a query or
+user performed selection. The only action you can perform on this list is
+to change the values, datatypes or SIDS types, or to save the list.
+
+The actual purpose of this view is to reduce the view of a tree for local
+modifications. For example you perform a query to retrieve a specific node
+and then you edit the selected nodes.
+
+You can run the query and display the result at once using the command line,
+for example:
+<pre>CGNS.NAV -q '100. Family boundaries' File.cgns</pre>
+
 <h3>Buttons</h3>
 <p>
+<table>
+<tr><td><img source=":/images/icons/control.png">
 <img source=":/images/icons/unselected.png">
+<img source=":/images/icons/node-sids-closed.png">
+</td>
+<td> unsused</td></tr>
+<tr><td><img source=":/images/icons/select-add.png"></td>
+<td> select all lines</td></tr>
+<tr><td><img source=":/images/icons/falg-revert.png"></td>
+<td> revert line selection</td></tr>
+<tr><td><img source=":/images/icons/select-delete.png"></td>
+<td> unselect all lines</td></tr>
+<tr><td><img source=":/images/icons/flag-none"></td>
+<td> remove a line from the selection line</td></tr>
+<tr><td><img source=":/images/icons/select-save"></td>
+<td> save the selection list in a file</td></tr>
+</table>
+
+<h3>User defined edition</h3>
+The node value editing can be a plain text edition or a combo-box enumerate.
+In that latter case the user can define a function to map the list of
+allowed value with respect to the node path (name for example) and the node
+type path (that is the list of types for each node in the path to the
+current node). The function should be a python class in a python file,
+the file name is <pre>default.py</pre> in the directory
+<pre>$HOME/.CGNS.NAV/funtions</pre>. There is an example of such a file:
+<pre>
+# -----------------------------------------------------------------
+# Mandatory name
+#
+class Q7UserFunction(object):
+  __attributes={
+    'artviscosity':['none','dissca','dismat','dismrt'],
+    'fluid':['rg','pg'],
+    'flux':['jameson','roe','vleer','coquel_d','coquel_i','ausmp','rbc','rbci'],
+    'ode':['backwardeuler','rk4'],
+    'phymod':['euler','nslam','nstur'],
+  }
+  # --- mandatory method
+  def getEnumerate(self,namepath,typepath):
+    if (namepath[-1] in self.__attributes):
+        return self.__attributes[namepath[-1]]
+    return None
+
+# --- last line
+</pre>
 """),
 # --------------------------------------------------------------------------
 'Diagnosis':('Diagnosis view',

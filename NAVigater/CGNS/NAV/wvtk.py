@@ -1163,6 +1163,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._currentactor=[path,actor,color,actor2]
 
   def highlightPoint(self,*args):
+      print 'HERE'
       actor=self._currentactor[1]
       if (actor is None): return
       grid=actor.GetMapper().GetInput()

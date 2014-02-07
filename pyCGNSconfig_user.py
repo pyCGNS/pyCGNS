@@ -40,8 +40,8 @@
 #
 # --- stuff to add for CHLone
 #CHLONE_VERSION          = ''
-#CHLONE_PATH_INCLUDES    = ['/home/tools/local/eosz/include']
-#CHLONE_PATH_LIBRARIES   = ['/home/tools/local/eosz/lib']
+CHLONE_PATH_INCLUDES    = ['/tmp_user/eos043z/poinot/v3.5-CGNS/Install/include']
+CHLONE_PATH_LIBRARIES   = ['/tmp_user/eos043z/poinot/v3.5-CGNS/Install/lib']
 #CHLONE_LINK_LIBRARIES   = [] 
 #CHLONE_EXTRA_ARGS       = []
 #
