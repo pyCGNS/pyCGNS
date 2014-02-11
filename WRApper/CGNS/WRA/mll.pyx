@@ -21,6 +21,7 @@ import numpy as PNY
 
 cimport cgnslib
 cimport numpy as CNY
+from libc.stdlib cimport malloc, free
 
 # -----------------------------------------------------------------------------
 # CGNS/MLL API v3.2.01
@@ -1709,8 +1710,8 @@ cdef class pyCGNS(object):
     cdef int fdir=0
     cdef int fneu=0
 
-    name="/"*MAXNAMELENGTH
-    c_name=name
+    c_name=<char *>malloc(MAXNAMELENGTH * sizeof(char))
+    c_name[0]='\0'
     self._error=cgnslib.cg_bcdataset_read(n,c_name,&bct,&fdir,&fneu)
     if ((c_name==DUMMYSTRING) or (not self._ok)): s=''
     else: s=str(c_name)

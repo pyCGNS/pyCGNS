@@ -53,3 +53,36 @@ int cgu_1to1_read_global(int fn, int B,
 		      range,donor_range,transform);
 
 }
+
+#if CGNS_VERSION < 3200
+/* dumb compat before v3.2 */
+int cg_family_name_read(int fn,int B,int F,int N,char *name,char *family)
+{
+  return -1;
+}
+
+int cg_family_name_write(int fn,int B,int F,char *name,char *family)
+{
+  return -1;
+}
+
+int cg_nfamily_names(int fn,int B,int F,int *nnames)
+{
+  return -1;
+}
+
+int cg_multifam_read(int N,char *name,char *family)
+{
+  return -1;
+}
+
+int cg_multifam_write(char *name,char *family)
+{
+  return -1;
+}
+
+int cg_nmultifam(int *nfams)
+{
+  return -1;
+}
+#endif

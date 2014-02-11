@@ -8,7 +8,7 @@ A Python package for CGNS
 
 .. raw:: html
 
-  Click below for a quick access to modules (DAT and APP are not available
+  Click below for a quick access to modules (DAT module is not available
   in this current version).<br>
   
   <div>
@@ -16,39 +16,48 @@ A Python package for CGNS
   <tr align="center" valign="middle">
 
   <td align="center" valign="middle"><a href="MAP/_index.html">
-      <img src="images/MAP-logo.jpg" height="48" alt="MAP"/></a></td>
+      <img src="images/MAP-logo-small.png" height="48" alt="MAP"/></a></td>
 
   <td align="center" valign="middle"><a href="PAT/_index.html">
-      <img src="images/PAT-logo.jpg" height="48" alt="PAT"/></a></td>
+      <img src="images/PAT-logo-small.png" height="48" alt="PAT"/></a></td>
 
   <td align="center" valign="middle"><a href="NAV/_index.html">
-      <img src="images/NAV-logo.jpg" height="48" alt="NAV"/></a></td>
+      <img src="images/NAV-logo-small.png" height="48" alt="NAV"/></a></td>
 
   <td align="center" valign="middle"><a href="VAL/_index.html">
-    <img src="images/VAL-logo.jpg" height="48" alt="VAL"/></a></td>
+    <img src="images/VAL-logo-small.png" height="48" alt="VAL"/></a></td>
 
   <td align="center" valign="middle"><a href="WRA/_index.html">
-      <img src="images/WRA-logo.jpg" height="48" alt="WRA"/></a></td>
+      <img src="images/WRA-logo-small.png" height="48" alt="WRA"/></a></td>
 
   <td align="center" valign="middle"><a href="DAT/_index.html">
-    <img src="images/DAT-logo.jpg" height="48" alt="DAT"/></a></td>
+    <img src="images/DAT-logo-small.png" height="48" alt="DAT"/></a></td>
 
   <td align="center" valign="middle"><a href="APP/_index.html">
-    <img src="images/APP-logo.jpg" height="48" alt="APP"/></a></td>
+    <img src="images/APP-logo-small.png" height="48" alt="APP"/></a></td>
  
  </tr></table></div>
 
 The package gathers various tools and libraries for CGNS end-users and
-Python application developpers. The main object of *pyCGNS* is to provide the
-application developpers with a Python interface to :term:`CGNS/SIDS`, the data
-model. 
+Python application developpers. The The main object of *pyCGNS* is to
+provide the application developpers with a Python interface to
+:term:`CGNS/SIDS`, the CGNS data model.  The `CFD General Notation System
+(CGNS) <http://www.cgns.org>`_ is both a data model for CFD and an
+implementation of this data model. CGNS should not be reduced to a
+file format and you can understand why by using pyCGNS without any
+file at all for your actual CFD data! 
+
 
 .. sidebar:: Release 4.4
 
    - pyCGNS available on Anaconda (Linux/Windows)
    - Enhanced testing (see :ref:`testsupport`)
 
-The *MAP* and *PAT* modules are dedicated to this goal: map the 
+There are seven sub-modules in
+*pyCGNS*, some of them are libraries of functions, some other are
+tools and some are gathering various scripts and examples.
+
+The *MAP* and *PAT* modules are the most important modules: map the 
 :term:`CGNS/SIDS` data model the :term:`CGNS/Python` implementation. 
 The *WRA* module contains wrapper on :term:`CGNS/MLL`
 and a *MLL-like* set of functions that uses the
@@ -88,19 +97,5 @@ Click on the modules icons above to get their documentation.
    introduction
    install
    glossary
-
-----
-
-.. _download_pdf:
-
-PDF Docs
-++++++++
-
-  * `Introduction document <_pdf/pyCGNS_intro.pdf>`_
-  * `MAP manual <_pdf/pyCGNS_MAP.pdf>`_
-  * `PAT manual <_pdf/pyCGNS_PAT.pdf>`_
-  * `NAV manual <_pdf/pyCGNS_NAV.pdf>`_
-  * `WRA manual <_pdf/pyCGNS_WRA.pdf>`_
-  * `VAL manual <_pdf/pyCGNS_VAL.pdf>`_
 
 .. -------------------------------------------------------------------------

@@ -26,6 +26,9 @@ if (RCONF is None):
   
 (pyCGNSconfig,installprocess)=RCONF
 
+if (not pyCGNSconfig.HAS_MLL):
+  sys.exit(1)
+
 # ---------------------------------------------------------------------------
 # --- config values
 hdfplib=pyCGNSconfig.HDF5_PATH_LIBRARIES

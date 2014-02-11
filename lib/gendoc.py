@@ -2,10 +2,38 @@
 #  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
 #
+import string
 import CGNS.PAT.cgnstypes
 
+nzero=[CGNS.PAT.cgnstypes.C_11,CGNS.PAT.cgnstypes.C_1N,CGNS.PAT.cgnstypes.C_NN]
+
+def gentype2(t):
+    s="\n-----\n\n.. _X%s:\n\n%s\n%s\n"%(t.type,t.type,len(t.type)*'-')
+    for nt in t.names:
+      if (nt=='{UserDefined}'): s+="\n :Name: %s "%nt
+      else: s+="\n :Name: **%s** "%nt
+    for c in t.parents:
+        s+="\n :Parents: :ref:`%s <X%s>` "%(c,c)
+    dtf=False
+    for dt in t.datatype:
+      if (dt!='LK'): 
+        if (not dtf): 
+            s+="\n :DataType: "
+            dtf=True
+        s+=" "+dt
+    if (t.enumerate):
+        s+="\n :Enumerate: "
+    for c in t.children:
+      for cn in c[1]:
+        cc=t.cardinality(c[0])
+        if ((cn!='{UserDefined}') and (t.cardinality(c[0]) not in nzero)):
+          s+="\n :Children: **%s** :ref:`%s <X%s>` (%s)"%(cn,c[0],c[0],cc)
+        else:
+          s+="\n :Children: %s :ref:`%s <X%s>` (%s)"%(cn,c[0],c[0],cc)
+    s+="\n"
+    return s
+        
 def gentype(t):
     s="\n-----\n\n.. _X%s:\n\n%s\n%s\n"%(t.type,t.type,len(t.type)*'-')
     s+="\n * Name: "
@@ -31,7 +59,7 @@ def gentypes():
     ct=CGNS.PAT.cgnstypes.types.keys()
     ct.sort()
     for c in ct:
-        s+=gentype(CGNS.PAT.cgnstypes.types[c])
+        s+=gentype2(CGNS.PAT.cgnstypes.types[c])
     return s
 
 print gentypes()

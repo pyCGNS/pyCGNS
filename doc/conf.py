@@ -31,7 +31,7 @@ exclude_dirnames = ['VALidater','TRAnslater','DATaTracer','APPlicater',
 pygments_style = 'sphinx'
 html_theme = 'pycgns'
 html_title = "%s"%os.environ['PYCGNSMOD']
-html_logo = 'images/%s-logo-small.jpg'%os.environ['PYCGNSMOD']
+html_logo = 'images/%s-logo-small.png'%os.environ['PYCGNSMOD']
 html_favicon =  'images/pyCGNS-logo-tiny.ico'
 html_use_index = True
 htmlhelp_basename = 'pyCGNSdoc'
@@ -49,7 +49,7 @@ latex_documents = [
    u'Marc Poinot',
    'manual',False),
 ]
-latex_logo = 'images/%s-logo.jpg'%os.environ['PYCGNSMOD']
+latex_logo = 'images/%s-logo.png'%os.environ['PYCGNSMOD']
 latex_use_parts = False
 latex_use_modindex = True
 

@@ -75,8 +75,6 @@ class CGUTestCase(unittest.TestCase):
     self.assertEqual(CGU.getPathNormalize('/./Base/Zone/ZoneBC//'),p)
     self.assertEqual(CGU.getPathToList(p),['','Base', 'Zone', 'ZoneBC'])
     self.assertEqual(CGU.getPathToList(p,True),['Base', 'Zone', 'ZoneBC'])
-
-    
   def test_03NodeStructure(self):
     import CGNS.PAT.cgnsutils as CGU
     import CGNS.PAT.cgnserrors as CGE
@@ -154,12 +152,27 @@ class CGUTestCase(unittest.TestCase):
     import CGNS.PAT.cgnserrors as CGE
     import CGNS.PAT.cgnskeywords as CGK
     self.genTree()
+    p1='/CGNSTree/{Base#1}/{Zone-B}'
+    self.assertEqual(CGU.getNodeByPath(self.T,p1)[0],'{Zone-B}')
+    p2='/CGNSTree/.///{Base#1}/{Zone-B}/../{Zone-A}'
+    self.assertEqual(CGU.getNodeByPath(self.T,p2)[0],'{Zone-A}')
+    p3='/{Base#1}/{Zone-A}/ZoneBC'
+    self.assertEqual(CGU.getNodeByPath(self.T,p3)[0],'ZoneBC')
+    n3=CGU.getNodeByPath(self.T,p3)
+    c1='{BC-2}'
+    self.assertEqual(CGU.getNodeByPath(n3,c1)[0],'{BC-2}')
+    c2='./{BC-1}'
+    self.assertEqual(CGU.getNodeByPath(n3,c2)[0],'{BC-1}')
+    self.assertIsNotNone(CGU.getNodeByPath(self.T,'/{Base#1}/{Zone-B}'))
     filter='/.*/.*/Zone.*'
     v1=['/{Base#1}/{Zone-B}/ZoneBC', '/{Base#1}/{Zone-B}/ZoneGridConnectivity']
     self.assertEqual(CGU.getPathByNameFilter(self.T,filter)[3:5],v1)
     filter='/.*/.*/.*/GridConnectivity.*'
     v2='/{Base#1}/{Zone-D2}/ZoneGridConnectivity/{CT-D2-C}'
     self.assertEqual(CGU.getPathByTypeFilter(self.T,filter)[-2],v2)
+    v=CGU.getValueByPath(self.T,'/CGNSTree/{Base#1}/{Zone-B}/ZoneType')
+    self.assertIsNotNone(v)
+    self.assertTrue(CGU.stringValueMatches(v,'Structured'))
   def test_09NodeDelete(self):
     import CGNS.PAT.cgnsutils as CGU
     import CGNS.PAT.cgnserrors as CGE

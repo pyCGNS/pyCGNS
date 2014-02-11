@@ -113,16 +113,17 @@ def search(tag,deps=[]):
                   C.MLL_EXTRA_ARGS)
       if (tp is None):
         print pfx+'ERROR: %s setup cannot find cgns.org library (MLL)!'%tag
-        sys.exit(1)
-      (C.MLL_VERSION,
-       C.MLL_PATH_INCLUDES,
-       C.MLL_PATH_LIBRARIES,
-       C.MLL_LINK_LIBRARIES,
-       C.MLL_EXTRA_ARGS)=tp
-      print pfx+'using MLL %s for %s'%(C.MLL_VERSION,tag)
-      print pfx+'using MLL headers from %s'%(C.MLL_PATH_INCLUDES[0])
-      print pfx+'using MLL libs from %s'%(C.MLL_PATH_LIBRARIES[0])
-      C.HAS_MLL=True
+        C.HAS_MLL=False
+      else:
+       (C.MLL_VERSION,
+        C.MLL_PATH_INCLUDES,
+        C.MLL_PATH_LIBRARIES,
+        C.MLL_LINK_LIBRARIES,
+        C.MLL_EXTRA_ARGS)=tp
+       print pfx+'using MLL %s for %s'%(C.MLL_VERSION,tag)
+       print pfx+'using MLL headers from %s'%(C.MLL_PATH_INCLUDES[0])
+       print pfx+'using MLL libs from %s'%(C.MLL_PATH_LIBRARIES[0])
+       C.HAS_MLL=True
         
     # -----------------------------------------------------------------------
     if ('CHLone' in deps):
@@ -388,6 +389,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
           cgnsversion=ll.split()[2]
           if (cgnsversion<'3200'):
             print pfx,"ERROR: version should be v3.2 for MLL"
+            return None
       break
   if notfound:
     print pfx+"ERROR: cgnslib.h not found, please check paths"

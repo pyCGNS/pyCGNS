@@ -27,28 +27,28 @@ __CGNS_LIBRARY_VERSION__=3.2
 
 # -----------------------------------------------------------------------------
 def newCGNSTree():
-  """Top CGNS/Python tree node creation::
+  """
+  Top CGNS/Python tree node creation::
 
-   T=newCGNSTree()
+    T=newCGNSTree()
 
-  - Return:
-   * The new :ref:`XCGNSTree_t` node
-
-  - Remarks:
-   * You *should* keep the returned node in a variable or reference to it in
+  :return: a new :ref:`XCGNSTree_t` node
+  :Remarks:
+   - You *should* keep the returned node in a variable or reference to it in
      any other way, this tree root is a Python object that would be garbagged
      if its reference count reaches zero.
-   * The `CGNSTree` node is a CGNS/Python node which has no existence in a
+   - The `CGNSTree` node is a CGNS/Python node which has no existence in a
      disk HDF5 file.
    
-  - Children:
-   * :py:func:`newCGNSBase`
+  :Children:
+    - :py:func:`newCGNSBase`
 
   """
   return newCGNS()
 
 def newCGNSBase(tree,name,ncell,nphys):
-  """*CGNSBase* node creation::
+  """
+  *CGNSBase* node creation::
 
     # The base is put in the `T` children list
     T=newCGNSTree()
@@ -57,20 +57,15 @@ def newCGNSBase(tree,name,ncell,nphys):
     # No parent, you should fetch the new node using a variable
     B=newCGNSBase(None,'Box-2',3,3)
   
-  - Args:
-   * `tree`: the parent node (`<node>` or `None`)
-   * `name`: base name (`string`)
-   * `cdim`: cell dimensions (`int`)
-   * `pdim`: physical dimensions (`int`)
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: base name 
+  :arg int cdim: cell dimensions
+  :arg int pdim: physical dimensions
+  :return: a new :ref:`XCGNSBase_t` node
+  :Children:
+    - :py:func:`newZone`
+  :raise: 10,11,12,6
 
-  - Return:
-   * The new :ref:`XCGNSBase_t` node
-
-  - Remarks:
-   * If a parent is given, the new node is added to the parent children list.
-
-  - Children:
-   * :py:func:`newZone`
   """
   return newBase(tree,name,ncell,nphys)
 
@@ -85,13 +80,21 @@ def newCGNS():
 
 # -----------------------------------------------------------------------------
 def newDataClass(parent,value=CK.UserDefined_s):
-  """-DataClass node creation -DataClass
-  
-  'newNode:N='*newDataClass*'(parent:N,value:A)'
-  
-  If a parent is given, the new <node> is added to the parent children list.
-  The value argument is a DataClass enumerate. No child allowed.
-  Returns a new <node> representing a DataClass_t sub-tree."""
+  """
+  *DataClass* node creation::
+
+    import CGNS.PAT.gcnskywords as CK
+    
+    dc=newDataClass(parent,CK.DimensionalUnits_s)
+
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str value: DataClass type to set
+  :return: a new :ref:`XDataClass_t` node
+  :Remarks:
+    - The value argument is a
+      :ref:`DataClass enumerate <pat_cgnskeywords>` enumerate.
+
+  """
   CU.checkDuplicatedName(parent,CK.DataClass_s)
   node=CU.newNode(CK.DataClass_s,CU.setStringAsArray(value),[],
                CK.DataClass_ts,parent)
@@ -112,27 +115,27 @@ def checkDataClass(node,parent=None):
   if (value not in CK.DataClass_l):  raise CE.cgnsException(207,value)
   if (parent != None):
      CU.checkTypeList(parent,[CK.DataArray_ts,CK.CGNSBase_ts,CK.Zone_ts,
-                           CK.GridCoordinates_ts,CK.Axisymmetry_ts,
-                           CK.RotatingCoordinates_ts,CK.FlowSolution_ts,
-                           CK.Periodic_ts,CK.ZoneBC_ts,CK.BC_ts,
-                           CK.BCDataSet_ts,
-                           CK.BCData_ts,CK.FlowEquationSet_ts,
-                           CK.GasModel_ts,
-                           CK.ViscosityModel_ts,
-                           CK.ThermalConductivityModel_ts,
-                           CK.TurbulenceClosure_ts,CK.TurbulenceModel_ts,
-                           CK.ThermalRelaxationModel_ts,
-                           CK.ChemicalKineticsModel_ts,
-                           CK.EMElectricFieldModel_ts,
-                           CK.EMMagneticFieldModel_ts,
-                           CK.EMConductivityModel_ts,
-                           CK.BaseIterativeData_ts,
-                           CK.ZoneIterativeData_ts,CK.RigidGridMotion_ts,
-                           CK.ArbitraryGridMotion_ts,CK.ReferenceState_ts,
-                           CK.ConvergenceHistory_ts,
-                           CK.DiscreteData_ts,CK.IntegralData_ts,
-                           CK.UserDefinedData_ts,CK.Gravity_ts]
-                   ,CK.DataClass_s)
+                              CK.GridCoordinates_ts,CK.Axisymmetry_ts,
+                              CK.RotatingCoordinates_ts,CK.FlowSolution_ts,
+                              CK.Periodic_ts,CK.ZoneBC_ts,CK.BC_ts,
+                              CK.BCDataSet_ts,
+                              CK.BCData_ts,CK.FlowEquationSet_ts,
+                              CK.GasModel_ts,
+                              CK.ViscosityModel_ts,
+                              CK.ThermalConductivityModel_ts,
+                              CK.TurbulenceClosure_ts,CK.TurbulenceModel_ts,
+                              CK.ThermalRelaxationModel_ts,
+                              CK.ChemicalKineticsModel_ts,
+                              CK.EMElectricFieldModel_ts,
+                              CK.EMMagneticFieldModel_ts,
+                              CK.EMConductivityModel_ts,
+                              CK.BaseIterativeData_ts,
+                              CK.ZoneIterativeData_ts,CK.RigidGridMotion_ts,
+                              CK.ArbitraryGridMotion_ts,CK.ReferenceState_ts,
+                              CK.ConvergenceHistory_ts,
+                              CK.DiscreteData_ts,CK.IntegralData_ts,
+                              CK.UserDefinedData_ts,CK.Gravity_ts]
+                             ,CK.DataClass_s)
   return node
   
 # -----------------------------------------------------------------------------

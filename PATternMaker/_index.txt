@@ -32,8 +32,8 @@ patterns gathered as
 *PAT.cgnslib* calls. These patterns, used for creation only, are building 
 in a recursive way the whole sub-tree for a given *SIDS* type.
 
-Direct link to modules documentation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Direct links to modules documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. toctree::
 
@@ -74,7 +74,7 @@ The list below gives an overview of publicly available functions.
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | Delete node and its children                                | :py:func:`nodeDelete <CGNS.PAT.cgnsutils.nodeDelete>`                                   |                 
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
-| Add child                                                   | :py:func:`addChild <CGNS.PAT.cgnsutils.addChild>`                                       |                 
+| Add child                                                   | :py:func:`setAsChild <CGNS.PAT.cgnsutils.setAsChild>`                                   |                 
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | List of children names                                      | :py:func:`childrenNames <CGNS.PAT.cgnsutils.childrenNames>`                             |                 
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
@@ -148,11 +148,11 @@ The list below gives an overview of publicly available functions.
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | Return  a node CGNS/SIDS type from path                     | :py:func:`getTypeByPath <CGNS.PAT.cgnsutils.getTypeByPath>`                             |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
-| All nodes matching the unordered set of CGNS/SIDS types     | :py:func:`getAllNodesByTypeSet <CGNS.PAT.cgnsutils.getAllNodesByTypeSet>`               |
+| All nodes matching the unordered set of CGNS/SIDS types     | :py:func:`getPathsByTypeSet <CGNS.PAT.cgnsutils.getPathsByTypeSet>`                     |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
-| All nodes matching the ordered list of CGNS/SIDS types      | :py:func:`getAllNodesByTypeList <CGNS.PAT.cgnsutils.getAllNodesByTypeList>`             |
+| All nodes matching the ordered list of CGNS/SIDS types      | :py:func:`getPathsByTypeList <CGNS.PAT.cgnsutils.getPathsByTypeList>`                   |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
-| All nodes matching a list of names and CGNS/SIDS types      | :py:func:`getAllNodesByTypeOrNameList <CGNS.PAT.cgnsutils.getAllNodesByTypeOrNameList>` |
+| All nodes matching a list of names and CGNS/SIDS types      | :py:func:`getPathsByTypeOrNameList <CGNS.PAT.cgnsutils.getPathsByTypeOrNameList>`       |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | Iterator, get next child by type/name order                 | :py:func:`getNextChildSortByType <CGNS.PAT.cgnsutils.getNextChildSortByType>`           |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
@@ -224,7 +224,7 @@ The list below gives an overview of publicly available functions.
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | Get the path of a node including root name                  | :py:func:`getPathFromRoot <CGNS.PAT.cgnsutils.getPathFromRoot>`                         |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
-| Get list of all CGNS/Python tree paths                      | :py:func:`getPathFullTree <CGNS.PAT.cgnsutils.getPathFullTree>`                         |
+| Get list of all CGNS/Python tree paths                      | :py:func:`getPathsFullTree <CGNS.PAT.cgnsutils.getPathsFullTree>`                       |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 | Get list of all tree paths with name filter                 | :py:func:`getPathByNameFilter <CGNS.PAT.cgnsutils.getPathByNameFilter>`                 |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
@@ -250,6 +250,14 @@ The list below gives an overview of publicly available functions.
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 |                                                             |                                                                                         |
 +-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             | **Miscellaneous**                                                                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Get a tree as a string                                      | :py:func:`toString <CGNS.PAT.cgnsutils.toString>`                                       |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+| Write tree as a string in an importable file                | :py:func:`toFile <CGNS.PAT.cgnsutils.toFile>`                                           |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
+|                                                             |                                                                                         |
++-------------------------------------------------------------+-----------------------------------------------------------------------------------------+
 
 
 .. _pat_cgnslib:
@@ -261,6 +269,15 @@ The so-called `CGNSlib` or `MLL` or `Mid-level` library, is set of functions
 for used to read/write/modify a set of nodes matching a CGNS/SIDS type.
 The Pythonish flavour of this library declares a set of functions with more
 or less the same interface but with Python values.
+
+Each function takes a parent as argument. If the parent is present, the new
+sub-tree is inserted in the parent child list. In all cases the call
+returns the created sub-tree
+The function names patterns are:
+
+ * ``newXXX``:   creates a new ``XXX_t`` type node
+ * ``updateXXX``: updates fields in the ``XXX_t`` node
+ * ``checkXXX``:  check if node is ok for SIDS and for CGNS/Python
 
 +-----------+----------------------------------------------------------------------------------------+
 |   SIDS    | Function                                                                               |
