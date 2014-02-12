@@ -54,13 +54,12 @@ The pyCGNS module now includes (former package names)
    Python clone.
 
  - VAL,the Validater (pyC5), an XML grammar based validation of a *CGNS/Python*
-   tree, for example produced using *MAP* or *PAT*. *Unsuable in v4.0*
+   tree, for example produced using *MAP* or *PAT*.
 
  - DAT, the DataTracer (pyDAX), some DBMS services for *CGNS/HDF5* files.
-   *Unsuable in v4.0*
+   *Not maintained anymore in v4.0 (to be resumed 2014/2015)*
 
- - APP, the Applicater, a set of applications using other modules.
-   *Unsuable in v4.0*
+ - APP, the ApplicationSampler, a set of applications using other modules.
 
 Quick start
 -----------
@@ -69,19 +68,16 @@ Loading a CGNS/HDF file with MAP
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The *CGNS.MAP* module implements the *CGNS/Python* mapping. You can 
 load/save a *CGNS/HDF5* file using the simple *MAP* functions (below, 
-the ``>>>`` string is the python interpreter prompt).
-
-.. code-block:: python
-   :emphasize-lines: 1,3
+the ``>>>`` string is the python interpreter prompt)::
 
    >>> import CGNS.MAP
-   >>> (tree,links)=CGNS.MAP.load("./001Disk.hdf",CGNS.MAP.S2P_FOLLOWLINKS)
+   >>> (tree,links,paths)=CGNS.MAP.load("./001Disk.hdf")
    >>> print tree
    ['CGNSTree', None, [['CGNSLibraryVersion',array([ 2.4000001],dtype=float32),
    [], 'CGNSLibraryVersion_t'], ['Disk', array([3, 3], dtype=int32), 
    [['.Solver#Command', ... ]
 
-Now ``tree`` is a Python list with the whole`` ./001Disk.hdf`` CGNS tree
+Now ``tree`` is a Python list with ``./001Disk.hdf`` CGNS tree
 into, with the data structure as described 
 in :ref:`SIDS-to-Python <mapix:reference_sids_to_python>`.
 
@@ -90,15 +86,20 @@ Using PAT to modify a CGNS tree
 The previously loaded *CGNS/Python* tree is modified using plain Python
 functions and types. The *CGNS.APP* module contains utilities, we use the
 ``getNodeByPath`` function which returns a *CGNS/Python* node with the
-target tree and the target node path as parameters.::
+target tree and the target node path as parameters. In the example hereafter,
+we are loading a sample tree from the *pyCGNS* test suite::
 
-  import CGNS.APP.path_utils as CGU
+  import CGNS.PAT.cgnsutils as CGU
+  import CGNS.PAT.test.disk as data
 
-  node=CGU.getNodeByPath("/Disk/zone1/ZoneBC/ext1/PointRange",tree)
+  node=CGU.getNodeByPath(data.T,"/{Base#1}/{Zone-D1}/ZoneGridConnectivity/{CT-D1-D2}")
+  print node[1]
+  print node[1].tostring()
 
 The returned node is a list of 4 Python values, the name (a string),
 the value of the node (a *Numpy* array), the list of children and
-the CGNS type of the node (string).
+the CGNS type of the node (string). The returned node of the example is a string
+array, you may want to use the ``tostring`` function to make it more readable.
 
 
 Using PAT to create a CGNS tree
@@ -112,6 +113,11 @@ state*::
   CGL.newBase(T,'Test Case 01',3,3) # name, physical dim, topological dim
   CGL.newSimulationType(T)
   CGL.newReferenceState(T)
+
+Each time you call a function you pass the parent node and some parameters.
+The tree is built as a python list, the top list is referenced by the ``T``
+variable here. As it is passed as argument to each call the new nodes are
+added to ``T`` into the function. The the resulting ``T`` is changed in place.
   
 Re-using your CGNS/MLL scripts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

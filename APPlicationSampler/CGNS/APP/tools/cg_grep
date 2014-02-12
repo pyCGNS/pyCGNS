@@ -61,6 +61,8 @@ parser.add_argument('-e','--regexp',action='store_true',
                     help='args can contain regular expressions (otherwise plain strings only)')
 parser.add_argument('-s','--stop',action='store_true',
                     help='stop at first found')
+parser.add_argument('-p','--path',action='store_true',
+                    help='return only the path of the matching node, no filename')
 parser.add_argument('files',nargs=argparse.REMAINDER)
 
 args=parser.parse_args()
@@ -110,8 +112,8 @@ def searchNodes(T,Q,R):
 
 def searchLinks(L,Q,R):
   for l in L:
-    add =(checkString(Q.linkpath,l[2],Q.regexp))
-    add|=(checkString(Q.linkfile,l[0],Q.regexp))
+    add =(checkString(Q.linkpath,[l[2]],Q.regexp))
+    add|=(checkString(Q.linkfile,[l[1]],Q.regexp))
     if (add):
       R.append(l[3])
       if (Q.stop): return
@@ -122,7 +124,8 @@ def parseFile(filename,P,Q):
   searchNodes(T[0],Q,R)
   searchLinks(T[1],Q,R)
   for p in R:
-    P.append('%s:%s'%(T[3],p))
+    if (Q.path): P.append('%s'%(p,))
+    else: P.append('%s:%s'%(T[3],p))
     if (Q.stop): break
   return P
 
@@ -132,6 +135,7 @@ Q.sidstype=args.sidstype
 Q.linkpath=args.linkpath
 Q.linkfile=args.linkfile
 Q.cut=args.cut
+Q.path=args.path
 Q.stop=args.stop
 Q.regexp=args.regexp
 Q.initialize()

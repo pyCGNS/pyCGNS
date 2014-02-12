@@ -1,9 +1,195 @@
-.. -------------------------------------------------------------------------
+
 .. pyCGNS - CFD General Notation System - 
 .. See license.txt file in the root directory of this Python module source  
 .. -------------------------------------------------------------------------
 
-Quickstart
-==========
+.. _apptools::
+
+Tools
+=====
+
+A set of shell tools are built using *pyCGNS*. Some of them are dedicated to
+a specific use of CGNS files and tree shape, you have to check the actual
+effects of the tools on your own test data before any attempt on valuable
+data.
+
+The ``cg_list`` is a kind of ``ls`` for CGNS files. There are many options
+to help you decide wether this is the file you are looking for or not, its size,
+its contents type...
+
+cg_list
++++++++
+
+You typically run ``cg_list`` to find out which are the CGNS files in 
+a directory::
+
+   $ cg_list
+    C.hdf                 
+    SUB.hdf               
+    cubes_T1.hdf          
+    cubes.hdf             
+    naca0012.hdf          
+    cube0_tetra.hdf       
+    sqnz_hexa_NGON.cgns   
+    T.hdf          
+
+Then you can go into further details on some of these files::
+
+   $ cg_list -tBZVLM *cubes*
+       V  L  B  Z     M N                
+    3.20  0  1  1  0.35 cube0_tetra.hdf  
+    3.20  0  1  5  0.12 cubes.hdf        
+    3.20  0  1  5  0.12 cubes_T1.hdf     
+
+The default is to skip files with a size >1Gb, but ``cg_list`` gives you
+the list anyway and you can add the ``-f`` option to force the read of very
+large files::
+
+   $ cg_list
+   # skip file >1Gb : Validation-Triggers.hdf
+   # skip file >1Gb : JTI-GRC2-FUS+HEAD-ROD_Near.hdf
+   # skip file >1Gb : Last25.hdf
+    Jt.hdf                             
+    naca12_50dom.hdf                       
+
+And you can set sorting option, to get a better view on number of items 
+some large files::
+
+  $ cg_list -fs PZF -PZFt
+      F    Z          P N                                      
+      1    1          5 ex_uns.hdf                             
+      2   50      76002 naca12_50dom.hdf                       
+     11    1     227206 supersonique.hdf                       
+      0    1    1070022 SNR.hdf                                
+     11   12    4245548 Jt.hdf                             
+      0   32    4474808 C2BP_I.hdf                    
+     26   32    4474808 C2BP_M.hdf                    
+      3    8    4794825 pale.hdf              
+     80   97   11384652 T23_instat_R4.hdf             
+    268  282   13978730 T23s_cfd#00000.hdf           
+    754  739   58300347 Last25_msh.hdf         
+      4  660  155858748 Last25.hdf  
+
+The -h option returns the following usage notice::
+
+  usage: cg_list [options] file1 file2 ...
+
+    List tool on CGNS/HDF5 files
+    (part of pyCGNS distribution http://pycgns.sourceforge.net)'
+    The result of the list is one line per found file/node.
+
+  positional arguments:
+    files
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    -V, --version         show version
+    -B, --base            number of bases
+    -Z, --zone            number of zones
+    -S, --structured      number of structured zones
+    -U, --unstructured    number of unstructured zones
+    -F, --family          number of families
+    -L, --links           number of links
+    -M, --mega            size of file in Mb
+    -G, --giga            size of file in Gb
+    -P, --points          total number of points
+    -r PATH, --restrict PATH
+                          restrict all counts to path subtree
+    -t, --title           add columns header
+    -k, --keys            show list of keys
+    -s SORT, --sort SORT  sort with criteria (see doc below)
+    -a, --all             alias for -hVBLZSUWK
+    -n, --nolinks         do not follow links
+    -f, --force           force parse for very large files > 1Gb
+
+    Sort criteria:
+
+     Each letter is a key for the sort criteria. With the key K, the pattern
+     K or K+ is ascending sort on key K, K- is descending.
+     Keys are N for filename, B number of bases, Z number of zones
+     and so on, use option -k to have key list and -t to add list header leys.
+
+
+cg_grep
++++++++
+
+This tool is a grep on the CGNS file contents. It parses the file and
+depending on your actual request it searches on node names, types, values,
+paths, links...
+
+For example you are looking for a file having a link to another one. The 
+following command looks at all CGNS files, stops at the first having a link::
+
+  $ cg_grep -sel '.*' *
+  C.hdf:/Blocks:S/WEST/ZAZA
+
+To get all nodes having a link a a given file name::
+
+  $ cg_grep -ef 'naca12_50dom_dom4.*' naca12_50dom_TOP.hdf 
+  naca12_50dom_TOP.hdf:/base1/dom4
+  naca12_50dom_TOP.hdf:/base1/dom40
+  naca12_50dom_TOP.hdf:/base1/dom41
+  naca12_50dom_TOP.hdf:/base1/dom42
+  naca12_50dom_TOP.hdf:/base1/dom43
+  naca12_50dom_TOP.hdf:/base1/dom44
+  naca12_50dom_TOP.hdf:/base1/dom45
+  naca12_50dom_TOP.hdf:/base1/dom46
+  naca12_50dom_TOP.hdf:/base1/dom47
+  naca12_50dom_TOP.hdf:/base1/dom48
+  naca12_50dom_TOP.hdf:/base1/dom49
+
+Beware, as any other result of the grep command, the return is the matching
+node, not the value. Once you have this node list, you can proceed to another
+filter with ``cg_list`` for example::
+
+The -h option returns the following usage notice::
+
+  usage: cg_grep [options] file1 file2 ...
+
+    Grep tool on CGNS/HDF5 files
+    (part of pyCGNS distribution http://pycgns.sourceforge.net)'
+    The result of the grep is one line per found file/node, with the
+    syntax <file>:<node-path>
+
+  positional arguments:
+    files
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    -n NAME, --name NAME  grep on node name
+    -t SIDSTYPE, --type SIDSTYPE
+                          grep on SIDS type name
+    -l LINKPATH, --linkpath LINKPATH
+                          grep on a path of a link
+    -f LINKFILE, --linkfile LINKFILE
+                          grep on a file of a link
+    -c, --cut             leaf only, do not propagate to subtrees (cut on find)
+    -e, --regexp          args can contain regular expressions (otherwise plain
+                          strings only)
+    -s, --stop            stop at first found
+    -p, --path            return only the path of the matching node, no filename
+
+    Examples:
+
+    cg_grep -n 'HybridBaseMerged' *
+    - find all nodes with the name 'HybridBaseMerged'
+
+    cg_grep -sn 'HybridBaseMerged' *
+    - find he first file with a node having the name 'HybridBaseMerged'
+
+    cg_grep -ct 'GridConnectivityProperty_t' *
+    - find all GridConnectivityProperty_t nodes but no not continue to parse
+      their children nodes
+      
+    cg_grep -en '[Aa]ngle' naca0012.hdf
+    - find all nodes with 'Angle' or 'angle' as substring in of the node name
+
+    cg_grep -en '^[Aa]ngle$' naca0012.hdf
+    - find all nodes with 'Angle' or 'angle' as the node name
+
+    cg_grep -sel '.*' *
+    - find all links in all CGNS/HDF5 files in current dir, stop at first
+      file found. The first file containing at least one link is the result.
+  
 
 .. -------------------------------------------------------------------------

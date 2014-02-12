@@ -195,12 +195,8 @@ WRA depends
 ~~~~~~~~~~~
 
 *CGNS/MLL* and *CGNS/ADF* libraries are required.
-You should build the CGNS libraries with the ``CG_BUILD_SCOPE`` 
-set to ``True``. To do so, edit your ``CMakeCache.txt`` file
-and set the following variable to ``ON``::
+Set the following variable to ``ON`` in the ``CMakeCache.txt`` file::
 
- //Enable or disable scoping of enumeration values
- ENABLE_SCOPING:BOOL=ON
  
  //Build the CGNSTools package
  BUILD_CGNSTOOLS:BOOL=ON
@@ -229,10 +225,18 @@ Test
 Some of the pyCGNS modules have embedded tests. Once you have installed
 pyCGNS, you can run each test suite from another user account/directory::
 
- python -c 'import CGNS.MAP.test;CGNS.MAP.test.run()'
+  python -c 'import CGNS.MAP.test;CGNS.MAP.test.run()'
 
 All modules tests can be run the same way, replace ``MAP`` by any of
-``PAT``, ``WRA``, ``VAL``, ``NAV``, ``APP``, ``DAT``.
+``PAT``, ``WRA``, ``VAL``, ``NAV``, ``APP``, ``DAT``. You can run all the
+tests by importing ``CGNS.test``::
 
+  python -c 'import CGNS.WRAP.test;CGNS.WRA.test.run()'
+  python -c 'import CGNS.PAT.test;CGNS.PAT.test.run()'
+
+  python -c 'import CGNS.test'
+
+The tests are running silently, if there is a problem you would see a stack
+error on the output.
 
 .. -------------------------------------------------------------------------

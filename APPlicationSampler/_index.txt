@@ -6,11 +6,9 @@
 CGNS.APP
 ========
 
-The APP module is an informal set of tools, example, utilities, tests...
-
-.. warning::
-   APP documentation is not up-to-date, however the module contents can
-   be used. You have to look at the sources...
+The *ApplicationSampler* module is an informal set of tools, examples,
+utilities, tests... Some libraries or tools are often tested in this
+module and eventually go to ``PAT``.
 
 .. -----
 

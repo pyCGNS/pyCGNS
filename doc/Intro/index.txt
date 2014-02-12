@@ -50,13 +50,12 @@ file at all for your actual CFD data!
 
 .. sidebar:: Release 4.4
 
+   - New tools in APP (see :ref:`apptools`)
    - pyCGNS available on Anaconda (Linux/Windows)
-   - Enhanced testing (see :ref:`testsupport`)
 
 There are seven sub-modules in
 *pyCGNS*, some of them are libraries of functions, some other are
 tools and some are gathering various scripts and examples.
-
 The *MAP* and *PAT* modules are the most important modules: map the 
 :term:`CGNS/SIDS` data model the :term:`CGNS/Python` implementation. 
 The *WRA* module contains wrapper on :term:`CGNS/MLL`
@@ -64,7 +63,8 @@ and a *MLL-like* set of functions that uses the
 :term:`CGNS/Python` mapping as implementation.
 The *NAV* module supports the *CGNS.NAV* graphical browser, with nice
 features about tree exploration, copy/paste and even global node changes.
-Then, the *VAL* module is a parser engine for :term:`CGNS/Python` tree compliance
+Then, the *VAL* module is a parser 
+engine for :term:`CGNS/Python` tree compliance
 checking. The *CGNS.VAL* tool can analyze your :term:`CGNS/HDF5` file
 and returns you a list of diagnostics.
 

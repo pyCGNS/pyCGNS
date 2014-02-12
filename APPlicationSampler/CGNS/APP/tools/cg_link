@@ -5,16 +5,106 @@
 #  -------------------------------------------------------------------------
 #
 import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnskeywords as CGK
 import CGNS.MAP as CGM
 
 """
   cg_link [options] 
+  (part of pyCGNS distribution http://pycgns.sourceforge.net)'
 
 """
 import argparse
 
-parser = argparse.ArgumentParser()
+doc1="""
+  Link tool on CGNS/HDF5 files
+"""
+
+doc2="""
+  Examples:
+  
+"""
+
+parser = argparse.ArgumentParser(description=doc1,epilog=doc2,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter,
+                                 usage='%(prog)s [options] file1 file2 ...')
+parser.add_argument("-n","--name",dest="name",
+                    help='grep on node name')
+parser.add_argument("-l","--linkpath",dest="linkpath",
+                    help='grep on a path of a link')
+parser.add_argument("-f","--linkfile",dest="linkfile",
+                    help='grep on a file of a link')
+parser.add_argument('-e','--regexp',action='store_true',
+                    help='args can contain regular expressions (otherwise plain strings only)')
+parser.add_argument('-s','--stop',action='store_true',
+                    help='stop at first found')
+parser.add_argument('-p','--path',action='store_true',
+                    help='return only the path of the matching node, no filename')
+parser.add_argument('files',nargs=argparse.REMAINDER)
 args=parser.parse_args()
+
+
+class Context:
+  def __init__(self):
+    self.name=None
+    self.linkpath=None
+    self.linkfile=None
+    self.regexp=False
+  def initialize(self):
+    if (self.regexp):
+      if (self.name     is not None): self.name=re.compile(self.name)
+      if (self.linkpath is not None): self.linkpath=re.compile(self.linkpath)
+      if (self.linkfile is not None): self.linkfile=re.compile(self.linkfile)
+    
+def openFile(filename):
+    flags=CGM.S2P_NODATA
+    (t,l,p)=CGM.load(filename,flags=flags,maxdata=20)
+    return (t,l,p,filename)
+
+def parseFile(filename,P,C):
+  R=[]
+  T=openFile(filename)
+  searchLinks(T[1],C,R)
+  for p in R:
+    if (C.path): P.append('%s'%(p,))
+    else: C.append('%s:%s'%(T[3],p))
+    if (C.stop): break
+  return P
+
+def checkString(variable,targetlist,re):
+  if (variable is None): return False
+  if (not re):
+    return (variable in targetlist)
+  else:
+    for t in targetlist:
+      if (variable.search(t) is not None): return True
+    return False
+  
+def searchLinks(L,C,R):
+  for l in L:
+    add =(checkString(C.linkpath,[l[2]],C.regexp))
+    add|=(checkString(C.linkfile,[l[1]],C.regexp))
+    if (add):
+      R.append(l[3])
+      if (C.stop): return
+
+P=[]
+C=Context()
+C.name=args.name
+C.path=args.path
+C.stop=args.stop
+C.linkpath=args.linkpath
+C.linkfile=args.linkfile
+C.regexp=args.regexp
+
+for F in args.files:
+  try:
+    parseFile(F,P,C)
+    if (P and C.stop): break
+  except CGM.CHLone.CHLoneException:
+    pass
+
+for p in P:
+  print p
 
 # --- last line
 
