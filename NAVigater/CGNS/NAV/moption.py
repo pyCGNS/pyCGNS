@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 #  -------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
@@ -131,13 +133,13 @@ Copyright (c) Onera - The French Aerospace Labs<br>
 <b>all other copyrights at the end of this page</b>
 
 <h2>Contributors</h2>
-Tristan Soubrié    - Andheo, France <br>
-Grégory Laheurte   - ONERA (DSNA/CS2A)<br>
+Tristan SoubriÃ©    - Andheo, France <br>
+GrÃ©gory Laheurte   - ONERA (DSNA/CS2A)<br>
 Benoit Rodriguez   - ONERA (DAAP/H2T)<br>
 Loic Hauchard      - ONERA (Student INSA Rouen, France)<br>
-Elise Hénaux       - ONERA (Student FIIFO Orsay, France)<br>
+Elise HÃ©naux       - ONERA (Student FIIFO Orsay, France)<br>
 Bill Perkins       - Pacific Northwest National Laboratory, U.S.A.<br>
-Florent Cayré      - SNECMA, France<br>
+Florent CayrÃ©      - SNECMA, France<br>
 Ching-Yang Wang    - U.S.A.<br>
 Alexandre Fayolle  - LOGILAB, France<br>
 Francois Thirifays - CENAERO, Belgique<br>
