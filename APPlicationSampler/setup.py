@@ -25,7 +25,8 @@ incdirs=['%s/lib/python%s/site-packages/numpy/core/include'\
          'CGNS/APP/probe']
 incdirs+=[numpy.get_include()]
 
-slist=['cg_grep','cg_list','cg_link','cg_gather','cg_scatter','cg_stats']
+slist=['cg_grep','cg_list','cg_link','cg_gather','cg_scatter',
+       'cg_scan','cg_look']
 
 extmods=[Extension("CGNS.APP.probe.arrayutils",
                   ["CGNS/APP/probe/arrayutils.pyx",

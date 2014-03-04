@@ -7,6 +7,7 @@
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.MAP as CGM
+import CGNS.version
 
 """
   cg_list [options] 
@@ -21,9 +22,11 @@ import sys
 
 doc1="""
   List tool on CGNS/HDF5 files
-  (part of pyCGNS distribution http://pycgns.sourceforge.net)'
+  (part of pyCGNS distribution http://pycgns.sourceforge.net)
+  pyCGNS v%s
+  
   The result of the list is one line per found file/node.
-"""
+"""%(CGNS.version.id)
 
 doc2="""
   Sort criteria:
@@ -37,45 +40,45 @@ doc2="""
   
 """
 
-parser = argparse.ArgumentParser(description=doc1,epilog=doc2,
-                                 formatter_class=argparse.RawDescriptionHelpFormatter,
-                                 usage='%(prog)s [options] file1 file2 ...')
-parser.add_argument("-V","--version",action='store_true',
-                    help='show version')
-parser.add_argument("-B","--base",action='store_true',
-                    help='number of bases')
-parser.add_argument("-Z","--zone",action='store_true',
-                    help='number of zones')
-parser.add_argument("-S","--structured",action='store_true',
-                    help='number of structured zones')
-parser.add_argument("-U","--unstructured",action='store_true',
-                    help='number of unstructured zones')
-parser.add_argument("-F","--family",action='store_true',
-                    help='number of families')
-parser.add_argument("-L","--links",action='store_true',
-                    help='number of links')
-parser.add_argument("-M","--mega",action='store_true',
-                    help='size of file in Mb')
-parser.add_argument("-G","--giga",action='store_true',
-                    help='size of file in Gb')
-parser.add_argument("-P","--points",action='store_true',
-                    help='total number of points')
-parser.add_argument("-r","--restrict",dest="path",
-                    help='restrict all counts to path subtree')
-parser.add_argument("-t","--title",action='store_true',
-                    help='add columns header')
-parser.add_argument("-k","--keys",action='store_true',
-                    help='show list of keys')
-parser.add_argument("-s","--sort",dest='sort',
-                    help='sort with criteria (see doc below)')
-parser.add_argument("-a","--all",action='store_true',
-                    help='alias for -hVBLZSUWK')
-parser.add_argument("-n","--nolinks",action='store_true',
-                    help='do not follow links')
-parser.add_argument("-f","--force",action='store_true',
-                    help='force parse for very large files > 1Gb')
-parser.add_argument('files',nargs=argparse.REMAINDER)
-args=parser.parse_args()
+pr=argparse.ArgumentParser(description=doc1,epilog=doc2,
+                           formatter_class=argparse.RawDescriptionHelpFormatter,
+                           usage='%(prog)s [options] file1 file2 ...')
+pr.add_argument("-V","--version",action='store_true',
+                help='show version')
+pr.add_argument("-B","--base",action='store_true',
+                help='number of bases')
+pr.add_argument("-Z","--zone",action='store_true',
+                help='number of zones')
+pr.add_argument("-S","--structured",action='store_true',
+                help='number of structured zones')
+pr.add_argument("-U","--unstructured",action='store_true',
+                help='number of unstructured zones')
+pr.add_argument("-F","--family",action='store_true',
+                help='number of families')
+pr.add_argument("-L","--links",action='store_true',
+                help='number of links')
+pr.add_argument("-M","--mega",action='store_true',
+                help='size of file in Mb')
+pr.add_argument("-G","--giga",action='store_true',
+                help='size of file in Gb')
+pr.add_argument("-P","--points",action='store_true',
+                help='total number of points')
+pr.add_argument("-r","--restrict",dest="path",
+                help='restrict all counts to path subtree')
+pr.add_argument("-t","--title",action='store_true',
+                help='add columns header')
+pr.add_argument("-k","--keys",action='store_true',
+                help='show list of keys')
+pr.add_argument("-s","--sort",dest='sort',
+                help='sort with criteria (see doc below)')
+pr.add_argument("-a","--all",action='store_true',
+                help='alias for -hVBLZSUWK')
+pr.add_argument("-n","--nolinks",action='store_true',
+                help='do not follow links')
+pr.add_argument("-f","--force",action='store_true',
+                help='force parse for very large files > 1Gb')
+pr.add_argument('files',nargs=argparse.REMAINDER)
+args=pr.parse_args()
 
 class Entry(object):
   _att={'version':[0.0,' %1s','V',0,0.0,'CGNS/HDF5 version'],

@@ -8,39 +8,36 @@ import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.MAP as CGM
 
-"""
-  cg_link [options] 
-  (part of pyCGNS distribution http://pycgns.sourceforge.net)'
-
-"""
-import argparse
-
 doc1="""
-  Link tool on CGNS/HDF5 files
-"""
+  Browsing and editing links on CGNS/HDF5 files
+  (part of pyCGNS distribution http://pycgns.sourceforge.net)
+  pyCGNS v%s
+"""%(CGNS.version.id) 
+
 
 doc2="""
   Examples:
   
 """
 
-parser = argparse.ArgumentParser(description=doc1,epilog=doc2,
-                                 formatter_class=argparse.RawDescriptionHelpFormatter,
-                                 usage='%(prog)s [options] file1 file2 ...')
-parser.add_argument("-n","--name",dest="name",
-                    help='grep on node name')
-parser.add_argument("-l","--linkpath",dest="linkpath",
-                    help='grep on a path of a link')
-parser.add_argument("-f","--linkfile",dest="linkfile",
-                    help='grep on a file of a link')
-parser.add_argument('-e','--regexp',action='store_true',
-                    help='args can contain regular expressions (otherwise plain strings only)')
-parser.add_argument('-s','--stop',action='store_true',
-                    help='stop at first found')
-parser.add_argument('-p','--path',action='store_true',
-                    help='return only the path of the matching node, no filename')
-parser.add_argument('files',nargs=argparse.REMAINDER)
-args=parser.parse_args()
+import argparse
+pr=argparse.ArgumentParser(description=doc1,epilog=doc2,
+                           formatter_class=argparse.RawDescriptionHelpFormatter,
+                           usage='%(prog)s [options] file1 file2 ...')
+pr.add_argument("-n","--name",dest="name",
+                help='grep on node name')
+pr.add_argument("-l","--linkpath",dest="linkpath",
+                help='grep on a path of a link')
+pr.add_argument("-f","--linkfile",dest="linkfile",
+                help='grep on a file of a link')
+pr.add_argument('-e','--regexp',action='store_true',
+                help='args can contain regular expressions')
+pr.add_argument('-s','--stop',action='store_true',
+                help='stop at first found')
+pr.add_argument('-p','--path',action='store_true',
+                help='return only the path of the matching node, no filename')
+pr.add_argument('files',nargs=argparse.REMAINDER)
+args=pr.parse_args()
 
 
 class Context:

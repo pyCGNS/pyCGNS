@@ -10,5 +10,7 @@ __release__=pyCGNSconfig.__release__
 __vid__=pyCGNSconfig.__vid__
 __doc__=pyCGNSconfig.__doc__
 version=__vid__
+id=__vid__
+
 #
 # --- last line
