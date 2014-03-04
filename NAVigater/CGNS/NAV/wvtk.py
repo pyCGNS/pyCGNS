@@ -31,6 +31,7 @@ import random
 import vtk
 vers=vtk.vtkVersion()
 VTK_VERSION_MINOR=vers.GetVTKMinorVersion()
+VTK_VERSION_MAJOR=vers.GetVTKMajorVersion()
 
 # ----------------------------------------------------------------------------
 class wVTKContext():
@@ -68,9 +69,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._control=control
       if (not self.wCGNSTreeParse(fgprint.tree,zlist)): return
       self._vtkstatus=True
-      if (VTK_VERSION_MINOR<8):
+      if (VTK_VERSION_MAJOR<6):
           MSG.wError(self._control,
-                     2376,"Your VTK version is lower than v5.8, if you have hexahedron in your mesh they cannot be display","Oups...")
+                     2376,"Your VTK version is lower than v6.0, you should consider upgrading","Oups...")
+          if (VTK_VERSION_MINOR<8):
+              MSG.wError(self._control,
+                         2377,"Your VTK version is lower than v5.8, if you have hexahedron in your mesh they cannot be display","Oups...")
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,fgprint)
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
       self._epix=QIcon(QPixmap(":/images/icons/empty.png"))
@@ -211,11 +215,15 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       bds[2]=(bounds[5]+bounds[4])/2.0
       grid=self._currentactor[1].GetMapper().GetInput()
       filter=vtk.vtkStructuredGridGeometryFilter()
-      filter.SetInputConnection(grid.GetProducerPort())
+      if (VTK_VERSION_MAJOR<6): filter.SetInput(grid)
+      else:                     filter.SetInputData(grid)
       self.planeWidget.SetPlaceFactor(1.0)
       self.planeWidget.GetOutlineProperty().SetColor(0,1,1)
       self.planeWidget.OutlineTranslationOff()
-      self.planeWidget.SetInput(filter.GetOutput())
+      if (VTK_VERSION_MAJOR<6):
+          self.planeWidget.SetInput(filter.GetOutput())
+      else:
+          self.planeWidget.SetInputConnection(filter.GetOutputPort())
       self.planeWidget.PlaceWidget()
       self.planeWidget.SetOrigin(bds[0],bds[1],bds[2])
       self.planeWidget.SetNormal(1,0,0)
@@ -239,10 +247,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       plane.SetNormal(normal)
       grid=self._currentactor[1].GetMapper().GetInput()
       filter=vtk.vtkStructuredGridGeometryFilter()
-      filter.SetInputConnection(grid.GetProducerPort())
+      if (VTK_VERSION_MAJOR<6): filter.SetInput(grid)
+      else:                     filter.SetInputData(grid)
       cutter=vtk.vtkCutter()
       cutter.SetCutFunction(plane)
-      cutter.SetInput(grid)
+      if (VTK_VERSION_MAJOR<6): filter.SetInput(grid)
+      else:                     filter.SetInputData(grid)
       cutter.Update()
       cutterMapper=vtk.vtkPolyDataMapper()
       cutterMapper.SetInputConnection(cutter.GetOutputPort())
@@ -885,7 +895,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       actors.InitTraversal()
       actor = actors.GetNextItem()
       while actor:
-          w.SetInput(actor.GetMapper().GetInput())
+          if (VTK_VERSION_MAJOR<6): w.SetInput(actor.GetMapper().GetInput())
+          else:                     w.SetInputData(actor.GetMapper().GetInput())
           actor = actors.GetNextItem()
       w.Write()
 
@@ -1144,7 +1155,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.CurrentRenderer=self._vtkren
       self.Outline=vtk.vtkOutlineSource()
       self.OutlineMapper=vtk.vtkPolyDataMapper()
-      self.OutlineMapper.SetInput(self.Outline.GetOutput())
+      if (VTK_VERSION_MAJOR<6):
+          self.OutlineMapper.SetInput(self.Outline.GetOutput())
+      else:
+          self.OutlineMapper.SetInputConnection(self.Outline.GetOutputPort())
       if (not self.PickedRenderer is None and not self.OutlineActor is None):
           self.PickedRenderer.RemoveActor(self.OutlineActor)
           self.PickedRenderer=None
@@ -1191,7 +1205,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (grid is None): return
       (i,j,k)=index
       filter=vtk.vtkStructuredGridGeometryFilter()
-      filter.SetInputConnection(grid.GetProducerPort())
+      if (VTK_VERSION_MAJOR<6): filter.SetInput(grid)
+      else:                     filter.SetInputData(grid)
       filter.SetExtent(i-1,i-1,j-1,j-1,k-1,k-1)
       mapper=vtk.vtkPolyDataMapper()
       mapper.SetInputConnection(filter.GetOutputPort())
@@ -1209,7 +1224,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self._vtkren.RemoveActor(self.actorpt)
       if (grid is None): return
       filter=vtk.vtkUnstructuredGridGeometryFilter()
-      filter.SetInputConnection(grid.GetProducerPort())
+      if (VTK_VERSION_MAJOR<6): filter.SetInput(grid)
+      else:                     filter.SetInputData(grid)
       filter.CellClippingOn()
       filter.SetCellMinimum(cellid)
       filter.SetCellMaximum(cellid)
@@ -1239,13 +1255,20 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       selection=vtk.vtkSelection()
       selection.AddNode(selectionNode) 
       extractSelection = vtk.vtkExtractSelection()
-      extractSelection.SetInputConnection(0,grid.GetProducerPort())
-      extractSelection.SetInput(1,selection)
+      if (VTK_VERSION_MAJOR<6):
+          extractSelection.SetInput(0,grid)
+          extractSelection.SetInput(1,selection)
+      else:
+          extractSelection.SetInputData(0,grid)
+          extractSelection.SetInputData(1,selection)
       extractSelection.Update()
       selected=vtk.vtkUnstructuredGrid()
       selected.ShallowCopy(extractSelection.GetOutput())
       selectedMapper=vtk.vtkDataSetMapper()
-      selectedMapper.SetInputConnection(selected.GetProducerPort())
+      if (VTK_VERSION_MAJOR<6):
+          selectedMapper.SetInput(selected)
+      else:
+          selectedMapper.SetInputData(selected)
       self.actorpt=vtk.vtkActor()
       self.actorpt.SetMapper(selectedMapper)
       self.actorpt.GetProperty().SetColor(0,1,0)
@@ -1269,13 +1292,20 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       selection=vtk.vtkSelection()
       selection.AddNode(selectionNode) 
       extractSelection = vtk.vtkExtractSelection()
-      extractSelection.SetInputConnection(0,grid.GetProducerPort())
-      extractSelection.SetInput(1,selection)
+      if (VTK_VERSION_MAJOR<6):
+          extractSelection.SetInput(0,grid)
+          extractSelection.SetInput(1,selection)
+      else:
+          extractSelection.SetInputData(0,grid)
+          extractSelection.SetInputData(1,selection)
       extractSelection.Update()
       selected=vtk.vtkUnstructuredGrid()
       selected.ShallowCopy(extractSelection.GetOutput())
       selectedMapper=vtk.vtkDataSetMapper()
-      selectedMapper.SetInputConnection(selected.GetProducerPort())
+      if (VTK_VERSION_MAJOR<6):
+          selectedMapper.SetInput(selected)
+      else:
+          selectedMapper.SetInputData(selected)
       self.actorpt=vtk.vtkActor()
       self.actorpt.SetMapper(selectedMapper)
       self.actorpt.GetProperty().SetColor(0,1,0)
@@ -2034,7 +2064,8 @@ class Q7VTKPlot(Q7Window,Ui_Q7VTKPlotWindow):
       actors.InitTraversal()
       actor=actors.GetNextItem()
       while actor:
-          w.SetInput(actor.GetMapper().GetInput())
+          if (VTK_VERSION_MAJOR<6): w.SetInput(actor.GetMapper().GetInput())
+          else:                     w.SetInputData(actor.GetMapper().GetInput())
           actor=actors.GetNextItem()
       w.Write()   
                            

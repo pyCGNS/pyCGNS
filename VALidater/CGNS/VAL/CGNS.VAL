@@ -79,7 +79,8 @@ elif (klist):
 else:
   if (verbose):
     print '### Loading file [%s]'%filename
-  (tree,links,paths)=CGNS.MAP.load(filename,flags=CGNS.MAP.S2P_DEFAULTS,
+  (tree,links,paths)=CGNS.MAP.load(filename,
+                                   flags=CGNS.MAP.S2P_DEFAULTS|CGNS.MAP.S2P_NODATA,
                                    lksearch=['.'],maxdata=200)
   checkdiag=CGV.run(tree,verbose,userlist)
   CGV.showDiag(checkdiag,idlist,bypath=pathsort)

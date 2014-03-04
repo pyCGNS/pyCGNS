@@ -20,7 +20,7 @@ import vtk.util.numpy_support as vtknpy
 
 vers=vtk.vtkVersion()
 VTK_VERSION_MINOR=vers.GetVTKMinorVersion()
-
+VTK_VERSION_MAJOR=vers.GetVTKMajorVersion()
 
 FAMILY_PATTERN=' :[%s]'
 
@@ -306,7 +306,8 @@ class Mesh(CGNSparser):
     g.SetPoints(pts)
     g.SetExtent(0,idim-1,0,jdim-1,0,kdim-1)
     d=vtk.vtkDataSetMapper()
-    d.SetInput(g)
+    if (VTK_VERSION_MAJOR<6): d.SetInput(g)
+    else:                     d.SetInputData(g)
     a=Q7vtkActor('Zone')
     a.SetMapper(d)
     a.GetProperty().SetRepresentationToWireframe()
@@ -372,7 +373,8 @@ class Mesh(CGNSparser):
     qp=vtk.vtkPoints()
     sg.SetPoints(qp)
     am = vtk.vtkDataSetMapper()
-    am.SetInput(sg)
+    if (VTK_VERSION_MAJOR<6): am.SetInput(sg)
+    else:                     am.SetInputData(sg)
     a = Q7vtkActor('Min/Max')
     a.SetMapper(am)
     a.GetProperty().SetRepresentationToWireframe()
@@ -409,7 +411,8 @@ class Mesh(CGNSparser):
       n+=1
     sg.SetPoints(qp)
     am = vtk.vtkDataSetMapper()
-    am.SetInput(sg)
+    if (VTK_VERSION_MAJOR<6): am.SetInput(sg)
+    else:                     am.SetInputData(sg)
     a = Q7vtkActor('BC')
     a.SetMapper(am) 
     a.GetProperty().SetRepresentationToWireframe()
@@ -455,7 +458,8 @@ class Mesh(CGNSparser):
           e+=1
         sg.SetPoints(qp)    
         am = vtk.vtkDataSetMapper()
-        am.SetInput(sg)
+        if (VTK_VERSION_MAJOR<6): am.SetInput(sg)
+        else:                     am.SetInputData(sg)
         a = Q7vtkActor()
         a.SetMapper(am)
         a.GetProperty().SetRepresentationToWireframe()

@@ -364,7 +364,7 @@ def QVTKRenderWidgetConeExample():
     cone.SetResolution(8)
 
     coneMapper = vtk.vtkPolyDataMapper()
-    coneMapper.SetInput(cone.GetOutput())
+    coneMapper.SetInputData(cone.getOutputPort())
 
     coneActor = vtk.vtkActor()
     coneActor.SetMapper(coneMapper)
