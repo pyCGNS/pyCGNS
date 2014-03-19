@@ -1119,6 +1119,8 @@ def getNodeByPath(tree,path):
       concatenation of children node names (and then recurse)
      
   """
+  path=getPathNormalize(path)
+  if (path in ['','/','.']): return tree
   if (not checkPath(path)): return None
   lpath=path.split('/')
   absolute=False
@@ -1130,10 +1132,7 @@ def getNodeByPath(tree,path):
     if (lpath[0]==CK.CGNSTree_s):
       if (len(lpath)==1): return T
       lpath=lpath[1:]
-  elif absolute:
-    T=[CK.CGNSTree_s,None,[tree],CK.CGNSTree_ts]
-  else:
-    T=tree  
+  T=[None,None,[tree],None]
   n=getNodeFromPath(lpath,T)
   if (n==-1): return None
   return n
@@ -2261,30 +2260,6 @@ def getEnumAsString(node):
     
 # -----------------------------------------------------------------------------
 def hasEnumValue(node):
-<<<<<<< variant A
-  # """
-  # Checks if the node type allows a SIDS enum value::
-  #   if (hasEnumValue(node)):
-  #     print getEnumAsString(node)
-  # :arg CGNS/Pytohn node: target node
-  # :return: True if the node value is a SIDS enumerate
-  # :Remarks:
-  #   - See also :py:func:`getEnumAsString`
-  # """
->>>>>>> variant B
-  """
-  Checks if the node type allows a SIDS enum value::
-
-    if (hasEnumValue(node)):
-      print getEnumAsString(node)
-
-  :arg CGNS/Pytohn node: target node
-  :return: True if the node value is a SIDS enumerate
-  :Remarks:
-    - See also :py:func:`getEnumAsString`
-  
-  """
-======= end
   # """
   # Checks if the node type allows a SIDS enum value::
   #   if (hasEnumValue(node)):
