@@ -22,15 +22,27 @@ class CGNSPythonChildren(list):
 
 # -----------------------------------------------------------------------------
 class CGNSPython(object):
+  """
+  A CGNS/Python object
+  """
   def __init__(self,node,parent=None):
     self.__node=node
     self.__parent=parent
   @property
   def name(self):
+    """
+    Name of the node (node[0])
+    """
     return self.__node[0]
   @property
-  def type(self):
+  def sidstype(self):
     return self.__node[3]
+  @property
+  def sids(self):
+    return self.sidstype
+  @property
+  def value(self):
+    return self.data
   @property
   def data(self):
     return self.__node[1]
@@ -43,11 +55,21 @@ class CGNSPython(object):
   @property
   def children(self):
     return self.__node[2]
-  def nextChild(self):
+  def nextChild(self,sidstype=None,namepattern=None):
     for c in self.__node[2]:
-       n=CGNSPython(c)
-       n.parent=self
-       yield n
+      take=False
+      if (sidstype is not None):
+        if (((type(sidstype)==list) and (c[3] in sidstype)) or ((type(sidstype)==str) and (c[3]==sidstype))):
+          take=True
+      else:
+        take=True
+      if (take):
+        n=CGNSPython(c)
+        n.parent=self
+        yield n
+  @property 
+  def node(self):
+    return self.__node
   @property 
   def parent(self):
     return self.__parent

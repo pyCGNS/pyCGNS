@@ -25,7 +25,7 @@ def listuserkeys(trace):
 
 def getParser(trace,user):
     if (user is not None):
-        mod=CGNS.VAL.parse.findgrammar.importUserGrammars(user)
+        mod=CGNS.VAL.parse.findgrammar.importUserGrammars(user,verbose=trace)
         if (mod is None):
             if (trace): print '### Using grammar [DEFAULT]'
             parser=CGV.CGNS_VAL_USER_Checks(None)

@@ -4,19 +4,38 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+import os
+import sys
+import subprocess
+
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.MAP as CGM
+import CGNS.version
 
 doc1="""
   Browsing and editing links on CGNS/HDF5 files
   (part of pyCGNS distribution http://pycgns.sourceforge.net)
   pyCGNS v%s
+
+  Warning: translation of ADF files is made *in place*, in other word if a link
+  with the path '/A/C/D.adf' is found, its translation is '/A/C/D.hdf'. Then
+  it requires correct access rights, disk place and so on...
+
+  Warning: translation of ADF files requires the cgnsconvert tool, can be
+  found on http://www.cgns.org tools
+  
 """%(CGNS.version.id) 
 
 
 doc2="""
   Examples:
+
+  * Recursively translates all ADF files (as far as you have cgnsconvert) and
+  sets the linked-to file names to these in-place translated files. The
+  verbose mode makes cg_link to print all parsed files:
+  
+  cg_link -vt 124Disk.cgns
   
 """
 
@@ -24,33 +43,21 @@ import argparse
 pr=argparse.ArgumentParser(description=doc1,epilog=doc2,
                            formatter_class=argparse.RawDescriptionHelpFormatter,
                            usage='%(prog)s [options] file1 file2 ...')
-pr.add_argument("-n","--name",dest="name",
-                help='grep on node name')
-pr.add_argument("-l","--linkpath",dest="linkpath",
-                help='grep on a path of a link')
-pr.add_argument("-f","--linkfile",dest="linkfile",
-                help='grep on a file of a link')
-pr.add_argument('-e','--regexp',action='store_true',
-                help='args can contain regular expressions')
-pr.add_argument('-s','--stop',action='store_true',
-                help='stop at first found')
+pr.add_argument("-t","--translate",action='store_true',
+                help='translates ADF to HDF and propagates through links')
+pr.add_argument('-l','--linklist',action='store_true',
+                help='list all link entries')
 pr.add_argument('-p','--path',action='store_true',
                 help='return only the path of the matching node, no filename')
+pr.add_argument('-v','--verbose',action='store_true',
+                help='trace mode')
 pr.add_argument('files',nargs=argparse.REMAINDER)
 args=pr.parse_args()
 
 
 class Context:
   def __init__(self):
-    self.name=None
-    self.linkpath=None
-    self.linkfile=None
-    self.regexp=False
-  def initialize(self):
-    if (self.regexp):
-      if (self.name     is not None): self.name=re.compile(self.name)
-      if (self.linkpath is not None): self.linkpath=re.compile(self.linkpath)
-      if (self.linkfile is not None): self.linkfile=re.compile(self.linkfile)
+    self.converter=None
     
 def openFile(filename):
     flags=CGM.S2P_NODATA
@@ -58,13 +65,20 @@ def openFile(filename):
     return (t,l,p,filename)
 
 def parseFile(filename,P,C):
+  C.depth+=1
   R=[]
   T=openFile(filename)
-  searchLinks(T[1],C,R)
+  LK=T[1]
+  if (C.translate): LK=transLinks(filename,LK,P,C)
+  searchLinks(LK,C,R)
   for p in R:
     if (C.path): P.append('%s'%(p,))
-    else: C.append('%s:%s'%(T[3],p))
-    if (C.stop): break
+    else: P.append('%s:%s'%(T[3],p))
+  for l in LK:
+    if (l[0]==''): FH=l[1]
+    else: FH="%s/%s"%(l[0],l[1])
+    parseFile(FH,P,C)
+  C.depth-=1    
   return P
 
 def checkString(variable,targetlist,re):
@@ -78,30 +92,83 @@ def checkString(variable,targetlist,re):
   
 def searchLinks(L,C,R):
   for l in L:
-    add =(checkString(C.linkpath,[l[2]],C.regexp))
-    add|=(checkString(C.linkfile,[l[1]],C.regexp))
-    if (add):
+    add=True
+    if (add or C.linklist):
       R.append(l[3])
-      if (C.stop): return
+      
+def asHDFname(FA,C):
+  return os.path.splitext(FA)[0]+C.exthdf
+
+def convertInPlace(FA,FH,C):
+  if (not os.path.exists(FA)):
+    if (C.verbose):
+      print('   '*C.depth+" Error: Unreachable file: %s"%FA)
+    return False
+  elif (not CGM.probe(FA)):
+    subprocess.check_output([C.converter,"-h",FA,FH])
+    return True
+  else:
+    if (C.verbose):
+      print('   '*C.depth+" Error: Mixing links to ADF and HDF files...")
+    return False
+
+def transLinks(filename,L,P,C):
+  LH=[]
+  for l in L:
+    LN=asHDFname(l[1],C)
+    if (l[0]==''): FA=l[1]
+    else: FA="%s/%s"%(l[0],l[1])
+    if (C.verbose): print '   '*C.depth,'->',FA
+    FH=asHDFname(FA,C)
+    if (convertInPlace(FA,FH,C)):
+      LH.append([l[0],LN,l[2],l[3]])
+  (t,l,p)=CGM.load(filename)
+  CGM.save(filename,t,links=LH)
+  return LH
 
 P=[]
 C=Context()
-C.name=args.name
+C.translate=args.translate
+C.exthdf='.hdf'
+C.verbose=args.verbose
+C.depth=0
 C.path=args.path
-C.stop=args.stop
-C.linkpath=args.linkpath
-C.linkfile=args.linkfile
-C.regexp=args.regexp
+C.linklist=args.linklist
 
+if (C.translate):
+  try:
+    cgc=subprocess.check_output(["which","cgnsconvert"])
+  except:
+    try:
+      cgc=subprocess.check_output(["whence","cgnsconvert"])
+    except:
+      cgc=None
+  if (cgc is None):
+    if (C.verbose):
+      print("cg_link Error: Cannot find 'cgnsconvert' in the PATH")
+    sys.exit(1)
+  C.converter=cgc[:-1]
+
+if (C.verbose): excpt=IndexError
+else: excpt=CGM.CHLone.CHLoneException
 for F in args.files:
   try:
-    parseFile(F,P,C)
-    if (P and C.stop): break
-  except CGM.CHLone.CHLoneException:
-    pass
+    if (C.translate):
+      FA=F
+      FH=asHDFname(FA,C)
+      convertInPlace(FA,FH,C)
+    else:
+      FH=F
+    if (C.verbose): print 'Start:',FH
+    parseFile(FH,P,C)
+  except excpt: pass
 
-for p in P:
-  print p
+if (C.linklist):
+  L=set()
+  for p in P: L.add(p)
+  L=list(L)
+  L.sort()
+  for p in L: print p
 
 # --- last line
 

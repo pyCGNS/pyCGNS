@@ -10,6 +10,23 @@ The *ApplicationSampler* module is an informal set of tools, examples,
 utilities, tests... Some libraries or tools are often tested in this
 module and eventually go to ``PAT``.
 
+The **cg_** tools are using pyCGNS, see below the updated list of
+available tools:
+
++-------------+--------------------------------------------------------+
++-------------+--------------------------------------------------------+
+| ``cg_look`` | Another name for *CGNS.NAV*                            |
++-------------+--------------------------------------------------------+
+| ``cg_scan`` | Another name for *CGNS.VAL*                            |
++-------------+--------------------------------------------------------+
+| ``cg_list`` | A kind of Unix *ls* for CGNS/HDF5 files                |
++-------------+--------------------------------------------------------+
+| ``cg_grep`` | Finds nodes with respect to *à-la-grep* criteria       |
++-------------+--------------------------------------------------------+
+| ``cg_link`` | Finds and recursively edit links in CGNS/HDF5 files    |
++-------------+--------------------------------------------------------+
+
+
 .. -----
 
 .. toctree::

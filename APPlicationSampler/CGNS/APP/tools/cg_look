@@ -72,8 +72,6 @@ doc2="""
 import argparse
 import re
 
-files=''
-
 pr=argparse.ArgumentParser(description=doc1,
                            epilog=doc2,
                            formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -110,6 +108,7 @@ except KeyError:
 if (args.path is not None): ppath=Q.path
 
 flags=(args.recurse,args.last,args.verbose,args.graphic,args.querylist)
+files=args.files
 
 import CGNS.NAV.script
 CGNS.NAV.script.run(sys.argv,files,flags,ppath,args.query)

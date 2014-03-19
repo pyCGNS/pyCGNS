@@ -79,9 +79,29 @@ def findOneUserGrammar(tag,verbose=False):
 def importUserGrammars(key,recurse=False,verbose=False):
   mod=None
   modname='CGNS_VAL_USER_%s'%key
+  prog=sys.argv[0]
+  dpref='./'
+  if (prog[0]=='/'):
+    dpref=os.path.dirname(prog)
+  else:
+    for pp in os.environ['PATH'].split(':'):
+      if (os.path.exists("%s/%s"%(pp,prog))):
+        dpref=os.path.dirname("%s/%s"%(pp,prog))
+        break
+  ppref=dpref+'/../lib/python%s/site-packages'%sys.version[:3]
+  ppref=os.path.normpath(os.path.abspath(ppref))
+  if (ppref+'/CGNS/PRO' not in sys.path):
+    sys.path.append(ppref+'/CGNS/VAL/grammars')
+  if (ppref+'/CGNS/PRO' not in sys.path):
+    sys.path.append(ppref+'/CGNS/PRO')
+  ipath='%s/lib/python%s.%s/site-packages/CGNS/PRO'%\
+         (sys.prefix,sys.version_info[0],sys.version_info[1])
+  sys.path.append(ipath)
   ipath='%s/lib/python%s.%s/site-packages/CGNS/VAL/grammars'%\
          (sys.prefix,sys.version_info[0],sys.version_info[1])
   sys.path.append(ipath)
+
+  print sys.path
   if (verbose): print '### Looking for grammar [%s]'%key
   try:
     tp=imp.find_module(modname)

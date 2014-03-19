@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 # -------------------------------------------------------------------------
 # pyCGNS.PAT - CFD General Notation System -

@@ -11,8 +11,6 @@ import CGNS.PAT.cgnsutils    as CU
 
 import numpy as NPY
 
-__CGNS_LIBRARY_VERSION__=3.2
-
 # =============================================================================
 # MLL-like calls
 # - every call takes a parent as argument. If the parent is present, the new
@@ -26,29 +24,39 @@ __CGNS_LIBRARY_VERSION__=3.2
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-def newCGNSTree():
+def newCGNSTree(version=CK.CGNSLIBRARYVERSION):
   """
-  Top CGNS/Python tree node creation::
+  Top CGNS/Python tree node creation, not a CGNS/SIDS type::
 
     T=newCGNSTree()
 
+  :param float32 version: force the CGNSLibraryVersion
   :return: a new :ref:`XCGNSTree_t` node
   :Remarks:
-   - You *should* keep the returned node in a variable or reference to it in
-     any other way, this tree root is a Python object that would be garbagged
-     if its reference count reaches zero.
-   - The `CGNSTree` node is a CGNS/Python node which has no existence in a
-     disk HDF5 file.
-   
+    - You *should* keep the returned node in a variable or reference to it in
+      any other way, this tree root is a Python object that would be garbagged
+      if its reference count reaches zero.
+    - The `CGNSTree` node is a CGNS/Python node which has no existence in a
+      disk HDF5 file.
+    - Default version is taken from CGNS.PAT.cgnskeywords
   :Children:
     - :py:func:`newCGNSBase`
 
   """
-  return newCGNS()
+  return newCGNS(version)
 
+def newCGNS(version=CK.CGNSLIBRARYVERSION):
+  node=[CK.CGNSLibraryVersion_s,
+        NPY.array([version],dtype='float32'),
+        [],
+        CK.CGNSLibraryVersion_ts]
+  badnode=[CK.CGNSTree_s,None,[node],CK.CGNSTree_ts]
+  return badnode
+
+# -----------------------------------------------------------------------------
 def newCGNSBase(tree,name,ncell,nphys):
   """
-  *CGNSBase* node creation::
+  *CGNSBase* node creation, the top node for topological contents::
 
     # The base is put in the `T` children list
     T=newCGNSTree()
@@ -56,6 +64,11 @@ def newCGNSBase(tree,name,ncell,nphys):
 
     # No parent, you should fetch the new node using a variable
     B=newCGNSBase(None,'Box-2',3,3)
+
+    # using tuple de-ref
+    dims=(3,3)
+    B=newCGNSBase(None,'Box-3',*dims)
+    
   
   :arg CGNS/Python node: the parent node (`<node>` or `None`)
   :arg str name: base name 
@@ -64,28 +77,237 @@ def newCGNSBase(tree,name,ncell,nphys):
   :return: a new :ref:`XCGNSBase_t` node
   :Children:
     - :py:func:`newZone`
-  :raise: 10,11,12,6
+    - :py:func:`newFamily`
+    - :py:func:`newReferenceState`
+    - :py:func:`newFlowEquationSet`
+    - :py:func:`newConvergenceHistory`
+  :See:
+    - :rsids:`SIDS CGNSBase <cgnsbase#CGNSBase>` 
 
   """
   return newBase(tree,name,ncell,nphys)
 
-def newCGNS():
-  ##code correction: Modify CGNS value type from float64 to float32.
-  node=[CK.CGNSLibraryVersion_s,
-        NPY.array([__CGNS_LIBRARY_VERSION__],dtype='float32'),
-        [],
-        CK.CGNSLibraryVersion_ts]
-  badnode=[CK.CGNSTree_s,None,[node],CK.CGNSTree_ts]
-  return badnode
+def newBase(tree,name,ncell,nphys):
+  if (ncell not in [1,2,3]): raise CE.cgnsException(10,name)
+  if (nphys not in [1,2,3]): raise CE.cgnsException(11,name)
+  if (nphys < ncell):        raise CE.cgnsException(12,name)
+  if ((tree != None) and (not CU.checkNode(tree))):
+     raise CE.cgnsException(6,name)
+  if ((tree != None) and (tree[0] == CK.CGNSTree_s)): parent=tree[2]  
+  else:                                              parent=tree
+  CU.checkDuplicatedName(["<root node>",None,parent],name)
+  node=CU.newNode(name,
+               NPY.array([ncell,nphys],dtype=NPY.int32,order='Fortran'),
+               [],CK.CGNSBase_ts)
+  if (parent != None): parent.append(node)
+  return node
+
+def numberOfBases(tree):
+  return len(CU.hasChildrenType(tree,CK.CGNSBase_ts))
+
+def readBase(tree,name):
+  b=CU.hasChildName(tree,name)
+  if (b == None): raise CE.cgnsException(21,name)
+  if (b[3] != CK.CGNSBase_ts):
+    raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
+  return (b[0],b[1])
+  
+def updateBase(tree,name=None,ncell=None,nphys=None):
+  if (ncell not in [1,2,3]): raise CE.cgnsException(10,name)
+  if (nphys not in [1,2,3]): raise CE.cgnsException(11,name)
+  if (nphys < ncell):        raise CE.cgnsException(12,name)
+  
+  if (tree): CU.checkNode(tree)
+
+  if (tree[3] != CK.CGNSBase_ts):
+    raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
+  if(name!=None): tree[0]=name
+  if(ncell!=None and nphys!=None and tree):
+    tree[1]=NPY.array([ncell,nphys],dtype=NPY.int32,order='Fortran')
+  else: raise CE.cgnsException(12)  
+  
+# -----------------------------------------------------------------------------
+def newZone(parent,name,zsize=None,
+            ztype=CK.Structured_s,
+            family=''):
+  """
+  *Zone* node creation, the sub-tree defining a topological domain::
+
+    s=NPY.array([[10],[2],[0]],dtype='i')
+    
+    T=newCGNSTree()
+    B=newBase(T,'Box-1',3,3)
+    Z=newZone(B,name,s,CK.Unstructured_s,'Wing')
+  
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: zone name
+  :arg ndarray size: array of zone dimensions
+  :arg str zonetype: type of the zone
+  :arg str family: main FamilyName of the zone
+  :return: a new :ref:`XZone_t` node
+  :Children:
+    - :py:func:`newElements`
+  :Remarks:
+    - The zone size has dimensions [IndexDimensions][3]
+  :See:
+    - :rsids:`SIDS Zone <cgnsbase#Zone>` 
+   
+  """
+  asize=None
+  if (ztype not in CK.ZoneType_l): raise CE.cgnsException(206,ztype)
+  if (zsize == None): raise CE.cgnsException(300) 
+  CU.checkDuplicatedName(parent,name)
+  CU.checkArray(zsize,dienow=True)
+  znode=CU.newNode(name,zsize,[],CK.Zone_ts,parent)
+  CU.newNode(CK.ZoneType_s,CU.setStringAsArray(ztype),[],CK.ZoneType_ts,znode)
+  if (family):
+    CU.newNode(CK.FamilyName_s,
+               CU.setStringAsArray(family),[],CK.FamilyName_ts,znode)
+  return znode
+
+def numberOfZones(tree,basename):
+  b=CU.hasChildName(tree,basename)
+  if (b == None): raise CE.cgnsException(21,basename)
+  if (b[3] != CK.CGNSBase_ts): raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
+  return len(CU.hasChildrenType(b,CK.Zone_ts))
+
+def readZone(tree,basename,zonename,gtype=None):
+  b=CU.hasChildName(tree,basename)
+  if (b == None): raise CE.cgnsException(21,basename)
+  if (b[3] != CK.CGNSBase_ts): raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
+  z=CU.hasChildName(b,zonename)
+  if (z == None): raise CE.cgnsException(21,zonename)
+  if (z[3] != CK.Zone_ts): raise CE.cgnsException(20,(CK.Zone_ts,name))
+  if gtype: 
+    zt=CU.hasChildName(z,CK.ZoneType_s)
+    if (zt == None): raise CE.cgnsException(21,CK.ZoneType_s)
+    return (z[0],z[1],zt[1])
+  else:
+    return (z[0],z[1])
+
+def typeOfZone(tree,basename,zonename):
+  return readZone(tree,basename,zonename,1)[2]
+
+# -----------------------------------------------------------------------------
+def newGridCoordinates(parent,name):
+  """
+  *GridCoordinates* node creation, container for coordinates::
+  
+    newGridCoordinates(zone,CK.GridCoordinates_s)
+    newDataArray(gc,CK.CoordinateX_s)
+    newDataArray(gc,CK.CoordinateY_s)
+    newDataArray(gc,CK.CoordinateZ_s)
+  
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: new node name
+  :return: a new :ref:`XGridCoordinates_t` node
+  :Remarks:
+    - Creates only the grid node, you have to use :py:func:`newDataArray` to
+      add the actual coordinates as children arrays. You can also use the
+      :py:func:`newCoordinates` function, it creates this *GridCoordinates*
+      node if missing, at the first coordinate add.
+  :See:
+    - :rsids:`SIDS GridCoordinates <gridflow#GridCoordinates>` 
+
+  """
+  node=CU.newNode(name,None,[],CK.GridCoordinates_ts,parent)
+  return node
+  
+# -----------------------------------------------------------------------------
+def newCoordinates(parent,name=CK.GridCoordinates_s,value=None):
+  """
+  *GridCoordinates_t* and *DataArray_t* nodes creation::
+  
+    cx=newCoordinates(zone,CK.CoordinateX_s,x_array)
+    cy=newCoordinates(zone,CK.CoordinateY_s,y_array)
+    cz=newCoordinates(zone,CK.CoordinateZ_s,z_array)
+
+    # the following function sequence performs the same action   
+    gc=newGridCoordinates(zone,CK.GridCoordinates_s)
+    newDataArray(gc,CK.CoordinateX_s,x_array)
+    newDataArray(gc,CK.CoordinateY_s,y_array)
+    newDataArray(gc,CK.CoordinateZ_s,z_array)
+
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: new node name
+  :arg ndarray value: the coordinates array to set
+  :return: The returned node always is the :ref:`XDataArray_t` node.
+  :Remarks:
+    - Creates a new <node> representing a GridCoordinates_t sub-tree with
+      the coordinate DataArray given as argument. This creates both the
+      GridCoordinates_t with GridCoordinates name and DataArray_t with the
+      argument name. Usually used to create the default grid.
+      If the GridCoordinates_t with name GridCoordinates already exists then
+      only the DataArray is created.
+    - Array dims are not checked, should be consistent with zone dims
+  :See:
+    - :rsids:`SIDS GridCoordinates <gridflow#GridCoordinates>` 
+
+  """
+  CU.checkDuplicatedName(parent,name)
+  gnode=CU.hasChildName(parent,CK.GridCoordinates_s)
+  if (gnode == None): gnode=newGridCoordinates(parent,CK.GridCoordinates_s)
+  node=newDataArray(gnode,name,value)
+  return node
+  
+# -----------------------------------------------------------------------------
+def newDataArray(parent,name,value=None):
+  """
+  *DataArray* node creation, the all purpose array node::
+  
+    import numpy as NPY
+
+    da=newDataArray(dd,'{DataArray}',value=NPY.array(((1,3),(5,7)),dtype='d'))
+
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: array name 
+  :return: a new :ref:`XDataArray_t` node
+  :See:
+    - :rsids:`SIDS DataArray <data#DataArray>` 
+
+  """
+  CU.checkDuplicatedName(parent,name)
+  ## code correction:  Add value type and fortran order
+  ## code correction:  Add a specific array for string type
+  ## code correction:  Modify array check
+  if (type(value)==type(3)):
+    vv=NPY.array([value],dtype=NPY.int32,order='Fortran')
+    CU.checkArray(vv)
+  elif(type(value)==type(3.2)):
+    vv=NPY.array([value],dtype=NPY.float32,order='Fortran')
+    CU.checkArray(vv)
+  elif(type(value)==type("s")):
+    vv=CU.setStringAsArray(value)
+    CU.checkArrayChar(vv)
+  else:
+    vv=value
+    if (vv != None): CU.checkArray(vv)
+    
+  node=CU.newNode(name,vv,[],CK.DataArray_ts,parent)
+  return node
+
+def numberOfDataArrays(parent):
+  return len(CU.hasChildrenType(parent,CK.DataArray_ts))
+
+def readDataArray(parent,name):
+  n=CU.hasChildName(parent,name)
+  if (n == None): raise CE.cgnsException(21,name)
+  if (n[3] != CK.DataArray_ts):
+    raise CE.cgnsException(20,(CK.DataArray_ts,name))
+  return n[1]
 
 # -----------------------------------------------------------------------------
 def newDataClass(parent,value=CK.UserDefined_s):
   """
-  *DataClass* node creation::
+  *DataClass* node creation, sets the class of a data array::
 
-    import CGNS.PAT.gcnskywords as CK
-    
-    dc=newDataClass(parent,CK.DimensionalUnits_s)
+    import CGNS.PAT.cgnskeywords as CK
+    import numpy as NPY
+
+    # N is an already existing CGNS/Python node
+    dd=newDiscreteData(N,'{DiscreteData}')
+    dc=newDataClass(dd,CK.DimensionalUnits_s)
+    da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype='d'))
 
   :arg CGNS/Python node: the parent node (`<node>` or `None`)
   :arg str value: DataClass type to set
@@ -93,6 +315,8 @@ def newDataClass(parent,value=CK.UserDefined_s):
   :Remarks:
     - The value argument is a
       :ref:`DataClass enumerate <pat_cgnskeywords>` enumerate.
+  :See:
+    - :rsids:`SIDS DataClass <build#DataClass>` 
 
   """
   CU.checkDuplicatedName(parent,CK.DataClass_s)
@@ -139,13 +363,155 @@ def checkDataClass(node,parent=None):
   return node
   
 # -----------------------------------------------------------------------------
+def newDimensionalUnits(parent,value=[CK.Kilogram_s,CK.Meter_s,
+                                      CK.Second_s,CK.Kelvin_s,CK.Radian_s]):
+  """
+  *DimensionalUnits* node creation, sets the units of a data array::
+
+    import CGNS.PAT.cgnskeywords as CK
+    import numpy as NPY
+
+    # N is an already existing CGNS/Python node
+    dd=newDiscreteData(N,'{DiscreteData}')
+    dc=newDataClass(dd,CK.DimensionalUnits_s)
+    units=(CK.Gram_s,CK.Foot_s,CK.UserDefined_s,CK.Celcius_s,CK.Degree_s)
+    du=newDimensionalUnits(dd,units)
+    da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype='d'))
+
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg list(str) value: list of 5 units, order is significant
+  :return: a new :ref:`XDimensionalUnits_t` node
+  :Remarks:
+    - order is MassUnit,LengthUnit,TimeUnit,
+      TemperatureUnit,AngleUnit
+  :See:
+    - :rsids:`SIDS DimensionalUnits <build#DimensionalUnits>` 
+
+  """
+  if (len(value) != 5): raise CE.cgnsException(202)
+  CU.checkDuplicatedName(parent,CK.DimensionalUnits_s)
+  # --- loop over values to find all required units
+  vunit=[CK.Null_s,CK.Null_s,CK.Null_s,CK.Null_s,CK.Null_s]
+  for v in value:
+    if (v not in CK.AllUnits_l): raise CE.cgnsException(203,v)
+    if ((v in CK.MassUnits_l)
+        and (v not in [CK.Null_s,CK.UserDefined_s])):
+      if (v in vunit): raise CE.cgnsException(204,v)
+      else:            vunit[0]=v
+    if ((v in CK.LengthUnits_l)
+        and (v not in [CK.Null_s,CK.UserDefined_s])):
+      if (v in vunit): raise CE.cgnsException(204,v)
+      else:            vunit[1]=v
+    if ((v in CK.TimeUnits_l)
+        and (v not in [CK.Null_s,CK.UserDefined_s])):
+      if (v in vunit): raise CE.cgnsException(204,v)
+      else:            vunit[2]=v
+    if ((v in CK.TemperatureUnits_l)
+        and (v not in [CK.Null_s,CK.UserDefined_s])):
+      if (v in vunit): raise CE.cgnsException(204,v)
+      else:            vunit[3]=v
+    if ((v in CK.AngleUnits_l)
+        and (v not in [CK.Null_s,CK.UserDefined_s])):
+      if (v in vunit): raise CE.cgnsException(204,v)
+      else:            vunit[4]=v
+  node=CU.newNode(CK.DimensionalUnits_s,CU.concatenateForArrayChar(vunit),[],
+               CK.DimensionalUnits_ts,parent)
+  snode=CU.newNode(CK.AdditionalUnits_s,
+                CU.concatenateForArrayChar([CK.Null_s,CK.Null_s,CK.Null_s]),
+                [],
+                CK.AdditionalUnits_ts,node)
+  return node
+
+# -----------------------------------------------------------------------------
+def newDimensionalExponents(parent,
+                            MassExponent=0,LengthExponent=0,TimeExponent=0,
+                            TemperatureExponent=0,AngleExponent=0):
+  """
+  *DimensionalExponents* node creation, sets the units exponents of an array::
+
+    import CGNS.PAT.cgnskeywords as CK
+    import numpy as NPY
+
+    # N is an already existing CGNS/Python node
+    dd=newDiscreteData(N,'{DiscreteData}')
+    dc=newDataClass(dd,CK.DimensionalUnits_s)
+    units=(CK.Gram_s,CK.Foot_s,CK.UserDefined_s,CK.Celcius_s,CK.Degree_s)
+    du=newDimensionalUnits(dd,units)
+    exps=(1,-1,-2,0,0)
+    du=newDimensionalExponents(dd,exps)
+    da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype='d'))
+
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg list(float) value: list of 5 exponents, order is significant
+  :return: a new :ref:`XDimensionalExponents_t` node
+  :Remarks:
+    - order is MassExponent,LengthExponent,TimeExponent,
+      TemperatureExponent,AngleExponent
+    - values are forced to be double floats
+  :See:
+    - :rsids:`SIDS DimensionalExponents <build#DimensionalExponents>` 
+
+  """
+  CU.checkDuplicatedName(parent,CK.DimensionalExponents_s)
+  node=CU.newNode(CK.DimensionalExponents_s,
+               NPY.array([MassExponent,
+                          LengthExponent,
+                          TimeExponent,
+                          TemperatureExponent,
+                          AngleExponent],dtype='Float64',order='Fortran'),
+               [],CK.DimensionalExponents_ts,parent)
+  return node
+
+# -----------------------------------------------------------------------------
+def newDataConversion(parent,ConversionScale=1.0,ConversionOffset=1.0):
+  """
+  *DataConversion* node creation, sets the conversion factors for an array::
+
+    import CGNS.PAT.cgnskeywords as CK
+    import numpy as NPY
+
+    # N is an already existing CGNS/Python node
+    dd=newDiscreteData(N,'{DiscreteData}')
+    dc=newDataClass(dd,CK.DimensionalUnits_s)
+    units=(CK.Gram_s,CK.Foot_s,CK.UserDefined_s,CK.Celcius_s,CK.Degree_s)
+    du=newDimensionalUnits(dd,units)
+    exps=(1,-1,-2,0,0)
+    du=newDimensionalExponents(dd,exps)
+    ds=newDataConversion(dd,2.0,0.0)
+    da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype='d'))
+
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg float scale: scale of the conversion to apply
+  :arg float offset: offset of the conversion to apply
+  :return: a new :ref:`XDataConversion_t` node
+  :Remarks:
+    - values are forced to be double floats
+  :See:
+    - :rsids:`SIDS DataConversion <data#DataConversion>` 
+
+  """
+  CU.checkDuplicatedName(parent,CK.DataConversion_s)
+  node=CU.newNode(CK.DataConversion_s,
+               NPY.array([ConversionScale,ConversionOffset],
+                         dtype='Float64',order='Fortran'),
+               [],CK.DataConversion_ts,parent)
+  return node
+
+# -----------------------------------------------------------------------------
 def newDescriptor(parent,name,value=''):
-  """-Descriptor node creation -Descriptor
+  """
+  *Descriptor* node creation, to contain user-defined textual contents::
   
-  'newNode:N='*newDescriptor*'(parent:N,name:S,text:A)'
+     txt=newDescriptor(parent,'CommandLine','python -c import elsA.CGNS')
   
-  No child allowed.
-  Returns a new <node> representing a Descriptor_t sub-tree."""
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: new node name
+  :arg str value: text to enter (python string)
+  :return: a new :ref:`XDescriptor_t` node
+  :See:
+    - :rsids:`SIDS Descriptor <build#Descriptor>` 
+ 
+  """
   CU.checkDuplicatedName(parent,name)
   node=CU.newNode(name,CU.setStringAsArray(value),[],CK.Descriptor_ts,parent)
   return checkDescriptor(node)
@@ -194,84 +560,20 @@ def checkDescriptor(node,parent=None):
   return node
 
 # -----------------------------------------------------------------------------
-def newDimensionalUnits(parent,value=[CK.Meter_s,CK.Kelvin_s,
-                                      CK.Second_s,CK.Radian_s,
-                                      CK.Kilogram_s]):
-  """DimensionalUnits node creation::
-
-  'newNode:N='*newDimensionalUnits*'(parent:N,value=[CK.MassUnits,CK.LengthUnits,CK.TimeUnits,CK.TemperatureUnits,CK.AngleUnits])'
-                                      
-  If a parent is given, the new <node> is added to the parent children list.
-  new <node> is composed of a set of enumeration types : `MassUnits`,`LengthUnits`,
-  TimeUnits,TemperatureUnits,AngleUnits are required
-  Returns a new <node> representing a DimensionalUnits_t sub-tree.
-  chapter 4.3 
-  """
-  if (len(value) != 5): raise CE.cgnsException(202)
-  CU.checkDuplicatedName(parent,CK.DimensionalUnits_s)
-  # --- loop over values to find all required units
-  vunit=[CK.Null_s,CK.Null_s,CK.Null_s,CK.Null_s,CK.Null_s]
-  for v in value:
-    if (v not in CK.AllUnits_l): raise CE.cgnsException(203,v)
-    if ((v in CK.MassUnits_l)
-        and (v not in [CK.Null_s,CK.UserDefined_s])):
-      if (v in vunit): raise CE.cgnsException(204,v)
-      else:            vunit[0]=v
-    if ((v in CK.LengthUnits_l)
-        and (v not in [CK.Null_s,CK.UserDefined_s])):
-      if (v in vunit): raise CE.cgnsException(204,v)
-      else:            vunit[1]=v
-    if ((v in CK.TimeUnits_l)
-        and (v not in [CK.Null_s,CK.UserDefined_s])):
-      if (v in vunit): raise CE.cgnsException(204,v)
-      else:            vunit[2]=v
-    if ((v in CK.TemperatureUnits_l)
-        and (v not in [CK.Null_s,CK.UserDefined_s])):
-      if (v in vunit): raise CE.cgnsException(204,v)
-      else:            vunit[3]=v
-    if ((v in CK.AngleUnits_l)
-        and (v not in [CK.Null_s,CK.UserDefined_s])):
-      if (v in vunit): raise CE.cgnsException(204,v)
-      else:            vunit[4]=v
-  node=CU.newNode(CK.DimensionalUnits_s,CU.concatenateForArrayChar(vunit),[],
-               CK.DimensionalUnits_ts,parent)
-  snode=CU.newNode(CK.AdditionalUnits_s,
-                CU.concatenateForArrayChar([CK.Null_s,CK.Null_s,CK.Null_s]),
-                [],
-                CK.AdditionalUnits_ts,node)
-  return node
-
-# -----------------------------------------------------------------------------
-def newDimensionalExponents(parent,
-                            MassExponent=0,LengthExponent=0,TimeExponent=0,
-                            TemperatureExponent=0,AngleExponent=0):
-  """-DimensionalExponents node creation -DimensionalExponents::
-  
-  'newNode:N='*newDimensionalExponents*'(parent:N,MassExponent:r,LengthExponent:r,TimeExponent:r,TemperatureExponent:r,AngleExponent:r)'
-  
-  If a parent is given, the new <node> is added to the parent children list.
-  Returns a new <node> representing a DimensionalExponents_t sub-tree.
-  chapter 4.4
-  """
-  CU.checkDuplicatedName(parent,CK.DimensionalExponents_s)
-  node=CU.newNode(CK.DimensionalExponents_s,
-               NPY.array([MassExponent,
-                          LengthExponent,
-                          TimeExponent,
-                          TemperatureExponent,
-                          AngleExponent],dtype='Float64',order='Fortran'),
-               [],CK.DimensionalExponents_ts,parent)
-  return node
-
-# -----------------------------------------------------------------------------
 def newGridLocation(parent,value=CK.CellCenter_s):
-  """-GridLocation node creation -GridLocation::
+  """
+  *GridLocation* node creation, set location of data value wrt grid::
   
-  'newNode:N='*newGridLocation*'(parent:N,value:CK.GridLocation)'
+    n=newGridLocation(parent,CK.Vertex_s)
   
-  If a parent is given, the new <node> is added to the parent children list.
-  Returns a new <node> representing a GridLocation_t sub-tree.
-  chapter 4.5
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str value: GridLocation to set
+  :return: a new :ref:`XGridLocation_t` node
+  :Remarks:
+    - Allowed values are in CK.GridLocation_l
+  :See:
+    - :rsids:`SIDS GridLocation <build#GridLocation>` 
+    
   """
   CU.checkDuplicatedName(parent,CK.GridLocation_s)
   if (value not in CK.GridLocation_l): raise CE.cgnsException(200,value)
@@ -281,18 +583,48 @@ def newGridLocation(parent,value=CK.CellCenter_s):
   
 # -----------------------------------------------------------------------------
 def newIndexArray(parent,name,value=None):
+  """
+  *IndexArray* node creation, integer array for indexing purpose::
+
+    import numpy as NPY
+    
+    ix=newIndexArray(parent,'GlobalIndex',NPY.array((3,4,5)))
+  
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: new node name
+  :arg ndarray value: array to set
+  :return: a new :ref:`XIndexArray_t` node
+  :Remarks:
+    - Values are *not* forced of any type, user has to use I4 or I8
+    - Array dims are not checked
+  :See:
+    - :rsids:`SIDS IndexArray <build#IndexArray>` 
+ 
+  """
   CU.checkDuplicatedName(parent,name)
   node=CU.newNode(name,value,[],CK.IndexArray_ts,parent)
   return node
   
+# -----------------------------------------------------------------------------
 def newPointList(parent,name=CK.PointList_s,value=None):
-  """-PointList node creation -PointList
+  """
+  *PointList* node creation, integer array for indexing purpose::
+
+    import numpy as NPY
+    
+    ix=newPointList(parent,'FacesList',NPY.array((3,4,5,9,15)))
   
-  'newNode:N='*newPointList*'(parent:N,name:S,value:[])'
-  
-  If a parent is given, the new <node> is added to the parent children list.
-  Returns a new <node> representing a IndexArray_t sub-tree.
-  chapter 4.6
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: new node name
+  :arg ndarray value: array to set
+  :return: a new :ref:`XPointList_t` node
+  :Remarks:
+    - Values are *not* forced of any type, user has to use I4 or I8
+    - Array dims are not checked
+    - Not a SIDS type
+  :See:
+    - :rsids:`SIDS IndexArray <build#IndexArray>` 
+ 
   """
   CU.checkDuplicatedName(parent,name)
   node=CU.newNode(name,value,[],CK.IndexArray_ts,parent)
@@ -300,13 +632,26 @@ def newPointList(parent,name=CK.PointList_s,value=None):
   
 # -----------------------------------------------------------------------------
 def newPointRange(parent,name=CK.PointRange_s,value=[]):
-  """-PointRange node creation -PointRange
+  """
+  *PointRange* node creation, integer array for Structured indexing purpose::
+
+    import numpy as NPY
+
+    minmax=NPY.array([[1,13],[1,6],[1,1]],order='F')
+    ix=newPointRange(parent,value=minmax)
   
-  'newNode:N='*newPointRange*'(parent:N,name:S,value:[])'
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: new node name
+  :arg ndarray value: array to set
+  :return: a new :ref:`XPointRange_t` node
+  :Remarks:
+    - Values are *not* forced of any type, user has to use I4 or I8
+    - Array dims are not checked
+    - Array index has to be in Fortran order
+    - not a SIDS type
+  :See:
+    - :rsids:`SIDS IndexRange <build#IndexRange>` 
   
-  If a parent is given, the new <node> is added to the parent children list.
-  Returns a new <node> representing a IndexRange_t sub-tree.
-  chapter 4.7
   """
   CU.checkDuplicatedName(parent,name)
   node=CU.newNode(name,value,[],CK.IndexRange_ts,parent)
@@ -314,237 +659,106 @@ def newPointRange(parent,name=CK.PointRange_s,value=[]):
 
 # -----------------------------------------------------------------------------
 def newRind(parent,value):                                    
-  """-Rind node creation -Rind
+  """
+  *Rind* node creation, indicates extra *ghost* cells around the grid::
   
-  'newNode:N='*newRind*'(parent:N,value=A)'
+    rind=NPY.array([[1,13],[1,6],[1,1]],order='F')
+    newRind(solution,rind)
   
-  If a parent is given, the new <node> is added to the parent children list.  
-  Returns a new <node> representing a Rind_t sub-tree.
-  chapter 4.8
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg ndarray value: array to set
+  :return: a new :ref:`XRind_t` node
+  :Remarks:
+    - For structured grids, order is imin,imax,jmin,jmax,kmin,kmax
+    - For unstructured grids, order is number of rind points before and after
+    - Values are *not* forced of any type, user has to use I4 or I8
+    - Array dims are not checked
+    - Array index has to be in Fortran order
+  :See:
+    - :rsids:`SIDS Rind <build#Rind>` 
+  
   """
   CU.checkDuplicatedName(parent,CK.Rind_s)
   # check value wrt base dims
   node=CU.newNode(CK.Rind_s,value,[],CK.Rind_ts,parent)
   return node
 
-# -----------------------------------------------------------------------------
-def newDataConversion(parent,ConversionScale=1.0,ConversionOffset=1.0):
-  """-DataConversion node creation -DataConversion
-  
-  'newNode:N='*newDataConversion*'(parent:N,ConversionScale:r,ConversionOffset:r)'
-  
-  If a parent is given, the new <node> is added to the parent children list.  
-  Returns a new <node> representing a DataConversion_t sub-tree.
-  chapter  5.1.1
-  """
-  CU.checkDuplicatedName(parent,CK.DataConversion_s)
-  node=CU.newNode(CK.DataConversion_s,
-               NPY.array([ConversionScale,ConversionOffset],
-                         dtype='Float64',order='Fortran'),
-               [],CK.DataConversion_ts,parent)
-  return node
-
 # ----------------------------------------------------------------------------
 def newSimulationType(parent,stype=CK.NonTimeAccurate_s):
-  """-SimulationType node creation -SimulationType
+  """
+  *SimulationType* node creation, set the TimeAccurate type::
   
-  'newNode:N='*newSimulationType*'(parent:N,stype=CK.SimulationType)'
+    newSimulationType(base,CK.TimeAccurate_s)
   
-  If a parent is given, the new <node> is added to the parent children list.  
-  Returns a new <node> representing a SimulationType_t sub-tree.
-  chapter 6.2
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str stype: enumerate from CK.SimulationType_l
+  :return: a new :ref:`XSimulationType_t` node
+  :See:
+    - :rsids:`SIDS SimulationType <cgnsbase#CGNSBase>` 
+
   """
   if (parent): CU.checkNode(parent)
   CU.checkDuplicatedName(parent,CK.SimulationType_s)
   CU.checkType(parent,CK.CGNSBase_ts,CK.SimulationType_s)
   if (stype not in CK.SimulationType_l): raise CE.cgnsException(205,stype)
-  node=CU.newNode(CK.SimulationType_s,CU.setStringAsArray(stype),[],CK.SimulationType_ts,parent)
+  node=CU.newNode(CK.SimulationType_s,
+                  CU.setStringAsArray(stype),[],CK.SimulationType_ts,parent)
   return node
   
-# ----------------------------------------------------------------------------
-def newBase(tree,name,ncell,nphys):
-  if (ncell not in [1,2,3]): raise CE.cgnsException(10,name)
-  if (nphys not in [1,2,3]): raise CE.cgnsException(11,name)
-  if (nphys < ncell):        raise CE.cgnsException(12,name)
-  if ((tree != None) and (not CU.checkNode(tree))):
-     raise CE.cgnsException(6,name)
-  if ((tree != None) and (tree[0] == CK.CGNSTree_s)): parent=tree[2]  
-  else:                                              parent=tree
-  CU.checkDuplicatedName(["<root node>",None,parent],name)
-  node=CU.newNode(name,
-               NPY.array([ncell,nphys],dtype=NPY.int32,order='Fortran'),
-               [],CK.CGNSBase_ts)
-  if (parent != None): parent.append(node)
-  return node
-
-def numberOfBases(tree):
-  return len(CU.hasChildrenType(tree,CK.CGNSBase_ts))
-
-def readBase(tree,name):
-  b=CU.hasChildName(tree,name)
-  if (b == None): raise CE.cgnsException(21,name)
-  if (b[3] != CK.CGNSBase_ts):
-    raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
-  return (b[0],b[1])
-  
-def updateBase(tree,name=None,ncell=None,nphys=None):
-  if (ncell not in [1,2,3]): raise CE.cgnsException(10,name)
-  if (nphys not in [1,2,3]): raise CE.cgnsException(11,name)
-  if (nphys < ncell):        raise CE.cgnsException(12,name)
-  
-  if (tree): CU.checkNode(tree)
-
-  if (tree[3] != CK.CGNSBase_ts):
-    raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
-  if(name!=None): tree[0]=name
-  if(ncell!=None and nphys!=None and tree):
-    tree[1]=NPY.array([ncell,nphys],dtype=NPY.int32,order='Fortran')
-  else: raise CE.cgnsException(12)  
-  
- 
 # -----------------------------------------------------------------------------
 def newOrdinal(parent,value=0):
-  """-Ordinal node creation -Ordinal
+  """
+  *Ordinal* node creation, an informative integer value::
   
-  'newNode:N='*newOrdinal*'(parent:N,value=i)'
+    newOrdinal(node,4)
   
-  If a parent is given, the new <node> is added to the parent children list.  
-  Returns a new <node> representing a Ordinal_t sub-tree.
-  chapter 6.3
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg int value: arbtrary integer
+  :return: a new :ref:`XOrdinal_t` node
+  :See:
+    - :rsids:`SIDS Ordinal <cgnsbase#Zone>` 
+
   """
   CU.checkDuplicatedName(parent,CK.Ordinal_s)
-  node=CU.newNode(CK.Ordinal_s,NPY.array([value],dtype=NPY.int32),[],CK.Ordinal_ts,parent)
+  node=CU.newNode(CK.Ordinal_s,
+                  NPY.array([value],dtype=NPY.int32),[],CK.Ordinal_ts,parent)
   return node
-
-# -----------------------------------------------------------------------------
-def newZone(parent,name,zsize=None,
-            ztype=CK.Structured_s,
-            family=''):
-  """*Zone* node creation::
-
-    s=NPY.array([[10],[2],[0]],dtype='i')
-    
-    T=newCGNSTree()
-    B=newBase(T,'Box-1',3,3)
-    Z=newZone(B,name,s,CK.Unstructured_s,'Wing')
-  
-  - Args:
-   * `parent`: the parent node (`<node>` or `None`)
-   * `name`: zone name (`string`)
-   * `zsize`: array of dimensions (`numpy.ndarray`)
-   * `ztype`: zone type (`string`)
-   * `family`: zone family (`string`)
-
-  - Return:
-   * The new :ref:`XZone_t` node
-
-  - Remarks:
-   * The zone size has dimensions [IndexDimensions][3]
-  
-  - Children:
-   * :py:func:`newElements`
-   
-  """
-  asize=None
-  if (ztype not in CK.ZoneType_l): raise CE.cgnsException(206,ztype)
-  if (zsize == None): raise CE.cgnsException(300) 
-  CU.checkDuplicatedName(parent,name)
-  CU.checkArray(zsize,dienow=True)
-  znode=CU.newNode(name,zsize,[],CK.Zone_ts,parent)
-  CU.newNode(CK.ZoneType_s,CU.setStringAsArray(ztype),[],CK.ZoneType_ts,znode)
-  if (family):
-    CU.newNode(CK.FamilyName_s,
-               CU.setStringAsArray(family),[],CK.FamilyName_ts,znode)
-  return znode
-
-def numberOfZones(tree,basename):
-  b=CU.hasChildName(tree,basename)
-  if (b == None): raise CE.cgnsException(21,basename)
-  if (b[3] != CK.CGNSBase_ts): raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
-  return len(CU.hasChildrenType(b,CK.Zone_ts))
-
-def readZone(tree,basename,zonename,gtype=None):
-  b=CU.hasChildName(tree,basename)
-  if (b == None): raise CE.cgnsException(21,basename)
-  if (b[3] != CK.CGNSBase_ts): raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
-  z=CU.hasChildName(b,zonename)
-  if (z == None): raise CE.cgnsException(21,zonename)
-  if (z[3] != CK.Zone_ts): raise CE.cgnsException(20,(CK.Zone_ts,name))
-  if gtype: 
-    zt=CU.hasChildName(z,CK.ZoneType_s)
-    if (zt == None): raise CE.cgnsException(21,CK.ZoneType_s)
-    return (z[0],z[1],zt[1])
-  else:
-    return (z[0],z[1])
-
-def typeOfZone(tree,basename,zonename):
-  return readZone(tree,basename,zonename,1)[2]
-
-# -----------------------------------------------------------------------------
-def newGridCoordinates(parent,name):
-  """-GridCoordinates node creation -Grid
-  
-  'newNode:N='*newGridCoordinates*'(parent:N,name:S)'
-  
-  Returns a new <node> representing a GridCoordinates_t sub-tree.
-  If a parent is given, the new <node> is added to the parent children list.
-  """
-  node=CU.newNode(name,None,[],CK.GridCoordinates_ts,parent)
-  return node
-  
-# -----------------------------------------------------------------------------
-def newDataArray(parent,name,value=None):
-  """-DataArray node creation -Global
-  
-  'newNode:N='*newDataArray*'(parent:N,name:S,value:A)'
-  
-  Returns a new <node> representing a DataArray_t sub-tree.
-  If a parent is given, the new <node> is added to the parent children list.
-  chapter 5.1
-  """
-  CU.checkDuplicatedName(parent,name)
-  ## code correction:  Add value type and fortran order
-  ## code correction:  Add a specific array for string type
-  ## code correction:  Modify array check
-  if (type(value)==type(3)):
-    vv=NPY.array([value],dtype=NPY.int32,order='Fortran')
-    CU.checkArray(vv)
-  elif(type(value)==type(3.2)):
-    vv=NPY.array([value],dtype=NPY.float32,order='Fortran')
-    CU.checkArray(vv)
-  elif(type(value)==type("s")):
-    vv=CU.setStringAsArray(value)
-    CU.checkArrayChar(vv)
-  else:
-    vv=value
-    if (vv != None): CU.checkArray(vv)
-    
-  node=CU.newNode(name,vv,[],CK.DataArray_ts,parent)
-  return node
-
-def numberOfDataArrays(parent):
-  return len(CU.hasChildrenType(parent,CK.DataArray_ts))
-
-def readDataArray(parent,name):
-  n=CU.hasChildName(parent,name)
-  if (n == None): raise CE.cgnsException(21,name)
-  if (n[3] != CK.DataArray_ts): raise CE.cgnsException(20,(CK.DataArray_ts,name))
-  return n[1]
 
 # -----------------------------------------------------------------------------
 def newDiscreteData(parent,name):
-  """-DiscreteData node creation -DiscreteData
+  """
+  *DiscreteData* node creation, structural node for data::
   
-  'newNode:N='*newDiscreteData*'(parent:N,name:S)'
+    newDiscreteData(node,'Parameters')
   
-   If a parent is given, the new <node> is added to the parent children list.
-   Returns a new <node> representing a DiscreteData_t sub-tree.
-   If a parent is given, the new <node> is added to the parent children list.
-   chapter 6.3
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: new node name
+  :return: a new :ref:`XDiscreteData_t` node
+  :See:
+    - :rsids:`SIDS DiscreteData <misc#DiscreteData>` 
+
   """
   CU.checkDuplicatedName(parent,name)    
   node=CU.newNode(name,None,[],CK.DiscreteData_ts,parent)
   return node 
+  
+#-----------------------------------------------------------------------------
+def newIntegralData(parent,name):
+  """
+  *IntegralData* node creation, structural node for data::
+  
+    newIntegralData(node,'Parameters')
+  
+  :arg CGNS/Python node: the parent node (`<node>` or `None`)
+  :arg str name: new node name
+  :return: a new :ref:`XIntegralData_t` node
+  :See:
+    - :rsids:`SIDS IntegralData <misc#IntegralData>` 
+
+  """
+  CU.checkDuplicatedName(parent,name)
+  node=CU.newNode(name,None,[],CK.IntegralData_ts,parent)
+  return node
   
 # -----------------------------------------------------------------------------
 def newElements(parent,name,
@@ -553,7 +767,8 @@ def newElements(parent,name,
                 erange=None,
                 eboundary=0
                 ):
-  """*Elements_t* node creation::
+  """
+  *Elements_t* node creation, indexing unstructured meshes::
 
    quads=newElements(None,'QUADS',CGK.QUAD_4,quad_array,NPY.array([start,end]))'
   
@@ -683,30 +898,6 @@ def newBCProperty(parent,wallfunction=CK.Null_s,area=CK.Null_s):
   CU.newNode(CK.AreaType_s,CU.setStringAsArray(area),[],CK.AreaType_ts,ar)
   return node 
 
-# -----------------------------------------------------------------------------
-def newCoordinates(parent,name=CK.GridCoordinates_s,value=None):
-  """-GridCoordinates_t node creation with name GridCoordinates -Grid
-  
-  'newNode:N='*newCoordinates*'(parent:N,name:S,value:A)'
-
-  Creates a new <node> representing a GridCoordinates_t sub-tree with
-  the coordinate DataArray given as argument. This creates both the
-  GridCoordinates_t with GridCoordinates name and DataArray_t with the
-  argument name. Usually used to create the default grid.
-  If the GridCoordinates_t with name GridCoordinates already exists then
-  only the DataArray is created.
-  If a parent is given, the new GridCoordinates_t <node> is added to the
-  parent children list, in all cases the DataArray is child of
-  GridCoordinates_t node.
-  The returned node always is the DataArray_t node.
-  chapter 7.1
-  """
-  CU.checkDuplicatedName(parent,name)
-  gnode=CU.hasChildName(parent,CK.GridCoordinates_s)
-  if (gnode == None): gnode=newGridCoordinates(parent,CK.GridCoordinates_s)
-  node=newDataArray(gnode,name,value)
-  return node
-  
 # -----------------------------------------------------------------------------
 def newAxisymmetry(parent,
                    refpoint=NPY.array([0.0,0.0,0.0]),
@@ -1293,20 +1484,6 @@ def newConvergenceHistory(parent,name=CK.GlobalConvergenceHistory_s,
   node=CU.newNode(name,NPY.array([iterations],dtype='i'),[],CK.ConvergenceHistory_ts,parent)
   return node
 
-#-----------------------------------------------------------------------------
-def newIntegralData(parent,name):
-  """-IntegralData node creation -IntegralData
-  
-  'newNode:N='*newIntegralData*'(parent:N,name:S)'
-  
-   Returns a new <node> representing a IntegralData_t sub-tree. 
-   If a parent is given, the new <node> is added to the parent children list. 
-   chapter  12.5 
-  """ 
-  CU.checkDuplicatedName(parent,name)
-  node=CU.newNode(name,None,[],CK.IntegralData_ts,parent)
-  return node
-  
 # -----------------------------------------------------------------------------
 def newFamily(parent,name):
   """-Family node creation -Family

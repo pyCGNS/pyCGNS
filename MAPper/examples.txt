@@ -112,16 +112,16 @@ for any reason, you have an exception.
    CHLone.CHLoneException: (104, 'Cannot create new file [tmp/solution.cgns]')
 
 
-Load of a *CGNS/HDF* file skeletton
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Partial load of a *CGNS/HDF* file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 One of the big advantage of *CGNS* is to provide a complete and consistent
 tree in data. Then you often want to parse it to get some information about
 its structure or about a particuliar data. You do not want to load all
-cooridnates and solution arrays, you just want the targetted information.
+cooridnates and solution arrays, you just want the targeted information.
 The *CGNS.MAP* load allows you to filter your target in the *CGNS/HDF5* file.
 
-In this first exemaple we load only the zone layout of the tree. You want 
+In this first example we load only the zone layout of the tree. You want 
 to distribute your zones on a cluster processors and you need to now the number
 of zones and their sizes::
 
@@ -148,8 +148,8 @@ lines.
    ['/Base_1', '/Base_1/About', '/Base_1/Zone_0001', '/Base_1/Zone_0002']
    >>> zlist=CGU.getAllNodesByTypeSet(T[0],['Zone_t'])
 
-Load of a *CGNS/HDF* file skeletton without data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Load of a *CGNS/HDF* file layout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The previous example actually reads all the data of the *CGNS/HDF5* file,
 its stops parsing the tree but every node is retrieved with its associated
@@ -158,7 +158,8 @@ of the children of ``GridCoordinates_t``, but we do not want to load a
 probably large amount of data. We use the ``madata`` threshold parameter,
 all data above this size is returned as a *no-data* node::
 
- T=CGNS.MAP.load('mesh.hdf',maxdata=20,flags=CGNS.MAP.S2P_NODATA)
+ flags=CGNS.MAP.S2P_DEFAULT|CGNS.MAP.S2P_NODATA
+ T=CGNS.MAP.load('mesh.hdf',maxdata=20,flags=flags)
 
 The ``CGNS.MAP.S2P_NODATA`` is required, without it the ``maxdata`` is
 ignored. Here all the *CGNS/HDF5* tree is retrieved but nodes with a
@@ -179,73 +180,163 @@ have been ignored because of the ``maxdata`` threshold. The third entry
 in the ``load`` return tuple is the ``paths``, it contains the paths of the
 nodes that were ignored::
 
-  >>> T=CGNS.MAP.load('mesh.hdf',maxdata=20,flags=CGNS.MAP.S2P_NODATA)
+  >>> flags=CGNS.MAP.S2P_DEFAULT|CGNS.MAP.S2P_NODATA
+  >>> T=CGNS.MAP.load('mesh.hdf',maxdata=20,flags=flags)
   >>> print T[2]
   [('/Mesh/Zone-004/GridCoordinates/CoordinateX',1),
    ('/Mesh/Zone-004/GridCoordinates/CoordinateY',1)
    ('/Mesh/Zone-004/GridCoordinates/CoordinateZ',1)]
 
 The ``1`` associated with the path is the integer value corresponding to
-the ``NODATA`` flag, it is useless at this time.
+the ``S2P_NODATA`` flag, it is useless at this time.
+
+Update a nodata node from a *CGNS/HDF* file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now next step is to load the data for a node. Your first step was to parse the 
+tree layout an discover the nodes you are intersted in. You have a list with
+node paths taken from your previously loaded tree. Some nodes have data, because
+their size was below the ``maxdata`` threshold, some other have ``None`` and
+they appear in the ``paths`` as the third returned value of the load function.
+
+First case, we want to load data from a ``None`` valued node. We use the
+``subtree`` named argument of the load. It creates all the nodes of the
+subtree starting from the path you give::
+
+  flags=CGNS.MAP.S2P_DEFAULT|CGNS.MAP.S2P_NODATA
+  (t1,l1,p1)=CGNS.MAP.load('mesh.hdf',maxdata=20,flags=flags)
+
+  # this path is in p1
+  pth='/Mesh/Zone-004/GridCoordinates/CoordinateX'
+  (t2,l2,p2)=CGNS.MAP.load('mesh.hdf',subtree=pth)
+
+  # replace the new node in the original tree
+  nodatanode=CGU.getNodeByPath(t1,pth)
+  datanode  =CGU.getNodeByPath(t2,pth)
+  nodatanode[1]=datanode[1]
+
+The numpy array is replaced in the list, python insures this is not a copy
+and also takes care of the object references. So you can remore ``t2`` now.
+In that case a new numpy array has been created. You can give an actual
+subtree instead of a leaf, the result is the same, all children nodes are
+recursively loaded::
+
+  flags=CGNS.MAP.S2P_DEFAULT|CGNS.MAP.S2P_NODATA
+  (t1,l1,p1)=CGNS.MAP.load('mesh.hdf'),maxdata=20,flags=CGNS.MAP.S2P_NODATA)
+
+  pth='/Mesh/Zone-004/GridCoordinates'
+  (t2,l2,p2)=CGNS.MAP.load('mesh.hdf',subtree=pth)
+
+  # replace the new node in the original tree
+  # here we change the children list instead of a single node value
+  nodatanode=CGU.getNodeByPath(t1,pth)
+  datanode  =CGU.getNodeByPath(t2,pth)
+  nodatanode[2]=datanode[2]
+
+Sometimes you just want a node that already exists to be updated. The
+``update`` argument of the load is a dictionnary of path/value
+entries::
+
+  (t1,l1,p1)=CGNS.MAP.load('mesh.hdf')
+  pth_g='/Mesh/Zone-004/GridCoordinates'
+  pth_x=pth_g+'/CoordinateX'
+  targetnode=CGU.getNodeByPath(t,pth_x)
+
+  upd={ pth_x:targetnode[1] }
+  (t2,l2,p2)=CGNS.MAP.load('mesh.hdf',update=upd,subtree=pth_g)
+
+  # both t1 and t2 are sharing the /Mesh/Zone-004/GridCoordinates/CoordinateX
+  # array, as the second load actullay updated the numpy array passed as arg
+  # in the update
+
+The previous example loads the X,Y and Z arrays in the ``t2`` tree. However,
+only Y and Z had a new memory allocation. If you do not set the ``subtree`` arg
+the ``t2`` tree will contain a completely new CGNS/Python, only the X coordinate
+array is shared with ``t1``.
+
+Another way to load the coordinates X,Y,Z having the X shared and Y and Z
+new numpy array is to set ``None`` in the ``update`` dictionnary and to
+add the ``S2P_UPDATEONLY`` flag. Only the paths into ``update`` would be
+parsed in the CGNS/HDF5 file, if the ``update`` is ``None`` a new numpy array
+is allocated, otherwise the existing numpy array found in the dictionnary
+is updated::
+
+  (t1,l1,p1)=CGNS.MAP.load('mesh.hdf')
+  pth_g='/Mesh/Zone-004/GridCoordinates'
+  pth_x=pth_g+'/CoordinateX'
+  pth_y=pth_g+'/CoordinateY'
+  pth_z=pth_g+'/CoordinateZ'
+  targetnode=CGU.getNodeByPath(t,pth_x)
+
+  upd={ pth_x:targetnode[1], pth_y:None, pth_z:None }
+
+  flags=CGNS.MAP.S2P_DEFAULT|CGNS.MAP.S2P_UPDATEONLY
+  (t2,l2,p2)=CGNS.MAP.load('mesh.hdf',update=upd,flags=flags)
+
+We suggest you use this last method instead of calling as many load with as
+many ``subtree`` you want to update. The CGNS/HDF5 file would be opened only
+once, you increase parsing performance, you limit the file system access and
+you reduce the critical section for other applications trying to read/write 
+simultaneously the same file.
 
 Load a tree without links
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*to add: example with trunctated tree*
+If you want to parse a CGNS/HDF5 file and avoid to load any linked-file found
+during the parse, remove the ``S2P_FOLLOWLINKS`` from the flags::
 
-Save a tree with links
-~~~~~~~~~~~~~~~~~~~~~~
+  flags=CGNS.MAP.S2P_DEFAULT & ~CGNS.MAP.S2P_FOLLOWLINKS
+  (t,l,p)=CGNS.MAP.load('mesh.hdf',flags=flags)
+
+The ``l`` list is empty.
+
+Save with links
+~~~~~~~~~~~~~~~
+
+When you load a file all the linked-to files areresolved to produce a full
+CGNS/Python tree with actual node data. The only way to find out from which
+file comes a specific node you have to check the link list, returned as the
+second value of the load function. The way back, that is when you want to save
+this previously loaded file, you have to give back this link list::
+
+  (t,l,p)=CGNS.MAP.load('mesh.hdf')
+
+  CGNS.MAP.save('mesh.hdf',t,links=l)
+
+If you miss this ``links`` argument, the save will store all the nodes ot ``t``
+in the file. This is a merge like describe :ref:`here <mergenolink>`.
+
+The save will only write the first top file, all other sub parts of the 
+tree having an ancestor in the links list would be ignored. If you want
+the save modifications of nodes coming from a linked-to file, you have
+to force the ``S2P_PROPAGATE`` flag::
+
+  (t,l,p)=CGNS.MAP.load('mesh.hdf')
+
+  flags=CGNS.MAP.S2P_DEFAULT|CGNS.MAP.S2P_PROPAGATE
+  CGNS.MAP.save('mesh.hdf',t,links=l,flags=flags)
+
+In that latter case, the linked-to file are set in the ``update`` mode as
+described :ref:`here <updatemode>`.
+
+Save with new links
+~~~~~~~~~~~~~~~~~~~
 
 *to add: example with recursive tree save per link*
 
-Update a sub-tree
-~~~~~~~~~~~~~~~~~
+.. _updatemode:
 
-You have an existing *CGNS/Python* tree and you want to update a single node
-from a *CGNS/HDF5* file, you do not want to load the complete file again or
-even overwrite some modifications i nthe tree you have in memory. The
-``updatedict`` argument of the ``load`` contains the actual *CGNS/Python*
-nodes you want to update with respect to the associated path you give.
+Update a file
+~~~~~~~~~~~~~
 
-For example, you have a *CGNS/Python* tree with three coordinate nodes
-you want to update, because you know some data has changed on the disk.
-First you add an entry in ``updatedict`` with the target path as key,
-then you set the value of this dictionary entry as the already existing
-node you want to update. Be sure to set the node, *not the array* which
-is the second entry in the node list::
+*to add: example with recursive tree save per link*
 
-  >>> T1=CGNS.MAP.load("mesh.cgns")
-  >>> mydict={}
-  >>> nodepath='/Mesh/Zone-001/GridCoordinates/CoordinateZ'
-  >>> mydict[path]=CGU.getValueByPath(T1,nodepath)
-  >>> T2=CGNS.MAP.load("mesh.cgns",updatedict=mydict)
+.. _mergenolink:
 
-The returned ``T2`` tree in the second ``load`` is a completely new one 
-except the ``/Mesh/Zone-001/GridCoordinates/CoordinateZ`` node which is
-now updated and shared by both ``T1`` and ``T2``.
+Merge all or some linked-to files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to load only this node and nothing else, use the ``subtree``
-argument::
-
-  >>> T1=CGNS.MAP.load("mesh.cgns")
-  >>> mydict={}
-  >>> nodepath='/Mesh/Zone-001/GridCoordinates/CoordinateZ'
-  >>> mydict[path]=CGU.getValueByPath(T1,nodepath)
-  >>> T2=CGNS.MAP.load("mesh.cgns",subtree=nodepath,updatedict=mydict)
-
-Again you have updated the node in ``T1``, but you don't really need
-the sub-tree you retrieve in ``T2``, which is a small copy of the nodes
-along the path you give as argument.
-To get rid of it, you forget the reference to the output, Python would
-garbage by itself the unused data::
-
-  >>> T1=CGNS.MAP.load("mesh.cgns")
-  >>> mydict={}
-  >>> nodepath='/Mesh/Zone-001/GridCoordinates/CoordinateZ'
-  >>> mydict[path]=CGU.getValueByPath(T1,nodepath)
-  >>> CGNS.MAP.load("mesh.cgns",subtree=nodepath,updatedict=mydict)
-
-You are done, the node is updated into ``T1``.
+*to add: example with recursive tree save per link*
 
 Some usual issues
 ~~~~~~~~~~~~~~~~~

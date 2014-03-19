@@ -3,8 +3,7 @@
 #  pyCGNS.APP - Python package for CFD General Notation System - APPlicater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  ------------------------------------------------------------------------- 
+#
 import CGNS.MAP
 import CGNS.PAT.cgnsutils    as CGU
 import CGNS.PAT.cgnskeywords as CGK

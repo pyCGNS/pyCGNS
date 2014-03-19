@@ -76,7 +76,7 @@ Q.keylist=args.keylist
 Q.verbose=args.verbose
 Q.pathsort=not args.message
 if (args.remove is not None): Q.idlist=args.remove.split(':')
-if (args.user is not None): Q.userkeys=args.user
+if (args.user is not None): Q.userkeys=[args.user]
 
 if (Q.diaglist):
   ml=CGV.listdiags(verbose,userlist)

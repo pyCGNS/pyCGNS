@@ -13,12 +13,12 @@ a specific use of CGNS files and tree shape, you have to check the actual
 effects of the tools on your own test data before any attempt on valuable
 data.
 
+cg_list
++++++++
+
 The ``cg_list`` is a kind of ``ls`` for CGNS files. There are many options
 to help you decide wether this is the file you are looking for or not, its size,
 its contents type...
-
-cg_list
-+++++++
 
 You typically run ``cg_list`` to find out which are the CGNS files in 
 a directory::
@@ -192,4 +192,42 @@ The -h option returns the following usage notice::
       file found. The first file containing at least one link is the result.
   
 
+cg_link
++++++++
+
+The link tool can be used to translate ADF links to HDF links for example,
+or just to recursively browse existing links::
+
+  usage: cg_link [options] file1 file2 ...
+
+    Browsing and editing links on CGNS/HDF5 files
+    (part of pyCGNS distribution http://pycgns.sourceforge.net)
+    pyCGNS v4.4.481
+
+    Warning: translation of ADF files is made *in place*, in other word if a link
+    with the path '/A/C/D.adf' is found, its translation is '/A/C/D.hdf'. Then
+    it requires correct access rights, disk place and so on...
+
+    Warning: translation of ADF files requires the cgnsconvert tool, can be
+    found on http://www.cgns.org tools
+    
+
+  positional arguments:
+    files
+
+  optional arguments:
+    -h, --help       show this help message and exit
+    -t, --translate  translates ADF to HDF and propagates through links
+    -l, --linklist   list all link entries
+    -p, --path       return only the path of the matching node, no filename
+    -v, --verbose    trace mode
+
+    Examples:
+
+    * Recursively translates all ADF files (as far as you have cgnsconvert) and
+    sets the linked-to file names to these in-place translated files. The
+    verbose mode makes cg_link to print all parsed files:
+    
+    cg_link -vt 124Disk.cgns
+  
 .. -------------------------------------------------------------------------

@@ -131,7 +131,7 @@ def genCT(Tb,zn,*ct):
       # --- generalized
       else:
         Tq=CGL.newGridConnectivity(Tc,
-                                   C1Pattern%(zn,zd),
+                                   C1Pattern%(zn,zd+'1'), # first part name
                                    ZonePattern%(zd),
                                    CGK.Abutting_s)
         if (len(zi)>2):

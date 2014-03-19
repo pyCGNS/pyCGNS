@@ -1,6 +1,7 @@
 import sys, os
 
-extensions = ['sphinx.ext.autodoc','sphinx.ext.intersphinx']
+extensions = ['sphinx.ext.autodoc','sphinx.ext.intersphinx',
+              'sphinx.ext.extlinks']
 mapdir='%s/../build/doc/html'%os.path.abspath('.')
 intersphinx_mapping={'topix': (mapdir+'/',None),
                      'wraix': (mapdir+'/WRA',None),
@@ -54,5 +55,11 @@ latex_use_parts = False
 latex_use_modindex = True
 
 autodoc_member_order='bysource'
+
+extlinks={'rsids':('http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/sids/%s',
+                   'rsids')}
+
+sids_url='http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/sids'
+rst_epilog='.. |sids_url| replace:: %s' %sids_url
 
 # --- last line

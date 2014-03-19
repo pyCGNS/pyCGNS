@@ -2,8 +2,6 @@
 #  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
 # Change these values to fit your installation
 # See notes at end of file about config values
 #
@@ -76,7 +74,7 @@ PFX='### pyCGNS:'
 #
 __version__=4 # @@UPDATEVERSION@@
 __release__=4 # @@UPDATERELEASE@@
-__revision__=481 # @@UPDATEREVISION@@
+__revision__=482 # @@UPDATEREVISION@@
 __vid__="%s.%s.%s"%(__version__,__release__,__revision__)
 __doc__="""pyCGNS - %s - Python package for CFD General Notation System"""\
         %(__vid__)
@@ -133,7 +131,7 @@ NUMPY_EXTRA_ARGS=%(NUMPY_EXTRA_ARGS)s
 
 __version__=4 # @@UPDATEVERSION@@
 __release__=4 # @@UPDATERELEASE@@
-__revision__=481 # @@UPDATEREVISION@@
+__revision__=482 # @@UPDATEREVISION@@
 __vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
 __doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
         %%(__vid__)

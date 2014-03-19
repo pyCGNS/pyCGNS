@@ -51,7 +51,6 @@ file at all for your actual CFD data!
 .. sidebar:: Release 4.4
 
    - New tools in APP (see :ref:`apptools`)
-   - pyCGNS available on Anaconda (Linux/Windows)
 
 There are seven sub-modules in
 *pyCGNS*, some of them are libraries of functions, some other are
@@ -82,8 +81,7 @@ instead of :term:`CGNS/MLL` to map its :term:`CGNS/Python` trees to *HDF5*.
   by `sourceforge <http://sourceforge.net/projects/pycgns>`_
   where you can find 
   `source download <http://sourceforge.net/projects/pycgns/files>`_, 
-  `help forum <http://sourceforge.net/projects/pycgns/forums/forum/1350997>`_, 
-  `wiki <http://sourceforge.net/apps/trac/pycgns/wiki>`_ 
+  `help forum <https://sourceforge.net/p/pycgns/mailman/pycgns-forum/>`_, 
   and `bug tracking <http://sourceforge.net/apps/trac/pycgns/report/6>`_.
 
 The listed chapters are the introduction chapters, each MAP, PAT, WRA, 
