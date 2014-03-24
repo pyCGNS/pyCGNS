@@ -5,7 +5,7 @@
 #
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU
-import CGNS.APP.probe.arrayutils as CGA
+import CGNS.APP.lib.arrayutils as CGA
 import CGNS.NAV.wmessages as MSG
 import numpy as NPY
 

@@ -281,7 +281,7 @@ def checkDuplicatedName(parent,name,dienow=False):
     - True if the child *IS NOT* duplicated
     - False if the child *IS* duplicated
   :Remarks:
-    - Bad legacy interface, True means not ok (see :py:func:`checkHasChildName`)
+    - Bad legacy interface, True means not ok (see :py:func:`checkChildName`)
   :raise: :ref:`cgnsnameerror` code 102 if `dienow` is True
   
   """
@@ -295,11 +295,15 @@ def checkDuplicatedName(parent,name,dienow=False):
 
 # -----------------------------------------------------------------------------
 def checkHasChildName(parent,name,dienow=False):
+  checkChildName(parent,name,dienow)
+  
+# -----------------------------------------------------------------------------
+def checkChildName(parent,name,dienow=False):
   """
   Checks if the name is in the children list of the parent::
 
     count=1
-    while (checkHasChildName(node,'solution#%.3d'%count)): count+=1
+    while (checkChildName(node,'solution#%.3d'%count)): count+=1
 
   :arg CGNS/Python parent: the parent node
   :arg str name: the child name to look for
@@ -314,12 +318,16 @@ def checkHasChildName(parent,name,dienow=False):
 
 # -----------------------------------------------------------------------------
 def checkUniqueChildName(parent,name,dienow=False):
+  getChildName(parent,name,dienow)
+
+# -----------------------------------------------------------------------------
+def getChildName(parent,name,dienow=False):
   """
   Checks if the name is in the children list of the parent, if the name
   already exists, a new name is returned. If the name doesn't exist the
   name itself is returned::
 
-    z=CGU.setAsChild(T,CGU.checkUniqueName(T,'BASE'))
+    z=CGU.setAsChild(T,CGU.getChildName(T,'BASE'))
 
   :arg CGNS/Python parent: the parent node
   :arg str name: the child name to look for
@@ -330,7 +338,7 @@ def checkUniqueChildName(parent,name,dienow=False):
   """
   if checkDuplicatedName(parent,name,dienow): return name
   count=1
-  while (checkHasChildName(parent,'%s#%.d'%(name,count))): count+=1
+  while (checkChildName(parent,'%s#%.d'%(name,count))): count+=1
   return '%s#%.d'%(name,count)
 
 # -----------------------------------------------------------------------------
@@ -1128,11 +1136,12 @@ def getNodeByPath(tree,path):
       lpath=lpath[1:]
       absolute=True
   if (tree[3]==CK.CGNSTree_ts):
-    T=tree
     if (lpath[0]==CK.CGNSTree_s):
       if (len(lpath)==1): return T
       lpath=lpath[1:]
-  T=[None,None,[tree],None]
+    T=tree
+  else:
+    T=[None,None,[tree],None]
   n=getNodeFromPath(lpath,T)
   if (n==-1): return None
   return n
@@ -2274,10 +2283,14 @@ def hasEnumValue(node):
     
 # -----------------------------------------------------------------------------
 def hasChildName(parent,name,dienow=False):
+  hasChildNode(parent,name,dienow)
+  
+# -----------------------------------------------------------------------------
+def hasChildNode(parent,name,dienow=False):
   """
   Returns a child node if it exists::
 
-    n=hasChildName(zone,CGK.ZoneType_s)
+    n=hasChildNode(zone,CGK.ZoneType_s)
     if ((n is not None) and (stringValueMatches(n,CGK.Unstructured_s)):
       # found unstructured zone
 
