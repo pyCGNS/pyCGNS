@@ -2283,7 +2283,7 @@ def hasEnumValue(node):
     
 # -----------------------------------------------------------------------------
 def hasChildName(parent,name,dienow=False):
-  hasChildNode(parent,name,dienow)
+  return hasChildNode(parent,name,dienow)
   
 # -----------------------------------------------------------------------------
 def hasChildNode(parent,name,dienow=False):
