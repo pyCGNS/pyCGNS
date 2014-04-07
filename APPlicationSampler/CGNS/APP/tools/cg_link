@@ -164,49 +164,50 @@ def transLinks(filename,L,P,C):
   CGM.save(filename,t,links=LH)
   return LH
 
-P=[]
-C=Context()
-C.translate=args.translate
-C.exthdf='.hdf'
-C.verbose=args.verbose
-C.depth=0
-C.path=args.path
-C.linklist=args.linklist
+if (__name__=='__main__'):
+  P=[]
+  C=Context()
+  C.translate=args.translate
+  C.exthdf='.hdf'
+  C.verbose=args.verbose
+  C.depth=0
+  C.path=args.path
+  C.linklist=args.linklist
 
-if (C.translate):
-  try:
-    cgc=subprocess.check_output(["which","cgnsconvert"])
-  except:
+  if (C.translate):
     try:
-      cgc=subprocess.check_output(["whence","cgnsconvert"])
+      cgc=subprocess.check_output(["which","cgnsconvert"])
     except:
-      cgc=None
-  if (cgc is None):
-    if (C.verbose):
-      print("cg_link Error: Cannot find 'cgnsconvert' in the PATH")
-    sys.exit(1)
-  C.converter=cgc[:-1]
+      try:
+        cgc=subprocess.check_output(["whence","cgnsconvert"])
+      except:
+        cgc=None
+    if (cgc is None):
+      if (C.verbose):
+        print("cg_link Error: Cannot find 'cgnsconvert' in the PATH")
+      sys.exit(1)
+    C.converter=cgc[:-1]
 
-if (C.verbose): excpt=IndexError
-else: excpt=CGM.CHLone.CHLoneException
-for F in args.files:
-  try:
-    if (C.translate):
-      FA=F
-      FH=asHDFname(FA,C)
-      convertInPlace(FA,FH,C)
-    else:
-      FH=F
-    if (C.verbose): print 'Start:',FH
-    parseFile(FH,P,C)
-  except excpt: pass
+  if (C.verbose): excpt=IndexError
+  else: excpt=CGM.CHLone.CHLoneException
+  for F in args.files:
+    try:
+      if (C.translate):
+        FA=F
+        FH=asHDFname(FA,C)
+        convertInPlace(FA,FH,C)
+      else:
+        FH=F
+      if (C.verbose): print 'Start:',FH
+      parseFile(FH,P,C)
+    except excpt: pass
 
-if (C.linklist):
-  L=set()
-  for p in P: L.add(p)
-  L=list(L)
-  L.sort()
-  for p in L: print p
+  if (C.linklist):
+    L=set()
+    for p in P: L.add(p)
+    L=list(L)
+    L.sort()
+    for p in L: print p
 
 # --- last line
 

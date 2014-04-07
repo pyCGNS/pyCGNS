@@ -57,10 +57,11 @@ def run(T,trace,userlist):
       diag.merge(parser.log)
     return diag
 
-def compliant(T,trace=False,userlist=['DEFAULT']):
+def compliant(T,trace=False,userlist=['DEFAULT'],paths=['']):
     ipath='%s/lib/python%s.%s/site-packages/CGNS/VAL/grammars'%\
            (sys.prefix,sys.version_info[0],sys.version_info[1])
     sys.path.append(ipath)
+    for pp in paths: sys.path.append(pp)
     diag=run(T,trace,userlist)
     ok=[True,[]]
     for p in diag:

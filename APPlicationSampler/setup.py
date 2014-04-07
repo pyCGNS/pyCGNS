@@ -22,7 +22,7 @@ import numpy
 incdirs=['%s/lib/python%s/site-packages/numpy/core/include'\
          %(os.path.normpath(sys.exec_prefix),sys.version[:3]),
          '.',
-         'CGNS/APP/probe']
+         'CGNS/APP/lib']
 incdirs+=[numpy.get_include()]
 
 slist=['cg_grep','cg_list','cg_link','cg_gather','cg_scatter',

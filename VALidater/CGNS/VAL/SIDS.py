@@ -5,10 +5,11 @@
 
 import CGNS.VAL.simplecheck 
 
-def check(t,trace=False):
-  chk=CGNS.VAL.simplecheck.compliant(t,userlist=['SIDS','elsA'])
+def check(t,trace=False,grammar=None,paths=['']):
+  if (grammar is None): grammar=['SIDS']
+  chk=CGNS.VAL.simplecheck.compliant(t,userlist=grammar,paths=paths)
   if trace:
       for d in chk[1]:
-          print d
+          print '# %s >>> %s'%(d[1],d[0])
   return chk[0]
 
