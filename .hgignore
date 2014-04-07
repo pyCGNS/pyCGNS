@@ -13,5 +13,11 @@ APPlicationSampler/build
 *~
 log
 *.*.orig
+NAVigater/CGNS/NAV/G/Q7*.c
+VALidater/CGNS/VAL/grammars/*.c
+WRApper/CGNS/WRA/mll.c
+APPlicationSampler/CGNS/APP/lib/arrayutils.c
+NAVigater/CGNS/NAV/m*.c
+NAVigater/CGNS/NAV/temputils.c
 .project
 .pydevproject
