@@ -1722,7 +1722,7 @@ def wsort(a,b):
 
 # --------------------------------------------------   
 def getPathFullTree(tree,width=False):
-    return getPathsFullTree(tree,width=False)
+    return getPathsFullTree(tree,width)
 
 # --------------------------------------------------   
 def getPathsFullTree(tree,width=False):
