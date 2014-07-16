@@ -18,8 +18,10 @@ class CGUTestCase(unittest.TestCase):
     # then load tree
     import CGNS.PAT.test.disk
     self.T=CGNS.PAT.test.disk.T
+
   def test_00Module(self):
     pass
+
   def test_01Check(self):
     import CGNS.PAT.cgnsutils  as CGU
     import CGNS.PAT.cgnserrors as CGE
@@ -68,6 +70,7 @@ class CGUTestCase(unittest.TestCase):
     self.assertTrue(CGU.checkSameNode(self.T,self.T))
     self.assertFalse(CGU.checkSameNode(self.T,[None,None,[],None]))
     self.assertRaisesRegexp(CGE.cgnsNodeError,self.eStr(30),CGU.checkSameNode,self.T,[None,None,[],None],dienow=True)
+
   def test_02Path(self):
     import CGNS.PAT.cgnsutils as CGU
     import CGNS.PAT.cgnserrors as CGE
@@ -86,6 +89,7 @@ class CGUTestCase(unittest.TestCase):
     p='/Zone/ZoneBC'
     self.assertEqual(CGU.getPathAsTypes(zone,p,legacy=False),[CGK.Zone_ts,CGK.ZoneBC_ts])
     self.assertEqual(CGU.getPathAsTypes(zone,p,legacy=True),[CGK.ZoneBC_ts])
+
   def test_03NodeStructure(self):
     import CGNS.PAT.cgnsutils as CGU
     import CGNS.PAT.cgnserrors as CGE
@@ -101,28 +105,33 @@ class CGUTestCase(unittest.TestCase):
     c=CGU.nodeCopy(n)
     self.assertIsNot(n,c)
     cname='NCopy'
-    c=CGU.nodeCopy(n,cname)    
+    c=CGU.nodeCopy(n,cname)
     self.assertEqual(c[0],cname)
     del n
     self.assertEqual(c[0],cname)
     
   def test_04NodeChildren(self):
     import CGNS.PAT.cgnsutils as CGU
+    import CGNS.PAT.cgnslib as CGL
     import CGNS.PAT.cgnserrors as CGE
     import CGNS.PAT.cgnskeywords as CGK
     A=['A',None,[],None]
     B=['B',None,[],None]
     C=['C',None,[],None]
-    D=['D',None,[],None]
     A[2]+=[B]
-    A[2]+=[C]
+    CGU.setAsChild(A,C)
     self.assertTrue(CGU.hasChildName(A,'B'))
+    self.assertTrue(CGU.hasChildName(A,'C'))
     self.assertTrue(CGU.checkDuplicatedName(A,'D'))
     self.assertFalse(CGU.checkHasChildName(A,'D'))
-    A[2]+=[D]    
+    D=CGU.nodeCreate('D',None,[],None,parent=A)
     self.assertFalse(CGU.checkDuplicatedName(A,'D'))
     self.assertTrue(CGU.checkHasChildName(A,'D'))
     self.assertFalse(CGU.checkNodeType(C))
+    d={'None':None,'String':'string value','Integer':10,'Float':1.4}
+    for n,v in d.items(): CGL.newDataArray(A,n,v)
+    for name in d.keys():self.assertTrue(CGU.hasChildName(A,name))
+    
   def test_05NodeValue(self):
     import numpy
     import CGNS.PAT.cgnsutils as CGU
@@ -145,17 +154,6 @@ class CGUTestCase(unittest.TestCase):
     self.assertTrue((CGU.setDoubleAsArray(1,2,3)==numpy.array([1,2,3],dtype='d')).all())
     self.assertTrue((CGU.setDoubleAsArray(tuple(range(10,1010,10)))==numpy.array(tuple(range(10,1010,10)),dtype='d')).all())
     n=['ZoneType',None,[],'ZoneType_t']
-    # set*AsValue
-    self.assertTrue(CGU.stringValueMatches(CGU.setStringAsValue(n,'Structured'),'Structured'))
-    self.assertEqual(CGU.setIntegerAsValue(n,1)[1],numpy.array(1,dtype='i'))
-    self.assertTrue(numpy.array_equal(CGU.setIntegerAsValue(n,1,2,3)[1],numpy.array([1,2,3],dtype='i')))
-    self.assertEqual(CGU.setLongAsValue(n,1)[1],numpy.array(1,dtype='l'))
-    self.assertTrue(numpy.array_equal(CGU.setLongAsValue(n,1,2,3)[1],numpy.array([1,2,3],dtype='l')))
-    self.assertEqual(CGU.setFloatAsValue(n,1)[1],numpy.array(1,dtype='f'))
-    self.assertTrue(numpy.array_equal(CGU.setFloatAsValue(n,1,2,3)[1],numpy.array([1,2,3],dtype='f')))
-    self.assertEqual(CGU.setDoubleAsValue(n,1)[1],numpy.array(1,dtype='d'))
-    self.assertTrue(numpy.array_equal(CGU.setDoubleAsValue(n,1,2,3)[1],numpy.array([1,2,3],dtype='d')))
-    self.assertTrue(numpy.array_equal(CGU.setDoubleAsValue(n,range(10,1010,10))[1],numpy.array([range(10,1010,10)],dtype='d')))
     # set*ByPath
     self.assertTrue(CGU.stringValueMatches(CGU.setStringByPath(n,'/','Structured'),'Structured'))
     self.assertEqual(CGU.setIntegerByPath(n,'/',1)[1],numpy.array(1,dtype='i'))
@@ -167,10 +165,6 @@ class CGUTestCase(unittest.TestCase):
     self.assertEqual(CGU.setDoubleByPath(n,'/',1)[1],numpy.array(1,dtype='d'))
     self.assertTrue(numpy.array_equal(CGU.setDoubleByPath(n,'/',1,2,3)[1],numpy.array([1,2,3],dtype='d')))
     self.assertTrue(numpy.array_equal(CGU.setDoubleByPath(n,'/',range(10,1010,10))[1],numpy.array([range(10,1010,10)],dtype='d')))
-    # guess value type
-    self.assertTrue(CGU.stringValueMatches(CGU.setValue(n,'Structured'),'Structured'))
-    self.assertEqual(CGU.setValue(n,1)[1],numpy.array(1,dtype='l'))
-    self.assertEqual(CGU.setValue(n,1.)[1],numpy.array(1,dtype='d'))
     
   def test_06NodeType(self):
     import CGNS.PAT.cgnsutils as CGU
@@ -192,6 +186,7 @@ class CGUTestCase(unittest.TestCase):
     self.assertTrue(CGU.checkNodeType(C,[CGK.Zone_ts,CGK.CGNSBase_ts,
                                          CGK.Zone_ts]))
     self.assertTrue(CGU.checkNodeType(C,CGK.CGNSBase_ts))
+
   def test_07NodeCompliance(self):
     import CGNS.PAT.cgnsutils as CGU
     import CGNS.PAT.cgnserrors as CGE
@@ -203,6 +198,7 @@ class CGUTestCase(unittest.TestCase):
     self.assertTrue(CGU.checkNodeCompliant(z,None))
     self.assertTrue(CGU.checkNodeCompliant(z,n,dienow=True))
     self.assertFalse(CGU.checkNodeCompliant(None,n))
+
   def test_08NodeRetrieval(self):
     import CGNS.PAT.cgnsutils as CGU
     import CGNS.PAT.cgnserrors as CGE
@@ -229,14 +225,15 @@ class CGUTestCase(unittest.TestCase):
     v2='/{Base#1}/{Zone-D2}/ZoneGridConnectivity/{CT-D2-C}'
     self.assertEqual(CGU.getPathByTypeFilter(self.T,filter)[-2],v2)
     t=CGK.CGNSBase_ts
-    b=CGU.getParentByType(self.T,n3,t)
+    b=CGU.getAncestorByType(self.T,n3,t)
     self.assertEqual(b[3],t)
-    self.assertIsNone(CGU.getParentByType(self.T,b,CGK.Zone_ts))
+    self.assertIsNone(CGU.getAncestorByType(self.T,b,CGK.Zone_ts))
     t=CGK.Zone_ts
-    self.assertEqual(CGU.getParentByType(b,n3,t)[3],t)
+    self.assertEqual(CGU.getAncestorByType(b,n3,t)[3],t)
     for p in CGU.getPathsByTypeSet(self.T,[CGK.BC_ts]):
       node=CGU.getNodeByPath(self.T,p)
       self.assertEqual(p,CGU.getPathFromNode(self.T,node))
+
   def test_09NodeDelete(self):
     import CGNS.PAT.cgnsutils as CGU
     import CGNS.PAT.cgnserrors as CGE
@@ -247,25 +244,25 @@ class CGUTestCase(unittest.TestCase):
     d=CGU.nodeCreate('Data',numpy.array([3.14]),[],CGK.DataArray_ts,parent=r)
     self.assertIsNotNone(CGU.hasChildName(r,'Data'))
     CGU.nodeDelete(n,d)
-    self.assertIsNone(CGU.hasChildName(r,'Data'))                    
+    self.assertIsNone(CGU.hasChildName(r,'Data'))
     d=CGU.nodeCreate('DataZ',numpy.array([3.14]),[],CGK.DataArray_ts,parent=r)
     self.assertIsNotNone(CGU.hasChildName(r,'DataZ'))
     CGU.nodeDelete(r,d)
-    self.assertIsNone(CGU.hasChildName(r,'DataZ'))                    
+    self.assertIsNone(CGU.hasChildName(r,'DataZ'))
     CGU.nodeDelete(r,d)
-    self.assertIsNone(CGU.hasChildName(r,'DataZ'))                    
+    self.assertIsNone(CGU.hasChildName(r,'DataZ'))
     n=CGU.nodeCreate('Base',numpy.array([3,3]),[],CGK.CGNSBase_ts)
     r=CGU.nodeCreate('ReferenceState',None,[],CGK.ReferenceState_ts,parent=n)
     d=CGU.nodeCreate('Data',numpy.array([3.14]),[],CGK.DataArray_ts,parent=r)
     self.assertIsNotNone(CGU.getNodeByPath(n,'/Base/ReferenceState/Data'))
     CGU.nodeDelete(n,d)
-    self.assertIsNone(CGU.hasChildName(r,'Data'))              
+    self.assertIsNone(CGU.hasChildName(r,'Data'))
     n=CGU.nodeCreate('Base',numpy.array([3,3]),[],CGK.CGNSBase_ts)
     r=CGU.nodeCreate('ReferenceState',None,[],CGK.ReferenceState_ts,parent=n)
     d=CGU.nodeCreate('Data',numpy.array([3.14]),[],CGK.DataArray_ts,parent=r)
     self.assertIsNotNone(CGU.getNodeByPath(n,'/Base/ReferenceState/Data'))
     CGU.removeChildByName(r,'Data')
-    self.assertIsNone(CGU.hasChildName(r,'Data'))              
+    self.assertIsNone(CGU.hasChildName(r,'Data'))
 
 # ---
 suite = unittest.TestLoader().loadTestsFromTestCase(CGUTestCase)

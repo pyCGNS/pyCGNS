@@ -47,12 +47,15 @@ def nodeCreate(name,value,children,type,parent=None,dienow=False):
     - Adds checks with :py:func:`checkNodeCompliant` only if `dienow` is `True`
 
   """
-  return newNode(name,value,children,type,parent,dienow)
+  return newNode(name,value,children,type,parent=parent,dienow=dienow)
     
 def newNode(name,value,children,type,parent=None,dienow=False):
-  node=[name, value, children, type]
+  node=[name, value, [], type]
+  if isinstance(children,list) and children is not []:
+    if checkNodeCompliant(children): setAsChild(node,children)
+    else: node[2]=children
   if (dienow): checkNodeCompliant(node,parent,dienow)
-  if (parent): parent[2].append(node)
+  if (parent): setAsChild(parent,node)
   return node
 
 # --------------------------------------------------
@@ -295,7 +298,7 @@ def checkDuplicatedName(parent,name,dienow=False):
 
 # -----------------------------------------------------------------------------
 def checkHasChildName(parent,name,dienow=False):
-  checkChildName(parent,name,dienow)
+  return checkChildName(parent,name,dienow)
   
 # -----------------------------------------------------------------------------
 def checkChildName(parent,name,dienow=False):
@@ -549,7 +552,7 @@ def sameNode(nodeA,nodeB,dienow=False):
   elif (not checkSameValue(nodeA,nodeB)):           same=False
   elif (len(nodeA[2]) != len(nodeB[2])):            same=False
   if (not same and dienow):
-    raise cgnsNodeError(30,(nodeA[0],nodeB[0]))
+    raise CE.cgnsNodeError(30,(nodeA[0],nodeB[0]))
   return same
 
 # -----------------------------------------------------------------------------
@@ -1045,15 +1048,15 @@ def getNodeType(node):
     if (data.dtype.char in ['i','I']):        return CK.I4
     if (data.dtype.char in ['l']):            return CK.I8
   if ((type(data) == type([])) and (len(data))): # oups !
-    if (type(data[0]) == type("")):           return CK.C1 
-    if (type(data[0]) == type(0)):            return CK.I4 
+    if (type(data[0]) == type("")):           return CK.C1
+    if (type(data[0]) == type(0)):            return CK.I4
     if (type(data[0]) == type(0.0)):          return CK.R8
   return '??'
 
 # --------------------------------------------------
 def hasFirstPathItem(path,item=CK.CGNSTree_s):
   """
-  True if the arg string is the item of the path
+  True if the arg string is the item of the path::
 
     p='/{Base#1}/{Zone-A}/ZoneGridConnectivity'
     print hasFirstPathItem(p,'{Base#1}')
@@ -1132,17 +1135,16 @@ def getNodeByPath(tree,path):
   if (path in ['','/','.']): return tree
   if (not checkPath(path)): return None
   lpath=path.split('/')
-  absolute=False
-  if (lpath[0]==''):
-      lpath=lpath[1:]
-      absolute=True
+  if (lpath[0]==''): lpath=lpath[1:]
   if (tree[3]==CK.CGNSTree_ts):
-    if (lpath[0]==CK.CGNSTree_s):
-      if (len(lpath)==1): return tree
-      lpath=lpath[1:]
     T=tree
+    if (lpath[0]==CK.CGNSTree_s):
+      if (len(lpath)==1): return T
+      lpath=lpath[1:]
+  elif (lpath[0]==tree[0]):
+    T=[CK.CGNSTree_s,None,[tree],CK.CGNSTree_ts]
   else:
-    T=[None,None,[tree],None]
+    T=tree
   n=getNodeFromPath(lpath,T)
   if (n==-1): return None
   return n
@@ -1538,7 +1540,7 @@ def getPathFromNode(tree,node,path=''):
     - see also :py:func:`getPathFromRoot`
    
   """
-  if checkSameNode(node,tree): return path
+  if id(node)==id(tree): return path
   for c in tree[2]:
     p=getPathFromNode(c,node,path+'/'+c[0])
     if (p): return p
@@ -1927,10 +1929,8 @@ def getPathNoRoot(path):
       well as CGNS.PAT.cgnskeywords.CGNSTree_s
    
   """
-  if (path is None): return '/'
-  if (path == ''):   return '/'
   path=getPathNormalize(path)
-  if (path=='/'): return path
+  if (path in [None,"",".",'/',"/"+CK.CGNSHDF5ROOT_s, "/"+CK.CGNSTree_s]): return "/"
   lp=path.split('/')
   if (lp[0] in [CK.CGNSHDF5ROOT_s, CK.CGNSTree_s]): lp=lp[1:]
   if ((lp[0]=='')
