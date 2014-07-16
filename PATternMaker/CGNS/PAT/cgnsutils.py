@@ -318,6 +318,7 @@ def checkChildName(parent,name,dienow=False):
 
 # -----------------------------------------------------------------------------
 def checkUniqueChildName(parent,name,dienow=False):
+  # todo: fix this should return a boolean
   getChildName(parent,name,dienow)
 
 # -----------------------------------------------------------------------------
@@ -2324,37 +2325,38 @@ def hasChildNodeOfType(node,ntype):
 
 # --------------------------------------------------
 def stringMatches(string,reval):
-  """True if the pattern matches the string"""
+  """Returns re.group if the pattern matches the string, None otherwise"""
   return re.match(reval,string)
 
 # --------------------------------------------------
 def stringNameMatches(node,reval):
-  """True if the pattern matches the node name"""
+  """Returns re.group if the pattern matches the node name, None otherwise"""
   return stringMatches(node[0],reval)
 
 # --------------------------------------------------
 def stringValueMatches(node,reval):
   """True if the string matches the node value"""
-  if (node == None):             return 0
-  if (node[1] == None):          return 0  
-  if (getNodeType(node)!=CK.C1): return 0
+  if (node == None):             return False
+  if (node[1] == None):          return False  
+  if (getNodeType(node)!=CK.C1): return False
   tn=type(node[1])
   if   (tn==type('')): vn=node[1]
   elif (tn == type(NPY.ones((1,))) and (node[1].dtype.kind in ['S','a'])):
     vn=node[1].tostring()
-  else: return 0
-  return stringMatches(vn,reval)
+  else: return False
+  if (stringMatches(vn,reval) is not None): return True
+  return False
 
 # --------------------------------------------------
 def stringValueInList(node,listval):
-  if (node == None):             return 0
-  if (node[1] == None):          return 0  
-  if (getNodeType(node)!=CK.C1): return 0
+  if (node == None):             return False
+  if (node[1] == None):          return False
+  if (getNodeType(node)!=CK.C1): return False
   tn=type(node[1])
   if   (tn==type('')): vn=node[1]
   elif (tn == type(NPY.ones((1,))) and (node[1].dtype.kind in ['S','s'])):
     vn=node[1].tostring()
-  else: return 0
+  else: return False
   return vn in listval
 
 # --------------------------------------------------
@@ -2396,6 +2398,10 @@ def toStringChildren(l,readable=False,shift=0):
     s+=','
   s+=']'
   return s
+
+# --------------------------------------------------
+def pretty_print(tree):
+  return toString(tree)
 
 # --------------------------------------------------
 def toString(tree,readable=False,shift=0):

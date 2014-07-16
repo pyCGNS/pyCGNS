@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
-# Created: Thu Feb  6 17:40:19 2014
+# Created: Thu Jul 10 10:37:42 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -272,16 +272,17 @@ class Ui_Q7TreeWindow(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
         self.horizontalLayout_4 = QtGui.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.cSaveLog = QtGui.QPushButton(Q7TreeWindow)
-        self.cSaveLog.setMinimumSize(QtCore.QSize(25, 25))
-        self.cSaveLog.setMaximumSize(QtCore.QSize(25, 25))
-        self.cSaveLog.setText("")
+        self.lineEditLock = QtGui.QPushButton(Q7TreeWindow)
+        self.lineEditLock.setMinimumSize(QtCore.QSize(25, 25))
+        self.lineEditLock.setMaximumSize(QtCore.QSize(25, 25))
+        self.lineEditLock.setText("")
         icon26 = QtGui.QIcon()
-        icon26.addPixmap(QtGui.QPixmap(":/images/icons/save-log.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.cSaveLog.setIcon(icon26)
-        self.cSaveLog.setCheckable(True)
-        self.cSaveLog.setObjectName("cSaveLog")
-        self.horizontalLayout_4.addWidget(self.cSaveLog)
+        icon26.addPixmap(QtGui.QPixmap(":/images/icons/optional-sids-node.gif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon26.addPixmap(QtGui.QPixmap(":/images/icons/lock-scroll.gif"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        self.lineEditLock.setIcon(icon26)
+        self.lineEditLock.setCheckable(True)
+        self.lineEditLock.setObjectName("lineEditLock")
+        self.horizontalLayout_4.addWidget(self.lineEditLock)
         self.lineEdit = QtGui.QLineEdit(Q7TreeWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -438,7 +439,7 @@ class Ui_Q7TreeWindow(object):
         self.bToolsView.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Open Tools view", None, QtGui.QApplication.UnicodeUTF8))
         self.bScreenShot.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Save tree view snapshot", None, QtGui.QApplication.UnicodeUTF8))
         self.bScreenShot.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.cSaveLog.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Write commands log", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEditLock.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Toggle tree selection updates the edit line", None, QtGui.QApplication.UnicodeUTF8))
         self.bBackControl.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Raise Control window", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("Q7TreeWindow", "Group:", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7TreeWindow", "Query:", None, QtGui.QApplication.UnicodeUTF8))

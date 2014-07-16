@@ -189,6 +189,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         #ix=-1#self.cQuery.findText()self.querymodel.getCurrentQuery())
         #if (ix!=-1): self.cQuery.setCurrentIndex(ix)
         self.bSave.clicked.connect(self.savetree)
+        
         self.lockable(self.bSave)
         self.bSaveAs.clicked.connect(self.savetreeas)
         self.lockable(self.bSaveAs)
@@ -250,7 +251,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bCheckView.setDisabled(True)
         self.bPatternDB.setDisabled(True)
         self.bSelectLink.clicked.connect(self.linkselect)
-        self.cSaveLog.setDisabled(True)
+        QObject.connect(self.lineEdit,
+                        SIGNAL("returnPressed()"),
+                        self.jumpToNode)
         self.updateTreeStatus()
         if (self._control.query is not None):
             ix=self.cQuery.findText(self._control.query,
@@ -318,8 +321,13 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.treeview.expandToDepth(self._depthExpanded)
         self.resizeAll()
     def updateStatus(self,node):
-        self.lineEdit.clear()
-        self.lineEdit.insert(node.sidsPath())
+        if (not self.lineEditLock.isChecked()):
+          self.lineEdit.clear()
+          self.lineEdit.insert(node.sidsPath())
+    def jumpToNode(self):
+        path=self.lineEdit.text()
+        print 'PATH',path
+        self.treeview.selectByPath(path)
     def popform(self):
         self.formview()
     def openLkTree(self):

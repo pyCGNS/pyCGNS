@@ -619,6 +619,20 @@ Search all <b>UserDefinedData_t</b> nodes with a non-<b>MT</b> data type.
 
 No argument.
 """),
+      
+('012. FamilyName reference',
+ 'Search by',
+"""
+if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
+    (VALUE.tostring()==ARGS[0])):
+    RESULT=True
+""",
+"""
+Search by
+Reference to a FamilyName
+
+Search all <b>FamilyName</b> nodes with the arg string (plain).
+"""),
 
 # --- Replace
 

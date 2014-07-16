@@ -48,7 +48,7 @@ file format and you can understand why by using pyCGNS without any
 file at all for your actual CFD data! 
 
 
-.. sidebar:: Release 4.4
+.. sidebar:: Release 4.4.490
 
    - New tools in APP (see :ref:`apptools`)
 

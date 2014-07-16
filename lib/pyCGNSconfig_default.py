@@ -74,7 +74,7 @@ PFX='### pyCGNS:'
 #
 __version__=4 # @@UPDATEVERSION@@
 __release__=4 # @@UPDATERELEASE@@
-__revision__=489 # @@UPDATEREVISION@@
+__revision__=490 # @@UPDATEREVISION@@
 __vid__="%s.%s.%s"%(__version__,__release__,__revision__)
 __doc__="""pyCGNS - %s - Python package for CFD General Notation System"""\
         %(__vid__)
@@ -131,7 +131,7 @@ NUMPY_EXTRA_ARGS=%(NUMPY_EXTRA_ARGS)s
 
 __version__=4 # @@UPDATEVERSION@@
 __release__=4 # @@UPDATERELEASE@@
-__revision__=489 # @@UPDATEREVISION@@
+__revision__=490 # @@UPDATEREVISION@@
 __vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
 __doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
         %%(__vid__)

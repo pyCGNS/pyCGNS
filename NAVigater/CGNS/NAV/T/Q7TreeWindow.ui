@@ -838,7 +838,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
-      <widget class="QPushButton" name="cSaveLog">
+      <widget class="QPushButton" name="lineEditLock">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -852,14 +852,15 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Write commands log</string>
+        <string>Toggle tree selection updates the edit line</string>
        </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/save-log.png</normaloff>:/images/icons/save-log.png</iconset>
+         <normaloff>:/images/icons/optional-sids-node.gif</normaloff>
+         <normalon>:/images/icons/lock-scroll.gif</normalon>:/images/icons/optional-sids-node.gif</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
