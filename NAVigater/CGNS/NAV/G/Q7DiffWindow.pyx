@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7DiffWindow.ui'
 #
-# Created: Thu Feb  6 17:40:20 2014
+# Created: Tue Sep 30 15:24:40 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -175,5 +175,5 @@ class Ui_Q7DiffWindow(object):
         self.bNextMark.setText(QtGui.QApplication.translate("Q7DiffWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setText(QtGui.QApplication.translate("Q7DiffWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
 
-from CGNS.PRO.mdifftreeview import Q7DiffTreeView
+from CGNS.NAV.mdifftreeview import Q7DiffTreeView
 import Res_rc

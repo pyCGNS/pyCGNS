@@ -86,7 +86,7 @@ def importUserGrammars(key,recurse=False,verbose=False):
   if (verbose): print '### Looking for grammar [%s]'%key
   try:
     tp=imp.find_module(modname)
-  except ValueError: #ImportError:
+  except ImportError:
     if (verbose): print '### Error: grammar [%s] not found'%key
     if (recurse):
       dk=findOneUserGrammar(key)
@@ -115,4 +115,13 @@ def importUserGrammars(key,recurse=False,verbose=False):
        fp.close()
   return mod
 
+#  -------------------------------------------------------------------------
+def locateGrammars():
+  glist=[]
+  for k in ['SIDS','elsA']:
+    mod=importUserGrammars(k)
+    if (mod is not None):
+      glist.append((k,mod.__file__))
+  return glist
+  
 # ---

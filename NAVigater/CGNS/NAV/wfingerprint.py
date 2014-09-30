@@ -676,4 +676,23 @@ class Q7FingerPrint:
         if (status not in Q7FingerPrint.STATUS_LIST): return
         if (status not in self._status): self._status.append(status)
         self.control.updateViews()
+    def pushGrammarPaths(self):
+        if (not OCTXT.ValKeyList): return
+        tag=OCTXT.ValKeyList[0]
+        pths=[]
+        self._oldsys=sys.path
+        for p in OCTXT.GrammarSearchPathList:
+            pths.append(str(p))
+        for p in sys.path:
+            pths.append(str(p))
+        pths_uniq=[]
+        for p in pths:
+            if (p not in pths_uniq): pths_uniq.append(p)
+        sys.path=pths_uniq
+    def popGrammarPaths(self):
+        sys.path=self._oldsys
+    def nextGrammarTag(self):
+      for t in OCTXT.ValKeyList:
+        yield t
+
 # -----------------------------------------------------------------

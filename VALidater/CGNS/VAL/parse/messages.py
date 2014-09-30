@@ -80,6 +80,7 @@ class DiagnosticLog(dict):
     def push(self,path,messagekey,*tp):
         if (path is None): return
         if (path not in self): self[path]=[]
+        print 'KEY ',messagekey
         if (messagekey not in DiagnosticLog.__messages): return
         entry=DiagnosticMessageInstance(DiagnosticLog.__messages[messagekey])
         self[path].append(entry.substitute(*tp))

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Thu Feb  6 17:40:24 2014
+# Created: Mon Sep 29 15:55:09 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -146,12 +146,16 @@ class Ui_Q7OptionsWindow(object):
         self.tab_6 = QtGui.QWidget()
         self.tab_6.setObjectName("tab_6")
         self.__O_checkonthefly = QtGui.QCheckBox(self.tab_6)
+        self.__O_checkonthefly.setEnabled(False)
         self.__O_checkonthefly.setGeometry(QtCore.QRect(10, 10, 274, 22))
+        self.__O_checkonthefly.setCheckable(True)
         self.__O_checkonthefly.setObjectName("__O_checkonthefly")
         self.__O_forcesidslegacymapping = QtGui.QCheckBox(self.tab_6)
+        self.__O_forcesidslegacymapping.setEnabled(False)
         self.__O_forcesidslegacymapping.setGeometry(QtCore.QRect(10, 30, 274, 22))
         self.__O_forcesidslegacymapping.setObjectName("__O_forcesidslegacymapping")
         self.__O_forcefortranflag = QtGui.QCheckBox(self.tab_6)
+        self.__O_forcefortranflag.setEnabled(False)
         self.__O_forcefortranflag.setGeometry(QtCore.QRect(10, 50, 274, 22))
         self.__O_forcefortranflag.setObjectName("__O_forcefortranflag")
         self.groupBox_3 = QtGui.QGroupBox(self.tab_6)
@@ -167,6 +171,7 @@ class Ui_Q7OptionsWindow(object):
         self.label_31.setGeometry(QtCore.QRect(10, 25, 271, 21))
         self.label_31.setObjectName("label_31")
         self.cRecurseGrammarSearch = QtGui.QCheckBox(self.groupBox_3)
+        self.cRecurseGrammarSearch.setEnabled(False)
         self.cRecurseGrammarSearch.setGeometry(QtCore.QRect(10, 50, 301, 21))
         self.cRecurseGrammarSearch.setCheckable(False)
         self.cRecurseGrammarSearch.setObjectName("cRecurseGrammarSearch")

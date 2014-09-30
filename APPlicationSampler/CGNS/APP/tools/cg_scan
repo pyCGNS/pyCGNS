@@ -79,11 +79,11 @@ if (args.remove is not None): Q.idlist=args.remove.split(':')
 if (args.user is not None): Q.userkeys=[args.user]
 
 if (Q.diaglist):
-  ml=CGV.listdiags(verbose,userlist)
+  ml=CGV.listdiags(Q.verbose,Q.userkeys)
   print ml
 elif (Q.keylist):
   print '### Looking for keys, parsing PYTHONPATH may be long...'
-  kl=CGV.listuserkeys(verbose)
+  kl=CGV.listuserkeys(Q.verbose)
   print kl
 else:  
   for F in args.files:

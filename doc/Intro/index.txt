@@ -50,7 +50,7 @@ file at all for your actual CFD data!
 
 .. sidebar:: Release 4.4.490
 
-   - New tools in APP (see :ref:`apptools`)
+   - New tools in APP
 
 There are seven sub-modules in
 *pyCGNS*, some of them are libraries of functions, some other are

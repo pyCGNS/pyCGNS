@@ -1272,22 +1272,14 @@ class Q7TreeModel(QAbstractItemModel):
             nodeitem=self.nodeFromPath(pth)
             nodeitem.dataRelease()
     def checkTree(self,T,pathlist):
-        if (not OCTXT.ValKeyList): return
-        tag=OCTXT.ValKeyList[0]
-        pths=[]
-        oldsys=sys.path
-        for p in OCTXT.GrammarSearchPathList:
-            pths.append(str(p))
-        for p in sys.path:
-            pths.append(str(p))
-        pths_uniq=[]
-        for p in pths:
-            if (p not in pths_uniq): pths_uniq.append(p)
-        sys.path=pths_uniq
-        mod=CGNS.VAL.parse.findgrammar.importUserGrammars(tag)
-        sys.path=oldsys
-        if (mod is None): checkdiag=CGV.CGNS_VAL_USER_Checks(None)
-        else:             checkdiag=mod.CGNS_VAL_USER_Checks(None)
+        self._fingerprint.pushGrammarPaths()
+        modset=set()
+        for tag in self._fingerprint.nextGrammarTag():
+            modset.add(CGNS.VAL.parse.findgrammar.importUserGrammars(tag))
+        self._fingerprint.popGrammarPaths()
+        for mod in modset:
+            if (mod is None): checkdiag=CGV.CGNS_VAL_USER_Checks(None)
+            else:             checkdiag=mod.CGNS_VAL_USER_Checks(None)
         checkdiag.checkTree(T,False)
         if (pathlist==[]):
             pathlist=self._extension.keys()

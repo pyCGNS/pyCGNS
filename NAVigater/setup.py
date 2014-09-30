@@ -10,7 +10,7 @@ import os
 import sys
 
 cui='pyside-uic'
-crc='pyside-rcc'
+crc='pyrcc4' #'pyside-rcc'
 ccy='cython'
 
 try:
@@ -86,7 +86,8 @@ if installprocess:
       ]
   modgenlist=[]
   modextlist=[]
-  for mfile in ['mtree','mparser','mquery','mcontrol','mtable','mpattern']:
+  for mfile in ['mtree','mparser','mquery','mcontrol','mtable','mpattern',
+                'diff','mdifftreeview','merge','mmergetreeview']:
      modextlist+=[Extension("CGNS.NAV.%s"%mfile,["CGNS/NAV/%s.pyx"%mfile,
                                                  fakefile],
                            include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,
@@ -114,11 +115,13 @@ if installprocess:
   for m in modgenlist:
       print '### pyCGNS: Generate from updated GUI templates: ',m
       com="(%s -o CGNS/NAV/G/%s.pyx CGNS/NAV/T/%s.ui;(cd CGNS/NAV/G;%s -a %s.pyx))2>/dev/null"%(cui,m,m,ccy,m)
+      print com
       os.system(com)
          
   if (os.path.getmtime('CGNS/NAV/R/Res.qrc')>os.path.getmtime('CGNS/NAV/Res_rc.py')):
       print '### pyCGNS: Generate from updated GUI Ressources'
       com="(%s -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc)2>/dev/null"%(crc)
+      print com
       os.system(com)
   cmdclassdict={'clean':setuputils.clean,'build_ext':build_ext}
 else:

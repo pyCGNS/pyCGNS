@@ -18,6 +18,7 @@ VALidater/CGNS/VAL/grammars/*.c
 WRApper/CGNS/WRA/mll.c
 APPlicationSampler/CGNS/APP/lib/arrayutils.c
 NAVigater/CGNS/NAV/m*.c
+NAVigater/CGNS/NAV/diff.c
 NAVigater/CGNS/NAV/temputils.c
 .project
 .pydevproject

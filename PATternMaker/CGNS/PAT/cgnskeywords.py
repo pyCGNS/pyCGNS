@@ -933,6 +933,10 @@ BCType_  = enumAsKeyDict(BCType_l)
  BCWallViscousHeatFlux,BCWallViscousIsothermal,
  FamilySpecified)=BCType_.keys()
 
+BC_l = BCType_l
+BC   = BCType
+BC_  = BCType_
+
 FamilyBC_l = BCType_l
 FamilyBC   = BCType
 FamilyBC_  = BCType_

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7MessageWindow.ui'
 #
-# Created: Thu Feb  6 17:40:40 2014
+# Created: Mon Sep 29 16:21:13 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,33 +12,31 @@ from PySide import QtCore, QtGui
 class Ui_Q7MessageWindow(object):
     def setupUi(self, Q7MessageWindow):
         Q7MessageWindow.setObjectName("Q7MessageWindow")
-        Q7MessageWindow.resize(500, 140)
+        Q7MessageWindow.resize(500, 200)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Q7MessageWindow.sizePolicy().hasHeightForWidth())
         Q7MessageWindow.setSizePolicy(sizePolicy)
-        Q7MessageWindow.setMinimumSize(QtCore.QSize(500, 140))
-        Q7MessageWindow.setMaximumSize(QtCore.QSize(500, 140))
+        Q7MessageWindow.setMinimumSize(QtCore.QSize(500, 200))
+        Q7MessageWindow.setMaximumSize(QtCore.QSize(1200, 600))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7MessageWindow.setWindowIcon(icon)
+        self.verticalLayout = QtGui.QVBoxLayout(Q7MessageWindow)
+        self.verticalLayout.setObjectName("verticalLayout")
         self.eMessage = QtGui.QTextEdit(Q7MessageWindow)
-        self.eMessage.setGeometry(QtCore.QRect(9, 9, 482, 91))
         self.eMessage.setMinimumSize(QtCore.QSize(0, 0))
         self.eMessage.setFrameShadow(QtGui.QFrame.Plain)
         self.eMessage.setLineWidth(0)
         self.eMessage.setUndoRedoEnabled(False)
         self.eMessage.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
         self.eMessage.setObjectName("eMessage")
-        self.verticalLayoutWidget = QtGui.QWidget(Q7MessageWindow)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(6, 106, 486, 31))
-        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.horizontalLayout_2 = QtGui.QHBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout.addWidget(self.eMessage)
+        self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setSizeConstraint(QtGui.QLayout.SetNoConstraint)
-        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.bInfo = QtGui.QPushButton(self.verticalLayoutWidget)
+        self.bInfo = QtGui.QPushButton(Q7MessageWindow)
         self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
         self.bInfo.setText("")
@@ -47,7 +45,7 @@ class Ui_Q7MessageWindow(object):
         self.bInfo.setIcon(icon1)
         self.bInfo.setObjectName("bInfo")
         self.horizontalLayout_2.addWidget(self.bInfo)
-        self.cNotAgain = QtGui.QCheckBox(self.verticalLayoutWidget)
+        self.cNotAgain = QtGui.QCheckBox(Q7MessageWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -57,12 +55,13 @@ class Ui_Q7MessageWindow(object):
         self.horizontalLayout_2.addWidget(self.cNotAgain)
         spacerItem = QtGui.QSpacerItem(868, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
-        self.bCANCEL = QtGui.QPushButton(self.verticalLayoutWidget)
+        self.bCANCEL = QtGui.QPushButton(Q7MessageWindow)
         self.bCANCEL.setObjectName("bCANCEL")
         self.horizontalLayout_2.addWidget(self.bCANCEL)
-        self.bOK = QtGui.QPushButton(self.verticalLayoutWidget)
+        self.bOK = QtGui.QPushButton(Q7MessageWindow)
         self.bOK.setObjectName("bOK")
         self.horizontalLayout_2.addWidget(self.bOK)
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
 
         self.retranslateUi(Q7MessageWindow)
         QtCore.QMetaObject.connectSlotsByName(Q7MessageWindow)

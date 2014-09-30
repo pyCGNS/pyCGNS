@@ -207,7 +207,7 @@ class GenericParser(object):
       version=int(node[1][0]*1000)
       if (version < 2400):
         stt=self.log.push(pth,'G001',version)
-      if (version > 3200):
+      if (version > 3210):
         stt=self.log.push(pth,'G002')
     except Exception:
       stt=self.log.push(pth,'G002')

@@ -6,7 +6,7 @@
 import CGNS.PAT.cgnslib      as C
 import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
-import numpy             as N
+import numpy                 as N
 #
 data=C.newAverageInterface(None)
 C.newUserDefinedData(data,'{UserDefinedData}')

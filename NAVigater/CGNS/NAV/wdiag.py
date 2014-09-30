@@ -4,6 +4,7 @@
 #  -------------------------------------------------------------------------
 #
 import sys
+import os
 import string
 from PySide.QtCore  import *
 from PySide.QtGui   import *
@@ -12,6 +13,8 @@ from CGNS.NAV.wfingerprint import Q7Window
 from CGNS.NAV.moption import Q7OptionContext  as OCTXT
 import CGNS.VAL.simplecheck as CGV
 import CGNS.VAL.parse.messages as CGM
+import CGNS.NAV.wmessages as MSG
+from CGNS.VAL.parse.findgrammar import locateGrammars
 
 # -----------------------------------------------------------------
 class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
@@ -25,6 +28,7 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         self.bNext.clicked.connect(self.nextfiltered)
         self.cWarnings.clicked.connect(self.warnings)
         self.bSave.clicked.connect(self.diagnosticssave)
+        self.bWhich.clicked.connect(self.grammars)
         QObject.connect(self.cFilter,
                         SIGNAL("currentIndexChanged(int)"),
                         self.filterChange)
@@ -32,10 +36,20 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         self._parent=parent
         self.diagTable.keyPressEvent=self.diagTableKeyPressEvent
         self.filterChange()
+        self._fingerprint=fgprint
+    def grammars(self):
+        self._fingerprint.pushGrammarPaths()
+        gl=""
+        for g in locateGrammars():
+            gl+="%s : %s<br>"%(g[0],os.path.split(g[1])[0])
+        self._fingerprint.popGrammarPaths()
+        MSG.wInfo(self,"Diag view:",
+                  """Checks performed using the following grammars:<br>%s"""%gl,
+                  again=False)
     def diagTableKeyPressEvent(self,event):
         kmod=event.modifiers()
         kval=event.key()
-        if (kval==Qt.Key_Space):
+        if (kval==Qt.Key_Enter):
             itlist=self.diagTable.selectedItems()
             it=itlist[0]
             itxt=it.text(0)
@@ -120,7 +134,9 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
                   self._filterItems[diag.key]=[dit]
                 else:
                   self._filterItems[diag.key].insert(0,dit)
-        for k in keyset:
+        keylist=list(keyset)
+        keylist.sort()
+        for k in keylist:
             self.cFilter.addItem(k)
     def reject(self):
         self.close()

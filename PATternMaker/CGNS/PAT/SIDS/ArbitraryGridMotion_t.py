@@ -6,7 +6,7 @@
 import CGNS.PAT.cgnslib      as C
 import CGNS.PAT.cgnskeywords as K
 import CGNS.PAT.cgnserrors   as E
-import numpy             as N
+import numpy                 as N
 #
 #
 data=C.newArbitraryGridMotion(None,'{ArbitraryGridMotion}')

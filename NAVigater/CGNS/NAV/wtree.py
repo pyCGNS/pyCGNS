@@ -279,10 +279,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._control.savedirect(self._fgprint)
         self.updateTreeStatus()
     def tools(self):
-        if (not OCTXT._HasProPackage): return
-        try:
-          from CGNS.PRO.wtools import Q7ToolsView
-        except ValueError: return
+        from CGNS.NAV.wtools import Q7ToolsView
         if (self._toolswindow is None):
             self._toolswindow=Q7ToolsView(self._control,self._fgprint,self)
             self._toolswindow.show()

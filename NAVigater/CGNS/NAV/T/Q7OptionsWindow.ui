@@ -468,6 +468,9 @@
          <string>Checks</string>
         </attribute>
         <widget class="QCheckBox" name="__O_checkonthefly">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -479,8 +482,14 @@
          <property name="text">
           <string>Check on the fly</string>
          </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
         </widget>
         <widget class="QCheckBox" name="__O_forcesidslegacymapping">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -494,6 +503,9 @@
          </property>
         </widget>
         <widget class="QCheckBox" name="__O_forcefortranflag">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -555,6 +567,9 @@
           </property>
          </widget>
          <widget class="QCheckBox" name="cRecurseGrammarSearch">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="geometry">
            <rect>
             <x>10</x>

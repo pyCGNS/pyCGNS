@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/check-grammars.png</file>
     <file>icons/panel-lock.png</file>
     <file>icons/panel-lock.gif</file>
     <file>icons/link-slist.png</file>

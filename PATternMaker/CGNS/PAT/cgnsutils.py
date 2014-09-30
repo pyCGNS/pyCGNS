@@ -26,12 +26,12 @@ def nodeCreate(name,value,children,type,parent=None,dienow=False):
     import CGNS.PAT.cgnskeywords as CK
     import numpy
 
-    n=createNode('Base',numpy.array([3,3]),[],CK.CGNSBase_ts)
-    z=createNode('ReferenceState',None,[],CK.ReferenceState_ts,parent=n)
+    n=nodeCreate('Base',numpy.array([3,3]),[],CK.CGNSBase_ts)
+    z=nodeCreate('ReferenceState',None,[],CK.ReferenceState_ts,parent=n)
 
     # you can safely create a node without referencing its return,
     # the actual new node is stored into the parent's children list
-    createNode('ReferenceState',None,[],CK.ReferenceState_ts,parent=n)
+    nodeCreate('ReferenceState',None,[],CK.ReferenceState_ts,parent=n)
 
   :arg str name: new node name
   :arg numpy.ndarray value: node value
@@ -322,7 +322,7 @@ def checkChildName(parent,name,dienow=False):
 # -----------------------------------------------------------------------------
 def checkUniqueChildName(parent,name,dienow=False):
   # todo: fix this should return a boolean
-  getChildName(parent,name,dienow)
+  return getChildName(parent,name,dienow)
 
 # -----------------------------------------------------------------------------
 def getChildName(parent,name,dienow=False):
@@ -355,7 +355,7 @@ def checkNodeType(node,cgnstype=[],dienow=False):
      
     import CGNS.PAT.cgnskeywords as CK
 
-    n=createNode('Base',numpy([3,3]),[],CK.CGNSBase_ts)
+    n=nodeCreate('Base',numpy([3,3]),[],CK.CGNSBase_ts)
     checkNodeType(n)
     checkNodeType(n,['Zone_t',CK.CGNSBase_ts])
     checkNodeType(n,CGK.FamilyName_ts)
@@ -853,6 +853,11 @@ def setDoubleAsArray(*d):
      numpy.float64 data type."""
   if (type(d)==type(None) or (len(d)==0)): raise CE.cgnsNameError(112)
   return NPY.array(d,dtype='d')
+
+# -----------------------------------------------------------------------------
+def getValueAsString(node):
+  """Returns node value as a Python string"""
+  return node[1].tostring()
 
 # -----------------------------------------------------------------------------
 def getValue(node):

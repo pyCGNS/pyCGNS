@@ -542,6 +542,8 @@ the file name is <pre>default.py</pre> in the directory
 # -----------------------------------------------------------------
 # Mandatory name
 #
+import CGNS.PAT.cgnskeywords as CGK
+
 class Q7UserFunction(object):
   __attributes={
     'artviscosity':['none','dissca','dismat','dismrt'],
@@ -554,6 +556,8 @@ class Q7UserFunction(object):
   def getEnumerate(self,namepath,typepath):
     if (namepath[-1] in self.__attributes):
         return self.__attributes[namepath[-1]]
+    else:
+        return CGK.cgnsenums[typepath[-1]]
     return None
 
 # --- last line

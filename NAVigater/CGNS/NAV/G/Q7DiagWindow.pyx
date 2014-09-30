@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7DiagWindow.ui'
 #
-# Created: Thu Feb  6 17:40:33 2014
+# Created: Mon Sep 29 16:11:48 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,14 +12,14 @@ from PySide import QtCore, QtGui
 class Ui_Q7DiagWindow(object):
     def setupUi(self, Q7DiagWindow):
         Q7DiagWindow.setObjectName("Q7DiagWindow")
-        Q7DiagWindow.resize(715, 350)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+        Q7DiagWindow.resize(715, 375)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Q7DiagWindow.sizePolicy().hasHeightForWidth())
         Q7DiagWindow.setSizePolicy(sizePolicy)
         Q7DiagWindow.setMinimumSize(QtCore.QSize(715, 350))
-        Q7DiagWindow.setMaximumSize(QtCore.QSize(1200, 350))
+        Q7DiagWindow.setMaximumSize(QtCore.QSize(1200, 900))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7DiagWindow.setWindowIcon(icon)
@@ -112,6 +112,18 @@ class Ui_Q7DiagWindow(object):
         self.horizontalLayout.addWidget(self.cFilter)
         spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem2)
+        self.bWhich = QtGui.QPushButton(Q7DiagWindow)
+        self.bWhich.setMinimumSize(QtCore.QSize(25, 25))
+        self.bWhich.setMaximumSize(QtCore.QSize(25, 25))
+        self.bWhich.setText("")
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(":/images/icons/check-grammars.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bWhich.setIcon(icon7)
+        self.bWhich.setIconSize(QtCore.QSize(24, 24))
+        self.bWhich.setObjectName("bWhich")
+        self.horizontalLayout.addWidget(self.bWhich)
+        spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem3)
         self.cWarnings = QtGui.QCheckBox(Q7DiagWindow)
         self.cWarnings.setEnabled(True)
         self.cWarnings.setChecked(True)
@@ -121,15 +133,15 @@ class Ui_Q7DiagWindow(object):
         self.cDiagFirst.setEnabled(False)
         self.cDiagFirst.setObjectName("cDiagFirst")
         self.horizontalLayout.addWidget(self.cDiagFirst)
-        spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem3)
+        spacerItem4 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem4)
         self.bSave = QtGui.QPushButton(Q7DiagWindow)
         self.bSave.setMinimumSize(QtCore.QSize(25, 25))
         self.bSave.setMaximumSize(QtCore.QSize(25, 25))
         self.bSave.setText("")
-        icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/images/icons/check-save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bSave.setIcon(icon7)
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap(":/images/icons/check-save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bSave.setIcon(icon8)
         self.bSave.setObjectName("bSave")
         self.horizontalLayout.addWidget(self.bSave)
         self.gridLayout.addLayout(self.horizontalLayout, 3, 0, 1, 1)

@@ -126,6 +126,7 @@ messagetable=(
 ('S302',CGM.CHECK_FAIL,'Reference to unknown additional family [%s]'),
 ('S303',CGM.CHECK_WARN,'Family is never referenced'),
 ('S304',CGM.CHECK_FAIL,'FamilyName_t child is mandatory for FamilySpecified BC'),
+('S305',CGM.CHECK_WARN,'FamilyBC_t node should have FamilyBC name'),
 
 ('S400',CGM.CHECK_FAIL,'Cannot get connectivity donor zone'),
 ('S401',CGM.CHECK_FAIL,'Connectivity donor zone [%s] not found'),

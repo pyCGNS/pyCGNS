@@ -1151,7 +1151,7 @@ def newFlowEquationSet(parent):
   """
   if (parent): CU.checkNode(parent)
   CU.checkDuplicatedName(parent,CK.FlowEquationSet_s)
-  CU.checkTypeList(parent,[CK.CGNSBase_ts,CK.Zone_ts],CK.FlowEquationSet_s)     
+  CU.checkTypeList(parent,[CK.CGNSBase_ts,CK.Zone_ts],CK.FlowEquationSet_s)    
   node=CU.newNode(CK.FlowEquationSet_s,None,[],CK.FlowEquationSet_ts,parent)  
   return node   
     

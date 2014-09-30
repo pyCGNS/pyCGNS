@@ -534,6 +534,8 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
   # --------------------------------------------------------------------
   def FamilyBC_t(self,pth,node,parent,tree,log):
     rs=CGM.CHECK_OK
+    if (node[0]!=CGK.FamilyBC_s):
+      rs=log.push(pth,'S199',CGU.getValueDataType(node),[CGK.C1])
     if (CGU.getValueDataType(node) not in [CGK.C1]):
       rs=log.push(pth,'S199',CGU.getValueDataType(node),[CGK.C1])
     elif (not CGU.stringValueInList(node,CGK.BCType_l)):

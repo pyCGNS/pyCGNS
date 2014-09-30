@@ -419,7 +419,7 @@
   <customwidget>
    <class>Q7DiffTreeView</class>
    <extends>QTreeView</extends>
-   <header>CGNS.PRO.mdifftreeview</header>
+   <header>CGNS.NAV.mdifftreeview</header>
   </customwidget>
  </customwidgets>
  <resources>
