@@ -16,6 +16,8 @@ from CGNS.NAV.diff import diffAB
 from CGNS.NAV.merge import mergeAB
 from CGNS.NAV.mmergetreeview import Q7TreeMergeModel,TAG_FRONT,TAG_BACK
 from CGNS.NAV.wtree import Q7Tree
+from CGNS.NAV.wdifftreeview import Q7Diff
+from CGNS.NAV.wmergetreeview import Q7Merge
 
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnslib   as CGL
@@ -28,7 +30,7 @@ PROCESSES=['HybridGenConnect']
 # -----------------------------------------------------------------
 class Q7ToolsView(Q7Window,Ui_Q7ToolsWindow):
     def __init__(self,parent,fgprint,master):
-        Q7Window.__init__(self,Q7Window.VIEW_TOOLS,parent,None,fgprint)
+        Q7Window.__init__(self,Q7Window.VIEW_TOOLS,parent,None,None)
         self.bClose.clicked.connect(self.reject)
         self.bInfo.clicked.connect(self.infoToolsView)
         self.bDiff.clicked.connect(self.diffAB)
@@ -73,7 +75,6 @@ class Q7ToolsView(Q7Window,Ui_Q7ToolsWindow):
         fpb=self._fgprint.getFingerPrint(idxB)
         diag={}
         diffAB(fpa.tree,fpb.tree,'','A',diag,False)
-        from CGNS.NAV.wdifftreeview import Q7Diff
         dw=Q7Diff(self._control,fpa,fpb,diag)
         dw.show()
     def mergeAB(self):
@@ -94,7 +95,6 @@ class Q7ToolsView(Q7Window,Ui_Q7ToolsWindow):
         diffAB(fpa.tree,fpb.tree,'','A',diag,False)
         fpc.tree=mergeAB(fpa.tree,fpb.tree,fpc.tree,'C',diag,pfxA,pfxB)
         fpc.model.modelReset()
-        from CGNS.NAV.wmergetreeview import Q7Merge
         dw=Q7Merge(self._control,fpc,diag)
         dw.show()
         self.merge.hide()
@@ -105,8 +105,10 @@ class Q7ToolsView(Q7Window,Ui_Q7ToolsWindow):
         if (self.merge is not None):
             self.merge.show()
             self.merge=None
-        if (self._master._toolswindow is not None):
-            self._master._toolswindow=None
-        self.close()
+        if (self._master._control._toolswindow is not None):
+            self._master._control._toolswindow=None
+    def closeEvent(self, event):
+        self.reject()
+        event.accept()
          
 # -----------------------------------------------------------------

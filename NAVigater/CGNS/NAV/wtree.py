@@ -161,7 +161,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._lastEntered=None
         self.lastdiag=None
         self._linkwindow=None
-        self._toolswindow=None
         self._querywindow=None
         self._vtkwindow=None
         self._selectwindow=None
@@ -280,11 +279,12 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.updateTreeStatus()
     def tools(self):
         from CGNS.NAV.wtools import Q7ToolsView
-        if (self._toolswindow is None):
-            self._toolswindow=Q7ToolsView(self._control,self._fgprint,self)
-            self._toolswindow.show()
+        if (self._control._toolswindow is None):
+            self._control._toolswindow=Q7ToolsView(self._control,
+                                                   self._fgprint,self)
+            self._control._toolswindow.show()
         else:
-            self._toolswindow.raise_()
+            self._control._toolswindow.raise_()
     def savetreeas(self):
         self._control.save(self._fgprint)
         self.updateTreeStatus()
@@ -599,8 +599,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def dataRelease(self):
         node=self.getLastEntered()
         self.model().dataReleaseSelected(single=node.sidsPath())
-    def closeAlone(self):
-        pass
     def forceapply(self):
         pass
     def reject(self):

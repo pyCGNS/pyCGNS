@@ -141,6 +141,7 @@ class Q7Window(QWidget,object):
     VIEW_PATTERN='P'
     VIEW_INFO='I'
     VIEW_LINK='L'
+    VIEW_DIFF='Z'
     VIEW_MESSAGE='M'
     HISTORYLASTKEY='///LAST///'
     control_log=None
@@ -154,6 +155,7 @@ class Q7Window(QWidget,object):
         self.I_TREE=QIcon(QPixmap(":/images/icons/tree-load.png"))
         self.I_VTK=QIcon(QPixmap(":/images/icons/vtkview.png"))
         self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.png"))
+        self.I_DIFF=QIcon(QPixmap(":/images/icons/merge.png"))
         self.I_FORM=QIcon(QPixmap(":/images/icons/form.png"))
         self.I_SELECT=QIcon(QPixmap(":/images/icons/mark-node.png"))
         self.I_PATTERN=QIcon(QPixmap(":/images/icons/pattern.png"))

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ToolsWindow.ui'
 #
-# Created: Thu Feb  6 17:40:37 2014
+# Created: Tue Sep 30 15:48:23 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -64,9 +64,6 @@ class Ui_Q7ToolsWindow(object):
         self.bDiff.setIcon(icon1)
         self.bDiff.setObjectName("bDiff")
         self.tabWidget.addTab(self.diff, "")
-        self.split = QtGui.QWidget()
-        self.split.setObjectName("split")
-        self.tabWidget.addTab(self.split, "")
         self.merge = QtGui.QWidget()
         self.merge.setObjectName("merge")
         self.gdiff_2 = QtGui.QGroupBox(self.merge)
@@ -237,6 +234,9 @@ class Ui_Q7ToolsWindow(object):
         self.bFileLog.setObjectName("bFileLog")
         self.verticalLayout_2.addWidget(self.groupBox)
         self.tabWidget.addTab(self.process, "")
+        self.split = QtGui.QWidget()
+        self.split.setObjectName("split")
+        self.tabWidget.addTab(self.split, "")
         self.horizontalLayout_2.addWidget(self.tabWidget)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtGui.QHBoxLayout()
@@ -265,10 +265,11 @@ class Ui_Q7ToolsWindow(object):
         Q7ToolsWindow.setWindowTitle(QtGui.QApplication.translate("Q7ToolsWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.gdiff.setTitle(QtGui.QApplication.translate("Q7ToolsWindow", "All tree identifications use view number", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7ToolsWindow", "Version A", None, QtGui.QApplication.UnicodeUTF8))
+        self.cAncestor.setToolTip(QtGui.QApplication.translate("Q7ToolsWindow", "Select first tree to diff", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Q7ToolsWindow", "Version B", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowA.setText(QtGui.QApplication.translate("Q7ToolsWindow", "Show result on B view", None, QtGui.QApplication.UnicodeUTF8))
+        self.bDiff.setToolTip(QtGui.QApplication.translate("Q7ToolsWindow", "Process the diff", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.diff), QtGui.QApplication.translate("Q7ToolsWindow", "Diff", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.split), QtGui.QApplication.translate("Q7ToolsWindow", "Split", None, QtGui.QApplication.UnicodeUTF8))
         self.gdiff_2.setTitle(QtGui.QApplication.translate("Q7ToolsWindow", "All tree identifications use view number", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_5.setTitle(QtGui.QApplication.translate("Q7ToolsWindow", "Version A", None, QtGui.QApplication.UnicodeUTF8))
         self.rForceA.setText(QtGui.QApplication.translate("Q7ToolsWindow", "Force A values when different", None, QtGui.QApplication.UnicodeUTF8))
@@ -298,6 +299,7 @@ class Ui_Q7ToolsWindow(object):
         self.bFileDir.setToolTip(QtGui.QApplication.translate("Q7ToolsWindow", "Open Form view on selected node", None, QtGui.QApplication.UnicodeUTF8))
         self.bFileLog.setToolTip(QtGui.QApplication.translate("Q7ToolsWindow", "Open Form view on selected node", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.process), QtGui.QApplication.translate("Q7ToolsWindow", "Process", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.split), QtGui.QApplication.translate("Q7ToolsWindow", "Split", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setText(QtGui.QApplication.translate("Q7ToolsWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
 
 from CGNS.NAV.weditors import Q7PythonEditor

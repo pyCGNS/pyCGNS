@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7DiffWindow.ui'
 #
-# Created: Tue Sep 30 15:24:40 2014
+# Created: Tue Sep 30 15:48:21 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -124,6 +124,7 @@ class Ui_Q7DiffWindow(object):
         spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem2)
         self.bPreviousMark = QtGui.QToolButton(Q7DiffWindow)
+        self.bPreviousMark.setEnabled(True)
         self.bPreviousMark.setMinimumSize(QtCore.QSize(25, 25))
         self.bPreviousMark.setMaximumSize(QtCore.QSize(25, 25))
         icon8 = QtGui.QIcon()
@@ -159,6 +160,7 @@ class Ui_Q7DiffWindow(object):
 
     def retranslateUi(self, Q7DiffWindow):
         Q7DiffWindow.setWindowTitle(QtGui.QApplication.translate("Q7DiffWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        self.bLockScroll.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Lock scrollbars together", None, QtGui.QApplication.UnicodeUTF8))
         self.bZoomOut.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Collapse lowest tree level", None, QtGui.QApplication.UnicodeUTF8))
         self.bZoomOut.setText(QtGui.QApplication.translate("Q7DiffWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bZoomAll.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Expand all tree", None, QtGui.QApplication.UnicodeUTF8))
@@ -167,6 +169,7 @@ class Ui_Q7DiffWindow(object):
         self.bSaveDiff.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Save tree view snapshot", None, QtGui.QApplication.UnicodeUTF8))
         self.bSaveDiff.setText(QtGui.QApplication.translate("Q7DiffWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bBackControl.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Raise Control window", None, QtGui.QApplication.UnicodeUTF8))
+        self.bInfo.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Contextual help", None, QtGui.QApplication.UnicodeUTF8))
         self.bPreviousMark.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Select previous marked node", None, QtGui.QApplication.UnicodeUTF8))
         self.bPreviousMark.setText(QtGui.QApplication.translate("Q7DiffWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bUnmarkAll_1.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Unmark all nodes", None, QtGui.QApplication.UnicodeUTF8))

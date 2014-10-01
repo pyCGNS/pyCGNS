@@ -35,9 +35,9 @@ class Q7MergeItemDelegate(QStyledItemDelegate):
         nnm=self._parent.modelData(index).sidsName()
         pth=CGU.getPathNoRoot(self._parent.modelData(index).sidsPath())
         if ((self._merge is not None) and (pth in self._merge)):
-            if (self._merge[pth]==MERGE_NA): 
+            if (self._merge[pth]==MERGE_NA):
                 self._parent.modelData(index).setUserStatePrivate('A')
-            if (self._merge[pth]==MERGE_NB): 
+            if (self._merge[pth]==MERGE_NB):
                 self._parent.modelData(index).setUserStatePrivate('B')
         if (col==NMT.COLUMN_NAME):
           if (nnm not in OCTXT._ReservedNames):
@@ -125,6 +125,9 @@ class Q7Merge(Q7Window,Ui_Q7MergeWindow):
         self.bZoomOut.clicked.connect(self.collapseLevel)
         self.bZoomAll.clicked.connect(self.expandMinMax)
         self.bSaveDiff.clicked.connect(self.savediff)
+        self.bSelectA.clicked.connect(self.showSelected)
+        self.bSelectB.clicked.connect(self.showSelected)
+        self.bSelectOrderSwap.clicked.connect(self.swapSelected)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.proxyA = self._fgprint.model
@@ -136,6 +139,25 @@ class Q7Merge(Q7Window,Ui_Q7MergeWindow):
         self.treeview.hideColumn(NMT.COLUMN_FLAG_LINK)
         self.treeview.hideColumn(NMT.COLUMN_FLAG_CHECK)
         self.treeview.hideColumn(NMT.COLUMN_FLAG_SELECT)
+        self._fgprint.model.addA=True
+        self._fgprint.model.addB=True
+        self._A=QIcon(QPixmap(":/images/icons/user-A.png"))
+        self._B=QIcon(QPixmap(":/images/icons/user-B.png"))
+        self._order=0 # A first
+    def swapSelected(self):
+        if (not self._order):
+            self.bSelectA.setIcon(self._B)
+            self.bSelectB.setIcon(self._A)
+            self._order=1
+        else:
+            self.bSelectA.setIcon(self._A)
+            self.bSelectB.setIcon(self._B)
+            self._order=0
+    def showSelected(self):
+        self._fgprint.model.addA=False
+        self._fgprint.model.addB=False
+        if (self.bSelectA.isChecked()): self._fgprint.model.addA=True
+        if (self.bSelectB.isChecked()): self._fgprint.model.addB=True
     def diagAnalysis(self,diag):
         ldiag={}
         lmerge={}

@@ -18,12 +18,12 @@ def mergeAB(ta,tb,tc,tag,diag,pfxA,pfxB,trace=False):
         for dg in pdg:
           if (dg[0]=='NA'):
             nt=CGU.getNodeByPath(tb,dg[1])
-            nd=CGU.copyNode(nt,str(nt[0]+pfxB))
+            nd=CGU.nodeCopy(nt,str(nt[0]+pfxB))
             np=CGU.getNodeByPath(tc,path)
             CGU.setChild(np,nd)
           elif (dg[0]=='ND'):
             nt=CGU.getNodeByPath(ta,dg[1])
-            nd=CGU.copyNode(nt,str(nt[0]+pfxA))
+            nd=CGU.nodeCopy(nt,str(nt[0]+pfxA))
             np=CGU.getNodeByPath(tc,path)
             CGU.setChild(np,nd)
           else:

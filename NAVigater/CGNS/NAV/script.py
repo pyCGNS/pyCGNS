@@ -31,7 +31,7 @@ def run(args=[],files=[],
     wcontrol.query=query
     wcontrol._T('start')
     if (flags[1]):  wcontrol.loadlast()
-    for f in files: wcontrol.loadfile(f)
+    wcontrol.loadfile(files[0]) # loop on file list broken in wfingerprint
     wcontrol.show()
     app.exec_()
     wcontrol._T('leave')

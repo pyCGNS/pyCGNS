@@ -19,7 +19,9 @@ import CGNS.NAV.mtree as NMT
 # -----------------------------------------------------------------
 class Q7TreeMergeModel(Q7TreeModel):
     def __init__(self,fgprint,parent=None):
-        Q7TreeModel.__init__(self,fgprint,parent)  
+        Q7TreeModel.__init__(self,fgprint,parent)
+        self.addA=True
+        self.addB=True
     def itemNew(self,fg,nt,md,tg,pi):
         return Q7MergeItem(fg,nt,md,tg,pi)
 
@@ -31,6 +33,7 @@ TAG_LENGTH=5
 class Q7MergeItem(Q7TreeItem):
     def __init__(self,fgprint,data,model,tag="",parent=None):
         Q7TreeItem.__init__(self,fgprint,data,model,tag,parent)
+        self._model=model
     def columnCount(self):
         return NMT.COLUMN_LAST+1
     def notagName(self):
@@ -41,6 +44,11 @@ class Q7MergeItem(Q7TreeItem):
             return name[:-TAG_LENGTH]
         return name
     def data(self,column):
+        if (not self._model.addA and self.userState()==NMT.STUSR_A):
+            print 'NO A'
+            return None
+        if (not self._model.addB and self.userState()==NMT.STUSR_B):
+            print 'NO B'
         if (self._itemnode==None):     return self._title[column]
         if (column==NMT.COLUMN_NAME):  return self.notagName()
         if (column==NMT.COLUMN_SIDS):      return self.sidsType()

@@ -87,6 +87,9 @@
             <height>22</height>
            </rect>
           </property>
+          <property name="toolTip">
+           <string>Select first tree to diff</string>
+          </property>
          </widget>
          <widget class="QComboBox" name="cVersionA">
           <property name="geometry">
@@ -154,6 +157,9 @@
             <height>25</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>Process the diff</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -163,11 +169,6 @@
           </property>
          </widget>
         </widget>
-       </widget>
-       <widget class="QWidget" name="split">
-        <attribute name="title">
-         <string>Split</string>
-        </attribute>
        </widget>
        <widget class="QWidget" name="merge">
         <attribute name="title">
@@ -770,6 +771,11 @@
           </item>
          </layout>
         </widget>
+       </widget>
+       <widget class="QWidget" name="split">
+        <attribute name="title">
+         <string>Split</string>
+        </attribute>
        </widget>
       </widget>
      </item>
