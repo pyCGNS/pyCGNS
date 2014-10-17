@@ -94,6 +94,7 @@ class CGNSparser:
     allfamilies=CGU.getAllFamilies(T)
     for z in CGU.getAllNodesByTypeSet(T,[CGK.Zone_ts]):
       zT=CGU.nodeByPath(z,T)
+      print 'STEP zone',z
       if ((zlist==[]) or (z in zlist)):
         gnode=CGU.getAllNodesByTypeSet(zT,[CGK.GridCoordinates_ts])
         if (gnode==[]): return False
@@ -333,6 +334,7 @@ class Mesh(CGNSparser):
     cdef double* tx
     cdef double* ty
     cdef double* tz
+    print 'STEP surf',path
     imax=surf[0].shape[0]
     jmax=surf[0].shape[1]
     _tx=surf[0]
@@ -345,8 +347,8 @@ class Mesh(CGNSparser):
     sg.Allocate(1, 1)
     n=0
     qp = vtk.vtkPoints() # TODO: add family label as attribute
-    for j in range(jmax-1):
-     for i in range(imax-1):
+    for j in xrange(jmax-1):
+     for i in xrange(imax-1):
       p1=j+      i*jmax +0
       p2=j+      i*jmax +1
       p3=j+jmax+ i*jmax +1
@@ -382,6 +384,7 @@ class Mesh(CGNSparser):
 
   def do_boundaries(self,path,bnd,fams):
     cdef int i, j, imax, jmax, p1, p2, p3, p4
+    print 'STEP bnd'
     max=[x for x in bnd[0].shape if x!=1]
     imax=max[0]
     jmax=max[1]
@@ -420,6 +423,7 @@ class Mesh(CGNSparser):
 
   def do_vtk(self,z):
       self._actors+=[self.do_volume(z.path,z.X,z.Y,z.Z,z.sols)]
+      return
       for (path,coords) in z.surfaces:
         self._actors+=[self.do_surface_double_3d(path,coords)]
       for (path,coords,fams) in z.boundaries:
@@ -467,6 +471,7 @@ class Mesh(CGNSparser):
     return actors
 
   def def_volume(self,n):
+    print 'STEP vol'
     if self._vtkelts.has_key(n):
       return self._vtkelts[n]
     return None

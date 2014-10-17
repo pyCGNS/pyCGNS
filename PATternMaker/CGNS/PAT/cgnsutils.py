@@ -2292,6 +2292,29 @@ def hasChildName(parent,name,dienow=False):
   return hasChildNode(parent,name,dienow)
   
 # -----------------------------------------------------------------------------
+def setChildName(parent,oldname,newname,dienow=False):
+  """
+  Changes the name of an existing node::
+
+    n=hasChildNode(zone,CGK.ZoneType_s)
+    for nc in childrenNames
+      nc=setChildName(parent,zonename,zonename+'#01')
+
+  :arg CGNS/Python parent: the parent node
+  :arg str oldname: the child name to look for
+  :arg str newname: the new name
+  :return:
+    - parent node
+  :Remarks:
+    - uses :py:func:`hasChildName` to check if old name exists and new name
+      does not.
+  """
+  n1=hasChildName(parent,oldname)
+  n2=hasChildName(parent,newname)
+  if (n1 and not n2): n1[0]=newname
+  return parent
+  
+# -----------------------------------------------------------------------------
 def hasChildNode(parent,name,dienow=False):
   """
   Returns a child node if it exists::

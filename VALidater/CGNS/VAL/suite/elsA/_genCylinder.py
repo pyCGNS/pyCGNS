@@ -49,17 +49,17 @@ def getFaces(Tz):
 #
 # zn: zone tag (name is {Zone-<tag>}, tag is used for BC and Connectivities)
 # nb: number of points in the interior/exterior sector (I index)
-# ag: angle of the sector (degree)
-# sa: starting angle of the sector (degree)
 # hg: number of points on the radius (J index)
 # wd: number of points on the width (K index)
+# sa: starting angle of the sector (degree)
+# ag: angle of the sector (degree)
 # rd: radius of outer circle
 # rt: radius of inner circle
 # wl: width
 # sw: starting width
 # oc: origin coordinates
 #
-def genSector(Tb, zn,nb,hg,wd,sa,ag,rd,rt,wl,sw=0,oc=(0,0,0),lin=False):
+def genSector(Tb,zn,nb,hg,wd,sa,ag,rd,rt,wl,sw=0,oc=(0,0,0),lin=False):
    
   sa=sa*((2*math.pi)/360.)
   ag=ag*((2*math.pi)/360.)
