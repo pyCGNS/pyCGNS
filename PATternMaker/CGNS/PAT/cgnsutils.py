@@ -2428,8 +2428,12 @@ def toStringChildren(l,readable=False,shift=0):
   return s
 
 # --------------------------------------------------
-def pretty_print(tree):
-  return toString(tree)
+def prettyPrint(tree,path='',depth=0):
+  print depth*' ',
+  n="%s(%s)"%(tree[0],tree[3]),
+  print "%-32s"%n
+  for c in tree[2]:
+    prettyPrint(c,path='/'+tree[0],depth=depth+2)
 
 # --------------------------------------------------
 def toString(tree,readable=False,shift=0):
