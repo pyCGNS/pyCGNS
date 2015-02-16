@@ -48,8 +48,7 @@ except:
 try:
   import vtk
 except:
-  print """CGNS.NAV: FATAL error, cannot import vtk..."""
-  sys.exit(-1)
+  print """CGNS.NAV: Warning, cannot import vtk..."""
 
 if (sys.platform=='win32'): import CGNS.NAV.temputils
 from CGNS.NAV.moption import Q7OptionContext as OCTXT

@@ -77,7 +77,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         self.transientVTK=False
         self.copyPasteBuffer=None
         self.wOption=None
-        self.selectForLink=[None]
+        self.selectForLinkDst=None
         self.newtreecount=1
         self.help=None
         self._patternwindow=None
@@ -313,13 +313,15 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         fgprint=self.signals.fgprint
         if (len(fgprint)>1):
             MSG.wError(self,*fgprint[1])
-            return
-        Q7TreeModel(fgprint)
-        child=Q7Tree(self,'/',fgprint)
-        child.show()
-        self.setHistory(fgprint.filedir,fgprint.filename)
-        self.updateViews()
-        fgprint.getInfo(force=True)
+        elif (fgprint.tree is None):
+            MSG.wError(self,829,'Fatal error while loading file, empty tree')
+        else:
+          Q7TreeModel(fgprint)
+          child=Q7Tree(self,'/',fgprint)
+          child.show()
+          self.setHistory(fgprint.filedir,fgprint.filename)
+          self.updateViews()
+          fgprint.getInfo(force=True)
         self.readyCursor()
     def saving(self,*args):
         self._T('saving as: [%s]'%self.signals.buffer)

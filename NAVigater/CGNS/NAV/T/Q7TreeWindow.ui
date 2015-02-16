@@ -442,7 +442,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="bSelectLink">
+      <widget class="QPushButton" name="bSelectLinkSrc">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -456,14 +456,52 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>select current node as selected link destination</string>
+        <string>Add selected node as parent to link source</string>
        </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/link-select.png</normaloff>:/images/icons/link-select.png</iconset>
+         <normaloff>:/images/icons/link-src.png</normaloff>:/images/icons/link-src.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bSelectLinkDst">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>25</horstretch>
+         <verstretch>25</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Add selected node as link destination</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../R/Res.qrc">
+         <normaloff>:/images/icons/link-dst.png</normaloff>:/images/icons/link-dst.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -482,7 +520,7 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>create a link to selected link destination</string>
+        <string>Create a link using selected link source/destination</string>
        </property>
        <property name="text">
         <string/>
@@ -490,32 +528,6 @@
        <property name="icon">
         <iconset resource="../R/Res.qrc">
          <normaloff>:/images/icons/link-add.png</normaloff>:/images/icons/link-add.png</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bDeleteLink">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>remove link</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/link-delete.png</normaloff>:/images/icons/link-delete.png</iconset>
        </property>
       </widget>
      </item>
@@ -587,29 +599,6 @@
        <property name="icon">
         <iconset resource="../R/Res.qrc">
          <normaloff>:/images/icons/vtk.png</normaloff>:/images/icons/vtk.png</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bPlotView">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/plot.png</normaloff>:/images/icons/plot.png</iconset>
        </property>
       </widget>
      </item>

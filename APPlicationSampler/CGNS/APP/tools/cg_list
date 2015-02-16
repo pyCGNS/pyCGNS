@@ -80,6 +80,7 @@ pr.add_argument("-f","--force",action='store_true',
 pr.add_argument('files',nargs=argparse.REMAINDER)
 args=pr.parse_args()
 
+#  -------------------------------------------------------------------------
 class Entry(object):
   _att={'version':[0.0,' %1s','V',0,0.0,'CGNS/HDF5 version'],
         'filename':['',' %-1s','N',0,'','Filename'],
@@ -121,12 +122,15 @@ class Entry(object):
            [self._att[a][3] for a in self._lvs],\
            tuple([ self._att[a][0] for a in self._lvs]), self.foundkeys()
       
+#  -------------------------------------------------------------------------
 def openFile(filename):
     flags=CGM.S2P_NODATA
     (t,l,p)=CGM.load(filename,flags=flags,maxdata=20)
     return (t,l,p,filename)
 
+#  -------------------------------------------------------------------------
 def parseFile(filename,A):
+  if (not os.path.exists(filename)): return None
   st=os.stat(filename)
   R=Entry()
   if (not A.force and (st.st_size>1e9)):
@@ -153,6 +157,10 @@ def parseFile(filename,A):
                                           CGK.Zone_ts])
     if (A.zone): R.nzones=len(zlist)
     if (A.structured or A.unstructured or A.points):
+      if (not zlist):
+        if (A.structured): R.nzones_structured=0 
+        if (A.unstructured): R.nzones_unstructured=0 
+        if (A.points): R.npoints=0 
       for z in zlist:
         zn=CGU.getNodeByPath(T[0],z+'/'+CGK.ZoneType_s)
         if (CGU.stringValueMatches(zn,CGK.Structured_s)):
@@ -174,6 +182,7 @@ def parseFile(filename,A):
   R.filename=filename
   return R.line()
 
+#  -------------------------------------------------------------------------
 def sortResult(L,A,hdr):
   if (not A.sort): return L
   ix=0
@@ -197,6 +206,7 @@ def sortResult(L,A,hdr):
       L=sorted(L,key=lambda v: v[k],reverse=r)
   return L
 
+#  -------------------------------------------------------------------------
 if (args.keys):
   kl=Entry.keys()
   kl.sort()

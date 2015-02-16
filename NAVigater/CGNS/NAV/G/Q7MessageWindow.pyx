@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7MessageWindow.ui'
 #
-# Created: Mon Sep 29 16:21:13 2014
+# Created: Fri Jan 23 10:40:28 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -27,6 +27,9 @@ class Ui_Q7MessageWindow(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.eMessage = QtGui.QTextEdit(Q7MessageWindow)
         self.eMessage.setMinimumSize(QtCore.QSize(0, 0))
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Sans Mono")
+        self.eMessage.setFont(font)
         self.eMessage.setFrameShadow(QtGui.QFrame.Plain)
         self.eMessage.setLineWidth(0)
         self.eMessage.setUndoRedoEnabled(False)

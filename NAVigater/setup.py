@@ -27,9 +27,11 @@ except:
 
 try:
   import vtk
+  has_vtk=True
 except:
-  raise Exception('Cannot build CGNS.NAV without vtk')
-  sys.exit()
+  print 'Build CGNS.NAV without vtk features'
+  has_vtk=False
+  
 
 # --- pyCGNSconfig search
 sys.path=['../lib']+sys.path
@@ -75,19 +77,21 @@ if installprocess:
       'Q7InfoWindow',
       'Q7DiagWindow',
       'Q7LinkWindow',
-      'Q7VTKPlotWindow',
       'Q7HelpWindow',
       'Q7ToolsWindow',
       'Q7PatternWindow',
       'Q7AnimationWindow',
       'Q7MessageWindow',
       'Q7LogWindow',
-      'Q7VTKWindow'
       ]
+  if (has_vtk): modnamelist+=['Q7VTKWindow']
   modgenlist=[]
   modextlist=[]
-  for mfile in ['mtree','mparser','mquery','mcontrol','mtable','mpattern',
-                'diff','mdifftreeview','merge','mmergetreeview']:
+  mfile_list=['mtree','mquery','mcontrol','mtable','mpattern',
+              'diff','mdifftreeview','merge','mmergetreeview']
+  if (has_vtk): mfile_list+=['mparser']
+    
+  for mfile in mfile_list:
      modextlist+=[Extension("CGNS.NAV.%s"%mfile,["CGNS/NAV/%s.pyx"%mfile,
                                                  fakefile],
                            include_dirs = pyCGNSconfig.NUMPY_PATH_INCLUDES,

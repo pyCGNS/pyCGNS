@@ -411,7 +411,9 @@ class Q7FingerPrint:
         flags=CGNS.MAP.S2P_DEFAULT
         if (OCTXT.CHLoneTrace): 
           flags|=CGNS.MAP.S2P_TRACE
-        if (not saveas):        flags|=CGNS.MAP.S2P_UPDATE
+        if (not saveas):
+          flags|=CGNS.MAP.S2P_UPDATE
+          flags|=CGNS.MAP.S2P_DELETEMISSING
         tree=fgprint.tree
         lazylist=[ CGU.getPathNoRoot(path) for path in fgprint.lazy.keys() ]
         try:

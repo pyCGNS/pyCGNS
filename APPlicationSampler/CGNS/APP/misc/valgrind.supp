@@ -30,6 +30,302 @@
    fun:Py_ADDRESS_IN_RANGE
 }
 
+{
+   <none>
+   Memcheck:Cond
+   fun:PyString_FromString
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:PyString_FromString
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:insertdict_by_entry
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:lookdict_string
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:PyString_InternInPlace
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:PyObject_Malloc
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:PyDict_*
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:dictiter_*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:dictiter_*
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:decoding_*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:decoding_*
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:Py*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:Py*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:stackdepth_walk
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:stackdepth_walk
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:do_mkvalue
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:do_mkvalue
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:assemble
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:ste_dealloc
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:_Py*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:compiler_*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:string_concat
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:parsestr
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:compiler_*
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:lookdict
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:_Py*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:find_module
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:find_module
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:ast_*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:listextend
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:list_dealloc
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:PyObject_*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:PyObject_*
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:mro_*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:mro_*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:list_ass_slice
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:analyze_block
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:parsetok
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:listsort*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:dictbytype
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:PyString_*
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:parsetok
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:__strcmp_ssse3
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:load_next
+}
+{
+  kill it
+  Memcheck:Cond
+  fun:memcpy
+  fun:type_new
+}
+{
+  kill it
+  Memcheck:Cond
+  fun:memcpy
+  fun:string_*
+}
+{
+  kill it
+  Memcheck:Value8
+  fun:__GI_strlen
+}
+{
+  kill it
+  Memcheck:Value8
+  fun:__GI_strstr
+}
+  kill it
+  Memcheck:Value8
+  obj:/usr/local/python-2.7.5/lib/libpython2.7.so.1.0
+}
+{
+  kill it
+  Memcheck:Cond
+  obj:/usr/local/python-2.7.5/lib/libpython2.7.so.1.0
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:PyString_*
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:PyString_*
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:PyDict_GetItem
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:assemble
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:string_hash
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:string_hash
+}
+{
+   <none>
+   Memcheck:Cond
+   fun:code_hash
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:tupledealloc
+}
+{
+   <none>
+   Memcheck:Value8
+   fun:lookdict
+}
 #
 # Leaks (including possible leaks)
 #    Hmmm, I wonder if this masks some real leaks.  I think it does.
@@ -711,6 +1007,11 @@
    <insert a suppression name here>
    Memcheck:Value8
    fun:PyObject_Realloc
+}
+{
+   <insert a suppression name here>
+   Memcheck:Value8
+   fun:lookdict_string
 }
 # --- last line
 

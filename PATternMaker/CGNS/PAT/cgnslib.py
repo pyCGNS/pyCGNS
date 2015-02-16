@@ -91,15 +91,15 @@ def newBase(tree,name,ncell,nphys):
   if (ncell not in [1,2,3]): raise CE.cgnsException(10,name)
   if (nphys not in [1,2,3]): raise CE.cgnsException(11,name)
   if (nphys < ncell):        raise CE.cgnsException(12,name)
-  if ((tree != None) and (not CU.checkNode(tree))):
+  if ((tree is not None) and (not CU.checkNode(tree))):
      raise CE.cgnsException(6,name)
-  if ((tree != None) and (tree[0] == CK.CGNSTree_s)): parent=tree[2]  
+  if ((tree is not None) and (tree[0] == CK.CGNSTree_s)): parent=tree[2]  
   else:                                              parent=tree
   CU.checkDuplicatedName(["<root node>",None,parent],name)
   node=CU.newNode(name,
                NPY.array([ncell,nphys],dtype=NPY.int32,order='Fortran'),
                [],CK.CGNSBase_ts)
-  if (parent != None): parent.append(node)
+  if (parent is not None): parent.append(node)
   return node
 
 def numberOfBases(tree):
@@ -107,7 +107,7 @@ def numberOfBases(tree):
 
 def readBase(tree,name):
   b=CU.hasChildName(tree,name)
-  if (b == None): raise CE.cgnsException(21,name)
+  if (b is None): raise CE.cgnsException(21,name)
   if (b[3] != CK.CGNSBase_ts):
     raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
   return (b[0],b[1])
@@ -121,8 +121,8 @@ def updateBase(tree,name=None,ncell=None,nphys=None):
 
   if (tree[3] != CK.CGNSBase_ts):
     raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
-  if(name!=None): tree[0]=name
-  if(ncell!=None and nphys!=None and tree):
+  if (name is not None): tree[0]=name
+  if((ncell is not None) and (nphys is not None) and tree):
     tree[1]=NPY.array([ncell,nphys],dtype=NPY.int32,order='Fortran')
   else: raise CE.cgnsException(12)  
   
@@ -155,7 +155,7 @@ def newZone(parent,name,zsize=None,
   """
   asize=None
   if (ztype not in CK.ZoneType_l): raise CE.cgnsException(206,ztype)
-  if (zsize == None): raise CE.cgnsException(300) 
+  if (zsize is None): raise CE.cgnsException(300) 
   CU.checkDuplicatedName(parent,name)
   CU.checkArray(zsize,dienow=True)
   znode=CU.newNode(name,zsize,[],CK.Zone_ts,parent)
@@ -167,20 +167,20 @@ def newZone(parent,name,zsize=None,
 
 def numberOfZones(tree,basename):
   b=CU.hasChildName(tree,basename)
-  if (b == None): raise CE.cgnsException(21,basename)
+  if (b is None): raise CE.cgnsException(21,basename)
   if (b[3] != CK.CGNSBase_ts): raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
   return len(CU.hasChildrenType(b,CK.Zone_ts))
 
 def readZone(tree,basename,zonename,gtype=None):
   b=CU.hasChildName(tree,basename)
-  if (b == None): raise CE.cgnsException(21,basename)
+  if (b is None): raise CE.cgnsException(21,basename)
   if (b[3] != CK.CGNSBase_ts): raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
   z=CU.hasChildName(b,zonename)
-  if (z == None): raise CE.cgnsException(21,zonename)
+  if (z is None): raise CE.cgnsException(21,zonename)
   if (z[3] != CK.Zone_ts): raise CE.cgnsException(20,(CK.Zone_ts,name))
   if gtype: 
     zt=CU.hasChildName(z,CK.ZoneType_s)
-    if (zt == None): raise CE.cgnsException(21,CK.ZoneType_s)
+    if (zt is None): raise CE.cgnsException(21,CK.ZoneType_s)
     return (z[0],z[1],zt[1])
   else:
     return (z[0],z[1])
@@ -246,7 +246,7 @@ def newCoordinates(parent,name=CK.GridCoordinates_s,value=None):
   """
   CU.checkDuplicatedName(parent,name)
   gnode=CU.hasChildName(parent,CK.GridCoordinates_s)
-  if (gnode == None): gnode=newGridCoordinates(parent,CK.GridCoordinates_s)
+  if (gnode is None): gnode=newGridCoordinates(parent,CK.GridCoordinates_s)
   node=newDataArray(gnode,name,value)
   return node
   
@@ -281,7 +281,7 @@ def newDataArray(parent,name,value=None):
     CU.checkArrayChar(vv)
   else:
     vv=value
-    if (vv != None): CU.checkArray(vv)
+    if (vv is not None): CU.checkArray(vv)
     
   node=CU.newNode(name,vv,[],CK.DataArray_ts,parent)
   return node
@@ -291,7 +291,7 @@ def numberOfDataArrays(parent):
 
 def readDataArray(parent,name):
   n=CU.hasChildName(parent,name)
-  if (n == None): raise CE.cgnsException(21,name)
+  if (n is None): raise CE.cgnsException(21,name)
   if (n[3] != CK.DataArray_ts):
     raise CE.cgnsException(20,(CK.DataArray_ts,name))
   return n[1]
@@ -326,7 +326,7 @@ def newDataClass(parent,value=CK.UserDefined_s):
 
 def updateDataClass(node,value):
   CU.checkNode(node)  
-  if (value!=None): node[1]=value
+  if (value is not None): node[1]=value
   return checkDataClass(node)
 
 def checkDataClass(node,parent=None):
@@ -337,7 +337,7 @@ def checkDataClass(node,parent=None):
   if (len(node[2]) != 0):         raise CE.cgnsException(28,node[0])
   value=CU.getValue(node).tostring()
   if (value not in CK.DataClass_l):  raise CE.cgnsException(207,value)
-  if (parent != None):
+  if (parent is not None):
      CU.checkTypeList(parent,[CK.DataArray_ts,CK.CGNSBase_ts,CK.Zone_ts,
                               CK.GridCoordinates_ts,CK.Axisymmetry_ts,
                               CK.RotatingCoordinates_ts,CK.FlowSolution_ts,
@@ -524,7 +524,7 @@ def checkDescriptor(node,parent=None):
   value=CU.getValue(node)
   if (CU.getValueType(value) != CK.Character_s):
                                       raise CE.cgnsException(110,node[0])
-  if (parent != None):
+  if (parent is not None):
      CU.checkTypeList(parent,[CK.DataArray_ts,CK.CGNSBase_ts,CK.Zone_ts,
                            CK.GridCoordinates_ts,CK.Elements_ts,
                            CK.Axisymmetry_ts,
@@ -860,7 +860,7 @@ def newBCDataSet(parent,name,valueType=CK.Null_s):
    chapter 9.4 Add node BCTypeSimple is required
   """
   node=CU.hasChildName(parent,name)
-  if (node == None):    
+  if (node is None):    
     node=CU.newNode(name,None,[],CK.BCDataSet_ts,parent)
   if (valueType not in CK.BCTypeSimple_l):
     raise CE.cgnsException(252,valueType)
@@ -917,10 +917,10 @@ def newAxisymmetry(parent,
   CU.checkArrayReal(axisvector)
   node=CU.newNode(CK.Axisymmetry_s,None,[],CK.Axisymmetry_ts,parent)
   n=CU.hasChildName(parent,CK.AxisymmetryReferencePoint_s)
-  if (n == None):
+  if (n is None):
     n=newDataArray(node,CK.AxisymmetryReferencePoint_s,NPY.array(refpoint))
   n=CU.hasChildName(parent,CK.AxisymmetryAxisVector_s)
-  if (n == None):
+  if (n is None):
     n=newDataArray(node,CK.AxisymmetryAxisVector_s,NPY.array(axisvector))
   return node
 
@@ -945,10 +945,10 @@ def newRotatingCoordinates(parent,
   CU.checkArrayReal(ratev)
   node=CU.newNode(CK.RotatingCoordinates_s,None,[],CK.RotatingCoordinates_ts,parent)
   n=CU.hasChildName(node,CK.RotationCenter_s)
-  if (n == None): 
+  if (n is None): 
     n=newDataArray(node,CK.RotationCenter_s,NPY.array(rotcenter))
   n=CU.hasChildName(node,CK.RotationRateVector_s)
-  if (n == None): 
+  if (n is None): 
     n=newDataArray(node,CK.RotationRateVector_s,NPY.array(ratev))
   return node
 
@@ -1078,16 +1078,16 @@ def  newPeriodic(parent,
   CU.checkArrayReal(ratev)
   CU.checkArrayReal(trans)
   cnode=CU.hasChildName(parent,CK.Periodic_s)
-  if (cnode == None):
+  if (cnode is None):
     cnode=CU.newNode(CK.Periodic_s,None,[],CK.Periodic_ts,parent)
   n=CU.hasChildName(cnode,CK.RotationCenter_s)
-  if (n == None): 
+  if (n is None): 
     newDataArray(cnode,CK.RotationCenter_s,NPY.array(rotcenter))
   n=CU.hasChildName(cnode,CK.RotationAngle_s)
-  if (n == None): 
+  if (n is None): 
     newDataArray(cnode,CK.RotationAngle_s,NPY.array(ratev))
   n=CU.hasChildName(cnode,CK.Translation_s)
-  if (n == None): 
+  if (n is None): 
     newDataArray(cnode,CK.Translation_s,NPY.array(trans)) 
   return cnode
   
@@ -1104,7 +1104,7 @@ def newAverageInterface(parent,valueType=CK.Null_s):
    chapter 8.5.2
   """
   node=CU.hasChildName(parent,CK.AverageInterface_s)
-  if (node == None):       
+  if (node is None):       
     node=CU.newNode(CK.AverageInterface_s,None,[],
                  CK.AverageInterface_ts,parent)
   if (valueType not in CK.AverageInterfaceType_l):
@@ -1127,13 +1127,13 @@ def newOversetHoles(parent,name,hrange):
   chapter 8.6 Add PointList or List( PointRange ) are required
   """
   cnode=CU.hasChildName(parent,CK.ZoneGridConnectivity_s)
-  if (cnode == None):
+  if (cnode is None):
     cnode=CU.newNode(CK.ZoneGridConnectivity_s,None,[],CK.ZoneGridConnectivity_ts,parent)
   CU.checkDuplicatedName(cnode,name)   
   node=CU.newNode(name,None,[],CK.OversetHoles_ts,cnode)
   #if(pname!=None and value!=None):
     #newPointList(node,pname,value)
-  if hrange!=None:  
+  if (hrange is not None):  
     ## code correction: Modify PointRange shape and order
    newPointRange(node,CK.PointRange_s,NPY.array(hrange,dtype=NPY.int32,order='Fortran'))
    #newNode(CK.PointRange_s,NPY.array(list(hrange),'i'),[],CK.IndexRange_ts,node)
@@ -1167,7 +1167,7 @@ def newGoverningEquations(parent,valueType=CK.Euler_s):
    chapter  10.2 Add node GoverningEquationsType is required   
   """
   node=CU.hasChildName(parent,CK.GoverningEquations_s)
-  if (node == None):    
+  if (node is None):    
     node=CU.newNode(CK.GoverningEquations_s,None,[],CK.GoverningEquations_ts,parent)
   if (valueType not in CK.GoverningEquationsType_l):
       raise CE.cgnsException(221,valueType)
@@ -1188,7 +1188,7 @@ def newGasModel(parent,valueType=CK.Ideal_s):
    chapter 10.3 Add node GasModelType is required  
   """
   node=CU.hasChildName(parent,CK.GasModel_s)
-  if (node == None):       
+  if (node is None):       
     node=CU.newNode(CK.GasModel_s,None,[],CK.GasModel_ts,parent)
   if (valueType not in CK.GasModelType_l):
     raise CE.cgnsException(224,valueType)
@@ -1208,7 +1208,7 @@ def newThermalConductivityModel(parent,valueType=CK.SutherlandLaw_s):
    chapter 10.5 Add node ThermalConductivityModelType is required     
   """
   node=CU.hasChildName(parent,CK.ThermalConductivityModel_s)
-  if (node == None):    
+  if (node is None):    
     node=CU.newNode(CK.ThermalConductivityModel_s,None,[],
                  CK.ThermalConductivityModel_ts,parent)
   if (valueType not in CK.ThermalConductivityModelType_l):
@@ -1229,7 +1229,7 @@ def newViscosityModel(parent,valueType=CK.SutherlandLaw_s):
    chapter 10.4 Add node ViscosityModelType is (r)       
   """  
   node=CU.hasChildName(parent,CK.ViscosityModel_s)
-  if (node == None):    
+  if (node is None):    
     node=CU.newNode(CK.ViscosityModel_s,None,[],CK.ViscosityModel_ts,parent)    
   if (valueType not in CK.ViscosityModelType_l):
     raise CE.cgnsException(230,valueType) 
@@ -1248,7 +1248,7 @@ def newTurbulenceClosure(parent,valueType=CK.Null_s):
    chapter 10.5 Add node TurbulenceClosureType is (r)       
   """
   node=CU.hasChildName(parent,CK.TurbulenceClosure_s)
-  if (node == None):    
+  if (node is None):    
     node=CU.newNode(CK.TurbulenceClosure_s,None,[],CK.TurbulenceClosure_ts,parent)
   if (valueType not in CK.TurbulenceClosureType_l):
     raise CE.cgnsException(233,valueType)
@@ -1268,7 +1268,7 @@ def newTurbulenceModel(parent,valueType=CK.OneEquation_SpalartAllmaras_s):
    chapter 10.6.2 Add node TurbulenceModelType is (r)  
   """ 
   node=CU.hasChildName(parent,CK.TurbulenceModel_s)
-  if (node == None):
+  if (node is None):
     node=CU.newNode(CK.TurbulenceModel_s,None,[],CK.TurbulenceModel_ts,parent)
   if (valueType not in CK.TurbulenceModelType_l):
     raise CE.cgnsException(236,valueType)  
@@ -1288,7 +1288,7 @@ def newThermalRelaxationModel(parent,valueType=CK.Null_s):
    chapter 10.7 Add node ThermalRelaxationModelType is (r)
   """
   node=CU.hasChildName(parent,CK.ThermalRelaxationModel_s) 
-  if (node == None):          
+  if (node is None):          
     node=CU.newNode(CK.ThermalRelaxationModel_s,None,[],
                  CK.ThermalRelaxationModel_ts,parent)
   if (valueType not in CK.ThermalRelaxationModelType_l):
@@ -1309,7 +1309,7 @@ def newChemicalKineticsModel(parent,valueType=CK.Null_s):
    chapter 10.8 Add node ChemicalKineticsModelType is (r)  
   """
   node=CU.hasChildName(parent,CK.ChemicalKineticsModel_s) 
-  if (node == None):             
+  if (node is None):             
     node=CU.newNode(CK.ChemicalKineticsModel_s,None,[],
                  CK.ChemicalKineticsModel_ts,parent)
   if (valueType not in CK.ChemicalKineticsModelType_l):
@@ -1330,7 +1330,7 @@ def newEMElectricFieldModel(parent,valueType=CK.Null_s):
    chapter 10.9 Add node EMElectricFieldModelType is (r)  
   """
   node=CU.hasChildName(parent,CK.EMElectricFieldModel_s)   
-  if (node == None):           
+  if (node is None):           
     node=CU.newNode(CK.EMElectricFieldModel_s,None,[],
                  CK.EMElectricFieldModel_ts,parent)
   if (valueType not in CK.EMElectricFieldModelType_l):
@@ -1351,7 +1351,7 @@ def newEMMagneticFieldModel(parent,valueType=CK.Null_s):
    chapter 10.9.2 Add node EMMagneticFieldModelType is (r)  
   """
   node=CU.hasChildName(parent,CK.EMMagneticFieldModel_s)   
-  if (node == None):            
+  if (node is None):            
     node=CU.newNode(CK.EMMagneticFieldModel_s,None,[],
                  CK.EMMagneticFieldModel_ts,parent)
   if (valueType not in CK.EMMagneticFieldModelType_l):
@@ -1372,7 +1372,7 @@ def newEMConductivityModel(parent,valueType=CK.Null_s):
    chapter 10.9.3 Add node EMConductivityModelType is (r)  
   """
   node=CU.hasChildName(parent,CK.EMConductivityModel_s)  
-  if (node == None):             
+  if (node is None):             
     node=CU.newNode(CK.EMConductivityModel_s,None,[],
                  CK.EMConductivityModel_ts,parent)
   if (valueType not in CK.EMConductivityModelType_l):
@@ -1442,7 +1442,7 @@ def newRigidGridMotion(parent,name,
       raise CE.cgnsException(254,valueType)
   node[1]=CU.setStringAsArray(valueType)
   n=CU.hasChildName(parent,CK.OriginLocation_s)
-  if (n == None): 
+  if (n is None): 
     n=newDataArray(node,CK.OriginLocation_s,NPY.array(vector))
   return node
   
@@ -1457,7 +1457,7 @@ def newReferenceState(parent,name=CK.ReferenceState_s):
    chapter  12.1  """   
   if (parent): CU.checkNode(parent)
   node=CU.hasChildName(parent,name)
-  if (node == None):
+  if (node is None):
     CU.checkDuplicatedName(parent,name)
     node=CU.newNode(name,None,[],CK.ReferenceState_ts,parent)
   return node
@@ -1569,7 +1569,7 @@ def newArbitraryGridMotion(parent,name,valuetype=CK.Null_s):
   """
   node=None
   if (parent): node=CU.hasChildName(parent,name)
-  if (node == None):
+  if (node is None):
     node=CU.newNode(name,None,[],CK.ArbitraryGridMotion_ts,parent)      
   if (valuetype not in CK.ArbitraryGridMotionType_l):
     raise CE.cgnsException(255,valuetype) 
@@ -1608,7 +1608,7 @@ def newGravity(parent,gvector=NPY.array([0.0,0.0,0.0])):
   CU.checkArrayReal(gvector)
   node=CU.newNode(CK.Gravity_s,None,[],CK.Gravity_ts,parent)
   n=CU.hasChildName(parent,CK.GravityVector_s)
-  if (n == None): 
+  if (n is None): 
     n=newDataArray(node,CK.GravityVector_s,NPY.array(gvector))
   return node
 
@@ -1655,7 +1655,7 @@ def newParentElementsPosition(parent,value):
 # -----------------------------------------------------------------------------
 def nextRange(previous,etype,earray):
   r=previous
-  if (previous==None): r=NPY.array([0,0],dtype='i')
+  if (previous is None): r=NPY.array([0,0],dtype='i')
   npe=CK.ElementTypeNPE[etype]
   if (npe):
     nelems=len(earray.flat)/npe

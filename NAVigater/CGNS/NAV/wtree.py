@@ -9,7 +9,16 @@ from PySide.QtGui  import *
 from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.wform import Q7Form
 from CGNS.NAV.wpattern import Q7PatternList
-from CGNS.NAV.wvtk import Q7VTK, Q7VTKPlot
+
+try:
+  import vtk
+  from CGNS.NAV.wvtk import Q7VTK
+  has_vtk=True
+  print 'VTK PASS'
+except:
+  print 'VTK FAIL'
+  has_vtk=False
+    
 from CGNS.NAV.wquery import Q7Query, Q7SelectionList
 from CGNS.NAV.wdiag import Q7CheckList
 from CGNS.NAV.wlink import Q7LinkList
@@ -18,6 +27,7 @@ import CGNS.NAV.mtree as NMT
 from CGNS.NAV.wfingerprint import Q7Window,Q7FingerPrint
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils as CGU
 
 import CGNS.NAV.wmessages as MSG
 
@@ -165,6 +175,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._vtkwindow=None
         self._selectwindow=None
 
+        self.selectForLinkSrc=None # one link source per tree view allowed
+
         QObject.connect(self.treeview,
                         SIGNAL("expanded(QModelIndex)"),
                         self.expandNode)
@@ -210,8 +222,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.lockable(self.bApply)
         self.bVTKView.clicked.connect(self.vtkview)
         self.lockable(self.bVTKView)
-        self.bPlotView.clicked.connect(self.plotview)
-        self.lockable(self.bPlotView)
+#        self.bPlotView.clicked.connect(self.plotview)
+#        self.lockable(self.bPlotView)
         self.bQueryView.clicked.connect(self.queryview)
         self.lockable(self.bQueryView)
         self.bScreenShot.clicked.connect(self.screenshot)
@@ -220,8 +232,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bClearChecks.clicked.connect(self.clearchecks)
         self.bLinkView.clicked.connect(self.linklist)
         self.bPatternView.clicked.connect(self.patternlist)
-        self.bDeleteLink.clicked.connect(self.linkdelete)
-        self.bAddLink.clicked.connect(self.linkadd)
         self.bToolsView.clicked.connect(self.tools)
         self.bOperateDoc.clicked.connect(self.querydoc)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -242,14 +252,15 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.clearchecks()
         #
         self.bCheckList.setDisabled(True)
-        self.bPlotView.setDisabled(True)
-        self.bDeleteLink.setDisabled(True)
-        self.bAddLink.setDisabled(True)
+#        self.bPlotView.setDisabled(True)
         if (not OCTXT._HasProPackage):
             self.bToolsView.setDisabled(True)
         self.bCheckView.setDisabled(True)
         self.bPatternDB.setDisabled(True)
-        self.bSelectLink.clicked.connect(self.linkselect)
+        self.bAddLink.clicked.connect(self.linkadd)
+        self.bSelectLinkSrc.clicked.connect(self.linkselectsrc)
+        self.bSelectLinkDst.clicked.connect(self.linkselectdst)
+        self.bAddLink.setDisabled(True)
         QObject.connect(self.lineEdit,
                         SIGNAL("returnPressed()"),
                         self.jumpToNode)
@@ -478,29 +489,58 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             if (qry.getQuery(q).requireTreeUpdate()):
                 self.model().modelReset()
         self.treeview.refreshView()
-    def linkselect(self):
+    def linkselectsrc(self):
+        if (self.bSelectLinkSrc.isChecked()):
+          if (self.getLastEntered() is None): return
+          self.bAddLink.setDisabled(False)
+          node=self.getLastEntered()
+          self.selectForLinkSrc=(node,node.sidsPath())
+        else:
+          self.bAddLink.setDisabled(True)          
+          self.selectForLinkSrc=None
+    def linkselectdst(self):
         if (self.getLastEntered() is None): return
         node=self.getLastEntered()
         if (node is None):  return
         if (node.sidsIsLink()): return
         if (node.sidsType()==CGK.CGNSTree_ts): return
-        self._control.selectForLink=(node,node.sidsPath(),
-                                     self._fgprint.filedir,
-                                     self._fgprint.filename)
+        if (self._control.selectForLinkDst is not None):
+          bt=self._control.selectForLinkDst[-1].bSelectLinkDst
+          bt.setChecked(Qt.Unchecked)
+          if (self._control.selectForLinkDst[-1] == self):
+            self._control.selectForLinkDst=None
+            return
+        self._control.selectForLinkDst=(node,node.sidsPath(),
+                                        self._fgprint.filedir,
+                                        self._fgprint.filename,
+                                        self)
+        self.bSelectLinkDst.setChecked(Qt.Checked)
         if (self._linkwindow is not None):
             n=node.sidsPath()
             d=self._fgprint.filedir
             f=self._fgprint.filename
             self._linkwindow.updateSelected(d,f,n)
     def linkadd(self):
-        node=self._control.selectForLink[0]
-        if (node is None): return
-        if (node.sidsType()==CGK.CGNSTree_ts): return
-    def linkdelete(self):
-        node=self._control.selectForLink[0]
-        if (node is None): return
-        if (node.sidsType()==CGK.CGNSTree_ts): return
-        if (not node.sidsIsLink()): return
+        if (self._control.selectForLinkDst is None): return
+        dst=self._control.selectForLinkDst
+        str_dst="%s:%s"%(dst[3],dst[1])
+        tpath='relative'
+        newname=CGU.getPathLeaf(dst[1])
+        if (CGU.checkDuplicatedName(self.selectForLinkSrc[0].sidsNode(),
+                                    newname,dienow=False)):
+          str_cnm="New child node name is <b>%s</b>"%newname
+        else:
+          count=0
+          while (not CGU.checkDuplicatedName(self.selectForLinkSrc[0].sidsNode(),
+                                             newname,dienow=False)):
+            count+=1
+            newname='{%s#%.3d}'%(dst[0].sidsType(),count)
+          str_cnm="""As a child with this name already exists, the name <b>%s</b> is used (generated name)"""%newname
+        str_src="%s:%s/%s"%(self._fgprint.filename,
+                         self.selectForLinkSrc[1],newname)
+        str_msg="you want to create a link from <b>%s</b> to <b>%s</b><br>%s<br>Your current user options do force the link to use <b>%s</b> destination file path."""%(str_src,str_dst,str_cnm,tpath)
+        reply = MSG.wQuestion(self,'Create link as a new node',str_msg)
+
     def linklist(self):
         if (self._linkwindow is None):
             self._linkwindow=Q7LinkList(self._control,self._fgprint,self)
@@ -567,6 +607,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         form=Q7Form(self._control,node,self._fgprint)
         form.show()
     def vtkview(self):
+        if (not has_vtk): return
         if (self._vtkwindow is None):
           self.busyCursor()
           ix=self.treeview.modelCurrentIndex()

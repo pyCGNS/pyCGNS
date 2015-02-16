@@ -13,6 +13,7 @@ import numpy as NPY
 import os.path as PTH
 import string
 import re
+import sys
 
 # -----------------------------------------------------------------------------
 # undocumented functions are private (or obsolete)
@@ -457,7 +458,7 @@ def checkNode(node,dienow=False):
   if (type(node[2]) != list):
     if (dienow): raise CE.cgnsException(4,node[0])
     return False
-  if ((node[1] != None) and (type(node[1]) != NPY.ndarray)):
+  if ((node[1] is not None) and (type(node[1]) != NPY.ndarray)):
     if (dienow): raise CE.cgnsException(5,node[0])
     return False
   return True
@@ -705,7 +706,7 @@ def getValueType(v):
   The return value is a string in:
   Character, RealSingle, RealDouble, Integer, LongInteger
   """
-  if (v == None): return None
+  if (v is None): return None
   if (type(v) == NPY.ndarray):
     if (v.dtype.kind in ['S','a']): return CK.Character_s
     if (v.dtype.char in ['f']):     return CK.RealSingle_s
@@ -864,7 +865,7 @@ def getValue(node):
   """Returns node value, could be `None` or a `numpy.ndarray`."""
   v=node[1]
   t=getValueType(v)
-  if (t == None):            return None
+  if (t is None):            return None
   if (t == CK.Integer_s):    return v
   if (t == CK.LongInteger_s):return v
   if (t == CK.RealDouble_s): return v
@@ -874,7 +875,7 @@ def getValue(node):
 # --------------------------------------------------
 def hasFortranFlag(node):
   """Returns node value fortran flag."""
-  if (node[1]==None):           return True
+  if (node[1] is None):         return True
   if (node[1]==[]):             return True
   if (type(node[1])==type('')): return True # link
   if (not node[1].shape):       return True
@@ -897,7 +898,7 @@ def getValueShape(node):
 
 def getNodeShape(node):
   r="-"
-  if   (node[1]==None): r="-"
+  if   (node[1] is None): r="-"
   elif (node[1]==[]):   r="-"
   elif (node[3]==''):   r="-"
   elif (node[1].shape in ['',(0,),()]): r="[0]"
@@ -906,7 +907,7 @@ def getNodeShape(node):
 
 def getShape(node):
   r=0
-  if   (node[1]==None): r=(0,)
+  if   (node[1] is None): r=(0,)
   elif (node[1]==[]):   r=(0,)
   elif (node[3]==''):   r=(0,)
   elif (node[1].shape in ['',(0,),()]): r=(0,)
@@ -928,7 +929,7 @@ def getAuthNames(node):
 
   """
   r=None
-  if   (node[1]==None): r=None
+  if   (node[1] is None): r=None
   elif (node[1]==[]):   r=None
   elif (node[3]==''):   r=None
   elif (CT.types[node[3]].names in ['',None,CT.UD]): r=None
@@ -949,7 +950,7 @@ def getAuthDataTypes(node):
 
   """
   r=None
-  if   (node[1]==None): r=None
+  if   (node[1] is None): r=None
   elif (node[1]==[]):   r=None
   elif (node[3]==''):   r=None
   elif (CT.types[node[3]].datatype in ['',None,[CK.LK]]): r=None
@@ -972,7 +973,7 @@ def getAuthParentTypes(node):
 
   """
   r=None
-  if   (node[1]==None): r=None
+  if   (node[1] is None): r=None
   elif (node[1]==[]):   r=None
   elif (node[3]==''):   r=None
   elif (CT.types[node[3]].parents in ['',None]): r=None
@@ -993,7 +994,7 @@ def getAuthShapes(node):
 
   """
   r=None
-  if   (node[1]==None): r=None
+  if   (node[1] is None): r=None
   elif (node[1]==[]):   r=None
   elif (node[3]==''):   r=None
   elif (CT.types[node[3]].shape in ['']): r=None
@@ -1015,7 +1016,7 @@ def getAuthChildren(node):
 
   """
   r=None
-  if   (node[3]==None): r=None
+  if   (node[3] is None): r=None
   elif (node[3]==[]):   r=None
   elif (node[3]==''):   r=None
   elif (CT.types[node[3]].children in ['',None,[]]): r=None
@@ -1044,7 +1045,7 @@ def getNodeType(node):
   data=node[1]
   if (node[0] == 'CGNSLibraryVersion_t'):
     return CK.R4 # ONLY ONE R4 IN ALL SIDS !
-  if ( data in [None, []] ):
+  if ((data is None) or (data == [])):
     return CK.MT
   if (type(data)==NPY.ndarray):
     if (data.dtype.kind in ['S','a']):        return CK.C1
@@ -2158,7 +2159,7 @@ def getNodeAllowedChildrenTypes(pnode,node):
   tlist=[]
   if (node[3] == CK.CGNSTree_ts): return tlist
   try:
-    if ((node[3] == None) or (pnode == None)):
+    if ((node[3] is None) or (pnode is None)):
       ctl=CT.types[CK.CGNSTree_ts]
     else:
       ctl=CT.types[pnode[3]]
@@ -2332,7 +2333,7 @@ def hasChildNode(parent,name,dienow=False):
        
   """
   if (not parent): return None
-  if (parent[2] == None): return None
+  if (parent[2] is None): return None
   for nc in parent[2]:
     if (nc[0] == name):
       if (dienow): raise CE.cgnsNameError(102,(name,parent[0]))
@@ -2346,7 +2347,7 @@ def getTypeAsGrammarToken(ntype):
     
 # --------------------------------------------------
 def hasChildNodeOfType(node,ntype):
-  if (node == None): return 0
+  if (node is None): return 0
   for cn in node[2]:
     if (cn[3]==ntype): return 1
   return 0
@@ -2364,8 +2365,8 @@ def stringNameMatches(node,reval):
 # --------------------------------------------------
 def stringValueMatches(node,reval):
   """True if the string matches the node value"""
-  if (node == None):             return False
-  if (node[1] == None):          return False  
+  if (node is None):             return False
+  if (node[1] is None):          return False  
   if (getNodeType(node)!=CK.C1): return False
   tn=type(node[1])
   if   (tn==type('')): vn=node[1]
@@ -2377,8 +2378,8 @@ def stringValueMatches(node,reval):
 
 # --------------------------------------------------
 def stringValueInList(node,listval):
-  if (node == None):             return False
-  if (node[1] == None):          return False
+  if (node is None):             return False
+  if (node[1] is None):          return False
   if (getNodeType(node)!=CK.C1): return False
   tn=type(node[1])
   if   (tn==type('')): vn=node[1]
@@ -2401,7 +2402,7 @@ def checkLinkFile(lkfile,lksearch=['']):
 # --------------------------------------------------
 def copyArray(a):
   """Copy a numpy.ndarray with flags"""
-  if (a==None): return None
+  if (a is None): return None
   if (a==[]):   return None
   if (NPY.isfortran(a)):
     b=NPY.array(a,order='Fortran',copy=True)

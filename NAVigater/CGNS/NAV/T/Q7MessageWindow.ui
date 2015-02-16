@@ -44,6 +44,11 @@
        <height>0</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans Mono</family>
+      </font>
+     </property>
      <property name="frameShadow">
       <enum>QFrame::Plain</enum>
      </property>

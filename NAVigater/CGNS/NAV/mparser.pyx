@@ -204,9 +204,6 @@ class Mesh(CGNSparser):
                    CGK.TETRA_10:(vtk.vtkTetra,     (4,10)),
                    CGK.PYRA_5:  (vtk.vtkPyramid,   (5,5)),
                    CGK.PYRA_14: (vtk.vtkPyramid,   (5,14)),
-                   #CGK.PENTA_6: (vtk.vtkPolyhedron,(6,6)),
-                   #CGK.PENTA_15:(vtk.vtkPolyhedron,(6,15)),
-                   #CGK.PENTA_18:(vtk.vtkPolyhedron,(6,18)),
                    CGK.HEXA_8:  (vtk.vtkHexahedron,(8,8)),
                    CGK.HEXA_20: (vtk.vtkHexahedron,(8,20)),
                    CGK.HEXA_27: (vtk.vtkHexahedron,(8,27))}
@@ -270,7 +267,8 @@ class Mesh(CGNSparser):
     return (1,None)
     
 #  @cython.boundscheck(False)
-  def do_volume(self,path,dx,dy,dz,solution):
+  def do_volume(self,path,CNPY.ndarray dx,CNPY.ndarray dy,CNPY.ndarray dz,
+                solution):
     data=vtk.vtkIntArray()
     data.SetNumberOfComponents(3)
     data.SetName("index volume")
@@ -284,9 +282,9 @@ class Mesh(CGNSparser):
     pts.SetNumberOfPoints(idim*jdim*kdim)
     #pts.setData
     if (dx.dtype==NPY.float32):
-      for k in range(kdim):
-       for j in range(jdim):
-        for i in range(idim):
+      for k in xrange(kdim):
+       for j in xrange(jdim):
+        for i in xrange(idim):
          data.InsertNextTuple3(i+1,j+1,k+1)
          p=i+j*idim+k*idim*jdim
          xf = (<float*>CNPY.PyArray_GETPTR1(dx,p))[0]
@@ -294,14 +292,14 @@ class Mesh(CGNSparser):
          zf = (<float*>CNPY.PyArray_GETPTR1(dz,p))[0]
          pts.InsertPoint(p,xf,yf,zf)
     else:
-      for k in range(kdim):
-       for j in range(jdim):
-        for i in range(idim):
+      for k in xrange(kdim):
+       for j in xrange(jdim):
+        for i in xrange(idim):
          data.InsertNextTuple3(i+1,j+1,k+1)
          p=i+j*idim+k*idim*jdim
-         xd = (<double*>CNPY.PyArray_GETPTR1(dx,p))[0]
-         yd = (<double*>CNPY.PyArray_GETPTR1(dy,p))[0]
-         zd = (<double*>CNPY.PyArray_GETPTR1(dz,p))[0]
+         xd=((<double*>dx.data)+p)[0]
+         yd=((<double*>dy.data)+p)[0]
+         zd=((<double*>dz.data)+p)[0]
          pts.InsertPoint(p,xd,yd,zd)
     g=vtk.vtkStructuredGrid()
     g.SetPoints(pts)
@@ -317,9 +315,9 @@ class Mesh(CGNSparser):
       if ((s[1] is not None) and (s[1].shape==(idim-1,jdim-1,kdim-1))):
         array=vtk.vtkFloatArray()
         array.SetName(s[0])
-        for k in range(kdim-1):          
-          for j in range(jdim-1):
-            for i in range(idim-1):
+        for k in xrange(kdim-1):          
+          for j in xrange(jdim-1):
+            for i in xrange(idim-1):
               array.InsertNextTuple1(s[1][i][j][k])
         g.GetCellData().AddArray(array)
     return (a,a.GetBounds(),g,path,(0,(idim,jdim,kdim)))
