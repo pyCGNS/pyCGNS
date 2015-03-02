@@ -124,6 +124,7 @@ class Entry(object):
       
 #  -------------------------------------------------------------------------
 def openFile(filename):
+    if (not CGM.probe(filename)): return None
     flags=CGM.S2P_NODATA
     (t,l,p)=CGM.load(filename,flags=flags,maxdata=20)
     return (t,l,p,filename)
@@ -137,12 +138,14 @@ def parseFile(filename,A):
       print '# skip file >1Gb :',filename
       return None
   T=openFile(filename)
+  if (T is None): return None
   fmt=''
   hdr=''
   if (A.version):
     node=CGU.getNodeByPath(T[0],'%s/%s'%\
                            (CGK.CGNSTree_s,CGK.CGNSLibraryVersion_s))
-    R.version='%.2f'%(node[1].flat[0])
+    if (node is None): R.version='?.??'
+    else: R.version='%.2f'%(node[1].flat[0])
   if (A.links):
     R.nlinks=len(T[1])
   if (A.base):
@@ -157,10 +160,9 @@ def parseFile(filename,A):
                                           CGK.Zone_ts])
     if (A.zone): R.nzones=len(zlist)
     if (A.structured or A.unstructured or A.points):
-      if (not zlist):
-        if (A.structured): R.nzones_structured=0 
-        if (A.unstructured): R.nzones_unstructured=0 
-        if (A.points): R.npoints=0 
+      R.nzones_structured=0 
+      R.nzones_unstructured=0 
+      R.npoints=0 
       for z in zlist:
         zn=CGU.getNodeByPath(T[0],z+'/'+CGK.ZoneType_s)
         if (CGU.stringValueMatches(zn,CGK.Structured_s)):

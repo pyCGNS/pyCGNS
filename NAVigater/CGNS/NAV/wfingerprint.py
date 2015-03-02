@@ -83,7 +83,7 @@ class Q7CHLoneThread(QThread):
         slp=OCTXT.LinkSearchPathList
         slp+=[filedir]
         loadfilename=selectedfile
-        flags=CGNS.MAP.S2P_NONE&~CGNS.MAP.S2P_REVERSEDIMS
+        flags=CGNS.MAP.S2P_DEFAULTS
         maxdataload=-1
         if (OCTXT.CHLoneTrace):
             flags|=CGNS.MAP.S2P_TRACE
@@ -545,7 +545,7 @@ class Q7FingerPrint:
         slp=OCTXT.LinkSearchPathList
         slp+=[self.filedir]
         minpath=CGU.getPathListCommonAncestor(pathdict.keys())
-        flags=CGNS.MAP.S2P_NONE&~CGNS.MAP.S2P_REVERSEDIMS
+        flags=CGNS.MAP.S2P_DEFAULTS
         if (OCTXT.CHLoneTrace):
             flags|=CGNS.MAP.S2P_TRACE
         if (OCTXT.FollowLinksAtLoad):

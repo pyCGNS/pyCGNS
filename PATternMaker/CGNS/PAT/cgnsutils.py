@@ -1997,6 +1997,7 @@ def getPathNormalize(path):
   """
   if (path is None): return None
   if (path and ((path[0]=='/') or (path[0]=='\\'))): path='///'+path
+  if (PTH.sep=='\\'):path.replace('/','\\')
   path=PTH.normpath(path).replace('\\','/')
   return path
 
