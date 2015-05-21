@@ -10,7 +10,8 @@ import os
 import sys
 
 cui='pyside-uic'
-crc='pyrcc4' #'pyside-rcc'
+crc='pyrcc4'
+crc='pyside-rcc'
 ccy='cython'
 
 try:

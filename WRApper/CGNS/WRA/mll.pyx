@@ -76,6 +76,7 @@ cdef cg_open_(char *filename, int mode):
 
 cdef enum:
   MAXNAMELENGTH = 33
+  MAXNAMELENGTHEXTENDED = 65
   MAXGOTODEPTH = 20
 
 EMPTYSTRING=" "*MAXNAMELENGTH
@@ -211,6 +212,23 @@ cdef class pyCGNS(object):
     cdef float v=0
     cgnslib.cg_version(self._root,&v)
     return v
+
+  # ---------------------------------------------------------------------------
+  cpdef path_token(self, int idx, char *path):
+    """
+    Returns the Nth token of a path. Used to split a path into tokens for
+    example to get base-name and family-name from an extended amily name.
+
+    - Args:
+     * `idx`: the index of the token
+     * `path`: the target path
+
+    - Return:
+     * the Nth token or empty string
+    """
+    cdef char token[MAXNAMELENGTH]
+    self._error=cgnslib.cg_path_token(idx,path,token)
+    return token
 
   # ---------------------------------------------------------------------------
   cpdef gopath(self,char *path):
@@ -544,7 +562,7 @@ cdef class pyCGNS(object):
      :py:func:`geo_read`. You have to parse each child a compare with
      some parameter of yours to find the one you are looking for.
     """
-    cdef char  family_name[MAXNAMELENGTH]
+    cdef char  family_name[MAXNAMELENGTHEXTENDED]
     cdef int   nboco
     cdef int   ngeo
     self._error=cgnslib.cg_family_read(self._root,B,F,family_name,&nboco,&ngeo)
@@ -2843,8 +2861,8 @@ cdef class pyCGNS(object):
     * range of points for the donor zone (`numpy.ndarray`)
 
     """
-    cdef char * name = " "
-    cdef char * dname = " "
+    cdef char name[MAXNAMELENGTH]
+    cdef char dname[MAXNAMELENGTHEXTENDED]
     cdef cgnslib.cgsize_t * arangeptr
     cdef cgnslib.cgsize_t * drangeptr
     cdef int * trptr
@@ -2977,7 +2995,7 @@ cdef class pyCGNS(object):
     
     name="/"*MAXNAMELENGTH
     c_name=name
-    dname="/"*MAXNAMELENGTH
+    dname="/"*MAXNAMELENGTHEXTENDED
     c_dname=dname
     self._error=cgnslib.cg_conn_info(self._root,B,Z,I,c_name,
                                      &location,&gtype,&pst,&npnts,c_dname,
@@ -3999,7 +4017,7 @@ cdef class pyCGNS(object):
   # ---------------------------------------------------------------------------
   cpdef family_name_read(self, int B, int F, int N):
     cdef char name[MAXNAMELENGTH]
-    cdef char fam[MAXNAMELENGTH]
+    cdef char fam[MAXNAMELENGTHEXTENDED]
     self._error=cgnslib.cg_family_name_read(self._root,B,F,N,name,fam)
     return (name,fam)
   

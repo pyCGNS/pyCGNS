@@ -14,9 +14,7 @@ try:
   import vtk
   from CGNS.NAV.wvtk import Q7VTK
   has_vtk=True
-  print 'VTK PASS'
 except:
-  print 'VTK FAIL'
   has_vtk=False
     
 from CGNS.NAV.wquery import Q7Query, Q7SelectionList

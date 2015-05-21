@@ -15,7 +15,7 @@ doc1="""
   pyCGNS v%s
   
   The result of the check is a textual diagnostic
-"""
+"""%(CGNS.version.id)
 
 doc2="""
   User requirements are identified by a <key>, all known

@@ -431,6 +431,7 @@ cdef extern from "cgnslib.h":
   int cg_gopath(int fn,char *path)
   int cg_gorel(int fn,...)
   int cg_goto(int fn,int B,...)
+  int cg_path_token(int index, const char *path, char *token)
   int cg_governing_read(GoverningEquationsType_t *EquationsType)
   int cg_governing_write(GoverningEquationsType_t Equationstype)
   int cg_gravity_read(int fn,int B,float *gravity_vector)
