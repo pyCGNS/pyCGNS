@@ -4,7 +4,7 @@
 #  -------------------------------------------------------------------------
 #
 MAJORVERSION=4
-MINORVERSION=4
+MINORVERSION=5
 REVISION=0
 # --------------------------------------------------------------------
 
@@ -14,6 +14,7 @@ import shutil
 import re
 import time
 import subprocess
+import distutils.util
 
 from distutils.dir_util import remove_tree
 from distutils.core import setup
@@ -24,6 +25,12 @@ rootfiles=['__init__.py','errors.py','version.py','config.py','test.py']
 compfiles=['midlevel.py','wrap.py']
 
 pfx='### pyCGNS: '
+
+# if you change this name, also change lines tagged with 'USER CONFIG'
+userconfigfile='setup_userConfig.py'
+
+class ConfigException(Exception):
+  pass
 
 # --------------------------------------------------------------------
 def prodtag():
@@ -52,26 +59,32 @@ def check_command(args):
   return True
 
 # --------------------------------------------------------------------
-def search(tag,deps=[]):
-  import sys
-  import distutils.util
-  import os
+def unique_but_keep_order(lst):
+  if (len(lst)<2): return lst
+  r=[lst[0]]
+  for p in lst[1:]:
+    if (p not in r): r.append(p)
+  return r
+    
+# --------------------------------------------------------------------
+def search(incs,libs,tag='pyCGNS',
+           deps=['Cython','HDF5','MLL','numpy','vtk','CHLone',
+                 'PySide','SQLAlchemy']):
   state=1
   for com in sys.argv:
     if com in ['help','clean']: state=0
-  bxtarget='../build/lib'
-  bptarget='../build/lib/CGNS'  
+  bxtarget='./build/lib'
+  bptarget='./build/lib/CGNS'  
   if (not os.path.exists(bxtarget)):
     os.makedirs(bxtarget)
     pt=distutils.util.get_platform()
     vv="%d.%d"%(sys.version_info[0],sys.version_info[1])
-    tg="%s/../build/lib.%s-%s/CGNS"%(os.getcwd(),pt,vv)
-    lg="%s/../build/lib/CGNS"%(os.getcwd())
+    tg="%s/./build/lib.%s-%s/CGNS"%(os.getcwd(),pt,vv)
+    lg="%s/./build/lib/CGNS"%(os.getcwd())
     os.makedirs(tg)
 #    os.symlink(tg,lg)
   oldsyspath=sys.path
-  sys.path =[os.path.abspath(os.path.normpath('../lib'))]
-  sys.path+=[os.path.abspath(os.path.normpath('./lib'))]
+  sys.path =[os.path.abspath(os.path.normpath('./lib'))]
   cfgdict={}
   import pyCGNSconfig_default as C_D
   sys.path=oldsyspath
@@ -83,14 +96,25 @@ def search(tag,deps=[]):
   cfgdict['PLATFORM']="%s %s %s"%(pg[1][0],pg[1][1],pg[1][-1])
   updateConfig('..',bptarget,cfgdict)
   sys.path=[bptarget]+sys.path
+
+  # here we go, check each dep and add incs/libs/others to config
   try:
     import pyCGNSconfig as C
 
+    print incs, libs
+    # -----------------------------------------------------------------------
+    if ('Cython' in deps):
+      try:
+        from Cython.Distutils import build_ext
+        C.HAS_CYTHON=True
+      except:
+        C.HAS_CYTHON=False
+
     # -----------------------------------------------------------------------
     if ('HDF5' in deps):
-      tp=find_HDF5(C.HDF5_PATH_INCLUDES+C.INCLUDE_DIRS,
-                   C.HDF5_PATH_LIBRARIES+C.LIBRARY_DIRS,
-                   C.HDF5_LINK_LIBRARIES)
+      incs=incs+C.HDF5_PATH_INCLUDES+C.INCLUDE_DIRS
+      libs=libs+C.HDF5_PATH_LIBRARIES+C.LIBRARY_DIRS
+      tp=find_HDF5(incs,libs,C.HDF5_LINK_LIBRARIES)
       if (tp is None):
         print pfx+'ERROR: %s setup cannot find HDF5!'%tag
         sys.exit(1)
@@ -106,10 +130,9 @@ def search(tag,deps=[]):
 
     # -----------------------------------------------------------------------
     if ('MLL' in deps):
-      tp=find_MLL(C.MLL_PATH_INCLUDES+C.INCLUDE_DIRS,
-                  C.MLL_PATH_LIBRARIES+C.LIBRARY_DIRS,
-                  C.MLL_LINK_LIBRARIES,
-                  C.MLL_EXTRA_ARGS)
+      incs=incs+C.MLL_PATH_INCLUDES
+      libs=libs+C.MLL_PATH_LIBRARIES
+      tp=find_MLL(incs,libs,C.MLL_LINK_LIBRARIES,C.MLL_EXTRA_ARGS)
       if (tp is None):
         print pfx+'ERROR: %s setup cannot find cgns.org library (MLL)!'%tag
         C.HAS_MLL=False
@@ -126,9 +149,9 @@ def search(tag,deps=[]):
         
     # -----------------------------------------------------------------------
     if ('CHLone' in deps):
-      tp=find_CHLone(C.CHLONE_PATH_INCLUDES+C.INCLUDE_DIRS,
-                     C.CHLONE_PATH_LIBRARIES+C.LIBRARY_DIRS,
-                     C.CHLONE_LINK_LIBRARIES)
+      incs=incs+C.CHLONE_PATH_INCLUDES
+      libs=libs+C.CHLONE_PATH_LIBRARIES
+      tp=find_CHLone(incs,libs,C.CHLONE_LINK_LIBRARIES)
       if (tp is None):
         print pfx+'ERROR: %s setup cannot find CHLone!'%tag
         sys.exit(1)
@@ -177,8 +200,8 @@ def search(tag,deps=[]):
 
 # --------------------------------------------------------------------
 def installConfigFiles():
-  lptarget='..'
-  bptarget='../build/lib/CGNS'  
+  lptarget='.'
+  bptarget='./build/lib/CGNS'  
   for ff in rootfiles:
     shutil.copy("%s/lib/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
   for ff in compfiles:
@@ -264,21 +287,21 @@ def updateConfig(pfile,gfile,config_default,config_previous=None):
     newconf=1
   else:
     f1=os.stat("%s/pyCGNSconfig.py"%(gfile))
-    if (os.path.exists("%s/pyCGNSconfig_user.py"%(pfile))):
-      f2=os.stat("%s/pyCGNSconfig_user.py"%(pfile))
+    if (os.path.exists("%s/%s"%(pfile,userconfigfile))):
+      f2=os.stat("%s/%s"%(pfile,userconfigfile))
     else:
-      f2=os.stat("./pyCGNSconfig_user.py")
+      f2=os.stat("./%s"%userconfigfile)
     if (f1.st_mtime < f2.st_mtime):
       newconf=1
-      print "### pyCGNS: use modified pyCGNSconfig_user.py file"
+      print "### pyCGNS: use modified %s file"%userconfigfile
     else:
       newconf=0
-      print "### pyCGNS: use existing pyCGNSconfig.py file"
+      print "### pyCGNS: use existing %s file"%userconfigfile
   if newconf:
     sys.path=['..']+['.']+sys.path
-    import pyCGNSconfig_user
-    for ck in dir(pyCGNSconfig_user):
-      if (ck[0]!='_'): config_default[ck]=pyCGNSconfig_user.__dict__[ck]
+    import setup_userConfig as UCFG # USER CONFIG
+    for ck in dir(UCFG):
+      if (ck[0]!='_'): config_default[ck]=UCFG.__dict__[ck]
     if (not os.path.exists('%s'%gfile)):
       os.makedirs('%s'%gfile)
     f=open("%s/pyCGNSconfig.py"%(gfile),'w+')
@@ -304,7 +327,7 @@ def frompath_HDF5():
 def frompath_MLL():
   try:
    mllp=subprocess.check_output(["which","cgnscheck"],stderr=subprocess.STDOUT)
-  except AttributeError:
+  except:
     try:
       mllp=subprocess.check_output(["whence","cgnscheck"],stderr=subprocess.STDOUT)
     except:
@@ -322,7 +345,10 @@ def find_HDF5(pincs,plibs,libs):
   vers=''
   h5root=frompath_HDF5()
   pincs+=[h5root,'%s/include'%h5root]
+  plibs+=[h5root,'%s/lib64'%h5root]
   plibs+=[h5root,'%s/lib'%h5root]
+  pincs=unique_but_keep_order(pincs)
+  plibs=unique_but_keep_order(plibs)
   for pth in plibs:
     if (    (os.path.exists(pth+'/libhdf5.a'))
          or (os.path.exists(pth+'/libhdf5.so'))
@@ -376,6 +402,8 @@ def find_MLL(pincs,plibs,libs,extraargs):
   pincs+=[mllroot,'%s/include'%mllroot]
   plibs+=[mllroot,'%s/lib'%mllroot]
   libs=['cgns','hdf5']+libs
+  pincs=unique_but_keep_order(pincs)
+  plibs=unique_but_keep_order(plibs)
   extraargs=[]#'-DCG_BUILD_SCOPE']
   for pth in pincs:
     if (os.path.exists(pth+'/cgnslib.h')):
@@ -433,6 +461,8 @@ def find_CHLone(pincs,plibs,libs):
   vers=''
   notfound=1
   libs=['CHLone']
+  pincs=unique_but_keep_order(pincs)
+  plibs=unique_but_keep_order(plibs)
   for pth in plibs:
     if (    (os.path.exists(pth+'/libCHLone.a'))
          or (os.path.exists(pth+'/libCHLone.so'))
@@ -441,7 +471,7 @@ def find_CHLone(pincs,plibs,libs):
       plibs=[pth]
       break
   if notfound:
-    print pfx,"ERROR: libCHlone not found, please check paths:"
+    print pfx+"ERROR: libCHlone not found, please check paths:"
     for ppl in plibs:
       print pfx,ppl
     return None
