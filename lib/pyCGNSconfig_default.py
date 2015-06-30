@@ -73,8 +73,8 @@ LIBRARY_DIRS+=LIBRARY_DIRS+PYTHON_PATH_LIBRARIES+HDF5_PATH_LIBRARIES\
 PFX='### pyCGNS:'
 #
 __version__=4 # @@UPDATEVERSION@@
-__release__=4 # @@UPDATERELEASE@@
-__revision__=493 # @@UPDATEREVISION@@
+__release__=5 # @@UPDATERELEASE@@
+__revision__=503 # @@UPDATEREVISION@@
 __vid__="%s.%s.%s"%(__version__,__release__,__revision__)
 __doc__="""pyCGNS - %s - Python package for CFD General Notation System"""\
         %(__vid__)
@@ -130,8 +130,8 @@ NUMPY_LINK_LIBRARIES=%(NUMPY_LINK_LIBRARIES)s
 NUMPY_EXTRA_ARGS=%(NUMPY_EXTRA_ARGS)s
 
 __version__=4 # @@UPDATEVERSION@@
-__release__=4 # @@UPDATERELEASE@@
-__revision__=493 # @@UPDATEREVISION@@
+__release__=5 # @@UPDATERELEASE@@
+__revision__=503 # @@UPDATEREVISION@@
 __vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
 __doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
         %%(__vid__)
