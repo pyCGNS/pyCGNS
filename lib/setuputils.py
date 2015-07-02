@@ -24,7 +24,7 @@ from distutils.command.clean import clean as _clean
 rootfiles=['__init__.py','errors.py','version.py','config.py','test.py']
 compfiles=['midlevel.py','wrap.py']
 
-pfx='### pyCGNS: '
+pfx='# '
 
 # if you change this name, also change lines tagged with 'USER CONFIG'
 userconfigfile='setup_userConfig.py'
@@ -41,22 +41,25 @@ def prodtag():
   except AttributeError:
     prodhost='win32'
   return (proddate,prodhost)
-  
-# --------------------------------------------------------------------
-def check_local_config():
-  print setuputils.check_command(['pyside-uic'])
-  print setuputils.check_command(['pyside-rcc'])
-  print setuputils.check_command(['cython'])
 
-# --------------------------------------------------------------------
-def check_command(args):
-  try:
-    r=subprocess.check_output(args,stderr=subprocess.STDOUT)
-  except subprocess.CalledProcessError:
-    return False
-  except OSError:
-    return False
-  return True
+# http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
+def which(program):
+    import os
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
 
 # --------------------------------------------------------------------
 def unique_but_keep_order(lst):
@@ -101,14 +104,65 @@ def search(incs,libs,tag='pyCGNS',
   try:
     import pyCGNSconfig as C
 
-    print incs, libs
     # -----------------------------------------------------------------------
     if ('Cython' in deps):
       try:
-        from Cython.Distutils import build_ext
+        if (which('cython') is not None):
+          C.COM_CYTHON='cython'
+        else:
+          raise Exception
+        if (which('pyside-uic') is not None): C.COM_UIC='pyside-uic'
+        if (which('pyside-rcc') is not None): C.COM_RCC='pyside-rcc'
+        if (which('pyrcc4') is not None):     C.COM_RCC='pyrcc4'
+        import Cython
         C.HAS_CYTHON=True
+        print pfx+'using Cython v%s'%Cython.__version__
       except:
         C.HAS_CYTHON=False
+        print pfx+'FATAL: Cython not found'
+
+    # -----------------------------------------------------------------------
+    if ('PySide' in deps):
+      try:
+        import PySide
+        import PySide.QtCore
+        import PySide.QtGui
+        
+        C.HAS_PYSIDE=True
+        print pfx+'using PySide v%s'%PySide.__version__
+      except:
+        C.HAS_PYSIDE=False
+        print pfx+'ERROR: PySide not found'
+
+    # -----------------------------------------------------------------------
+    if ('vtk' in deps):
+      try:
+        import vtk
+        v=vtk.vtkVersion()
+        C.HAS_VTK=True
+        print pfx+'using vtk (python module) v%s'%v.GetVTKVersion()
+      except:
+        C.HAS_VTK=False
+        print pfx+'ERROR: no vtk python module'
+
+    # -----------------------------------------------------------------------
+    if ('numpy' in deps):
+      incs=incs+C.NUMPY_PATH_INCLUDES
+      libs=libs+C.NUMPY_PATH_LIBRARIES
+      tp=find_numpy(incs,libs,C.NUMPY_LINK_LIBRARIES)
+      if (tp is None):
+        print pfx+'FATAL: setup cannot find Numpy'
+        sys.exit(1)
+      (C.NUMPY_VERSION,
+       C.NUMPY_PATH_INCLUDES,
+       C.NUMPY_PATH_LIBRARIES,
+       C.NUMPY_LINK_LIBRARIES,
+       C.NUMPY_EXTRA_ARGS)=tp
+      print pfx+'using Numpy API version %s'%(C.NUMPY_VERSION,)
+      print pfx+'using Numpy headers from %s'%(C.NUMPY_PATH_INCLUDES[0])
+      C.HAS_NUMPY=True
+      incs=incs+C.NUMPY_PATH_INCLUDES
+      libs=libs+C.NUMPY_PATH_LIBRARIES
 
     # -----------------------------------------------------------------------
     if ('HDF5' in deps):
@@ -116,17 +170,19 @@ def search(incs,libs,tag='pyCGNS',
       libs=libs+C.HDF5_PATH_LIBRARIES+C.LIBRARY_DIRS
       tp=find_HDF5(incs,libs,C.HDF5_LINK_LIBRARIES)
       if (tp is None):
-        print pfx+'ERROR: %s setup cannot find HDF5!'%tag
+        print pfx+'ERROR: setup cannot find HDF5!'
         sys.exit(1)
       (C.HDF5_VERSION,
        C.HDF5_PATH_INCLUDES,
        C.HDF5_PATH_LIBRARIES,
        C.HDF5_LINK_LIBRARIES,
        C.HDF5_EXTRA_ARGS)=tp
-      print pfx+'using HDF5 %s for %s'%(C.HDF5_VERSION,tag)
+      print pfx+'using HDF5 %s'%(C.HDF5_VERSION,)
       print pfx+'using HDF5 headers from %s'%(C.HDF5_PATH_INCLUDES[0])
       print pfx+'using HDF5 libs from %s'%(C.HDF5_PATH_LIBRARIES[0])
       C.HAS_HDF5=True
+      incs=incs+C.HDF5_PATH_INCLUDES+C.INCLUDE_DIRS
+      libs=libs+C.HDF5_PATH_LIBRARIES+C.LIBRARY_DIRS
 
     # -----------------------------------------------------------------------
     if ('MLL' in deps):
@@ -134,58 +190,46 @@ def search(incs,libs,tag='pyCGNS',
       libs=libs+C.MLL_PATH_LIBRARIES
       tp=find_MLL(incs,libs,C.MLL_LINK_LIBRARIES,C.MLL_EXTRA_ARGS)
       if (tp is None):
-        print pfx+'ERROR: %s setup cannot find cgns.org library (MLL)!'%tag
+        print pfx+'ERROR: setup cannot find cgns.org library (MLL)!'
         C.HAS_MLL=False
       else:
-       (C.MLL_VERSION,
-        C.MLL_PATH_INCLUDES,
-        C.MLL_PATH_LIBRARIES,
-        C.MLL_LINK_LIBRARIES,
-        C.MLL_EXTRA_ARGS)=tp
-       print pfx+'using MLL %s for %s'%(C.MLL_VERSION,tag)
-       print pfx+'using MLL headers from %s'%(C.MLL_PATH_INCLUDES[0])
-       print pfx+'using MLL libs from %s'%(C.MLL_PATH_LIBRARIES[0])
-       C.HAS_MLL=True
-        
+        (C.MLL_VERSION,
+         C.MLL_PATH_INCLUDES,
+         C.MLL_PATH_LIBRARIES,
+         C.MLL_LINK_LIBRARIES,
+         C.MLL_EXTRA_ARGS)=tp
+        print pfx+'using CGNS/MLL %s'%(C.MLL_VERSION)
+        print pfx+'using CGNS/MLL headers from %s'%(C.MLL_PATH_INCLUDES[0])
+        print pfx+'using CGNS/MLL libs from %s'%(C.MLL_PATH_LIBRARIES[0])
+        C.HAS_MLL=True
+      incs=incs+C.MLL_PATH_INCLUDES
+      libs=libs+C.MLL_PATH_LIBRARIES
+       
     # -----------------------------------------------------------------------
     if ('CHLone' in deps):
       incs=incs+C.CHLONE_PATH_INCLUDES
       libs=libs+C.CHLONE_PATH_LIBRARIES
       tp=find_CHLone(incs,libs,C.CHLONE_LINK_LIBRARIES)
       if (tp is None):
-        print pfx+'ERROR: %s setup cannot find CHLone!'%tag
-        sys.exit(1)
-      (C.CHLONE_VERSION,
-       C.CHLONE_PATH_INCLUDES,
-       C.CHLONE_PATH_LIBRARIES,
-       C.CHLONE_LINK_LIBRARIES,
-       C.CHLONE_EXTRA_ARGS)=tp
-      print pfx+'using CHLone %s for %s'%(C.CHLONE_VERSION,tag)
-      print pfx+'using CHLone headers from %s'%(C.CHLONE_PATH_INCLUDES[0])
-      print pfx+'using CHLone libs from %s'%(C.CHLONE_PATH_LIBRARIES[0])
-      C.HAS_CHLONE=True
-        
-    # -----------------------------------------------------------------------
-    if ('numpy' in deps):
-      tp=find_numpy(C.NUMPY_PATH_INCLUDES,
-                    C.NUMPY_PATH_LIBRARIES,
-                    C.NUMPY_LINK_LIBRARIES)
-      if (tp is None):
-        print pfx+'ERROR: %s setup cannot find Numpy!'%tag
-        sys.exit(1)
-      (C.NUMPY_VERSION,
-       C.NUMPY_PATH_INCLUDES,
-       C.NUMPY_PATH_LIBRARIES,
-       C.NUMPY_LINK_LIBRARIES,
-       C.NUMPY_EXTRA_ARGS)=tp
-      print pfx+'using Numpy API version %s for %s'%(C.NUMPY_VERSION,tag)
-      print pfx+'using Numpy headers from %s'%(C.NUMPY_PATH_INCLUDES[0])
-      C.HAS_NUMPY=True
-
+        print pfx+'ERROR: setup cannot find CHLone!'
+        C.HAS_CHLONE=False
+      else:
+        (C.CHLONE_VERSION,
+         C.CHLONE_PATH_INCLUDES,
+         C.CHLONE_PATH_LIBRARIES,
+         C.CHLONE_LINK_LIBRARIES,
+         C.CHLONE_EXTRA_ARGS)=tp
+        print pfx+'using CHLone %s'%(C.CHLONE_VERSION,)
+        print pfx+'using CHLone headers from %s'%(C.CHLONE_PATH_INCLUDES[0])
+        print pfx+'using CHLone libs from %s'%(C.CHLONE_PATH_LIBRARIES[0])
+        C.HAS_CHLONE=True
+      incs=incs+C.CHLONE_PATH_INCLUDES
+      libs=libs+C.CHLONE_PATH_LIBRARIES
+       
     # -----------------------------------------------------------------------
 
   except ImportError:
-    print pfx+'ERROR: %s setup cannot find pyCGNSconfig.py file!'%tag
+    print pfx+'ERROR: setup cannot find pyCGNSconfig.py file!'
     sys.exit(1)
   C.MLL_PATH_INCLUDES=list(set(C.MLL_PATH_INCLUDES))
   C.MLL_PATH_LIBRARIES=list(set(C.MLL_PATH_LIBRARIES))
@@ -195,7 +239,15 @@ def search(incs,libs,tag='pyCGNS',
   C.CHLONE_PATH_LIBRARIES=list(set(C.CHLONE_PATH_LIBRARIES))
   C.NUMPY_PATH_INCLUDES=list(set(C.NUMPY_PATH_INCLUDES))
   C.NUMPY_PATH_LIBRARIES=list(set(C.NUMPY_PATH_LIBRARIES))
+
+  incs=unique_but_keep_order(incs)
+  libs=unique_but_keep_order(libs)
+
+  C.INCLUDE_DIRS=incs
+  C.LIBRARY_DIRS=libs
+  
   updateConfig('..',bptarget,C.__dict__,cfgdict)
+
   return (C, state)
 
 # --------------------------------------------------------------------
@@ -293,10 +345,10 @@ def updateConfig(pfile,gfile,config_default,config_previous=None):
       f2=os.stat("./%s"%userconfigfile)
     if (f1.st_mtime < f2.st_mtime):
       newconf=1
-      print "### pyCGNS: use modified %s file"%userconfigfile
+      print pfx+"using modified %s file"%userconfigfile
     else:
       newconf=0
-      print "### pyCGNS: use existing %s file"%userconfigfile
+      print pfx+"using existing %s file"%userconfigfile
   if newconf:
     sys.path=['..']+['.']+sys.path
     import setup_userConfig as UCFG # USER CONFIG
@@ -433,7 +485,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
       notfound=0
       break
   if notfound:
-    print pfx,"ERROR: libcgns not found, please check paths:"
+    print pfx+"ERROR: libcgns not found, please check paths:"
     for ppl in plibs:
       print pfx,ppl
     return None
@@ -517,6 +569,8 @@ def find_numpy(pincs,plibs,libs):
          %(pdir,sys.version[:3])]
   pincs+=[numpy.get_include()]
   notfound=1      
+  pincs=unique_but_keep_order(pincs)
+  plibs=unique_but_keep_order(plibs)
   for pth in pincs:
     if (os.path.exists(pth+'/numpy/ndarrayobject.h')):
       fh=open(pth+'/numpy/ndarrayobject.h','r')
