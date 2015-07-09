@@ -111,8 +111,8 @@ class CHLoneTestCase(unittest.TestCase):
     CHLone.save(self.HDF02,self.T)
     self.chmod(self.HDF02,0)
     self.assertRaisesRegexp(CHLone.CHLoneException,
-                            "[104].*",CHLone.save,self.HDF02,
-                            self.T,flags=CHLone.FUPDATE)
+                            "[100].*",CHLone.save,self.HDF02,
+                            self.T,flags=CHLone.FUPDATE|CHLone.FTRACE)
     self.unlink(self.HDF02)
   def test_013_Save_03(self):
     import CHLone
@@ -143,6 +143,6 @@ class CHLoneTestCase(unittest.TestCase):
     (t,l,p)=CHLone.load(self.HDF01)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(CHLoneTestCase)
-unittest.TextTestRunner(verbosity=1).run(suite)
+unittest.TextTestRunner(verbosity=2).run(suite)
 
 # --- last line

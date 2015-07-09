@@ -304,17 +304,14 @@ def wselect(args,dirname,names):
         break
 
 class clean(_clean):
-  def walkAndClean(self):
-    os.path.walk("..",wselect,[])
   def run(self):
     import glob
     rdirs=glob.glob("./build/*")
     for d in rdirs: remove_tree(d)
-    if os.path.exists("./build"):     os.remove("./build")
+    if os.path.exists("./build"):     remove_tree("./build")
     if os.path.exists("./Doc/_HTML"): remove_tree("./Doc/_HTML")
     if os.path.exists("./Doc/_PS"):   remove_tree("./Doc/_PS")
     if os.path.exists("./Doc/_PDF"):  remove_tree("./Doc/_PDF")
-    self.walkAndClean()
 
 # --------------------------------------------------------------------
 def confValueAsStr(v):
@@ -501,7 +498,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
       break
 
   if notfound:
-    print pfx,"Warning: ADFH.h not found, using pyCGNS own headers"
+    print pfx+"Warning: ADFH.h not found, using pyCGNS own headers"
     extraargs+=['-U__ADF_IN_SOURCES__']
 
   libs=list(set(libs))
@@ -549,10 +546,16 @@ def find_CHLone(pincs,plibs,libs):
         notfound=0
         break
   if notfound:
-    print pfx,"ERROR: CHLone/CHLone.h not found, please check paths"
+    print pfx+"ERROR: CHLone/CHLone.h not found, please check paths"
     for ppi in pincs:
       print pfx,ppi
     return None
+
+  try:
+    import CHLone
+    vers=CHLone.version
+  except:
+    print pfx+"ERROR: import CHLone failed, please check PYTHONPATH (and/or LD_LIBRARY_PATH)"
 
   return (vers,pincs,plibs,libs,extraargs)
 

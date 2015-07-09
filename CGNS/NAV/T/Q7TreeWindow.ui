@@ -931,7 +931,7 @@
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Expanding</enum>
+        <enum>QSizePolicy::Minimum</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -985,6 +985,9 @@
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Show Query doc</string>
        </property>
        <property name="text">
         <string/>
@@ -1129,29 +1132,6 @@
        <property name="icon">
         <iconset resource="../R/Res.qrc">
          <normaloff>:/images/icons/node-sids-closed.png</normaloff>:/images/icons/node-sids-closed.png</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_8">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bClose">
-       <property name="text">
-        <string>Close</string>
        </property>
       </widget>
      </item>

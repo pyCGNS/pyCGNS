@@ -87,7 +87,7 @@ def nodeCopy(node,newname=None,share=False):
   if (newname is None): newname=node[0]
   return copyNode(node,newname,share)
 
-def copyNode(n,newname,share):
+def copyNode(n,newname,share=False):
   if (not share):
     newn=[newname,copyArray(n[1]),deepcopyNodeList(n[2],share=share),n[3]]
   else:

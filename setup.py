@@ -105,7 +105,8 @@ if APP:
                  'CGNS.APP.lib',
                  'CGNS.APP.tools',
                  'CGNS.APP.examples',
-                 'CGNS.APP.misc']
+                 'CGNS.APP.misc',
+                 'CGNS.APP.test']
 
 # -------------------------------------------------------------------------  
 if (MAP and CONFIG.HAS_CHLONE):
@@ -118,7 +119,8 @@ if VAL:
                  'CGNS.VAL.suite',
                  'CGNS.VAL.suite.elsA',
                  'CGNS.VAL.suite.SIDS',
-                 'CGNS.VAL.parse']
+                 'CGNS.VAL.parse',
+                 'CGNS.VAL.test']
   ALL_SCRIPTS+=['CGNS/VAL/CGNS.VAL']
 
   ALL_EXTENSIONS+=[Extension("CGNS.VAL.grammars.CGNS_VAL_USER_SIDS_",
@@ -177,7 +179,8 @@ if DAT:
   ALL_PACKAGES+=['CGNS.DAT',
                  'CGNS.DAT.db',
                  'CGNS.DAT.db.dbdrivers',                
-                 'CGNS.DAT.demo']
+                 'CGNS.DAT.demo',
+                 'CGNS.DAT.test']
   ALL_SCRIPTS+=['CGNS/DAT/tools/CGNS.DAT',
                 'CGNS/DAT/tools/daxQT',
                 'CGNS/DAT/tools/CGNS.DAT.create']

@@ -79,6 +79,7 @@ class Q7OptionContext(object):
     }
     _HasProPackage=True
     CHLoneTrace=False
+    QueryNoException=False
     ActivateMultiThreading=False
     NAVTrace=False
     AutoExpand=False
@@ -133,16 +134,19 @@ Copyright (c) Onera - The French Aerospace Labs<br>
 <b>all other copyrights at the end of this page</b>
 
 <h2>Contributors</h2>
-Tristan Soubrié    - Andheo, France <br>
-Grégory Laheurte   - ONERA (DSNA/CS2A)<br>
-Benoit Rodriguez   - ONERA (DAAP/H2T)<br>
-Loic Hauchard      - ONERA (Student INSA Rouen, France)<br>
-Elise Hénaux       - ONERA (Student FIIFO Orsay, France)<br>
-Bill Perkins       - Pacific Northwest National Laboratory, U.S.A.<br>
-Florent Cayré      - SNECMA, France<br>
-Ching-Yang Wang    - U.S.A.<br>
-Alexandre Fayolle  - LOGILAB, France<br>
-Francois Thirifays - CENAERO, Belgique<br>
+Simon Verley         - ONERA (DADS/MSAE), France<br>
+Benoit Rodriguez     - ONERA (DAAP/H2T), France<br>
+Grégory Laheurte     - ONERA (DSNA/CS2A), France<br>
+Loic Hauchard        - ONERA (Student INSA Rouen, France)<br>
+Elise Hénaux         - ONERA (Student FIIFO Orsay, France)<br>
+Bill Perkins         - Pacific Northwest National Laboratory, U.S.A.<br>
+Florent Cayré        - SNECMA, France<br>
+Ching-Yang Wang      - U.S.A.<br>
+Alexandre Fayolle    - LOGILAB, France<br>
+Francois Thirifays   - CENAERO, Belgique<br>
+Pierre-Jacques Legay - BERTIN, France<br>
+Tristan Soubrié      - Andheo, France <br>
+Jérôme Regis         - STILOG, France<br>
 
 <h2>Copyrights</h2>
 <hr>
@@ -539,6 +543,7 @@ Please visit his web site: http://www.famfamfam.com/<br>
     _UsualQueries=[
 
 # --- Search -----------------------------------------------------------
+# last two booleans: Update tree, has args
 ('001. Node name',
  'Search by',
  'RESULT=(NAME==ARGS[0])',
@@ -554,7 +559,7 @@ all the following values are ok and would match the NAME <i>ZoneType</i>:
 ZoneType
 'ZoneType'
 ('ZoneType',)
-"""),
+""",False,True),
 
 ('002. Wildcard node name',
  'Search by',
@@ -572,19 +577,19 @@ Warning: the <b>argument name</b> should be quoted:
 'BC*' is ok
 
 BC* would fail
-"""),
+""",False,True),
         
 ('003. Node type',
  'Search by',
  'RESULT=(SIDSTYPE==ARGS[0])',
- """search all nodes with argument SIDS type."""),
+ """search all nodes with argument SIDS type.""",False,True),
 
 ('010. Node with truncated data',
  'Search by',
  'if (PATH in SKIPS): RESULT=PATH',
  """search all nodes with truncated or unread data, for example if you have set
  the maximum data argument for the load, or if you release the memory of a
- node."""),
+ node.""",False,False),
 
 ('004. Wildcard node type',
  'Search by',
@@ -602,7 +607,7 @@ Warning: the <b>argument type</b> should be quoted:
 'Turb*' is ok
 
 Turb* would fail
-"""),
+""",False,True),
 
 ('011. Non-MT UserDefinedData',
  'Search by',
@@ -618,9 +623,20 @@ Valued UserDefinedData
 Search all <b>UserDefinedData_t</b> nodes with a non-<b>MT</b> data type.
 
 No argument.
-"""),
+""",False,False),
       
-('012. FamilyName reference',
+('012. FamilyName',
+ 'Search by',
+"""
+if (SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]):
+    RESULT=True
+""",
+"""
+Search by
+All <b>FamilyName_t</b> and <b>AdditionalFamilyname_t</b> nodes.
+""",False,False),
+
+('013. FamilyName reference',
  'Search by',
 """
 if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
@@ -632,7 +648,55 @@ Search by
 Reference to a FamilyName
 
 Search all <b>FamilyName</b> nodes with the arg string (plain).
-"""),
+""",False,True),
+
+('014. Zones',
+ 'Search by',
+"""
+if (SIDSTYPE in [CGK.Zone_ts]):
+    RESULT=True
+""",
+"""
+Search by
+All <b>Zone_t</b> nodes.
+""",False,False),
+
+('015. Zones Structured',
+ 'Search by',
+"""
+if (SIDSTYPE in [CGK.Zone_ts]):
+    t=CGU.hasChildName(NODE,CGK.ZoneType_s)
+    if (t is None or CGU.stringValueMatches(t,CGK.Structured_s)):
+      RESULT=True
+""",
+"""
+Search by
+All <b>Zone_t</b> with Structured <b>ZoneType</b> nodes.
+""",False,False),
+
+('016. Zones Unstructured',
+ 'Search by',
+"""
+if (SIDSTYPE in [CGK.Zone_ts]):
+    t=CGU.hasChildName(NODE,CGK.ZoneType_s)
+    if (t is not None and CGU.stringValueMatches(t,CGK.Unstructured_s)):
+      RESULT=True
+""",
+"""
+Search by
+All <b>Zone_t</b> with Unstructured <b>ZoneType</b> nodes.
+""",False,False),
+
+('017. BCs',
+ 'Search by',
+"""
+if (SIDSTYPE in [CGK.BC_ts]):
+    RESULT=True
+""",
+"""
+Search by
+All <b>BC_t</b> nodes.
+""",False,False),
 
 # --- Replace
 
@@ -648,7 +712,7 @@ Replace
 Valued UserDefinedData
 
 Search all <b>UserDefinedData_t</b> nodes with a non-<b>MT</b> data type
- and replace them as <b>DataArray_t</b>."""),
+ and replace them as <b>DataArray_t</b>.""",False,False),
 
 ('051. Substitute Zone name',
  'Replace',"""
@@ -677,29 +741,50 @@ the second as the subsitution pattern. For example:
 <pre>
 ('domain.','zone#')
 </pre>
-"""),
+""",True,True),
 
 # --- Find Elements_t
-('020. Elements QUAD',
+('020. Elements',
+ 'Find Elements_t',
+ """if (SIDSTYPE==CGK.Elements_ts):
+   RESULT=True
+ """,
+ """Find all <b>Elements_t</b> nodes """,False,False),
+
+('021. Elements QUAD',
  'Find Elements_t',
  """if (SIDSTYPE==CGK.Elements_ts):
    RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)
  """,
- """Find all <b>Elements_t</b> nodes of type <b>QUAD</b>"""),
+ """Find all <b>Elements_t</b> nodes of type <b>QUAD</b>""",False,False),
 
-('021. Elements TRI',
+('022. Elements TRI',
  'Find Elements_t',
  """if (SIDSTYPE==CGK.Elements_ts):
    RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)
  """,
- """Find all <b>Elements_t</b> nodes of type <b>TRI</b>"""),
+ """Find all <b>Elements_t</b> nodes of type <b>TRI</b>""",False,False),
 
-('022. Elements NGON',
+('023. Elements NGON',
  'Find Elements_t',
  """if (SIDSTYPE==CGK.Elements_ts):
    RESULT=VALUE[0] in (CGK.NGON_n,)
  """,
- """Find all <b>Elements_t</b> nodes of type <b>NGON_n</b>"""),
+ """Find all <b>Elements_t</b> nodes of type <b>NGON_n</b>""",False,False),
+
+('024 Elements HEXA',
+ 'Find Elements_t',
+ """if (SIDSTYPE==CGK.Elements_ts):
+   RESULT=VALUE[0] in (CGK.HEXA_8, CGK.HEXA_20, CGK.HEXA_27)
+ """,
+ """Find all <b>Elements_t</b> nodes of type <b>HEXA</b>""",False,False),
+
+('025 Elements TETRA',
+ 'Find Elements_t',
+ """if (SIDSTYPE==CGK.Elements_ts):
+   RESULT=VALUE[0] in (CGK.TETRA_4, CGK.TETRA_10)
+ """,
+ """Find all <b>Elements_t</b> nodes of type <b>TETRA</b>""",False,False),
 
 # --- External Tools
 ('030. Create Cartesian Zone',
@@ -720,7 +805,7 @@ if (SIDSTYPE==CGK.CGNSTree_ts):
  """,
  """Example of Cartesian zone creation using Cassiopee.
  The first argument is the base name, if ommitted a name is generated.""",
- True),
+ True,True),
 ('031. Bounding boxes',
  'External Tools',
  """
@@ -735,7 +820,8 @@ if (SIDSTYPE==CGK.Zone_ts):
 if (PARENT[0]=='.Solver#Compute'):
     RESULT=PATH
  """,
- """Selects all children nodes of the .Solver#Compute elsA userdefined node"""),
+ """Selects all children nodes of the .Solver#Compute elsA userdefined node""",
+    False,False),
 
     ]
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'NAV/T/Q7TreeWindow.ui'
+# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
-# Created: Mon Jun 29 10:47:06 2015
+# Created: Thu Jul  9 08:29:17 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -311,7 +311,7 @@ class Ui_Q7TreeWindow(object):
         self.bInfo.setIcon(icon27)
         self.bInfo.setObjectName("bInfo")
         self.horizontalLayout_3.addWidget(self.bInfo)
-        spacerItem8 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        spacerItem8 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem8)
         self.label_3 = QtGui.QLabel(Q7TreeWindow)
         self.label_3.setObjectName("label_3")
@@ -386,11 +386,6 @@ class Ui_Q7TreeWindow(object):
         self.bNextMark.setIcon(icon32)
         self.bNextMark.setObjectName("bNextMark")
         self.horizontalLayout_3.addWidget(self.bNextMark)
-        spacerItem10 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem10)
-        self.bClose = QtGui.QPushButton(Q7TreeWindow)
-        self.bClose.setObjectName("bClose")
-        self.horizontalLayout_3.addWidget(self.bClose)
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
 
         self.retranslateUi(Q7TreeWindow)
@@ -441,6 +436,7 @@ class Ui_Q7TreeWindow(object):
         self.bBackControl.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Raise Control window", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("Q7TreeWindow", "Group:", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Q7TreeWindow", "Query:", None, QtGui.QApplication.UnicodeUTF8))
+        self.bOperateDoc.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Show Query doc", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Q7TreeWindow", "Args:", None, QtGui.QApplication.UnicodeUTF8))
         self.bApply.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Run Query", None, QtGui.QApplication.UnicodeUTF8))
         self.bPreviousMark.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Select previous marked node", None, QtGui.QApplication.UnicodeUTF8))
@@ -449,7 +445,6 @@ class Ui_Q7TreeWindow(object):
         self.bUnmarkAll_1.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bNextMark.setToolTip(QtGui.QApplication.translate("Q7TreeWindow", "Select next marked node", None, QtGui.QApplication.UnicodeUTF8))
         self.bNextMark.setText(QtGui.QApplication.translate("Q7TreeWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.bClose.setText(QtGui.QApplication.translate("Q7TreeWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
 
 from CGNS.NAV.mtree import Q7TreeView
 import Res_rc

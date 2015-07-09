@@ -441,10 +441,8 @@ leave this panel without save?""",again=False)
         Q7Query._defaultQueriesNames=[n[0] for n in OCTXT._UsualQueries]
         for qe in allqueriestext:
             try:
-                if (len(qe)<5):
-                    q=Q7QueryEntry(qe[0],qe[1],qe[2],qe[3])
-                else:
-                    q=Q7QueryEntry(qe[0],qe[1],qe[2],qe[3],qe[4])
+                q=Q7QueryEntry(qe[0],qe[1],qe[2],qe[3],
+                               hasargs=qe[5],update=qe[4])
                 Q7Query._allQueries[qe[0]]=q
             except IndexError: pass
     @classmethod

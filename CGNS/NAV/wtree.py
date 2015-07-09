@@ -181,15 +181,21 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         QObject.connect(self.treeview,
                         SIGNAL("collapsed()"),
                         self.collapseNode)
+#        QObject.connect(self.treeview,
+#                        SIGNAL("clicked(QModelIndex)"),
+#                        self.clickedNode)
         QObject.connect(self.treeview,
-                        SIGNAL("clicked(QModelIndex)"),
-                        self.clickedNode)
+                        SIGNAL("pressed(QModelIndex)"),
+                        self.clickedPressedNode)
         QObject.connect(self.treeview,
                         SIGNAL("customContextMenuRequested(QPoint)"),
                         self.clickedNode)
         QObject.connect(self.cGroup,
                         SIGNAL("currentIndexChanged(int)"),
                         self.fillqueries)
+        QObject.connect(self.cQuery,
+                        SIGNAL("currentIndexChanged(int)"),
+                        self.checkquery)
         qlist=Q7Query.queriesNamesList()
         qlist.sort()
         for q in qlist: self.cQuery.addItem(q)
@@ -203,7 +209,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bSaveAs.clicked.connect(self.savetreeas)
         self.lockable(self.bSaveAs)
         self.bApply.clicked.connect(self.forceapply)
-        self.bClose.clicked.connect(self.reject)
+#        self.bClose.clicked.connect(self.reject)
         self.bInfo.clicked.connect(self.infoTreeView)
         self.bZoomIn.clicked.connect(self.expandLevel)
         self.bZoomOut.clicked.connect(self.collapseLevel)
@@ -332,7 +338,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
           self.lineEdit.insert(node.sidsPath())
     def jumpToNode(self):
         path=self.lineEdit.text()
-        print 'PATH',path
         self.treeview.selectByPath(path)
     def popform(self):
         self.formview()
@@ -447,10 +452,13 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def clearOtherSelections(self):
         if (self._control._patternwindow is not None):
             self._control._patternwindow.clearSelection()
+    def clickedPressedNode(self,index):
+        self.clickedNode(index)
     def clickedNode(self,index):
-        if (self.updateMenu(index)):
-            if (self.treeview.lastButton==Qt.RightButton):
-                self.popupmenu.popup(self.treeview.lastPos)
+        self.treeview.exclusiveSelectRow(index,False)
+        if (self.treeview.lastButton==Qt.RightButton):
+          if (self.updateMenu(index)):
+            self.popupmenu.popup(self.treeview.lastPos)
     def expandNode(self,*args):
         self.resizeAll()
     def collapseNode(self,*args):
@@ -460,6 +468,12 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.treeview.resizeColumnToContents(n)
     def show(self):
         super(Q7Tree, self).show()
+    def checkquery(self):
+        q=self.cQuery.currentText()
+        if (Q7Query.getQuery(q) is not None and Q7Query.getQuery(q).hasArgs):
+          self.eUserVariable.setEnabled(True)
+        else:
+          self.eUserVariable.setEnabled(False)
     def fillqueries(self):
         g=self.cGroup.currentText()
         self.cQuery.clear()
@@ -627,7 +641,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self._querywindow.raise_()
     def aboutSIDS(self):
         path=self.getLastEntered().sidsPath()
-        print path
     def dataLoadSelected(self):
         self.model().dataLoadSelected()
     def dataReleaseSelected(self):

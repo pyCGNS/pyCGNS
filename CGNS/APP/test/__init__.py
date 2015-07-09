@@ -1,11 +1,9 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
+#  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
+
 def run():
-  print '### pyCGNS TEST: starting VAL tests'
-  import CGNS.VAL.suite.run
-  CGNS.VAL.suite.run.runall()
+  print '### pyCGNS TEST: no APP tests available'
 
 # --- last line
-

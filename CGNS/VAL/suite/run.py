@@ -85,9 +85,10 @@ def valTree(suite,t,tag,T,diag,trace,count):
     if (trace): print sr
     return sr
 
-tlist=('SIDS','elsA')
-for s in tlist:
-  KEY=s
-  runSuite(s,TRACE,FILES,CGNSCHECK)
+def runall():
+  tlist=('SIDS','elsA')
+  for s in tlist:
+    KEY=s
+    runSuite(s,TRACE,FILES,CGNSCHECK)
 
 

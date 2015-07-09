@@ -292,6 +292,12 @@ class Q7TreeView(QTreeView):
     def modelIndex(self,idx):
         if (self._control is not None): return self._control.modelIndex(idx)
         return None
+    def mousePressEvent(self, event):
+        #print 'PRESS'
+        pass
+    def mouseReleaseEvent(self,event):
+        #print 'RELEASE'
+        pass
     def mousePressEvent(self,event):
         self.lastPos=event.globalPos()
         self.lastButton=event.button()
@@ -391,9 +397,8 @@ class Q7TreeView(QTreeView):
     def modelCurrentIndex(self):
         idx=self.tryToMapTo(self.currentIndex())
         return idx
-    def refreshView(self):
-        ixc=self.modelCurrentIndex()
-        if (ixc.isValid()):
+    def refreshView(self,ixc=None):
+        if (ixc is not None and ixc.isValid()):
             self._model.refreshModel(ixc)
             return
         ixc=self._model.createIndex(0,0,None)
@@ -449,15 +454,15 @@ class Q7TreeView(QTreeView):
         if ((index==-1) or (not index.isValid())): index=QModelIndex()
         mod=QItemSelectionModel.SelectCurrent|QItemSelectionModel.Rows
         if (index.internalPointer() is None): return
+        self.selectionModel().clearSelection()
         pth=index.internalPointer().sidsPath()
         nix=self.M().indexByPath(pth)
-        self.selectionModel().clearSelection()
-        self.selectionModel().setCurrentIndex(nix,mod)
+        self.selectionModel().setCurrentIndex(index,mod)
         if (setlast):
             self.clearLastEntered()
             self.setLastEntered(index)
         self.scrollTo(index)
-        self.refreshView()
+        self.refreshView(index)
     def changeSelectedMark(self,delta):
         if (self.M()._selected==[]): return
         sidx=self.M()._selectedIndex
@@ -1056,12 +1061,6 @@ class Q7TreeModel(QAbstractItemModel):
                     return row
                 row+=1
             return -1
-        if trace:
-            print 'SORT ',
-            for childnode in CGU.getNextChildSortByType(node,
-                                                        criteria=self._slist):
-                print childnode[0],
-                print 
         for childnode in CGU.getNextChildSortByType(node,criteria=self._slist):
             if (childnode[0]==targetname):
                 return row
@@ -1171,6 +1170,7 @@ class Q7TreeModel(QAbstractItemModel):
         self._fingerprint.refreshScreen()
         return newItem
     def refreshModel(self,nodeidx):
+        self.dataChanged.emit(QModelIndex(), QModelIndex())
         if (not nodeidx.isValid()): return
         row=nodeidx.row()
         dlt=2
@@ -1261,7 +1261,6 @@ class Q7TreeModel(QAbstractItemModel):
             udict[CGU.getPathNoRoot(nodeitem.sidsPath())]=nodeitem.sidsValue()
         if (udict):
             (t,l,p)=self._fingerprint.updateNodeData(udict)
-            print (t,l,p)
         for pth in pthlist:
             nodeitem=self.nodeFromPath(pth)
             nodeitem.dataLoad(t)
@@ -1322,6 +1321,5 @@ class Q7TreeModel(QAbstractItemModel):
         cl=OCTXT.UserColors
         c=int(k[-3])
         return QColor(cl[c])
-
 
 # -----------------------------------------------------------------

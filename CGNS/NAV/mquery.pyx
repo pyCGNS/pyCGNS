@@ -127,10 +127,13 @@ def evalScript(node,parent,tree,links,skips,path,val,args,selected):
     l[OCST.Q_VAR_USER]=args
     l[OCST.Q_VAR_NODE]=node
     pre=OCST.Q_SCRIPT_PRE+val+OCST.Q_SCRIPT_POST
-    try:
+    if (OCTXT.QueryNoException):
       eval(compile(pre,'<string>','exec'),globals(),l)
-    except Exception:
-      l[OCST.Q_VAR_RESULT_LIST][0]=False
+    else:
+      try:
+        eval(compile(pre,'<string>','exec'),globals(),l)
+      except Exception:
+        l[OCST.Q_VAR_RESULT_LIST][0]=False
     RESULT=l[OCST.Q_VAR_RESULT_LIST][0]
     return RESULT
 # -----------------------------------------------------------------
@@ -151,12 +154,14 @@ def parseAndSelect(tree,node,parent,links,skips,path,script,args,selected,
 
 # -----------------------------------------------------------------
 class Q7QueryEntry(object):
-    def __init__(self,name,group=None,script='',doc='',update=False):
+    def __init__(self,name,group=None,script='',doc='',
+                 update=False,hasargs=False):
         self._name=name
         self._group=group
         self._script=script
         self._doc=doc
         self._update=update
+        self._hasargs=hasargs
     @property
     def name(self):
         return self._name
@@ -166,6 +171,9 @@ class Q7QueryEntry(object):
     @property
     def doc(self):
         return self._doc
+    @property
+    def hasArgs(self):
+        return self._hasargs
     @property
     def script(self):
         return self._script
