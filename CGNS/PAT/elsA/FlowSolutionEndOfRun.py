@@ -9,11 +9,19 @@ import CGNS.PAT.cgnskeywords as CGK
 import numpy                 as NPY
 
 data=CGL.newUserDefinedData(None,'Solver#Compute')
-CGL.newDataArray(data,'artviscosity',CGU.setStringAsArray("dissca"))
-CGL.newDataArray(data,'avcoef_k2',CGU.setDoubleAsArray(1.0))
-CGL.newDataArray(data,'avcoef_k4',CGU.setDoubleAsArray(0.032))
-CGL.newDataArray(data,'avcoef_sigma',CGU.setDoubleAsArray(0.0))
+CGL.newGridLocation(data,CGK.CellCenter_s)
+CGL.newRind(data,NPY.array([0,0,0,0,0,0]))
+CGL.newUserDefinedData(data,CGK.MomentumX_s)
+CGL.newUserDefinedData(data,CGK.MomentumY_s)
+CGL.newUserDefinedData(data,CGK.MomentumZ_s)
+CGL.newUserDefinedData(data,CGK.Density_s)
+CGL.newUserDefinedData(data,CGK.EnergyStagnationDensity_s)
+CGL.newUserDefinedData(data,CGK.TurbulentDistance_s)
+CGL.newUserDefinedData(data,"TurbulentEnergyKineticDensity")
+CGL.newUserDefinedData(data,"TurbulentDissipationDensity")
+CGL.newUserDefinedData(data,"TurbulentDistanceIndex")
+CGL.newUserDefinedData(data,"TurbulentSANuTildeDensity")
     
 status='0.1'
-comment='ONERA/elsA CFD pattern - Generic Solver#Compute'
+comment='FlowSolution pattern for end of run output'
 pattern=[data, status, comment]

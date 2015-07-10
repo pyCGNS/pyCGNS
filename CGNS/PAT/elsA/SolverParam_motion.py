@@ -8,12 +8,23 @@ import CGNS.PAT.cgnsutils    as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import numpy                 as NPY
 
-data=CGL.newUserDefinedData(None,'Solver#Compute')
-CGL.newDataArray(data,'artviscosity',CGU.setStringAsArray("dissca"))
-CGL.newDataArray(data,'avcoef_k2',CGU.setDoubleAsArray(1.0))
-CGL.newDataArray(data,'avcoef_k4',CGU.setDoubleAsArray(0.032))
-CGL.newDataArray(data,'avcoef_sigma',CGU.setDoubleAsArray(0.0))
+data=CGL.newUserDefinedData(None,'Solver#Param')
+CGL.newDataArray(data,'axis_ang_1',   CGU.setIntegerAsArray(60))
+CGL.newDataArray(data,'axis_ang_2',   CGU.setIntegerAsArray(1))
+CGL.newDataArray(data,'axis_pnt_x',   CGU.setDoubleAsArray(0.0))
+CGL.newDataArray(data,'axis_pnt_y',   CGU.setDoubleAsArray(0.0))
+CGL.newDataArray(data,'axis_pnt_z',   CGU.setDoubleAsArray(0.0))
+CGL.newDataArray(data,'axis_vct_x',   CGU.setDoubleAsArray(1.0))
+CGL.newDataArray(data,'axis_vct_y',   CGU.setDoubleAsArray(0.0))
+CGL.newDataArray(data,'axis_vct_z',   CGU.setDoubleAsArray(0.0))
+CGL.newDataArray(data,'interpol_tool',CGU.setStringAsArray('adt'))
+CGL.newDataArray(data,'motion',       CGU.setStringAsArray('mobile'))
+CGL.newDataArray(data,'omega',        CGU.setDoubleAsArray(0.0))
+CGL.newDataArray(data,'transl_speed', CGU.setDoubleAsArray(0.0))
+CGL.newDataArray(data,'transl_vct_x', CGU.setDoubleAsArray(1.0))
+CGL.newDataArray(data,'transl_vct_y', CGU.setDoubleAsArray(0.0))
+CGL.newDataArray(data,'transl_vct_z', CGU.setDoubleAsArray(0.0))
     
 status='0.1'
-comment='ONERA/elsA CFD pattern - Generic Solver#Compute'
+comment='Motion parameter set'
 pattern=[data, status, comment]

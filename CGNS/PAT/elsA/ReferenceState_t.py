@@ -32,5 +32,5 @@ d=CGL.newDataArray(rs,CGK.Coef_PressureDynamic_s,CGU.setDoubleAsArray(1.0))
 
 data=rs
 status='0.1'
-comment='ONERA/elsA CFD pattern'
+comment='ReferenceState all purpose'
 pattern=[data, status, comment]

@@ -5,6 +5,9 @@
 #  
 import sys
 import numpy
+import os
+import importlib
+import glob
 
 from PySide.QtCore  import *
 from PySide.QtGui   import QFileDialog
@@ -36,6 +39,7 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
         self._profiles={}
         self._profiles['SIDS']=CGNS.PAT.SIDS.profile
         self._profiles['elsA']=CGNS.PAT.elsA.profile
+        self.loadUserProfiles()
         self._modified=False
         self._initialized=False
         self._selected=None
@@ -123,7 +127,22 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
         if (self._master._patternwindow is not None):
             self._master._patternwindow=None
         self.close()
-
+    def loadUserProfiles(self):
+        pthlist=OCTXT.ProfileSearchPathList
+        if (not pthlist): return
+        pthlistok=[]
+        for pth in pthlist:
+            if (os.path.isdir(pth)): pthlistok+=[pth]
+        if (not pthlistok): return
+        for pth in pthlistok:
+          sys.path.append(pth)
+          modlist=[os.path.splitext(os.path.basename(mod))[0] \
+                   for mod in glob.glob('%s/*'%pth)]
+          for m in modlist:
+            pym=importlib.import_module(m)
+            self._profiles[m]=pym.profile
+            
+        
 # -----------------------------------------------------------------
 class Q7PatternTableItemDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):

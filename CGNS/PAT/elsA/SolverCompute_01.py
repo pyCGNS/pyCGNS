@@ -8,12 +8,13 @@ import CGNS.PAT.cgnsutils    as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import numpy                 as NPY
 
-data=CGL.newUserDefinedData(None,'Solver#Compute')
-CGL.newDataArray(data,'artviscosity',CGU.setStringAsArray("dissca"))
-CGL.newDataArray(data,'avcoef_k2',CGU.setDoubleAsArray(1.0))
-CGL.newDataArray(data,'avcoef_k4',CGU.setDoubleAsArray(0.032))
-CGL.newDataArray(data,'avcoef_sigma',CGU.setDoubleAsArray(0.0))
-    
+from .SolverCompute import data
+
+CGL.newDataArray(data,'turbmod',CGU.setStringAsArray("rsm"))
+CGL.newDataArray(data,'rsm_name',CGU.setStringAsArray("ssg_chien"))
+CGL.newDataArray(data,'t_cutvar',CGU.setDoubleAsArray(1.78929762604e-08))
+CGL.newDataArray(data,'t_harten',CGU.setDoubleAsArray(1e-24))
+
 status='0.1'
-comment='ONERA/elsA CFD pattern - Jameson Euler'
+comment='Parameter set for RSM'
 pattern=[data, status, comment]

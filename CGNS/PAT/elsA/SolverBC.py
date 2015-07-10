@@ -12,5 +12,5 @@ data=CGL.newUserDefinedData(None,'Solver#BC')
 CGL.newDataArray(data,'type',CGU.setStringAsArray("wall"))
     
 status='0.1'
-comment='ONERA/elsA CFD pattern'
+comment='Base BC'
 pattern=[data, status, comment]
