@@ -39,9 +39,8 @@ pr.add_argument("-I","--includes",dest="incs",
                 help='list of paths for include search ( : separated)')
 pr.add_argument("-L","--libraries",dest="libs",
                 help='list of paths for libraries search ( : separated)')
-
-os.system('hg parents --template="{rev}\n" > ./lib/revision.tmp')
-setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py')
+pr.add_argument("-U","--update",action='store_true',
+                help='update version (dev only)')
 
 try:
   os.makedirs('./build/lib/CGNS')
@@ -71,6 +70,10 @@ if (args.incs!=None):
 if (args.libs!=None):
   libs=[os.path.expanduser(path) for path in args.libs.split(':')]
 
+if (args.update):
+  os.system('hg parents --template="{rev}\n" > ./lib/revision.tmp')
+  setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py')
+
 try:
   (CONFIG,status)=setuputils.search(incs,libs)
 except setuputils.ConfigException, val:
@@ -80,6 +83,7 @@ except setuputils.ConfigException, val:
 new_args=[]
 for arg in sys.argv:
   if ( not ('-I=' in arg or '--includes=' in arg) and
+       not ('-U' in arg or '--update' in arg) and
        not ('-L=' in arg or '--libraries=' in arg)):
     new_args+=[arg]
 sys.argv=new_args
