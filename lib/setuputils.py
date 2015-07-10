@@ -117,6 +117,14 @@ def search(incs,libs,tag='pyCGNS',
         import Cython
         C.HAS_CYTHON=True
         print pfx+'using Cython v%s'%Cython.__version__
+        C.HAS_CYTHON_2PLUS=False
+        try:
+          if (float(Cython.__version__[:3])>0.1):
+            C.HAS_CYTHON_2PLUS=True
+          else:
+            print pfx+'warning Cython version cannot build CGNS/WRA'
+        except:
+          print pfx+'warning Cython version cannot build CGNS/WRA'
       except:
         C.HAS_CYTHON=False
         print pfx+'FATAL: Cython not found'
@@ -197,10 +205,10 @@ def search(incs,libs,tag='pyCGNS',
          C.MLL_PATH_INCLUDES,
          C.MLL_PATH_LIBRARIES,
          C.MLL_LINK_LIBRARIES,
-         C.MLL_EXTRA_ARGS)=tp
+         C.MLL_EXTRA_ARGS,ifound,lfound)=tp
         print pfx+'using CGNS/MLL %s'%(C.MLL_VERSION)
-        print pfx+'using CGNS/MLL headers from %s'%(C.MLL_PATH_INCLUDES[0])
-        print pfx+'using CGNS/MLL libs from %s'%(C.MLL_PATH_LIBRARIES[0])
+        print pfx+'using CGNS/MLL headers from %s'%ifound
+        print pfx+'using CGNS/MLL libs from %s'%lfound
         C.HAS_MLL=True
       incs=incs+C.MLL_PATH_INCLUDES
       libs=libs+C.MLL_PATH_LIBRARIES
@@ -218,10 +226,10 @@ def search(incs,libs,tag='pyCGNS',
          C.CHLONE_PATH_INCLUDES,
          C.CHLONE_PATH_LIBRARIES,
          C.CHLONE_LINK_LIBRARIES,
-         C.CHLONE_EXTRA_ARGS)=tp
+         C.CHLONE_EXTRA_ARGS,ifound,lfound)=tp
         print pfx+'using CHLone %s'%(C.CHLONE_VERSION,)
-        print pfx+'using CHLone headers from %s'%(C.CHLONE_PATH_INCLUDES[0])
-        print pfx+'using CHLone libs from %s'%(C.CHLONE_PATH_LIBRARIES[0])
+        print pfx+'using CHLone headers from %s'%ifound
+        print pfx+'using CHLone libs from %s'%lfound
         C.HAS_CHLONE=True
       incs=incs+C.CHLONE_PATH_INCLUDES
       libs=libs+C.CHLONE_PATH_LIBRARIES
@@ -454,6 +462,8 @@ def find_MLL(pincs,plibs,libs,extraargs):
   pincs=unique_but_keep_order(pincs)
   plibs=unique_but_keep_order(plibs)
   extraargs=[]#'-DCG_BUILD_SCOPE']
+  lfound=''
+  ifound=''
   for pth in pincs:
     if (os.path.exists(pth+'/cgnslib.h')):
       notfound=0
@@ -466,6 +476,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
           if (cgnsversion<'3200'):
             print pfx,"ERROR: version should be v3.2 for MLL"
             return None
+      ifound=pth
       break
   if notfound:
     print pfx+"ERROR: cgnslib.h not found, please check paths"
@@ -480,6 +491,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
          or (os.path.exists(pth+'/libcgns.sl'))):
       cgnslib='cgns'
       notfound=0
+      lfound=pth
       break
   if notfound:
     print pfx+"ERROR: libcgns not found, please check paths:"
@@ -502,7 +514,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
     extraargs+=['-U__ADF_IN_SOURCES__']
 
   libs=list(set(libs))
-  return (cgnsversion,pincs,plibs,libs,extraargs)
+  return (cgnsversion,pincs,plibs,libs,extraargs,ifound,lfound)
 
 # --------------------------------------------------------------------
 def find_CHLone(pincs,plibs,libs):
@@ -512,12 +524,15 @@ def find_CHLone(pincs,plibs,libs):
   libs=['CHLone']
   pincs=unique_but_keep_order(pincs)
   plibs=unique_but_keep_order(plibs)
+  ifound=''
+  lfound=''
   for pth in plibs:
     if (    (os.path.exists(pth+'/libCHLone.a'))
          or (os.path.exists(pth+'/libCHLone.so'))
          or (os.path.exists(pth+'/libCHLone.sl'))):
       notfound=0
       plibs=[pth]
+      lfound=pth
       break
   if notfound:
     print pfx+"ERROR: libCHlone not found, please check paths:"
@@ -544,6 +559,7 @@ def find_CHLone(pincs,plibs,libs):
         vers="%s.%s"%(vma,vmi)
         pincs=[pth]
         notfound=0
+        ifound=pth
         break
   if notfound:
     print pfx+"ERROR: CHLone/CHLone.h not found, please check paths"
@@ -557,7 +573,7 @@ def find_CHLone(pincs,plibs,libs):
   except:
     print pfx+"ERROR: import CHLone failed, please check PYTHONPATH (and/or LD_LIBRARY_PATH)"
 
-  return (vers,pincs,plibs,libs,extraargs)
+  return (vers,pincs,plibs,libs,extraargs,ifound,lfound)
 
 # --------------------------------------------------------------------
 def find_numpy(pincs,plibs,libs):

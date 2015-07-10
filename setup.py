@@ -146,10 +146,13 @@ if PAT:
   #  ALL_EXTENSIONS+=[ Extension('CGNS.PAT.cgnsutils',
   #                              ['CGNS/PAT/cgnsutils.pyx'],
   #                              include_dirs = CONFIG.INCLUDE_DIRS) ]
-  ALL_PACKAGES+=['CGNS.PAT','CGNS.PAT.SIDS','CGNS.PAT.test']
+  ALL_PACKAGES+=['CGNS.PAT',
+                 'CGNS.PAT.SIDS',
+                 'CGNS.PAT.elsA',
+                 'CGNS.PAT.test']
 
 # -------------------------------------------------------------------------  
-if (WRA and CONFIG.HAS_MLL):
+if (WRA and CONFIG.HAS_MLL and CONFIG.HAS_CYTHON_2PLUS):
 
   # --- config values
   hdfplib=CONFIG.HDF5_PATH_LIBRARIES

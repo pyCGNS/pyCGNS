@@ -5,7 +5,7 @@
 import CGNS.WRA.mll as Mll
 import numpy as N
 
-print 'CGNS.WRA.mll','#133 - nsubregs/subreg_info/subreg_ptset/subreg_bcname/subreg_gcname_read'
+print 'CGNS.WRA.mll','#133 - nsubregs/subreg_*'
 
 # ----------------------------------------------------------------------
 a=Mll.pyCGNS('tmp/testmll34.hdf',Mll.MODE_READ)

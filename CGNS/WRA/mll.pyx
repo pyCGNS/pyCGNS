@@ -163,6 +163,11 @@ cdef class pyCGNS(object):
   def root(self):
     return self._root
 
+  def raiseOnError(self,error=None):
+    if (error is None): error=self._error
+    if (error==0): return
+    raise CGNSException(error,cgnslib.cg_get_error())
+
   # ---------------------------------------------------------------------------
   cdef asCharPtrInList(self,char **ar,nstring,dstring):
     ns=[]
@@ -227,8 +232,8 @@ cdef class pyCGNS(object):
      * the Nth token or empty string
     """
     cdef char token[MAXNAMELENGTH]
-    self._error=cgnslib.cg_path_token(idx,path,token)
-    return token
+    # self._error=cgnslib.cg_path_token(idx,path,token)
+    return None #token
 
   # ---------------------------------------------------------------------------
   cpdef gopath(self,char *path):
@@ -1939,18 +1944,23 @@ cdef class pyCGNS(object):
   # ---------------------------------------------------------------------------
   cpdef field_read(self, int B, int Z, int S, char *fieldname, 
                    cgnslib.DataType_t dtype,
-                   CNY.ndarray rmin, CNY.ndarray rmax):
+                   CNY.ndarray rmin=None, CNY.ndarray rmax=None):
     cdef int cdim
     cdef int ddim
     cdef int tsize=1
     cgnslib.cg_cell_dim(self._root,B,&cdim)
+    self.raiseOnError()
+    cgnslib.cg_index_dim(self._root,B,Z,&ddim)
+    self.raiseOnError()
     dim_vals=PNY.ones((CK.ADF_MAX_DIMENSIONS,),dtype=PNY.int32,order='F')
     dim_valsPtr=<int *>CNY.PyArray_DATA(dim_vals)
     cgnslib.cg_sol_size(self._root,B,Z,S,&ddim,dim_valsPtr)
     for ix in xrange(ddim):
        tsize*=dim_vals[ix]
-    rmin=PNY.ones((cdim),dtype=PNY.int32,order='F')
-    rmax=PNY.ones((cdim),dtype=PNY.int32,order='F')
+    if (rmin is None):
+      rmin=PNY.ones((cdim,),dtype=PNY.int32,order='F')
+    if (rmax is None):
+      rmax=PNY.ones((cdim,),dtype=PNY.int32,order='F')
     rminPtr=<int *>CNY.PyArray_DATA(rmin)
     rmaxPtr=<int *>CNY.PyArray_DATA(rmax)
     cdtype=asnumpydtype(dtype)

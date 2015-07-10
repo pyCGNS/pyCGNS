@@ -32,7 +32,8 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
         self.bDelete.setDisabled(True)
         self.bAdd.setDisabled(True)
         self._profiles={}
-        self._profiles['SIDS']=CGS.profile
+        self._profiles['SIDS']=CGNS.PAT.SIDS.profile
+        self._profiles['elsA']=CGNS.PAT.elsA.profile
         self._modified=False
         self._initialized=False
         self._selected=None
