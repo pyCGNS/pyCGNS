@@ -15,5 +15,5 @@ CGL.newDataArray(data,'avcoef_k4',CGU.setDoubleAsArray(0.032))
 CGL.newDataArray(data,'avcoef_sigma',CGU.setDoubleAsArray(0.0))
     
 status='0.1'
-comment='ONERA/elsA CFD pattern - Jameson Euler'
+comment='ONERA/elsA CFD pattern - Generic Solver#Compute'
 pattern=[data, status, comment]

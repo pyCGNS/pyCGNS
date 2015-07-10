@@ -455,7 +455,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def clickedPressedNode(self,index):
         self.clickedNode(index)
     def clickedNode(self,index):
-        self.treeview.exclusiveSelectRow(index,False)
+        self.treeview.exclusiveSelectRow(index)
         if (self.treeview.lastButton==Qt.RightButton):
           if (self.updateMenu(index)):
             self.popupmenu.popup(self.treeview.lastPos)

@@ -822,6 +822,22 @@ if (PARENT[0]=='.Solver#Compute'):
  """,
  """Selects all children nodes of the .Solver#Compute elsA userdefined node""",
     False,False),
+('101. ReferenceState children',
+ 'Edit filters',
+ """
+if (PARENT[0]=='ReferenceState'):
+    RESULT=PATH
+ """,
+ """Selects all children nodes of the ReferenceState node""",
+    False,False),
+('102. .Solver#Param children',
+ 'Edit filters',
+ """
+if (PARENT[0]=='.Solver#Param'):
+    RESULT=PATH
+ """,
+ """Selects all children nodes of the .Solver#Param elsA userdefined node""",
+    False,False),
 
     ]
 

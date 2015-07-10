@@ -361,6 +361,9 @@
        <property name="editTriggers">
         <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
        </property>
+       <property name="dragDropOverwriteMode">
+        <bool>false</bool>
+       </property>
        <property name="alternatingRowColors">
         <bool>false</bool>
        </property>

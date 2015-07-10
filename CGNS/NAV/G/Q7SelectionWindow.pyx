@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'NAV/T/Q7SelectionWindow.ui'
+# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7SelectionWindow.ui'
 #
-# Created: Mon Jun 29 10:47:19 2015
+# Created: Fri Jul 10 13:39:29 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -145,6 +145,7 @@ class Ui_Q7SelectionWindow(object):
         self.selectionTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.selectionTable.setAutoScroll(False)
         self.selectionTable.setEditTriggers(QtGui.QAbstractItemView.DoubleClicked|QtGui.QAbstractItemView.EditKeyPressed)
+        self.selectionTable.setDragDropOverwriteMode(False)
         self.selectionTable.setAlternatingRowColors(False)
         self.selectionTable.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
         self.selectionTable.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)

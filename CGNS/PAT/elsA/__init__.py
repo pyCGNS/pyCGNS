@@ -7,14 +7,20 @@ from . import CGNSBase_t
 from . import ReferenceState_t
 from . import SolverBC
 from . import SolverBC_injmfr1
+from . import SolverCompute
+from . import SolverCompute_01
+from . import FlowSolutionEndOfRun
+from . import SolverParam_motion
 
 profile={ 
-'CGNSBase':          CGNSBase_t.pattern,
-'Solver#Compute':    SolverCompute.pattern,
-'Solver#Compute 01': SolverCompute_01.pattern,
-'Solver#BC':         SolverBC.pattern,
-'Solver#BC injmfr1': SolverBC_injmfr1.pattern,
-'ReferenceState':    ReferenceState_t.pattern
+'CGNSBase':              CGNSBase_t.pattern,
+'Solver#Compute':        SolverCompute.pattern,
+'Solver#Compute 01':     SolverCompute_01.pattern,
+'Solver#BC':             SolverBC.pattern,
+'Solver#BC injmfr1':     SolverBC_injmfr1.pattern,
+'Solver#Param motion':   SolverParam_motion.pattern,
+'FlowSolution#EndOfRun': FlowSolutionEndOfRun.pattern,
+'ReferenceState':        ReferenceState_t.pattern
 }
 
 # -- last line

@@ -292,12 +292,12 @@ class Q7TreeView(QTreeView):
     def modelIndex(self,idx):
         if (self._control is not None): return self._control.modelIndex(idx)
         return None
-    def mousePressEvent(self, event):
-        #print 'PRESS'
-        pass
-    def mouseReleaseEvent(self,event):
-        #print 'RELEASE'
-        pass
+#    def mousePressEvent(self, event):
+#        #print 'PRESS'
+#        pass
+#    def mouseReleaseEvent(self,event):
+#        #print 'RELEASE'
+#        pass
     def mousePressEvent(self,event):
         self.lastPos=event.globalPos()
         self.lastButton=event.button()
@@ -312,6 +312,7 @@ class Q7TreeView(QTreeView):
     def keyPressEvent(self,event):
         kmod=event.modifiers()
         kval=event.key()
+        print 'KEY',kmod,kval
         if (kval not in ALLKEYMAPPINGS): return
         last=self.getLastEntered()
         if (last is not None):
