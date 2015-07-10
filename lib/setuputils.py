@@ -76,16 +76,11 @@ def search(incs,libs,tag='pyCGNS',
   state=1
   for com in sys.argv:
     if com in ['help','clean']: state=0
-  bxtarget='./build/lib'
-  bptarget='./build/lib/CGNS'  
-  if (not os.path.exists(bxtarget)):
-    os.makedirs(bxtarget)
-    pt=distutils.util.get_platform()
-    vv="%d.%d"%(sys.version_info[0],sys.version_info[1])
-    tg="%s/./build/lib.%s-%s/CGNS"%(os.getcwd(),pt,vv)
-    lg="%s/./build/lib/CGNS"%(os.getcwd())
-    os.makedirs(tg)
-#    os.symlink(tg,lg)
+  pt=distutils.util.get_platform()
+  vv="%d.%d"%(sys.version_info[0],sys.version_info[1])
+  tg="%s/./build/lib.%s-%s/CGNS"%(os.getcwd(),pt,vv)
+  bptarget=tg
+  if (not os.path.exists(bptarget)): os.makedirs(bptarget)
   oldsyspath=sys.path
   sys.path =[os.path.abspath(os.path.normpath('./lib'))]
   cfgdict={}
@@ -253,23 +248,24 @@ def search(incs,libs,tag='pyCGNS',
 
   C.INCLUDE_DIRS=incs
   C.LIBRARY_DIRS=libs
+
+  C.PRODUCTION_DIR=bptarget
   
   updateConfig('..',bptarget,C.__dict__,cfgdict)
 
   return (C, state)
 
 # --------------------------------------------------------------------
-def installConfigFiles():
+def installConfigFiles(bptarget):
   lptarget='.'
-  bptarget='./build/lib/CGNS'  
   for ff in rootfiles:
     shutil.copy("%s/lib/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
   for ff in compfiles:
     shutil.copy("%s/lib/compatibility/%s"%(lptarget,ff),"%s/%s"%(bptarget,ff))
 
 # --------------------------------------------------------------------
-def updateVersionInFile(filename):
-  f=open('./lib/revision.tmp')
+def updateVersionInFile(filename,bptarget):
+  f=open('%s/revision.tmp'%bptarget)
   r=int(f.readlines()[0][:-1])
   REVISION=r
   f=open(filename,'r')

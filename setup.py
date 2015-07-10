@@ -70,10 +70,6 @@ if (args.incs!=None):
 if (args.libs!=None):
   libs=[os.path.expanduser(path) for path in args.libs.split(':')]
 
-if (args.update):
-  os.system('hg parents --template="{rev}\n" > ./lib/revision.tmp')
-  setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py')
-
 try:
   (CONFIG,status)=setuputils.search(incs,libs)
 except setuputils.ConfigException, val:
@@ -87,6 +83,12 @@ for arg in sys.argv:
        not ('-L=' in arg or '--libraries=' in arg)):
     new_args+=[arg]
 sys.argv=new_args
+
+if (args.update):
+  os.system('hg parents --template="{rev}\n" > %s/revision.tmp'\
+            %CONFIG.PRODUCTION_DIR)
+  setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py',
+                                 CONFIG.PRODUCTION_DIR)
 
 def line(m):
    print "###","-"*70
@@ -269,7 +271,7 @@ if (NAV and CONFIG.HAS_PYSIDE):
   ALL_SCRIPTS+=['CGNS/NAV/CGNS.NAV']
   ALL_EXTENSIONS+=modextlist
 
-setuputils.installConfigFiles()
+setuputils.installConfigFiles(CONFIG.PRODUCTION_DIR)
 
 #  -------------------------------------------------------------------------
 if (CONFIG.HAS_CYTHON):
