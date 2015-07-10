@@ -4,12 +4,12 @@
 #  ---------------------------------------------------------------------------
 #
 import CGNS.PAT.cgnslib      as CGL
-import CGNS.PAT.cgnserrors   as CGE
+import CGNS.PAT.cgnsutils    as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import numpy                 as NPY
 
 data=CGL.newUserDefinedData(None,'Solver#BC')
-CGL.newDataArray('type',CGU.setStringAsArray("wall"))
+CGL.newDataArray(data,'type',CGU.setStringAsArray("wall"))
     
 status='0.1'
 comment='ONERA/elsA CFD pattern'

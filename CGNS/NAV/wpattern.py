@@ -17,7 +17,9 @@ import CGNS.NAV.wmessages as MSG
 
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.SIDS as CGS
+
+import CGNS.PAT.SIDS
+import CGNS.PAT.elsA
 
 # -----------------------------------------------------------------
 class Q7PatternList(Q7Window,Ui_Q7PatternWindow):

@@ -4,11 +4,12 @@
 #  ---------------------------------------------------------------------------
 #
 import CGNS.PAT.cgnslib      as CGL
+import CGNS.PAT.cgnsutils    as CGU
 import CGNS.PAT.cgnserrors   as CGE
 import CGNS.PAT.cgnskeywords as CGK
 import numpy                 as NPY
 
-data=CGL.newReferenceState(b,CGK.ReferenceState_s)
+rs=CGL.newReferenceState(None,CGK.ReferenceState_s)
 d=CGL.newDescriptor(rs,CGK.ReferenceStateDescription_s,CGU.setStringAsArray("Global reference state"))
 d=CGL.newDataArray(rs,CGK.Mach_s,CGU.setDoubleAsArray(0.2))
 d=CGL.newDataArray(rs,'AngleofAttack',CGU.setDoubleAsArray(7.0))
@@ -28,7 +29,8 @@ d=CGL.newDataArray(rs,CGK.Temperature_s,CGU.setDoubleAsArray(1.0))
 d=CGL.newDataArray(rs,CGK.PressureStagnation_s,CGU.setDoubleAsArray(1.0))
 d=CGL.newDataArray(rs,CGK.TemperatureStagnation_s,CGU.setDoubleAsArray(1.0))
 d=CGL.newDataArray(rs,CGK.Coef_PressureDynamic_s,CGU.setDoubleAsArray(1.0))
-    
+
+data=rs
 status='0.1'
 comment='ONERA/elsA CFD pattern'
 pattern=[data, status, comment]
