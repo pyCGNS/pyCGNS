@@ -46,6 +46,8 @@ class DiagnosticMessagePattern(object):
     return '[%s:%s] %s'%(self._key,self.levelAsStr(),self._str)
   def notSubst(self):
     return '%' in self._str
+  def forceLevel(self,l):
+    self._lvl=l
     
 class DiagnosticMessageInstance(DiagnosticMessagePattern):
   def __init__(self,pattern):
@@ -144,5 +146,11 @@ class DiagnosticLog(dict):
           s+="  %s,\n"%diag
       s+="}\n"
       return s
-    
+    def forceAsWarning(self,key):
+      if (key in DiagnosticLog.__messages):
+        DiagnosticLog.__messages[key].forceLevel(CHECK_WARN)
+    def forceAsFailure(self,key):
+      if (key in DiagnosticLog.__messages):
+        DiagnosticLog.__messages[key].forceLevel(CHECK_FAIL)
+     
 # --- last line

@@ -190,26 +190,12 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         QObject.connect(self.treeview,
                         SIGNAL("customContextMenuRequested(QPoint)"),
                         self.clickedNode)
-        QObject.connect(self.cGroup,
-                        SIGNAL("currentIndexChanged(int)"),
-                        self.fillqueries)
-        QObject.connect(self.cQuery,
-                        SIGNAL("currentIndexChanged(int)"),
-                        self.checkquery)
-        qlist=Q7Query.queriesNamesList()
-        qlist.sort()
-        for q in qlist: self.cQuery.addItem(q)
-        gqlist=Q7Query.queriesGroupsList()
-        for gq in gqlist: self.cGroup.addItem(gq)
-        #ix=-1#self.cQuery.findText()self.querymodel.getCurrentQuery())
-        #if (ix!=-1): self.cQuery.setCurrentIndex(ix)
         self.bSave.clicked.connect(self.savetree)
-        
         self.lockable(self.bSave)
+        self.bQueryView.clicked.connect(self.queryview)
+        self.lockable(self.bQueryView)
         self.bSaveAs.clicked.connect(self.savetreeas)
         self.lockable(self.bSaveAs)
-        self.bApply.clicked.connect(self.forceapply)
-#        self.bClose.clicked.connect(self.reject)
         self.bInfo.clicked.connect(self.infoTreeView)
         self.bZoomIn.clicked.connect(self.expandLevel)
         self.bZoomOut.clicked.connect(self.collapseLevel)
@@ -222,14 +208,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bNextMark.clicked.connect(self.nextmark)
         self.bSwapMarks.clicked.connect(self.swapmarks)
         self.bMarksAsList.clicked.connect(self.selectionlist)
-        self.bApply.clicked.connect(self.applyquery)
-        self.lockable(self.bApply)
         self.bVTKView.clicked.connect(self.vtkview)
         self.lockable(self.bVTKView)
-#        self.bPlotView.clicked.connect(self.plotview)
-#        self.lockable(self.bPlotView)
-        self.bQueryView.clicked.connect(self.queryview)
-        self.lockable(self.bQueryView)
         self.bScreenShot.clicked.connect(self.screenshot)
         self.bCheck.clicked.connect(self.check)
         self.bCheckList.clicked.connect(self.checklist)
@@ -237,7 +217,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bLinkView.clicked.connect(self.linklist)
         self.bPatternView.clicked.connect(self.patternlist)
         self.bToolsView.clicked.connect(self.tools)
-        self.bOperateDoc.clicked.connect(self.querydoc)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.diagview=None
@@ -269,13 +248,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                         SIGNAL("returnPressed()"),
                         self.jumpToNode)
         self.updateTreeStatus()
-        if (self._control.query is not None):
-            ix=self.cQuery.findText(self._control.query,
-                                    flags=Qt.MatchStartsWith)
-            if (ix!=-1):
-                self.cQuery.setCurrentIndex(ix)
-            self.applyquery()
-            self.selectionlist()
     def model(self):
         return self._fgprint.model
     def modelIndex(self,idx):
@@ -398,21 +370,21 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
           lknode=not node.sidsIsLink()
           lznode=node.hasLazyLoad()
           actlist=(
-            ("About %s"%node.sidsType(),self.aboutSIDS,None,False),
+            ("%s goodies"%node.sidsType(),),
             None,
             ("Mark/unmark node",self.marknode,'Space',False),
             ("Add new child node",self.newnodechild,'Ctrl+A',False),
             ("Add new brother node",self.newnodebrother,'Ctrl+Z',False),
-            None,
-            ("Open form",self.popform,'Ctrl+F',False),
-            ("Open view",self.openSubTree,'Ctrl+W',False),
-            ("Open view on linked-to file",self.openLkTree,'Ctrl+O',lknode),
+#            None,
+#            ("Open form",self.popform,'Ctrl+F',False),
+#            ("Open view",self.openSubTree,'Ctrl+W',False),
+#            ("Open view on linked-to file",self.openLkTree,'Ctrl+O',lknode),
             None,
             ("Load node data in memory",self.dataLoad,'Ctrl+L',not lznode),
             ("Release memory node data",self.dataRelease,'Ctrl+R',lznode),
             None,
-            ("Copy",self.mcopy,'Ctrl+C',False),
-            ("Cut",self.mcut,'Ctrl+X',False),
+            ("Copy current",self.mcopy,'Ctrl+C',False),
+            ("Cut current",self.mcut,'Ctrl+X',False),
             ("Paste as brother",self.mpasteasbrother,'Ctrl+V',False),
             ("Paste as child",self.mpasteaschild,'Ctrl+Y',False),
             None,
@@ -429,13 +401,32 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
           self.popupmenu.clear()
           self.popupmenu.setTitle('Node menu')
           for aparam in actlist:
-              if (aparam is None): self.popupmenu.addSeparator()
+              if (aparam is None):
+                self.popupmenu.addSeparator()
+              elif (len(aparam)==1):
+                tag='_GM_%s'%node.sidsType() 
+                if (hasattr(self,tag)):
+                  self.popupmenu.addMenu(getattr(self,tag)(node))
+                else:
+                  a=QAction("About %s"%node.sidsType(),self,
+                            triggered=self.aboutSIDS)
+                  self.popupmenu.addAction(a)
               else:
                   a=QAction(aparam[0],self,triggered=aparam[1])
                   if (aparam[2] is not None): a.setShortcut(aparam[2])
                   self.popupmenu.addAction(a)
                   a.setDisabled(aparam[3])
           return True
+    def pp(self):
+      pass
+    def _GM_Family_t(self,node):
+      m=QMenu('%s special menu'%node.sidsType())
+      p=QMenu('Insert pattern')
+      m.addMenu(p)
+      m.addSeparator()
+      a=QAction('Select references to myself',self,triggered=self.pp)
+      m.addAction(a)
+      return m
     def setLastEntered(self,nix=None):
         if ((nix is None) or (not nix.isValid())):
             nix=self.treeview.modelCurrentIndex()
@@ -468,39 +459,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self.treeview.resizeColumnToContents(n)
     def show(self):
         super(Q7Tree, self).show()
-    def checkquery(self):
-        q=self.cQuery.currentText()
-        if (Q7Query.getQuery(q) is not None and Q7Query.getQuery(q).hasArgs):
-          self.eUserVariable.setEnabled(True)
-        else:
-          self.eUserVariable.setEnabled(False)
-    def fillqueries(self):
-        g=self.cGroup.currentText()
-        self.cQuery.clear()
-        for qn in Q7Query.queriesNamesList():
-          if ((g=='*') or (Q7Query.getQuery(qn).group==g)):
-            self.cQuery.addItem(qn)
-    def querydoc(self):
-        q=self.cQuery.currentText()
-        if (q in Q7Query.queriesNamesList()):
-            doc=Q7Query.getQuery(q).doc
-            self._control.helpWindowDoc(doc)
-    def applyquery(self):
-        q=self.cQuery.currentText()
-        v=self.eUserVariable.text()
-        if (q in ['',' ']):
-            self.unmarkall()
-            return
-        qry=Q7Query
-        if (q in qry.queriesNamesList()):
-            sl=qry.getQuery(q).run(self._fgprint.tree,self._fgprint.links,
-                                   self._fgprint.lazy.keys(),
-                                   False,v,self.model().getSelected())
-            self.model().markExtendToList(sl)
-            self.model().updateSelected()
-            if (qry.getQuery(q).requireTreeUpdate()):
-                self.model().modelReset()
-        self.treeview.refreshView()
     def linkselectsrc(self):
         if (self.bSelectLinkSrc.isChecked()):
           if (self.getLastEntered() is None): return

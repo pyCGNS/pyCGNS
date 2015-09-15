@@ -312,7 +312,8 @@ class Q7TreeView(QTreeView):
     def keyPressEvent(self,event):
         kmod=event.modifiers()
         kval=event.key()
-        print 'KEY',kmod,kval
+        #print 'KEY',kmod,kval
+        #kmod=QApplication.keyboardModifiers()
         if (kval not in ALLKEYMAPPINGS): return
         last=self.getLastEntered()
         if (last is not None):
@@ -320,7 +321,7 @@ class Q7TreeView(QTreeView):
           nix=self._model.indexByPath(last.sidsPath())
           pix=self._model.indexByPath(last.parentItem().sidsPath())
           if (kval in EDITKEYMAPPINGS):
-              if (kmod==Qt.ControlModifier):
+              if (kmod&Qt.ControlModifier and not kmod&Qt.ShiftModifier):
                 if (kval==KEYMAPPING[NEWCHILDNODE]):
                   self._model.newNodeChild(last)
                   nix=self._model.indexByPath(last.sidsPath())
@@ -345,6 +346,7 @@ class Q7TreeView(QTreeView):
                   self._model.pasteAsBrother(last)
                   nix=self._model.indexByPath(last.sidsPath())
                   self.exclusiveSelectRow(nix)
+              if (kmod&Qt.ControlModifier and kmod&Qt.ShiftModifier):
                 if (kval==KEYMAPPING[CUTSELECTED]):
                   self._model.cutAllSelectedNodes()
                   self.exclusiveSelectRow()

@@ -193,7 +193,7 @@ def getChildNodeValueWithDefault(node,ntype,defaultv,pth=None,log=None,rs=None):
   p = CGU.hasChildType(node,ntype) # get child by type
   if (not p): # child is absent
     v=defaultv # affect default value
-    if rs: rs=log.push(pth,'S123',ntype,defaultv)
+    if rs: rs=log.push(pth,'s0000.0123',ntype,defaultv)
   else: v=p[0][1].tostring() # child is present
   if rs: return v,rs
   else: return v  

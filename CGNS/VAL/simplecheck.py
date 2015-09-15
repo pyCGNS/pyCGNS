@@ -7,6 +7,7 @@
 
 import CGNS.VAL.grammars.CGNS_VAL_USER_DEFAULT as CGV
 import CGNS.VAL.parse.messages as CGM
+import CGNS.PAT.cgnserrors     as CGE
 import CGNS.VAL.parse.findgrammar
 
 import sys
@@ -49,20 +50,27 @@ def listdiags(trace,userlist):
         s+="%s\n"%(str(mlist[d]))
     return s
 
-def run(T,trace,userlist):
+def run(T,trace,userlist,stop=False,warnings=[],failures=[]):
     diag=CGM.DiagnosticLog()
     for user in userlist:
       parser=getParser(trace,user)
-      parser.checkTree(T,trace)
+      # parser lookup and init are required prior to initialize message tables
+      for w in warnings: diag.forceAsWarning(w)
+      for w in failures: diag.forceAsFailure(w)
+      try:
+        parser.checkTree(T,trace,stop=stop)
+      except (CGE.cgnsException,),v:
+        pass
       diag.merge(parser.log)
     return diag
 
-def compliant(T,trace=False,userlist=['DEFAULT'],paths=['']):
+def compliant(T,trace=False,userlist=['DEFAULT'],paths=[''],stop=False,
+              warnings=[],failures=[]):
     ipath='%s/lib/python%s.%s/site-packages/CGNS/VAL/grammars'%\
            (sys.prefix,sys.version_info[0],sys.version_info[1])
     sys.path.append(ipath)
     for pp in paths: sys.path.append(pp)
-    diag=run(T,trace,userlist)
+    diag=run(T,trace,userlist,stop=stop,warnings=warnings,failures=failures)
     ok=[True,[]]
     for p in diag:
       for (s,sp) in diag.diagnosticsByPath(p):

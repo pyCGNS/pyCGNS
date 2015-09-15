@@ -26,13 +26,16 @@ c01=acube()
 c02=acube(offset=1)
 c03=acube(offset=2)
 
+cpex0039=1
+
 # ------------------------------------------------------------------------
 
 a=Mll.pyCGNS('tmp/testmll17.hdf',Mll.MODE_WRITE)
-a.base_write('Base',3,3)
-a.zone_write(1,'Zone 01',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
-a.zone_write(1,'Zone 02',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
-a.zone_write(1,'Zone 03',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
+a.base_write('BaseWithAQuiteLongNameToTestSize',3,3)
+a.zone_write(1,'Zone#01',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
+a.zone_write(1,'Zone#02',NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
+a.zone_write(1,'ZoneWithALongNameToTestSize#0003',
+             NPY.array([[3,5,7],[2,4,6],[0,0,0]]),CK.Structured)
 a.coord_write(1,1,CK.RealDouble,CK.CoordinateX_s,c01[0])
 a.coord_write(1,1,CK.RealDouble,CK.CoordinateY_s,c01[1])
 a.coord_write(1,1,CK.RealDouble,CK.CoordinateZ_s,c01[2])
@@ -50,12 +53,37 @@ a.sol_write(1,3,"Initialize",CK.CellCenter)
 a.sol_write(1,3,"Result",CK.CellCenter)
 a.boco_write(1,1,'BC',12,4,2,NPY.array([[1,1,1],[3,5,1]]))
 a.boco_write(1,1,'BC2',12,4,2,NPY.array([[1,1,7],[3,5,7]]))
-t=a.conn_1to1_write(1,1,'Connectivity','Zone2',
+t=a.conn_1to1_write(1,1,'Connectivity#1','ZoneWithALongNameToTestSize#0003',
                 NPY.array([[3,1,1],[3,5,7]]),
                 NPY.array([[1,1,1],[1,5,7]]),
                 NPY.array([1,2,3]))
+if (cpex0039):
+  t=a.conn_1to1_write(1,1,'Connectivity#2','/ZoneWithALongNameToTestSize#0003',
+                      NPY.array([[3,1,1],[3,5,7]]),
+                      NPY.array([[1,1,1],[1,5,7]]),
+                      NPY.array([1,2,3]))
+  print a.error
+  t=a.conn_1to1_write(1,1,'Connectivity#3','BaseWithAQuiteLongNameToTestSize/',
+                      NPY.array([[3,1,1],[3,5,7]]),
+                      NPY.array([[1,1,1],[1,5,7]]),
+                      NPY.array([1,2,3]))
+  print a.error
+  t=a.conn_1to1_write(1,1,'Connectivity#4','BaseWithAQuiteLongNameToTestSizeX/',
+                      NPY.array([[3,1,1],[3,5,7]]),
+                      NPY.array([[1,1,1],[1,5,7]]),
+                      NPY.array([1,2,3]))
+  print a.error
+  t=a.conn_1to1_write(1,1,'Connectivity#5','A/ZoneWithALongNameToTestSize#0003X',
+                      NPY.array([[3,1,1],[3,5,7]]),
+                      NPY.array([[1,1,1],[1,5,7]]),
+                      NPY.array([1,2,3]))
+  print a.error
+  t=a.conn_1to1_write(1,1,'Connectivity#6','A/ZoneWithALongName/Size#0003',
+                      NPY.array([[3,1,1],[3,5,7]]),
+                      NPY.array([[1,1,1],[1,5,7]]),
+                      NPY.array([1,2,3]))
+  print a.error
 
 a.close()
-
 # ---
 

@@ -49,6 +49,688 @@
        <property name="currentIndex">
         <number>0</number>
        </property>
+       <widget class="QWidget" name="search">
+        <attribute name="title">
+         <string>Search</string>
+        </attribute>
+        <widget class="QWidget" name="verticalLayoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>5</x>
+           <y>5</y>
+           <width>541</width>
+           <height>271</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <widget class="QPushButton" name="bSaveAsQuery">
+             <property name="geometry">
+              <rect>
+               <x>350</x>
+               <y>235</y>
+               <width>24</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Save as a query</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../R/Res.qrc">
+               <normaloff>:/images/icons/operate-save.png</normaloff>:/images/icons/operate-save.png</iconset>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="eSaveAsQuery">
+             <property name="geometry">
+              <rect>
+               <x>80</x>
+               <y>235</y>
+               <width>261</width>
+               <height>21</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QSlider" name="sLevel">
+             <property name="geometry">
+              <rect>
+               <x>420</x>
+               <y>100</y>
+               <width>16</width>
+               <height>56</height>
+              </rect>
+             </property>
+             <property name="maximum">
+              <number>2</number>
+             </property>
+             <property name="sliderPosition">
+              <number>1</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="invertedAppearance">
+              <bool>true</bool>
+             </property>
+             <property name="invertedControls">
+              <bool>true</bool>
+             </property>
+             <property name="tickPosition">
+              <enum>QSlider::TicksAbove</enum>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_7">
+             <property name="geometry">
+              <rect>
+               <x>360</x>
+               <y>95</y>
+               <width>53</width>
+               <height>15</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Ancestor</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_8">
+             <property name="geometry">
+              <rect>
+               <x>360</x>
+               <y>120</y>
+               <width>53</width>
+               <height>15</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Current</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_14">
+             <property name="geometry">
+              <rect>
+               <x>360</x>
+               <y>145</y>
+               <width>53</width>
+               <height>15</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Children</string>
+             </property>
+            </widget>
+            <widget class="QGroupBox" name="gCriteria">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>336</width>
+               <height>196</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>###</string>
+             </property>
+             <widget class="QLabel" name="label_9">
+              <property name="geometry">
+               <rect>
+                <x>15</x>
+                <y>30</y>
+                <width>76</width>
+                <height>16</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>name:</string>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="eName">
+              <property name="geometry">
+               <rect>
+                <x>75</x>
+                <y>25</y>
+                <width>181</width>
+                <height>21</height>
+               </rect>
+              </property>
+             </widget>
+             <widget class="QGroupBox" name="cDataCheck">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>85</y>
+                <width>316</width>
+                <height>106</height>
+               </rect>
+              </property>
+              <property name="title">
+               <string>Data</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <widget class="QComboBox" name="cDataType">
+               <property name="geometry">
+                <rect>
+                 <x>65</x>
+                 <y>40</y>
+                 <width>41</width>
+                 <height>22</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_11">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>45</y>
+                 <width>76</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>type:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_12">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>75</y>
+                 <width>76</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>max size:</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="eValue">
+               <property name="geometry">
+                <rect>
+                 <x>65</x>
+                 <y>15</y>
+                 <width>181</width>
+                 <height>21</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_13">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>20</y>
+                 <width>76</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>value:</string>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="eMaxSize">
+               <property name="geometry">
+                <rect>
+                 <x>65</x>
+                 <y>70</y>
+                 <width>81</width>
+                 <height>22</height>
+                </rect>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="value">
+                <number>65</number>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="cRegexpValue">
+               <property name="geometry">
+                <rect>
+                 <x>250</x>
+                 <y>15</y>
+                 <width>24</width>
+                 <height>24</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="../R/Res.qrc">
+                 <normaloff>:/images/icons/regexp.png</normaloff>:/images/icons/regexp.png</iconset>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="cNotValue">
+               <property name="geometry">
+                <rect>
+                 <x>280</x>
+                 <y>15</y>
+                 <width>24</width>
+                 <height>24</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="../R/Res.qrc">
+                 <normaloff>:/images/icons/delete.png</normaloff>:/images/icons/delete.png</iconset>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="cNotDataType">
+               <property name="geometry">
+                <rect>
+                 <x>280</x>
+                 <y>45</y>
+                 <width>24</width>
+                 <height>24</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="../R/Res.qrc">
+                 <normaloff>:/images/icons/delete.png</normaloff>:/images/icons/delete.png</iconset>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </widget>
+             <widget class="QLabel" name="label_10">
+              <property name="geometry">
+               <rect>
+                <x>15</x>
+                <y>60</y>
+                <width>76</width>
+                <height>16</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>SIDS type:</string>
+              </property>
+             </widget>
+             <widget class="QComboBox" name="cSIDStype">
+              <property name="geometry">
+               <rect>
+                <x>75</x>
+                <y>55</y>
+                <width>181</width>
+                <height>22</height>
+               </rect>
+              </property>
+              <property name="editable">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="cRegexpName">
+              <property name="geometry">
+               <rect>
+                <x>260</x>
+                <y>25</y>
+                <width>24</width>
+                <height>24</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="../R/Res.qrc">
+                <normaloff>:/images/icons/regexp.png</normaloff>:/images/icons/regexp.png</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="cNotName">
+              <property name="geometry">
+               <rect>
+                <x>290</x>
+                <y>25</y>
+                <width>24</width>
+                <height>24</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="../R/Res.qrc">
+                <normaloff>:/images/icons/delete.png</normaloff>:/images/icons/delete.png</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="cRegexpSIDStype">
+              <property name="geometry">
+               <rect>
+                <x>260</x>
+                <y>55</y>
+                <width>24</width>
+                <height>24</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="../R/Res.qrc">
+                <normaloff>:/images/icons/regexp.png</normaloff>:/images/icons/regexp.png</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="cNotSIDStype">
+              <property name="geometry">
+               <rect>
+                <x>290</x>
+                <y>55</y>
+                <width>24</width>
+                <height>24</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="../R/Res.qrc">
+                <normaloff>:/images/icons/delete.png</normaloff>:/images/icons/delete.png</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </widget>
+            <widget class="QRadioButton" name="rAddToCurrent">
+             <property name="geometry">
+              <rect>
+               <x>355</x>
+               <y>15</y>
+               <width>176</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Add to current selection</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+            <widget class="QRadioButton" name="rClearCurrent">
+             <property name="geometry">
+              <rect>
+               <x>355</x>
+               <y>55</y>
+               <width>171</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Clear current selection first</string>
+             </property>
+            </widget>
+            <widget class="QRadioButton" name="rWithinCurrent">
+             <property name="geometry">
+              <rect>
+               <x>355</x>
+               <y>35</y>
+               <width>156</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Within current selection</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="bRunSearch">
+             <property name="geometry">
+              <rect>
+               <x>350</x>
+               <y>175</y>
+               <width>24</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Run current selection criteria</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../R/Res.qrc">
+               <normaloff>:/images/icons/operate-execute.gif</normaloff>:/images/icons/operate-execute.gif</iconset>
+             </property>
+            </widget>
+            <widget class="Line" name="line">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>215</y>
+               <width>516</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_19">
+             <property name="geometry">
+              <rect>
+               <x>40</x>
+               <y>240</y>
+               <width>53</width>
+               <height>15</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>name:</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="bFindQuery">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>235</y>
+               <width>24</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>24</horstretch>
+               <verstretch>24</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Load search query with this name</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../R/Res.qrc">
+               <normaloff>:/images/icons/zoompoint.png</normaloff>:/images/icons/zoompoint.png</iconset>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="eWithLinks">
+             <property name="geometry">
+              <rect>
+               <x>385</x>
+               <y>180</y>
+               <width>111</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Include links</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
        <widget class="QWidget" name="diff">
         <attribute name="title">
          <string>Diff</string>
@@ -175,6 +857,9 @@
          <string>Merge</string>
         </attribute>
         <widget class="QGroupBox" name="gdiff_2">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>5</x>
@@ -373,7 +1058,7 @@
           </property>
           <widget class="QComboBox" name="cTreeAncestor">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="geometry">
             <rect>
@@ -426,356 +1111,158 @@
          </widget>
         </widget>
        </widget>
-       <widget class="QWidget" name="process">
+       <widget class="QWidget" name="Queries">
         <attribute name="title">
-         <string>Process</string>
+         <string>Queries</string>
         </attribute>
-        <widget class="QWidget" name="verticalLayoutWidget">
+        <widget class="QLabel" name="label_15">
          <property name="geometry">
           <rect>
-           <x>5</x>
-           <y>5</y>
-           <width>541</width>
-           <height>271</height>
+           <x>25</x>
+           <y>25</y>
+           <width>37</width>
+           <height>25</height>
           </rect>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QGroupBox" name="groupBox">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="title">
-             <string/>
-            </property>
-            <widget class="QComboBox" name="cProcess">
-             <property name="geometry">
-              <rect>
-               <x>75</x>
-               <y>5</y>
-               <width>416</width>
-               <height>22</height>
-              </rect>
-             </property>
-            </widget>
-            <widget class="QPushButton" name="bFileProcess">
-             <property name="geometry">
-              <rect>
-               <x>500</x>
-               <y>5</y>
-               <width>25</width>
-               <height>25</height>
-              </rect>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>25</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>25</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="toolTip">
-              <string>Open Form view on selected node</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="icon">
-              <iconset resource="../R/Res.qrc">
-               <normaloff>:/images/icons/save.png</normaloff>:/images/icons/save.png</iconset>
-             </property>
-            </widget>
-            <widget class="QPushButton" name="bApply">
-             <property name="geometry">
-              <rect>
-               <x>25</x>
-               <y>230</y>
-               <width>25</width>
-               <height>25</height>
-              </rect>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>25</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>25</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="toolTip">
-              <string>Run process</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="icon">
-              <iconset resource="../R/Res.qrc">
-               <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
-             </property>
-            </widget>
-            <widget class="QGroupBox" name="groupBox_2">
-             <property name="geometry">
-              <rect>
-               <x>5</x>
-               <y>30</y>
-               <width>120</width>
-               <height>91</height>
-              </rect>
-             </property>
-             <property name="title">
-              <string>Run on :</string>
-             </property>
-             <widget class="QRadioButton" name="rUser">
-              <property name="geometry">
-               <rect>
-                <x>5</x>
-                <y>15</y>
-                <width>94</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>User args</string>
-              </property>
-             </widget>
-             <widget class="QRadioButton" name="rSelection">
-              <property name="geometry">
-               <rect>
-                <x>5</x>
-                <y>35</y>
-                <width>94</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Selection list</string>
-              </property>
-             </widget>
-             <widget class="QRadioButton" name="rTree">
-              <property name="geometry">
-               <rect>
-                <x>5</x>
-                <y>55</y>
-                <width>94</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Whole tree</string>
-              </property>
-             </widget>
-            </widget>
-            <widget class="QLabel" name="label_4">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>5</y>
-               <width>58</width>
-               <height>16</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Process:</string>
-             </property>
-            </widget>
-            <widget class="QGroupBox" name="groupBox_3">
-             <property name="geometry">
-              <rect>
-               <x>75</x>
-               <y>120</y>
-               <width>456</width>
-               <height>146</height>
-              </rect>
-             </property>
-             <property name="title">
-              <string>Args:</string>
-             </property>
-             <widget class="Q7PythonEditor" name="eText">
-              <property name="geometry">
-               <rect>
-                <x>5</x>
-                <y>20</y>
-                <width>441</width>
-                <height>116</height>
-               </rect>
-              </property>
-             </widget>
-            </widget>
-            <widget class="QGroupBox" name="groupBox_4">
-             <property name="geometry">
-              <rect>
-               <x>130</x>
-               <y>30</y>
-               <width>401</width>
-               <height>91</height>
-              </rect>
-             </property>
-             <property name="title">
-              <string>System :</string>
-             </property>
-             <widget class="QCheckBox" name="cAsynchroneous">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>15</y>
-                <width>116</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Asynchroneous</string>
-              </property>
-             </widget>
-             <widget class="QCheckBox" name="rDir">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>40</y>
-                <width>86</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Run in dir:</string>
-              </property>
-             </widget>
-             <widget class="QLineEdit" name="eDir">
-              <property name="geometry">
-               <rect>
-                <x>95</x>
-                <y>35</y>
-                <width>266</width>
-                <height>22</height>
-               </rect>
-              </property>
-             </widget>
-             <widget class="QCheckBox" name="rLog">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>65</y>
-                <width>86</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Log file:</string>
-              </property>
-             </widget>
-             <widget class="QLineEdit" name="eLog">
-              <property name="geometry">
-               <rect>
-                <x>95</x>
-                <y>60</y>
-                <width>266</width>
-                <height>22</height>
-               </rect>
-              </property>
-             </widget>
-             <widget class="QPushButton" name="bFileDir">
-              <property name="geometry">
-               <rect>
-                <x>365</x>
-                <y>30</y>
-                <width>25</width>
-                <height>25</height>
-               </rect>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>25</width>
-                <height>25</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>25</width>
-                <height>25</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Open Form view on selected node</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="../R/Res.qrc">
-                <normaloff>:/images/icons/save.png</normaloff>:/images/icons/save.png</iconset>
-              </property>
-             </widget>
-             <widget class="QPushButton" name="bFileLog">
-              <property name="geometry">
-               <rect>
-                <x>365</x>
-                <y>60</y>
-                <width>25</width>
-                <height>25</height>
-               </rect>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>25</width>
-                <height>25</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>25</width>
-                <height>25</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Open Form view on selected node</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="../R/Res.qrc">
-                <normaloff>:/images/icons/save.png</normaloff>:/images/icons/save.png</iconset>
-              </property>
-             </widget>
-            </widget>
-           </widget>
-          </item>
-         </layout>
+         <property name="text">
+          <string>Group:</string>
+         </property>
         </widget>
-       </widget>
-       <widget class="QWidget" name="split">
-        <attribute name="title">
-         <string>Split</string>
-        </attribute>
+        <widget class="QComboBox" name="cGroup">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>25</y>
+           <width>74</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_16">
+         <property name="geometry">
+          <rect>
+           <x>25</x>
+           <y>55</y>
+           <width>36</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Query:</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cQuery">
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>55</y>
+           <width>378</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="bOperateDoc">
+         <property name="geometry">
+          <rect>
+           <x>465</x>
+           <y>55</y>
+           <width>25</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Show Query doc</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../R/Res.qrc">
+           <normaloff>:/images/icons/operate-doc.png</normaloff>:/images/icons/operate-doc.png</iconset>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_17">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>85</y>
+           <width>28</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Args:</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="eUserVariable">
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>85</y>
+           <width>306</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="bApply">
+         <property name="geometry">
+          <rect>
+           <x>505</x>
+           <y>245</y>
+           <width>25</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Run Query</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../R/Res.qrc">
+           <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
+         </property>
+        </widget>
        </widget>
       </widget>
      </item>
@@ -830,15 +1317,7 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>Q7PythonEditor</class>
-   <extends>QPlainTextEdit</extends>
-   <header>CGNS.NAV.weditors</header>
-  </customwidget>
- </customwidgets>
  <resources>
-  <include location="../R/Res.qrc"/>
   <include location="../R/Res.qrc"/>
  </resources>
  <connections/>

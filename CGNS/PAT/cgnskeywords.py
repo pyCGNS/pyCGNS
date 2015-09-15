@@ -47,6 +47,7 @@ def enumAsKeyDict(l):
 # --------------------------------------------------
 # --- ADF-level Datatypes
 #
+# MT: No data; LK: Link
 adftypes=('C1','I4','I8','R4','R8','MT','LK')
 (C1,I4,I8,R4,R8,MT,LK)=adftypes
 
@@ -80,21 +81,23 @@ CGNSTree_s            = 'CGNSTree'
 
 # --- Type with weird (coming from outer space) names
 #
-Transform_ts          = 'Transform_ts'
+Transform_ts          = 'Transform_t'
 DiffusionModel_ts     = 'DiffusionModel_t'
 EquationDimension_ts  = 'EquationDimension_t'
 InwardNormalIndex_ts  = 'InwardNormalIndex_t'
-IntIndexDimension_ts  = 'IntIndexDimension_ts'
+IntIndexDimension_ts  = 'IntIndexDimension_t'
 
 # --- Add legacy strings for translation tools
 #
 Transform_ts2         = '"int[IndexDimension]"'
+Transform_ts3         = 'int[IndexDimension]'
 DiffusionModel_ts2    = '"int[1+...+IndexDimension]"'
 EquationDimension_ts2 = '"int"'
 InwardNormalIndex_ts2 = '"int[IndexDimension]"'
 
 weirdSIDStypes={
   Transform_ts2:         IntIndexDimension_ts,
+  Transform_ts3:         IntIndexDimension_ts,
   DiffusionModel_ts2:    DiffusionModel_ts,
   EquationDimension_ts2: EquationDimension_ts,
   InwardNormalIndex_ts2: IntIndexDimension_ts,
@@ -640,11 +643,15 @@ LorentzForceZ_s               = "LorentzForceZ"
 ElectricConductivity_s        = "ElectricConductivity"
 JouleHeating_s                = "JouleHeating"
 TurbulentDistance_s           = "TurbulentDistance"
+TurbulentDistanceIndex_s      = "TurbulentDistanceIndex"  # maybe not SIDS but usefull
 TurbulentEnergyKinetic_s      = "TurbulentEnergyKinetic"
+TurbulentEnergyKineticDensity_s = "TurbulentEnergyKineticDensity" # maybe not SIDS but usefull
 TurbulentDissipation_s        = "TurbulentDissipation"
 TurbulentDissipationRate_s    = "TurbulentDissipationRate"
+TurbulentDissipationDensity_s = "TurbulentDissipationDensity" # maybe not SIDS but usefull
 TurbulentBBReynolds_s         = "TurbulentBBReynolds"
 TurbulentSANuTilde_s          = "TurbulentSANuTilde"
+TurbulentSANuTildeDensity_s  = "TurbulentSANuTildeDensity" # maybe not SIDS but usefull
 Mach_s                        = "Mach"
 Mach_Velocity_s               = "Mach_Velocity"
 Mach_VelocitySound_s          = "Mach_VelocitySound"
@@ -885,6 +892,8 @@ BCType_s                   = "BCType"
 BCType_ts                  = "BCType_t"
 BCTypeSimple_s             = "BCTypeSimple"
 BCTypeSimple_ts            = "BCTypeSimple_t"
+BCTypeCompound_s           = "BCTypeCompound"
+BCTypeCompound_ts          = "BCTypeCompound_ts"
 
 BCAxisymmetricWedge_s      = "BCAxisymmetricWedge"
 BCDegenerateLine_s         = "BCDegenerateLine"
@@ -1255,7 +1264,7 @@ ElementRangeList_s = "ElementRangeList"
 
 # ---
 cgnsnames=[globals()[k] for k in dir() if (k[-2:]=='_s')]
-cgnstypes=[globals()[k] for k in dir() if (k[-3:]=='_ts')]
+cgnstypes=[globals()[k] for k in dir() if (k[-3:]=='_ts')]+weirdSIDStypes.keys()
 cgnsenums={}
 for k in dir():
   if (k[-2:]=='_l'): cgnsenums[k[:-1]+'t']=locals()[k]

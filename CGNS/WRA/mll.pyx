@@ -138,11 +138,13 @@ cdef class pyCGNS(object):
   cdef public object _debug
   cdef public object _error
   cdef public object _filename
+  cdef public object _raiseException
 
   def __init__(self,filename,mode,debug=False):
     self._filename=filename
     self._mode=mode
     self._debug=debug
+    self._raiseException=False
     self.dbg('cg_open [%s][%s]'%(filename,mode))
     (self._root,self._error)=cg_open_(filename,mode)
 
@@ -154,6 +156,9 @@ cdef class pyCGNS(object):
   def error(self):
     return (self._error, cgnslib.cg_get_error())
 
+  def raiseException(self,v=True):
+    self._raiseException=v
+
   @property
   def _ok(self):
     if (self._error==0): return True
@@ -164,6 +169,7 @@ cdef class pyCGNS(object):
     return self._root
 
   def raiseOnError(self,error=None):
+    if (not self._raiseException): return
     if (error is None): error=self._error
     if (error==0): return
     raise CGNSException(error,cgnslib.cg_get_error())
@@ -2924,6 +2930,7 @@ cdef class pyCGNS(object):
     trptr=<int *>CNY.PyArray_DATA(tarray)
     self._error=cgnslib.cg_1to1_write(self._root,B,Z,cname,dname,
                                       crangeptr,drangeptr,trptr,&I)
+    self.raiseOnError()
     return I
 
   # ---------------------------------------------------------------------------

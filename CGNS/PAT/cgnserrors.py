@@ -25,7 +25,7 @@ class cgnsException(Exception):
     self.value=args
   def __str__(self):
     if (self.value is not None): ret=perr(self.code,self.value)
-    else:                       ret=perr(self.code)
+    else:                        ret=perr(self.code)
     return ret
 
 class cgnsNodeError(cgnsException):
@@ -39,6 +39,7 @@ class cgnsTypeError(cgnsNodeError):
 
 # -----------------------------------------------------------------------------
 errorTable={
+   -1 : "Stop on check",
     0 : "No error",
     1 : "Node is empty !",
     2 : "Node should be a list of <name, value, children, type>",

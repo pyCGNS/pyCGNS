@@ -2008,7 +2008,7 @@ def childNames(node):
 def childrenNames(node):
   """Gets the children names as a list of strings::
 
-     for c in childNames(node):
+     for c in childrenNames(node):
        print '%s/%s'%(node[0],c)
        
   :arg CGNS/Python node: the parent node
@@ -2364,6 +2364,11 @@ def stringNameMatches(node,reval):
   return stringMatches(node[0],reval)
 
 # --------------------------------------------------
+def stringTypeMatches(node,reval):
+  """Returns re.group if the pattern matches the node type, None otherwise"""
+  return stringMatches(node[3],reval)
+
+# --------------------------------------------------
 def stringValueMatches(node,reval):
   """True if the string matches the node value"""
   if (node is None):             return False
@@ -2388,6 +2393,11 @@ def stringValueInList(node,listval):
     vn=node[1].tostring()
   else: return False
   return vn in listval
+
+# --------------------------------------------------
+def isLinkNode(tree,links,node):
+  """Returns True if the node is a linked node"""
+  pass
 
 # --------------------------------------------------
 def checkLinkFile(lkfile,lksearch=['']):

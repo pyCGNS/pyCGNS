@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/regexp.png</file>
     <file>icons/link-dst.png</file>
     <file>icons/link-dst.png</file>
     <file>icons/link-src.png</file>

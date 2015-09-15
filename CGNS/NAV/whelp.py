@@ -645,6 +645,16 @@ shows you which is the actual original file name and the temporary filename.
 """
 <h2>Tools panel</h2>
 
+<h1>Search</h1>
+The SIDS type can be selected as a choice in the CGNS/SIDS types or you
+can enter your own pattern for regexp search. In that later case, you have to
+press [ENTER] once you have typed down the actual search string.
+
+The Children checks are performed with a OR clause.
+If you require a child to be named 'FamilyName' for example, then the check
+is True if at least one child has this name. With the NOT clause, the check
+is True if NO child has the name 'FamilyName'.
+
 """),
 # --------------------------------------------------------------------------
 'Message':('Message window',

@@ -624,7 +624,7 @@ Search all <b>UserDefinedData_t</b> nodes with a non-<b>MT</b> data type.
 
 No argument.
 """,False,False),
-      
+# -----------------------------------------------------------------------------
 ('012. FamilyName',
  'Search by',
 """
@@ -635,7 +635,7 @@ if (SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]):
 Search by
 All <b>FamilyName_t</b> and <b>AdditionalFamilyname_t</b> nodes.
 """,False,False),
-
+# -----------------------------------------------------------------------------
 ('013. FamilyName reference',
  'Search by',
 """
@@ -644,12 +644,18 @@ if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
     RESULT=True
 """,
 """
-Search by
-Reference to a FamilyName
+Search by<br>
+Reference to a FamilyName<br>
 
-Search all <b>FamilyName</b> nodes with the arg string (plain).
+Search all <b>FamilyName</b> nodes with the arg string (plain).<br>
+The string arg should be a valid Python string such as:<br>
+
+'BLADE(1)'<br>
+'Surface ext 1A'<br>
+'Left/Wing/Flap'<br>
+
 """,False,True),
-
+# -----------------------------------------------------------------------------
 ('014. Zones',
  'Search by',
 """
@@ -660,7 +666,7 @@ if (SIDSTYPE in [CGK.Zone_ts]):
 Search by
 All <b>Zone_t</b> nodes.
 """,False,False),
-
+# -----------------------------------------------------------------------------
 ('015. Zones Structured',
  'Search by',
 """
@@ -673,7 +679,7 @@ if (SIDSTYPE in [CGK.Zone_ts]):
 Search by
 All <b>Zone_t</b> with Structured <b>ZoneType</b> nodes.
 """,False,False),
-
+# -----------------------------------------------------------------------------
 ('016. Zones Unstructured',
  'Search by',
 """
@@ -686,7 +692,7 @@ if (SIDSTYPE in [CGK.Zone_ts]):
 Search by
 All <b>Zone_t</b> with Unstructured <b>ZoneType</b> nodes.
 """,False,False),
-
+# -----------------------------------------------------------------------------
 ('017. BCs',
  'Search by',
 """
@@ -699,7 +705,7 @@ All <b>BC_t</b> nodes.
 """,False,False),
 
 # --- Replace
-
+# -----------------------------------------------------------------------------
 ('050. Valued UserDefinedData',
  'Replace',"""
 if (     (SIDSTYPE==CGK.UserDefinedData_ts)
@@ -741,6 +747,31 @@ the second as the subsitution pattern. For example:
 <pre>
 ('domain.','zone#')
 </pre>
+""",True,True),
+
+# -----------------------------------------------------------------------------
+('052. FamilySpecified BC type rewrite',
+ 'Replace',
+"""
+if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
+    (VALUE.tostring()==ARGS[0]) and (PARENT[3]==CGK.BC_ts)):
+    PARENT[1]=CGU.setStringAsArray(CGK.FamilySpecified_s)
+    RESULT=True
+""",
+"""
+<h1>Replace</h1>
+<h2>FamilySpecified BC type rewrite</h2>
+<p>
+Search all <b>FamilyName BC</b> nodes with the arg string (plain).<br>
+The string arg should be a valid Python string such as:<br>
+
+'BLADE(1)'<br>
+'Surface ext 1A'<br>
+'Left/Wing/Flap'<br>
+
+<p>
+Once found, the parent <b>BC_t</b> value is forced to <b>FamilySpecified</b>
+
 """,True,True),
 
 # --- Find Elements_t

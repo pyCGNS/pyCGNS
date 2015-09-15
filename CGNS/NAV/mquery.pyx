@@ -55,7 +55,7 @@ def evalScript(node,parent,tree,links,skips,path,val,args,selected):
     try:
       eval(compile(pre,'<string>','exec'),globals(),l)
     except Exception:
-      l[OCST.Q_VAR_RESULT_LIST][0]=False
+      l['%(Q_VAR_RESULT_LIST)s'][0]=False
     RESULT=l['%(Q_VAR_RESULT_LIST)s'][0]
     return RESULT
 # -----------------------------------------------------------------
@@ -85,7 +85,7 @@ def run(tree,links,skips,mode,args,script,selected):
     except:
         pass
     _args=v
-    result=parseAndSelect(tree,tree,[None,None,[],None],links,skip,'',
+    result=parseAndSelect(tree,tree,[None,None,[],None],links,skips,'',
                           script,_args,selected,mode)
     return result
 # -----------------------------------------------------------------
@@ -201,7 +201,7 @@ class Q7QueryEntry(object):
         self._args=v
         result=parseAndSelect(tree,tree,[None,None,[],None],links,skips,'',
                               self._script,self._args,selected,mode)
-        print result
+        #print result
         return result
     def getFullScript(self,filename,text,args):
         datadict={}
