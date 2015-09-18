@@ -210,24 +210,12 @@ def search(incs,libs,tag='pyCGNS',
        
     # -----------------------------------------------------------------------
     if ('CHLone' in deps):
-      incs=incs+C.CHLONE_PATH_INCLUDES
-      libs=libs+C.CHLONE_PATH_LIBRARIES
-      tp=find_CHLone(incs,libs,C.CHLONE_LINK_LIBRARIES)
-      if (tp is None):
-        print pfx+'ERROR: setup cannot find CHLone!'
-        C.HAS_CHLONE=False
-      else:
-        (C.CHLONE_VERSION,
-         C.CHLONE_PATH_INCLUDES,
-         C.CHLONE_PATH_LIBRARIES,
-         C.CHLONE_LINK_LIBRARIES,
-         C.CHLONE_EXTRA_ARGS,ifound,lfound)=tp
-        print pfx+'using CHLone %s'%(C.CHLONE_VERSION,)
-        print pfx+'using CHLone headers from %s'%ifound
-        print pfx+'using CHLone libs from %s'%lfound
+      try:
+        import CHLone
         C.HAS_CHLONE=True
-      incs=incs+C.CHLONE_PATH_INCLUDES
-      libs=libs+C.CHLONE_PATH_LIBRARIES
+      except:
+        print pfx+'ERROR: setup cannot import CHLone!'
+        C.HAS_CHLONE=False
        
     # -----------------------------------------------------------------------
 
@@ -511,65 +499,6 @@ def find_MLL(pincs,plibs,libs,extraargs):
 
   libs=list(set(libs))
   return (cgnsversion,pincs,plibs,libs,extraargs,ifound,lfound)
-
-# --------------------------------------------------------------------
-def find_CHLone(pincs,plibs,libs):
-  extraargs=[]
-  vers=''
-  notfound=1
-  libs=['CHLone']
-  pincs=unique_but_keep_order(pincs)
-  plibs=unique_but_keep_order(plibs)
-  ifound=''
-  lfound=''
-  for pth in plibs:
-    if (    (os.path.exists(pth+'/libCHLone.a'))
-         or (os.path.exists(pth+'/libCHLone.so'))
-         or (os.path.exists(pth+'/libCHLone.sl'))):
-      notfound=0
-      plibs=[pth]
-      lfound=pth
-      break
-  if notfound:
-    print pfx+"ERROR: libCHlone not found, please check paths:"
-    for ppl in plibs:
-      print pfx,ppl
-    return None
-
-  notfound=1      
-  for pth in pincs:
-    if (os.path.exists(pth+'/CHLone/CHLone.h')):
-      fh=open(pth+'/CHLone/config.h','r')
-      fl=fh.readlines()
-      fh.close()
-      found=0
-      vma=0
-      vmi=0
-      for ifh in fl:
-        if (ifh[:21] == "#define CHLONE_MAJOR "):
-          vma=ifh.split()[-1]
-        if (ifh[:21] == "#define CHLONE_MINOR "):          
-          vmi=ifh.split()[-1]
-          found=1
-      if found:
-        vers="%s.%s"%(vma,vmi)
-        pincs=[pth]
-        notfound=0
-        ifound=pth
-        break
-  if notfound:
-    print pfx+"ERROR: CHLone/CHLone.h not found, please check paths"
-    for ppi in pincs:
-      print pfx,ppi
-    return None
-
-  try:
-    import CHLone
-    vers=CHLone.version
-  except:
-    print pfx+"ERROR: import CHLone failed, please check PYTHONPATH (and/or LD_LIBRARY_PATH)"
-
-  return (vers,pincs,plibs,libs,extraargs,ifound,lfound)
 
 # --------------------------------------------------------------------
 def find_numpy(pincs,plibs,libs):

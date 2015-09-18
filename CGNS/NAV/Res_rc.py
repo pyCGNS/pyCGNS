@@ -2,12 +2,11 @@
 
 # Resource object code
 #
-# Created: Wed Sep 2 11:43:18 2015
-#      by: The Resource Compiler for PyQt (Qt v4.6.2)
+# Created by: The Resource Compiler for PyQt (Qt v4.8.5)
 #
 # WARNING! All changes made in this file will be lost!
 
-from PySide import QtCore
+from PyQt4 import QtCore
 
 qt_resource_data = "\
 \x00\x00\x06\xee\

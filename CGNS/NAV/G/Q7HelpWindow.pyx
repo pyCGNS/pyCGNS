@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'NAV/T/Q7HelpWindow.ui'
+# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7HelpWindow.ui'
 #
-# Created: Mon Jun 29 10:47:24 2015
+# Created: Fri Sep 18 10:21:00 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
