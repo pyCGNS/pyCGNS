@@ -1289,6 +1289,38 @@ def getPathByNameFilter(tree,filter):
   return getPathsByNameFilter(tree,filter)
 
 # --------------------------------------------------
+def getPathsByTokenFilter(tree,filter):
+  """
+  Returns a list of paths from T matching the filter. The filter is a
+  `regular expression <http://docs.python.org/library/re.html>`_
+  used to match at least one of the token of the path::
+
+   import CGNS.PAT.cgnskeywords as CK
+
+   for path in getPathsByTokenFilter(T,'Family.*'):
+      print 'Family ',path,' is ',path[2]
+
+  :arg CGNS/Python tree: target tree to parse
+  :arg str filter: a regular expression for the token to match to
+  :return:
+    - A list of paths (strings) matching the path pattern
+    - Returns empty list if no match
+  :Remarks:
+    - You cannot use the regex to match for a path
+    - Always skips `CGNSTree_t`
+   
+  """
+  lpth=getAllPaths(tree)
+  reg=re.compile(filter)
+  rpth=[]
+  for p in lpth:
+    pl=getPathToList(p,True)
+    for tk in pl:
+      if (reg.match(tk) is not None):
+        rpth.append(p)
+  return rpth
+ 
+# --------------------------------------------------
 def getPathsByNameFilter(tree,filter):
   """
   Returns a list of paths from T matching the filter. The filter is a
@@ -1307,7 +1339,9 @@ def getPathsByNameFilter(tree,filter):
     - Returns empty list if no match
   :Remarks:
     - The '/' is the separator for the path tokens, so you cannot use it
-      in the regular expression for any other purpose
+      in the regular expression for any other purpose. Then you cannot match
+      any number of tokens in the filter, you must have the exact count of
+      '/' chars.
     - Always skips `CGNSTree_t`
    
   """

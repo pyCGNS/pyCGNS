@@ -18,14 +18,23 @@ def mergeTrees(treelist):
         tmaster=mergeTwoTrees(tmaster,tslave)
     return tmaster
 
-def mergeTwoTrees(TM,TS):
-    TR=[TM[0],TM[1],TM[2],TM[3]]
-    for C_S in TS[2]:
-        C_M=CGU.hasChildName(TM,C_S)
-        if C_M is None:
-            TR[2].append(C_S)
-        else:
-            TR[2].append(mergeTwoTrees(C_M,C_S))
+def mergeTwoTrees(TM,TS,path=''):
+    TR=[TM[0],TM[1],[],TM[3]]
+    C_M=set(CGU.childrenNames(TM))
+    C_S=set(CGU.childrenNames(TS))
+    C_L=C_M.symmetric_difference(C_S)
+    for C in C_L:
+        #print 'add   ',path+'/'+C
+        if (C in C_M): T=TM
+        else:          T=TS
+        C_N=CGU.hasChildNode(T,C)
+        TR[2].append(C_N)
+    C_L=C_M.intersection(C_S)
+    for C in C_L:
+        #print 'merge ',path+'/'+C
+        TR[2].append(mergeTwoTrees(CGU.hasChildNode(TM,C),
+                                   CGU.hasChildNode(TS,C),
+                                   path+'/'+C))
     return TR
 
 def test():

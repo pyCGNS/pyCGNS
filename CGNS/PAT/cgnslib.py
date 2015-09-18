@@ -868,7 +868,7 @@ def newBCDataSet(parent,name,valueType=CK.Null_s):
   return node
 
 # ---------------------------------------------------------------------------  
-def newBCData(parent,name):
+def newBCData(parent,name=CK.NeumannData_s):
   """-BCData node creation -BCData
   
   'newNode:N='*newBCData*'(parent:N,name:S)'
