@@ -29,7 +29,7 @@ def genTrees():
   d=CGL.newDataArray(g,CGK.CoordinateZ_s,NPY.ones((5,7),dtype='d',order='F'))
   return (T,)
 
-class CHLoneTestCase(unittest.TestCase):
+class MAPTestCase(unittest.TestCase):
   def setUp(self):
     try:
       self.T=genTrees()[0]
@@ -112,7 +112,7 @@ class CHLoneTestCase(unittest.TestCase):
     self.chmod(self.HDF02,0)
     self.assertRaisesRegexp(CHLone.CHLoneException,
                             "[100].*",CHLone.save,self.HDF02,
-                            self.T,flags=CHLone.FUPDATE|CHLone.FTRACE)
+                            self.T,flags=CHLone.FUPDATE)
     self.unlink(self.HDF02)
   def test_013_Save_03(self):
     import CHLone
@@ -142,7 +142,9 @@ class CHLoneTestCase(unittest.TestCase):
     CHLone.save(self.HDF01,self.T)
     (t,l,p)=CHLone.load(self.HDF01)
 
-suite = unittest.TestLoader().loadTestsFromTestCase(CHLoneTestCase)
+# ---
+print '-'*70+'\nCGNS.MAP test suite'
+suite = unittest.TestLoader().loadTestsFromTestCase(MAPTestCase)
 unittest.TextTestRunner(verbosity=2).run(suite)
 
 # --- last line

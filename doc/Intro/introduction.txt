@@ -44,19 +44,19 @@ The pyCGNS module now includes (former package names)
    the *CGNS/Python* mapping. This is pure python module, it creates and modify
    CGNS/Python trees without the help of any HDF5 or even ADf calls.
 
- - `NAV <NAV/readme.html>`_, the Navigater (pyS7), a graphical browser that can
+ - `NAV <NAV/readme.html>`_, the Navigater (was pyS7), a graphical browser that can
    handle *CGNS/Python*, *CGNS/HDF5* and *CGNS/ADF* file formats. It is slightly
    different to *cgnsviewer* because it actually is a tree editor, you can 
    copy/cut/paste CGNS/Python trees and quickly draft or modify your CGNS tree.
 
- - `WRA <WRA/readme.html>`_, the Wrapper (pyCGNS), is a *CGNS/MLL* and 
+ - `WRA <WRA/readme.html>`_, the Wrapper (was the original pyCGNS), is a *CGNS/MLL* and 
    *CGNS/ADF* Python wrapping. All the CGNS/MLL functions are mapped to their
    Python clone.
 
- - VAL,the Validater (pyC5), an XML grammar based validation of a *CGNS/Python*
+ - VAL,the Validater (was pyC5), an XML grammar based validation of a *CGNS/Python*
    tree, for example produced using *MAP* or *PAT*.
 
- - DAT, the DataTracer (pyDAX), some DBMS services for *CGNS/HDF5* files.
+ - DAT, the DataTracer (was pyDAX), some DBMS services for *CGNS/HDF5* files.
    *Not maintained anymore in v4.0 (to be resumed 2014/2015)*
 
  - APP, the ApplicationSampler, a set of applications using other modules.
@@ -123,7 +123,7 @@ Re-using your CGNS/MLL scripts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 If you really want to use CGNS/MLL, for example if you have a large toolbox 
 with old pyCGNS scripts you have to change your
-imports from `CGNS.WRA` to {CGNS.WRA.wrapper` for functions::
+imports from `CGNS.WRA` to `CGNS.WRA.wrapper` for functions::
 
     import CGNS.WRA.wrapper
 
@@ -134,7 +134,7 @@ imports from `CGNS.WRA` to {CGNS.WRA.wrapper` for functions::
 Browsing your CGNS tree with NAV
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The CGNS.NAV tool is a CGNS tree brower. You start it typing ``CGNS.NAV``
-and you can open several views on your file. 
+(or ``cg_look``) and you can open several views on your file. 
 
 .. image:: ../images/cgnsnav_quick_1.png
    :width: 24cm

@@ -14,7 +14,7 @@ import string
 KEY='SAMPLE'
 FILES=False
 CGNSCHECK=False
-TRACE=True
+TRACE=False
 
 try:
   import CGNS.PRO

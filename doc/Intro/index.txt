@@ -44,8 +44,8 @@ provide the application developpers with a Python interface to
 :term:`CGNS/SIDS`, the CGNS data model.  The `CFD General Notation System
 (CGNS) <http://www.cgns.org>`_ is both a data model for CFD and an
 implementation of this data model. CGNS should not be reduced to a
-file format and you can understand why by using pyCGNS without any
-file at all for your actual CFD data! 
+file format, you can use pyCGNS without any file at all for your 
+actual CFD data! 
 
 
 .. sidebar:: Release 4.4.490
@@ -55,9 +55,10 @@ file at all for your actual CFD data!
 There are seven sub-modules in
 *pyCGNS*, some of them are libraries of functions, some other are
 tools and some are gathering various scripts and examples.
-The *MAP* and *PAT* modules are the most important modules: map the 
-:term:`CGNS/SIDS` data model the :term:`CGNS/Python` implementation. 
-The *WRA* module contains wrapper on :term:`CGNS/MLL`
+The *MAP* and *PAT* modules are the most important modules, they map the 
+:term:`CGNS/SIDS` data model as :term:`CGNS/Python` implementation and
+provide manipulation function for it.
+The *WRA* module contains a wrapper on :term:`CGNS/MLL`
 and a *MLL-like* set of functions that uses the
 :term:`CGNS/Python` mapping as implementation.
 The *NAV* module supports the *CGNS.NAV* graphical browser, with nice
@@ -79,10 +80,8 @@ instead of :term:`CGNS/MLL` to map its :term:`CGNS/Python` trees to *HDF5*.
   The *pyCGNS* python package is released 
   under `LGPL2 license <http://opensource.org/licenses/lgpl-2.1>`_ and hosted 
   by `sourceforge <http://sourceforge.net/projects/pycgns>`_
-  where you can find 
-  `source download <http://sourceforge.net/projects/pycgns/files>`_, 
-  `help forum <https://sourceforge.net/p/pycgns/mailman/pycgns-forum/>`_, 
-  and `bug tracking <http://sourceforge.net/apps/trac/pycgns/report/6>`_.
+  where you can find there the
+  `source download <http://sourceforge.net/projects/pycgns/files>`_.
 
 The listed chapters are the introduction chapters, each MAP, PAT, WRA, 
 NAV, VAL module has its own documentation which doesn't appear below.

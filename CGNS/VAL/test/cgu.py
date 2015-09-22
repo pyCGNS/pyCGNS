@@ -3,7 +3,7 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-# TESTING WRA
+# TESTING VAL
 #
 
 import unittest
@@ -18,15 +18,16 @@ import os
 import string
 import subprocess
 
-class WRATestCase(unittest.TestCase):
+class VALTestCase(unittest.TestCase):
   def setUp(self):
-    print "SKIP WRA tests (process do require a ./tmp directory)"
+    pass
   def test_001_Base_write_close(self):
-    import wra_001
+    import CGNS.VAL.suite.run
+    CGNS.VAL.suite.run.runall()
 
 # ---
-print '-'*70+'\nCGNS.WRA test suite'
-suite = unittest.TestLoader().loadTestsFromTestCase(WRATestCase)
+print '-'*70+'\nCGNS.VAL test suite'
+suite = unittest.TestLoader().loadTestsFromTestCase(VALTestCase)
 unittest.TextTestRunner(verbosity=2).run(suite)
 
 # --- last line

@@ -226,7 +226,7 @@ Examples
 
    examples
 
-.. include:: ../doc/Intro/glossary.txt
+.. include:: ../../Intro/glossary.txt
    
 .. _map_index:
 

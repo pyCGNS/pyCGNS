@@ -13,7 +13,8 @@ Build and Install
    pair: Installation; hdf5
    pair: Installation; CHLone
 
-The installation described here is for UNIX platforms only.
+The installation described here is for UNIX platforms only. The MS-Windows version is distributed as
+a self-installable Windows package.
 
 The installation process is easy in the case you already have the required
 libraries and a standard configuration.
@@ -35,16 +36,16 @@ need *libcgns*.
 
   The *libcgns* (:term:`CGNS/MLL`) is **NOT** required for pyCGNS.
   You need it if you want the **WRA** module, all other pyCGNS tools
-  are using :term:`CHLone`.
+  are using :term:`CHLone` and have 100% features even without `CGNS/MLL`.
 
 The complete set of required tools/modules/libraries contains Python, HDF5
 and other graphical toolkits:
 
 * `Python <http://www.python.org>`_ (starting from v2.4)
 * `numpy <http://numpy.scipy.org>`_ (v1.1 +)
-* `cython <http://www.cython.org>`_ (v0.16 +)
+* `cython <http://www.cython.org>`_ (v0.19 +)
 * `hdf5 <http://www.hdfgroup.org>`_ (v1.8.5 +)
-* `CHLone <http://chlone.sourceforge.net>`_ (v0.4 +)
+* `CHLone <http://chlone.sourceforge.net>`_ (v0.39 +)
 * `VTK <http://www.vtk.org>`_ (v5.8 +)
 * `Qt <http://qt.nokia.com/products>`_ (v4.7 +)
 * `pySide <http://www.pyside.org>`_ (v4.7 +)

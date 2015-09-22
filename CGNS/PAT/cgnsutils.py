@@ -311,10 +311,14 @@ def checkChildName(parent,name,dienow=False):
 
   :arg CGNS/Python parent: the parent node
   :arg str name: the child name to look for
+
   :return: True if the child exists
+
   :Remarks:
+
     - Same function as ``checkDuplicatedName`` but with the **NOT** return
-     (see :py:func:`checkDuplicatedName`)
+      (see :py:func:`checkDuplicatedName`)
+
   :raise: :ref:`cgnsnameerror` code 102 if `dienow` is True
   
   """
@@ -726,13 +730,13 @@ def setValue(node,value):
   
 # -----------------------------------------------------------------------------
 def setStringByPath(T,path,s):
-  """Creates a 1D numpy.ndarray from one string,
-     set to node by path::
+  """
+  Creates a 1D numpy.ndarray from one string, set to node by path::
 
-     p='/{Base#1}/BaseIterativeData/DataClass'
-     setStringByPath(T,p,'UserDefined')
+    p='/{Base#1}/BaseIterativeData/DataClass'
+    setStringByPath(T,p,'UserDefined')
 
-     """
+  """
   node=getNodeByPath(T,path)
   v=setStringAsArray(s)
   if (v is not None): setValue(node,v)
@@ -742,7 +746,7 @@ def setStringByPath(T,path,s):
 def setStringAsArray(a):
   """Creates a numpy.ndarray from a string::
 
-     setStringAsArray('UserDefined')
+       setStringAsArray('UserDefined')
 
   """
   if ((type(a)==type(NPY.array((1))))
@@ -756,7 +760,8 @@ def setStringAsArray(a):
 def setIntegerByPath(T,path,*i):
   """Creates a 1D numpy.ndarray from one or more integers,
      set to node by path. Same as :py:func:`setLongByPath` but with a
-     numpy.int32 data type."""
+     numpy.int32 data type.
+  """
   if (type(i)==type(None) or (len(i)==0)): raise CE.cgnsNameError(112)
   node=getNodeByPath(T,path)
   setValue(node,NPY.array(i,dtype='i'))
@@ -766,7 +771,8 @@ def setIntegerByPath(T,path,*i):
 def setIntegerAsArray(*i):
   """Creates a 1D numpy.ndarray from one or more integers.
      Same as :py:func:`setLongAsArray` but with a
-     numpy.int32 data type."""
+     numpy.int32 data type.
+  """
   if (type(i)==type(None) or (len(i)==0)): raise CE.cgnsNameError(112)
   return NPY.array(i,dtype='i')
 
@@ -850,7 +856,7 @@ def setDoubleByPath(T,path,*d):
 # -----------------------------------------------------------------------------
 def setDoubleAsArray(*d):
   """Creates a 1D numpy.ndarray from one or more doubles.
-     Same as :py:func:`setFloatByArray` but with a
+     Same as :py:func:`setFloatAsArray` but with a
      numpy.float64 data type."""
   if (type(d)==type(None) or (len(d)==0)): raise CE.cgnsNameError(112)
   return NPY.array(d,dtype='d')
@@ -2325,6 +2331,9 @@ def hasEnumValue(node):
     
 # -----------------------------------------------------------------------------
 def hasChildName(parent,name,dienow=False):
+  """
+  Finds a child with a target name. Returns the node.
+  """
   return hasChildNode(parent,name,dienow)
   
 # -----------------------------------------------------------------------------

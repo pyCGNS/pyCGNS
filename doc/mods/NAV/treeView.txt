@@ -14,21 +14,21 @@ from this view.
 The *Tree view* shows you the tree of nodes in a table-like way, you can
 see at the same time many informations on a complete sub-tree.
 
-.. image:: ../doc/images/tree_view_3.png
+.. image:: ../../../doc/images/tree_view_3.png
    :width: 20cm
 
 A *Tree view* can be a view of a sub-tree of your current view. Select the
 top node you want as sub-tree root, press *<Control-W>* and the new window
 appears (see [#n0]_).
 
-.. image:: ../doc/images/tree_view_4.png
+.. image:: ../../../doc/images/tree_view_4.png
    :width: 20cm
 
 You can track with the *Control view* wich window you have on which node.
 To find back the *Control view* when you are in a *Tree view*, press
 *<BackSpace>*.
 
-.. image:: ../doc/images/tree_view_5.png
+.. image:: ../../../doc/images/tree_view_5.png
    :width: 20cm
 
 .. note::

@@ -4,6 +4,6 @@
 #  -------------------------------------------------------------------------
 
 def run():
-  print '### pyCGNS TEST: no APP tests available'
+  import CGNS.APP.test.cgu
 
 # --- last line

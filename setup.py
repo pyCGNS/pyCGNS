@@ -267,7 +267,7 @@ if (NAV and CONFIG.HAS_PYSIDE):
       print com
       os.system(com)
 
-  ALL_PACKAGES+=['CGNS.NAV']
+  ALL_PACKAGES+=['CGNS.NAV','CGNS.NAV.test']
   ALL_SCRIPTS+=['CGNS/NAV/CGNS.NAV']
   ALL_EXTENSIONS+=modextlist
 

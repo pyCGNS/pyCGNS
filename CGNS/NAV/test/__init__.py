@@ -4,6 +4,6 @@
 #  -------------------------------------------------------------------------
 
 def run():
-  print '### pyCGNS TEST: no NAV tests available'
+  import CGNS.NAV.test.cgu
 
 # --- last line

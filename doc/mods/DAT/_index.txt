@@ -14,7 +14,7 @@ CGNS files.
 
 .. _dat_index:
 
-.. include:: ../doc/Intro/glossary.txt
+.. include:: ../../Intro/glossary.txt
 
 DAT Index
 ---------

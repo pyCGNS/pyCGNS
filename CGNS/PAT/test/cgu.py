@@ -7,7 +7,7 @@ import unittest
 
 # --------------------------------------------------
 # should not be documented with docstrings
-class CGUTestCase(unittest.TestCase):
+class PATTestCase(unittest.TestCase):
   def setUp(self):
     self.T=None
   def eStr(self,code):
@@ -265,6 +265,9 @@ class CGUTestCase(unittest.TestCase):
     self.assertIsNone(CGU.hasChildName(r,'Data'))
 
 # ---
-suite = unittest.TestLoader().loadTestsFromTestCase(CGUTestCase)
-unittest.TextTestRunner(verbosity=1).run(suite)
-# ---
+print '-'*70+'\nCGNS.PAT test suite'
+suite = unittest.TestLoader().loadTestsFromTestCase(PATTestCase)
+unittest.TextTestRunner(verbosity=2).run(suite)
+
+# --- last line
+

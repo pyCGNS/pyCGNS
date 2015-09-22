@@ -20,14 +20,12 @@ source_suffix = '.txt'
 import os
 master_doc=os.environ['PYCGNSDOC']
 project = u'pyCGNS'
-copyright = u'2001-2012, Marc Poinot'
+copyright = u'2001-2016, Marc Poinot'
 version = '4'
 release = '4.2.0'
 unused_docs = ['license.txt']
-exclude_trees = ['VALidater','TRAnslater','DATaTracer','APPlicater',
-                 'build','doc','lib','.hg']
-exclude_dirnames = ['VALidater','TRAnslater','DATaTracer','APPlicater',
-                 'build','doc','lib','.hg']
+exclude_trees = ['build','doc','lib','.hg']
+exclude_dirnames = ['build','doc','lib','.hg']
 
 pygments_style = 'sphinx'
 html_theme = 'pycgns'

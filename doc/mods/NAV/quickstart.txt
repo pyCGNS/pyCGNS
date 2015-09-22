@@ -10,7 +10,7 @@ The first window you see when you start ``CGNS.NAV`` is the *Control View*.
 This main view helps you to find out the views you have and on which 
 CGNS tree they refer to. 
 
-.. image:: ../doc/images/control_view_1.png
+.. image:: ../../../doc/images/control_view_1.png
    :width: 20cm
 
 If you select the line of an existing view in the
@@ -19,7 +19,7 @@ You can find back the *Control view* from any other view
 just pressing the `BackSpace` key 
 (See :ref:`Key/Mouse Bindings <keymousebindings>`).
 
-.. image:: ../doc/images/control_view_2.png
+.. image:: ../../../doc/images/control_view_2.png
    :width: 7cm
 
 From its icon menu you can *create* a new CGNS/Python tree, you can *Load*
@@ -29,7 +29,7 @@ the *Option View* and an info about ``CGNS.NAV`` version.
 Each time you open a view on a file, the *Control* keeps track of it, you
 can check all the views you may have on the same file.
 
-.. image:: ../doc/images/control_view_3.png
+.. image:: ../../../doc/images/control_view_3.png
    :width: 20cm
 
 The columns of the lines you see in this *Control* view are:
@@ -45,7 +45,7 @@ The *Tree View* appears when you *create* a new tree or when you *open*
 an existing one. The tree below is a large one and we have a lot of
 information. 
 
-.. image:: ../doc/images/tree_view_1.png
+.. image:: ../../../doc/images/tree_view_1.png
    :width: 20cm
 
 You click on the *+/-* icon before any node name in the tree to open/close 
@@ -55,7 +55,7 @@ selected node. The menu gives you access to some function such as Copy/Paste,
 change node name, type, add a child... Most of these functions have keyboard
 shortcuts.
 
-.. image:: ../doc/images/tree_view_2.png
+.. image:: ../../../doc/images/tree_view_2.png
    :width: 20cm
 
 .. -------------------------------------------------------------------------

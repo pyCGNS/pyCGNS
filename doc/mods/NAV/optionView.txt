@@ -11,7 +11,7 @@ for *CGNS.NAV*. You should be sure the right options are set because some
 of these are very important and could change the actual contents of a 
 file you want to store.
 
-.. image:: ../doc/images/options_view_1.png
+.. image:: ../../../doc/images/options_view_1.png
    :width: 22cm
 
 You can change values in the *Option view* or edit the ``.cgnsnavoptions.py``
@@ -20,13 +20,13 @@ key bindings only in the ``.cgnsnavoptions.py`` file. This file is a plain
 Python file, it is imported and re-generated each time you run 
 ``CGNS.NAV``.
 
-The ``.cgnsnavhistory.py`` contains the history of directories where you
+The ``.CGNS.NAV/historyfile.py`` contains the history of directories where you
 opened a *CGNS* file.
 
 Options
 ~~~~~~~
 
-The check-box options are active when the box is *checked* (wouahahah !).
+The check-box options are active when the box is *checked*.
 Some are only related to the display of the data, some other are driving
 the way *CGNS.NAV* reads or writes the data on disk and have a strong
 impact on the  actual CGNS file you will obtain.
@@ -87,7 +87,7 @@ Default key/mouse bindings per view
 
 The *<C-x>* notation stands for *<Control-X>*, that is pressing the *Control*
 key and the *X* letter key at the same time. The mouse actions can be a
-*Single* or a *Double* click on the *L*eft, *M*iddle or *R*ight button.
+*Single* or a *Double* click on the Left, Middle or Right button.
 
 +-------------+-------------+------------------------------------------------+
 | View        | Key/Mouse   | Action                                         |

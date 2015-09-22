@@ -8,5 +8,5 @@
 def run():
   print '### pyCGNS TEST: starting WRA tests'
   import CGNS.WRA.test.wra_all
-#
+
 # --- last line

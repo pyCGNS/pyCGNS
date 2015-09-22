@@ -4,7 +4,6 @@
 #  -------------------------------------------------------------------------
 
 def run():
-  print '### pyCGNS TEST: starting MAP tests'
   import CGNS.MAP.test.cgu
 
 # --- last line

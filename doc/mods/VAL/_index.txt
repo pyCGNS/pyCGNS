@@ -80,7 +80,7 @@ Reference
 
 -----
 
-.. include:: ../doc/Intro/glossary.txt
+.. include:: ../../Intro/glossary.txt
 
 .. _val_index:
 

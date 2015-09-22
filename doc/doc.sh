@@ -24,13 +24,13 @@ do_mod()
 if test "x$STOPREBUILDINGDOCS" != "x"
 then
 do_mod intro index doc/Intro intro ' '
-do_mod PAT _index PATternMaker PAT /PAT
-do_mod NAV _index NAVigater NAV /NAV
-do_mod MAP _index MAPper MAP /MAP
-do_mod DAT _index DATaTracer DAT /DAT
-do_mod WRA _index WRApper WRA /WRA
-do_mod APP _index APPlicationSampler APP /APP
-do_mod VAL _index VALidater VAL /VAL
+do_mod PAT _index doc/mods/PAT PAT /PAT
+do_mod NAV _index doc/mods/NAV NAV /NAV
+do_mod MAP _index doc/mods/MAP MAP /MAP
+do_mod DAT _index doc/mods/DAT DAT /DAT
+do_mod WRA _index doc/mods/WRA WRA /WRA
+do_mod APP _index doc/mods/APP APP /APP
+do_mod VAL _index doc/mods/VAL VAL /VAL
 fi
 
 # --- ALL
