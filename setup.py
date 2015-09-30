@@ -70,11 +70,19 @@ if (args.incs!=None):
 if (args.libs!=None):
   libs=[os.path.expanduser(path) for path in args.libs.split(':')]
 
+print setuputils.pfx+'-'*65
+print setuputils.pfx+'      pyCGNS v%d.%d'%\
+      (setuputils.MAJORVERSION,setuputils.MINORVERSION)
+
+print setuputils.pfx+'-'*65
+
 try:
   (CONFIG,status)=setuputils.search(incs,libs)
 except setuputils.ConfigException, val:
   print 'Cannot build pyCGNS without:',val
   sys.exit(1)
+
+print setuputils.pfx+'-'*65
 
 new_args=[]
 for arg in sys.argv:

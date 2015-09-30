@@ -117,9 +117,9 @@ def search(incs,libs,tag='pyCGNS',
           if (float(Cython.__version__[:3])>0.1):
             C.HAS_CYTHON_2PLUS=True
           else:
-            print pfx+'warning Cython version cannot build CGNS/WRA'
+            print pfx+'***** warning Cython version cannot build CGNS/WRA'
         except:
-          print pfx+'warning Cython version cannot build CGNS/WRA'
+          print pfx+'***** warning Cython version cannot build CGNS/WRA'
       except:
         C.HAS_CYTHON=False
         print pfx+'FATAL: Cython not found'
@@ -213,6 +213,8 @@ def search(incs,libs,tag='pyCGNS',
       try:
         import CHLone
         C.HAS_CHLONE=True
+        print pfx+'using CHLone %s'%CHLone.version
+        
       except:
         print pfx+'ERROR: setup cannot import CHLone!'
         C.HAS_CHLONE=False
@@ -494,7 +496,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
       break
 
   if notfound:
-    print pfx+"Warning: ADFH.h not found, using pyCGNS own headers"
+    print pfx+"***** warning ADFH.h not found, using pyCGNS own headers"
     extraargs+=['-U__ADF_IN_SOURCES__']
 
   libs=list(set(libs))
