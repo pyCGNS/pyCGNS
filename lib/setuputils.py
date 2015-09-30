@@ -326,7 +326,7 @@ def updateConfig(pfile,gfile,config_default,config_previous=None):
     f.close()
     return
   elif (not os.path.exists("%s/pyCGNSconfig.py"%(gfile))):
-    print "### pyCGNS: create new pyCGNSconfig.py file"
+    print "# create new pyCGNSconfig.py file"
     newconf=1
   else:
     f1=os.stat("%s/pyCGNSconfig.py"%(gfile))
