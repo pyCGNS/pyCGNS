@@ -3,12 +3,14 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from CGNS.NAV.moption import Q7OptionContext  as OCTXT
+
 import sys
 import re
 import string
-from PySide.QtCore       import *
-from PySide.QtGui        import *
-from CGNS.NAV.moption import Q7OptionContext  as OCTXT
+
+from PySide.QtCore import *
+from PySide.QtGui  import *
 
 # -----------------------------------------------------------------
 class Q7DocEditor(QTextEdit):  

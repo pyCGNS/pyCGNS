@@ -5,7 +5,7 @@
 # Change these values to fit your installation
 #
 # --- If you leave empty the variables below the build process would
-#     try to guess for you, using the PATH you gave above.
+#     try to guess for you, using your current environment variables.
 #     Change these values only if you need to add/change something.
 #     Remove the comment (the first #) and change the value
 #

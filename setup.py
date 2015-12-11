@@ -14,21 +14,52 @@ from distutils.core import setup, Extension
 from distutils.util import get_platform
 from distutils      import sysconfig
 
+def line(m):
+   print "#","-"*70
+   print "# ----- %s"%m
+
+line('pyCGNS install')
+
 # --- get overall configuration
 sys.path=['./lib']+sys.path
 import setuputils
 
 doc1="""
-  pyCGNS installation setup -- pyCGNS v%s
-  
-  All setup options are unchanged, added options are:
+  pyCGNS installation setup 
+  - Usual python setup options are unchanged (build, install, help...)
+  - The recommanded way to build is to set your shell environment with
+    your own PATH, LD_LIBRARY_PATH and PYTHONPATH so that the setup would
+    find all expected ressources itself.
+  - You can either use the command line args as described below or edit
+    the setup_userConfig.py with the values you want.
+
+  All packages are installed if all expected dependancies are found.
+  See doc for more installation details and depend:
+  http://pycgns.sourceforge.net/install.html
 
 """
 
 doc2="""
   Examples:
 
+  1. The best way is to let setup find out required stuff, build and
+     install. This would need write access to python installation dirs:
+
+  python setup.py install
+
+  2. You can build and install in two separate commands
+
+  python setup.py build
+  python setup.py install
+
+  3. Specific paths would be used prior to any automatic detection:
+
   python setup.py build --includes=/usr/local/includes:/home/tools/include
+
+  4. Installation to a local directory (usual setup pattern)
+
+  python setup.py install --prefix=/home/myself/install
+
 """
 
 pr=argparse.ArgumentParser(description=doc1,epilog=doc2,
@@ -36,9 +67,9 @@ pr=argparse.ArgumentParser(description=doc1,epilog=doc2,
                            usage='python %(prog)s [options] file1 file2 ...')
 
 pr.add_argument("-I","--includes",dest="incs",
-                help='list of paths for include search ( : separated)')
+                help='list of paths for include search ( : separated), order is significant and is kept unchanged')
 pr.add_argument("-L","--libraries",dest="libs",
-                help='list of paths for libraries search ( : separated)')
+                help='list of paths for libraries search ( : separated), order is significant and is kept unchanged')
 pr.add_argument("-U","--update",action='store_true',
                 help='update version (dev only)')
 
@@ -59,6 +90,8 @@ NAV=True
 ALL_PACKAGES=[]
 ALL_SCRIPTS=[]
 ALL_EXTENSIONS=[]
+
+modules=""
 
 incs=[]
 libs=[]
@@ -90,10 +123,6 @@ if (args.update):
   setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py',
                                  CONFIG.PRODUCTION_DIR)
 
-def line(m):
-   print "###","-"*70
-   print "### %s"%m
-
 # -------------------------------------------------------------------------
 if APP:
   slist=['cg_grep','cg_list','cg_link',
@@ -113,10 +142,16 @@ if APP:
                  'CGNS.APP.examples',
                  'CGNS.APP.misc',
                  'CGNS.APP.test']
+  modules+="\n# APP   add  build"
+else:
+  modules+="\n# APP   skip build *"
 
 # -------------------------------------------------------------------------  
 if (MAP and CONFIG.HAS_CHLONE):
-   ALL_PACKAGES+=['CGNS.MAP','CGNS.MAP.test']
+  ALL_PACKAGES+=['CGNS.MAP','CGNS.MAP.test']
+  modules+="\n# MAP   add  build"
+else:
+  modules+="\n# MAP   skip build *"
 
 # -------------------------------------------------------------------------  
 if VAL:
@@ -142,6 +177,10 @@ if VAL:
                              include_dirs = CONFIG.INCLUDE_DIRS,
                              extra_compile_args=[])]
 
+  modules+="\n# VAL   add  build"
+else:
+  modules+="\n# VAL   skip build *"
+
 # -------------------------------------------------------------------------  
 if PAT:
   #if CONFIG.HAS_CYTHON:
@@ -152,6 +191,9 @@ if PAT:
                  'CGNS.PAT.SIDS',
                  'CGNS.PAT.elsA',
                  'CGNS.PAT.test']
+  modules+="\n# PAT   add  build"
+else:
+  modules+="\n# PAT   skip build *"
 
 # -------------------------------------------------------------------------  
 if (WRA and CONFIG.HAS_MLL and CONFIG.HAS_CYTHON_2PLUS):
@@ -183,6 +225,10 @@ if (WRA and CONFIG.HAS_MLL and CONFIG.HAS_CYTHON_2PLUS):
                                library_dirs = library_dirs,
                                libraries    = optional_libs)]
 
+  modules+="\n# WRA   add  build"
+else:
+  modules+="\n# WRA   skip build *"
+
 # -------------------------------------------------------------------------  
 if DAT:
   ALL_PACKAGES+=['CGNS.DAT',
@@ -193,6 +239,9 @@ if DAT:
   ALL_SCRIPTS+=['CGNS/DAT/tools/CGNS.DAT',
                 'CGNS/DAT/tools/daxQT',
                 'CGNS/DAT/tools/CGNS.DAT.create']
+  modules+="\n# DAT   add  build"
+else:
+  modules+="\n# DAT   skip build *"
 
 # -------------------------------------------------------------------------  
 if (NAV and CONFIG.HAS_PYSIDE):
@@ -271,6 +320,10 @@ if (NAV and CONFIG.HAS_PYSIDE):
   ALL_SCRIPTS+=['CGNS/NAV/CGNS.NAV']
   ALL_EXTENSIONS+=modextlist
 
+  modules+="\n# NAV   add  build"
+else:
+  modules+="\n# NAV   skip build *"
+
 setuputils.installConfigFiles(CONFIG.PRODUCTION_DIR)
 
 #  -------------------------------------------------------------------------
@@ -279,6 +332,9 @@ if (CONFIG.HAS_CYTHON):
   cmd={'clean':setuputils.clean,'build_ext':build_ext}
 else:
   cmd={'clean':setuputils.clean}
+
+print "#"+modules
+print "#\n# Running build now...\n#"
 
 # -------------------------------------------------------------------------  
 setup (

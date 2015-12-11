@@ -235,6 +235,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Help window</string>
+       </property>
        <property name="text">
         <string/>
        </property>

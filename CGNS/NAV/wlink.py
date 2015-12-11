@@ -3,22 +3,24 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #  
+from CGNS.NAV.moption import Q7OptionContext  as OCTXT
+
 import sys
 import string
 import os.path
 
-from PySide.QtCore  import *
-from PySide.QtGui   import QFileDialog
-from PySide.QtGui   import *
+import CGNS.MAP              as CGM
+import CGNS.PAT.cgnsutils    as CGU
+import CGNS.PAT.cgnskeywords as CGK
+
+from PySide.QtCore import *
+from PySide.QtGui  import QFileDialog
+from PySide.QtGui  import *
+
 from CGNS.NAV.Q7LinkWindow import Ui_Q7LinkWindow
-from CGNS.NAV.wfingerprint import Q7Window
-from CGNS.NAV.moption import Q7OptionContext  as OCTXT
+from CGNS.NAV.wfingerprint import Q7Window as QW
 
 import CGNS.NAV.wmessages as MSG
-
-import CGNS.MAP as CGM
-import CGNS.PAT.cgnsutils as CGU
-import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
 class Q7LinkItemDelegate(QStyledItemDelegate):
@@ -70,19 +72,18 @@ class Q7LinkItemDelegate(QStyledItemDelegate):
         QStyledItemDelegate.paint(self, painter, option, index)
 
 # -----------------------------------------------------------------
-class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
-    def __init__(self,parent,fgprint,master):
-        Q7Window.__init__(self,Q7Window.VIEW_LINK,parent,None,fgprint)
+class Q7LinkList(QW,Ui_Q7LinkWindow):
+    def __init__(self,parent,fgindex,master):
+        QW.__init__(self,QW.VIEW_LINK,parent,None,fgindex)
         self.bClose.clicked.connect(self.reject)
         self._lk2col=[4,2,3,1,0]
         self._col2lk=[4,3,1,2,0]
-        self._fgprint=fgprint
         self._master=master
-        self._links=fgprint.links
+        self._links=self.FG.links
         self.linkTable.setItemDelegate(Q7LinkItemDelegate(self,
-                                                          self._fgprint.model))
-        self.setLabel(self.eDirSource,fgprint.filedir)
-        self.setLabel(self.eFileSource,fgprint.filename)
+                                                          self.FG.model))
+        self.setLabel(self.eDirSource,self.FG.filedir)
+        self.setLabel(self.eFileSource,self.FG.filename)
         self.bInfo.clicked.connect(self.infoLinkView)
         self.bAddLink.clicked.connect(self.newLink)
         self.bDeleteLink.clicked.connect(self.removeLink)
@@ -90,6 +91,8 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
         self.bSave.clicked.connect(self.infoLinkView)
         self.bCheckLink.clicked.connect(self.checkLinks)
         self.bLoadTree.clicked.connect(self.loadLinkFile)
+    def doRelease(self):
+        self.reject()
     def loadLinkFile(self):
         i=self.linkTable.currentItem()
         if (i is None): return
@@ -133,26 +136,26 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
         super(Q7LinkList, self).show()
     def statusIcon(self,status):
         if (status ==CGM.S2P_LKOK):
-            it=QTableWidgetItem(self.I_L_OKL,'')
+            it=QTableWidgetItem(self.IC(QW.I_L_OKL),'')
             it.setToolTip('Link ok')
             return it
         if (status & CGM.S2P_LKNOFILE):
-            it=QTableWidgetItem(self.I_L_NFL,'')
+            it=QTableWidgetItem(self.IC(QW.I_L_NFL),'')
             it.setToolTip('File not found in search path')
             return it
         if (status & CGM.S2P_LKIGNORED):
-            it=QTableWidgetItem(self.I_L_IGN,'')
+            it=QTableWidgetItem(self.IC(QW.I_L_IGN),'')
             it.setToolTip('Link was ignored during load')
             return it
         if (status & CGM.S2P_LKFILENOREAD):
-            it=QTableWidgetItem(self.I_L_NRL,'')
+            it=QTableWidgetItem(self.IC(QW.I_L_NRL),'')
             it.setToolTip('File found, not readable')
             return it
         if (status & CGM.S2P_LKNONODE):
-            it=QTableWidgetItem(self.I_L_NNL,'')
+            it=QTableWidgetItem(self.IC(QW.I_L_NNL),'')
             it.setToolTip('File ok, node path not found')
             return it
-        it=QTableWidgetItem(self.I_L_ERL,'')
+        it=QTableWidgetItem(self.IC(QW.I_L_ERL),'')
         it.setToolTip('Unknown error')
         return it
     def reset(self):
@@ -170,7 +173,6 @@ class Q7LinkList(Q7Window,Ui_Q7LinkWindow):
         lh.setResizeMode(len(h)-1,QHeaderView.Stretch)
         v.setRowCount(len(self._links))
         r=0
-        print "RESET"
         for lk in self._links:
           print lk
           (ld,lf,ln,sn,st)=lk

@@ -5,6 +5,7 @@
 #
 import CGNS.PAT.cgnsutils
 import CGNS.PAT.cgnskeywords
+
 import numpy
 
 def getChildren(t):

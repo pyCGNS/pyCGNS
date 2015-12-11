@@ -3,12 +3,28 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from PySide.QtCore import QCoreApplication
-from PySide.QtCore import *
-from PySide.QtGui  import *
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+
 import os
 import os.path
 import re
+import sys
+import time
+import stat
+import sys
+
+import CGNS.MAP
+import CGNS.PAT.cgnsutils as CGU
+
+from PySide.QtCore import QCoreApplication
+from PySide.QtCore import *
+from PySide.QtGui  import *
+
+from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
+from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
+from CGNS.NAV.wfile        import checkFilePermission
+
+import CGNS.NAV.wmessages as MSG
 
 try:
   from pwd import getpwuid
@@ -20,18 +36,6 @@ try:
 except ImportError:
   def getgrgid(a):
     return (0,)
-import time
-import stat
-import sys
-import CGNS.MAP
-import CGNS.PAT.cgnsutils as CGU
-
-import CGNS.NAV.wmessages as MSG
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
-from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
-from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
-from CGNS.NAV.wfile import checkFilePermission
-
 
 # -----------------------------------------------------------------
 class Q7CHLoneProxy(object):
@@ -40,11 +44,14 @@ class Q7CHLoneProxy(object):
         self._hasthreads=hasthreads
         self._thread=None
     def kill(self):
-        if (self._thread is not None): self._thread.quit()
+        self._data=None
+        if (self._thread is not None): 
+          self._thread.quit()
     def load(self,control,selectedfile):
         self._control=control
         self._thread=Q7CHLoneThread(control,selectedfile)
-        self._thread.datacompleted.connect(self.proxyCompleted, Qt.QueuedConnection)
+        self._thread.datacompleted.connect(self.proxyCompleted, 
+                                           Qt.QueuedConnection)
         self._data=None
         if (self._hasthreads): self._thread.start()
         else:                  self._thread.run()
@@ -73,7 +80,8 @@ class Q7CHLoneThread(QThread):
         kw={}
         (filedir,filename)=(os.path.abspath(os.path.dirname(selectedfile)),
                             os.path.basename(selectedfile))
-        if ("%s/%s"%(filedir,filename) in Q7FingerPrint.getExpandedFilenameList()):
+        if ("%s/%s"%(filedir,filename) \
+            in Q7FingerPrint.getExpandedFilenameList()):
             Q7FingerPrint.Unlock()
             txt="""The current file is already open:"""
             self._data=(None,(0,"%s/%s"%(filedir,filename),txt))
@@ -130,72 +138,97 @@ class Q7CHLoneThread(QThread):
 # -----------------------------------------------------------------
 class Q7Window(QWidget,object):
     VIEW_CONTROL='C'
-    VIEW_DIAG='D'
-    VIEW_TOOLS='X'
-    VIEW_TREE='T'
-    VIEW_OPTION='O'
-    VIEW_VTK='G'
-    VIEW_FORM='F'
-    VIEW_QUERY='Q'
-    VIEW_SELECT='S'
+    VIEW_DIAG   ='D'
+    VIEW_TOOLS  ='X'
+    VIEW_TREE   ='T'
+    VIEW_OPTION ='O'
+    VIEW_VTK    ='G'
+    VIEW_FORM   ='F'
+    VIEW_QUERY  ='Q'
+    VIEW_SELECT ='S'
     VIEW_PATTERN='P'
-    VIEW_INFO='I'
-    VIEW_LINK='L'
-    VIEW_DIFF='Z'
+    VIEW_INFO   ='I'
+    VIEW_LINK   ='L'
+    VIEW_DIFF   ='Z'
     VIEW_MESSAGE='M'
     HISTORYLASTKEY='///LAST///'
+    (I_MOD_SAV,I_UMOD_SAV,I_MOD_USAV,I_UMOD_USAV,I_TREE,I_VTK,I_QUERY,I_DIFF,
+     I_FORM,I_SELECT,I_PATTERN,I_DIAG,I_TOOLS,I_LINK,I_D_INF,I_D_ERR,I_L_OKL,
+     I_L_NFL,I_L_NRL,I_L_NNL,I_L_IGN,I_L_ERL,I_C_SFL,I_C_SWR,I_EMPTY,
+     I_MARK)=range(26)
+    ICONMAPPING={
+      I_MOD_SAV:  ":/images/icons/save-S-M.png",
+      I_UMOD_SAV: ":/images/icons/save-S-UM.png",
+      I_MOD_USAV: ":/images/icons/save-US-M.png",
+      I_UMOD_USAV:":/images/icons/save-US-UM.png",
+      I_TREE:     ":/images/icons/tree-load.png",
+      I_VTK:      ":/images/icons/vtkview.png",
+      I_QUERY:    ":/images/icons/operate-execute.png",
+      I_DIFF:     ":/images/icons/merge.png",
+      I_FORM:     ":/images/icons/form.png",
+      I_SELECT:   ":/images/icons/mark-node.png",
+      I_PATTERN:  ":/images/icons/pattern.png",
+      I_DIAG:     ":/images/icons/check-all.png",
+      I_TOOLS:    ":/images/icons/toolsview.png",
+      I_LINK:     ":/images/icons/link-node.png",
+      I_D_INF:    ":/images/icons/subtree-sids-warning.png",
+      I_D_ERR:    ":/images/icons/subtree-sids-failed.png",
+      I_L_OKL:    ":/images/icons/link.png",
+      I_L_NFL:    ":/images/icons/link-nofile.png",
+      I_L_NRL:    ":/images/icons/link-noreadable.png",
+      I_L_NNL:    ":/images/icons/link-nonode.png",
+      I_L_IGN:    ":/images/icons/link-error.png",
+      I_L_ERL:    ":/images/icons/link-ignore.png",
+      I_C_SFL:    ":/images/icons/check-fail.png",
+      I_C_SWR:    ":/images/icons/check-warn.png",
+      I_EMPTY:    ":/images/icons/empty.png",
+      I_MARK:     ":/images/icons/mark-node.png",
+    }   
     control_log=None
-    def __init__(self,vtype,control,path,fgprint):
+    _icons={}
+    _title={}
+    @classmethod 
+    def initClassConstants(cls):
+        for ik in cls.ICONMAPPING:
+            cls._icons[ik]=QIcon(QPixmap(cls.ICONMAPPING[ik]))
+        cls._title[cls.VIEW_CONTROL]='Control'
+        cls._title[cls.VIEW_OPTION]='Options'
+        cls._title[cls.VIEW_TOOLS]='Tools'
+        cls._busyx=QCursor(QPixmap(":/images/icons/cgSpy.png"))
+    @classmethod
+    def IC(cls,tag):
+      return cls._icons[tag]
+    def __init__(self,vtype,control,path,fgprintindex):
+        if (fgprintindex is None): fgprintindex=-1
+        if (Q7Window._icons=={}): Q7Window.initClassConstants()
         QWidget.__init__(self,None)
         self._stylesheet=None
-        self.I_MOD_SAV=QIcon(QPixmap(":/images/icons/save-S-M.png"))
-        self.I_UMOD_SAV=QIcon(QPixmap(":/images/icons/save-S-UM.png"))
-        self.I_MOD_USAV=QIcon(QPixmap(":/images/icons/save-US-M.png"))
-        self.I_UMOD_USAV=QIcon(QPixmap(":/images/icons/save-US-UM.png"))
-        self.I_TREE=QIcon(QPixmap(":/images/icons/tree-load.png"))
-        self.I_VTK=QIcon(QPixmap(":/images/icons/vtkview.png"))
-        self.I_QUERY=QIcon(QPixmap(":/images/icons/operate-execute.png"))
-        self.I_DIFF=QIcon(QPixmap(":/images/icons/merge.png"))
-        self.I_FORM=QIcon(QPixmap(":/images/icons/form.png"))
-        self.I_SELECT=QIcon(QPixmap(":/images/icons/mark-node.png"))
-        self.I_PATTERN=QIcon(QPixmap(":/images/icons/pattern.png"))
-        self.I_DIAG=QIcon(QPixmap(":/images/icons/check-all.png"))
-        self.I_TOOLS=QIcon(QPixmap(":/images/icons/toolsview.png"))
-        self.I_LINK=QIcon(QPixmap(":/images/icons/link-node.png"))
-        self.I_D_INF=QIcon(QPixmap(":/images/icons/subtree-sids-warning.png"))
-        self.I_D_ERR=QIcon(QPixmap(":/images/icons/subtree-sids-failed.png"))
-        self.I_L_OKL=QIcon(QPixmap(":/images/icons/link.png"))
-        self.I_L_NFL=QIcon(QPixmap(":/images/icons/link-nofile.png"))
-        self.I_L_NRL=QIcon(QPixmap(":/images/icons/link-noreadable.png"))
-        self.I_L_NNL=QIcon(QPixmap(":/images/icons/link-nonode.png"))
-        self.I_L_IGN=QIcon(QPixmap(":/images/icons/link-error.png"))
-        self.I_L_ERL=QIcon(QPixmap(":/images/icons/link-ignore.png"))
-        self.I_C_SFL=QIcon(QPixmap(":/images/icons/check-fail.png"))
-        self.I_C_SWR=QIcon(QPixmap(":/images/icons/check-warn.png"))
-        self.I_EMPTY=QIcon(QPixmap(":/images/icons/empty.png"))
-        self.I_MARK=QIcon(QPixmap(":/images/icons/mark-node.png"))
         if (vtype==Q7Window.VIEW_TREE):
             self._stylesheet=Q7TREEVIEWSTYLESHEET
         if (vtype==Q7Window.VIEW_CONTROL):
             self._stylesheet=Q7CONTROLVIEWSTYLESHEET
         self.setupUi(self)
+        #self.setAttribute(Qt.WA_DeleteOnClose)
         if (self._stylesheet is not None): self.setStyleSheet(self._stylesheet)
-        self._busyx=QCursor(QPixmap(":/images/icons/cgSpy.png"))
         self.getOptions()
         self._timercount=0
         self._vtype=vtype
         self._path=path
         self._control=control
-        self._fgprint=fgprint
+        self._fgindex=fgprintindex
         self._index=self.addChildWindow()
         self._lockableWidgets=[]
         self._lockedWidgets=[]
         fn=''
-        if (fgprint is not None): fn=fgprint.filename
+        if (self._fgindex!=-1): 
+          fn=Q7FingerPrint.getByIndex(self._fgindex).filename
         if (self._index!=0):
-            tit="%s:%s%.3d"%(OCTXT._ToolName,self._vtype,self._index)
+          tit="%s: %s%.3d"%(OCTXT._ToolName,self._vtype,self._index)
         else:
-            tit="%s:Control"%(OCTXT._ToolName)            
+          if (self._title.has_key(vtype)):
+            tit="%s: %s"%(OCTXT._ToolName,self._title[vtype])
+          else:
+            tit="%s: ---"%(OCTXT._ToolName)
         self.setWindowTitle(tit)
         try:
             self.bBackControl.clicked.connect(self.backcontrol)
@@ -205,6 +238,9 @@ class Q7Window(QWidget,object):
         if (not control.verbose):
           sys.stdout=self.control_log
           sys.stderr=self.control_log
+    @property
+    def FG(self):
+      return Q7FingerPrint.getByIndex(self._fgindex)
     def validateOption(self,name,value):
         #if (name[0]=='_'): return False
         return True
@@ -309,20 +345,20 @@ class Q7Window(QWidget,object):
             return None
         return self._history[Q7Window.HISTORYLASTKEY]
     def addChildWindow(self):
-        if (self._fgprint is None): return 0
-        self._index=self._fgprint.addChild(self._vtype,self)
-        l=[self._fgprint._status,self._vtype,'%.3d'%self._index]
-        l+=[self._fgprint.filedir,self._fgprint.filename,self._path]
-        self._control.addLine(l,self._fgprint)
+        if (self.FG is None): return 0
+        self._index=self.FG.addChild(self._vtype,self)
+        l=[self.FG._status,self._vtype,'%.3d'%self._index]
+        l+=[self.FG.filedir,self.FG.filename,self._path]
+        self._control.addLine(l,self.FG)
         return self._index
     def closeEvent(self, event):
         self._control.delLine('%.3d'%self._index)
-        if (self._fgprint is not None):
-            self._fgprint.closeView(self._index)
+        if (self.FG is not None):
+          self.FG.closeView(self._index)
         event.accept()
     def backcontrol(self):
-        if (self._fgprint is not None):
-            self._fgprint.raiseControlView()
+        if (self.FG is not None):
+            self.FG.raiseControlView()
         self._control.selectLine('%.3d'%self._index)
     def busyCursor(self):
         self._control.lockView(True)
@@ -338,9 +374,9 @@ class Q7Window(QWidget,object):
             if (lock and wid.isEnabled()):
                 self._lockedWidgets.append(wid)
                 wid.setDisabled(lock)
-        if (self._fgprint is not None): self._fgprint._locked=lock
+        if (self.FG is not None): self.FG._locked=lock
     def isLocked(self):
-        if (self._fgprint is None): return self._fgprint._locked
+        if (self.FG is None): return self.FG._locked
         return False
     def lockable(self,widget):
         self._lockableWidgets.append(widget)
@@ -353,12 +389,10 @@ class Q7Window(QWidget,object):
     def _T(self,msg):
         if (self.getOptionValue('NAVTrace')):
             print '### CGNS.NAV:', msg
-    def reject(self):
-        pass
+#    def reject(self):
+#        pass
 # -----------------------------------------------------------------
 class Q7FingerPrint:
-    __viewscounter=0
-    __extension=[]
     STATUS_UNCHANGED='U'
     STATUS_MODIFIED='M'
     STATUS_SAVEABLE='S'
@@ -367,6 +401,9 @@ class Q7FingerPrint:
                  STATUS_SAVEABLE)
     __mutex=QMutex()
     __chloneproxy=None
+    __viewscounter=0
+    __fingerprintcounter=0
+    __extension=[] # the single variable that holds the fingerprint reference
     @classmethod
     def proxy(cls):
         cls.Lock()
@@ -450,7 +487,7 @@ class Q7FingerPrint:
                 if (lock and wid.isEnabled()):
                     v._lockedWidgets.append(wid)
                     wid.setDisabled(lock)
-              if (v._fgprint is not None): v._fgprint._locked=lock
+              if (v.FG is not None): v.FG._locked=lock
         cls.Unlock()
     @classmethod
     def raiseView(cls,idx):
@@ -484,10 +521,11 @@ class Q7FingerPrint:
         return None
     @classmethod
     def getFingerPrint(cls,idx):
+        ix=int(idx)
         for x in cls.__extension:
             for vtype in x.views:
                 for (v,i) in x.views[vtype]:
-                    if (i==int(idx)): return x
+                    if (i==ix): return x
         return None
     @classmethod
     def getUniqueTreeViewIdList(cls):
@@ -504,9 +542,23 @@ class Q7FingerPrint:
         for x in cls.__extension:
             l.append("%s/%s"%(x.filedir,x.filename))
         return l
+    @classmethod
+    def removeNoMoreView(self):
+      for fg in list(Q7FingerPrint.__extension):
+        if (fg.views=={}):
+          fg.model.doRelease()
+          fg.doRelease()
+          Q7FingerPrint.__extension.remove(fg)
+    @classmethod
+    def getByIndex(self,index):
+      for fg in Q7FingerPrint.__extension:
+        if (fg.index==index): 
+          return fg
+      return None
     # -------------------------------------------------------------
     def __init__(self,control,filedir,filename,tree,links,paths,**kw):
         if (control is None): return # __root instance, empty
+        self.index=Q7FingerPrint.__fingerprintcounter
         self.filename=filename
         self.tree=tree
         self.filedir=filedir
@@ -535,6 +587,7 @@ class Q7FingerPrint:
         self.lazy={}
         for p in paths: self.lazy['/CGNSTree'+p[0]]=p[1]
         Q7FingerPrint.__extension.append(self)
+        Q7FingerPrint.__fingerprintcounter+=1
         self.updateFileStats(filedir+'/'+filename)
     def __len__(self):
         return 0
@@ -651,13 +704,19 @@ class Q7FingerPrint:
         idx=int(i)
         fg=self.getFingerPrint(idx)
         vw=self.getView(idx)
-        vt=self.getViewType(idx)
-        if ((vw is not None) and self.views.has_key(vt)):
-          self.views[vt].remove((vw,idx))
-          if (self.views[vt]==[]): del self.views[vt]
-        if (vw is not None): vw.reject()
-        if ((self.views=={}) and (fg in self.__extension)):
-            self.__extension.remove(fg)
+        if (vw is not None):
+          vt=self.getViewType(idx)
+          if (self.views.has_key(vt)):
+            self.views[vt].remove((vw,idx))
+            if (self.views[vt]==[]): del self.views[vt]
+          vw.doRelease()
+          vw.close()
+        Q7FingerPrint.removeNoMoreView()
+    def doRelease(self):
+#        print 'DORELEASE Q7FINGERPRINT'
+        self.model=None
+        self.tree=None
+        self.links=None
     def unlockAllViews(self):
         self.lockAllViews(lock=False)
     def lockAllViews(self,lock=True):

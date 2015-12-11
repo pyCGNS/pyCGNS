@@ -3,32 +3,27 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-
-from PySide.QtCore    import *
-from PySide.QtGui     import *
-from CGNS.NAV.Q7VTKWindow import Ui_Q7VTKWindow
-#from CGNS.NAV.Q7VTKPlotWindow import Ui_Q7VTKPlotWindow
-from CGNS.NAV.wfingerprint import Q7Window
-try:
-    from CGNS.PRO.vtkparser import Mesh
-    from CGNS.PRO.vtkparser import SIZE_PATTERN, LIST_PATTERN
-except:
-    from CGNS.NAV.mparser import Mesh
-    from CGNS.NAV.mparser import SIZE_PATTERN, LIST_PATTERN
-
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
-from CGNS.NAV.wfile import Q7File
-
-import CGNS.NAV.wmessages as MSG
-import CGNS.PAT.cgnskeywords as CGK
+from CGNS.NAV.moption      import Q7OptionContext as OCTXT
 
 import numpy as NPY
-
-import math as M
+import math
 import sys
-
 import random
 import vtk
+
+import CGNS.PAT.cgnskeywords as CGK
+
+from PySide.QtCore import *
+from PySide.QtGui  import *
+
+from CGNS.NAV.Q7VTKWindow  import Ui_Q7VTKWindow
+from CGNS.NAV.wfingerprint import Q7Window,Q7FingerPrint
+from CGNS.NAV.mparser      import Mesh
+from CGNS.NAV.mparser      import SIZE_PATTERN, LIST_PATTERN
+from CGNS.NAV.wfile        import Q7File
+
+import CGNS.NAV.wmessages    as MSG
+
 vers=vtk.vtkVersion()
 VTK_VERSION_MINOR=vers.GetVTKMinorVersion()
 VTK_VERSION_MAJOR=vers.GetVTKMajorVersion()
@@ -62,12 +57,14 @@ class wVTKContext():
 
 # -----------------------------------------------------------------
 class Q7VTK(Q7Window,Ui_Q7VTKWindow):
-  def __init__(self,control,parent,node,fgprint,tmodel,zlist):
+  def __init__(self,control,parent,node,fgprintindex,tmodel,zlist):
       if (not zlist): pth='/'
       else: pth='<partial>'
       self._vtkstatus=False
       self._control=control
-      if (not self.wCGNSTreeParse(fgprint.tree,zlist)): return
+      self._fgindex=fgprintindex
+      self._T=Q7FingerPrint.getByIndex(self._fgindex).tree
+      if (not self.wCGNSTreeParse(self._T,zlist)): return
       self._vtkstatus=True
       if (VTK_VERSION_MAJOR<6):
           MSG.wError(self._control,
@@ -75,13 +72,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           if (VTK_VERSION_MINOR<8):
               MSG.wError(self._control,
                          2377,"Your VTK version is lower than v5.8, if you have hexahedron in your mesh they cannot be display","Oups...")
-      Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,fgprint)
+      Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,self._fgindex)
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
       self._epix=QIcon(QPixmap(":/images/icons/empty.png"))
       self._spix=QIcon(QPixmap(":/images/icons/selected.png"))
       self._npix=QIcon(QPixmap(":/images/icons/unselected.png"))
       self._hpix=QIcon(QPixmap(":/images/icons/hidden.png"))
-      self._T=self._fgprint.tree
       self._parent=parent
       self._master=parent
       self.lut=None
@@ -112,7 +108,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.display.Initialize()
       self.display.Start()
       self.display.show()
-      self._vtktree=self.wCGNSTreeActors(fgprint.tree,zlist)
+      self._vtktree=self.wCGNSTreeActors(self._T,zlist)
       self.bX.clicked.connect(self.b_xaxis)
       self.bY.clicked.connect(self.b_yaxis)
       self.bZ.clicked.connect(self.b_zaxis)
@@ -190,6 +186,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def printMessage(self, text):
         sys.stdout.write(text+'\n')
         sys.stdout.flush()
+
+  def doRelease(self):
+      self._T=None
 
   def parseDone(self):
       print 'PARSE DONE'
@@ -1685,8 +1684,8 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
         y2=self._parent._iren.GetEventPosition()[1]-int(DisplayCenter[1])
         zCross=x1*y2-y1*x2
         zCross=float(zCross)
-        angle=vtk.vtkMath().DegreesFromRadians(zCross/(M.sqrt(float(x1*x1+y1*y1))*
-                                                     M.sqrt(float(x2*x2+y2*y2))))
+        angle=vtk.vtkMath().DegreesFromRadians(zCross/(math.sqrt(float(x1*x1+y1*y1))*
+                                                     math.sqrt(float(x2*x2+y2*y2))))
         transform.Identity()
         transform.Translate(Center[0],Center[1],Center[2])
         transform.RotateWXYZ(angle,axis[0],axis[1],axis[2])
@@ -1831,8 +1830,8 @@ class Q7InteractorStyleRubberBandZoom(vtk.vtkInteractorStyleRubberBandZoom):
         y2=self._parent._iren.GetEventPosition()[1]-int(DisplayCenter[1])
         zCross=x1*y2-y1*x2
         zCross=float(zCross)
-        angle=vtk.vtkMath().DegreesFromRadians(zCross/(M.sqrt(float(x1*x1+y1*y1))*
-                                                     M.sqrt(float(x2*x2+y2*y2))))
+        angle=vtk.vtkMath().DegreesFromRadians(zCross/(math.sqrt(float(x1*x1+y1*y1))*
+                                                     math.sqrt(float(x2*x2+y2*y2))))
         transform.Identity()
         transform.Translate(Center[0],Center[1],Center[2])
         transform.RotateWXYZ(angle,axis[0],axis[1],axis[2])

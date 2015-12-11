@@ -2,28 +2,29 @@
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
+from CGNS.NAV.moption import Q7OptionContext  as OCTXT
+
 import sys
 import string
-from PySide.QtCore  import *
-from PySide.QtGui   import *
-from CGNS.NAV.wfingerprint import Q7FingerPrint
-from CGNS.NAV.Q7ToolsWindow import Ui_Q7ToolsWindow
-from CGNS.NAV.wfingerprint import Q7Window
-from CGNS.NAV.wquery import Q7Query, Q7SelectionList
-from CGNS.NAV.moption import Q7OptionContext  as OCTXT
-from CGNS.NAV.diff import diffAB
-from CGNS.NAV.merge import mergeAB
-from CGNS.NAV.mmergetreeview import Q7TreeMergeModel,TAG_FRONT,TAG_BACK
-from CGNS.NAV.wtree import Q7Tree
-from CGNS.NAV.wdifftreeview import Q7Diff
-from CGNS.NAV.wmergetreeview import Q7Merge
-from CGNS.NAV.mquery import Q7QueryEntry
 
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnslib   as CGL
 import CGNS.PAT.cgnskeywords as CGK
+
+from PySide.QtCore import *
+from PySide.QtGui  import *
+
+from CGNS.NAV.wfingerprint   import Q7FingerPrint
+from CGNS.NAV.Q7ToolsWindow  import Ui_Q7ToolsWindow
+from CGNS.NAV.wfingerprint   import Q7Window
+from CGNS.NAV.wquery         import Q7Query, Q7SelectionList
+from CGNS.NAV.diff           import diffAB
+from CGNS.NAV.merge          import mergeAB
+from CGNS.NAV.mmergetreeview import Q7TreeMergeModel,TAG_FRONT,TAG_BACK
+from CGNS.NAV.wtree          import Q7Tree
+from CGNS.NAV.wdifftreeview  import Q7Diff
+from CGNS.NAV.wmergetreeview import Q7Merge
+from CGNS.NAV.mquery         import Q7QueryEntry
 
 # -----------------------------------------------------------------
 class Q7Criteria():

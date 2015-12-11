@@ -3,17 +3,19 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from PySide.QtCore    import *
-from PySide.QtGui     import *
-from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
-
 from CGNS.NAV.moption import Q7OptionContext  as OCTXT
-import CGNS.NAV.wmessages as MSG
 
 import os.path
 import stat
 import string
 import time
+
+from PySide.QtCore import *
+from PySide.QtGui  import *
+
+from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
+
+import CGNS.NAV.wmessages as MSG
 
 LOADBUTTON='Load'
 SAVEBUTTON='Save'

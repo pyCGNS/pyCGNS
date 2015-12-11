@@ -3,10 +3,14 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.cgnsutils    as CGU
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+
+import CGNS.PAT.cgnskeywords   as CGK
+import CGNS.PAT.cgnsutils      as CGU
 import CGNS.APP.lib.arrayutils as CGA
-import CGNS.NAV.wmessages as MSG
+
+import CGNS.NAV.wmessages      as MSG
+
 import numpy as NPY
 
 cimport cython
@@ -94,7 +98,6 @@ class CGNSparser:
     allfamilies=CGU.getAllFamilies(T)
     for z in CGU.getAllNodesByTypeSet(T,[CGK.Zone_ts]):
       zT=CGU.nodeByPath(z,T)
-      print 'STEP zone',z
       if ((zlist==[]) or (z in zlist)):
         gnode=CGU.getAllNodesByTypeSet(zT,[CGK.GridCoordinates_ts])
         if (gnode==[]): return False
@@ -215,7 +218,7 @@ class Mesh(CGNSparser):
    
     try:
       self._status=self.parseZones(zlist)
-    except ValueError:
+    except (ValueError,IndexError):
       self._status=False
 
   def getResidus(self):
@@ -332,7 +335,6 @@ class Mesh(CGNSparser):
     cdef double* tx
     cdef double* ty
     cdef double* tz
-    print 'STEP surf',path
     imax=surf[0].shape[0]
     jmax=surf[0].shape[1]
     _tx=surf[0]
@@ -382,7 +384,6 @@ class Mesh(CGNSparser):
 
   def do_boundaries(self,path,bnd,fams):
     cdef int i, j, imax, jmax, p1, p2, p3, p4
-    print 'STEP bnd'
     max=[x for x in bnd[0].shape if x!=1]
     imax=max[0]
     jmax=max[1]
@@ -469,7 +470,6 @@ class Mesh(CGNSparser):
     return actors
 
   def def_volume(self,n):
-    print 'STEP vol'
     if self._vtkelts.has_key(n):
       return self._vtkelts[n]
     return None

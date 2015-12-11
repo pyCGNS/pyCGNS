@@ -3,13 +3,16 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 # 
+from CGNS.NAV.moption import Q7OptionContext  as OCTXT
+
 import sys
 import string
+
 from PySide.QtCore  import *
 from PySide.QtGui   import *
+
 from CGNS.NAV.Q7InfoWindow import Ui_Q7InfoWindow
 from CGNS.NAV.wfingerprint import Q7Window
-from CGNS.NAV.moption import Q7OptionContext  as OCTXT
 
 # -----------------------------------------------------------------
 class Q7Info(Q7Window,Ui_Q7InfoWindow):

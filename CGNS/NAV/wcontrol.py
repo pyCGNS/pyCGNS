@@ -3,26 +3,29 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-import sys
-
-from PySide.QtCore import *
-from PySide.QtGui import *
-
-from CGNS.NAV.Q7ControlWindow import Ui_Q7ControlWindow
-from CGNS.NAV.wfile import Q7File
-from CGNS.NAV.winfo import Q7Info
-from CGNS.NAV.woption import Q7Option
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
-from CGNS.NAV.wtree import Q7Tree
-from CGNS.NAV.mtree import Q7TreeModel
-from CGNS.NAV.wfingerprint import Q7FingerPrint, Q7Window
-from CGNS.NAV.wquery import Q7Query
-from CGNS.NAV.whelp import Q7Help
 
-import CGNS.NAV.wmessages as MSG
+import sys
 
 import CGNS.PAT.cgnslib   as CGL
 import CGNS.PAT.cgnsutils as CGU
+
+from PySide.QtCore import *
+from PySide.QtGui  import *
+
+from CGNS.NAV.Q7ControlWindow import Ui_Q7ControlWindow
+from CGNS.NAV.wfile           import Q7File
+from CGNS.NAV.winfo           import Q7Info
+from CGNS.NAV.woption         import Q7Option
+from CGNS.NAV.wtree           import Q7Tree
+from CGNS.NAV.mtree           import Q7TreeModel
+from CGNS.NAV.wfingerprint    import Q7FingerPrint
+from CGNS.NAV.wquery          import Q7Query
+from CGNS.NAV.whelp           import Q7Help
+
+import CGNS.NAV.wmessages as MSG
+
+from CGNS.NAV.wfingerprint import Q7Window as QW
 
 # -----------------------------------------------------------------
 class Q7SignalPool(QObject):
@@ -43,11 +46,11 @@ class Q7ControlItemDelegate(QStyledItemDelegate):
             QStyledItemDelegate.paint(self, painter, option, index)
 
 # -----------------------------------------------------------------
-class Q7Main(Q7Window, Ui_Q7ControlWindow):
+class Q7Main(QW, Ui_Q7ControlWindow):
     verbose=False
     def __init__(self, parent=None):
-        Q7Window.control_log=MSG.Q7Log()
-        Q7Window.__init__(self,Q7Window.VIEW_CONTROL,self,None,None)
+        QW.control_log=MSG.Q7Log()
+        QW.__init__(self,QW.VIEW_CONTROL,self,None,None)
         self.getHistory()
         self.bAbout.clicked.connect(self.about)
         self.bOptionView.clicked.connect(self.option)
@@ -98,6 +101,7 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         if (self.lastView is not None):
             fg=Q7FingerPrint.getFingerPrint(self.lastView)
             fg.closeView(self.lastView)
+            self.lastView=None
     def raiseView(self):
         self.updateLastView()
         if (self.lastView is not None):
@@ -224,19 +228,20 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
     def modifiedLine(self,n,stat,fg):
         if (     (Q7FingerPrint.STATUS_MODIFIED in stat)
              and (Q7FingerPrint.STATUS_SAVEABLE in stat)):
-            stitem=QTableWidgetItem(self.I_MOD_SAV,'')
+
+            stitem=QTableWidgetItem(self.IC(QW.I_MOD_SAV),'')
             stitem.setToolTip('Tree modified and saveable')
         if (     (Q7FingerPrint.STATUS_MODIFIED in stat)
              and (Q7FingerPrint.STATUS_SAVEABLE not in stat)):
-            stitem=QTableWidgetItem(self.I_MOD_USAV,'')
+            stitem=QTableWidgetItem(self.IC(QW.I_MOD_USAV),'')
             stitem.setToolTip('Tree modified but NOT saveable')
         if (     (Q7FingerPrint.STATUS_MODIFIED not in stat)
              and (Q7FingerPrint.STATUS_SAVEABLE not in stat)):
-            stitem=QTableWidgetItem(self.I_UMOD_USAV,'')
+            stitem=QTableWidgetItem(self.IC(QW.I_UMOD_USAV),'')
             stitem.setToolTip('Tree unmodified and NOT saveable')
         if (     (Q7FingerPrint.STATUS_MODIFIED not in stat)
              and (Q7FingerPrint.STATUS_SAVEABLE in stat)):
-            stitem=QTableWidgetItem(self.I_UMOD_SAV,'')
+            stitem=QTableWidgetItem(self.IC(QW.I_UMOD_SAV),'')
             stitem.setToolTip('Tree unmodified and saveable')
         stitem.setTextAlignment(Qt.AlignCenter)
         self.controlTable.setItem(n,0,stitem)
@@ -246,25 +251,25 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         ctw=self.controlTable
         ctw.setRowCount(ctw.rowCount()+1)
         r=ctw.rowCount()-1
-        if (l[1]==Q7Window.VIEW_TREE):
-            tpitem=QTableWidgetItem(self.I_TREE,'')
-        if (l[1]==Q7Window.VIEW_FORM):
-            tpitem=QTableWidgetItem(self.I_FORM,'')
-        if (l[1]==Q7Window.VIEW_VTK):
-            tpitem=QTableWidgetItem(self.I_VTK,'')
-        if (l[1]==Q7Window.VIEW_QUERY):
-            tpitem=QTableWidgetItem(self.I_QUERY,'')
-        if (l[1]==Q7Window.VIEW_SELECT):
-            tpitem=QTableWidgetItem(self.I_SELECT,'')
-        if (l[1]==Q7Window.VIEW_DIAG):
-            tpitem=QTableWidgetItem(self.I_DIAG,'')
-        if (l[1]==Q7Window.VIEW_TOOLS):
-            tpitem=QTableWidgetItem(self.I_TOOLS,'')
+        if (l[1]==QW.VIEW_TREE):
+            tpitem=QTableWidgetItem(self.IC(QW.I_TREE),'')
+        if (l[1]==QW.VIEW_FORM):
+            tpitem=QTableWidgetItem(self.IC(QW.I_FORM),'')
+        if (l[1]==QW.VIEW_VTK):
+            tpitem=QTableWidgetItem(self.IC(QW.I_VTK),'')
+        if (l[1]==QW.VIEW_QUERY):
+            tpitem=QTableWidgetItem(self.IC(QW.I_QUERY),'')
+        if (l[1]==QW.VIEW_SELECT):
+            tpitem=QTableWidgetItem(self.IC(QW.I_SELECT),'')
+        if (l[1]==QW.VIEW_DIAG):
+            tpitem=QTableWidgetItem(self.IC(QW.I_DIAG),'')
+        if (l[1]==QW.VIEW_TOOLS):
+            tpitem=QTableWidgetItem(self.IC(QW.I_TOOLS),'')
             l=l[0:2]+[None,None,None]
-        if (l[1]==Q7Window.VIEW_LINK):
-            tpitem=QTableWidgetItem(self.I_LINK,'')
-        if (l[1]==Q7Window.VIEW_DIFF):
-            tpitem=QTableWidgetItem(self.I_DIFF,'')
+        if (l[1]==QW.VIEW_LINK):
+            tpitem=QTableWidgetItem(self.IC(QW.I_LINK),'')
+        if (l[1]==QW.VIEW_DIFF):
+            tpitem=QTableWidgetItem(self.IC(QW.I_DIFF),'')
         tpitem.setTextAlignment(Qt.AlignCenter)
         ctw.setItem(r,1,tpitem)
         for i in range(len(l)-2):
@@ -316,12 +321,14 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         elif (fgprint.tree is None):
             MSG.wError(self,829,'Fatal error while loading file, empty tree')
         else:
-          Q7TreeModel(fgprint)
-          child=Q7Tree(self,'/',fgprint)
+          Q7TreeModel(fgprint.index)
+          child=Q7Tree(self,'/',fgprint.index)
           child.show()
           self.setHistory(fgprint.filedir,fgprint.filename)
           self.updateViews()
           fgprint.getInfo(force=True)
+        self.signals.fgprint=None
+        Q7FingerPrint.killProxy()
         self.readyCursor()
     def saving(self,*args):
         self._T('saving as: [%s]'%self.signals.buffer)
@@ -360,8 +367,8 @@ class Q7Main(Q7Window, Ui_Q7ControlWindow):
         tc=self.newtreecount
         self.busyCursor()
         fgprint=Q7FingerPrint(self,'.','new#%.3d.hdf'%tc,tree,[],[])
-        Q7TreeModel(fgprint)
-        child=Q7Tree(self,'/',fgprint)
+        Q7TreeModel(fgprint.index)
+        child=Q7Tree(self,'/',fgprint.index)
         fgprint._status=[Q7FingerPrint.STATUS_MODIFIED]
         self.readyCursor()
         self.newtreecount+=1

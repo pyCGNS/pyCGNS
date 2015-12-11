@@ -3,25 +3,27 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+
 import sys
 import numpy
 import os
 
-from PySide.QtCore  import *
-from PySide.QtGui   import QFileDialog
-from PySide.QtGui   import *
-from CGNS.NAV.Q7QueryWindow import Ui_Q7QueryWindow
-from CGNS.NAV.Q7SelectionWindow import Ui_Q7SelectionWindow
-from CGNS.NAV.wfingerprint import Q7Window
-from CGNS.NAV.mtree import COLUMN_VALUE,COLUMN_DATATYPE,COLUMN_SIDS,COLUMN_NAME
-from CGNS.NAV.mtree import HIDEVALUE
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
-from CGNS.NAV.mquery import Q7QueryEntry
-
-import CGNS.NAV.wmessages as MSG
-
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
+
+from PySide.QtCore import *
+from PySide.QtGui  import QFileDialog
+from PySide.QtGui  import *
+
+from CGNS.NAV.Q7QueryWindow     import Ui_Q7QueryWindow
+from CGNS.NAV.Q7SelectionWindow import Ui_Q7SelectionWindow
+from CGNS.NAV.wfingerprint      import Q7Window
+from CGNS.NAV.mquery            import Q7QueryEntry
+from CGNS.NAV.mtree             import COLUMN_VALUE,COLUMN_DATATYPE,\
+                                       COLUMN_SIDS,COLUMN_NAME,\
+                                       HIDEVALUE
+import CGNS.NAV.wmessages as MSG
 
 (CELLCOMBO,CELLTEXT)=range(2)
 CELLEDITMODE=(CELLCOMBO,CELLTEXT)
@@ -142,14 +144,13 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
 
 # -----------------------------------------------------------------
 class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
-    def __init__(self,parent,model,fgprint):
+    def __init__(self,parent,model,fgindex):
         Q7Window.__init__(self,Q7Window.VIEW_SELECT,
-                          parent._control,None,fgprint)
+                          parent._control,None,fgindex)
         self.bClose.clicked.connect(self.reject)
         self._parent=parent
         self._model=model
         self._data=model.getSelected()
-        self._fgprint=fgprint
         self._tb=self.selectionTable
         self.bSave.clicked.connect(self.selectionsave)
         self.bInfo.clicked.connect(self.infoSelectView)
@@ -158,11 +159,13 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
         QObject.connect(self.cShowSIDS,
                         SIGNAL("stateChanged(int)"),self.colCheck)
         self.bFirst.clicked.connect(self.sClear)
-        self._tb.setItemDelegate(Q7SelectionItemDelegate(self,self._fgprint.model))
+        self._tb.setItemDelegate(Q7SelectionItemDelegate(self,self.FG.model))
         self.bRemoveToSelect.clicked.connect(self.sRemove)
         self.bReverse.clicked.connect(self.sReverse)
         self.bSelectAll.clicked.connect(self.sAll)
         self.bUnselectAll.clicked.connect(self.sClear)
+    def doRelease(self):
+        pass
     def colCheck(self):
         if (self.cShowPath.checkState()==Qt.Checked):
             self._tb.showColumn(0)
@@ -285,8 +288,8 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
 # -----------------------------------------------------------------
 class Q7Query(Q7Window,Ui_Q7QueryWindow):
     _allQueries={}
-    def __init__(self,control,fgprint,treeview):
-        Q7Window.__init__(self,Q7Window.VIEW_QUERY,control,'/',fgprint)
+    def __init__(self,control,fgindex,treeview):
+        Q7Window.__init__(self,Q7Window.VIEW_QUERY,control,'/',fgindex)
         self.bClose.clicked.connect(self.reject)
         self.bRun.clicked.connect(self.runCurrent)
         self.bAdd.clicked.connect(self.queryAdd)
@@ -321,6 +324,8 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.setCurrentQuery()
         self._modified=False
         self.showQuery()
+    def doRelease(self):
+        pass
     def infoQueryView(self):
         self._control.helpWindow('Query')
     def updateTreeStatus(self):
@@ -334,7 +339,7 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         q=self.getQuery(n)
         c=self.eText.toPlainText()
         v=self.eUserVariable.text()
-        f="%s/%s"%(self._fgprint.filedir,self._fgprint.filename)
+        f="%s/%s"%(self.FG.filedir,self.FG.filename)
         s=q.getFullScript(f,c,v)
         filename=QFileDialog.getSaveFileName(self,
                                              "Save query script",".","*.py")
@@ -429,12 +434,12 @@ leave this panel without save?""",again=False)
         v=self.eUserVariable.text()
         q=Q7QueryEntry('__tmp__query__')
         q.setScript(com)
-        skp=self._fgprint.lazy.keys()
-        r=q.run(self._fgprint.tree,self._fgprint.links,skp,True,v,
-                self._fgprint.model.getSelected())
+        skp=self.FG.lazy.keys()
+        r=q.run(self.FG.tree,self.FG.links,skp,True,v,
+                self.FG.model.getSelected())
         self.eResult.initText(str(r))
         if (q.requireTreeUpdate()):
-            self._fgprint.model.modelReset()
+            self.FG.model.modelReset()
     @classmethod
     def fillQueries(self):
         allqueriestext=Q7Query._userQueriesText+OCTXT._UsualQueries

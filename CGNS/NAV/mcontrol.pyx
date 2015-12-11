@@ -3,8 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from PySide.QtCore    import *
-from PySide.QtGui     import *
+from PySide.QtCore import *
+from PySide.QtGui  import *
 
 RAISEVIEW='@@RAISEVIEW@@'
 CLOSEVIEW='@@CLOSEVIEW@@'

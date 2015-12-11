@@ -3,17 +3,20 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+
 import numpy
+
+import CGNS.PAT.cgnsutils as CGU
 
 from PySide.QtCore    import *
 from PySide.QtGui     import *
-from CGNS.NAV.Q7DiffWindow import Ui_Q7DiffWindow
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
-from CGNS.NAV.wfingerprint import Q7Window
+
+from CGNS.NAV.Q7DiffWindow  import Ui_Q7DiffWindow
+from CGNS.NAV.wfingerprint  import Q7Window
 from CGNS.NAV.mdifftreeview import Q7DiffTreeModel
 
 import CGNS.NAV.mtree as NMT
-import CGNS.PAT.cgnsutils as CGU
 
 (DIFF_NX,DIFF_NA,DIFF_ND,DIFF_CQ,DIFF_CT,DIFF_CS,DIFF_CV)=range(7)
 

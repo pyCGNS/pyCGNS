@@ -3,12 +3,15 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+import sys
+import gc
+
+import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils    as CGU
+
 from PySide.QtCore import Slot as pyqtSlot
 from PySide.QtCore import *
 from PySide.QtGui  import *
-from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
-from CGNS.NAV.wform import Q7Form
-from CGNS.NAV.wpattern import Q7PatternList
 
 try:
   import vtk
@@ -17,16 +20,17 @@ try:
 except:
   has_vtk=False
     
-from CGNS.NAV.wquery import Q7Query, Q7SelectionList
-from CGNS.NAV.wdiag import Q7CheckList
-from CGNS.NAV.wlink import Q7LinkList
-from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem, Q7TreeFilterProxy
-import CGNS.NAV.mtree as NMT
+from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
+from CGNS.NAV.wform        import Q7Form
+from CGNS.NAV.wpattern     import Q7PatternList
+from CGNS.NAV.wquery       import Q7Query, Q7SelectionList
+from CGNS.NAV.wdiag        import Q7CheckList
+from CGNS.NAV.wlink        import Q7LinkList
+from CGNS.NAV.mtree        import Q7TreeModel, Q7TreeItem
 from CGNS.NAV.wfingerprint import Q7Window,Q7FingerPrint
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.cgnsutils as CGU
+from CGNS.NAV.moption      import Q7OptionContext as OCTXT
 
+import CGNS.NAV.mtree     as NMT
 import CGNS.NAV.wmessages as MSG
 
 (CELLCOMBO,CELLTEXT)=range(2)
@@ -34,9 +38,9 @@ CELLEDITMODE=(CELLCOMBO,CELLTEXT)
 
 # -----------------------------------------------------------------
 class Q7TreeItemDelegate(QStyledItemDelegate):
-    def __init__(self, owner, model):
-        QStyledItemDelegate.__init__(self, owner)
-        self._parent=owner
+    def __init__(self, wtree, model):
+        QStyledItemDelegate.__init__(self, wtree)
+        self._parent=wtree
         self._mode=CELLTEXT
         self._model=model
     def createEditor(self, parent, option, index):
@@ -160,11 +164,15 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           option.decorationPosition=QStyleOptionViewItem.Left
         else:
           QStyledItemDelegate.paint(self, painter, option, index)
+    def doRelease(self):
+      self._model=None
+#    def __del__(self):
+#      print 'DELETE Q7ITEMDELEGATE'
 
 # -----------------------------------------------------------------
 class Q7Tree(Q7Window,Ui_Q7TreeWindow):
-    def __init__(self,control,path,fgprint):
-        Q7Window.__init__(self,Q7Window.VIEW_TREE,control,path,fgprint)
+    def __init__(self,control,path,fgprintindex):
+        Q7Window.__init__(self,Q7Window.VIEW_TREE,control,path,fgprintindex)
         self._depthExpanded=0
         self._lastEntered=None
         self.lastdiag=None
@@ -181,9 +189,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         QObject.connect(self.treeview,
                         SIGNAL("collapsed()"),
                         self.collapseNode)
-#        QObject.connect(self.treeview,
-#                        SIGNAL("clicked(QModelIndex)"),
-#                        self.clickedNode)
         QObject.connect(self.treeview,
                         SIGNAL("pressed(QModelIndex)"),
                         self.clickedPressedNode)
@@ -220,13 +225,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
         self.diagview=None
-        self.proxy = self._fgprint.model
-#        self.proxy = Q7TreeFilterProxy(self)
-#        self.proxy.setSourceModel(self._fgprint.model)
-        self.treeview.setModel(self.proxy)
-        self.treeview.setItemDelegate(Q7TreeItemDelegate(self.treeview,
-                                                         self._fgprint.model))
-        self.treeview.setControlWindow(self,self._fgprint.model)
+        lmodel=self.FG.model
+        self.treeview.setModel(lmodel)
+        self.treeview.setItemDelegate(Q7TreeItemDelegate(self.treeview,lmodel))
+        self.treeview.setControlWindow(self,self.FG.index)
         if (self._control.transientRecurse or OCTXT.RecursiveTreeDisplay):
             self.expandMinMax()
         if (self._control.transientVTK): self.vtkview()
@@ -235,7 +237,6 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.clearchecks()
         #
         self.bCheckList.setDisabled(True)
-#        self.bPlotView.setDisabled(True)
         if (not OCTXT._HasProPackage):
             self.bToolsView.setDisabled(True)
         self.bCheckView.setDisabled(True)
@@ -249,7 +250,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                         self.jumpToNode)
         self.updateTreeStatus()
     def model(self):
-        return self._fgprint.model
+        return self.FG.model
     def modelIndex(self,idx):
         if (not idx.isValid()): return -1
         midx=idx
@@ -260,20 +261,21 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (not idx.isValid()): return None
         return self.modelIndex(idx).internalPointer()
     def savetree(self):
-        if (not (self._fgprint.isSaveable() and self._fgprint.isModified())):
+        if (not (self.FG.isSaveable() and self.FG.isModified())):
             return
-        self._control.savedirect(self._fgprint)
+        self._control.savedirect(self.FG)
         self.updateTreeStatus()
     def tools(self):
         from CGNS.NAV.wtools import Q7ToolsView
         if (self._control._toolswindow is None):
             self._control._toolswindow=Q7ToolsView(self._control,
-                                                   self._fgprint,self)
+                                                   self.FG,
+                                                   self)
             self._control._toolswindow.show()
         else:
             self._control._toolswindow.raise_()
     def savetreeas(self):
-        self._control.save(self._fgprint)
+        self._control.save(self.FG)
         self.updateTreeStatus()
     def infoTreeView(self):
         self._control.helpWindow('Tree')
@@ -282,18 +284,18 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         sshot=QPixmap.grabWindow(self.treeview.winId())
         sshot.save('/tmp/foo.png','png')
     def expandMinMax(self):
-        if (self._depthExpanded==self._fgprint.depth-2):
+        if (self._depthExpanded==self.FG.depth-2):
             self._depthExpanded=-1
             self.treeview.collapseAll()
         else:
-            self._depthExpanded=self._fgprint.depth-2
+            self._depthExpanded=self.FG.depth-2
             self.treeview.expandAll()
         self.resizeAll()
     def resetOptions(self):
         if (OCTXT.AutoExpand): self.treeview.setAutoExpandDelay(1000)
         else:                  self.treeview.setAutoExpandDelay(-1)
     def expandLevel(self):
-        if (self._depthExpanded<self._fgprint.depth-2):
+        if (self._depthExpanded<self.FG.depth-2):
             self._depthExpanded+=1
         self.treeview.expandToDepth(self._depthExpanded)
         self.resizeAll()
@@ -322,7 +324,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
     def openSubTree(self):
         self.busyCursor()
         node=self.getLastEntered().sidsPath()
-        child=Q7Tree(self._control,node,self._fgprint)
+        child=Q7Tree(self._control,node,self.FG)
         self.readyCursor()
         child.show()
     def pop0(self):
@@ -481,14 +483,14 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             self._control.selectForLinkDst=None
             return
         self._control.selectForLinkDst=(node,node.sidsPath(),
-                                        self._fgprint.filedir,
-                                        self._fgprint.filename,
+                                        self.FG.filedir,
+                                        self.FG.filename,
                                         self)
         self.bSelectLinkDst.setChecked(Qt.Checked)
         if (self._linkwindow is not None):
             n=node.sidsPath()
-            d=self._fgprint.filedir
-            f=self._fgprint.filename
+            d=self.FG.filedir
+            f=self.FG.filename
             self._linkwindow.updateSelected(d,f,n)
     def linkadd(self):
         if (self._control.selectForLinkDst is None): return
@@ -506,21 +508,20 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
             count+=1
             newname='{%s#%.3d}'%(dst[0].sidsType(),count)
           str_cnm="""As a child with this name already exists, the name <b>%s</b> is used (generated name)"""%newname
-        str_src="%s:%s/%s"%(self._fgprint.filename,
+        str_src="%s:%s/%s"%(self.FG.filename,
                          self.selectForLinkSrc[1],newname)
         str_msg="you want to create a link from <b>%s</b> to <b>%s</b><br>%s<br>Your current user options do force the link to use <b>%s</b> destination file path."""%(str_src,str_dst,str_cnm,tpath)
         reply = MSG.wQuestion(self,'Create link as a new node',str_msg)
 
     def linklist(self):
         if (self._linkwindow is None):
-            self._linkwindow=Q7LinkList(self._control,self._fgprint,self)
+            self._linkwindow=Q7LinkList(self._control,self.FG.index,self)
             self._linkwindow.show()
         else:
             self._linkwindow.raise_()
     def patternlist(self):
         if (self._control._patternwindow is None):
-            self._control._patternwindow=Q7PatternList(self._control,
-                                                       self._fgprint)
+            self._control._patternwindow=Q7PatternList(self._control,self.FG)
             self._control._patternwindow.show()
         self._control._patternwindow.raise_()
     def check(self):
@@ -534,7 +535,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bCheckList.setDisabled(False)
     def checklist(self):
         if (self.lastdiag is None): return
-        self.diagview=Q7CheckList(self,self.lastdiag,self._fgprint)
+        self.diagview=Q7CheckList(self,self.lastdiag,self.FG.index)
         self.diagview.show()
     def clearchecks(self):
         self.model().checkClear()
@@ -545,8 +546,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         if (self._selectwindow is not None):
             self._selectwindow.close()
             self._selectwindow=None
-        self._selectwindow=Q7SelectionList(self,self.model(),
-                                           self._fgprint)
+        self._selectwindow=Q7SelectionList(self,self.model(),self.FG.index)
         self._selectwindow.show()
         self._selectwindow.raise_()
     def previousmark(self):
@@ -574,7 +574,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                       again=False)
             return
         if (node.sidsType()==CGK.CGNSTree_ts): return
-        form=Q7Form(self._control,node,self._fgprint)
+        form=Q7Form(self._control,node,self.FG)
         form.show()
     def vtkview(self):
         if (not has_vtk): return
@@ -583,7 +583,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
           ix=self.treeview.modelCurrentIndex()
           zlist=self.model().getSelectedZones()
           node=self.modelData(ix)
-          self._vtkwindow=Q7VTK(self._control,self,node,self._fgprint,self.model(),zlist)
+          self._vtkwindow=Q7VTK(self._control,self,node,self.FG.index,
+                                self.model(),zlist)
           if (self._vtkwindow._vtkstatus): self._vtkwindow.show()
           else: self._vtkwindow=None
           self.readyCursor()
@@ -593,7 +594,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         return 
     def queryview(self):
         if (self._querywindow is None):
-            self._querywindow=Q7Query(self._control,self._fgprint,self)
+            self._querywindow=Q7Query(self._control,self.FG.index,self)
             self._querywindow.show()
         else:
             self._querywindow.raise_()
@@ -611,13 +612,17 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.model().dataReleaseSelected(single=node.sidsPath())
     def forceapply(self):
         pass
-    def reject(self):
-        self.close()
     def updateTreeStatus(self):
-        if (    (Q7FingerPrint.STATUS_MODIFIED in self._fgprint._status)
-            and (Q7FingerPrint.STATUS_SAVEABLE in self._fgprint._status)):
+        if (    (Q7FingerPrint.STATUS_MODIFIED in self.FG._status)
+            and (Q7FingerPrint.STATUS_SAVEABLE in self.FG._status)):
             self.bSave.setEnabled(True)
         else:
             self.bSave.setEnabled(False)
-        
+    def doRelease(self):
+      # break cyclic refs to allow garbage
+      self.treeview.itemDelegate().doRelease()
+      self.treeview.setItemDelegate(None)
+      self.treeview.doRelease()
+      self.treeview=None
+
 # -----------------------------------------------------------------

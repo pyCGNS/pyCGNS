@@ -3,13 +3,16 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+
 import sys
 import string
+
 from PySide.QtCore       import *
 from PySide.QtGui        import *
+
 from CGNS.NAV.Q7MessageWindow import Ui_Q7MessageWindow
-from CGNS.NAV.Q7LogWindow import Ui_Q7LogWindow
-from CGNS.NAV.moption import Q7OptionContext  as OCTXT
+from CGNS.NAV.Q7LogWindow     import Ui_Q7LogWindow
 
 (INFO,QUESTION,ERROR,WARNING)=(0,1,2,3)
 
@@ -110,6 +113,7 @@ class Q7Log(QDialog,Ui_Q7LogWindow):
         self.setupUi(self)
         self.bClose.clicked.connect(self.leave)
         self.bClear.clicked.connect(self.clear)
+        self.setWindowTitle("%s: Log"%OCTXT._ToolName)
         self.eLog.setReadOnly(True)
         self.eLog.setAcceptRichText(False)
         self.eLog.setStyleSheet("font: 12pt \"Courier\";")
@@ -127,7 +131,7 @@ class Q7MessageBox(QDialog,Ui_Q7MessageWindow):
         self.setupUi(self)
         self.bOK.clicked.connect(self.runOK)
         self.bCANCEL.clicked.connect(self.runCANCEL)
-        self.bInfo.clicked.connect(self.infoMessageView)
+        self.bInfo.setDisabled(True)
         self._text=''
         self._result=None
         self._control=control
@@ -149,8 +153,6 @@ class Q7MessageBox(QDialog,Ui_Q7MessageWindow):
     def runCANCEL(self,*arg):
         self._result=False
         self.close()
-    def infoMessageView(self):
-        self._control.helpWindow('Message')
     def showAndWait(self):
         self.exec_()
   
@@ -158,6 +160,7 @@ def wError(control,code,info,error):
   txt="""<img source=":/images/icons/user-G.png">  <big>ERROR #%d</big><hr>
          %s<br>%s"""%(code,error,info)
   msg=Q7MessageBox(control)
+  msg.setWindowTitle("%s: Error"%OCTXT._ToolName)
   msg.setLayout(txt,btype=ERROR,cancel=False,again=False,buttons=('Close',))
   msg.showAndWait()
   return msg._result
@@ -166,6 +169,7 @@ def wQuestion(control,title,question,again=True,buttons=('OK','Cancel')):
   txt="""<img source=":/images/icons/user-M.png">
          <b> <big>%s</big></b><hr>%s"""%(title,question)
   msg=Q7MessageBox(control)
+  msg.setWindowTitle("%s: Question"%OCTXT._ToolName)
   msg.setLayout(txt,btype=QUESTION,cancel=True,again=again,buttons=buttons)
   msg.showAndWait()
   return msg._result
@@ -174,6 +178,7 @@ def wInfo(control,title,info,again=True,buttons=('Close',)):
   txt="""<img source=":/images/icons/user-S.png">
          <b> <big>%s</big></b><hr>%s"""%(title,info)
   msg=Q7MessageBox(control)
+  msg.setWindowTitle("%s: Info"%OCTXT._ToolName)
   msg.setLayout(txt,btype=INFO,cancel=False,again=again,buttons=buttons)
   msg.showAndWait()
   return msg._result

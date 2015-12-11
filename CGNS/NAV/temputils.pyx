@@ -7,7 +7,8 @@
 # See https://bugreports.qt-project.org/browse/PYSIDE-46
 #
 from PySide.QtCore import *
-from PySide.QtGui import *
+from PySide.QtGui  import *
+
 import ctypes
 
 _QWidget_winId = QWidget.winId
