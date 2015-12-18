@@ -1,0 +1,13 @@
+.. -------------------------------------------------------------------------
+.. pyCGNS - CFD General Notation System - 
+.. See license.txt file in the root directory of this Python module source  
+.. -------------------------------------------------------------------------
+
+About links
+-----------
+
+Links are a powerful mean to refer to another file from the current file.
+These are quite the same as the Unix symbolic links.
+
+.. warning::
+   A node has to exist in order to be mutated into a link.

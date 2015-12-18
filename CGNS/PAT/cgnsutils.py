@@ -8,12 +8,17 @@ import CGNS.PAT.cgnskeywords as CK
 import CGNS.PAT.cgnstypes    as CT
 import CGNS.PAT.cgnserrors   as CE
 
-import numpy as NPY
+import numpy
 
 import os.path as PTH
 import string
 import re
 import sys
+
+__I4=numpy.dtype(numpy.int32)
+__I8=numpy.dtype(numpy.int64)
+__R4=numpy.dtype(numpy.float32)
+__R8=numpy.dtype(numpy.float64)
 
 # -----------------------------------------------------------------------------
 # undocumented functions are private (or obsolete)
@@ -462,7 +467,7 @@ def checkNode(node,dienow=False):
   if (type(node[2]) != list):
     if (dienow): raise CE.cgnsException(4,node[0])
     return False
-  if ((node[1] is not None) and (type(node[1]) != NPY.ndarray)):
+  if ((node[1] is not None) and (type(node[1]) != numpy.ndarray)):
     if (dienow): raise CE.cgnsException(5,node[0])
     return False
   return True
@@ -581,12 +586,12 @@ def checkSameValue(nodeA,nodeB,dienow=False):
   if ((vA is None) and (vB is None)):     return True
   if ((vA is None) and (vB is not None)): return False
   if ((vA is not None) and (vB is None)): return False
-  if ((type(vA)==NPY.ndarray) and (type(vB)!=NPY.ndarray)): return False
-  if ((type(vA)!=NPY.ndarray) and (type(vB)==NPY.ndarray)): return False
-  if ((type(vA)==NPY.ndarray) and (type(vB)==NPY.ndarray)):
+  if ((type(vA)==numpy.ndarray) and (type(vB)!=numpy.ndarray)): return False
+  if ((type(vA)!=numpy.ndarray) and (type(vB)==numpy.ndarray)): return False
+  if ((type(vA)==numpy.ndarray) and (type(vB)==numpy.ndarray)):
     if (vA.dtype != vB.dtype): return False
     if (vA.shape != vB.shape): return False
-    return NPY.all(NPY.equal(vA,vB))
+    return numpy.all(numpy.equal(vA,vB))
   return (vA == vB)
 
 # -----------------------------------------------------------------------------
@@ -603,13 +608,13 @@ def checkArray(a,dienow=False,orNone=True):
 
   """
   if (orNone and (a is None)): return True
-  if (type(a)!=NPY.ndarray):
+  if (type(a)!=numpy.ndarray):
     if (dienow): raise CE.cgnsException(109)
     return False
   if (getValueType(a) is None):
     if (dienow): raise CE.cgnsException(111)
     return False
-  if ((len(a.shape)>1) and not NPY.isfortran(a)):
+  if ((len(a.shape)>1) and not numpy.isfortran(a)):
     if (dienow): raise CE.cgnsException(710)
     return False
   return True
@@ -623,20 +628,58 @@ def checkArrayChar(a,dienow=False):
   return True
 
 # -----------------------------------------------------------------------------
+def checkArrayI4(a,dienow=False):
+  """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type I4"""
+  if (not checkArray(a)): return False
+  if (a.dtype!=__I4):     return False
+  return True
+
+# -----------------------------------------------------------------------------
+def checkArrayI8(a,dienow=False):
+  """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type I8"""
+  if (not checkArray(a)): return False
+  if (a.dtype!=__I8):     return False
+  return True
+
+# -----------------------------------------------------------------------------
+def checkArrayR4(a,dienow=False):
+  """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type R4 """
+  if (not checkArray(a)): return False
+  if (a.dtype!=__R4):     return False
+  return True
+
+# -----------------------------------------------------------------------------
+def checkArrayR8(a,dienow=False):
+  """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type R8 """
+  if (not checkArray(a)): return False
+  if (a.dtype!=__R8):     return False
+  return True
+
+# -----------------------------------------------------------------------------
 def checkArrayReal(a,dienow=False):
   """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type R4 or R8"""
-  if (checkArray(a) and (a.dtype.kind not in ['d','f'])):
-    if (dienow): raise CE.cgnsException(106)
-    return False
+  if (not checkArray(a)):          return False
+  if (a.dtype not in [__R4,__R8]): return False
   return True
 
 # -----------------------------------------------------------------------------
 def checkArrayInteger(a,dienow=False):
-  """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type I4 or I8"""
-  if (checkArray(a) and (a.dtype.kind not in ['i','u','l'])):
-    if (dienow):  raise CE.cgnsException(107)
-    return False
+  """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type I4,I8"""
+  if (not checkArray(a)):          return False
+  if (a.dtype not in [__I4,__I8]): return False
   return True
+
+# -----------------------------------------------------------------------------
+def checkSingleValue(a):
+  """checks if a value is a single value, that is a single integer,
+  a single float or a single string"""
+  if (checkArrayReal(a) or checkArrayInteger(a)):
+      if (a.shape==(1,)): return True
+      return False
+  elif (checkArrayChar(a)):
+      if (len(a.shape)==1): return True
+      return False
+  return False
 
 # -----------------------------------------------------------------------------
 def checkNodeCompliant(node,parent=None,dienow=False):
@@ -670,7 +713,7 @@ def concatenateForArrayChar(nlist):
     else:
       checkArrayChar(n)
       nl+=[setStringAsArray(("%-32s"%n.tostring())[:32])]
-  r=NPY.array(NPY.array(nl,order='F').T,order='F')
+  r=numpy.array(numpy.array(nl,order='F').T,order='F')
   return r
 
 # -----------------------------------------------------------------------------
@@ -698,8 +741,8 @@ def concatenateForArrayChar3D(nlist):
       else:
         checkArrayChar(n)
         nl+=[setStringAsArray(("%-32s"%n.tostring())[:32])]
-    rr.append(NPY.array(NPY.array(nl,order='F'),order='F'))
-  r=NPY.array(rr,order='F').T
+    rr.append(numpy.array(numpy.array(nl,order='F'),order='F'))
+  r=numpy.array(rr,order='F').T
   return r
 
 # -----------------------------------------------------------------------------
@@ -711,7 +754,7 @@ def getValueType(v):
   Character, RealSingle, RealDouble, Integer, LongInteger
   """
   if (v is None): return None
-  if (type(v) == NPY.ndarray):
+  if (type(v) == numpy.ndarray):
     if (v.dtype.kind in ['S','a']): return CK.Character_s
     if (v.dtype.char in ['f']):     return CK.RealSingle_s
     if (v.dtype.char in ['d']):     return CK.RealDouble_s
@@ -749,11 +792,11 @@ def setStringAsArray(a):
        setStringAsArray('UserDefined')
 
   """
-  if ((type(a)==type(NPY.array((1))))
+  if ((type(a)==type(numpy.array((1))))
       and (a.shape != ()) and (a.dtype.kind=='S')):
     return a
-  if ((type(a) in [str, unicode]) or (type(a)==type(NPY.array((1))))):
-    return NPY.array(tuple(a),dtype='|S',order='Fortran')
+  if ((type(a) in [str, unicode]) or (type(a)==type(numpy.array((1))))):
+    return numpy.array(tuple(a),dtype='|S',order='Fortran')
   return None
 
 # -----------------------------------------------------------------------------
@@ -764,7 +807,7 @@ def setIntegerByPath(T,path,*i):
   """
   if (type(i)==type(None) or (len(i)==0)): raise CE.cgnsNameError(112)
   node=getNodeByPath(T,path)
-  setValue(node,NPY.array(i,dtype='i'))
+  setValue(node,numpy.array(i,dtype='i'))
   return node
 
 # -----------------------------------------------------------------------------
@@ -774,7 +817,7 @@ def setIntegerAsArray(*i):
      numpy.int32 data type.
   """
   if (type(i)==type(None) or (len(i)==0)): raise CE.cgnsNameError(112)
-  return NPY.array(i,dtype='i')
+  return numpy.array(i,dtype='i')
 
 # -----------------------------------------------------------------------------
 def setLongByPath(T,path,*l):
@@ -793,7 +836,7 @@ def setLongByPath(T,path,*l):
      """
   if (type(l)==type(None) or (len(l)==0)): raise CE.cgnsNameError(112)
   node=getNodeByPath(T,path)
-  setValue(node,NPY.array(l,dtype='l'))
+  setValue(node,numpy.array(l,dtype='l'))
   return node
 
 # -----------------------------------------------------------------------------
@@ -808,7 +851,7 @@ def setLongAsArray(*l):
 
   """
   if (type(l)==type(None) or (len(l)==0)): raise CE.cgnsNameError(112)
-  return NPY.array(l,dtype='l')
+  return numpy.array(l,dtype='l')
 
 # -----------------------------------------------------------------------------
 def setFloatByPath(T,path,*f):
@@ -826,7 +869,7 @@ def setFloatByPath(T,path,*f):
      """
   if (type(f)==type(None) or (len(f)==0)): raise CE.cgnsNameError(112)
   node=getNodeByPath(T,path)
-  setValue(node,NPY.array(f,dtype='f'))
+  setValue(node,numpy.array(f,dtype='f'))
   return node
 
 # -----------------------------------------------------------------------------
@@ -841,7 +884,7 @@ def setFloatAsArray(*f):
 
   """
   if (type(f)==type(None) or (len(f)==0)): raise CE.cgnsNameError(112)
-  return NPY.array(f,dtype='f')
+  return numpy.array(f,dtype='f')
 
 # -----------------------------------------------------------------------------
 def setDoubleByPath(T,path,*d):
@@ -850,7 +893,7 @@ def setDoubleByPath(T,path,*d):
      numpy.float64 data type."""
   if (type(d)==type(None) or (len(d)==0)): raise CE.cgnsNameError(112)
   node=getNodeByPath(T,path)
-  setValue(node,NPY.array(d,dtype='d'))
+  setValue(node,numpy.array(d,dtype='d'))
   return node
 
 # -----------------------------------------------------------------------------
@@ -859,7 +902,7 @@ def setDoubleAsArray(*d):
      Same as :py:func:`setFloatAsArray` but with a
      numpy.float64 data type."""
   if (type(d)==type(None) or (len(d)==0)): raise CE.cgnsNameError(112)
-  return NPY.array(d,dtype='d')
+  return numpy.array(d,dtype='d')
 
 # -----------------------------------------------------------------------------
 def getValueAsString(node):
@@ -886,7 +929,7 @@ def hasFortranFlag(node):
   if (type(node[1])==type('')): return True # link
   if (not node[1].shape):       return True
   if (len(node[1].shape)==1):   return True  
-  return NPY.isfortran(node[1])
+  return numpy.isfortran(node[1])
 
 # --------------------------------------------------
 def getValueShape(node):
@@ -1053,7 +1096,7 @@ def getNodeType(node):
     return CK.R4 # ONLY ONE R4 IN ALL SIDS !
   if ((data is None) or (data == [])):
     return CK.MT
-  if (type(data)==NPY.ndarray):
+  if (type(data)==numpy.ndarray):
     if (data.dtype.kind in ['S','a']):        return CK.C1
     if (data.dtype.char in ['f','F']):        return CK.R4
     if (data.dtype.char in ['D','d']):        return CK.R8
@@ -2419,7 +2462,7 @@ def stringValueMatches(node,reval):
   if (getNodeType(node)!=CK.C1): return False
   tn=type(node[1])
   if   (tn==type('')): vn=node[1]
-  elif (tn == type(NPY.ones((1,))) and (node[1].dtype.kind in ['S','a'])):
+  elif (tn == type(numpy.ones((1,))) and (node[1].dtype.kind in ['S','a'])):
     vn=node[1].tostring()
   else: return False
   if (stringMatches(vn,reval) is not None): return True
@@ -2432,7 +2475,7 @@ def stringValueInList(node,listval):
   if (getNodeType(node)!=CK.C1): return False
   tn=type(node[1])
   if   (tn==type('')): vn=node[1]
-  elif (tn == type(NPY.ones((1,))) and (node[1].dtype.kind in ['S','s'])):
+  elif (tn == type(numpy.ones((1,))) and (node[1].dtype.kind in ['S','s'])):
     vn=node[1].tostring()
   else: return False
   return vn in listval
@@ -2458,17 +2501,17 @@ def copyArray(a):
   """Copy a numpy.ndarray with flags"""
   if (a is None): return None
   if (a==[]):   return None
-  if (NPY.isfortran(a)):
-    b=NPY.array(a,order='Fortran',copy=True)
+  if (numpy.isfortran(a)):
+    b=numpy.array(a,order='Fortran',copy=True)
   else:
-    b=NPY.array(a,copy=True)
+    b=numpy.array(a,copy=True)
   return b
 
 # --------------------------------------------------
 def toStringValue(v):
   if (v is None): return None
   ao='C'
-  if (NPY.isfortran(v)): ao='F'
+  if (numpy.isfortran(v)): ao='F'
   at=v.dtype.char
   av=v.tolist()
   return "numpy.array(%s,dtype='%s',order='%s')"%(av,at,ao)

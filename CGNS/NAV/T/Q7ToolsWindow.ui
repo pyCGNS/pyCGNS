@@ -341,6 +341,9 @@
                  <height>24</height>
                 </size>
                </property>
+               <property name="toolTip">
+                <string>String is a regular expression</string>
+               </property>
                <property name="text">
                 <string/>
                </property>
@@ -373,6 +376,9 @@
                  <height>24</height>
                 </size>
                </property>
+               <property name="toolTip">
+                <string>Use all strings but this one</string>
+               </property>
                <property name="text">
                 <string/>
                </property>
@@ -404,6 +410,9 @@
                  <width>24</width>
                  <height>24</height>
                 </size>
+               </property>
+               <property name="toolTip">
+                <string>Use all strings but this one</string>
                </property>
                <property name="text">
                 <string/>
@@ -464,6 +473,9 @@
                 <height>24</height>
                </size>
               </property>
+              <property name="toolTip">
+               <string>String is a regular expression</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -495,6 +507,9 @@
                 <width>24</width>
                 <height>24</height>
                </size>
+              </property>
+              <property name="toolTip">
+               <string>Use all strings but this one</string>
               </property>
               <property name="text">
                <string/>
@@ -528,6 +543,9 @@
                 <height>24</height>
                </size>
               </property>
+              <property name="toolTip">
+               <string>String is a regular expression</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -559,6 +577,9 @@
                 <width>24</width>
                 <height>24</height>
                </size>
+              </property>
+              <property name="toolTip">
+               <string>Use all strings but this one</string>
               </property>
               <property name="text">
                <string/>

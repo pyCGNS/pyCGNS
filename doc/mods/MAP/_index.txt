@@ -86,6 +86,7 @@ The arguments and the return values are:
    your own ``links`` list or change the list you obtain after a *load*.
    The structure of a ``links`` list is detailled 
    in :ref:`SIDS-to-Python <reference_sids_to_python>`.
+   See also 'about links'
 
  * **filename**:
    The name of the target file, to read or to write. The ``filename`` can
@@ -224,6 +225,7 @@ Examples
 
 .. toctree::
 
+   links
    examples
 
 .. include:: ../../Intro/glossary.txt
