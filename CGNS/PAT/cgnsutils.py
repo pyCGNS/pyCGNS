@@ -273,6 +273,7 @@ def setAsChild(parent,node):
   return setChild(parent,node)
  
 def setChild(parent,node):
+  checkNodeCompliant(node,parent)
   parent[2].append(node)
   return parent
 

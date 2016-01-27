@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ToolsWindow.ui'
 #
-# Created: Wed Sep  2 11:56:56 2015
-#      by: pyside-uic 0.2.15 running on PySide 1.2.2
+# Created: Fri Jan 15 11:27:36 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -413,7 +413,14 @@ class Ui_Q7ToolsWindow(object):
         self.label_11.setText(QtGui.QApplication.translate("Q7ToolsWindow", "type:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_12.setText(QtGui.QApplication.translate("Q7ToolsWindow", "max size:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_13.setText(QtGui.QApplication.translate("Q7ToolsWindow", "value:", None, QtGui.QApplication.UnicodeUTF8))
+        self.cRegexpValue.setToolTip(QtGui.QApplication.translate("Q7ToolsWindow", "String is a regular expression", None, QtGui.QApplication.UnicodeUTF8))
+        self.cNotValue.setToolTip(QtGui.QApplication.translate("Q7ToolsWindow", "Use all strings but this one", None, QtGui.QApplication.UnicodeUTF8))
+        self.cNotDataType.setToolTip(QtGui.QApplication.translate("Q7ToolsWindow", "Use all strings but this one", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setText(QtGui.QApplication.translate("Q7ToolsWindow", "SIDS type:", None, QtGui.QApplication.UnicodeUTF8))
+        self.cRegexpName.setToolTip(QtGui.QApplication.translate("Q7ToolsWindow", "String is a regular expression", None, QtGui.QApplication.UnicodeUTF8))
+        self.cNotName.setToolTip(QtGui.QApplication.translate("Q7ToolsWindow", "Use all strings but this one", None, QtGui.QApplication.UnicodeUTF8))
+        self.cRegexpSIDStype.setToolTip(QtGui.QApplication.translate("Q7ToolsWindow", "String is a regular expression", None, QtGui.QApplication.UnicodeUTF8))
+        self.cNotSIDStype.setToolTip(QtGui.QApplication.translate("Q7ToolsWindow", "Use all strings but this one", None, QtGui.QApplication.UnicodeUTF8))
         self.rAddToCurrent.setText(QtGui.QApplication.translate("Q7ToolsWindow", "Add to current selection", None, QtGui.QApplication.UnicodeUTF8))
         self.rClearCurrent.setText(QtGui.QApplication.translate("Q7ToolsWindow", "Clear current selection first", None, QtGui.QApplication.UnicodeUTF8))
         self.rWithinCurrent.setText(QtGui.QApplication.translate("Q7ToolsWindow", "Within current selection", None, QtGui.QApplication.UnicodeUTF8))

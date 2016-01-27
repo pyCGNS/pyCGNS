@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7SelectionWindow.ui'
 #
-# Created: Fri Jul 10 13:39:29 2015
-#      by: pyside-uic 0.2.15 running on PySide 1.2.2
+# Created: Fri Jan 15 11:50:20 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -192,7 +192,7 @@ class Ui_Q7SelectionWindow(object):
         Q7SelectionWindow.setWindowTitle(QtGui.QApplication.translate("Q7SelectionWindow", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setText(QtGui.QApplication.translate("Q7SelectionWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
         self.bSelectAll.setToolTip(QtGui.QApplication.translate("Q7SelectionWindow", "XOR", None, QtGui.QApplication.UnicodeUTF8))
-        self.selectionTable.setSortingEnabled(False)
+        self.selectionTable.setSortingEnabled(True)
         self.label.setText(QtGui.QApplication.translate("Q7SelectionWindow", "Show:", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowSIDS.setText(QtGui.QApplication.translate("Q7SelectionWindow", "SIDS", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowPath.setText(QtGui.QApplication.translate("Q7SelectionWindow", "Path", None, QtGui.QApplication.UnicodeUTF8))

@@ -377,7 +377,7 @@
         <enum>QAbstractItemView::ScrollPerPixel</enum>
        </property>
        <property name="sortingEnabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="columnCount">
         <number>1</number>
