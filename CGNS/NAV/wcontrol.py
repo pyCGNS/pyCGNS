@@ -129,13 +129,13 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.updateLastView()
         if (self.lastView is None): return
         (f,v,d)=Q7FingerPrint.infoView(self.lastView)
-        reply = MSG.wQuestion(self,'Double check...',
+        reply = MSG.wQuestion(self,101,'Double check...',
                             """Do you want to close the tree and all its views,<br>
                             and <b>forget unsaved</b> modifications?""")
         if (reply):
             f.closeAllViews()
     def closeAllTrees(self):
-        reply = MSG.wQuestion(self,'Double check...',
+        reply = MSG.wQuestion(self,101,'Double check...',
                             """Do you want to close all the views,<br>
                             and <b>forget unsaved</b> modifications?""")
         if (reply):
@@ -177,10 +177,10 @@ class Q7Main(QW, Ui_Q7ControlWindow):
             haspro=' + pyCGNS.PRO v%s'%CGNS.PRO.version
         except:
             haspro=''
-        MSG.wInfo(self,"pyCGNS v%s%s"%(OCTXT._ToolVersion,haspro),
+        MSG.wInfo(self,100,"pyCGNS v%s%s"%(OCTXT._ToolVersion,haspro),
                   OCTXT._CopyrightNotice,again=False)
     def closeApplication(self):
-        reply = MSG.wQuestion(self,'Double check...',
+        reply = MSG.wQuestion(self,101,'Double check...',
                             """Do you want to quit %s,<b>close all views</b>
                             and forget unsaved modifications?""" \
                             %OCTXT._ToolName)
@@ -317,9 +317,9 @@ class Q7Main(QW, Ui_Q7ControlWindow):
     def loadCompleted(self,*args):
         fgprint=self.signals.fgprint
         if (len(fgprint)>1):
-            MSG.wError(self,*fgprint[1])
+            MSG.wError(self,200,*fgprint[1])
         elif (fgprint.tree is None):
-            MSG.wError(self,829,'Fatal error while loading file, empty tree')
+            MSG.wError(self,201,'Fatal error while loading file, empty tree')
         else:
           Q7TreeModel(fgprint.index)
           child=Q7Tree(self,'/',fgprint.index)

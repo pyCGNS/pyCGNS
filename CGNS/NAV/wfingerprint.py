@@ -389,8 +389,7 @@ class Q7Window(QWidget,object):
     def _T(self,msg):
         if (self.getOptionValue('NAVTrace')):
             print '### CGNS.NAV:', msg
-#    def reject(self):
-#        pass
+
 # -----------------------------------------------------------------
 class Q7FingerPrint:
     STATUS_UNCHANGED='U'
@@ -458,12 +457,12 @@ class Q7FingerPrint:
         except (CGNS.MAP.error,),chlex:
             txt="""The current save operation has been aborted (CHLone):"""
             control.readyCursor()
-            MSG.wError(control,chlex[0],txt,chlex[1])
+            MSG.wError(control,130,chlex[0],txt,chlex[1])
             return None
         except (Exception,), e:
             txt="""The current save operation has been aborted: %s"""%e
             control.readyCursor()
-            MSG.wError(control,0,txt,'')
+            MSG.wError(control,131,0,txt,'')
             return None
         fgprint.updateFileStats(f,saveas=True)
     @classmethod

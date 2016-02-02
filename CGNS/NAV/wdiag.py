@@ -49,7 +49,7 @@ class Q7CheckList(QW,Ui_Q7DiagWindow):
         for g in locateGrammars():
             gl+="%s : %s<br>"%(g[0],os.path.split(g[1])[0])
         self.FG.popGrammarPaths()
-        MSG.wInfo(self,"Diag view:",
+        MSG.wInfo(self,400,"Diag view:",
                   """Checks performed using the following grammars:<br>%s"""%gl,
                   again=False)
     def diagTableKeyPressEvent(self,event):

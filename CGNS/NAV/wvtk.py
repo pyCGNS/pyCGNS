@@ -68,10 +68,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtkstatus=True
       if (VTK_VERSION_MAJOR<6):
           MSG.wError(self._control,
-                     2376,"Your VTK version is lower than v6.0, you should consider upgrading","Oups...")
+                     501,"Your VTK version is lower than v6.0, you should consider upgrading","Oups...")
           if (VTK_VERSION_MINOR<8):
               MSG.wError(self._control,
-                         2377,"Your VTK version is lower than v5.8, if you have hexahedron in your mesh they cannot be display","Oups...")
+                         502,"Your VTK version is lower than v5.8, if you have hexahedron in your mesh they cannot be display","Oups...")
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,self._fgindex)
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
       self._epix=QIcon(QPixmap(":/images/icons/empty.png"))
@@ -667,7 +667,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def wCGNSTreeParse(self,T,zlist):
       self._parser=Mesh(T,zlist)
       if (not self._parser._status):
-          MSG.wError(self._control,823,'Cannot create VTK view',
+          MSG.wError(self._control,500,'Cannot create VTK view',
                      'No data or bad data for a VTK display')
           return False
       return True

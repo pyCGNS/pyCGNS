@@ -126,7 +126,7 @@ class Q7Log(QDialog,Ui_Q7LogWindow):
 
 # -----------------------------------------------------------------
 class Q7MessageBox(QDialog,Ui_Q7MessageWindow):
-    def __init__(self,control):
+    def __init__(self,control,code):
         QDialog.__init__(self,None)
         self.setupUi(self)
         self.bOK.clicked.connect(self.runOK)
@@ -135,6 +135,7 @@ class Q7MessageBox(QDialog,Ui_Q7MessageWindow):
         self._text=''
         self._result=None
         self._control=control
+        self._code=0
     def setMode(self,cancel=False,again=False):
         if (not again): self.cNotAgain.hide()
         if (not cancel): self.bCANCEL.hide()
@@ -149,35 +150,45 @@ class Q7MessageBox(QDialog,Ui_Q7MessageWindow):
         self.setMode(cancel,again)
     def runOK(self,*arg):
         self._result=True
+        self.addToSkip()
         self.close()
     def runCANCEL(self,*arg):
         self._result=False
+        self.addToSkip()
         self.close()
+    def addToSkip(self):
+        if (self.cNotAgain.isChecked()):
+            if (self._code and self._code not in OCTXT.IgnoredMessages):
+                OCTXT.IgnoredMessages+=[self._code]
+        print OCTXT.IgnoredMessages
     def showAndWait(self):
         self.exec_()
   
 def wError(control,code,info,error):
   txt="""<img source=":/images/icons/user-G.png">  <big>ERROR #%d</big><hr>
          %s<br>%s"""%(code,error,info)
-  msg=Q7MessageBox(control)
+  if (code in OCTXT.IgnoredMessages): return True
+  msg=Q7MessageBox(control,code)
   msg.setWindowTitle("%s: Error"%OCTXT._ToolName)
-  msg.setLayout(txt,btype=ERROR,cancel=False,again=False,buttons=('Close',))
+  msg.setLayout(txt,btype=ERROR,cancel=False,again=True,buttons=('Close',))
   msg.showAndWait()
   return msg._result
 
-def wQuestion(control,title,question,again=True,buttons=('OK','Cancel')):
+def wQuestion(control,code,title,question,again=True,buttons=('OK','Cancel')):
   txt="""<img source=":/images/icons/user-M.png">
          <b> <big>%s</big></b><hr>%s"""%(title,question)
-  msg=Q7MessageBox(control)
+  if (code in OCTXT.IgnoredMessages): return True
+  msg=Q7MessageBox(control,code)
   msg.setWindowTitle("%s: Question"%OCTXT._ToolName)
   msg.setLayout(txt,btype=QUESTION,cancel=True,again=again,buttons=buttons)
   msg.showAndWait()
   return msg._result
 
-def wInfo(control,title,info,again=True,buttons=('Close',)):
+def wInfo(control,code,title,info,again=True,buttons=('Close',)):
   txt="""<img source=":/images/icons/user-S.png">
          <b> <big>%s</big></b><hr>%s"""%(title,info)
-  msg=Q7MessageBox(control)
+  if (code in OCTXT.IgnoredMessages): return True
+  msg=Q7MessageBox(control,code)
   msg.setWindowTitle("%s: Info"%OCTXT._ToolName)
   msg.setLayout(txt,btype=INFO,cancel=False,again=again,buttons=buttons)
   msg.showAndWait()

@@ -35,6 +35,7 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
         self.bInfo.clicked.connect(self.infoOptionView)
         self.bClose.clicked.connect(self.close)
         self.bReset.clicked.connect(self.reset)
+        self.bResetIgnored.clicked.connect(self.resetIgnored)
         self.bResetFonts.clicked.connect(self.resetFonts)
         self.getOptions()
     def infoOptionView(self):
@@ -56,6 +57,9 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
                       self.getopt(dep).setEnabled(True)
                 else:
                     print 'CGNS.NAV (debug) NO OPTION :',chks
+    def resetIgnored(self):
+        print OCTXT.IgnoredMessages
+        OCTXT.IgnoredMessages=[]
     def reset(self):
         self.getOptions()
         data=self._options

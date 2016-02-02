@@ -511,7 +511,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         str_src="%s:%s/%s"%(self.FG.filename,
                          self.selectForLinkSrc[1],newname)
         str_msg="you want to create a link from <b>%s</b> to <b>%s</b><br>%s<br>Your current user options do force the link to use <b>%s</b> destination file path."""%(str_src,str_dst,str_cnm,tpath)
-        reply = MSG.wQuestion(self,'Create link as a new node',str_msg)
+        reply = MSG.wQuestion(self,310,'Create link as a new node',str_msg)
 
     def linklist(self):
         if (self._linkwindow is None):
@@ -569,7 +569,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         ix=self.treeview.modelCurrentIndex()
         node=self.modelData(ix)
         if (node is None):
-            MSG.wInfo(self,"Form view:",
+            MSG.wInfo(self,302,"Form view:",
                       """You have to select a node to open its form view""",
                       again=False)
             return

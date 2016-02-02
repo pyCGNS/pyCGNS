@@ -119,7 +119,7 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
         if (self._mode==CELLCOMBO): value=editor.currentText()
         if (self._mode==CELLTEXT):  value=editor.text()
         if (self._parent.setToAll()):
-          reply=MSG.wQuestion(self._parent,'Apply changes to all...',
+          reply=MSG.wQuestion(self._parent,371,'Apply changes to all...',
           """The same value is going to be set to all selected nodes,<br>
              Do we continue and perform the modification on all selected?<br>
              This may fail on some nodes if the data type is not the same
@@ -391,7 +391,7 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
     def reject(self):
         reply=True
         if (self._modified):
-            reply = MSG.wQuestion(self._control,'Leave query panel',
+            reply = MSG.wQuestion(self._control,370,'Leave query panel',
                                 """There are unsaved modified queries,
 leave this panel without save?""",again=False)
         if (not reply):

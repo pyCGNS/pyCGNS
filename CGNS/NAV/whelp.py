@@ -483,6 +483,28 @@ want to find back which result matches which value (see example)</td></tr>
 <h2>Option panel</h2>
 
 <h3>Buttons</h3>
+
+<h3>Message codes</h3>
+100 * Version and Copyright notice
+101 - CGNS.NAV Exit double check
+110 - Directory not found during file open
+120 - Clear file history - current not found file
+121 - Clear file history - all not found files
+122 - Clear file history - all files
+130 - Save abort
+131 - Save abort (execption caught)
+200 * Error during load (returns actual CGNS/HDF5 layer error)
+201 * Fatal error during load
+500 - Bad data for a VTK display
+501 - VTK version lower than v6.0
+502 - VTK version lower than v5.8
+302 - Node selection required for Form view
+310 - Create link as new node
+311 - Remove link entry
+370 - Leave query panel
+371 - Apply changes to all
+400 * Show diag view grammer used
+
 <p>
 <img source=":/images/icons/unselected.png">
 """),

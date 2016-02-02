@@ -118,7 +118,7 @@ class Q7LinkList(QW,Ui_Q7LinkWindow):
         if (not self._links): return
         i=self.linkTable.currentItem()
         if (i is None): return
-        reply = MSG.wQuestion(self,'Remove link entry',
+        reply = MSG.wQuestion(self,311,'Remove link entry',
                             """Do you want to remove the selected link entry?
                                Existing sub-tree would be <b>merged</b> in the
                                top file during the next save.""")

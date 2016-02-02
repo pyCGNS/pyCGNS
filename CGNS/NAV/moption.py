@@ -112,6 +112,7 @@ class Q7OptionContext(object):
     _OptionsFileName='~/.CGNS.NAV/optionsfile.py'
     _QueriesDefaultFile='default.py'
     _FunctionsDefaultFile='default.py'
+    IgnoredMessages=[]
     LinkSearchPathList=[]
     ProfileSearchPathList=[]
     GrammarSearchPathList=[]
