@@ -975,14 +975,14 @@ def getAuthNames(node):
        print 'not SIDS compliant name'
 
   :arg CGNS/Python node: the target node
-  :return: A list of authorized names
+  :return: A list of authorized names (empty list if not found)
 
   """
-  r=None
-  if   (node[1] is None): r=None
-  elif (node[1]==[]):   r=None
-  elif (node[3]==''):   r=None
-  elif (CT.types[node[3]].names in ['',None,CT.UD]): r=None
+  r=[]
+  if   (node[1] is None): r=[]
+  elif (node[1]==[]):     r=[]
+  elif (node[3]==''):     r=[]
+  elif (CT.types[node[3]].names in ['',None,CT.UD]): r=[]
   else: r=CT.types[node[3]].names
   return r
 
@@ -996,14 +996,14 @@ def getAuthDataTypes(node):
        print 'Type of node value is not SIDS comliant'
 
   :arg CGNS/Python node: the target node
-  :return: A list of authorized data types
+  :return: A list of authorized data types (empty if not found)
 
   """
-  r=None
-  if   (node[1] is None): r=None
-  elif (node[1]==[]):   r=None
-  elif (node[3]==''):   r=None
-  elif (CT.types[node[3]].datatype in ['',None,[CK.LK]]): r=None
+  r=[]
+  if   (node[1] is None): r=[]
+  elif (node[1]==[]):     r=[]
+  elif (node[3]==''):     r=[]
+  elif (CT.types[node[3]].datatype in ['',None,[CK.LK]]): r=[]
   else: r=CT.types[node[3]].datatype
   return r
 
@@ -1019,14 +1019,14 @@ def getAuthParentTypes(node):
        print '[%s] cannot have parent of type [%s]'%(p,np[3])
 
   :arg CGNS/Python node: the target node
-  :return: A list of authorized parent types
+  :return: A list of authorized parent types (empty list is none)
 
   """
-  r=None
-  if   (node[1] is None): r=None
-  elif (node[1]==[]):   r=None
-  elif (node[3]==''):   r=None
-  elif (CT.types[node[3]].parents in ['',None]): r=None
+  r=[]
+  if   (node[1] is None): r=[]
+  elif (node[1]==[]):     r=[]
+  elif (node[3]==''):     r=[]
+  elif (CT.types[node[3]].parents in ['',None]): r=[]
   else: r=CT.types[node[3]].parents
   return r
 
@@ -1043,11 +1043,11 @@ def getAuthShapes(node):
   :return: A list of authorized shapes
 
   """
-  r=None
-  if   (node[1] is None): r=None
-  elif (node[1]==[]):   r=None
-  elif (node[3]==''):   r=None
-  elif (CT.types[node[3]].shape in ['']): r=None
+  r=[]
+  if   (node[1] is None): r=[]
+  elif (node[1]==[]):     r=[]
+  elif (node[3]==''):     r=[]
+  elif (CT.types[node[3]].shape in ['']): r=[]
   else: r=CT.types[node[3]].shape
   return r
 
@@ -1065,11 +1065,11 @@ def getAuthChildren(node):
   :return: list of str, authorized CGNS/SIDS types for children
 
   """
-  r=None
-  if   (node[3] is None): r=None
-  elif (node[3]==[]):   r=None
-  elif (node[3]==''):   r=None
-  elif (CT.types[node[3]].children in ['',None,[]]): r=None
+  r=[]
+  if   (node[3] is None): r=[]
+  elif (node[3]==[]):     r=[]
+  elif (node[3]==''):     r=[]
+  elif (CT.types[node[3]].children in ['',None,[]]): r=[]
   else: r=CT.types[node[3]].children
   return r
 

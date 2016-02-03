@@ -13,5 +13,7 @@ CGNS/APP/lib/arrayutils.c
 CGNS/NAV/m*.c
 CGNS/NAV/diff.c
 CGNS/NAV/temputils.c
+CGNS/NAV/Res_rc_qt4.py
+changes
 .project
 .pydevproject

@@ -70,6 +70,15 @@ class GenericParser(object):
       self.log=CGM.DiagnosticLog()
     self.log.addMessages(genericmessages)
     self.context=GenericContext()
+    self._trace=False
+  # --------------------------------------------------------------------
+  def dbg(self,msg,*args):
+    if (self._trace):
+      print '> %-24s'%msg,
+      if (args):
+        for a in args:
+          print a,
+      print
   # --------------------------------------------------------------------
   def listDiagnostics(self):
     return self.log.listMessages()
@@ -139,20 +148,21 @@ class GenericParser(object):
       stt=self.checkReservedChildrenNames(T,path,node,parent)
     return stt
   # --------------------------------------------------------------------
-  def checkTreeStructure(self,T,path='',trace=False):
+  def checkTreeStructure(self,T,path=''):
     status=CGM.CHECK_GOOD
     status=self.checkLeafStructure(T,path,T,None)
     if (status==CGM.CHECK_GOOD):
       path=path+'/'+T[0]
       for c in T[2]:
-        status=self.checkTreeStructure(c,path,trace)
+        status=self.checkTreeStructure(c,path)
     return status
   # --------------------------------------------------------------------
   def checkTree(self,T,trace=False,stop=False):
     self._stop=stop
+    self._trace=trace
     status1=CGM.CHECK_GOOD
-    if (trace): print '### Parsing node paths...'
-    status1=self.checkTreeStructure(T,trace=trace)
+    if (self._trace): print '### Parsing node paths...'
+    status1=self.checkTreeStructure(T)
     if (status1!=CGM.CHECK_GOOD): return status1
     paths=CGU.getPathFullTree(T,width=True)
     sz=len(paths)+1
@@ -163,7 +173,7 @@ class GenericParser(object):
         if ((m[0][-2:]=='_t') or (m[0][-2:]=='_n') or (m[0][-3:]=='_ts')):
           self.methods+=[m[0]]
     for path in ['/']+paths:
-      if (trace): print '### Check node [%.6d/%.6d]\r'%(ct,sz),
+      if (self._trace): print '### Check node [%.6d/%.6d]\r'%(ct,sz),
       node=CGU.getNodeByPath(T,path)
       status2=CGM.CHECK_GOOD
       if (node is None):
@@ -173,7 +183,7 @@ class GenericParser(object):
         status2=self.checkLeaf(T,path,node)
       status1=status2
       ct+=1
-    if (trace): print
+    if (self._trace): print
     return status1
   # --------------------------------------------------
   def checkCardinalityOfChildren(self,T,path,node,parent):

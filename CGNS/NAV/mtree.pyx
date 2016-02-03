@@ -1279,9 +1279,13 @@ class Q7TreeModel(QAbstractItemModel):
         for tag in self._fingerprint.nextGrammarTag():
             modset.add(CGNS.VAL.parse.findgrammar.importUserGrammars(tag))
         self._fingerprint.popGrammarPaths()
+        print 'MOD ',modset
         for mod in modset:
-            if (mod is None): checkdiag=CGV.CGNS_VAL_USER_Checks(None)
-            else:             checkdiag=mod.CGNS_VAL_USER_Checks(None)
+            if (mod is None):
+                checkdiag=CGV.CGNS_VAL_USER_Checks(None)
+            else:
+                checkdiag=mod.CGNS_VAL_USER_Checks(None)
+                break
         checkdiag.checkTree(T,False)
         if (pathlist==[]):
             pathlist=self._extension.keys()

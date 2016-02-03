@@ -49,7 +49,7 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
     def diagTableKeyPressEvent(self,event):
         kmod=event.modifiers()
         kval=event.key()
-        if (kval==Qt.Key_Enter):
+        if (kval==Qt.Key_Space):
             itlist=self.diagTable.selectedItems()
             it=itlist[0]
             itxt=it.text(0)

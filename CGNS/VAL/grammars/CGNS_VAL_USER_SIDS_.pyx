@@ -34,6 +34,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     self.log.addMessages(SIDS_MESSAGES)
   # --------------------------------------------------------------------
   def CGNSBase_t(self,pth,node,parent,tree,log):
+    self.dbg("CGNSBase_t",pth)
     rs=CGM.CHECK_OK
     self.context[CGK.DataClass_s][pth]=None
     self.context[CGK.DimensionalUnits_s][pth]=None
@@ -58,12 +59,14 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def SimulationType_t(self,pth,node,parent,tree,log):
+    self.dbg("SimulationType_t",pth)
     rs=CGM.CHECK_OK
     if (not CGU.stringValueInList(node,CGK.SimulationType_l)):
       rs=log.push(pth,'s0000.0102')
     return rs
   # --------------------------------------------------------------------
   def Zone_t(self,pth,node,parent,tree,log):
+    self.dbg("Zone_t",pth)
     rs=CGM.CHECK_OK
     zt=CGU.hasChildName(node,CGK.ZoneType_s) # zone type
     zv=[] # vertexsize
@@ -97,35 +100,36 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
         nd=0
         zv.append(zd[nd][0]) # add VertexSize to context
         zc.append(zd[nd][1]) # add CellSize to context
-        if ((zd[nd][0]<=zd[nd][1]) or (zd[nd][2]!=0)):
-          rs=log.push(pth,'s0000.0010')
-          bad_value = True       
-        if (not CGU.hasChildType(node,CGK.Elements_ts)): # check if has Elements_t nodes
+        #if (zd[nd][0]>=zd[nd][1]) or (zd[nd][2]!=0)):
+        #  rs=log.push(pth,'s0000.0010')
+        #  bad_value = True
+        if (not CGU.hasChildType(node,CGK.Elements_ts)):
           rs=log.push(pth,'s0000.0605')       
       self.context[CGK.VertexSize_s][pth]=tuple(zv)
       self.context[CGK.CellSize_s][pth]=tuple(zc)
       if (    not bad_value 
           and not isStructured
           and CGU.hasChildType(node,CGK.Elements_ts)):
-        # Checking correct combination of element ranges using of a table initialized at 0 and 
-        # incremented by 1 for each element found in ElementRange children 
-        cellsize = self.context[CGK.CellSize_s][pth][0] # number of cells in zone
-  #      tcell = NPY.zeros(cellsize,dtype='i4', order='F') # table of zeros of size CellSize
+        # Checking correct combination of element ranges using of a
+        # table initialized at 0 and incremented by 1 for each element
+        # found in ElementRange children
+        cellsize = self.context[CGK.CellSize_s][pth][0] 
         tall  = NPY.zeros(cellsize,dtype='i4', order='F')
         has_nface = False # initialize
         has_ngon  = False # initialize
         facesize  = 0     # initialize
-        erl = dict(zip(range(len(CGK.ElementType)),NPY.empty([len(CGK.ElementType),0]).tolist())) # initialize element range list
+        erl = dict(zip(range(len(CGK.ElementType)),
+                       NPY.empty([len(CGK.ElementType),0]).tolist()))
         erpathlist=CGU.getPathsByTypeOrNameList(node,[node[3],
                                                       CGK.Elements_ts,
                                                       CGK.ElementRange_s])
         for erpath in erpathlist: # loop on element range paths
           er  = CGU.getNodeByPath(node,erpath) # element range node
-          #print 'ZAZA',erpath,CGU.getPathFromNode(tree,node)
           erp = CGU.getParentFromNode(tree,er) # element_t node
           et  = erp[1][0]                      # element type (integer)
           shp = (id,2)
-          if (CGU.getShape(er) == shp) and (CGU.getValueDataType(er) in [CGK.I4, CGK.I8]): # checking shape and type
+          if ((CGU.getShape(er) == shp)
+              and (CGU.getValueDataType(er) in [CGK.I4, CGK.I8])):
             # enlarge tall table if necessary
             min_i  = len(tall)+1
             max_i  = max(er[1][0])
@@ -133,34 +137,41 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
               t      = NPY.zeros(max_i-min_i+1,dtype='i4', order='F')
               tall   = NPY.concatenate((tall,t)) 
             if (all(er[1][0] > 0)): 
-              tall[range(min(er[1][0])-1,max(er[1][0]))] += 1 # add 1 to table 
-  #            if (et in val_u.getElementTypes(CGK.Cell_s,self.context[CGK.PhysicalDimension_s][pth])): # consider only cell Elements in tcell
-  #              tcell[range(min(er[1][0])-1,min(max(er[1][0]),cellsize))] += 1 # add 1 to table
-              erl[et].append([min(er[1][0]),max(er[1][0])]) # add to element range list, reordered min,max
+              tall[range(min(er[1][0])-1,max(er[1][0]))] += 1
+              erl[et].append([min(er[1][0]),max(er[1][0])]) 
           if   (et == CGK.NFACE_n): has_nface = True                  
           elif (et == CGK.NGON_n):  has_ngon  = True            
-        if ( erpathlist and # (any(tcell != 1) or ## # not in SIDS  
-             any(tall != 1)): rs=log.push(pth,'s0000.0209') # raise error if any element of table not equal to 1
-        if (has_nface and not has_ngon): rs=log.push(pth,'s0000.0198',CGK.NGON_n_s,CGK.NFACE_n_s)
-        self.context[CGK.ElementsSize_s][pth]=len(tall) # total number of elements in zone
-        self.context[CGK.ElementRangeList_s][pth]=erl   # range indices for each element type
+        if ( erpathlist and any(tall != 1)):
+          rs=log.push(pth,'s0000.0209') 
+        if (has_nface and not has_ngon):
+          rs=log.push(pth,'s0000.0198',CGK.NGON_n_s,CGK.NFACE_n_s)
+        self.context[CGK.ElementsSize_s][pth]=len(tall) 
+        self.context[CGK.ElementRangeList_s][pth]=erl
       elif (    not bad_value 
             and isStructured):
-        if (CGU.hasChildType(node,CGK.Elements_ts)): # Structured zone should not have Elements_t
+        # Structured zone should not have Elements_t
+        if (CGU.hasChildType(node,CGK.Elements_ts)): 
           rs=log.push(pth,'s0000.0608')
-        # check all boundary faces are either on a BC or a GridConnectivity node
-        # Only for structured zones here, test for unstructured zones is performed in Elements_t
-        (rl,al) = val_u.getIndicesOnBCandGC(tree,pth,id) # get IndexRange and IndexArray on BC and GridConnectivity
-        bndfaces = val_u.initBndFaces(zd) # create boundary face tables, full of 0, face-centered
+        # check all boundary faces are either on a BC or a
+        # GridConnectivity node Only for structured zones here, test
+        # for unstructured zones is performed in Elements_t
+        # get IndexRange and IndexArray on BC and GridConnectivity
+        (rl,al) = val_u.getIndicesOnBCandGC(tree,pth,id)
+        # create boundary face tables, full of 0, face-centered
+        bndfaces = val_u.initBndFaces(zd) 
         for r in rl:
-          (bnd,imin,imax,jmin,jmax)=val_u.getFaceNumber(r,zd) # get face number and indices, vertex-centered
+           # get face number and indices, vertex-centered
+          (bnd,imin,imax,jmin,jmax)=val_u.getFaceNumber(r,zd)
           if (bnd in range(cd*2)):
-            bndfaces[bnd][imin-1:imax-1,jmin-1:jmax-1] += 1 # add 1 to faces in range r         
+            # add 1 to faces in range r         
+            bndfaces[bnd][imin-1:imax-1,jmin-1:jmax-1] += 1
         for bnd in range(cd*2): # loop on boundary faces
           if (any(bndfaces[bnd].flatten() == 0)): # not defined faces
-            rs=log.push(pth,'s0000.0702',val_u.bdnName(bnd),NPY.where(bndfaces[bnd] == 0))              
+            rs=log.push(pth,'s0000.0702',
+                        val_u.bdnName(bnd),NPY.where(bndfaces[bnd] == 0)) 
           if (any(bndfaces[bnd].flatten() > 1)): # doubly defined faces
-            rs=log.push(pth,'s0000.0703',val_u.bdnName(bnd),NPY.where(bndfaces[bnd] > 1))   
+            rs=log.push(pth,'s0000.0703',
+                        val_u.bdnName(bnd),NPY.where(bndfaces[bnd] > 1))   
     if (CGU.hasChildNodeOfType(node,CGK.FamilyName_ts)):
       basepath=[CGK.CGNSTree_ts,parent[0],node[0]]
       searchpath=basepath+[CGK.FamilyName_ts]
@@ -191,22 +202,26 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def ZoneType_t(self,pth,node,parent,tree,log):
+    self.dbg("ZoneType_t",pth)
     rs=CGM.CHECK_OK
     if (not CGU.stringValueInList(node,CGK.ZoneType_l)):
       rs=log.push(pth,'s0000.0101')
     return rs
   # --------------------------------------------------------------------
   def CGNSTree_t(self,pth,node,parent,tree,log):
+    self.dbg("CGNSTree_t",pth)
     rs=CGM.CHECK_OK
     if (not CGU.hasChildType(node,CGK.CGNSBase_ts)):
       rs=log.push(pth,'s0000.0600')
     return rs
   # --------------------------------------------------------------------
   def ReferenceState_t(self,pth,node,parent,tree,log):
+    self.dbg("ReferenceState_t",pth)
     rs=CGM.CHECK_OK
     return rs
   # --------------------------------------------------------------------
   def Family_t(self,pth,node,parent,tree,log):
+    self.dbg("Family_t",pth)
     rs=CGM.CHECK_OK
     famname=node[0]
     basename=parent[0]
@@ -227,17 +242,18 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def IndexArray_t(self,pth,node,parent,tree,log):
+    self.dbg("IndexArray_t",pth)
     rs=CGM.CHECK_OK
-    if ((CGU.getAuthNames(node) is not None) 
-        and (node[0] not in CGU.getAuthNames(node))):  # checking name
+    if (node[0] not in CGU.getAuthNames(node)):
       rs=log.push(pth,'s0000.0122',node[0],node[3],CGU.getAuthNames(node)) 
-    # Getting referred zone (current or donor)
+    # Getting refered-to zone (current or donor)
     zpth = None
     if (parent[3] in CGU.getAuthParentTypes(node)):
       if (node[0] in [CGK.PointList_s,CGK.InwardNormalList_s]):
         zpth = pth
-      elif (    node[0] in [CGK.PointListDonor_s,CGK.CellListDonor_s] 
-            and parent[3] in [CGK.GridConnectivity1to1_ts,CGK.GridConnectivity_ts]):
+      elif (node[0] in [CGK.PointListDonor_s,CGK.CellListDonor_s] 
+            and parent[3] in [CGK.GridConnectivity1to1_ts,
+                              CGK.GridConnectivity_ts]):
         if (CGU.getValueDataType(parent) in [CGK.C1]):
           zdonorname=parent[1].tostring().rstrip()
           basename=val_u.getBase(pth,node,parent,tree,log)
@@ -262,31 +278,34 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
             if (shp != targetshp): # checking shape
               rs=log.push(pth,'s0000.0192',shp,targetshp,node[0])
           else:
-            if (   len(shp) != 2
-                or shp[0]   != self.context[CGK.PhysicalDimension_s][zpth]): # checking shape
-              rs=log.push(pth,'s0000.0192',shp,'(%s,?)' %self.context[CGK.PhysicalDimension_s][zpth],node[0])            
+            if ((len(shp)!=2)
+                or (shp[0]!=self.context[CGK.PhysicalDimension_s][zpth])): 
+              rs=log.push(pth,'s0000.0192',shp,
+                          '(%s,?)' %self.context[CGK.PhysicalDimension_s][zpth],
+                          node[0])            
         else: # node[0] != CGK.InwardNormalList_s
           if (CGU.getShape(node)[0]!=idim):  # checking shape
-            rs=log.push(pth,'s0000.0192',CGU.getShape(node),idim,node[0])          
+            rs=log.push(pth,'s0000.0192',CGU.getShape(node),idim,node[0])
           if (ntype not in [CGK.I4,CGK.I8]): # checking data type 
             rs=log.push(pth,'s0000.0199',ntype,[CGK.I4,CGK.I8])
           else:
             pl=node[1]
-            if (pl.size!=len(set(pl.flatten().tolist()))): # could use also NPY.unique()
-              rs=log.push(pth,'s0000.0208') # checking each value appears only once in list
-            if (any(pl.flatten()<1)): rs=log.push(pth,'s0000.0206') # checking out of range (<1) 
+            if (pl.size!=len(set(pl.flatten().tolist()))):
+              rs=log.push(pth,'s0000.0208')
+            if (any(pl.flatten()<1)): rs=log.push(pth,'s0000.0206')
             if (parent[3] == CGK.BCDataSet_ts):
-              refnode = CGU.getNodeByPath(tree,CGU.getPathAncestor(pth,level=2)) # BC_t
+              refnode=CGU.getNodeByPath(tree,CGU.getPathAncestor(pth,level=2))
             else:
-              refnode = parent
-            (gridloc,rs)  = val_u.getGridLocation(refnode,pth=pth,log=log,rs=rs)
+              refnode=parent
+            (gridloc,rs)=val_u.getGridLocation(refnode,pth=pth,log=log,rs=rs)
+            # cell data required for cell list donor
             if (    gridloc != CGK.CellCenter_s 
-                and node[0] == CGK.CellListDonor_s): # cell data required for cell list donor
+                and node[0] == CGK.CellListDonor_s): 
               rs=log.push(pth,'s0000.0218',gridloc,node[0],[CGK.CellCenter_s])
-            elif (    (gridloc==CGK.Vertex_s # Vertex data 
+            elif (    (gridloc==CGK.Vertex_s
                        or
                        (    gridloc.endswith(CGK.FaceCenter_s)
-                            and ztype==CGK.Structured_s # Face data for structured grid
+                            and ztype==CGK.Structured_s
                        )
                       )
                   and (len(self.context[CGK.VertexSize_s][zpth])==idim)
@@ -294,37 +313,40 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
               dd=self.context[CGK.VertexSize_s][zpth]
               for d in range(idim):
                 if (any(pl[d]>dd[d])):
-                  rs=log.push(pth,'s0000.0211',CGK.Vertex_s,d+1,idim,[1,dd[d]]) # checking out of range elements
+                  rs=log.push(pth,'s0000.0211',CGK.Vertex_s,d+1,idim,[1,dd[d]])
             elif (    (gridloc==CGK.CellCenter_s) # Cell center data 
                   and (ztype==CGK.Structured_s) # for structured zone 
                   and (len(self.context[CGK.CellSize_s][zpth])==idim)):
               dd=self.context[CGK.CellSize_s][zpth]
               for d in range(idim):
                 if (any(pl[d]>dd[d])):
-                  rs=log.push(pth,'s0000.0211',CGK.CellCenter_s,d+1,idim,[1,dd[d]]) # checking out of range elements
+                  rs=log.push(pth,'s0000.0211',
+                              CGK.CellCenter_s,d+1,idim,[1,dd[d]])
             else:
               if (ztype==CGK.Unstructured_s): # Unstructured zone
                 imin=1   
-#                if (gridloc==CGK.FaceCenter_s): imin=self.context[CGK.CellSize_s][zpth][0]+1  # not in SIDS                   
                 imax=self.context[CGK.ElementsSize_s][zpth]
                 if (any(pl[0]<imin) or any(pl[0]>imax)):
-                  rs=log.push(pth,'s0000.0211',gridloc,1,idim,[imin,imax]) # checking out of range elements
-                erl = val_u.getElementTypeRangeList(val_u.getLevelFromGridLoc(gridloc),
-                                                    self.context[CGK.PhysicalDimension_s][zpth],
-                                                    self.context[CGK.ElementRangeList_s][zpth])
-                rs=val_u.allIndexInElementRangeList(pl[0],erl,pth,log,rs)                                      
+                  rs=log.push(pth,'s0000.0211',gridloc,1,idim,[imin,imax])
+                _lv=val_u.getLevelFromGridLoc(gridloc)
+                _pd=self.context[CGK.PhysicalDimension_s][zpth]
+                _er=self.context[CGK.ElementRangeList_s][zpth]
+                erl=val_u.getElementTypeRangeList(_lv,_pd,_er)
+                rs=val_u.allIndexInElementRangeList(pl[0],erl,pth,log,rs)
     return rs
   # --------------------------------------------------------------------
   def DiscreteData_t(self,pth,node,parent,tree,log):
+    self.dbg("DiscreteData_t",pth)
     rs=CGM.CHECK_OK
     return rs
   # --------------------------------------------------------------------
   def IndexRange_t(self,pth,node,parent,tree,log):
+    self.dbg("IndexRange_t",pth)
     rs=CGM.CHECK_OK
-    if (    (CGU.getAuthNames(node) is not None) 
-        and (node[0] not in CGU.getAuthNames(node))):  # checking name
+    if (node[0] not in CGU.getAuthNames(node)):
       rs=log.push(pth,'s0000.0122',node[0],node[3],CGU.getAuthNames(node))
-    # Getting referred zone (current or donor)
+    # ---
+    # Get parent zone (current or donor)
     zpth = None
     if (parent[3] in CGU.getAuthParentTypes(node)):
       if (node[0] in [CGK.PointRange_s,CGK.ElementRange_s]):
@@ -348,13 +370,18 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
       shp=(self.context[CGK.IndexDimension_s][zpth],2)
       ntype = CGU.getValueDataType(node)
       ztype = val_u.getZoneType(tree,zpth)
-      if (CGU.getShape(node)!=shp): # checking shape
+      checkData=True
+      if (node[0]==CGK.ElementRange_s):
+        eshp=(2,)
+        checkData=False
+        if (CGU.getShape(node)!=eshp):
+          rs=log.push(pth,'s0000.0192',CGU.getShape(node),eshp,node[0])
+      elif (CGU.getShape(node)!=shp):
         rs=log.push(pth,'s0000.0192',CGU.getShape(node),shp,node[0])
-      elif (    (CGU.getAuthDataTypes(node) is not None) 
-            and (ntype not in CGU.getAuthDataTypes(node))):
-        # checking data type 
+        checkData=False
+      if (ntype not in CGU.getAuthDataTypes(node)):
         rs=log.push(pth,'s0000.0199',ntype,CGU.getAuthDataTypes(node))
-      else:
+      if checkData:
         pr=node[1]
         if (any(pr.flatten()<1)): rs=log.push(pth,'s0000.0206')
         # checking out of range (<1) 
@@ -409,14 +436,17 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
               rs=val_u.allIndexInElementRangeList(pr[0],erl,pth,log,rs)               
         elif (node[0]==CGK.ElementRange_s): # ElementRange node
           if (ztype!=CGK.Unstructured_s or parent[3] != CGK.Elements_ts):
-            rs=log.push(pth,'s0000.0609') # name reserved for elements of unstructured zones
+            rs=log.push(pth,'s0000.0609') 
           else: 
             dd=self.context[CGK.ElementsSize_s][zpth]
             if (any(pr.flatten()>dd)):
-              rs=log.push(pth,'s0000.0217',1,self.context[CGK.IndexDimension_s][zpth],[1,dd]) # checking out of range elements
+               # checking out of range elements
+              rs=log.push(pth,'s0000.0217',1,
+                          self.context[CGK.IndexDimension_s][zpth],[1,dd])
     return rs
   # --------------------------------------------------------------------
   def BC_t(self,pth,node,parent,tree,log):
+    self.dbg("BC_t",pth)
     rs=CGM.CHECK_OK
     if ((node[1] is None)
         or (not CGU.stringValueInList(node,CGK.BCType_l))):
@@ -438,12 +468,14 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def ZoneBC_t(self,pth,node,parent,tree,log):
+    self.dbg("ZoneBC_t",pth)
     rs=CGM.CHECK_OK
     if (not CGU.hasChildType(node,CGK.BC_ts)):
       rs=log.push(pth,'s0000.0604')
     return rs
   # --------------------------------------------------------------------
   def FlowSolution_t(self,pth,node,parent,tree,log):
+    self.dbg("FlowSolution_t",pth)
     rs=CGM.CHECK_OK
     (gridloc,rs)=val_u.getGridLocation(node,pth=pth,log=log,rs=rs)
     if (    val_u.getZoneType(tree,pth)==CGK.Unstructured_s # unstructured zone
@@ -456,12 +488,13 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
                             self.context[CGK.VertexSize_s][pth],
                             self.context[CGK.CellSize_s][pth])
     if (datasize):
-      for n in CGU.hasChildType(node,CGK.DataArray_ts): # check DataArray children shapes
+      for n in CGU.hasChildType(node,CGK.DataArray_ts): 
         if (CGU.getShape(n)!=datasize): 
           rs=log.push(pth,'s0000.0192',CGU.getShape(n),datasize,n[0])          
     return rs
   # --------------------------------------------------------------------
   def ZoneSubRegion_t(self,pth,node,parent,tree,log):
+    self.dbg("ZoneSubRegion_t",pth)
     rs=CGM.CHECK_OK
     if (CGU.getShape(node)!=(1,)):  # check shape
       rs=log.push(pth,'s0000.0192',CGU.getShape(node),(1,),node[0])
@@ -509,6 +542,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def Rind_t(self,pth,node,parent,tree,log):
+    self.dbg("Rind_t",pth)
     rs=CGM.CHECK_OK
     shp=(2*self.context[CGK.IndexDimension_s][pth],)
     if (CGU.getShape(node)!=shp):  # check shape
@@ -520,6 +554,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def Descriptor_t(self,pth,node,parent,tree,log):
+    self.dbg("Descriptor_t",pth)
     rs=CGM.CHECK_OK
     if (node[1] is not None):
       v=set(node[1])
@@ -529,10 +564,12 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def FamilyBCDataSet_t(self,pth,node,parent,tree,log):
+    self.dbg("FamilyBCDataSet_t",pth)
     rs=CGM.CHECK_OK
     return rs
   # --------------------------------------------------------------------
   def FamilyBC_t(self,pth,node,parent,tree,log):
+    self.dbg("FamilyBC_t",pth)
     rs=CGM.CHECK_OK
     if (node[0]!=CGK.FamilyBC_s):
       rs=log.push(pth,'s0000.0199',CGU.getValueDataType(node),[CGK.C1])
@@ -547,6 +584,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def FamilyName_t(self,pth,node,parent,tree,log):
+    self.dbg("FamilyName_t",pth)
     rs=CGM.CHECK_OK
     famdefinition=CGU.getNodeByPath(tree,pth)
     if (famdefinition[1] is None):
@@ -564,16 +602,19 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def ConvergenceHistory_t(self,pth,node,parent,tree,log):
+    self.dbg("ConvergenceHistory_t",pth)
     rs=CGM.CHECK_OK
     return rs
   # --------------------------------------------------------------------
   def ZoneGridConnectivity_t(self,pth,node,parent,tree,log):
+    self.dbg("ZoneGridConnectivity_t",pth)
     rs=CGM.CHECK_OK
     return rs
   # --------------------------------------------------------------------
   def GridConnectivity1to1_t(self,pth,node,parent,tree,log):
+    self.dbg("GridConnectivity1to1_t",pth)
     rs=CGM.CHECK_OK
-    if (val_u.getZoneType(tree,pth)!=CGK.Structured_s): # checking zone is structured
+    if (val_u.getZoneType(tree,pth)!=CGK.Structured_s):
       rs=log.push(pth,'s0000.0620')
     er =CGU.hasChildName(node,CGK.PointRange_s)
     erd=CGU.hasChildName(node,CGK.PointRangeDonor_s)
@@ -613,6 +654,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def GridConnectivity_t(self,pth,node,parent,tree,log):
+    self.dbg("GridConnectivity_t",pth)
     rs=CGM.CHECK_OK
     ntype = CGU.getValueDataType(node)
     if ((CGU.getAuthDataTypes(node) is not None) 
@@ -641,6 +683,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def GridCoordinates_t(self,pth,node,parent,tree,log):
+    self.dbg("GridCoordinates_t",pth)
     rs=CGM.CHECK_OK
     cl=CGU.hasChildType(node,CGK.DataArray_ts)
     if (not cl):
@@ -703,18 +746,22 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
     return rs
   # --------------------------------------------------------------------
   def UserDefinedData_t(self,pth,node,parent,tree,log):
+    self.dbg("UserDefinedData_t",pth)
     rs=CGM.CHECK_OK
     return rs
   # --------------------------------------------------------------------
   def Axisymmetry_t(self,pth,node,parent,tree,log):
+    self.dbg("Axisymmetry_t",pth)
     rs=CGM.CHECK_OK
     return rs
   # --------------------------------------------------------------------
   def FlowEquationSet_t(self,pth,node,parent,tree,log):
+    self.dbg("FlowEquationSet_t",pth)
     rs=CGM.CHECK_OK
     return rs
   # --------------------------------------------------------------------
   def Gravity_t(self,pth,node,parent,tree,log):
+    self.dbg("Gravity_t",pth)
     rs=CGM.CHECK_OK
     return rs
   # --------------------------------------------------------------------

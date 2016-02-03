@@ -583,7 +583,8 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
           ix=self.treeview.modelCurrentIndex()
           zlist=self.model().getSelectedZones()
           node=self.modelData(ix)
-          self._vtkwindow=Q7VTK(self._control,self,node,self._fgprint,self.model(),zlist)
+          self._vtkwindow=Q7VTK(self._control,self,node,
+                                self._fgprint,self.model(),zlist)
           if (self._vtkwindow._vtkstatus): self._vtkwindow.show()
           else: self._vtkwindow=None
           self.readyCursor()

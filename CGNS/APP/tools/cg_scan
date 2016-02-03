@@ -67,7 +67,7 @@ def checkRawFile(filename):
     sys.exit(0)
         
 def openFile(filename):
-    flags=CGM.S2P_NODATA
+    flags=CGM.S2P_DEFAULT|CGM.S2P_NODATA
     (t,l,p)=CGM.load(filename,flags=flags,lksearch=['.'],maxdata=200)
     return (t,l,p,filename)
 

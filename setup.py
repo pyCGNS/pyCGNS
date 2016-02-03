@@ -271,7 +271,10 @@ if (NAV and CONFIG.HAS_PYSIDE):
          
   if (os.path.getmtime('CGNS/NAV/R/Res.qrc')>os.path.getmtime('CGNS/NAV/Res_rc.py')):
       print '### pyCGNS: Generate from updated GUI Ressources'
-      com="(%s -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc)2>/dev/null"%(crc)
+      com="(%s -o CGNS/NAV/Res_rc_qt4.py CGNS/NAV/R/Res.qrc)2>/dev/null"%(crc)
+      print com
+      os.system(com)
+      com="cat CGNS/NAV/Res_rc_qt4.py|sed -e 's/PyQt4/PySide/'>CGNS/NAV/Res_rc.py"
       print com
       os.system(com)
 
