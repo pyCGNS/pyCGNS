@@ -2,8 +2,7 @@
 #  pyCGNS.VAL - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-#  $Release$
-#  -------------------------------------------------------------------------
+#
 
 import CGNS.VAL.grammars.CGNS_VAL_USER_DEFAULT as CGV
 import CGNS.VAL.parse.messages as CGM
