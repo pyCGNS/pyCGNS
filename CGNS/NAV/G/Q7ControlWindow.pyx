@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ControlWindow.ui'
 #
-# Created: Fri Sep 18 10:20:52 2015
+# Created: Wed Dec  9 11:16:16 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -148,6 +148,7 @@ class Ui_Q7ControlWindow(object):
         self.bLog.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "Log window", None, QtGui.QApplication.UnicodeUTF8))
         self.bOptionView.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "Set user defined options", None, QtGui.QApplication.UnicodeUTF8))
         self.bOptionView.setText(QtGui.QApplication.translate("Q7ControlWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.bInfo.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "Help window", None, QtGui.QApplication.UnicodeUTF8))
         self.bAbout.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "About....", None, QtGui.QApplication.UnicodeUTF8))
         self.bAbout.setText(QtGui.QApplication.translate("Q7ControlWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bClose.setToolTip(QtGui.QApplication.translate("Q7ControlWindow", "Close all CGNS.NAV windows", None, QtGui.QApplication.UnicodeUTF8))

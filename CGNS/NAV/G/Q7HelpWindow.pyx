@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7HelpWindow.ui'
 #
-# Created: Fri Sep 18 10:21:00 2015
+# Created: Wed Dec  9 10:45:43 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,6 +20,9 @@ class Ui_Q7HelpWindow(object):
         Q7HelpWindow.setSizePolicy(sizePolicy)
         Q7HelpWindow.setMinimumSize(QtCore.QSize(715, 350))
         Q7HelpWindow.setMaximumSize(QtCore.QSize(1200, 350))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Q7HelpWindow.setWindowIcon(icon)
         self.gridLayout = QtGui.QGridLayout(Q7HelpWindow)
         self.gridLayout.setObjectName("gridLayout")
         self.verticalLayout = QtGui.QVBoxLayout()
@@ -35,9 +38,9 @@ class Ui_Q7HelpWindow(object):
         self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))
         self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
         self.bBackControl.setText("")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bBackControl.setIcon(icon)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bBackControl.setIcon(icon1)
         self.bBackControl.setObjectName("bBackControl")
         self.horizontalLayout_2.addWidget(self.bBackControl)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)

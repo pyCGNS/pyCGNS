@@ -3,9 +3,10 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 # 
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
-from PySide.QtCore    import *
-from PySide.QtGui     import *
+from PySide.QtCore import *
+from PySide.QtGui  import *
 
 COPYPATTERN='@@COPYPATTERN@@'
 

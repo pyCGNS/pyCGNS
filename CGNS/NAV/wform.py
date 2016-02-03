@@ -3,16 +3,20 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+
 import sys
-from PySide.QtCore  import *
-from PySide.QtGui   import *
-from CGNS.NAV.Q7FormWindow import Ui_Q7FormWindow
-from CGNS.NAV.mtable import Q7TableModel
-from CGNS.NAV.wstylesheets import Q7TABLEVIEWSTYLESHEET
-from CGNS.NAV.wfingerprint import Q7Window
 
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
+
+from PySide.QtCore import *
+from PySide.QtGui  import *
+
+from CGNS.NAV.Q7FormWindow import Ui_Q7FormWindow
+from CGNS.NAV.mtable       import Q7TableModel
+from CGNS.NAV.wstylesheets import Q7TABLEVIEWSTYLESHEET
+from CGNS.NAV.wfingerprint import Q7Window
 
 # -----------------------------------------------------------------
 def divpairs(n):

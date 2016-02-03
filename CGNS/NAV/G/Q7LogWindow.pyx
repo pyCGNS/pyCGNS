@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7LogWindow.ui'
 #
-# Created: Fri Sep 18 10:21:02 2015
+# Created: Wed Dec  9 10:05:33 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -34,15 +34,6 @@ class Ui_Q7LogWindow(object):
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setSizeConstraint(QtGui.QLayout.SetNoConstraint)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.bInfo = QtGui.QPushButton(Q7LogWindow)
-        self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
-        self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
-        self.bInfo.setText("")
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bInfo.setIcon(icon1)
-        self.bInfo.setObjectName("bInfo")
-        self.horizontalLayout_2.addWidget(self.bInfo)
         spacerItem = QtGui.QSpacerItem(868, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.bClear = QtGui.QPushButton(Q7LogWindow)

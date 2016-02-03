@@ -11,8 +11,8 @@ import os.path as OP
 import sys
 import imp
 import tempfile
-from time import time,gmtime,strftime
 
+from time import time,gmtime,strftime
 from CGNS.pyCGNSconfig import version as __vid__
 
 WINOPTS=False
@@ -112,6 +112,7 @@ class Q7OptionContext(object):
     _OptionsFileName='~/.CGNS.NAV/optionsfile.py'
     _QueriesDefaultFile='default.py'
     _FunctionsDefaultFile='default.py'
+    IgnoredMessages=[]
     LinkSearchPathList=[]
     ProfileSearchPathList=[]
     GrammarSearchPathList=[]
@@ -145,7 +146,7 @@ Ching-Yang Wang      - U.S.A.<br>
 Alexandre Fayolle    - LOGILAB, France<br>
 Francois Thirifays   - CENAERO, Belgique<br>
 Pierre-Jacques Legay - BERTIN, France<br>
-Tristan Soubrié      - Andheo, France <br>
+Tristan Soubrié      - ANDHEO, France <br>
 Jérôme Regis         - STILOG, France<br>
 
 <h2>Copyrights</h2>

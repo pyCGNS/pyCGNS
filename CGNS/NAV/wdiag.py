@@ -3,23 +3,28 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from CGNS.NAV.moption import Q7OptionContext  as OCTXT
+
 import sys
 import os
-import string
-from PySide.QtCore  import *
-from PySide.QtGui   import *
-from CGNS.NAV.Q7DiagWindow import Ui_Q7DiagWindow
-from CGNS.NAV.wfingerprint import Q7Window
-from CGNS.NAV.moption import Q7OptionContext  as OCTXT
-import CGNS.VAL.simplecheck as CGV
+
+import CGNS.VAL.simplecheck    as CGV
 import CGNS.VAL.parse.messages as CGM
-import CGNS.NAV.wmessages as MSG
+
 from CGNS.VAL.parse.findgrammar import locateGrammars
 
+from PySide.QtCore  import *
+from PySide.QtGui   import *
+
+from CGNS.NAV.Q7DiagWindow import Ui_Q7DiagWindow
+from CGNS.NAV.wfingerprint import Q7Window as QW
+
+import CGNS.NAV.wmessages as MSG
+
 # -----------------------------------------------------------------
-class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
-    def __init__(self,parent,data,fgprint):
-        Q7Window.__init__(self,Q7Window.VIEW_DIAG,parent._control,None,fgprint)
+class Q7CheckList(QW,Ui_Q7DiagWindow):
+    def __init__(self,parent,data,fgindex):
+        QW.__init__(self,QW.VIEW_DIAG,parent._control,None,fgindex)
         self.bClose.clicked.connect(self.reject)
         self.bExpandAll.clicked.connect(self.expand)
         self.bInfo.clicked.connect(self.infoDiagView)
@@ -36,14 +41,15 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
         self._parent=parent
         self.diagTable.keyPressEvent=self.diagTableKeyPressEvent
         self.filterChange()
-        self._fingerprint=fgprint
+    def doRelease(self):
+        pass
     def grammars(self):
-        self._fingerprint.pushGrammarPaths()
+        self.FG.pushGrammarPaths()
         gl=""
         for g in locateGrammars():
             gl+="%s : %s<br>"%(g[0],os.path.split(g[1])[0])
-        self._fingerprint.popGrammarPaths()
-        MSG.wInfo(self,"Diag view:",
+        self.FG.popGrammarPaths()
+        MSG.wInfo(self,400,"Diag view:",
                   """Checks performed using the following grammars:<br>%s"""%gl,
                   again=False)
     def diagTableKeyPressEvent(self,event):
@@ -118,8 +124,8 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
           else:
             it=QTreeWidgetItem(None,(path,))
             it.setFont(0,OCTXT._Table_Font)
-            if (state==CGM.CHECK_FAIL): it.setIcon(0,self.I_C_SFL)
-            if (state==CGM.CHECK_WARN): it.setIcon(0,self.I_C_SWR)
+            if (state==CGM.CHECK_FAIL): it.setIcon(0,self.IC(QW.I_C_SFL))
+            if (state==CGM.CHECK_WARN): it.setIcon(0,self.IC(QW.I_C_SWR))
             v.insertTopLevelItem(0, it)
             for (diag,pth) in self._data.diagnosticsByPath(path):
               if ((diag.level==CGM.CHECK_WARN) and not warnings):
@@ -128,8 +134,10 @@ class Q7CheckList(Q7Window,Ui_Q7DiagWindow):
                 dit=QTreeWidgetItem(it,(self._data.message(diag),))
                 dit.setFont(0,OCTXT._Edit_Font)
                 keyset.add(diag.key)
-                if (diag.level==CGM.CHECK_FAIL): dit.setIcon(0,self.I_C_SFL)
-                if (diag.level==CGM.CHECK_WARN): dit.setIcon(0,self.I_C_SWR)
+                if (diag.level==CGM.CHECK_FAIL): 
+                    dit.setIcon(0,self.IC(QW.I_C_SFL))
+                if (diag.level==CGM.CHECK_WARN): 
+                    dit.setIcon(0,self.IC(QW.I_C_SWR))
                 if (diag.key not in self._filterItems):
                   self._filterItems[diag.key]=[dit]
                 else:

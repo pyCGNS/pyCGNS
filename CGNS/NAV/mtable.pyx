@@ -3,15 +3,17 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 # 
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+
 import sys
 import re
 import numpy
 
-from PySide.QtCore    import *
-from PySide.QtGui     import *
-
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
+
+from PySide.QtCore import *
+from PySide.QtGui  import *
 
 # -----------------------------------------------------------------
 class Q7TableView(QTableView):

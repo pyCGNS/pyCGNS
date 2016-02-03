@@ -3,31 +3,32 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #  
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+
 import sys
 import numpy
 import os
 import importlib
 import glob
 
-from PySide.QtCore  import *
-from PySide.QtGui   import QFileDialog
-from PySide.QtGui   import *
-from CGNS.NAV.Q7PatternWindow import Ui_Q7PatternWindow
-from CGNS.NAV.wfingerprint import Q7Window
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
-
-import CGNS.NAV.wmessages as MSG
-
-import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnsutils    as CGU
 import CGNS.PAT.cgnskeywords as CGK
-
 import CGNS.PAT.SIDS
 import CGNS.PAT.elsA
 
+from PySide.QtCore import *
+from PySide.QtGui  import QFileDialog
+from PySide.QtGui  import *
+
+from CGNS.NAV.Q7PatternWindow import Ui_Q7PatternWindow
+from CGNS.NAV.wfingerprint    import Q7Window as QW
+
+import CGNS.NAV.wmessages as MSG
+
 # -----------------------------------------------------------------
-class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
+class Q7PatternList(QW,Ui_Q7PatternWindow):
     def __init__(self,control,fgprint):
-        Q7Window.__init__(self,Q7Window.VIEW_PATTERN,control,None,None)
+        QW.__init__(self,QW.VIEW_PATTERN,control,None,None)
         self.bClose.clicked.connect(self.reject)
         self.bSave.clicked.connect(self.patternsave)
         self.bInfo.clicked.connect(self.infoPatternView)
@@ -51,7 +52,7 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
         if (self._selected is not None):
           rold=self.findRow(*self._selected)
           if (rold!=-1):
-              it1=QTableWidgetItem(self.I_EMPTY,'')
+              it1=QTableWidgetItem(self.IC(QW.I_EMPTY),'')
               self.patternTable.setItem(rold,0,it1)
     def findRow(self,pit,nit):
         maxrow=self.patternTable.rowCount()
@@ -73,7 +74,7 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
         self.clearSelection()
         self._selected=(pit,nit)
         self._control.copyPasteBuffer=self._profiles[pit][nit][0]
-        it1=QTableWidgetItem(self.I_MARK,'')
+        it1=QTableWidgetItem(self.IC(QW.I_MARK),'')
         self.patternTable.setItem(row,0,it1)
     def show(self):
         if (not self._initialized): self.reset()
@@ -106,7 +107,7 @@ class Q7PatternList(Q7Window,Ui_Q7PatternWindow):
             pentry=prof[k]
             v.setRowCount(v.rowCount()+1)
             r=v.rowCount()-1
-            it1=QTableWidgetItem(self.I_EMPTY,'')
+            it1=QTableWidgetItem(self.IC(QW.I_EMPTY),'')
             it2=QTableWidgetItem(k)
             it2.setFont(QFont("Courier"))
             it3=QTableWidgetItem(profkey)

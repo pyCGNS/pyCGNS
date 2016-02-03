@@ -3,13 +3,17 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #  
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+
 import sys
 import string
-from PySide.QtCore  import *
-from PySide.QtGui   import *
+
+from PySide.QtCore import *
+from PySide.QtGui  import *
+
 from CGNS.NAV.Q7OptionsWindow import Ui_Q7OptionsWindow
-from CGNS.NAV.wfingerprint import Q7Window
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from CGNS.NAV.moption         import Q7OptionContext as OCTXT
+from CGNS.NAV.wfingerprint    import Q7Window
 
 combonames=[]
 for tn in ['label','edit','table','button','rname','nname']:
@@ -29,8 +33,9 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
         Q7Window.__init__(self,Q7Window.VIEW_OPTION,parent,None,None)
         self.bApply.clicked.connect(self.accept)
         self.bInfo.clicked.connect(self.infoOptionView)
-        self.bClose.clicked.connect(self.reject)
+        self.bClose.clicked.connect(self.close)
         self.bReset.clicked.connect(self.reset)
+        self.bResetIgnored.clicked.connect(self.resetIgnored)
         self.bResetFonts.clicked.connect(self.resetFonts)
         self.getOptions()
     def infoOptionView(self):
@@ -52,6 +57,9 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
                       self.getopt(dep).setEnabled(True)
                 else:
                     print 'CGNS.NAV (debug) NO OPTION :',chks
+    def resetIgnored(self):
+        print OCTXT.IgnoredMessages
+        OCTXT.IgnoredMessages=[]
     def reset(self):
         self.getOptions()
         data=self._options
@@ -112,8 +120,6 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
         self.updateFonts(update=True)
         self.setOptions()
         self.reset()
-    def reject(self):
-        self.hide()
     def updateFonts(self,update=False):
         data=self._options
         scss=""

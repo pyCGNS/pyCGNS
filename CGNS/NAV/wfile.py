@@ -3,17 +3,19 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from PySide.QtCore    import *
-from PySide.QtGui     import *
-from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
-
 from CGNS.NAV.moption import Q7OptionContext  as OCTXT
-import CGNS.NAV.wmessages as MSG
 
 import os.path
 import stat
 import string
 import time
+
+from PySide.QtCore import *
+from PySide.QtGui  import *
+
+from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
+
+import CGNS.NAV.wmessages as MSG
 
 LOADBUTTON='Load'
 SAVEBUTTON='Save'
@@ -199,7 +201,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         p=str(self.direntries.currentText())
         if (os.path.isdir(p)): self.updateView()
         else:
-            reply=MSG.wQuestion(self.parent,'Directory not found...',
+            reply=MSG.wQuestion(self.parent,110,'Directory not found...',
                   """The path below doesn't exist, do you want to remove<br>
                      it from the history?<br>%s"""%p)
             if (reply == MSG.OK):
@@ -271,7 +273,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.updateMode=False
     def doClearHistory(self):
         if (self.rClearNoHDF.isChecked()):
-            reply=MSG.wQuestion(self.parent,'Clear history',
+            reply=MSG.wQuestion(self.parent,120,'Clear history',
                 """You really want to remove directory entries from history<br>
                    where no file with defined extensions has been found?<br>""")
             if (reply == MSG.OK):
@@ -280,7 +282,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
                     self.updateHistory()
                     self.lClear.clear()
         if (self.rClearNotFound.isChecked()):
-            reply=MSG.wQuestion(self.parent,'Clear history',
+            reply=MSG.wQuestion(self.parent,121,'Clear history',
                   """You really want to remove <b>NOT FOUND</b> entries from<br>
                      the history of used directories?<br>""")
             if (reply == MSG.OK):
@@ -289,7 +291,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
                     self.updateHistory()
                     self.lClear.clear()
         if (self.rClearAllDirs.isChecked()):
-            reply=MSG.wQuestion(self.parent,'Clear history',
+            reply=MSG.wQuestion(self.parent,122,'Clear history',
                   """You really want to remove <b>ALL</b> entries from the<br>
                      the history of used files and directories?<br>""")
             if (reply == MSG.OK):

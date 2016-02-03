@@ -66,7 +66,7 @@
        </property>
        <widget class="QWidget" name="tab_1">
         <attribute name="title">
-         <string>Load/Save</string>
+         <string>Load</string>
         </attribute>
         <widget class="QCheckBox" name="__O_recursivetreedisplay">
          <property name="geometry">
@@ -81,24 +81,11 @@
           <string>Recursive tree display</string>
          </property>
         </widget>
-        <widget class="QCheckBox" name="__O_recursivesidspatternsload">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>230</y>
-           <width>274</width>
-           <height>22</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Recursive SIDS patterns load</string>
-         </property>
-        </widget>
         <widget class="QCheckBox" name="__O_donotdisplaylargedata">
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>120</y>
+           <y>155</y>
            <width>274</width>
            <height>22</height>
           </rect>
@@ -107,37 +94,11 @@
           <string>Do not dispay large data</string>
          </property>
         </widget>
-        <widget class="QCheckBox" name="__O_followlinksatload">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>170</y>
-           <width>274</width>
-           <height>22</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Follow links during file load</string>
-         </property>
-        </widget>
-        <widget class="QCheckBox" name="__O_donotfollowlinksatsave">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>210</y>
-           <width>274</width>
-           <height>22</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Do not follow links during file save</string>
-         </property>
-        </widget>
         <widget class="QCheckBox" name="__O_donotloadlargearrays">
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>65</y>
+           <y>80</y>
            <width>274</width>
            <height>22</height>
           </rect>
@@ -150,20 +111,20 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>30</y>
+           <y>35</y>
            <width>217</width>
            <height>27</height>
           </rect>
          </property>
          <property name="text">
-          <string>Max tree parse recursion level</string>
+          <string>Max tree parse recursion level:</string>
          </property>
         </widget>
         <widget class="QSpinBox" name="__O_maxrecursionlevel">
          <property name="geometry">
           <rect>
            <x>235</x>
-           <y>20</y>
+           <y>35</y>
            <width>71</width>
            <height>27</height>
           </rect>
@@ -185,7 +146,7 @@
          <property name="geometry">
           <rect>
            <x>235</x>
-           <y>70</y>
+           <y>100</y>
            <width>71</width>
            <height>27</height>
           </rect>
@@ -198,19 +159,6 @@
          </property>
          <property name="value">
           <number>-1</number>
-         </property>
-        </widget>
-        <widget class="QCheckBox" name="__O_stoploadbrokenlinks">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>190</y>
-           <width>274</width>
-           <height>22</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Stop loading on broken link</string>
          </property>
         </widget>
         <widget class="QCheckBox" name="__O_filterhdffiles">
@@ -230,7 +178,7 @@
          <property name="geometry">
           <rect>
            <x>320</x>
-           <y>80</y>
+           <y>90</y>
            <width>274</width>
            <height>22</height>
           </rect>
@@ -242,7 +190,7 @@
         <widget class="Line" name="line">
          <property name="geometry">
           <rect>
-           <x>300</x>
+           <x>305</x>
            <y>10</y>
            <width>20</width>
            <height>261</height>
@@ -256,7 +204,7 @@
          <property name="geometry">
           <rect>
            <x>335</x>
-           <y>100</y>
+           <y>110</y>
            <width>211</width>
            <height>41</height>
           </rect>
@@ -276,7 +224,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>135</y>
+           <y>175</y>
            <width>217</width>
            <height>27</height>
           </rect>
@@ -289,7 +237,7 @@
          <property name="geometry">
           <rect>
            <x>235</x>
-           <y>125</y>
+           <y>175</y>
            <width>71</width>
            <height>27</height>
           </rect>
@@ -308,7 +256,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>80</y>
+           <y>100</y>
            <width>217</width>
            <height>27</height>
           </rect>
@@ -317,11 +265,16 @@
           <string>Do not load node data if above:</string>
          </property>
         </widget>
+       </widget>
+       <widget class="QWidget" name="tab_8">
+        <attribute name="title">
+         <string>Save</string>
+        </attribute>
         <widget class="QCheckBox" name="__O_fileupdateremoveschildren">
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>250</y>
+           <y>10</y>
            <width>271</width>
            <height>21</height>
           </rect>
@@ -333,13 +286,13 @@
        </widget>
        <widget class="QWidget" name="tab_2">
         <attribute name="title">
-         <string>Paths</string>
+         <string>Links</string>
         </attribute>
         <widget class="QCheckBox" name="__O_addcurrentdirinsearch">
          <property name="geometry">
           <rect>
-           <x>10</x>
-           <y>5</y>
+           <x>5</x>
+           <y>10</y>
            <width>274</width>
            <height>22</height>
           </rect>
@@ -354,8 +307,8 @@
         <widget class="QCheckBox" name="__O_addrootdirinsearch">
          <property name="geometry">
           <rect>
-           <x>10</x>
-           <y>25</y>
+           <x>5</x>
+           <y>35</y>
            <width>311</width>
            <height>22</height>
           </rect>
@@ -368,81 +321,61 @@
          <property name="geometry">
           <rect>
            <x>5</x>
-           <y>45</y>
+           <y>105</y>
            <width>546</width>
-           <height>236</height>
+           <height>171</height>
           </rect>
          </property>
          <property name="title">
           <string>Search paths</string>
          </property>
-         <widget class="QLabel" name="label_24">
-          <property name="geometry">
-           <rect>
-            <x>5</x>
-            <y>160</y>
-            <width>147</width>
-            <height>51</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Grammars</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_7">
-          <property name="geometry">
-           <rect>
-            <x>5</x>
-            <y>85</y>
-            <width>147</width>
-            <height>51</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Profiles</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_8">
-          <property name="geometry">
-           <rect>
-            <x>5</x>
-            <y>30</y>
-            <width>147</width>
-            <height>27</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Links</string>
-          </property>
-         </widget>
-         <widget class="QPlainTextEdit" name="__O_grammarsearchpathlist">
-          <property name="geometry">
-           <rect>
-            <x>80</x>
-            <y>160</y>
-            <width>456</width>
-            <height>66</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QPlainTextEdit" name="__O_profilesearchpathlist">
-          <property name="geometry">
-           <rect>
-            <x>80</x>
-            <y>85</y>
-            <width>456</width>
-            <height>66</height>
-           </rect>
-          </property>
-         </widget>
          <widget class="QPlainTextEdit" name="__O_linksearchpathlist">
           <property name="geometry">
            <rect>
-            <x>80</x>
-            <y>15</y>
-            <width>456</width>
+            <x>0</x>
+            <y>25</y>
+            <width>541</width>
             <height>61</height>
            </rect>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="__O_followlinksatload">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>95</y>
+            <width>274</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Follow links during file load</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="__O_stoploadbrokenlinks">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>120</y>
+            <width>274</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Stop loading on broken link</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="__O_donotfollowlinksatsave">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>145</y>
+            <width>274</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Do not follow links during file save</string>
           </property>
          </widget>
         </widget>
@@ -460,6 +393,47 @@
          </property>
          <property name="text">
           <string>Remove unreachable paths</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_7">
+        <attribute name="title">
+         <string>Profiles</string>
+        </attribute>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="geometry">
+          <rect>
+           <x>5</x>
+           <y>5</y>
+           <width>546</width>
+           <height>96</height>
+          </rect>
+         </property>
+         <property name="title">
+          <string>Search paths</string>
+         </property>
+         <widget class="QPlainTextEdit" name="__O_profilesearchpathlist">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>25</y>
+            <width>541</width>
+            <height>66</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QCheckBox" name="__O_recursivesidspatternsload">
+         <property name="geometry">
+          <rect>
+           <x>5</x>
+           <y>105</y>
+           <width>274</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Recursive SIDS patterns load</string>
          </property>
         </widget>
        </widget>
@@ -530,29 +504,6 @@
          <property name="title">
           <string>CGNS.VAL parameters</string>
          </property>
-         <widget class="QPlainTextEdit" name="__O_valkeylist">
-          <property name="geometry">
-           <rect>
-            <x>380</x>
-            <y>35</y>
-            <width>156</width>
-            <height>156</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_25">
-          <property name="geometry">
-           <rect>
-            <x>380</x>
-            <y>15</y>
-            <width>111</width>
-            <height>16</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Grammar keys</string>
-          </property>
-         </widget>
          <widget class="QLabel" name="label_31">
           <property name="geometry">
            <rect>
@@ -585,6 +536,52 @@
            <bool>false</bool>
           </property>
          </widget>
+         <widget class="QPlainTextEdit" name="__O_grammarsearchpathlist">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>130</y>
+            <width>536</width>
+            <height>66</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_24">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>95</y>
+            <width>147</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Search paths&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QLabel" name="label_25">
+         <property name="geometry">
+          <rect>
+           <x>385</x>
+           <y>10</y>
+           <width>111</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Grammar keys</string>
+         </property>
+        </widget>
+        <widget class="QPlainTextEdit" name="__O_valkeylist">
+         <property name="geometry">
+          <rect>
+           <x>385</x>
+           <y>30</y>
+           <width>156</width>
+           <height>156</height>
+          </rect>
+         </property>
         </widget>
        </widget>
        <widget class="QWidget" name="tab_3">
@@ -1059,7 +1056,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>40</y>
+           <y>55</y>
            <width>274</width>
            <height>22</height>
           </rect>
@@ -1072,7 +1069,7 @@
          <property name="geometry">
           <rect>
            <x>320</x>
-           <y>0</y>
+           <y>5</y>
            <width>274</width>
            <height>22</height>
           </rect>
@@ -1085,7 +1082,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>60</y>
+           <y>80</y>
            <width>274</width>
            <height>22</height>
           </rect>
@@ -1098,7 +1095,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>80</y>
+           <y>105</y>
            <width>274</width>
            <height>22</height>
           </rect>
@@ -1114,7 +1111,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>20</y>
+           <y>30</y>
            <width>274</width>
            <height>22</height>
           </rect>
@@ -1127,7 +1124,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>0</y>
+           <y>5</y>
            <width>274</width>
            <height>22</height>
           </rect>
@@ -1140,7 +1137,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>110</y>
+           <y>135</y>
            <width>217</width>
            <height>27</height>
           </rect>
@@ -1153,7 +1150,7 @@
          <property name="geometry">
           <rect>
            <x>230</x>
-           <y>110</y>
+           <y>135</y>
            <width>101</width>
            <height>27</height>
           </rect>
@@ -1175,7 +1172,7 @@
          <property name="geometry">
           <rect>
            <x>320</x>
-           <y>20</y>
+           <y>30</y>
            <width>274</width>
            <height>22</height>
           </rect>
@@ -1188,7 +1185,7 @@
          <property name="geometry">
           <rect>
            <x>320</x>
-           <y>50</y>
+           <y>55</y>
            <width>166</width>
            <height>21</height>
           </rect>
@@ -1217,8 +1214,8 @@
          <widget class="QCheckBox" name="__O_querynoexception">
           <property name="geometry">
            <rect>
-            <x>20</x>
-            <y>25</y>
+            <x>5</x>
+            <y>30</y>
             <width>246</width>
             <height>20</height>
            </rect>
@@ -1251,7 +1248,7 @@
          <property name="geometry">
           <rect>
            <x>15</x>
-           <y>30</y>
+           <y>35</y>
            <width>331</width>
            <height>20</height>
           </rect>
@@ -1334,32 +1331,6 @@
           </rect>
          </property>
         </widget>
-        <widget class="QCheckBox" name="__O_chlonetrace">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>215</y>
-           <width>111</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>CHLone trace</string>
-         </property>
-        </widget>
-        <widget class="QCheckBox" name="__O_navtrace">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>195</y>
-           <width>131</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>CGNS.NAV trace</string>
-         </property>
-        </widget>
         <widget class="QLabel" name="label_10">
          <property name="geometry">
           <rect>
@@ -1430,6 +1401,45 @@
          </property>
          <property name="text">
           <string>Activate Multi-threading</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="__O_navtrace">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>195</y>
+           <width>131</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>CGNS.NAV trace</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="__O_chlonetrace">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>215</y>
+           <width>111</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>CHLone trace</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="bResetIgnored">
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>240</y>
+           <width>166</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Reset ignored messages</string>
          </property>
         </widget>
        </widget>
