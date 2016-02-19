@@ -493,6 +493,7 @@ want to find back which result matches which value (see example)</td></tr>
 122 - Clear file history - all files
 130 - Save abort
 131 - Save abort (execption caught)
+132 - Save warning about file overwriting issue
 200 * Error during load (returns actual CGNS/HDF5 layer error)
 201 * Fatal error during load
 500 - Bad data for a VTK display
@@ -512,6 +513,51 @@ want to find back which result matches which value (see example)</td></tr>
 'File':('File panel',
 """
 <h2>File panel</h2>
+The same panel is used for both <b>load</b> and <b>save</b> file selection.
+The <b>Cancel</b> button would abort the current load or save
+operation, but once the the load/save process is strated there is no way
+to abort it.
+<p>
+There are two tabs, the <i>Selection</i> tab is the default one, you select
+there the directory and filename of the target file you want to load or to
+save. The <I>Options</i> tab sets the behavior of the file filter and the
+history of your loads/saves.
+<P>
+The <i>File panel</i> filters the CGNS/HDF/ADF files depending on the options
+you set. Files can be sorted by name, size, type or modification date by
+clicking on the corresponding column header.
+<p>
+Unchecking the <i>Show directories</i> checkbox would mask all directories
+from the table, thus making it more easy to find your file in large lists.
+
+<h3>Load</h3>
+The <i>File panel</i> options checkboxes, such as <i>Do Not load large data</i>
+are used only for the current load/save. The initial values of these checkboxes,
+each time you open the panel, are get from your overall options (see the
+<img source=":/images/icons/option-view.png"> <i>Options Panel</i>).
+<p>
+<img source=":/images/icons/h_files_checks.png">
+<table>
+<tr><td><b>Do not load large data</b></td><td>Skip large arrays, the threshold
+is set in the <i>Options Panel</i></td></tr>
+<tr><td><b>Follow links</b></td><td>Recursively load files you can reach through linksSkip large arrays, the threshold is
+set in the <i>Options Panel</i></td></tr>
+<tr><td><b>Open as read-only</b></td><td>Prevent any attempt to modify the
+tree. This guard is unlocked if you do a <I>Save as</i>, the tree is then
+associated to a new file and becames writable.</td></tr>
+</table>
+
+<h3>Save</h3>
+The save policy is complex as saving a CGNS tree can be an update or
+an overwrite. 
+The save checkboxes are <i>overwrite</i> and <i>delete missing</i>, the behavior
+of the same is summerized in this table:
+<table>
+<tr><td><img source=":/images/icons/w_file_checks_00.png"></td><td></td></tr>
+<tr><td><img source=":/images/icons/w_file_checks_10.png"></td><td></td></tr>
+<tr><td><img source=":/images/icons/w_file_checks_01.png"></td><td></td></tr>
+<tr><td><img source=":/images/icons/w_file_checks_11.png"></td><td></td></tr>
+</table>
 
 <h3>Buttons</h3>
 <p>

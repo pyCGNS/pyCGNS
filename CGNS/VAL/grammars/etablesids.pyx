@@ -116,6 +116,7 @@ messagetable=(
 ('s0000.0266',CGM.CHECK_FAIL,'Coordinate name not allowed for 3D system'),
 
 ('s0000.0270',CGM.CHECK_WARN,'Descriptor contains non-printable or non-ascii chars'),
+('s0000.0271',CGM.CHECK_WARN,'Descriptor is empty (no data)'),
 
 ('s0000.0280',CGM.CHECK_FAIL,'DiffusionModel should have a value'),
 ('s0000.0281',CGM.CHECK_FAIL,'DiffusionModel value should have dimension of %d'),

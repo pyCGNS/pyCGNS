@@ -45,40 +45,87 @@ LIST_PATTERN=(IMIN_PATTERN,JMIN_PATTERN,KMIN_PATTERN,
               QUAD_PATTERN,TRI_PATTERN)
 
 # ----------------------------------------------------------------------------
+class Q7vtkAssembly(vtk.vtkPropAssembly):
+  def topo(self,newtopo=None):
+    if (newtopo is not None):
+      self._topo=newtopo
+    return self._topo
+  def tag(self,newtag=None):
+    if (newtag is not None):
+      self._tag=newtag
+    return self._tag
+  def alone(self):
+    return False
+  def __repr__(self):
+    s="Q7vtkAssembly(%s:'%s',%d):<<"%(self._topo,self._tag,
+                                      self.GetParts().GetNumberOfItems())
+    plst=self.GetParts()
+    plst.InitTraversal()
+    a=plst.GetNextItemAsObject()
+    while a:
+      s+=a.__repr__()
+      a=plst.GetNextItemAsObject()
+    s+='>>'
+    return s
+     
+  
+# ----------------------------------------------------------------------------
 class Q7vtkActor(vtk.vtkActor):
-  __actortypes=['Zone','BC','Min/Max']
+  __actortypes=['BC','Min/Max','CT']
   def __init__(self,topo=None):
-    if (topo in self.__actortypes):
-        self.__type=topo
-    else: self.__type='Zone'
+    if (topo in self.__actortypes): self._type=topo
+    else: self._type='???' ### FIXME
+    self._families=[]
+    self._zones=[]
+    self._zonepath=''
   def topo(self):
-    return self.__type
+    return self._type
+  def addFamily(self,fam):
+    if (fam and fam not in self._families): self._families.append(fam)
+  def families(self):
+    return self._families
+  def addZone(self,zone):
+    if (zone and zone not in self._zones): self._zones.append(zone)
+  def zones(self):
+    return self._zones
+  def zonepath(self,zpath=None):
+    if (zpath is None): return self._zonepath
+    self._zonepath=zpath
+  def path(self,path=None):
+    if (path is None): return self._path
+    self._path=path
+  def alone(self):
+    return True
+  def __repr__(self):
+    s=" Q7vtkActor('%s':'%s')\n"%(self._type,self._path)
+    return s
 
 # ----------------------------------------------------------------------------
 class ZoneData(object):
   __zones=[]
-  def __init__(self,meshcoords,surfcoords,bndlist,path,surfpaths,bcpaths,sols,
-               bcfams):
+  def __init__(self,meshcoords,ctlist,bclist,path,ctpaths,bcpaths,
+               sols,bcfams,ctfams):
     self.meshcoordinates=meshcoords # 0
-    self.surfcoordinates=surfcoords # 1
-    self.bndlist=bndlist            # 2
+    self.ctlist=ctlist              # 1
+    self.bclist=bclist              # 2
     self.path=path                  # 3
-    self.surfpaths=surfpaths        # 4
+    self.ctpaths=ctpaths            # 4
     self.bcpaths=bcpaths            # 5
     self.sols=sols                  # 6
     self.bcfams=bcfams
+    self.ctfams=ctfams
     self.X=self.meshcoordinates[0]
     self.Y=self.meshcoordinates[1]
     self.Z=self.meshcoordinates[2]
-    self.surfaces=zip(self.surfpaths,self.surfcoordinates)
-    self.boundaries=zip(self.bcpaths,self.bndlist,self.bcfams)
+    self.boundaries=zip(self.bcpaths,self.bclist,self.bcfams)
+    self.zconnectivities=zip(self.ctpaths,self.ctlist,self.ctfams)
     ZoneData.__zones.append(self)
   @classmethod
   def zonelist(cls):
     for z in cls.__zones: yield z
 
+# ----------------------------------------------------------------------------
 class CGNSparser:
-  
   def __init__(self,T):    
     self._zones={}
     self._zones_ns={}
@@ -132,10 +179,16 @@ class CGNSparser:
             surfpaths=[zp+IMIN_PATTERN,zp+IMAX_PATTERN,
                        zp+JMIN_PATTERN,zp+JMAX_PATTERN,
                        zp+KMIN_PATTERN,zp+KMAX_PATTERN]
-            bndlist=[]
+            bclist=[]
             bcpaths=[]
+            ctlist=[]
+            ctpaths=[]
             bcfams=[]
+            ctfams=[]
             solutions=[]
+            bname=CGU.getPathAncestor(z)
+            znfams=['%s/%s'%(bname,znf)
+                    for znf in CGU.getFamiliesFromZone(T,z)]
             for sol in CGU.getAllNodesByTypeSet(zT,[CGK.FlowSolution_ts]):
               zsol=CGU.nodeByPath(sol,zT)
               for data in CGU.getAllNodesByTypeSet(zsol,[CGK.DataArray_ts]):
@@ -144,28 +197,36 @@ class CGNSparser:
             for nzbc in CGU.getAllNodesByTypeSet(zT,[CGK.ZoneBC_ts]):
               zbcT=CGU.nodeByPath(nzbc,zT)
               for nbc in CGU.getAllNodesByTypeSet(zbcT,[CGK.BC_ts]):
-                bcpaths+=['%s/ZoneBC/%s'%(zp,nbc.split('/')[1])]
-                bcnode=CGU.getNodeByPath(zbcT,nbc)
-                lfbc =CGU.hasChildType(bcnode,CGK.FamilyName_ts)
-                lfbc+=CGU.hasChildType(bcnode,CGK.AdditionalFamilyName_ts)
-                nflbcs=[]
-                for nlfbc in lfbc:
-                  nflbcs+=[nlfbc[1].tostring()]
-                bcfams+=[nflbcs]
+                bcpaths+=['%s/ZoneBC/%s'%(z,nbc.split('/')[1])]
+                bcfams.append(['%s/%s'%(bname,bcf)
+                               for bcf in CGU.getFamiliesFromBC(zT,nbc)])
+                bcfams[-1]+=znfams
                 bcT=CGU.nodeByPath(nbc,zbcT)
                 for rbc in CGU.getAllNodesByTypeSet(bcT,[CGK.IndexRange_ts]):
                   ptr=CGU.nodeByPath(rbc,bcT)[1].T.flat
                   brg=[scx[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],
                        scy[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],
                        scz[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]]]
-                  bndlist+=[brg]
-            # self._zones[zg]=([acx,acy,acz],
-            #                 [simin,simax,sjmin,sjmax,skmin,skmax],bndlist,
-            #                 meshpath,surfpaths,bcpaths,solutions)
+                  bclist+=[brg]
+            for nzbc in CGU.getAllNodesByTypeSet(zT,[CGK.ZoneGridConnectivity_ts]):
+              zbcT=CGU.nodeByPath(nzbc,zT)
+              for nbc in CGU.getAllNodesByTypeSet(zbcT,[CGK.GridConnectivity_ts,
+                                                        CGK.GridConnectivity1to1_ts]):
+                ctpaths+=['%s/ZoneGridConnectivity/%s'%(z,nbc.split('/')[1])]
+                ctfams+=[znfams]
+                bcnode=CGU.getNodeByPath(zbcT,nbc)
+                bcT=CGU.nodeByPath(nbc,zbcT)
+                rbc=CGU.hasChildNode(bcT,CGK.PointRange_s)
+                if (rbc is not None):
+                  ptr=rbc[1].T.flat
+                  brg=[scx[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],
+                       scy[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]],
+                       scz[ptr[0]-1:ptr[3],ptr[1]-1:ptr[4],ptr[2]-1:ptr[5]]]
+                  ctlist+=[brg]
             self._zones[zg]=ZoneData([acx,acy,acz],
-                            [simin,simax,sjmin,sjmax,skmin,skmax],bndlist,
-                            meshpath,surfpaths,bcpaths,solutions,
-                            bcfams)
+                                     ctlist,bclist,
+                                     z,ctpaths,bcpaths,solutions,
+                                     bcfams,ctfams)
           elif (ztype[1].tostring()==CGK.Unstructured_s):
             volume={}
             surface={}
@@ -229,7 +290,38 @@ class Mesh(CGNSparser):
       self.do_vtk(z)
       QCoreApplication.processEvents()
     self._actors+=self.createActors_ns()
+    lf=self.addFamilies()
+    self._actors+=lf
+    lf=self.addIntoZones()
+    self._actors+=lf
+    QCoreApplication.processEvents()
     return self._actors
+
+  def addFamilies(self):
+    fd={}
+    for a in self._actors:
+      for f in a[0].families():
+        if (f and not fd.has_key(f)):
+          g=a[0].GetMapper().GetInput()
+          fd[f]=[Q7vtkAssembly(),None,g,f,(1,None),None]
+        fd[f][0].AddPart(a[0])
+        fd[f][0].topo('Family')
+        fd[f][0].tag(f)
+    return fd.values()
+    
+  def addIntoZones(self):
+    fd={}
+    for a in self._actors:
+      if (a[0].alone()):
+        for zn in ZoneData.zonelist():
+          if (a[0].zonepath()==zn.path):
+            if (not fd.has_key(zn.path)):
+              g=a[0].GetMapper().GetInput()
+              fd[zn.path]=[Q7vtkAssembly(),None,g,zn.path,(1,None),None]
+            fd[zn.path][0].AddPart(a[0])
+            fd[zn.path][0].topo('Zone')
+            fd[zn.path][0].tag(zn.path)
+    return fd.values()
 
   def createActors_ns(self):
     actors=self.do_surface_ns(self._zones_ns)
@@ -255,7 +347,7 @@ class Mesh(CGNSparser):
     return ('A','B','C')
 
   def getPathFromObject(self,selectedobject):
-    for (o,p) in [(a[2],a[3]) for a in self._actors]:                  
+    for (o,p) in [(a[2],a[3]) for a in self._actors]:
         if (selectedobject==o): return p
     return ''
     
@@ -382,7 +474,7 @@ class Mesh(CGNSparser):
     a.GetProperty().SetRepresentationToWireframe()
     return (a,None,sg,path,(1,None),None)
 
-  def do_boundaries(self,path,bnd,fams):
+  def do_boundaries(self,path,bnd,fams,tag='BC',zone=''):
     cdef int i, j, imax, jmax, p1, p2, p3, p4
     max=[x for x in bnd[0].shape if x!=1]
     imax=max[0]
@@ -415,18 +507,21 @@ class Mesh(CGNSparser):
     am = vtk.vtkDataSetMapper()
     if (VTK_VERSION_MAJOR<6): am.SetInput(sg)
     else:                     am.SetInputData(sg)
-    a = Q7vtkActor('BC')
+    a = Q7vtkActor(tag)
     a.SetMapper(am) 
     a.GetProperty().SetRepresentationToWireframe()
+    for f in fams:
+      a.addFamily(f)
+    a.path(path)
+    a.zonepath(zone)
     return (a,None,sg,path,(1,None),None)
 
   def do_vtk(self,z):
-      self._actors+=[self.do_volume(z.path,z.X,z.Y,z.Z,z.sols)]
-      return
-      for (path,coords) in z.surfaces:
-        self._actors+=[self.do_surface_double_3d(path,coords)]
+      #self._actors+=[self.do_volume(z.path,z.X,z.Y,z.Z,z.sols)]
+      for (path,coords,fams) in z.zconnectivities:
+        self._actors+=[self.do_boundaries(path,coords,fams,'CT',zone=z.path)]
       for (path,coords,fams) in z.boundaries:
-        self._actors+=[self.do_boundaries(path,coords,fams)]
+        self._actors+=[self.do_boundaries(path,coords,fams,zone=z.path)]
       return
 
 #  @cython.boundscheck(False)

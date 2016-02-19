@@ -21,43 +21,6 @@ if (sys.platform=='win32'):  WINOPTS=True
 import CGNS.PAT.cgnskeywords as CGK
 
 # -----------------------------------------------------------------
-Q_VAR_NODE='NODE'
-Q_VAR_PARENT='PARENT'
-Q_VAR_NAME='NAME'
-Q_VAR_VALUE='VALUE'
-Q_VAR_CGNSTYPE='SIDSTYPE'
-Q_VAR_CHILDREN='CHILDREN'
-Q_VAR_TREE='TREE'
-Q_VAR_PATH='PATH'
-Q_VAR_LINKS='LINKS'
-Q_VAR_SKIPS='SKIPS'
-Q_VAR_RESULT='RESULT'
-Q_VAR_USER='ARGS'
-Q_VAR_SELECTED='SELECTED'
-Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
-
-Q_SCRIPT_PRE="""
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.cgnsutils as CGU
-import CGNS.PAT.cgnslib as CGL
-import numpy
-"""
-
-Q_FILE_PRE="""
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.cgnsutils as CGU
-import CGNS.PAT.cgnslib as CGL
-import CGNS.NAV.moption as CGO
-import numpy
-"""
-
-Q_SCRIPT_POST="""
-try:
-  %s[0]=%s
-except NameError:
-  %s[0]=None
-"""%(Q_VAR_RESULT_LIST,Q_VAR_RESULT,Q_VAR_RESULT_LIST)
-
 def removeSubDirAndFiles(path):
   shutil.rmtree(path)
 
@@ -72,6 +35,43 @@ def copyOneFile(src,dst):
 
 # -----------------------------------------------------------------
 class Q7OptionContext(object):
+    Q_VAR_NODE='NODE'
+    Q_VAR_PARENT='PARENT'
+    Q_VAR_NAME='NAME'
+    Q_VAR_VALUE='VALUE'
+    Q_VAR_CGNSTYPE='SIDSTYPE'
+    Q_VAR_CHILDREN='CHILDREN'
+    Q_VAR_TREE='TREE'
+    Q_VAR_PATH='PATH'
+    Q_VAR_LINKS='LINKS'
+    Q_VAR_SKIPS='SKIPS'
+    Q_VAR_RESULT='RESULT'
+    Q_VAR_USER='ARGS'
+    Q_VAR_SELECTED='SELECTED'
+    Q_VAR_RESULT_LIST='__Q7_QUERY_RESULT__'
+
+    Q_SCRIPT_PRE="""
+import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnslib as CGL
+import numpy
+"""
+
+    Q_FILE_PRE="""
+import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnslib as CGL
+import CGNS.NAV.moption as CGO
+import numpy
+"""
+
+    Q_SCRIPT_POST="""
+try:
+  %s[0]=%s
+except NameError:
+  %s[0]=None
+"""%(Q_VAR_RESULT_LIST,Q_VAR_RESULT,Q_VAR_RESULT_LIST)
+
     _depends={
         'MaxDisplayDataSize':['DoNotDisplayLargeData'],
         'MaxLoadDataSize':['DoNotLoadLargeArrays'],
@@ -104,6 +104,7 @@ class Q7OptionContext(object):
     FileUpdateRemovesChildren=True
     TransposeArrayForView=True
     Show1DAsPlain=True
+    UserCSS=""
     SelectionListDirectory='~/.CGNS.NAV/selections'
     QueriesDirectory='~/.CGNS.NAV/queries'
     FunctionsDirectory='~/.CGNS.NAV/functions'
@@ -129,33 +130,36 @@ class Q7OptionContext(object):
     _ToolName='CGNS.NAV'
     _ToolVersion='%s'%__vid__
     
-    _CopyrightNotice="""
+    _CopyrightNotice=u"""
 Copyright (c) Marc Poinot <br>
 Copyright (c) Onera - The French Aerospace Labs<br>
 <b>all other copyrights at the end of this page</b>
 
-<h2>Contributors</h2>
-Simon Verley         - ONERA (DADS/MSAE), France<br>
-Benoit Rodriguez     - ONERA (DAAP/H2T), France<br>
-Grégory Laheurte     - ONERA (DSNA/CS2A), France<br>
-Loic Hauchard        - ONERA (Student INSA Rouen, France)<br>
-Elise Hénaux         - ONERA (Student FIIFO Orsay, France)<br>
-Bill Perkins         - Pacific Northwest National Laboratory, U.S.A.<br>
-Florent Cayré        - SNECMA, France<br>
-Ching-Yang Wang      - U.S.A.<br>
-Alexandre Fayolle    - LOGILAB, France<br>
-Francois Thirifays   - CENAERO, Belgique<br>
-Pierre-Jacques Legay - BERTIN, France<br>
-Tristan Soubrié      - ANDHEO, France <br>
-Jérôme Regis         - STILOG, France<br>
+<hr>
+<h3>Contributors (alphabetic order)</h3>
+<table>
+<tr><td>Florent Cayré</td><td>-SNECMA, France</td></tr>
+<tr><td>Alexandre Fayolle</td><td>-LOGILAB, France</td></tr>
+<tr><td>Loic Hauchard</td><td>-ONERA (Student INSA Rouen, France)</td></tr>
+<tr><td>Elise Hénaux</td><td>-ONERA (Student FIIFO Orsay, France)</td></tr>
+<tr><td>Grégory Laheurte</td><td>-ONERA (DSNA/CS2A), France</td></tr>
+<tr><td>Pierre-Jacques Legay</td><td>-BERTIN, France</td></tr>
+<tr><td>Bill Perkins</td><td>-Pacific Northwest National Laboratory, U.S.A.</td></tr>
+<tr><td>Jérôme Regis</td><td>-STILOG, France</td></tr>
+<tr><td>Benoit Rodriguez</td><td>-ONERA (DAAP/H2T), France</td></tr>
+<tr><td>Tristan Soubrié</td><td>-ANDHEO, France</td></tr>
+<tr><td>Francois Thirifays</td><td>-CENAERO, Belgique</td></tr>
+<tr><td>Simon Verley</td><td>-ONERA (DADS/MSAE), France</td></tr>
+<tr><td>Ching-Yang Wang</td><td>-U.S.A.</td></tr>
+</table>
 
 <h2>Copyrights</h2>
 <hr>
 All <b>pyCGNS</b> 
 rights reserved in accordance with GPL v2 <br><br>
 <b>NO WARRANTY :</b><br>
-Check GPL v2 sections 15 and 16<br>
-about loss of data or corrupted data<br>
+Check GPL v2 sections 15 and 16
+about <font color=red>loss of data or corrupted data</font><br>
 <hr>
 PySide Copyright (c) <br>
 Copyright (C) 2009-2011 Nokia Corporation and/or its subsidiary(-ies).<br>
@@ -164,7 +168,7 @@ Contact: PySide team <contact@pyside.org><br>
 Qt Copyright (c)<br>
 The Qt4 Library is (c) 2011 Nokia Corporation and/or its subsidiary(-ies),
 and is licensed under the GNU Lesser General Public License version 2.1
-with Nokia Qt LGPL exception version 1.1. 
+with Nokia Qt LGPL exception version 1.1. <br>
 <hr>
 Python Copyright (c)<br>
 Copyright (c) 2001-2011 Python Software Foundation.<br>
@@ -203,7 +207,7 @@ Cython Copyright (c)<br>
 Greg Ewing, William Stein, Gabriel Gellner, et al.
 <hr>
 Icons Copyright (c)<br>
-All these nice icons are provided or are modified version of original
+All these nice icons are provided or are modified versions of original
 icons provided by Mark James (Birmingham, UK).<br>
 Please visit his web site: http://www.famfamfam.com/<br>
 
@@ -585,6 +589,19 @@ BC* would fail
  'RESULT=(SIDSTYPE==ARGS[0])',
  """search all nodes with argument SIDS type.""",False,True),
 
+('005. Node value',
+ 'Search by',
+ """
+print 70*'-'
+print VALUE
+print ARGS[0]
+if (VALUE is not None and VALUE.all()==ARGS[0].all()):
+   RESULT=True
+ """,
+ """search all nodes with argument value. The compare is performed
+ using a straightforward '==' and then relies on the Python/Numpy comparison
+ operator.""",False,True),
+
 ('010. Node with truncated data',
  'Search by',
  'if (PATH in SKIPS): RESULT=PATH',
@@ -888,7 +905,7 @@ if (PARENT[0]=='.Solver#Param'):
         for k in udata:
           if (k[0]!='_'):
             val=str(udata[k])
-            if (type(udata[k]) in [unicode, str]): val="'%s'"%str(udata[k])
+            if (type(udata[k]) in [unicode, str]): val='"""%s"""'%str(udata[k])
             s+="""'%s':%s,\n"""%(k,val)
         s+="""}\n\n# --- last line\n"""
       elif (type(udata)==list):

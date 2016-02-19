@@ -1,5 +1,13 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/h_file_checks_01.png</file>
+    <file>icons/h_file_checks_10.png</file>
+    <file>icons/h_file_checks_11.png</file>
+    <file>icons/h_file_checks_00.png</file>
+    <file>icons/h_file_checks.gif</file>
+    <file>icons/h_file_checks.png</file>
+    <file>icons/local-dir.png</file>
+    <file>icons/parent-dir.png</file>
     <file>icons/regexp.png</file>
     <file>icons/link-dst.png</file>
     <file>icons/link-dst.png</file>

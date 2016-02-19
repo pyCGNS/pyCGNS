@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>720</width>
-    <height>400</height>
+    <height>420</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -27,8 +27,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>720</width>
-    <height>400</height>
+    <width>726</width>
+    <height>420</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -74,7 +74,7 @@
        <property name="maximumSize">
         <size>
          <width>700</width>
-         <height>400</height>
+         <height>420</height>
         </size>
        </property>
        <property name="currentIndex">
@@ -102,45 +102,13 @@
         <attribute name="title">
          <string>Selection</string>
         </attribute>
-        <widget class="QComboBox" name="direntries">
-         <property name="geometry">
-          <rect>
-           <x>40</x>
-           <y>10</y>
-           <width>651</width>
-           <height>27</height>
-          </rect>
-         </property>
-         <property name="editable">
-          <bool>true</bool>
-         </property>
-        </widget>
-        <widget class="QComboBox" name="fileentries">
-         <property name="geometry">
-          <rect>
-           <x>40</x>
-           <y>40</y>
-           <width>331</width>
-           <height>27</height>
-          </rect>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="editable">
-          <bool>true</bool>
-         </property>
-        </widget>
         <widget class="QTreeView" name="treeview">
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>70</y>
+           <y>100</y>
            <width>680</width>
-           <height>240</height>
+           <height>230</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -152,13 +120,13 @@
          <property name="minimumSize">
           <size>
            <width>680</width>
-           <height>240</height>
+           <height>230</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>680</width>
-           <height>240</height>
+           <height>230</height>
           </size>
          </property>
          <property name="editTriggers">
@@ -177,117 +145,24 @@
           <bool>true</bool>
          </property>
         </widget>
-        <widget class="QPushButton" name="bAction">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>40</y>
-           <width>25</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Use selected file for load/save</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/tree-load-g.png</normaloff>:/images/icons/tree-load-g.png</iconset>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="bBack">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>10</y>
-           <width>25</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>14</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="toolTip">
-          <string>Go back to parent directory</string>
-         </property>
-         <property name="text">
-          <string>..</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/control.png</normaloff>:/images/icons/control.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-        </widget>
-        <widget class="QCheckBox" name="cShowDirs">
-         <property name="geometry">
-          <rect>
-           <x>380</x>
-           <y>44</y>
-           <width>91</width>
-           <height>22</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Directories</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
         <widget class="QPushButton" name="bClose">
          <property name="geometry">
           <rect>
            <x>610</x>
-           <y>320</y>
+           <y>340</y>
            <width>75</width>
            <height>26</height>
           </rect>
          </property>
          <property name="text">
-          <string>Close</string>
+          <string>Cancel</string>
          </property>
         </widget>
         <widget class="QPushButton" name="bInfo">
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>320</y>
+           <y>340</y>
            <width>25</width>
            <height>25</height>
           </rect>
@@ -312,21 +187,458 @@
            <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
          </property>
         </widget>
-        <widget class="QCheckBox" name="cReadOnly">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
+        <widget class="QWidget" name="gridLayoutWidget">
          <property name="geometry">
           <rect>
-           <x>476</x>
-           <y>45</y>
-           <width>211</width>
-           <height>20</height>
+           <x>10</x>
+           <y>10</y>
+           <width>681</width>
+           <height>81</height>
           </rect>
          </property>
-         <property name="text">
-          <string>Open as read-only (including links)</string>
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="spacing">
+           <number>3</number>
+          </property>
+          <item row="5" column="2" colspan="2">
+           <widget class="QComboBox" name="fileentries">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="editable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2" colspan="3">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QCheckBox" name="cNoLargeData">
+              <property name="font">
+               <font>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string>Nodes with large data are read but their data is not</string>
+              </property>
+              <property name="text">
+               <string>Do not load large data</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="3" column="2" colspan="3">
+           <widget class="QComboBox" name="direntries">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="editable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="4">
+           <widget class="QCheckBox" name="cShowDirs">
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>Show directories</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QPushButton" name="bCurrent">
+            <property name="minimumSize">
+             <size>
+              <width>25</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>25</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Go to current directory (or default)</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../R/Res.qrc">
+              <normaloff>:/images/icons/local-dir.png</normaloff>:/images/icons/local-dir.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QPushButton" name="bBack">
+            <property name="minimumSize">
+             <size>
+              <width>25</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>25</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Go back to parent directory</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../R/Res.qrc">
+              <normaloff>:/images/icons/parent-dir.png</normaloff>:/images/icons/parent-dir.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>16</width>
+              <height>16</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QPushButton" name="bAction">
+         <property name="geometry">
+          <rect>
+           <x>530</x>
+           <y>340</y>
+           <width>70</width>
+           <height>26</height>
+          </rect>
          </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>70</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>LOAD</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>Load/Save options</string>
+        </attribute>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>331</width>
+           <height>241</height>
+          </rect>
+         </property>
+         <property name="title">
+          <string>Load</string>
+         </property>
+         <widget class="QCheckBox" name="cNoLargeData_2">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>20</y>
+            <width>161</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Nodes with large data are read but their data is not</string>
+          </property>
+          <property name="text">
+           <string>Do not load large data</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="cFollowLinks">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>40</y>
+            <width>88</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Follow links</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="cReadOnly">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>60</y>
+            <width>127</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Open as read-only</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="cLoadSubPath">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>90</y>
+            <width>151</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Load sub-tree with path:</string>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>110</y>
+            <width>301</width>
+            <height>21</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="cLimitDepth">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>150</y>
+            <width>101</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Limit depth to:</string>
+          </property>
+         </widget>
+         <widget class="QSpinBox" name="spinBox">
+          <property name="geometry">
+           <rect>
+            <x>140</x>
+            <y>150</y>
+            <width>53</width>
+            <height>22</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="geometry">
+          <rect>
+           <x>350</x>
+           <y>10</y>
+           <width>341</width>
+           <height>241</height>
+          </rect>
+         </property>
+         <property name="title">
+          <string>Save</string>
+         </property>
+         <widget class="QCheckBox" name="cOverwrite">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>30</y>
+            <width>77</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Overwrite an existing file with new contents</string>
+          </property>
+          <property name="text">
+           <string>Overwrite</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="cDeleteMissing">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>50</y>
+            <width>107</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="toolTip">
+           <string>Children found in existing file but not in current tree are removed</string>
+          </property>
+          <property name="text">
+           <string>Delete missing</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="cSkipEmpty">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>70</y>
+            <width>85</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Skip empty</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="cSaveWithoutLinks">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>110</y>
+            <width>151</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Do not save with links</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_5">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>260</y>
+           <width>681</width>
+           <height>101</height>
+          </rect>
+         </property>
+         <property name="title">
+          <string>CHLone options (both load and save)</string>
+         </property>
+         <widget class="QCheckBox" name="checkBox">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>20</y>
+            <width>83</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Trace</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="checkBox_2">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>40</y>
+            <width>171</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Debug (quite large output)</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="checkBox_3">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>60</y>
+            <width>151</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Send output to:</string>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_2">
+          <property name="geometry">
+           <rect>
+            <x>120</x>
+            <y>60</y>
+            <width>211</width>
+            <height>21</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="Line" name="line">
+          <property name="geometry">
+           <rect>
+            <x>313</x>
+            <y>20</y>
+            <width>41</width>
+            <height>71</height>
+           </rect>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
         </widget>
        </widget>
        <widget class="QWidget" name="tab_2">
@@ -352,15 +664,15 @@
          </size>
         </property>
         <attribute name="title">
-         <string>History</string>
+         <string>History/Filter</string>
         </attribute>
         <widget class="QGroupBox" name="groupBox">
          <property name="geometry">
           <rect>
            <x>191</x>
-           <y>9</y>
+           <y>55</y>
            <width>492</width>
-           <height>337</height>
+           <height>291</height>
           </rect>
          </property>
          <property name="title">
@@ -438,13 +750,55 @@
           <property name="geometry">
            <rect>
             <x>9</x>
-            <y>150</y>
+            <y>120</y>
             <width>475</width>
-            <height>182</height>
+            <height>161</height>
            </rect>
           </property>
           <property name="selectionMode">
            <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="bClearHistory">
+          <property name="geometry">
+           <rect>
+            <x>410</x>
+            <y>20</y>
+            <width>75</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Clear</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="bInfo2">
+          <property name="geometry">
+           <rect>
+            <x>380</x>
+            <y>20</y>
+            <width>25</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="../R/Res.qrc">
+            <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
           </property>
          </widget>
         </widget>
@@ -454,8 +808,8 @@
          </property>
          <property name="geometry">
           <rect>
-           <x>10</x>
-           <y>10</y>
+           <x>190</x>
+           <y>30</y>
            <width>173</width>
            <height>20</height>
           </rect>
@@ -471,9 +825,9 @@
          <property name="geometry">
           <rect>
            <x>6</x>
-           <y>52</y>
+           <y>53</y>
            <width>173</width>
-           <height>292</height>
+           <height>291</height>
           </rect>
          </property>
          <property name="title">
@@ -513,12 +867,12 @@
            <rect>
             <x>10</x>
             <y>60</y>
-            <width>80</width>
+            <width>141</width>
             <height>20</height>
            </rect>
           </property>
           <property name="text">
-           <string>.cgns files</string>
+           <string>.cgns/.adf files</string>
           </property>
           <property name="checked">
            <bool>true</bool>
@@ -528,7 +882,7 @@
           <property name="geometry">
            <rect>
             <x>10</x>
-            <y>80</y>
+            <y>100</y>
             <width>111</width>
             <height>20</height>
            </rect>
@@ -541,9 +895,9 @@
           <property name="geometry">
            <rect>
             <x>9</x>
-            <y>106</y>
+            <y>120</y>
             <width>154</width>
-            <height>181</height>
+            <height>161</height>
            </rect>
           </property>
          </widget>
@@ -559,48 +913,6 @@
          </property>
          <property name="text">
           <string>Auto-Change directory</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="bClearHistory">
-         <property name="geometry">
-          <rect>
-           <x>596</x>
-           <y>30</y>
-           <width>75</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Clear now</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="bInfo2">
-         <property name="geometry">
-          <rect>
-           <x>560</x>
-           <y>30</y>
-           <width>25</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/help-view.png</normaloff>:/images/icons/help-view.png</iconset>
          </property>
         </widget>
        </widget>

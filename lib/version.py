@@ -3,6 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+# actual versions number are in setuputils.py
+#
 import pyCGNSconfig
 __version__=pyCGNSconfig.__version__
 __release__=pyCGNSconfig.__release__

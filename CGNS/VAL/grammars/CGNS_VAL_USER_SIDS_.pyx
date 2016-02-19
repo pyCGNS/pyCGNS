@@ -561,6 +561,8 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
       p=set(string.printable)
       if (not v.issubset(p)):
         rs=log.push(pth,'s0000.0270')
+    else:
+        rs=log.push(pth,'s0000.0271')      
     return rs
   # --------------------------------------------------------------------
   def FamilyBCDataSet_t(self,pth,node,parent,tree,log):

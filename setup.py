@@ -14,15 +14,16 @@ from distutils.core import setup, Extension
 from distutils.util import get_platform
 from distutils      import sysconfig
 
-def line(m):
-   print "#","-"*70
-   print "# ----- %s"%m
-
-line('pyCGNS install')
-
 # --- get overall configuration
 sys.path=['./lib']+sys.path
 import setuputils
+
+def line(m=""):
+   print "#","-"*70
+   if (m): print "# ----- %s"%m
+
+line('pyCGNS v%d.%d install'%(setuputils.MAJORVERSION,setuputils.MINORVERSION))
+line()
 
 doc1="""
   pyCGNS installation setup 
@@ -99,15 +100,9 @@ libs=[]
 args,unknown=pr.parse_known_args()
 
 if (args.incs!=None):
-  incs=[os.path.expanduser(path) for path in args.incs.split(':')]
+  incs=[os.path.expanduser(path) for path in args.incs.split(os.path.pathsep)]
 if (args.libs!=None):
-  libs=[os.path.expanduser(path) for path in args.libs.split(':')]
-
-print setuputils.pfx+'-'*65
-print setuputils.pfx+'      pyCGNS v%d.%d'%\
-      (setuputils.MAJORVERSION,setuputils.MINORVERSION)
-
-print setuputils.pfx+'-'*65
+  libs=[os.path.expanduser(path) for path in args.libs.split(os.path.pathsep)]
 
 try:
   (CONFIG,status)=setuputils.search(incs,libs)

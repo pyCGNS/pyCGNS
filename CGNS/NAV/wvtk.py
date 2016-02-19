@@ -94,6 +94,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._cacheActor={}
       self._tmodel=tmodel
       self.color=(0,0,0)
+      self.selectionColor=(1,0,0)
       self.OutlineActor=None
       self._currentactor=None
       self.PickedRenderer=None
@@ -121,13 +122,13 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bNext.clicked.connect(self.b_next)
       self.bPrevious.clicked.connect(self.b_prev)
       self.bReset.clicked.connect(self.b_reset)
-      self.bUpdate.clicked.connect(self.b_update)
+      self.bUpdateFromTree.clicked.connect(self.b_update)
+      self.bUpdateFromVTK.clicked.connect(self.b_update)
       self.bScreenShot.clicked.connect(self.screenshot)
       self.selectable.clicked.connect(self.setInteractive)
       self.ColorMapMin=QColorDialog(self)
       self.ColorMapMax=QColorDialog(self)
       self.cCurrentPath.setParent(self)
-#      self.cFamilies.setParent(self)
       QObject.connect(self.ColorMapMin,
                       SIGNAL("colorSelected(QColor)"),self.getColorMapMin)
       QObject.connect(self.ColorMapMax,
@@ -160,7 +161,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
                       self.fillCurrentPath)
       QObject.connect(self.cShowBC, SIGNAL("stateChanged(int)"),
                       self.fillCurrentPath)
-      QObject.connect(self.cShowMinMax, SIGNAL("stateChanged(int)"),
+      QObject.connect(self.cShowCT, SIGNAL("stateChanged(int)"),
+                      self.fillCurrentPath)
+      QObject.connect(self.cShowFamily, SIGNAL("stateChanged(int)"),
                       self.fillCurrentPath)
       QObject.connect(self.cRotationAxis,
                       SIGNAL("currentIndexChanged(int)"),self.setInteractor)
@@ -689,6 +692,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       
       self._selected=[]
       alist=self._parser.createActors()
+      for act in alist:
+          if (not self._cacheActor.has_key(act[3])): 
+              self._cacheActor[act[3]]=act[0]
       variables=[]
       if (alist!=[]):
           grid=vtk.vtkStructuredGrid.SafeDownCast(alist[0][2])
@@ -951,9 +957,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       hid=[n[0] for n in self._hidden]
       self.cCurrentPath.addItem(self._epix,'')
       pthlist=[]
-      if (self.cShowZone.isChecked()): pthlist+=['Zone']
-      if (self.cShowMinMax.isChecked()): pthlist+=['Min/Max']
-      if (self.cShowBC.isChecked()): pthlist+=['BC']
+      if (self.cShowZone.isChecked()):   pthlist+=['Zone']
+      if (self.cShowCT.isChecked()):     pthlist+=['CT']
+      if (self.cShowBC.isChecked()):     pthlist+=['BC']
+      if (self.cShowFamily.isChecked()): pthlist+=['Family']
       for i in self._parser.getPathList(pthlist):
           pix=self._npix
           if (i in sel): pix=self._spix
@@ -1096,7 +1103,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (not self._currentactor is None):
           if (self._currentactor[0:2] in self._selected):
               self._currentactor[1].VisibilityOff()
-              self._currentactor[3].VisibilityOff()
+#              self._currentactor[3].VisibilityOff() ### FIXME
               self._selected.remove(self._currentactor[0:2])
               self._hidden.append(self._currentactor[0:2])
               actor=self.b_next()
@@ -1118,26 +1125,47 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self._master._vtkwindow=None
       self.close()
         
-  def changeCurrentActor(self,atp,combo=True):
-      self.resetSpinBox()
-      if (self.planeWidget is not None):
-          if (self.planeWidget.GetEnabled()==1):
-              self.planeWidget.Off()
-          if (self.planeActor is not None):
-              self._vtkren.RemoveActor(self.planeActor)
-      if (not self.actorpt is None):
-          self._vtkren.RemoveActor(self.actorpt)
+  def changeCurrentActor(self,act,combo=True):
+    if (act[1] is not None and not act[1].alone()):
+        atpl=[]
+        plst=act[1].GetParts()
+        plst.InitTraversal()
+        a=plst.GetNextItemAsObject()
+        while a:
+            atpl+=[(act[0],a)]
+            a=plst.GetNextItemAsObject()
+    else:
+        atpl=[act]
+    self.resetSpinBox()
+    if (self.planeWidget is not None):
+        if (self.planeWidget.GetEnabled()==1):
+            self.planeWidget.Off()
+        if (self.planeActor is not None):
+            self._vtkren.RemoveActor(self.planeActor)
+    if (self.actorpt is not None):
+        self._vtkren.RemoveActor(self.actorpt)
+    if (self._currentactor is not None):
+          if (type(self._currentactor[2])!=list):
+              lact=[(self._currentactor[3],self._currentactor[2])]
+          else:
+              lact=self._currentactor
+          if (    (lact is not None)
+              and (type(lact)==list)
+              and (lact[0] is not None)):
+            for (col,act) in lact[2]:
+              self._vtkren.RemoveActor(act)
+              act.GetProperty().SetColor(col)
+              act.GetProperty().SetLineWidth(1.0)
+    aclist=[]
+    print 'LIST ',atpl
+    for atp in atpl:
       path =atp[0]
       actor=atp[1]
+      print path,actor
       if (not combo):self.setCurrentPath(path)         
-      if (not self._currentactor is None):
-          act=self._currentactor[3]
-          col=self._currentactor[2]
-          self._vtkren.RemoveActor(act)
-          act.GetProperty().SetColor(col)
       if (actor is None):
           self.cCurrentPath.setCurrentIndex(0)
-          if (not self.PickedRenderer is None and not self.OutlineActor is None):
+          if (None not in [self.PickedRenderer,self.OutlineActor]):
               self.PickedRenderer.RemoveActor(self.OutlineActor)
               self.PickedRenderer=None
               self.CurrentRenderer.Render()
@@ -1149,39 +1177,40 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       actor2.ShallowCopy(actor)
       actor2.PickableOff()
       actor2.DragableOff()
-      actor2.GetProperty().SetColor(1,0,0)
+      actor2.GetProperty().SetColor(*self.selectionColor)
+      actor2.GetProperty().SetLineWidth(3.0)
       self._vtkren.AddActor(actor2)
       self.CurrentRenderer=self._vtkren
-      self.Outline=vtk.vtkOutlineSource()
+      self.Outline=vtk.vtkStructuredGridOutlineFilter()
+      self.Outline.SetInputData(actor2.GetMapper().GetInput())
       self.OutlineMapper=vtk.vtkPolyDataMapper()
       if (VTK_VERSION_MAJOR<6):
           self.OutlineMapper.SetInput(self.Outline.GetOutput())
       else:
           self.OutlineMapper.SetInputConnection(self.Outline.GetOutputPort())
-      if (not self.PickedRenderer is None and not self.OutlineActor is None):
+      if (None not in [self.PickedRenderer,self.OutlineActor]):
           self.PickedRenderer.RemoveActor(self.OutlineActor)
           self.PickedRenderer=None
-      if (not actor is None):
+      if (actor is not None):
           self.OutlineActor=vtk.vtkActor()
           self.OutlineActor.PickableOff()
           self.OutlineActor.DragableOff()
           self.OutlineActor.SetMapper(self.OutlineMapper)
-          self.OutlineActor.GetProperty().SetColor(0,1,1)
+          self.OutlineActor.GetProperty().SetColor(*self.selectionColor)
           self.OutlineActor.GetProperty().SetAmbient(1.0)
           self.OutlineActor.GetProperty().SetDiffuse(0.0)
-          self.OutlineActor.GetProperty().SetLineWidth(1.2)
+          self.OutlineActor.GetProperty().SetLineWidth(3.0)
           self.OutlineActor.SetScale(1.01,1.01,1.01)
           if (self.CurrentRenderer!=self.PickedRenderer):
-              if (not self.PickedRenderer is None and not self.OutlineActor is None):
+              if (None not in [self.PickedRenderer,self.OutlineActor]):
                   self.PickedRenderer.RemoveActor(self.OutlineActor)
               self.CurrentRenderer.AddActor(self.OutlineActor)
               self.PickedRenderer=self.CurrentRenderer
-          self.Outline.SetBounds(actor.GetBounds())
-      self._iren.Render()
-      self._currentactor=[path,actor,color,actor2]
+          aclist+=[(color,actor2)]
+    self._iren.Render()
+    self._currentactor=[path,actor,aclist]
 
   def highlightPoint(self,*args):
-      print 'HERE'
       actor=self._currentactor[1]
       if (actor is None): return
       grid=actor.GetMapper().GetInput()
@@ -1370,9 +1399,10 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       while a:
           a.PickableOn()
           a=actors.GetNextActor()
-      if (not self._currentactor is None):
-          self._currentactor[3].PickableOff()
-
+      if (self._currentactor is not None):
+          pass
+          # self._currentactor[3].PickableOff() ### FIXME
+          
   def resetSpinBox(self):  
       self.sIndex1.blockSignals(True)
       self.sIndex2.blockSignals(True)

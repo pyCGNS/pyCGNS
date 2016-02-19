@@ -17,8 +17,8 @@ from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
 
 import CGNS.NAV.wmessages as MSG
 
-LOADBUTTON='Load'
-SAVEBUTTON='Save'
+LOADBUTTON=['Load','Load from selected file']
+SAVEBUTTON=['Save','Save to selected file']
 (LOADMODE,SAVEMODE)=(0,1)
 
 def checkFilePermission(path,write=False):
@@ -44,7 +44,6 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         QSortFilterProxyModel.__init__(self,parent)
         self.model=parent.model
         self.treeview=parent.treeview
-        self.control=parent.parent
         self.wparent=parent
         self.setDynamicSortFilter(True)
         import locale
@@ -59,7 +58,7 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
             return True
         self.wparent.getBoxes()
         #if (self.wparent.cShowAll.checkState()==Qt.Checked): xlist=[]
-        return self.control.matchFileExtensions(p)
+        return self.wparent.parent.matchFileExtensions(p)
     def checkPermission(self,path,write=False):
         return checkFilePermission(path,write)
     def lessThan(self,left,right):
@@ -114,6 +113,7 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.proxy = Q7FileFilterProxy(self)
         self.proxy.setSourceModel(self.model)
         self.treeview.setModel(self.proxy)
+        self.setAttribute(Qt.WA_DeleteOnClose)
         siglist=[
         (self.model,"directoryLoaded(QString)",self.expandCols),
         (self.treeview,"expanded(QModelIndex)",self.expandCols),
@@ -121,7 +121,6 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         (self.treeview,"doubleClicked(QModelIndex)",self.clickedNodeAndLoad),
         (self.direntries.lineEdit(),"returnPressed()",self.changeDirEdit),
         (self.direntries,"currentIndexChanged(int)",self.changeDirIndex),
-        #(self.direntries,"editTextChanged(QString)",self.changeDirText),
         (self.fileentries,"currentIndexChanged(int)",self.changeFile),
         (self.fileentries.lineEdit(),"editingFinished()",self.changeFile),
         (self.tabs,"currentChanged(int)",self.currentTabChanged),
@@ -135,7 +134,8 @@ class Q7File(QWidget,Ui_Q7FileWindow):
             ]
         for (o,s,f) in siglist:
             QObject.connect(o,SIGNAL(s),f)
-        self.bClose.clicked.connect(self.close)
+        self.bClose.clicked.connect(self.closeUnlock)
+        self.bCurrent.clicked.connect(self.currentDir)
         self.bBack.clicked.connect(self.backDir)
         self.bInfo.clicked.connect(self.infoFileView)
         self.bInfo2.clicked.connect(self.infoFileView)
@@ -147,8 +147,13 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.parent.getHistory()
         self.updateHistory()
         self.updateClearNotFound()
+    def closeUnlock(self):
+        self.parent.signals.cancel.emit()
+        self.close()
+    def closeEvent(self,event):
+        self.closeUnlock()
     def infoFileView(self):
-        self.control.helpWindow('File')
+        self.parent.helpWindow('File')
     def updateView(self):
         p=self.direntries.currentText()
         self.setCurrentDir(p)
@@ -187,6 +192,9 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         self.getBoxes()
         for n in range(3):
             self.treeview.resizeColumnToContents(n)
+    def currentDir(self,*args):
+        p=os.path.split(self.path())[0]
+        self.setCurrentDir(p)
     def backDir(self,*args):
         p=os.path.split(self.path())[0]
         self.setCurrentDir(p)
@@ -239,10 +247,34 @@ class Q7File(QWidget,Ui_Q7FileWindow):
     def setMode(self,load=True):
         if (load):
             self.bAction.clicked.connect(self.load)
-            self.bAction.setToolTip(LOADBUTTON)
+            self.bAction.setToolTip(LOADBUTTON[1])
+            self.bAction.setText(LOADBUTTON[0])
+            self.cOverwrite.setEnabled(False)
+            self.cReadOnly.setEnabled(True)
+            self.cNoLargeData.setEnabled(True)
+            self.cFollowLinks.setEnabled(True)
+            self.cDeleteMissing.setEnabled(False)
+            if OCTXT.DoNotLoadLargeArrays:
+                self.cNoLargeData.setCheckState(Qt.Checked)
+            else:
+                self.cNoLargeData.setCheckState(Qt.Unchecked)
+            if OCTXT.FollowLinksAtLoad:
+                self.cFollowLinks.setCheckState(Qt.Checked)
+            else:
+                self.cFollowLinks.setCheckState(Qt.Unchecked)
         else:
             self.bAction.clicked.connect(self.save)
-            self.bAction.setToolTip(SAVEBUTTON)
+            self.bAction.setToolTip(SAVEBUTTON[1])
+            self.bAction.setText(SAVEBUTTON[0])
+            self.cOverwrite.setEnabled(True)
+            self.cReadOnly.setEnabled(False)
+            self.cNoLargeData.setEnabled(False)
+            self.cFollowLinks.setEnabled(False)
+            self.cDeleteMissing.setEnabled(True)
+            if OCTXT.FileUpdateRemovesChildren:
+                self.cDeleteMissing.setCheckState(Qt.Checked)
+            else:
+                self.cDeleteMissing.setCheckState(Qt.Unchecked)
     def updateHistory(self):
         self.updateMode=True
         self.direntries.clear()
@@ -352,8 +384,27 @@ class Q7File(QWidget,Ui_Q7FileWindow):
           MSG.message("Save file: %s"%self.selectedPath(),
                       diag,MSG.INFO)
     def checkTarget(self,filename,write=False):
-        if (os.path.exists(filename)): pass
-        return None
+        if (os.path.exists(filename) and not write): return None
+        if (not os.path.exists(filename) and write): return None
+        if self.cOverwrite.isChecked():
+          sc="The file is <b>completely replaced</b> by the current tree"
+        else:
+          sc="The file is <b>updated</b> with the current tree contents."
+          if self.cDeleteMissing.isChecked():
+              sc+="The nodes <b>NOT</b> found in the current tree are removed from the updated file"
+          else:
+              sc+="The nodes <b>NOT</b> found in the current tree are kept unchanged"
+        reply=MSG.wQuestion(self,132,'Saving on an already existing file',
+"""You are going to save into an existing file,
+based on the current options you have and the target tree you want to save,
+the result would be the following:<p>%s<p>
+If this not the way you want the save to operate, please <i>abort</b> this
+file selection and check the <i>Load/Save option</i> tab.
+You still want to write on this file?"""%sc,
+                            buttons=('Continue to save on existing file',
+                                     'Abort save'))
+        if (reply): return None
+        return 'User Abort' 
     def path(self,index=None):
         if (index==None):
             idx=self.treeview.currentIndex()

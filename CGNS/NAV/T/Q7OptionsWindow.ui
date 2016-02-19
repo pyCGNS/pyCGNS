@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>580</width>
+    <width>650</width>
     <height>364</height>
    </rect>
   </property>
@@ -21,13 +21,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>580</width>
+    <width>650</width>
     <height>364</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>580</width>
+    <width>650</width>
     <height>364</height>
    </size>
   </property>
@@ -51,13 +51,13 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>560</width>
+         <width>630</width>
          <height>310</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>560</width>
+         <width>630</width>
          <height>310</height>
         </size>
        </property>
@@ -366,6 +366,9 @@
           </property>
          </widget>
          <widget class="QCheckBox" name="__O_donotfollowlinksatsave">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -1039,12 +1042,37 @@
           <rect>
            <x>10</x>
            <y>215</y>
-           <width>166</width>
-           <height>26</height>
+           <width>25</width>
+           <height>25</height>
           </rect>
          </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>25</horstretch>
+           <verstretch>25</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Reset all fonts to default installation fonts</string>
+         </property>
          <property name="text">
-          <string>Reset to default fonts</string>
+          <string notr="true"/>
+         </property>
+         <property name="icon">
+          <iconset resource="../R/Res.qrc">
+           <normaloff>:/images/icons/undo-last-modification.gif</normaloff>:/images/icons/undo-last-modification.gif</iconset>
          </property>
         </widget>
        </widget>

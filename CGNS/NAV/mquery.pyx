@@ -192,7 +192,8 @@ class Q7QueryEntry(object):
     def run(self,tree,links,skips,mode,args,selected=[]):
         v=None
         try:
-            if (args): v=eval(args)
+            if (args):
+                v=eval(args)
             if ((v is not None) and (type(v)!=tuple)): v=(v,)
         except NameError,e:
             v=(str(args),)

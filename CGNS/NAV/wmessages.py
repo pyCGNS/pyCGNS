@@ -144,7 +144,7 @@ class Q7MessageBox(QDialog,Ui_Q7MessageWindow):
         self.bOK.setText(buttons[0])
         if (len(buttons)>1):
           self.bCANCEL.setText(buttons[1])
-        self.eMessage.setText(text)
+        self.eMessage.setText(unicode(text))
         self._text=text
         self.eMessage.setReadOnly(True)
         self.setMode(cancel,again)

@@ -30,6 +30,7 @@ def run(args=[],files=[],
     wcontrol.transientVTK=flags[3]
     wcontrol.query=query
     wcontrol._T('start')
+    wcontrol.setDefaults()
     if (flags[1]):  wcontrol.loadlast()
     if files:
       wcontrol.loadfile(files[0]) # loop on file list broken in wfingerprint

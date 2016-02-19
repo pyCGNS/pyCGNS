@@ -12,7 +12,6 @@ from PySide.QtCore import *
 from PySide.QtGui  import *
 
 from CGNS.NAV.Q7OptionsWindow import Ui_Q7OptionsWindow
-from CGNS.NAV.moption         import Q7OptionContext as OCTXT
 from CGNS.NAV.wfingerprint    import Q7Window
 
 combonames=[]
@@ -22,12 +21,13 @@ for tn in ['label','edit','table','button','rname','nname']:
 
 # -----------------------------------------------------------------
 class Q7Option(Q7Window,Ui_Q7OptionsWindow):
-    labdict={'Label':['QLabel','QTabWidget','QGroupBox','QCheckBox'],
+    labdict={'Label' :['QLabel','QTabWidget','QGroupBox','QCheckBox',
+                       'QRadioButton'],
              'Button':['QPushButton'],
-             'Edit':['QLineEdit','QSpinBox','QComboBox'],
-             'RName':['Q7TreeView'],
-             'NName':[],
-             'Table':['Q7TableView']}
+             'Edit'  :['QLineEdit','QSpinBox','QComboBox'],
+             'RName' :['Q7TreeView'],
+             'NName' :[],
+             'Table' :['Q7TableView']}
     combos=combonames
     def __init__(self,parent):
         Q7Window.__init__(self,Q7Window.VIEW_OPTION,parent,None,None)
@@ -158,5 +158,6 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
               if (it): tf='italic'
               scss+="""%s { font:  %s %s %dpx "%s" }\n"""%(wtype,bf,tf,sz,fm)
         self._control._application.setStyleSheet(scss)
+        self._options['UserCSS']=scss
 
 # -----------------------------------------------------------------

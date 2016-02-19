@@ -49,6 +49,300 @@
        <property name="currentIndex">
         <number>0</number>
        </property>
+       <widget class="QWidget" name="Queries">
+        <attribute name="title">
+         <string>Queries</string>
+        </attribute>
+        <widget class="QLabel" name="label_15">
+         <property name="geometry">
+          <rect>
+           <x>50</x>
+           <y>25</y>
+           <width>37</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Group:</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cGroup">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>95</x>
+           <y>25</y>
+           <width>74</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_16">
+         <property name="geometry">
+          <rect>
+           <x>50</x>
+           <y>55</y>
+           <width>36</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Query:</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cQuery">
+         <property name="geometry">
+          <rect>
+           <x>95</x>
+           <y>55</y>
+           <width>378</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="bOperateDoc">
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>55</y>
+           <width>25</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Show Query doc</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../R/Res.qrc">
+           <normaloff>:/images/icons/operate-doc.png</normaloff>:/images/icons/operate-doc.png</iconset>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="bApply">
+         <property name="geometry">
+          <rect>
+           <x>480</x>
+           <y>55</y>
+           <width>25</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Run Query</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../R/Res.qrc">
+           <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
+         </property>
+        </widget>
+        <widget class="QSpinBox" name="spinBox">
+         <property name="geometry">
+          <rect>
+           <x>190</x>
+           <y>240</y>
+           <width>53</width>
+           <height>22</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="checkBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>240</y>
+           <width>171</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Show predefined query #</string>
+         </property>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>94</y>
+           <width>521</width>
+           <height>131</height>
+          </rect>
+         </property>
+         <property name="title">
+          <string>Query arguments :</string>
+         </property>
+         <widget class="QRadioButton" name="radioButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>15</x>
+            <y>20</y>
+            <width>261</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Use last selected value as arg</string>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="eUserVariable">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>70</y>
+            <width>376</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="radioButton_2">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>15</x>
+            <y>70</y>
+            <width>92</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Plain value</string>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="radioButton_3">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>15</x>
+            <y>95</y>
+            <width>131</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Regexp value</string>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>95</y>
+            <width>376</width>
+            <height>21</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="radioButton_4">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>15</x>
+            <y>45</y>
+            <width>426</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Use ALL selected value as arg (loop on values and add selections)</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QPushButton" name="pushButton">
+         <property name="geometry">
+          <rect>
+           <x>510</x>
+           <y>55</y>
+           <width>25</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>25</horstretch>
+           <verstretch>25</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../R/Res.qrc">
+           <normaloff>:/images/icons/flag-none.gif</normaloff>:/images/icons/flag-none.gif</iconset>
+         </property>
+        </widget>
+       </widget>
        <widget class="QWidget" name="search">
         <attribute name="title">
          <string>Search</string>
@@ -1130,159 +1424,6 @@
            <string>Auto</string>
           </property>
          </widget>
-        </widget>
-       </widget>
-       <widget class="QWidget" name="Queries">
-        <attribute name="title">
-         <string>Queries</string>
-        </attribute>
-        <widget class="QLabel" name="label_15">
-         <property name="geometry">
-          <rect>
-           <x>25</x>
-           <y>25</y>
-           <width>37</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Group:</string>
-         </property>
-        </widget>
-        <widget class="QComboBox" name="cGroup">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="geometry">
-          <rect>
-           <x>80</x>
-           <y>25</y>
-           <width>74</width>
-           <height>21</height>
-          </rect>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_16">
-         <property name="geometry">
-          <rect>
-           <x>25</x>
-           <y>55</y>
-           <width>36</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Query:</string>
-         </property>
-        </widget>
-        <widget class="QComboBox" name="cQuery">
-         <property name="geometry">
-          <rect>
-           <x>80</x>
-           <y>55</y>
-           <width>378</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="bOperateDoc">
-         <property name="geometry">
-          <rect>
-           <x>465</x>
-           <y>55</y>
-           <width>25</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Show Query doc</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/operate-doc.png</normaloff>:/images/icons/operate-doc.png</iconset>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_17">
-         <property name="geometry">
-          <rect>
-           <x>30</x>
-           <y>85</y>
-           <width>28</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Args:</string>
-         </property>
-        </widget>
-        <widget class="QLineEdit" name="eUserVariable">
-         <property name="geometry">
-          <rect>
-           <x>80</x>
-           <y>85</y>
-           <width>306</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="bApply">
-         <property name="geometry">
-          <rect>
-           <x>505</x>
-           <y>245</y>
-           <width>25</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Run Query</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
-         </property>
         </widget>
        </widget>
       </widget>

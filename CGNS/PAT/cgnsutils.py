@@ -911,6 +911,46 @@ def getValueAsString(node):
   return node[1].tostring()
 
 # -----------------------------------------------------------------------------
+def getValueAsStringEval(value):
+  """Tries to build the best value one can deduce from given string, the
+  returned value is a numpy array or None (if everything else fail).
+  Evaluation is performed on string with the following order:
+
+   - numpy array of single int
+   - numpy array of single float
+   - numpy array of ints
+   - numpy array of floats
+   - numpy array of chars
+  
+  """
+  from numpy import * # required for eval() below
+  try:
+      v=numpy.array(value,dtype=numpy.int64)
+      return v
+  except ValueError: pass
+  
+  try:
+      v=numpy.array(value,dtype=numpy.float64)
+      return v
+  except ValueError: pass
+
+  try:
+      v=numpy.array(eval(value),dtype=numpy.int64)
+      return v
+  except ValueError: pass
+  
+  try:
+      v=numpy.array(eval(value),dtype=numpy.float64)
+      return v
+  except ValueError: pass
+  try:
+      v=setStringAsArray(value)
+      return v
+  except ValueError: pass
+  
+  return None
+
+# -----------------------------------------------------------------------------
 def getValue(node):
   """Returns node value, could be `None` or a `numpy.ndarray`."""
   v=node[1]
@@ -2317,6 +2357,26 @@ def getZoneSubRegionFromFamily(tree,families):
     if (getValueByPath(tree,pth).tostring() in families): 
       r+=[getPathAncestor(pth)]
   return r
+
+# --------------------------------------------------
+def getFamiliesFromZone(tree,zonepath):
+  return getFamiliesFromBC(tree,zonepath)
+
+# --------------------------------------------------
+def getFamiliesFromBC(tree,bcpath):
+  bcnode=getNodeByPath(tree,bcpath)
+  l1=hasChildType(bcnode,CK.FamilyName_ts)
+  l2=hasChildType(bcnode,CK.AdditionalFamilyName_ts)
+  if (l1 is None): l1=[]
+  if (l2 is None): l2=[]
+  r=[]
+  for nd in l1+l2:
+    r.append(nd[1].tostring())
+  return r
+  
+# --------------------------------------------------
+def getFamiliesFromZoneSubRegion(tree,zsrpath):
+  return getFamiliesFromBC(tree,zonepath)
 
 # -----------------------------------------------------------------------------
 def hasChildType(parent,ntype):

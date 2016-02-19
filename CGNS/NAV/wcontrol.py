@@ -31,6 +31,7 @@ from CGNS.NAV.wfingerprint import Q7Window as QW
 class Q7SignalPool(QObject):
     loadFile=Signal()
     saveFile=Signal()
+    cancel=Signal()
     loadCompleted=Signal()
     buffer=None
     fgprint=None
@@ -73,6 +74,7 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.signals=Q7SignalPool()
         self.signals.loadFile.connect(self.loadStart)     
         self.signals.saveFile.connect(self.saving)
+        self.signals.cancel.connect(self.cancelUnlock)
         self.signals.loadCompleted.connect(self.loadCompleted)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
@@ -309,12 +311,18 @@ class Q7Main(QW, Ui_Q7ControlWindow):
     def clearOtherSelections(self):
         if (self._patternwindow is not None):
             self._patternwindow.clearSelection()
+    def cancelUnlock(self,*args):
+        self.lockView(False)
     def loadStart(self,*args):
         self._T('loading: [%s]'%self.signals.buffer)
         self.busyCursor()
         Q7FingerPrint.treeLoad(self,self.signals.buffer)
         Q7FingerPrint.refreshScreen()
+    def setDefaults(self):
+        self.loadOptions()
+        self._application.setStyleSheet(self.wOption._options['UserCSS'])
     def loadCompleted(self,*args):
+        self.lockView(False)
         fgprint=self.signals.fgprint
         if (len(fgprint)>1):
             MSG.wError(self,200,*fgprint[1])
@@ -340,8 +348,10 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.updateViews()
         self.signals.fgprint.getInfo(force=True)
         self.readyCursor()
+        self.lockView(False)
     def load(self):
         self.fdialog=Q7File(self)
+        self.lockView(True)
         self.fdialog.show()
     def loadlast(self):
         if (self.getLastFile() is None): return
@@ -355,6 +365,7 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.signals.fgprint=fgprint
         self.signals.saveAs=True
         self.fdialog=Q7File(self,1)
+        self.lockView(True)
         self.fdialog.show()
     def savedirect(self,fgprint):
         self.signals.fgprint=fgprint
