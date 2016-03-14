@@ -171,7 +171,6 @@ class Q7ToolsView(Q7Window,Ui_Q7ToolsWindow):
             s+="t3=False\nfor cn in CHILDREN:\n  t3=t3 or ('%s'==cn[3])\n"%self.criteria[2].sidstype
         s+="rt=t1 and t2 and t3\n"
         s+="RESULT=rn and rt\n"
-        print s
         q=Q7QueryEntry('TMP',script=s)
         skp=self._fgprint.lazy.keys()
         sl=q.run(self._fgprint.tree,self._fgprint.links,skp,False,'',

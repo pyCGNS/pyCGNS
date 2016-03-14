@@ -190,11 +190,14 @@ class Q7QueryEntry(object):
         (self.name,self.group,self._script,self._doc,self._update)
         return s
     def run(self,tree,links,skips,mode,args,selected=[]):
+        print type(args)
         v=None
         try:
-            if (args):
-                v=eval(args)
-            if ((v is not None) and (type(v)!=tuple)): v=(v,)
+            if (type(args)==numpy.ndarray):
+                v=('numpy.'+repr(args),)
+            else:
+                if (args not in [None, [], ()]): v=eval(args)
+                if ((v is not None) and (type(v)!=tuple)): v=(v,)
         except NameError,e:
             v=(str(args),)
         except Exception,e:
@@ -202,7 +205,6 @@ class Q7QueryEntry(object):
         self._args=v
         result=parseAndSelect(tree,tree,[None,None,[],None],links,skips,'',
                               self._script,self._args,selected,mode)
-        #print result
         return result
     def getFullScript(self,filename,text,args):
         datadict={}

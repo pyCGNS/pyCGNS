@@ -481,30 +481,34 @@ want to find back which result matches which value (see example)</td></tr>
 'Option':('Option panel',
 """
 <h2>Option panel</h2>
-
+<font color=red>Oups! the Option panel is a MODAL window, which means
+it blocks all other windows until you answer to it. So if you want to
+browse this help you have to close the Option panel window first!</font>
 <h3>Buttons</h3>
 
 <h3>Message codes</h3>
-100 * Version and Copyright notice
-101 - CGNS.NAV Exit double check
-110 - Directory not found during file open
-120 - Clear file history - current not found file
-121 - Clear file history - all not found files
-122 - Clear file history - all files
-130 - Save abort
-131 - Save abort (execption caught)
-132 - Save warning about file overwriting issue
-200 * Error during load (returns actual CGNS/HDF5 layer error)
-201 * Fatal error during load
-500 - Bad data for a VTK display
-501 - VTK version lower than v6.0
-502 - VTK version lower than v5.8
-302 - Node selection required for Form view
-310 - Create link as new node
-311 - Remove link entry
-370 - Leave query panel
-371 - Apply changes to all
-400 * Show diag view grammer used
+<table>
+<tr><td>100</td><td> * </td><td>Version and Copyright notice</td></tr>
+<tr><td>101</td><td> - </td><td>CGNS.NAV Exit double check</td></tr>
+<tr><td>110</td><td> - </td><td>Directory not found during file open</td></tr>
+<tr><td>120</td><td> - </td><td>Clear file history - current not found file</td></tr>
+<tr><td>121</td><td> - </td><td>Clear file history - all not found files</td></tr>
+<tr><td>122</td><td> - </td><td>Clear file history - all files</td></tr>
+<tr><td>130</td><td> - </td><td>Save abort</td></tr>
+<tr><td>131</td><td> - </td><td>Save abort (execption caught)</td></tr>
+<tr><td>132</td><td> - </td><td>Save warning about file overwriting issue</td></tr>
+<tr><td>200</td><td> * </td><td>Error during load (returns actual CGNS/HDF5 layer error)</td></tr>
+<tr><td>201</td><td> * </td><td>Fatal error during load</td></tr>
+<tr><td>500</td><td> - </td><td>Bad data for a VTK display</td></tr>
+<tr><td>501</td><td> - </td><td>VTK version lower than v6.0</td></tr>
+<tr><td>502</td><td> - </td><td>VTK version lower than v5.8</td></tr>
+<tr><td>302</td><td> - </td><td>Node selection required for Form view</td></tr>
+<tr><td>310</td><td> - </td><td>Create link as new node</td></tr>
+<tr><td>311</td><td> - </td><td>Remove link entry</td></tr>
+<tr><td>370</td><td> - </td><td>Leave query panel</td></tr>
+<tr><td>371</td><td> - </td><td>Apply changes to all</td></tr>
+<tr><td>400</td><td> * </td><td>Show diag view grammer used</td></tr>
+</table>
 
 <p>
 <img source=":/images/icons/unselected.png">
@@ -513,6 +517,10 @@ want to find back which result matches which value (see example)</td></tr>
 'File':('File panel',
 """
 <h2>File panel</h2>
+<font color=red>Oups! the File panel is a MODAL window, which means
+it blocks all other windows until you answer to it. So if you want to
+browse this help you have to close the File panel window first!</font>
+<p>
 The same panel is used for both <b>load</b> and <b>save</b> file selection.
 The <b>Cancel</b> button would abort the current load or save
 operation, but once the the load/save process is strated there is no way

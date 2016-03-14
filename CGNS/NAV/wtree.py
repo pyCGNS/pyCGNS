@@ -432,9 +432,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
       self.model().updateSelected()
       self.treeview.refreshView()
     def _gm_family_1(self,node):
-      _runAndSelect('013. FamilyName reference',"'%s'"%node.sidsName())
+      self._runAndSelect('013. FamilyName reference',"'%s'"%node.sidsName())
     def _gm_family_2(self,node):
-      _runAndSelect('003. Node type',"'Family_t'")
+      self._runAndSelect('003. Node type',"'Family_t'")
     def _GM_Family_t(self,node):
       m=QMenu('%s special menu'%node.sidsType())
       a=QAction('Select references to myself',self)
@@ -455,11 +455,18 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
       self._runAndSelect('001. Node name',"'%s'"%node.sidsName())
     def marknode_v(self):
       node=self.getLastEntered()
-      value=repr(node.sidsValue())
+      value=node.sidsValue()
       self._runAndSelect('005. Node value',value)
     def marknode_p(self):
       node=self.getLastEntered()
-      self._runAndSelect('001. Node name',"'%s'"%node.sidsName())
+      node.switchMarked()
+      path=node.sidsPath()
+      while path is not None:
+        path=CGU.getPathAncestor(path)
+        if (path not in ['/',None]):
+          node=self.model().nodeFromPath('/CGNSTree'+path)
+          node.switchMarked()
+      self.model().updateSelected()
     def setLastEntered(self,nix=None):
         if ((nix is None) or (not nix.isValid())):
             nix=self.treeview.modelCurrentIndex()

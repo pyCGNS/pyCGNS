@@ -325,7 +325,7 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.lockView(False)
         fgprint=self.signals.fgprint
         if (len(fgprint)>1):
-            MSG.wError(self,200,*fgprint[1])
+            MSG.wError(self,200,fgprint[1])
         elif (fgprint.tree is None):
             MSG.wError(self,201,'Fatal error while loading file, empty tree')
         else:

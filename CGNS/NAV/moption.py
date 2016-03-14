@@ -592,11 +592,14 @@ BC* would fail
 ('005. Node value',
  'Search by',
  """
-print 70*'-'
-print VALUE
-print ARGS[0]
-if (VALUE is not None and VALUE.all()==ARGS[0].all()):
-   RESULT=True
+target=eval(ARGS[0])
+if   (VALUE is None and target is None): RESULT=True
+elif (VALUE is None)            : RESULT=False
+elif (target.dtype!=VALUE.dtype): RESULT=False
+elif (target.size!=VALUE.size):   RESULT=False
+elif (target.shape!=VALUE.shape): RESULT=False
+elif (target.tolist()==VALUE.tolist()): RESULT=True
+else:                             RESULT=False
  """,
  """search all nodes with argument value. The compare is performed
  using a straightforward '==' and then relies on the Python/Numpy comparison
