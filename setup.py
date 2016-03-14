@@ -161,7 +161,6 @@ if VAL:
   ALL_PACKAGES+=['CGNS.VAL',
                  'CGNS.VAL.grammars',
                  'CGNS.VAL.suite',
-                 'CGNS.VAL.suite.elsA',
                  'CGNS.VAL.suite.SIDS',
                  'CGNS.VAL.parse',
                  'CGNS.VAL.test']
@@ -192,7 +191,6 @@ if PAT:
   #                              include_dirs = CONFIG.INCLUDE_DIRS) ]
   ALL_PACKAGES+=['CGNS.PAT',
                  'CGNS.PAT.SIDS',
-                 'CGNS.PAT.elsA',
                  'CGNS.PAT.test']
   modules+="\n# PAT   add  build"
 else:

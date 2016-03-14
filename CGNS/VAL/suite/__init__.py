@@ -8,8 +8,6 @@ pass
 #
 #   python -c 'import CGNS.VAL.suite.run'
 #
-# if the CGNS.PRO package is found, it is used instead of the SAMPLE grammar.
-#
 # To save all tests files in a CGNS/HDF files, set the shell variable
 # CGNS_VAL_SAVE_FILES, create a directory and run the test in this directory.
 #
