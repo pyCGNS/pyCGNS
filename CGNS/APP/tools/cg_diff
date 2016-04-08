@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+#  -------------------------------------------------------------------------
+#  pyCGNS - Python package for CFD General Notation System - 
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#
+import CGNS.PAT.cgnsutils as CGU
+import CGNS.MAP as CGM
+import CGNS.VAL.simplecheck as CGV
+import CGNS.version
+
+import os.path
+
+doc1="""
+  CGNS/HDF5 diff tool
+  (part of pyCGNS distribution http://pycgns.sourceforge.net)
+  pyCGNS v%s
+  
+  The result of the diff is a textual diagnostic
+"""%(CGNS.version.id)
+
+doc2="""
+  Examples:
+
+"""
+
+import argparse
+import re
+
+pr=argparse.ArgumentParser(description=doc1,epilog=doc2,
+                           formatter_class=argparse.RawDescriptionHelpFormatter,
+                           usage='%(prog)s [options] file1 file2 ...')
+pr.add_argument("-p","--path",dest="path",
+                help='start diff at this node')
+pr.add_argument('-f','--flat',action='store_true',
+                help='flat mode, do not recurse on tree')
+pr.add_argument('-v','--verbose',action='store_true',
+                help='trace mode')
+pr.add_argument('files',nargs=argparse.REMAINDER)
+
+args=pr.parse_args()
+
+class Query(object):
+  def __init__(self):
+    self.userkeys=['DEFAULT']
+    self.idlist=[]
+
+def openFile(filename):
+    flags=CGM.S2P_DEFAULT|CGM.S2P_NODATA
+    (t,l,p)=CGM.load(filename,flags=flags,lksearch=['.'],maxdata=200)
+    return (t,l,p,filename)
+
+Q=Query()
+Q.path=args.path
+Q.flat=args.flat
+Q.verbose=args.verbose
+
+for F in args.files:
+    try:
+      pass
+    except CGM.CHLone.CHLoneException:
+      pass
+
+# --- last line

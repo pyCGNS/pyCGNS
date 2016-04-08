@@ -3,9 +3,13 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-import sys
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
-from PySide.QtGui import QApplication
+import sys
+import time
+
+from PySide.QtCore import *
+from PySide.QtGui import QApplication, QPixmap, QSplashScreen
 from CGNS.NAV.wcontrol import Q7Main
 
 # -----------------------------------------------------------------
@@ -22,6 +26,13 @@ def run(args=[],files=[],
       print ' ',q
   else:    
     app=QApplication(args)
+    pixmap = QPixmap(":/images/splash.png")
+    splash = QSplashScreen(pixmap,Qt.WindowStaysOnTopHint)
+    splash.show()
+    splash.showMessage("Release v%s"%OCTXT._ToolVersion,
+                       Qt.AlignHCenter|Qt.AlignBottom)
+    app.processEvents()
+    t1=time.time()
     Q7Main.verbose=flags[2]
     wcontrol=Q7Main()
     wcontrol._application=app
@@ -34,7 +45,10 @@ def run(args=[],files=[],
     if (flags[1]):  wcontrol.loadlast()
     if files:
       wcontrol.loadfile(files[0]) # loop on file list broken in wfingerprint
+    t2=time.time()
+    if (t2-t1<2.0): time.sleep(2)
     wcontrol.show()
+    splash.finish(wcontrol)
     app.exec_()
     wcontrol._T('leave')
   sys.exit()

@@ -128,7 +128,7 @@ if (args.update):
 
 # -------------------------------------------------------------------------
 if APP:
-  slist=['cg_grep','cg_list','cg_link','cg_iges',
+  slist=['cg_grep','cg_list','cg_link','cg_iges','cg_diff','cg_checksum',
          'cg_gather','cg_scatter',
          'cg_scan','cg_look']
 
