@@ -1,6 +1,11 @@
 [MASTER]
+# pyCGNS pylint config file
+# run:
+# pylint CGNS --rcfile=pyCGNS/.pylintrc
+# 
 
-# Specify a configuration file.
+
+# Specify a configuration file
 rcfile=pyCGNS/.pylintrc
 
 # Python code to execute, usually for sys.path manipulation such as
@@ -44,7 +49,7 @@ symbols=no
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-#disable=
+disable=
 
 
 [REPORTS]

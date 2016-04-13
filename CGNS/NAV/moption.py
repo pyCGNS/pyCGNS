@@ -592,6 +592,7 @@ BC* would fail
 ('005. Node value',
  'Search by',
  """
+from numpy import *
 target=eval(ARGS[0])
 if   (VALUE is None and target is None): RESULT=True
 elif (VALUE is None)            : RESULT=False

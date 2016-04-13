@@ -14,7 +14,6 @@ import glob
 import CGNS.PAT.cgnsutils    as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.SIDS
-import CGNS.PAT.elsA
 
 from PySide.QtCore import *
 from PySide.QtGui  import QFileDialog
@@ -39,7 +38,6 @@ class Q7PatternList(QW,Ui_Q7PatternWindow):
         self.bAdd.setDisabled(True)
         self._profiles={}
         self._profiles['SIDS']=CGNS.PAT.SIDS.profile
-        self._profiles['elsA']=CGNS.PAT.elsA.profile
         self.loadUserProfiles()
         self._modified=False
         self._initialized=False

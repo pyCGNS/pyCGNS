@@ -447,6 +447,14 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
       p=QMenu('Insert pattern')
       m.addMenu(p)
       return m
+    def _GM_Elements_t(self,node):
+      m=QMenu('%s special menu'%node.sidsType())
+      print node.sidsNode()
+      etp=CGU.getEnumAsString(node.sidsNode())
+      npe=CGK.ElementTypeNPE[etp]
+      a=QAction('Element type [%s] npe [%d]'%(etp,npe),self)
+      m.addAction(a)
+      return m
     def marknode_t(self):
       node=self.getLastEntered()
       self._runAndSelect('003. Node type',"'%s'"%node.sidsType())
@@ -612,7 +620,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                       again=False)
             return
         if (node.sidsType()==CGK.CGNSTree_ts): return
-        form=Q7Form(self._control,node,self.FG)
+        form=Q7Form(self._control,node,self.FG.index)
         form.show()
     def vtkview(self):
         if (not has_vtk): return

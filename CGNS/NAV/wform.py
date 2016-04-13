@@ -39,11 +39,10 @@ class Q7TableItemDelegate(QStyledItemDelegate):
 
 # -----------------------------------------------------------------
 class Q7Form(Q7Window,Ui_Q7FormWindow):
-    def __init__(self,control,node,fgprint):
+    def __init__(self,control,node,fgprintindex):
         Q7Window.__init__(self,Q7Window.VIEW_FORM,control,
-                          node.sidsPath(),fgprint)
+                          node.sidsPath(),fgprintindex)
         self._node=node
-        self._fgprint=fgprint
         self._operatorlist=['']
         for t in self._node.sidsTypeList():
             self.eType.addItem(t)
@@ -103,7 +102,7 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         QObject.connect(self.sMinV,
                         SIGNAL("valueChanged(int)"),
                         self.resetIndex)
-        lk=self._fgprint.isLink(self._node.sidsPath())
+        lk=self.FG.isLink(self._node.sidsPath())
         if (lk):
             self.setLabel(self.eDestDir,lk[0])
             self.setLabel(self.eDestFile,lk[1])

@@ -2401,36 +2401,44 @@ def hasChildType(parent,ntype):
 
 # -----------------------------------------------------------------------------
 def getEnumAsString(node):
-  # """
-  # Return the node value as corresponding SIDS enumerate string::
-  #   if (hasEnumValue(node)):
-  #     print getEnumAsString(node)
-  # :arg CGNS/Python node: target node
-  # :return: A string corresponding to the SIDS enumerate value
-  # :Remarks:
-  #   - returns empty string if something wrong happens
-  #   - See also :py:func:`hasEnumValue`
-  # """
+  """
+  Return the node value as corresponding SIDS enumerate string::
+    if (hasEnumValue(node)):
+      print getEnumAsString(node)
+
+  The enumerate value is the <node-value>.flat[0] that is supposed to be an
+  integer.
+
+  :arg CGNS/Python node: target node
+  :return: A string corresponding to the SIDS enumerate value
+  :Remarks:
+    - returns empty string if something wrong happens
+    - See also :py:func:`hasEnumValue`
+    
+  """
   try:
-    e=CK.cgnsenums[node[3]]
-    d=getattr(CK,e[:-1])
-    v=d[node[1].flat[0]]
+    stp=node[3]
+    if (stp==CK.Elements_ts): stp=CK.ElementType_ts
+    e=CK.cgnsenums[stp]
+    v=e[node[1].flat[0]]
     return v
   except:
     return ''
     
 # -----------------------------------------------------------------------------
 def hasEnumValue(node):
-  # """
-  # Checks if the node type allows a SIDS enum value::
-  #   if (hasEnumValue(node)):
-  #     print getEnumAsString(node)
-  # :arg CGNS/Pytohn node: target node
-  # :return: True if the node value is a SIDS enumerate
-  # :Remarks:
-  #   - See also :py:func:`getEnumAsString`
-  # """
-  if (node[3] in CK.cgnsenums.keys()): return True
+  """
+  Checks if the node type allows a SIDS enum value::
+    if (hasEnumValue(node)):
+      print getEnumAsString(node)
+  :arg CGNS/Python node: target node
+  :return: True if the node value is a SIDS enumerate
+  :Remarks:
+    - See also :py:func:`getEnumAsString`
+  """
+  stp=node[3]
+  if (stp==CK.Elements_ts): stp=CK.ElementType_ts
+  if (stp in CK.cgnsenums.keys()): return True
   return False
     
 # -----------------------------------------------------------------------------
