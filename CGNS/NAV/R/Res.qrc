@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/images">
+    <file>icons/arrow.gif</file>
     <file>splash.png</file>
     <file>icons/h_file_checks_01.png</file>
     <file>icons/h_file_checks_10.png</file>

@@ -1121,87 +1121,122 @@ AverageInterfaceType_    = enumAsKeyDict(AverageInterfaceType_l)
 AverageInterface_s      = "AverageInterface"
 AverageInterface_ts     = "AverageInterface_t"
 
-NODE_s     = "NODE"
-BAR_2_s    = "BAR_2"
-BAR_3_s    = "BAR_3"
-TRI_3_s    = "TRI_3"
-TRI_6_s    = "TRI_6"
-QUAD_4_s   = "QUAD_4"
-QUAD_8_s   = "QUAD_8"
-QUAD_9_s   = "QUAD_9"
-TETRA_4_s  = "TETRA_4"
-TETRA_10_s = "TETRA_10"
-PYRA_5_s   = "PYRA_5"
-PYRA_13_s  = "PYRA_13"
-PYRA_14_s  = "PYRA_14"
-PENTA_6_s  = "PENTA_6"
-PENTA_15_s = "PENTA_15"
-PENTA_18_s = "PENTA_18"
-HEXA_8_s   = "HEXA_8"
-HEXA_20_s  = "HEXA_20"
-HEXA_27_s  = "HEXA_27"
-MIXED_s    = "MIXED"
-NGON_n_s   = "NGON_n"
-NFACE_n_s  = "NFACE_n"
-BAR_4_s    = "BAR_4"
-TRI_9_s    = "TRI_9"
-TRI_10_s   = "TRI_10"
-QUAD_12_s  = "QUAD_12"
-QUAD_16_s  = "QUAD_16"
-TETRA_16_s = "TETRA_16"
-TETRA_20_s = "TETRA_20"
-PYRA_21_s  = "PYRA_21"
-PYRA_29_s  = "PYRA_29"
-PYRA_30_s  = "PYRA_30"
-PENTA_24_s = "PENTA_24"
-PENTA_38_s = "PENTA_38"
-PENTA_40_s = "PENTA_40"
-HEXA_32_s  = "HEXA_32"
-HEXA_56_s  = "HEXA_56"
-HEXA_64_s  = "HEXA_64"
+NODE_s        = "NODE"
+BAR_2_s       = "BAR_2"
+BAR_3_s       = "BAR_3"
+TRI_3_s       = "TRI_3"
+TRI_6_s       = "TRI_6"
+QUAD_4_s      = "QUAD_4"
+QUAD_8_s      = "QUAD_8"
+QUAD_9_s      = "QUAD_9"
+TETRA_4_s     = "TETRA_4"
+TETRA_10_s    = "TETRA_10"
+PYRA_5_s      = "PYRA_5"
+PYRA_14_s     = "PYRA_14"
+PENTA_6_s     = "PENTA_6"
+PENTA_15_s    = "PENTA_15"
+PENTA_18_s    = "PENTA_18"
+HEXA_8_s      = "HEXA_8"
+HEXA_20_s     = "HEXA_20"
+HEXA_27_s     = "HEXA_27"
+MIXED_s       = "MIXED"
+PYRA_13_s     = "PYRA_13"
+NGON_n_s      = "NGON_n"
+NFACE_n_s     = "NFACE_n"
+BAR_4_s       = "BAR_4"
+TRI_9_s       = "TRI_9"
+TRI_10_s      = "TRI_10"
+QUAD_12_s     = "QUAD_12"
+QUAD_16_s     = "QUAD_16"
+TETRA_16_s    = "TETRA_16"
+TETRA_20_s    = "TETRA_20"
+PYRA_21_s     = "PYRA_21"
+PYRA_29_s     = "PYRA_29"
+PYRA_30_s     = "PYRA_30"
+PENTA_24_s    = "PENTA_24"
+PENTA_38_s    = "PENTA_38"
+PENTA_40_s    = "PENTA_40"
+HEXA_32_s     = "HEXA_32"
+HEXA_56_s     = "HEXA_56"
+HEXA_64_s     = "HEXA_64"
+BAR_5_s       = "BAR_5"
+TRI_12_s      = "TRI_12"
+TRI_15_s      = "TRI_15"
+QUAD_P4_16_s  = "QUAD_P4_16"
+QUAD_25_s     = "QUAD_25"
+TETRA_22_s    = "TETRA_22"
+TETRA_34_s    = "TETRA_34"
+TETRA_35_s    = "TETRA_35"
+PYRA_P4_29_s  = "PYRA_P4_29"
+PYRA_50_s     = "PYRA_50"
+PYRA_55_s     = "PYRA_55"
+PENTA_33_s    = "PENTA_33"
+PENTA_66_s    = "PENTA_66"
+PENTA_75_s    = "PENTA_75"
+HEXA_44_s     = "HEXA_44"
+HEXA_98_s     = "HEXA_98"
+HEXA_125_s    = "HEXA_125"
 
-Null_npe        = 0
-UserDefined_npe = 0
+# ORDER *IS* SIGNIFICANT
 
-NODE_npe     =  1
-BAR_2_npe    =  2
-BAR_3_npe    =  3
-TRI_3_npe    =  3
-TRI_6_npe    =  6
-QUAD_4_npe   =  4
-QUAD_8_npe   =  8
-QUAD_9_npe   =  9
-TETRA_4_npe  =  4
-TETRA_10_npe = 10
-PYRA_5_npe   =  5
-PYRA_13_npe  = 13
-PYRA_14_npe  = 14
-PENTA_6_npe  =  6
-PENTA_15_npe = 15
-PENTA_18_npe = 18
-HEXA_8_npe   =  8
-HEXA_20_npe  = 20
-HEXA_27_npe  = 27
-MIXED_npe    =  0
-NGON_n_npe   =  0
-NFACE_n_npe  =  0
-BAR_4_npe    =  4
-TRI_9_npe    =  9
-TRI_10_npe   = 10
-QUAD_12_npe  = 12
-QUAD_16_npe  = 16
-TETRA_16_npe = 16
-TETRA_20_npe = 20
-PYRA_21_npe  = 21
-PYRA_29_npe  = 29
-PYRA_30_npe  = 30
-PENTA_24_npe = 24
-PENTA_38_npe = 38
-PENTA_40_npe = 40
-HEXA_32_npe  = 32
-HEXA_56_npe  = 56
-HEXA_64_npe  = 64
-
+Null_npe        =  0
+UserDefined_npe =  0
+NODE_npe        =  1
+BAR_2_npe       =  2
+BAR_3_npe       =  3
+TRI_3_npe       =  3
+TRI_6_npe       =  6
+QUAD_4_npe      =  4
+QUAD_8_npe      =  8
+QUAD_9_npe      =  9
+TETRA_4_npe     =  4
+TETRA_10_npe    = 10
+PYRA_5_npe      =  5
+PYRA_14_npe     = 14
+PENTA_6_npe     =  6
+PENTA_15_npe    = 15
+PENTA_18_npe    = 18
+HEXA_8_npe      =  8
+HEXA_20_npe     = 20
+HEXA_27_npe     = 27
+MIXED_npe       =  0
+PYRA_13_npe     = 13
+NGON_n_npe      =  0
+NFACE_n_npe     =  0
+BAR_4_npe       =  4
+TRI_9_npe       =  9
+TRI_10_npe      = 10
+QUAD_12_npe     = 12
+QUAD_16_npe     = 16
+TETRA_16_npe    = 16
+TETRA_20_npe    = 20
+PYRA_21_npe     = 21
+PYRA_29_npe     = 29
+PYRA_30_npe     = 30
+PENTA_24_npe    = 24
+PENTA_38_npe    = 38
+PENTA_40_npe    = 40
+HEXA_32_npe     = 32
+HEXA_56_npe     = 56
+HEXA_64_npe     = 64
+BAR_5_npe       = 40
+TRI_12_npe      = 41
+TRI_15_npe      = 42
+QUAD_P4_16_npe  = 43
+QUAD_25_npe     = 44
+TETRA_22_npe    = 45
+TETRA_34_npe    = 46
+TETRA_35_npe    = 47
+PYRA_P4_29_npe  = 48
+PYRA_50_npe     = 49
+PYRA_55_npe     = 50
+PENTA_33_npe    = 51
+PENTA_66_npe    = 52
+PENTA_75_npe    = 53
+HEXA_44_npe     = 54
+HEXA_98_npe     = 55
+HEXA_125_npe    = 56
+  
 Elements_ts    = "Elements_t"
 ElementType_ts = "ElementType_t"
 ElementType_s  = "ElementType"
@@ -1214,7 +1249,10 @@ ElementType_l  = [Null_s, UserDefined_s, NODE_s, BAR_2_s, BAR_3_s,
                  NGON_n_s, NFACE_n_s, BAR_4_s, TRI_9_s, TRI_10_s, QUAD_12_s,
                  QUAD_16_s, TETRA_16_s, TETRA_20_s, PYRA_21_s, PYRA_29_s,
                  PYRA_30_s, PENTA_24_s, PENTA_38_s, PENTA_40_s, HEXA_32_s,
-                 HEXA_56_s, HEXA_64_s ]
+                 HEXA_56_s, HEXA_64_s, BAR_5_s, TRI_12_s, TRI_15_s,
+                 QUAD_P4_16_s, QUAD_25_s, TETRA_22_s, TETRA_34_s,
+                 TETRA_35_s, PYRA_P4_29_s, PYRA_50_s, PYRA_55_s, PENTA_33_s,
+                 PENTA_66_s, PENTA_75_s, HEXA_44_s, HEXA_98_s, HEXA_125_s]
 ElementTypeNPE_l = [Null_npe, UserDefined_npe, NODE_npe, BAR_2_npe, BAR_3_npe,
                    TRI_3_npe, TRI_6_npe, QUAD_4_npe, QUAD_8_npe, QUAD_9_npe,
                    TETRA_4_npe, TETRA_10_npe, PYRA_5_npe, PYRA_14_npe,
@@ -1224,7 +1262,13 @@ ElementTypeNPE_l = [Null_npe, UserDefined_npe, NODE_npe, BAR_2_npe, BAR_3_npe,
                    TRI_10_npe, QUAD_12_npe, QUAD_16_npe, TETRA_16_npe,
                    TETRA_20_npe, PYRA_21_npe, PYRA_29_npe,
                    PYRA_30_npe, PENTA_24_npe, PENTA_38_npe, PENTA_40_npe,
-                   HEXA_32_npe, HEXA_56_npe, HEXA_64_npe]
+                   HEXA_32_npe, HEXA_56_npe, HEXA_64_npe,
+                   BAR_5_npe, TRI_12_npe, TRI_15_npe,
+                   QUAD_P4_16_npe, QUAD_25_npe, TETRA_22_npe, TETRA_34_npe,
+                   TETRA_35_npe, PYRA_P4_29_npe, PYRA_50_npe, PYRA_55_npe,
+                   PENTA_33_npe,
+                   PENTA_66_npe, PENTA_75_npe,
+                   HEXA_44_npe, HEXA_98_npe, HEXA_125_npe]
 ElementType    = stringAsKeyDict(ElementType_l)
 ElementType_   = enumAsKeyDict(ElementType_l)
 ElementTypeNPE = dict(zip(ElementType_l,ElementTypeNPE_l))
@@ -1237,24 +1281,38 @@ ElementTypeNPE = dict(zip(ElementType_l,ElementTypeNPE_l))
  BAR_4, TRI_9, TRI_10, QUAD_12,
  QUAD_16, TETRA_16, TETRA_20, PYRA_21, PYRA_29,
  PYRA_30, PENTA_24, PENTA_38, PENTA_40, HEXA_32,
- HEXA_56, HEXA_64)=ElementType_.keys()
+ HEXA_56, HEXA_64, BAR_5, TRI_12, TRI_15,
+ QUAD_P4_16, QUAD_25, TETRA_22, TETRA_34,
+ TETRA_35, PYRA_P4_29, PYRA_50, PYRA_55,
+ PENTA_33,
+ PENTA_66, PENTA_75,
+ HEXA_44, HEXA_98, HEXA_125)=ElementType_.keys()
  
 ElementType3D = [TETRA_4, TETRA_10, PYRA_5, PYRA_14,
                  PENTA_6, PENTA_15, PENTA_18,
                  HEXA_8, HEXA_20, HEXA_27, MIXED, PYRA_13,
                  TETRA_16, TETRA_20, PYRA_21, PYRA_29,
                  PYRA_30, PENTA_24, PENTA_38, PENTA_40, HEXA_32,
-                 HEXA_56, HEXA_64]
+                 HEXA_56, HEXA_64, TETRA_22, TETRA_34,
+                 TETRA_35, PYRA_P4_29, PYRA_50, PYRA_55,
+                 PENTA_33, PENTA_66, PENTA_75,
+                 HEXA_44, HEXA_98, HEXA_125]
 ElementType2D = [TRI_3, TRI_6, QUAD_4, QUAD_8, QUAD_9,
-                 TRI_9, TRI_10, QUAD_12, QUAD_16 ]
-ElementType1D = [BAR_2, BAR_3, BAR_4]
+                 TRI_9, TRI_10, QUAD_12, QUAD_16, TRI_12, TRI_15,
+                 QUAD_P4_16, QUAD_25 ]
+ElementType1D = [BAR_2, BAR_3, BAR_4, BAR_5]
 ElementType0D = [NODE]
-ElementType_tri   = [TRI_3, TRI_6, TRI_9, TRI_10]
-ElementType_quad  = [QUAD_4, QUAD_8, QUAD_9, QUAD_12, QUAD_16]
-ElementType_tetra = [TETRA_4, TETRA_10, TETRA_16, TETRA_20]
-ElementType_pyra  = [PYRA_13, PYRA_21, PYRA_29, PYRA_30]
-ElementType_penta = [PENTA_6, PENTA_15, PENTA_18, PENTA_24, PENTA_38, PENTA_40]
-ElementType_hexa  = [HEXA_8, HEXA_20, HEXA_27, HEXA_32, HEXA_56, HEXA_64]
+ElementType_tri   = [TRI_3, TRI_6, TRI_9, TRI_10, TRI_12, TRI_15]
+ElementType_quad  = [QUAD_4, QUAD_8, QUAD_9, QUAD_12, QUAD_16,
+                     QUAD_P4_16, QUAD_25]
+ElementType_tetra = [TETRA_4, TETRA_10, TETRA_16, TETRA_20, TETRA_22, TETRA_34,
+                     TETRA_35]
+ElementType_pyra  = [PYRA_13, PYRA_21, PYRA_29, PYRA_30,
+                     PYRA_P4_29, PYRA_50, PYRA_55]
+ElementType_penta = [PENTA_6, PENTA_15, PENTA_18, PENTA_24, PENTA_38, PENTA_40,
+                     PENTA_33, PENTA_66, PENTA_75]
+ElementType_hexa  = [HEXA_8, HEXA_20, HEXA_27, HEXA_32, HEXA_56, HEXA_64,
+                     HEXA_44, HEXA_98, HEXA_125]
 ElementType_trionly  = ElementType_tetra
 ElementType_quadonly = ElementType_hexa
 ElementType_triquad  = ElementType_pyra + ElementType_penta

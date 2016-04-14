@@ -348,6 +348,7 @@ class Mesh(CGNSparser):
 
   def getPathFromObject(self,selectedobject):
     for (o,p) in [(a[2],a[3]) for a in self._actors]:
+        print 'get path :',p,selectedobject,o
         if (selectedobject==o): return p
     return ''
     

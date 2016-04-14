@@ -412,7 +412,7 @@ class Q7TreeView(QTreeView):
         self.model().refreshModel(ixc)
     def markNode(self,node):
         node.switchMarked()
-        node.model().updateSelected()
+        self.model().updateSelected()
         self.changeRow(node)
     def upRowLevel(self,index):
         self.relativeMoveToRow(-1,index)
@@ -948,7 +948,8 @@ class Q7TreeModel(QAbstractItemModel):
                 t+=[(n.orderTag(),p)]
         t.sort()
         return [e[1] for e in t]
-    def getSelected(self):
+    def getSelected(self,noroot=False):
+        if (noroot): return [CGU.getPathNoRoot(pth) for pth in self._selected]
         return self._selected
     def getSelectedZones(self):
         zlist=[]
@@ -969,9 +970,10 @@ class Q7TreeModel(QAbstractItemModel):
                         if (zpth not in zlist):
                             zlist+=[zpth]
         return zlist
-    def getSelectedShortCut(self):
+    def getSelectedShortCut(self,ulist=None):
         slist=[]
-        for pth in self._selected:
+        if (ulist is None): ulist=self._selected
+        for pth in ulist:
             if (CGU.hasFirstPathItem(pth)): pth=CGU.removeFirstPathItem(pth)
             slist+=[pth]
         return slist

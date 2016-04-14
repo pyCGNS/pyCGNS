@@ -670,32 +670,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
-      <widget class="QPushButton" name="bUpdateFromVTK">
-       <property name="minimumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Reset tree view selection from vtk view</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/flag-bwd.gif</normaloff>:/images/icons/flag-bwd.gif</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="bUpdateFromTree">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -716,21 +690,21 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Reset vtk view selection from tree view</string>
+        <string>Reset VTK view selection from tree view FIRST selected node</string>
        </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/flag-fwd.gif</normaloff>:/images/icons/flag-fwd.gif</iconset>
+         <normaloff>:/images/icons/user-U.gif</normaloff>:/images/icons/user-U.gif</iconset>
        </property>
       </widget>
      </item>
      <item>
       <widget class="Q7ComboBox" name="cCurrentPath">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -747,23 +721,7 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::MinimumExpanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bReverse">
+      <widget class="QPushButton" name="bUpdateFromVTK">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -777,14 +735,14 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Switch seleted and  unselected actors</string>
+        <string>Reset tree view selection from ALL VTK view selected objects</string>
        </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/flag-revert.png</normaloff>:/images/icons/flag-revert.png</iconset>
+         <normaloff>:/images/icons/user-U.gif</normaloff>:/images/icons/user-U.gif</iconset>
        </property>
       </widget>
      </item>

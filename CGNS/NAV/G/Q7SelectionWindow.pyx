@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7SelectionWindow.ui'
 #
-# Created: Fri Mar 11 10:06:30 2016
+# Created: Thu Apr 14 17:33:46 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -166,7 +166,7 @@ class Ui_Q7SelectionWindow(object):
         self.cShowSIDS.setObjectName("cShowSIDS")
         self.horizontalLayout_3.addWidget(self.cShowSIDS)
         self.cShowPath = QtGui.QCheckBox(Q7SelectionWindow)
-        self.cShowPath.setChecked(False)
+        self.cShowPath.setChecked(True)
         self.cShowPath.setObjectName("cShowPath")
         self.horizontalLayout_3.addWidget(self.cShowPath)
         spacerItem4 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)

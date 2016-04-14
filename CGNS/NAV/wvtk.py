@@ -113,7 +113,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bX.clicked.connect(self.b_xaxis)
       self.bY.clicked.connect(self.b_yaxis)
       self.bZ.clicked.connect(self.b_zaxis)
-      self.bReverse.clicked.connect(self.reverseSelection)
+#      self.bReverse.clicked.connect(self.reverseSelection)
       self.bSaveVTK.clicked.connect(self.b_saveVTK)
       self.bSuffleColors.clicked.connect(self.b_shufflecolors)
       self.bBlackColor.clicked.connect(self.b_blackandwhite)
@@ -122,8 +122,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.bNext.clicked.connect(self.b_next)
       self.bPrevious.clicked.connect(self.b_prev)
       self.bReset.clicked.connect(self.b_reset)
-      self.bUpdateFromTree.clicked.connect(self.b_update)
-      self.bUpdateFromVTK.clicked.connect(self.b_update)
+      self.bUpdateFromTree.clicked.connect(self.b_update_from)
+      self.bUpdateFromVTK.clicked.connect(self.b_update_to)
       self.bScreenShot.clicked.connect(self.screenshot)
       self.selectable.clicked.connect(self.setInteractive)
       self.ColorMapMin=QColorDialog(self)
@@ -192,6 +192,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def doRelease(self):
       self._T=None
+      self.reject()
 
   def parseDone(self):
       print 'PARSE DONE'
@@ -203,8 +204,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           if ((len(p)>SIZE_PATTERN) and (p[-SIZE_PATTERN:] in LIST_PATTERN)):
               p=p[:-SIZE_PATTERN]
           s+=['/'+CGK.CGNSTree_s+p]
-      print s
       self._tmodel.markExtendToList(s)
+      self._tmodel.updateSelected()
   
   def setCutPlane(self):
       if (self._currentactor is None): return
@@ -510,7 +511,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       
   def screenshot(self):
     sshot=QPixmap.grabWindow(self.display.winId())
-    sshot.save('/tmp/foo.png','png')
+    sshot.save('/tmp/cg_look-vtkview.png','png')
 
   def findObjectPath(self,selected):
     return self._parser.getPathFromObject(selected)
@@ -805,15 +806,24 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           self.actorpt.GetProperty().SetColor(0,1,0)
       self._iren.Render()
 
-  def b_update(self):
+  def b_update_from(self):
       self.busyCursor()
-      #self._selected=[] # merge instead
+      self._selected=[]
+      for pth in self._parser.getPathList():
+          if (pth in self._parent.model().getSelected(True)):
+              self._selected.append([pth,self.findPathObject(pth)])
+      if (len(self._selected)>1):
+         MSG.wInfo(self,503,"VTK view selections",
+                   """Only the first marked object in tree view would be
+                      selected in the VTK view""")
+      for s in self._selected: 
+          self.changeCurrentActor(s)
+          break #todo: allow multiple selections
+      self.readyCursor()
+      
+  def b_update_to(self):
+      self.busyCursor()
       self.textActor.VisibilityOff()
-      tlist=self._tmodel.getSelectedShortCut()
-      slist=self._parser.getPathList()
-      for i in tlist:
-          if (i in slist):
-              self._selected+=[[i,self.findPathObject(i)]]
       ptmp=set()
       stmp=[]
       for i in self._selected:
@@ -1123,15 +1133,16 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (self._master._vtkwindow is not None):
           self._vtk.GetRenderWindow().Finalize()
           self._master._vtkwindow=None
-      self.close()
         
   def changeCurrentActor(self,act,combo=True):
+    self._selected=[]
     if (act[1] is not None and not act[1].alone()):
         atpl=[]
         plst=act[1].GetParts()
         plst.InitTraversal()
         a=plst.GetNextItemAsObject()
         while a:
+            self._selected+=[[a.path(),a]]
             atpl+=[(act[0],a)]
             a=plst.GetNextItemAsObject()
     else:
@@ -1157,11 +1168,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
               act.GetProperty().SetColor(col)
               act.GetProperty().SetLineWidth(1.0)
     aclist=[]
-    print 'LIST ',atpl
     for atp in atpl:
       path =atp[0]
       actor=atp[1]
-      print path,actor
       if (not combo):self.setCurrentPath(path)         
       if (actor is None):
           self.cCurrentPath.setCurrentIndex(0)
