@@ -215,6 +215,7 @@ class Q7Window(QWidget,object):
         self._vtype=vtype
         self._path=path
         self._control=control
+        self._application=None
         self._fgindex=fgprintindex
         self._index=self.addChildWindow()
         self._lockableWidgets=[]
@@ -381,7 +382,8 @@ class Q7Window(QWidget,object):
     def lockable(self,widget):
         self._lockableWidgets.append(widget)
     def refreshScreen(self):
-        QCoreApplication.processEvents()
+      if (self._control._application is not None):
+        self._control._application.processEvents()
     def setLabel(self,it,text):
         it.setText(text)
         it.setFont(QFont("Courier"))

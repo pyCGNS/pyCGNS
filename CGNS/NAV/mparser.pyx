@@ -67,7 +67,6 @@ class Q7vtkAssembly(vtk.vtkPropAssembly):
       a=plst.GetNextItemAsObject()
     s+='>>'
     return s
-     
   
 # ----------------------------------------------------------------------------
 class Q7vtkActor(vtk.vtkActor):

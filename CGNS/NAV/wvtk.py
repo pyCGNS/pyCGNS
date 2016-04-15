@@ -12,6 +12,7 @@ import random
 import vtk
 
 import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils    as CGU
 
 from PySide.QtCore import *
 from PySide.QtGui  import *
@@ -199,13 +200,24 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
 
   def updateSelectedFromVTK(self):
       s=[]
-      for i in self._selected:
-          p=i[0]
-          if ((len(p)>SIZE_PATTERN) and (p[-SIZE_PATTERN:] in LIST_PATTERN)):
-              p=p[:-SIZE_PATTERN]
-          s+=['/'+CGK.CGNSTree_s+p]
+      paths=set()
+      if   (self._lastSelectedType=='Zone'):
+        for a in self._selected:
+          paths.add(CGU.stackPathItem('/',*CGU.getPathToList(a[0],True)[:2]))
+      elif (self._lastSelectedType=='Family'):
+        for a in self._selected:
+          paths.add(CGU.stackPathItem('/',self._lastSelectedTag))
+      else:
+        for a in self._selected:
+          paths.add(a[0])
+      for p in list(paths):
+        if ((len(p)>SIZE_PATTERN) and (p[-SIZE_PATTERN:] in LIST_PATTERN)):
+            p=p[:-SIZE_PATTERN]
+        s+=['/'+CGK.CGNSTree_s+p]
+      print s
       self._tmodel.markExtendToList(s)
       self._tmodel.updateSelected()
+      self._parent.treeview.refreshView()
   
   def setCutPlane(self):
       if (self._currentactor is None): return
@@ -815,7 +827,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (len(self._selected)>1):
          MSG.wInfo(self,503,"VTK view selections",
                    """Only the first marked object in tree view would be
-                      selected in the VTK view""")
+                      selected in the VTK view. That could be one of the
+                      Family_t, Zone_t or BC_t SIDS type node.""")
       for s in self._selected: 
           self.changeCurrentActor(s)
           break #todo: allow multiple selections
@@ -1136,7 +1149,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
         
   def changeCurrentActor(self,act,combo=True):
     self._selected=[]
+    self._lastSelectedType=None
+    self._lastSelectedTag=''
     if (act[1] is not None and not act[1].alone()):
+        self._lastSelectedType=act[1].topo()
+        self._lastSelectedTag=act[1].tag()
         atpl=[]
         plst=act[1].GetParts()
         plst.InitTraversal()
@@ -1147,6 +1164,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
             a=plst.GetNextItemAsObject()
     else:
         atpl=[act]
+        if (act[1] is not None): self._lastSelectedType=act[1].topo()
     self.resetSpinBox()
     if (self.planeWidget is not None):
         if (self.planeWidget.GetEnabled()==1):
