@@ -447,9 +447,16 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
       p=QMenu('Insert pattern')
       m.addMenu(p)
       return m
+    def _GM_IndexRange_t(self,node):
+      if (node.sidsName()!=CGK.ElementRange_s): return
+      m=QMenu('%s special menu'%node.sidsName())
+      v=node.sidsValue()[1]-node.sidsValue()[0]
+      etp=CGU.getEnumAsString(node.sidsParent())
+      a=QAction('Number of elements of type [%s]: %d'%(etp,v),self)
+      m.addAction(a)
+      return m
     def _GM_Elements_t(self,node):
       m=QMenu('%s special menu'%node.sidsType())
-      print node.sidsNode()
       etp=CGU.getEnumAsString(node.sidsNode())
       npe=CGK.ElementTypeNPE[etp]
       a=QAction('Element type [%s] npe [%d]'%(etp,npe),self)

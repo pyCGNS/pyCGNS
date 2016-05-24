@@ -14,6 +14,7 @@ import os.path as PTH
 import string
 import re
 import sys
+import hashlib
 
 __I4=numpy.dtype(numpy.int32)
 __I8=numpy.dtype(numpy.int64)
@@ -249,6 +250,24 @@ def checkName(name,dienow=False,strict=False):
       if (dienow): raise CE.cgnsNameError(34)
       return False
   return True
+
+def checkNameOrGenerate(name,pattern='%32s'):
+  """
+  Checks if a name is CGNS/SIDS compliant, if not generate a new
+  name using a hash fonction with arg name as input.
+  The check is performed using checkName.
+  A pattern can be used only if it actually leads to a compliant name::
+
+    name=checkNameOrGenerate(name,pattern='GEN:%s'
+    
+  """
+  if (checkName(name,strict=True)): return name
+  h = hashlib.md5()
+  h.update(name)
+  nname=h.hexdigest()
+  name='%32s'%(pattern%nname)[:32]
+  if (checkName(name,strict=True)): return name
+  return nname
 
 # --------------------------------------------------
 def addChild(parent,node):

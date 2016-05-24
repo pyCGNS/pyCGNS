@@ -19,8 +19,8 @@ import CGNS.NAV.mtree as NMT
 
 # -----------------------------------------------------------------
 class Q7DiffTreeModel(Q7TreeModel):
-    def __init__(self,fgprint,parent=None):
-        Q7TreeModel.__init__(self,fgprint,parent)
+    def __init__(self,fgprintindex,parent=None):
+        Q7TreeModel.__init__(self,fgprintindex,parent)
         self._diag=None
         self.orange=QColor(255,165,0,255)
         self.orangeLight=QColor(255,165,0,120)

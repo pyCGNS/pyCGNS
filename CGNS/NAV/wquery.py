@@ -440,6 +440,7 @@ leave this panel without save?""",again=False)
         self.eResult.initText(str(r))
         if (q.requireTreeUpdate()):
             self.FG.model.modelReset()
+        self.treeview._treeview.refreshView()
     @classmethod
     def fillQueries(self):
         allqueriestext=Q7Query._userQueriesText+OCTXT._UsualQueries

@@ -171,6 +171,13 @@ def numberOfZones(tree,basename):
   if (b[3] != CK.CGNSBase_ts): raise CE.cgnsException(20,(CK.CGNSBase_ts,name))
   return len(CU.hasChildrenType(b,CK.Zone_ts))
 
+def listZones(tree,basename=None):
+  if (basename is None):
+    filterpath=[CK.CGNSTree_ts,CK.CGNSBase_ts,CK.Zone_ts]
+  else:
+    filterpath=[CK.CGNSTree_ts,basename,CK.Zone_ts]    
+  return CU.getPathsByTypeOrNameList(tree,filterpath)
+
 def readZone(tree,basename,zonename,gtype=None):
   b=CU.hasChildName(tree,basename)
   if (b is None): raise CE.cgnsException(21,basename)

@@ -13,7 +13,7 @@ from PySide.QtCore    import *
 from PySide.QtGui     import *
 
 from CGNS.NAV.Q7DiffWindow  import Ui_Q7DiffWindow
-from CGNS.NAV.wfingerprint  import Q7Window
+from CGNS.NAV.wfingerprint  import Q7Window,Q7FingerPrint
 from CGNS.NAV.mdifftreeview import Q7DiffTreeModel
 
 import CGNS.NAV.mtree as NMT
@@ -95,12 +95,12 @@ class Q7DiffItemDelegate(QStyledItemDelegate):
 
 # -----------------------------------------------------------------
 class Q7Diff(Q7Window,Ui_Q7DiffWindow):
-    def __init__(self,control,fgprintA,fgprintB,diag):
-        Q7Window.__init__(self,Q7Window.VIEW_TOOLS,control,None,fgprintA)
+    def __init__(self,control,fgprintindexA,fgprintindexB,diag):
+        Q7Window.__init__(self,Q7Window.VIEW_TOOLS,control,None,fgprintindexA)
         self._depthExpanded=0
         self._lastEntered=None
-        self._fgprintA=fgprintA
-        self._fgprintB=fgprintB
+        self._fgidxA=fgprintindexA
+        self._fgidxB=fgprintindexB
         ldiag=self.diagAnalysis(diag)
         QObject.connect(self.treeviewA,
                         SIGNAL("expanded(QModelIndex)"),
@@ -137,20 +137,22 @@ class Q7Diff(Q7Window,Ui_Q7DiffWindow):
         self.bSaveDiff.clicked.connect(self.savediff)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.popupmenu = QMenu()
-        self.proxyA = Q7DiffTreeModel(self._fgprintA)
-        self.proxyB = Q7DiffTreeModel(self._fgprintB)
+        self.proxyA = Q7DiffTreeModel(self._fgidxA)
+        self.proxyB = Q7DiffTreeModel(self._fgidxB)
         self.proxyA.setDiag(ldiag)
         self.proxyB.setDiag(ldiag)
         self.treeviewA.setModel(self.proxyA)
         self.treeviewB.setModel(self.proxyB)
+        modelA=Q7FingerPrint.getByIndex(self._fgidxA).model
+        modelB=Q7FingerPrint.getByIndex(self._fgidxB).model
         self.treeviewA.setItemDelegate(Q7DiffItemDelegate(self.treeviewA,
-                                                          self._fgprintA.model,
+                                                          modelA,
                                                           ldiag))
         self.treeviewB.setItemDelegate(Q7DiffItemDelegate(self.treeviewB,
-                                                          self._fgprintB.model,
+                                                          modelB,
                                                           ldiag))
-        self.treeviewA.setControlWindow(self,self._fgprintA.model)
-        self.treeviewB.setControlWindow(self,self._fgprintB.model)
+        self.treeviewA.setControlWindow(self,modelA)
+        self.treeviewB.setControlWindow(self,modelB)
         self.treeviewA.hideColumn(NMT.COLUMN_FLAG_LINK)
         self.treeviewA.hideColumn(NMT.COLUMN_FLAG_CHECK)
         self.treeviewA.hideColumn(NMT.COLUMN_FLAG_SELECT)
@@ -216,17 +218,17 @@ class Q7Diff(Q7Window,Ui_Q7DiffWindow):
     def savediff(self):
         pass
     def expandMinMax(self):
-        if (self._depthExpanded==self._fgprintA.depth-2):
+        if (self._depthExpanded==Q7FingerPrint.getByIndex(self._fgidxA).depth-2):
             self._depthExpanded=-1
             self.treeviewA.collapseAll()
             self.treeviewB.collapseAll()
         else:
-            self._depthExpanded=self._fgprintA.depth-2
+            self._depthExpanded=Q7FingerPrint.getByIndex(self._fgidxA).depth-2
             self.treeviewA.expandAll()
             self.treeviewB.expandAll()
         self.resizeAll()
     def expandLevel(self):
-        if (self._depthExpanded<self._fgprintA.depth-2):
+        if (self._depthExpanded<Q7FingerPrint.getByIndex(self._fgidxA).depth-2):
             self._depthExpanded+=1
         self.treeviewA.expandToDepth(self._depthExpanded)
         self.treeviewB.expandToDepth(self._depthExpanded)

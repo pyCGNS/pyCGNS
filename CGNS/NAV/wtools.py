@@ -229,7 +229,7 @@ class Q7ToolsView(Q7Window,Ui_Q7ToolsWindow):
         fpb=self._fgprint.getFingerPrint(idxB)
         diag={}
         diffAB(fpa.tree,fpb.tree,'','A',diag,False)
-        dw=Q7Diff(self._control,fpa,fpb,diag)
+        dw=Q7Diff(self._control,fpa.index,fpb.index,diag)
         dw.show()
     def mergeAB(self):
         idxA=int(self.cTreeA.currentText())

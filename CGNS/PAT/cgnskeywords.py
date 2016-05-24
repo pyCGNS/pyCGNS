@@ -71,7 +71,7 @@ ADF_ROOT_NODE_NAME  = "HDF5 MotherNode"
 ADF_ROOT_NODE_LABEL = "Root Node of HDF5 File"
 
 CGNSHDF5ROOT_s = ADF_ROOT_NODE_NAME
-CGNSLIBRARYVERSION = 3.2
+CGNSLIBRARYVERSION = 3.3
 
 # -------------------------------------------------- (NOT SIDS)
 # --- CGNS/Python mapping extensions
