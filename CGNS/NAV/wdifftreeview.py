@@ -96,7 +96,7 @@ class Q7DiffItemDelegate(QStyledItemDelegate):
 # -----------------------------------------------------------------
 class Q7Diff(Q7Window,Ui_Q7DiffWindow):
     def __init__(self,control,fgprintindexA,fgprintindexB,diag):
-        Q7Window.__init__(self,Q7Window.VIEW_TOOLS,control,None,fgprintindexA)
+        Q7Window.__init__(self,Q7Window.VIEW_DIFF,control,None,fgprintindexA)
         self._depthExpanded=0
         self._lastEntered=None
         self._fgidxA=fgprintindexA
@@ -143,8 +143,10 @@ class Q7Diff(Q7Window,Ui_Q7DiffWindow):
         self.proxyB.setDiag(ldiag)
         self.treeviewA.setModel(self.proxyA)
         self.treeviewB.setModel(self.proxyB)
-        modelA=Q7FingerPrint.getByIndex(self._fgidxA).model
-        modelB=Q7FingerPrint.getByIndex(self._fgidxB).model
+        fga=Q7FingerPrint.getByIndex(self._fgidxA)
+        fgb=Q7FingerPrint.getByIndex(self._fgidxB)
+        modelA=fga.model
+        modelB=fgb.model
         self.treeviewA.setItemDelegate(Q7DiffItemDelegate(self.treeviewA,
                                                           modelA,
                                                           ldiag))
@@ -165,6 +167,8 @@ class Q7Diff(Q7Window,Ui_Q7DiffWindow):
         self.wvsb=self.treeviewB.verticalScrollBar()
         self.uvsa=self.verticalScrollBarA
         self.uvsb=self.verticalScrollBarB
+        self.uvsa.setToolTip("%s/%s"%(fga.filedir,fga.filename))
+        self.uvsb.setToolTip("%s/%s"%(fgb.filedir,fgb.filename))
         self.syncScrolls(True)
     def diagAnalysis(self,diag):
         ldiag={}

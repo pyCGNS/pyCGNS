@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7DiffWindow.ui'
 #
-# Created: Fri Sep 18 10:20:49 2015
+# Created: Wed May 25 11:26:54 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -168,6 +168,8 @@ class Ui_Q7DiffWindow(object):
         self.bZoomIn.setText(QtGui.QApplication.translate("Q7DiffWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.bSaveDiff.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Save tree view snapshot", None, QtGui.QApplication.UnicodeUTF8))
         self.bSaveDiff.setText(QtGui.QApplication.translate("Q7DiffWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.verticalScrollBarA.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "DiffA file", None, QtGui.QApplication.UnicodeUTF8))
+        self.verticalScrollBarB.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "DiffB file", None, QtGui.QApplication.UnicodeUTF8))
         self.bBackControl.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Raise Control window", None, QtGui.QApplication.UnicodeUTF8))
         self.bInfo.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Contextual help", None, QtGui.QApplication.UnicodeUTF8))
         self.bPreviousMark.setToolTip(QtGui.QApplication.translate("Q7DiffWindow", "Select previous marked node", None, QtGui.QApplication.UnicodeUTF8))

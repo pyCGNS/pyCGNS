@@ -225,6 +225,9 @@
      </item>
      <item>
       <widget class="QScrollBar" name="verticalScrollBarA">
+       <property name="toolTip">
+        <string>DiffA file</string>
+       </property>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
@@ -232,6 +235,9 @@
      </item>
      <item>
       <widget class="QScrollBar" name="verticalScrollBarB">
+       <property name="toolTip">
+        <string>DiffB file</string>
+       </property>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
