@@ -188,10 +188,10 @@ class Q7Main(QW, Ui_Q7ControlWindow):
                             %OCTXT._ToolName)
         if (reply == MSG.OK):
             Q7FingerPrint.closeAllTrees()
-            if (self.help is not None): self.help.close()
+            if (self.help is not None):           self.help.close()
             if (self._patternwindow is not None): self._patternwindow.close()
-            self.control_log.close()
-            self._toolswindow.close()
+            if (self.control_log is not None):    self.control_log.close()
+            if (self._toolswindow is not None):   self._toolswindow.close()
             return True
         else:
             return False
@@ -325,9 +325,10 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.lockView(False)
         fgprint=self.signals.fgprint
         if (len(fgprint)>1):
-            MSG.wError(self,200,fgprint[1])
+            MSG.wError(self,200,'Load error',fgprint[1])
         elif (fgprint.tree is None):
-            MSG.wError(self,201,'Fatal error while loading file, empty tree')
+            MSG.wError(self,201,'Load error',
+                       'Fatal error while loading file, empty tree')
         else:
           Q7TreeModel(fgprint.index)
           child=Q7Tree(self,'/',fgprint.index)

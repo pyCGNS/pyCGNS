@@ -140,43 +140,11 @@
            <normaloff>:/images/icons/operate-doc.png</normaloff>:/images/icons/operate-doc.png</iconset>
          </property>
         </widget>
-        <widget class="QPushButton" name="bApply">
-         <property name="geometry">
-          <rect>
-           <x>480</x>
-           <y>55</y>
-           <width>25</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>25</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Run Query</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
-         </property>
-        </widget>
         <widget class="QSpinBox" name="spinBox">
          <property name="geometry">
           <rect>
            <x>190</x>
-           <y>240</y>
+           <y>235</y>
            <width>53</width>
            <height>22</height>
           </rect>
@@ -341,6 +309,57 @@
           <iconset resource="../R/Res.qrc">
            <normaloff>:/images/icons/flag-none.gif</normaloff>:/images/icons/flag-none.gif</iconset>
          </property>
+        </widget>
+        <widget class="QFrame" name="bApplyBox">
+         <property name="geometry">
+          <rect>
+           <x>495</x>
+           <y>235</y>
+           <width>36</width>
+           <height>36</height>
+          </rect>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <property name="lineWidth">
+          <number>2</number>
+         </property>
+         <widget class="QPushButton" name="bApply">
+          <property name="geometry">
+           <rect>
+            <x>5</x>
+            <y>5</y>
+            <width>25</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>Run Query</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="../R/Res.qrc">
+            <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
+          </property>
+         </widget>
         </widget>
        </widget>
        <widget class="QWidget" name="search">

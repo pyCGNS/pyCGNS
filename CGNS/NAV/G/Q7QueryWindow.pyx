@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'NAV/T/Q7QueryWindow.ui'
+# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7QueryWindow.ui'
 #
-# Created: Mon Jun 29 10:47:18 2015
+# Created: Wed May 25 09:51:52 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -255,6 +255,7 @@ class Ui_Q7QueryWindow(object):
         self.bRevert.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Revert to last saved text", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("Q7QueryWindow", "Python", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("Q7QueryWindow", "Documentation", None, QtGui.QApplication.UnicodeUTF8))
+        self.bRun.setToolTip(QtGui.QApplication.translate("Q7QueryWindow", "Run query with args", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("Q7QueryWindow", "Args:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("Q7QueryWindow", "Result", None, QtGui.QApplication.UnicodeUTF8))
 

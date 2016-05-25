@@ -190,7 +190,6 @@ class Q7QueryEntry(object):
         (self.name,self.group,self._script,self._doc,self._update)
         return s
     def run(self,tree,links,skips,mode,args,selected=[]):
-        print type(args)
         v=None
         try:
             if (type(args)==numpy.ndarray):

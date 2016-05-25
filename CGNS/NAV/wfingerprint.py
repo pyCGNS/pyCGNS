@@ -714,7 +714,6 @@ class Q7FingerPrint:
           vw.close()
         Q7FingerPrint.removeNoMoreView()
     def doRelease(self):
-#        print 'DORELEASE Q7FINGERPRINT'
         self.model=None
         self.tree=None
         self.links=None

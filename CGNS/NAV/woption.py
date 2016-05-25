@@ -58,7 +58,6 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
                 else:
                     print 'CGNS.NAV (debug) NO OPTION :',chks
     def resetIgnored(self):
-        print OCTXT.IgnoredMessages
         OCTXT.IgnoredMessages=[]
     def reset(self):
         self.getOptions()

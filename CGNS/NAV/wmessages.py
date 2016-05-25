@@ -160,7 +160,6 @@ class Q7MessageBox(QDialog,Ui_Q7MessageWindow):
         if (self.cNotAgain.isChecked()):
             if (self._code and self._code not in OCTXT.IgnoredMessages):
                 OCTXT.IgnoredMessages+=[self._code]
-        print OCTXT.IgnoredMessages
     def showAndWait(self):
         self.exec_()
   

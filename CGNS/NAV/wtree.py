@@ -167,8 +167,6 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
           QStyledItemDelegate.paint(self, painter, option, index)
     def doRelease(self):
       self._model=None
-#    def __del__(self):
-#      print 'DELETE Q7ITEMDELEGATE'
 
 # -----------------------------------------------------------------
 class Q7Tree(Q7Window,Ui_Q7TreeWindow):

@@ -179,10 +179,6 @@ class Q7Diff(Q7Window,Ui_Q7DiffWindow):
                 if (d[0] in ['C4','C5']): ldiag[k]=DIFF_CS
         return ldiag
     def syncScrolls(self,force=False):
-        #print 'STEP A',self.uvsa.pageStep()
-        #print 'STEP B',self.uvsb.pageStep()
-        #print 'RANGE A',self.wvsa.minimum(),self.wvsa.maximum()
-        #print 'RANGE B',self.wvsb.minimum(),self.wvsb.maximum()
         QObject.connect(self.uvsa, SIGNAL("valueChanged(int)"),
                         self.wvsa, SLOT("setValue(int)"))
         QObject.connect(self.uvsb, SIGNAL("valueChanged(int)"),
@@ -320,5 +316,7 @@ class Q7Diff(Q7Window,Ui_Q7DiffWindow):
         pass
     def leave(self):
         self.close()
+    def doRelease(self):
+        pass
         
 # -----------------------------------------------------------------

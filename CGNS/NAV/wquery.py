@@ -435,12 +435,15 @@ leave this panel without save?""",again=False)
         q=Q7QueryEntry('__tmp__query__')
         q.setScript(com)
         skp=self.FG.lazy.keys()
-        r=q.run(self.FG.tree,self.FG.links,skp,True,v,
+        r=q.run(self.FG.tree,self.FG.links,skp,False,v,
                 self.FG.model.getSelected())
         self.eResult.initText(str(r))
+        self.FG.model.markExtendToList(r)
+        self.FG.model.updateSelected()
         if (q.requireTreeUpdate()):
             self.FG.model.modelReset()
-        self.treeview._treeview.refreshView()
+        
+        self._master.treeview.refreshView()
     @classmethod
     def fillQueries(self):
         allqueriestext=Q7Query._userQueriesText+OCTXT._UsualQueries

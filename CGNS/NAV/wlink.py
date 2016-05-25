@@ -174,7 +174,6 @@ class Q7LinkList(QW,Ui_Q7LinkWindow):
         v.setRowCount(len(self._links))
         r=0
         for lk in self._links:
-          print lk
           (ld,lf,ln,sn,st)=lk
           t1item=self.statusIcon(st)
           t2item=QTableWidgetItem(sn)

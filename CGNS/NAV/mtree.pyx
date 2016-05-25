@@ -296,12 +296,6 @@ class Q7TreeView(QTreeView):
     def modelIndex(self,idx):
         if (self._control is not None): return self._control.modelIndex(idx)
         return None
-#    def mousePressEvent(self, event):
-#        #print 'PRESS'
-#        pass
-#    def mouseReleaseEvent(self,event):
-#        #print 'RELEASE'
-#        pass
     def mousePressEvent(self,event):
         self.lastPos=event.globalPos()
         self.lastButton=event.button()
@@ -316,8 +310,6 @@ class Q7TreeView(QTreeView):
     def keyPressEvent(self,event):
         kmod=event.modifiers()
         kval=event.key()
-        #print 'KEY',kmod,kval
-        #kmod=QApplication.keyboardModifiers()
         if (kval not in ALLKEYMAPPINGS): return
         last=self.getLastEntered()
         if (last is not None):
@@ -491,7 +483,6 @@ class Q7TreeView(QTreeView):
                                flags=Qt.MatchExactly|Qt.MatchRecursive)
             if (idx[0].isValid()): self.exclusiveSelectRow(idx[0])
     def doRelease(self):
-#        print 'DORELEASE Q7TREEVIEW',self
         self._model=None
         
 # -----------------------------------------------------------------
@@ -874,12 +865,9 @@ class Q7TreeItem(object):
             if (c is not self): 
                 c.doRelease()
                 if (c.children()==[]): 
-                    #print 'DORELEASE Q7TREEITEM REMOVE %s'%c.sidsPath()
                     c._itemnode=None
                     c._model=None
                     self.delChild(c)
-#    def __del__(self):
-#        print 'DELETE Q7TREEITEM'
 
 SORTTAG="%.4x"
 
@@ -1359,7 +1347,5 @@ class Q7TreeModel(QAbstractItemModel):
         self.extension=None
         Q7TreeItem._icons={}
         self.reset()
-#    def __del__(self):
-#        print 'DELETE Q7TREEMODEL'
 
 # -----------------------------------------------------------------

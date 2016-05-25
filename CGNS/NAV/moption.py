@@ -900,17 +900,19 @@ if (PARENT[0]=='.Solver#Param'):
         setattr(cls,name,value)
     @classmethod
     def _writeFile(cls,tag,name,udata,filename,prefix=""):
-      #print '### CGNS.NAV write',filename
       gdate=strftime("%Y-%m-%d %H:%M:%S", gmtime())
-      s="""# %s - %s file - Generated %s\n%s\n%s="""%\
+      s="""# %s - %s file - Generated %s\n# coding: utf-8\n%s\n%s="""%\
          (cls._ToolName,tag,gdate,prefix,name)
       if (type(udata)==dict):
         s+="""{\n"""
         for k in udata:
           if (k[0]!='_'):
             val=str(udata[k])
-            if (type(udata[k]) in [unicode, str]): val='"""%s"""'%str(udata[k])
-            s+="""'%s':%s,\n"""%(k,val)
+            if (type(udata[k]) in [unicode, str]):
+              val='u"""%s"""'%unicode(udata[k],'utf-8')
+            if (type(k) != unicode): uk=unicode(k,'utf-8')
+            else: uk=k.encode('utf-8')
+            s+="""u'%s':%s,\n"""%(uk,val)
         s+="""}\n\n# --- last line\n"""
       elif (type(udata)==list):
         s+="""[\n"""
@@ -923,7 +925,6 @@ if (PARENT[0]=='.Solver#Param'):
       f.close()
     @classmethod
     def _readFile(cls,name,filename):
-      #print '### CGNS.NAV read ',filename
       dpath=tempfile.mkdtemp()
       if (not os.path.exists(filename)): return None
       try:
@@ -962,7 +963,10 @@ if (PARENT[0]=='.Solver#Param'):
       filename=cls._trpath(cls._HistoryFileName)
       m=cls._readFile('history',filename)
       if (m is None): return None
-      return m.history
+      try:
+        return m.history
+      except:
+        return None
     @classmethod
     def _writeOptions(cls,control):
       filename=cls._trpath(cls._OptionsFileName)
@@ -973,10 +977,9 @@ if (PARENT[0]=='.Solver#Param'):
       m=cls._readFile('options',filename)
       if (m is None): return None
       try:
-        r=m.options
-      except AttributeError:
+        return m.options
+      except:
         return None
-      return m.options
     @classmethod
     def _writeQueries(cls,control,q):
       filename=cls._trpath(cls.QueriesDirectory+'/'+cls._QueriesDefaultFile)
@@ -986,7 +989,10 @@ if (PARENT[0]=='.Solver#Param'):
       filename=cls._trpath(cls.QueriesDirectory+'/'+cls._QueriesDefaultFile)
       m=cls._readFile('queries',filename)
       if (m is None): return None
-      return m.queries
+      try:
+        return m.queries
+      except:
+        return None
     @classmethod
     def _writeFunctions(cls,control,f):
       filename=cls._trpath(cls.FunctionsDirectory+'/'+cls._FunctionsDefaultFile)
