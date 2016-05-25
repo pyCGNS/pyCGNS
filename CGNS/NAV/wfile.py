@@ -21,6 +21,7 @@ LOADBUTTON=['Load','Load from selected file']
 SAVEBUTTON=['Save','Save to selected file']
 (LOADMODE,SAVEMODE)=(0,1)
 
+# -----------------------------------------------------------------
 def checkFilePermission(path,write=False):
     return True
     if (not os.path.exists(path)): return False
@@ -193,7 +194,8 @@ class Q7File(QWidget,Ui_Q7FileWindow):
         for n in range(3):
             self.treeview.resizeColumnToContents(n)
     def currentDir(self,*args):
-        p=os.path.split(self.path())[0]
+        #p=os.path.split(self.path())[0]
+        p=os.getcwd()
         self.setCurrentDir(p)
     def backDir(self,*args):
         p=os.path.split(self.path())[0]

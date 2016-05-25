@@ -287,7 +287,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>Go to current directory (or default)</string>
+             <string>Go to launch directory</string>
             </property>
             <property name="layoutDirection">
              <enum>Qt::LeftToRight</enum>

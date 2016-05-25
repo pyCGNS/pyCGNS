@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FileWindow.ui'
 #
-# Created: Fri Mar 11 10:06:28 2016
+# Created: Wed May 25 11:02:10 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -313,7 +313,7 @@ class Ui_Q7FileWindow(object):
         self.cNoLargeData.setToolTip(QtGui.QApplication.translate("Q7FileWindow", "Nodes with large data are read but their data is not", None, QtGui.QApplication.UnicodeUTF8))
         self.cNoLargeData.setText(QtGui.QApplication.translate("Q7FileWindow", "Do not load large data", None, QtGui.QApplication.UnicodeUTF8))
         self.cShowDirs.setText(QtGui.QApplication.translate("Q7FileWindow", "Show directories", None, QtGui.QApplication.UnicodeUTF8))
-        self.bCurrent.setToolTip(QtGui.QApplication.translate("Q7FileWindow", "Go to current directory (or default)", None, QtGui.QApplication.UnicodeUTF8))
+        self.bCurrent.setToolTip(QtGui.QApplication.translate("Q7FileWindow", "Go to launch directory", None, QtGui.QApplication.UnicodeUTF8))
         self.bBack.setToolTip(QtGui.QApplication.translate("Q7FileWindow", "Go back to parent directory", None, QtGui.QApplication.UnicodeUTF8))
         self.bAction.setText(QtGui.QApplication.translate("Q7FileWindow", "LOAD", None, QtGui.QApplication.UnicodeUTF8))
         self.tabs.setTabText(self.tabs.indexOf(self.Selection), QtGui.QApplication.translate("Q7FileWindow", "Selection", None, QtGui.QApplication.UnicodeUTF8))
