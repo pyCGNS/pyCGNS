@@ -908,7 +908,9 @@ if (PARENT[0]=='.Solver#Param'):
         for k in udata:
           if (k[0]!='_'):
             val=str(udata[k])
-            if (type(udata[k]) in [unicode, str]):
+            if (type(udata[k]) == unicode):
+              val='u"""%s"""'%udata[k].encode('utf-8')
+            elif (type(udata[k]) == str):
               val='u"""%s"""'%unicode(udata[k],'utf-8')
             if (type(k) != unicode): uk=unicode(k,'utf-8')
             else: uk=k.encode('utf-8')
