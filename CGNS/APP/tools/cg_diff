@@ -8,8 +8,10 @@ import CGNS.PAT.cgnsutils as CGU
 import CGNS.MAP as CGM
 import CGNS.VAL.simplecheck as CGV
 import CGNS.version
+from CGNS.NAV.diff import diffAB
 
 import os.path
+import sys
 
 doc1="""
   CGNS/HDF5 diff tool
@@ -55,10 +57,40 @@ Q.path=args.path
 Q.flat=args.flat
 Q.verbose=args.verbose
 
-for F in args.files:
-    try:
-      pass
-    except CGM.CHLone.CHLoneException:
-      pass
+if (len(args.files)!=2):
+  print 'cg_diff requires exactly two files to check'
+
+try:
+   R1=openFile(args.files[0])
+except CGM.CHLone.CHLoneException:
+   print 'cg_diff cannot open file [%s]'%args.files[0]
+   sys.exit(0)
+
+try:
+   R2=openFile(args.files[1])
+except CGM.CHLone.CHLoneException:
+   print 'cg_diff cannot open file [%s]'%args.files[1]
+   sys.exit(0)
+
+diag={}
+diffAB(R1[0],R2[0],'','A',diag,False)
+
+def diagAnalysis(diag):
+  paths=diag.keys()
+  paths.sort()
+  for k in paths:
+    for d in diag[k]:
+      ldiag=''
+      if (d[0]=='NA'): ldiag='< '
+      if (d[0]=='ND'): ldiag='> '
+      if (d[0] in ['CT']): ldiag='#t'
+      if (d[0] in ['C3','C1','C2']): ldiag='#a'
+      if (d[0] in ['C6','C7']): ldiag='#v'
+      if (d[0] in ['C4','C5']): ldiag='#s'
+      print ldiag,d[1]
+  return ldiag
+
+diagAnalysis(diag)
+
 
 # --- last line

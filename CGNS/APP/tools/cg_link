@@ -114,7 +114,7 @@ def parseFile(filename,P,C):
     else: P.append('%s:%s'%(T[3],p))
   for l in LK:
     if (l[0]==''): FH=l[1]
-    else: FH="%s/%s"%(l[0],l[1])
+    else: FH="%s%s%s"%(l[0],os.path.sep,l[1])
     parseFile(FH,P,C)
   C.depth-=1    
   return P
@@ -155,7 +155,7 @@ def transLinks(filename,L,P,C):
   for l in L:
     LN=asHDFname(l[1],C)
     if (l[0]==''): FA=l[1]
-    else: FA="%s/%s"%(l[0],l[1])
+    else: FA="%s%s%s"%(l[0],os.path.sep,l[1])
     if (C.verbose): print '   '*C.depth,'->',FA
     FH=asHDFname(FA,C)
     if (convertInPlace(FA,FH,C)):

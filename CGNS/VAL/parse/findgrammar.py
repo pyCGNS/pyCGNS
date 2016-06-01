@@ -17,7 +17,7 @@ def readProfile():
     hdir=os.environ['HOME']
   except:
     return {}
-  pdir='%s/.CGNS.NAV'%hdir
+  pdir='%s%s.CGNS.NAV'%(hdir,os.path.sep)
   if (not os.exists(pdir)):
     return {}
   sys.path.append(pdir)

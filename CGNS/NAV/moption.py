@@ -28,7 +28,7 @@ def copyOneFile(src,dst):
   f1=open(src,'r')
   l1=f1.readlines()
   f1.close()
-  if (os.path.exists(dst)): os.remove(dst)
+  if (OP.exists(dst)): os.remove(dst)
   f2=open(dst,'w')
   l2=f2.writelines(l1)
   f2.close()
@@ -105,12 +105,12 @@ except NameError:
     TransposeArrayForView=True
     Show1DAsPlain=True
     UserCSS=""
-    SelectionListDirectory='~/.CGNS.NAV/selections'
-    QueriesDirectory='~/.CGNS.NAV/queries'
-    FunctionsDirectory='~/.CGNS.NAV/functions'
-    SnapShotDirectory='~/.CGNS.NAV/snapshots'
-    _HistoryFileName='~/.CGNS.NAV/historyfile.py'
-    _OptionsFileName='~/.CGNS.NAV/optionsfile.py'
+    SelectionListDirectory=OP.normpath('~/.CGNS.NAV/selections')
+    QueriesDirectory=OP.normpath('~/.CGNS.NAV/queries')
+    FunctionsDirectory=OP.normpath('~/.CGNS.NAV/functions')
+    SnapShotDirectory=OP.normpath('~/.CGNS.NAV/snapshots')
+    _HistoryFileName=OP.normpath('~/.CGNS.NAV/historyfile.py')
+    _OptionsFileName=OP.normpath('~/.CGNS.NAV/optionsfile.py')
     _QueriesDefaultFile='default.py'
     _FunctionsDefaultFile='default.py'
     IgnoredMessages=[]
@@ -125,7 +125,7 @@ except NameError:
     MaxDisplayDataSize=1000
     MaxRecursionLevel=7
     ADFConversionCom='cgnsconvert'
-    TemporaryDirectory='/tmp'
+    TemporaryDirectory=OP.normpath('/tmp')
     _ConvertADFFiles=True
     _ToolName='CGNS.NAV'
     _ToolVersion='%s'%__vid__
@@ -928,7 +928,7 @@ if (PARENT[0]=='.Solver#Param'):
     @classmethod
     def _readFile(cls,name,filename):
       dpath=tempfile.mkdtemp()
-      if (not os.path.exists(filename)): return None
+      if (not OP.exists(filename)): return None
       try:
         copyOneFile(filename,'%s/%s.py'%(dpath,name))
       except IOError:
@@ -950,7 +950,7 @@ if (PARENT[0]=='.Solver#Param'):
       return mod
     @classmethod
     def _crpath(cls,path):
-      p=os.path.dirname(path)
+      p=OP.dirname(path)
       if (OP.exists(p)): return True
       os.makedirs(p)
     @classmethod
