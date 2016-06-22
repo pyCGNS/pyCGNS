@@ -5,8 +5,8 @@
 #
 import sys
 import string
-from PySide.QtCore  import *
-from PySide.QtGui   import *
+from PyQt4.QtCore  import *
+from PyQt4.QtGui   import *
 from CGNS.NAV.wfingerprint import Q7FingerPrint
 from CGNS.NAV.Q7ToolsWindow import Ui_Q7ToolsWindow
 from CGNS.NAV.wfingerprint import Q7Window

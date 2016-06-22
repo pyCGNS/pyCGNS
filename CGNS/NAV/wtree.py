@@ -10,9 +10,8 @@ import functools
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU
 
-from PySide.QtCore import Slot as pyqtSlot
-from PySide.QtCore import *
-from PySide.QtGui  import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui  import *
 
 try:
   import vtk

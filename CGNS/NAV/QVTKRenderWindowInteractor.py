@@ -28,7 +28,7 @@ Changes by Phil Thompson, Mar. 2008
 """
 
 
-from PySide import QtCore, QtGui
+from PyQt4 import QtCore, QtGui
 import vtk
 
 

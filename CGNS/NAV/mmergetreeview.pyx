@@ -7,8 +7,8 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import numpy
 
-from PySide.QtCore import *
-from PySide.QtGui  import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui  import *
 
 from CGNS.NAV.mtree import Q7TreeView,Q7TreeItem,Q7TreeModel
 

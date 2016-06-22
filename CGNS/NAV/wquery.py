@@ -12,9 +12,9 @@ import os
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-from PySide.QtCore import *
-from PySide.QtGui  import QFileDialog
-from PySide.QtGui  import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui  import QFileDialog
+from PyQt4.QtGui  import *
 
 from CGNS.NAV.Q7QueryWindow     import Ui_Q7QueryWindow
 from CGNS.NAV.Q7SelectionWindow import Ui_Q7SelectionWindow

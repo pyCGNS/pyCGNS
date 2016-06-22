@@ -12,8 +12,8 @@ import CGNS.PAT.cgnsutils    as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnslib      as CGL
 
-from PySide.QtCore import *
-from PySide.QtGui  import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui  import *
 
 
 SCRIPT_PATTERN="""#!/usr/bin/env python

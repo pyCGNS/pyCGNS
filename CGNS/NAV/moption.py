@@ -20,6 +20,8 @@ if (sys.platform=='win32'):  WINOPTS=True
 
 import CGNS.PAT.cgnskeywords as CGK
 
+from PyQt4.QtGui import *
+
 # -----------------------------------------------------------------
 def removeSubDirAndFiles(path):
   shutil.rmtree(path)
@@ -161,9 +163,9 @@ rights reserved in accordance with GPL v2 <br><br>
 Check GPL v2 sections 15 and 16
 about <font color=red>loss of data or corrupted data</font><br>
 <hr>
-PySide Copyright (c) <br>
-Copyright (C) 2009-2011 Nokia Corporation and/or its subsidiary(-ies).<br>
-Contact: PySide team <contact@pyside.org><br>
+PyQt Copyright (c) Riverbank Computing Limited. <br>
+Usage within the terms of the GPL v2.<br>
+All Rights Reserved.<br>
 <hr>
 Qt Copyright (c)<br>
 The Qt4 Library is (c) 2011 Nokia Corporation and/or its subsidiary(-ies),
@@ -267,12 +269,12 @@ Please visit his web site: http://www.famfamfam.com/<br>
           'NName_Italic':False,
        }
 
-    _Label_Font=None
-    _Table_Font=None
-    _Edit_Font=None
-    _Button_Font=None
-    _RName_Font=None
-    _NName_Font=None
+    _Label_Font=QFont("Arial")
+    _Table_Font=QFont("Courier")
+    _Edit_Font=QFont("Courier")
+    _Button_Font=QFont("Arial")
+    _RName_Font=QFont("Courier")
+    _NName_Font=QFont("Courier bold")
     
     UserColors=[
         'gray',

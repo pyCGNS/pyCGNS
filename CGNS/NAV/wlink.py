@@ -13,9 +13,9 @@ import CGNS.MAP              as CGM
 import CGNS.PAT.cgnsutils    as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-from PySide.QtCore import *
-from PySide.QtGui  import QFileDialog
-from PySide.QtGui  import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui  import QFileDialog
+from PyQt4.QtGui  import *
 
 from CGNS.NAV.Q7LinkWindow import Ui_Q7LinkWindow
 from CGNS.NAV.wfingerprint import Q7Window as QW

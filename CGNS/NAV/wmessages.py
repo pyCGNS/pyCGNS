@@ -8,8 +8,8 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import sys
 import string
 
-from PySide.QtCore       import *
-from PySide.QtGui        import *
+from PyQt4.QtCore       import *
+from PyQt4.QtGui        import *
 
 from CGNS.NAV.Q7MessageWindow import Ui_Q7MessageWindow
 from CGNS.NAV.Q7LogWindow     import Ui_Q7LogWindow

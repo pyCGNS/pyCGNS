@@ -73,6 +73,8 @@ pr.add_argument("-L","--libraries",dest="libs",
                 help='list of paths for libraries search ( : separated), order is significant and is kept unchanged')
 pr.add_argument("-U","--update",action='store_true',
                 help='update version (dev only)')
+pr.add_argument("-g","--generate",action='store_true',
+                help='force Qt/creator .pyx files to be regenerated')
 
 try:
   os.makedirs('./build/lib/CGNS')
@@ -245,13 +247,13 @@ else:
   modules+="\n# DAT   skip build *"
 
 # -------------------------------------------------------------------------  
-if (NAV and CONFIG.HAS_PYSIDE):
+if (NAV and CONFIG.HAS_PYQT4):
   cui=CONFIG.COM_UIC
   crc=CONFIG.COM_RCC
   ccy=CONFIG.COM_CYTHON
 
   fakefile="./CGNS/NAV/fake.pxi"
-  #setuputils.touch(fakefile)
+  if (args.generate): setuputils.touch(fakefile)
 
   modnamelist=[
       'Q7TreeWindow',
@@ -296,6 +298,7 @@ if (NAV and CONFIG.HAS_PYSIDE):
                             )]
      g=("CGNS/NAV/T/%s.ui"%m,"CGNS/NAV/G/%s.pyx"%m)
      if (not os.path.exists(g[1])
+         or args.generate
          or os.path.getmtime(g[0])>os.path.getmtime(g[1])): modgenlist+=[m]
                   
   modextlist+=[Extension("CGNS.NAV.temputils",["CGNS/NAV/temputils.pyx",
@@ -306,22 +309,18 @@ if (NAV and CONFIG.HAS_PYSIDE):
                        )]
 
   for m in modgenlist:
-      print '### pyCGNS: Generate from updated GUI templates: ',m
+      print '# Generate from updated Qt templates  (%s): %s'%(cui,m)
       com="(%s -o CGNS/NAV/G/%s.pyx CGNS/NAV/T/%s.ui;(cd CGNS/NAV/G;%s -a %s.pyx))2>/dev/null"%(cui,m,m,ccy,m)
-      print com
+      #print com
       os.system(com)
-         
-  if (os.path.getmtime('CGNS/NAV/R/Res.qrc')>os.path.getmtime('CGNS/NAV/Res_rc.py')):
-      print '### pyCGNS: Generate from updated GUI Ressources'
-      com="(%s -o CGNS/NAV/Res_rc_qt4.py CGNS/NAV/R/Res.qrc)2>/dev/null"%(crc)
-      print com
-      os.system(com)
-      com="cat CGNS/NAV/Res_rc_qt4.py|sed -e 's/PyQt4/PySide/'>CGNS/NAV/Res_rc.py"
-      print com
+
+  opg=os.path.getmtime
+  if (args.generate or opg('CGNS/NAV/R/Res.qrc')>opg('CGNS/NAV/Res_rc.py')):
+      print '# Generate from updated Qt Ressources (%s): Res_rc.py'%(crc)
+      com="(%s -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc)2>/dev/null"%(crc)
       os.system(com)
 
   ALL_PACKAGES+=['CGNS.NAV','CGNS.NAV.test']
-  # ALL_SCRIPTS+=['CGNS/NAV/CGNS.NAV']
   ALL_EXTENSIONS+=modextlist
 
   modules+="\n# NAV   add  build"

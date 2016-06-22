@@ -4,6 +4,10 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+import sip
+sip.setapi('QVariant',2)
+sip.setapi('QString',2)
+
 import sys
 import os
 
@@ -33,7 +37,7 @@ if (ppref not in sys.path):
 
 try:
   import numpy
-except:
+except KeyError:
   print """CGNS.NAV: FATAL error, cannot import numpy..."""
   sys.exit(-1)
 
@@ -45,9 +49,9 @@ except:
   sys.exit(-1)
   
 try:
-  import PySide.QtCore
+  import PyQt4.QtCore
 except:
-  print """CGNS.NAV: FATAL error, cannot import PySide.QtCore..."""
+  print """CGNS.NAV: FATAL error, cannot import PyQt4.QtCore..."""
   sys.exit(-1)
   
 try:

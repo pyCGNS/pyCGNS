@@ -17,7 +17,7 @@ cimport cython
 cimport cpython
 cimport numpy as CNPY
 
-from PySide.QtCore import QCoreApplication
+from PyQt4.QtCore import QCoreApplication
 
 import vtk
 import vtk.util.numpy_support as vtknpy

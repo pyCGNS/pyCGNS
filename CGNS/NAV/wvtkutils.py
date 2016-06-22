@@ -5,8 +5,8 @@
 #
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
-from PySide.QtCore import *
-from PySide.QtGui  import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui  import *
 
 # -----------------------------------------------------------------
 class Q7ComboBox(QComboBox):

@@ -14,8 +14,8 @@ import vtk
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU
 
-from PySide.QtCore import *
-from PySide.QtGui  import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui  import *
 
 from CGNS.NAV.Q7VTKWindow  import Ui_Q7VTKWindow
 from CGNS.NAV.wfingerprint import Q7Window,Q7FingerPrint

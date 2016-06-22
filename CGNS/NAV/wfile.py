@@ -10,8 +10,8 @@ import stat
 import string
 import time
 
-from PySide.QtCore import *
-from PySide.QtGui  import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui  import *
 
 from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
 

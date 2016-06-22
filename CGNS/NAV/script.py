@@ -8,8 +8,8 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import sys
 import time
 
-from PySide.QtCore import *
-from PySide.QtGui import QApplication, QPixmap, QSplashScreen
+from PyQt4.QtCore import *
+from PyQt4.QtGui import QApplication, QPixmap, QSplashScreen
 from CGNS.NAV.wcontrol import Q7Main
 
 # -----------------------------------------------------------------

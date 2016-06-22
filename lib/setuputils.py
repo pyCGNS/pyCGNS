@@ -72,7 +72,7 @@ def unique_but_keep_order(lst):
 # --------------------------------------------------------------------
 def search(incs,libs,tag='pyCGNS',
            deps=['Cython','HDF5','MLL','numpy','vtk','CHLone',
-                 'PySide','SQLAlchemy']):
+                 'PyQt4','SQLAlchemy']):
   state=1
   for com in sys.argv:
     if com in ['help','clean']: state=0
@@ -108,6 +108,7 @@ def search(incs,libs,tag='pyCGNS',
           raise Exception
         if (which('pyside-uic') is not None): C.COM_UIC='pyside-uic'
         if (which('pyside-rcc') is not None): C.COM_RCC='pyside-rcc'
+        if (which('pyuic4') is not None):     C.COM_UIC='pyuic4'
         if (which('pyrcc4') is not None):     C.COM_RCC='pyrcc4'
         import Cython
         C.HAS_CYTHON=True
@@ -125,17 +126,19 @@ def search(incs,libs,tag='pyCGNS',
         print pfx+'FATAL: Cython not found'
 
     # -----------------------------------------------------------------------
-    if ('PySide' in deps):
+    if ('PyQt4' in deps):
       try:
-        import PySide
-        import PySide.QtCore
-        import PySide.QtGui
+        import PyQt4
+        import PyQt4.QtCore
+        import PyQt4.QtGui
+        from PyQt4.Qt import PYQT_VERSION_STR
+        from PyQt4.QtCore import QT_VERSION_STR
         
-        C.HAS_PYSIDE=True
-        print pfx+'using PySide v%s'%PySide.__version__
+        C.HAS_PYQT4=True
+        print pfx+'using PyQt4 v%s (Qt v%s)'%(PYQT_VERSION_STR,QT_VERSION_STR)
       except:
-        C.HAS_PYSIDE=False
-        print pfx+'ERROR PySide not found'
+        C.HAS_PYQT4=False
+        print pfx+'ERROR PyQt4 not found'
 
     # -----------------------------------------------------------------------
     if ('vtk' in deps):

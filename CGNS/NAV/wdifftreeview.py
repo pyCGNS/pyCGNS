@@ -9,8 +9,8 @@ import numpy
 
 import CGNS.PAT.cgnsutils as CGU
 
-from PySide.QtCore    import *
-from PySide.QtGui     import *
+from PyQt4.QtCore    import *
+from PyQt4.QtGui     import *
 
 from CGNS.NAV.Q7DiffWindow  import Ui_Q7DiffWindow
 from CGNS.NAV.wfingerprint  import Q7Window,Q7FingerPrint

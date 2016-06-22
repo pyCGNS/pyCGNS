@@ -6,8 +6,8 @@
 # Trick to avoid window identification in Windows/Qt
 # See https://bugreports.qt-project.org/browse/PYSIDE-46
 #
-from PySide.QtCore import *
-from PySide.QtGui  import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui  import *
 
 import ctypes
 

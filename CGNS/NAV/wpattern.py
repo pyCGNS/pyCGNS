@@ -15,9 +15,9 @@ import CGNS.PAT.cgnsutils    as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.SIDS
 
-from PySide.QtCore import *
-from PySide.QtGui  import QFileDialog
-from PySide.QtGui  import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui  import QFileDialog
+from PyQt4.QtGui  import *
 
 from CGNS.NAV.Q7PatternWindow import Ui_Q7PatternWindow
 from CGNS.NAV.wfingerprint    import Q7Window as QW

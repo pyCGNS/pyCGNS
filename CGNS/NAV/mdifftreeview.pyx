@@ -9,8 +9,8 @@ import numpy
 
 import CGNS.PAT.cgnsutils as CGU
 
-from PySide.QtCore    import *
-from PySide.QtGui     import *
+from PyQt4.QtCore    import *
+from PyQt4.QtGui     import *
 
 from CGNS.NAV.mtree import Q7TreeView,Q7TreeItem,Q7TreeModel
 import CGNS.NAV.mtree as NMT
