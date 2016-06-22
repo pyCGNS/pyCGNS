@@ -393,7 +393,7 @@ t=CK.Family_ts
 cgt[t]=CGNStype(t)
 cgt[t].addChild(CK.Descriptor_ts)
 cgt[t].addChild(CK.Ordinal_ts,CK.Ordinal_s)
-cgt[t].addChild(CK.FamilyBC_ts)
+cgt[t].addChild(CK.FamilyBC_ts,card=C_01)
 cgt[t].addChild(CK.GeometryReference_ts)
 cgt[t].addChild(CK.RotatingCoordinates_ts,CK.RotatingCoordinates_s)
 cgt[t].addChild(CK.UserDefinedData_ts)

@@ -1297,7 +1297,7 @@ class Q7TreeModel(QAbstractItemModel):
         for mod in modset:
             if (mod is None): checkdiag=CGV.CGNS_VAL_USER_Checks(None)
             else:             checkdiag=mod.CGNS_VAL_USER_Checks(None)
-        checkdiag.checkTree(T,False)
+            checkdiag.checkTree(T,False)
         if (pathlist==[]):
             pathlist=self._extension.keys()
         for path in pathlist:
