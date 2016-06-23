@@ -148,5 +148,7 @@ class Q7Form(Q7Window,Ui_Q7FormWindow):
         self.model.headerDataChanged.emit(Qt.Horizontal, 1, 1)
     def addControlLine(self):
         pass
+    def doRelease(self):
+        pass
             
 # -----------------------------------------------------------------

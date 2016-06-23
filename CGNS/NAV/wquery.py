@@ -311,7 +311,7 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
                         SIGNAL("editTextChanged()"),
                         self.checkNewQueryName)
         QObject.connect(self.cQueryName,
-                        SIGNAL("editTextChanged(str)"),
+                        SIGNAL("editTextChanged(QString)"),
                         self.checkNewQueryName)
         QObject.connect(self.eText,
                         SIGNAL("textChanged()"),

@@ -10,9 +10,7 @@ import argparse
 import glob
 import re
 
-from distutils.core import setup, Extension
-from distutils.util import get_platform
-from distutils      import sysconfig
+from setuptools import setup, Extension
 
 # --- get overall configuration
 sys.path=['./lib']+sys.path
@@ -94,6 +92,9 @@ ALL_PACKAGES=[]
 ALL_SCRIPTS=[]
 ALL_EXTENSIONS=[]
 
+OTHER_INCLUDES_PATHS=['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\include']+['c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\include']
+OTHER_LIBRARIES_PATHS=['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\lib\\amd64']+['c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Lib\\x64']
+
 modules=""
 
 incs=[]
@@ -118,6 +119,7 @@ new_args=[]
 for arg in sys.argv:
   if ( not ('-I=' in arg or '--includes=' in arg) and
        not ('-U' in arg or '--update' in arg) and
+       not ('-g' in arg or '--generate' in arg) and
        not ('-L=' in arg or '--libraries=' in arg)):
     new_args+=[arg]
 sys.argv=new_args
@@ -139,7 +141,7 @@ if APP:
   ALL_EXTENSIONS+=[Extension("CGNS.APP.lib.arrayutils",
                              ["CGNS/APP/lib/arrayutils.pyx",
                               "CGNS/APP/lib/hashutils.c"],
-                             include_dirs = CONFIG.INCLUDE_DIRS,
+                             include_dirs = CONFIG.INCLUDE_DIRS+OTHER_INCLUDES_PATHS,
                              extra_compile_args=[])]
   ALL_PACKAGES+=['CGNS.APP',
                  'CGNS.APP.lib',
@@ -281,7 +283,7 @@ if (NAV and CONFIG.HAS_PYQT4):
   mfile_list=['mtree','mquery','mcontrol','mtable','mpattern',
               'diff','mdifftreeview','merge','mmergetreeview']
   if (CONFIG.HAS_VTK): mfile_list+=['mparser']
-    
+
   for mfile in mfile_list:
      modextlist+=[Extension("CGNS.NAV.%s"%mfile,["CGNS/NAV/%s.pyx"%mfile,
                                                  fakefile],

@@ -58,6 +58,12 @@ def which(program):
             exe_file = os.path.join(path, program)
             if is_exe(exe_file):
                 return exe_file
+            w_exe_file=exe_file+'.exe'
+            if is_exe(w_exe_file):
+                return w_exe_file
+            b_exe_file=exe_file+'.bat'
+            if is_exe(b_exe_file):
+                return b_exe_file
 
     return None
 
@@ -106,10 +112,10 @@ def search(incs,libs,tag='pyCGNS',
           C.COM_CYTHON='cython'
         else:
           raise Exception
-        if (which('pyside-uic') is not None): C.COM_UIC='pyside-uic'
-        if (which('pyside-rcc') is not None): C.COM_RCC='pyside-rcc'
-        if (which('pyuic4') is not None):     C.COM_UIC='pyuic4'
-        if (which('pyrcc4') is not None):     C.COM_RCC='pyrcc4'
+        if (which('pyuic') is not None):  C.COM_UIC='pyuic'
+        if (which('pyrcc') is not None):  C.COM_RCC='pyrcc'
+        if (which('pyuic4') is not None): C.COM_UIC='pyuic4'
+        if (which('pyrcc4') is not None): C.COM_RCC='pyrcc4'
         import Cython
         C.HAS_CYTHON=True
         print pfx+'using Cython v%s'%Cython.__version__
@@ -356,13 +362,7 @@ def updateConfig(pfile,gfile,config_default,config_previous=None):
 
 # --------------------------------------------------------------------
 def frompath_HDF5():
-  try:
-   h5p=subprocess.check_output(["which","h5dump"])
-  except:
-    try:
-      h5p=subprocess.check_output(["whence","h5dump"])
-    except:
-      h5p=None
+  h5p=which("h5dump")
   if (h5p is not None):
     h5root='/'.join(h5p.split('/')[:-2])
   else:

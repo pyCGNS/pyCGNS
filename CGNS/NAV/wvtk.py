@@ -64,8 +64,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtkstatus=False
       self._control=control
       self._fgindex=fgprintindex
-      self._T=Q7FingerPrint.getByIndex(self._fgindex).tree
-      if (not self.wCGNSTreeParse(self._T,zlist)): return
+      self._tree=Q7FingerPrint.getByIndex(self._fgindex).tree
       self._vtkstatus=True
       if (VTK_VERSION_MAJOR<6):
           MSG.wError(self._control,
@@ -73,7 +72,11 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
           if (VTK_VERSION_MINOR<8):
               MSG.wError(self._control,
                          502,"Your VTK version is lower than v5.8, if you have hexahedron in your mesh they cannot be display","Oups...")
+      # FIXME: options are required for parse, then wCGNSTreeParse should
+      # be called AFTER the init (that reads options)
+      # if the parse fails (no data, bad data...) the window has to be deleted
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,self._fgindex)
+      if (not self.wCGNSTreeParse(self._tree,zlist)): return
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
       self._epix=QIcon(QPixmap(":/images/icons/empty.png"))
       self._spix=QIcon(QPixmap(":/images/icons/selected.png"))
@@ -110,7 +113,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.display.Initialize()
       self.display.Start()
       self.display.show()
-      self._vtktree=self.wCGNSTreeActors(self._T,zlist)
+      self._vtktree=self.wCGNSTreeActors(self._tree,zlist)
       self.bX.clicked.connect(self.b_xaxis)
       self.bY.clicked.connect(self.b_yaxis)
       self.bZ.clicked.connect(self.b_zaxis)
@@ -186,13 +189,13 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self.actorval=None      
       self.planeActor=None
 
-  @Slot(str)
+  @pyqtSlot(str)
   def printMessage(self, text):
         sys.stdout.write(text+'\n')
         sys.stdout.flush()
 
   def doRelease(self):
-      self._T=None
+      self._tree=None
       self.reject()
 
   def parseDone(self):
@@ -682,6 +685,7 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
         
   def wCGNSTreeParse(self,T,zlist):
       self._parser=Mesh(T,zlist)
+      self._T('Parse data for VTK display')
       if (not self._parser._status):
           MSG.wError(self._control,500,'Cannot create VTK view',
                      'No data or bad data for a VTK display')

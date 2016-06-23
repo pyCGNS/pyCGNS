@@ -174,12 +174,7 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         if (self.wOption==None): self.wOption=Q7Option(self)
         self.wOption.show()
     def about(self):
-        try:
-            import CGNS.PRO
-            haspro=' + pyCGNS.PRO v%s'%CGNS.PRO.version
-        except:
-            haspro=''
-        MSG.wInfo(self,100,"pyCGNS v%s%s"%(OCTXT._ToolVersion,haspro),
+        MSG.wInfo(self,100,"pyCGNS v%s"%(OCTXT._ToolVersion),
                   OCTXT._CopyrightNotice,again=False)
     def closeApplication(self):
         reply = MSG.wQuestion(self,101,'Double check...',
@@ -198,10 +193,10 @@ class Q7Main(QW, Ui_Q7ControlWindow):
     def closeEvent(self, event):
         if (self.closeApplication()):
             event.accept()
-            return True
+#            return True
         else:
             event.ignore()
-            return False
+#            return False
     def resetScrolls(self):
         self.controlTable.verticalScrollBar().setSliderPosition(0)
         self.controlTable.horizontalScrollBar().setSliderPosition(0)

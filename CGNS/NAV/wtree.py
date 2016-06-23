@@ -17,7 +17,7 @@ try:
   import vtk
   from CGNS.NAV.wvtk import Q7VTK
   has_vtk=True
-except:
+except IndexError:
   has_vtk=False
     
 from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
@@ -409,9 +409,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
               if (aparam is None):
                 self.popupmenu.addSeparator()
               elif (len(aparam)==1):
-                tag='_GM_%s'%node.sidsType() 
+                tag='_GM_%s'%node.sidsType()
                 if (hasattr(self,tag)):
-                  self.popupmenu.addMenu(getattr(self,tag)(node))
+                  subm=self.popupmenu.addMenu('%s special menu'%node.sidsType())
+                  getattr(self,tag)(subm,node)
                 else:
                   a=QAction("About %s"%node.sidsType(),self,
                             triggered=self.aboutSIDS)
@@ -432,8 +433,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
       self._runAndSelect('013. FamilyName reference',"'%s'"%node.sidsName())
     def _gm_family_2(self,node):
       self._runAndSelect('003. Node type',"'Family_t'")
-    def _GM_Family_t(self,node):
-      m=QMenu('%s special menu'%node.sidsType())
+    def _GM_Family_t(self,m,node):
       a=QAction('Select references to myself',self)
       a.triggered.connect(functools.partial(self._gm_family_1, node))
       m.addAction(a)
@@ -443,22 +443,24 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
       m.addSeparator()
       p=QMenu('Insert pattern')
       m.addMenu(p)
-      return m
-    def _GM_IndexRange_t(self,node):
-      if (node.sidsName()!=CGK.ElementRange_s): return
-      m=QMenu('%s special menu'%node.sidsName())
-      v=node.sidsValue()[1]-node.sidsValue()[0]
-      etp=CGU.getEnumAsString(node.sidsParent())
-      a=QAction('Number of elements of type [%s]: %d'%(etp,v),self)
-      m.addAction(a)
-      return m
-    def _GM_Elements_t(self,node):
-      m=QMenu('%s special menu'%node.sidsType())
+      return True
+    def _GM_IndexRange_t(self,m,node):
+      if (node.sidsName()!=CGK.ElementRange_s):
+        v=0
+        a=QAction('Range size: %d'%(v),self)
+        m.addAction(a)
+      else:
+        v=node.sidsValue()[1]-node.sidsValue()[0]
+        etp=CGU.getEnumAsString(node.sidsParent())
+        a=QAction('Number of elements of type [%s]: %d'%(etp,v),self)
+        m.addAction(a)
+      return True
+    def _GM_Elements_t(self,m,node):
       etp=CGU.getEnumAsString(node.sidsNode())
       npe=CGK.ElementTypeNPE[etp]
       a=QAction('Element type [%s] npe [%d]'%(etp,npe),self)
       m.addAction(a)
-      return m
+      return True
     def marknode_t(self):
       node=self.getLastEntered()
       self._runAndSelect('003. Node type',"'%s'"%node.sidsType())
@@ -561,7 +563,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         str_src="%s:%s/%s"%(self.FG.filename,
                          self.selectForLinkSrc[1],newname)
         str_msg="you want to create a link from <b>%s</b> to <b>%s</b><br>%s<br>Your current user options do force the link to use <b>%s</b> destination file path."""%(str_src,str_dst,str_cnm,tpath)
-        reply = MSG.wQuestion(self,'Create link as a new node',str_msg)
+        reply = MSG.wQuestion(self,231,'Create link as a new node',str_msg)
 
     def linklist(self):
         if (self._linkwindow is None):
@@ -619,7 +621,7 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         ix=self.treeview.modelCurrentIndex()
         node=self.modelData(ix)
         if (node is None):
-            MSG.wInfo(self,"Form view:",
+            MSG.wInfo(self,254,"Form view:",
                       """You have to select a node to open its form view""",
                       again=False)
             return

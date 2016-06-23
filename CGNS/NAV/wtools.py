@@ -55,7 +55,7 @@ class Q7ToolsView(Q7Window,Ui_Q7ToolsWindow):
         #if (ix!=-1): self.cQuery.setCurrentIndex(ix)
         self.bApply.clicked.connect(self.applyquery)
         pal=self.bApplyBox.palette()
-        pal.setColor(QPalette.WindowText,'red')
+        pal.setColor(QPalette.WindowText,QColor('red'))
         self.bApplyBox.setPalette(pal)
         self.lockable(self.bApply)
         self.bOperateDoc.clicked.connect(self.querydoc)
@@ -71,7 +71,7 @@ class Q7ToolsView(Q7Window,Ui_Q7ToolsWindow):
                         SIGNAL("valueChanged(int)"),
                         self.updateCriteria)
         QObject.connect(self.cSIDStype,
-                        SIGNAL("editTextChanged(str)"),
+                        SIGNAL("editTextChanged(QString)"),
                         self.updateSIDStypeEntry)
         self.criteria=[]
         for l in range(3):
