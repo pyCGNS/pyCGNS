@@ -59,7 +59,6 @@ try:
 except:
   print """CGNS.NAV: Warning, cannot import vtk..."""
 
-if (sys.platform=='win32'): import CGNS.NAV.temputils
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 doc1="""

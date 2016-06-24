@@ -150,9 +150,19 @@ class Q7VTKRenderWindowInteractor(QtGui.QWidget):
             self._RenderWindow = vtk.vtkRenderWindow()
 
         if (sys.platform=='win32'):
-            self._RenderWindow.SetWindowInfo(str(int(self.winId(self))))
+            WId = self.winId()
         else:
-            self._RenderWindow.SetWindowInfo(str(int(self.winId())))
+            WId = self.winId()
+
+        if type(WId).__name__ == 'PyCObject':
+            from ctypes import pythonapi, c_void_p, py_object
+
+            pythonapi.PyCObject_AsVoidPtr.restype  = c_void_p
+            pythonapi.PyCObject_AsVoidPtr.argtypes = [py_object]
+
+            WId = pythonapi.PyCObject_AsVoidPtr(WId)
+
+        self._RenderWindow.SetWindowInfo(str(int(WId)))
 
         if stereo: # stereo mode
             self._RenderWindow.StereoCapableWindowOn()

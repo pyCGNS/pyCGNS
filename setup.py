@@ -303,13 +303,6 @@ if (NAV and CONFIG.HAS_PYQT4):
          or args.generate
          or os.path.getmtime(g[0])>os.path.getmtime(g[1])): modgenlist+=[m]
                   
-  modextlist+=[Extension("CGNS.NAV.temputils",["CGNS/NAV/temputils.pyx",
-                                               fakefile],
-                         include_dirs = CONFIG.NUMPY_PATH_INCLUDES,
-                         library_dirs = CONFIG.NUMPY_PATH_LIBRARIES,
-                         libraries    = CONFIG.NUMPY_LINK_LIBRARIES,
-                       )]
-
   for m in modgenlist:
       print '# Generate from updated Qt templates  (%s): %s'%(cui,m)
       com="(%s -o CGNS/NAV/G/%s.pyx CGNS/NAV/T/%s.ui;(cd CGNS/NAV/G;%s -a %s.pyx))2>/dev/null"%(cui,m,m,ccy,m)
