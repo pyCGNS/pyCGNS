@@ -35,7 +35,7 @@ doc2="""
 
 $cg_diff NACA0012_1b_Block_0000_SUB.hdf NACA0012_1b.hdf 
 #v /CGNSLibraryVersion
-++ /NACA0012_HYB/BCFarField
+++ /NACA0012_HYB/BCFrField
 ++ /NACA0012_HYB/Block_0001
 ++ /NACA0012_HYB/S_SYM
 ++ /NACA0012_HYB/S_OUTFLOW
