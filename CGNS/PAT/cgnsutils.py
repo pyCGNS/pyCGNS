@@ -1154,18 +1154,18 @@ def getNodeType(node):
   data=node[1]
   if (node[0] == 'CGNSLibraryVersion_t'):
     return CK.R4 # ONLY ONE R4 IN ALL SIDS !
-  if ((data is None) or (data == [])):
-    return CK.MT
   if (type(data)==numpy.ndarray):
     if (data.dtype.kind in ['S','a']):        return CK.C1
     if (data.dtype.char in ['f','F']):        return CK.R4
     if (data.dtype.char in ['D','d']):        return CK.R8
     if (data.dtype.char in ['i','I']):        return CK.I4
     if (data.dtype.char in ['l']):            return CK.I8
-  if ((type(data) == type([])) and (len(data))): # oups !
+  if ((type(data) == list) and (len(data))): # oups !
     if (type(data[0]) == type("")):           return CK.C1
     if (type(data[0]) == type(0)):            return CK.I4
     if (type(data[0]) == type(0.0)):          return CK.R8
+  if ((data is None) or (data == [])):
+    return CK.MT
   return '??'
 
 # --------------------------------------------------

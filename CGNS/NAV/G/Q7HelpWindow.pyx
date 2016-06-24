@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7HelpWindow.ui'
 #
-# Created: Thu Jun 23 13:57:44 2016
+# Created: Fri Jun 24 13:58:07 2016
 #      by: PyQt4 UI code generator 4.11.1
 #
 # WARNING! All changes made in this file will be lost!
