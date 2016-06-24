@@ -1,7 +1,12 @@
-#  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System -
-#  See license.txt file in the root directory of this Python module source  
-#  -------------------------------------------------------------------------
+# -------------------------------------------------------------------------
+# pyCGNS - Python package for CFD General Notation System -
+# See license.txt file in the root directory of this Python module source  
+# -------------------------------------------------------------------------
+#
+# this script doesn't need to be used for every doc update, run it once
+# using :
+#   python lib/gendoc.py > doc/mods/PAT/cgnstypes.txt
+#
 #
 import string
 import CGNS.PAT.cgnstypes
@@ -14,7 +19,7 @@ def gentype2(t):
       if (nt=='{UserDefined}'): s+="\n :Name: %s "%nt
       else: s+="\n :Name: **%s** "%nt
     for c in t.parents:
-        s+="\n :Parents: :ref:`%s <X%s>` "%(c,c)
+        s+="\n :Parent: :ref:`%s <X%s>` "%(c,c)
     dtf=False
     for dt in t.datatype:
       if (dt!='LK'): 
@@ -28,9 +33,9 @@ def gentype2(t):
       for cn in c[1]:
         cc=t.cardinality(c[0])
         if ((cn!='{UserDefined}') and (t.cardinality(c[0]) not in nzero)):
-          s+="\n :Children: **%s** :ref:`%s <X%s>` (%s)"%(cn,c[0],c[0],cc)
+          s+="\n :Child: **%s** :ref:`%s <X%s>` (%s)"%(cn,c[0],c[0],cc)
         else:
-          s+="\n :Children: %s :ref:`%s <X%s>` (%s)"%(cn,c[0],c[0],cc)
+          s+="\n :Child: %s :ref:`%s <X%s>` (%s)"%(cn,c[0],c[0],cc)
     s+="\n"
     return s
         

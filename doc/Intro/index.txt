@@ -48,9 +48,10 @@ file format, you can use pyCGNS without any file at all for your
 actual CFD data! 
 
 
-.. sidebar:: Release 4.4.490
+.. sidebar:: Release 4.6 (June 2016)
 
-   - New tools in APP
+   - Move to PyQt
+   - Windows version update
 
 There are seven sub-modules in
 *pyCGNS*, some of them are libraries of functions, some other are

@@ -6,7 +6,9 @@
 CGNS.NAV
 ========
 
-The CGNS.NAV tool is a CGNS tree browser.
+.. |help55| image:: ../../../doc/images/cgnsnav_055.png
+
+The **cg_look** tool is a CGNS tree browser (formerly was CGNS.NAV).
 
 There are three important views (or windows) you can open on a CGNS tree.
 The ``control view`` is the manager for all the views on all the trees you
@@ -15,20 +17,22 @@ The ``tree view`` is the main window you can open on a single tree.
 The ``VTK view`` displays the mesh, element sets, connectivities and boundary 
 conditions of your CGNS base.
 
-.. note::
+.. warning::
    The screenshots you have on these pages may be outdated. Most
    features are unchanged from GUI version to another GUI version, but as the
    update of all screenshots is long and tedious the actual GUI you would
    have on your screen may be more or less close to these docs...
+   The **best way** to get help is to use the tools' embedded doc, each
+   window has its own help, use the |help55| button.
 
 Control view
 ------------
 
 If you want to browse your CGNS file, just type::
 
-  CGNS.NAV
+  cg_look
 
-``CGNS.NAV`` *options*
+``cg_look`` *options*
 
 You can use several options to launch the ``CGNS.NAV`` program.
 

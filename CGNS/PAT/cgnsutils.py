@@ -2288,18 +2288,18 @@ def getAllNodesFromTypeSet(typelist,node,path,result):
 
 # --------------------------------------------------
 def getNodeAllowedChildrenTypes(pnode,node):
-  # """
-  # Returns all allowed CGNS-types for the node. The parent is mandatory::
-  #    if (node[2] not in getNodeAllowedChildrenTypes(parent,node)):
-  #       print 'Such a child is not SIDS compliant'
-  # :arg CGNS/Python pnode: parent node of second argument
-  # :arg CGNS/Python node: target node
-  # :return: A list of CGNS/SIDS types (strings)
-  # :Remarks:
-  #   - The parent node is mandatory, many CGNS/SIDS types are allowed in many
-  #     places and the only way to check their compliance is to have their
-  #     father node.
-  # """
+  """
+  Returns all allowed CGNS-types for the node. The parent is mandatory::
+     if (node[2] not in getNodeAllowedChildrenTypes(parent,node)):
+        print 'Such a child is not SIDS compliant'
+  :arg CGNS/Python pnode: parent node of second argument
+  :arg CGNS/Python node: target node
+  :return: A list of CGNS/SIDS types (strings)
+  :Remarks:
+    - The parent node is mandatory, many CGNS/SIDS types are allowed in many
+      places and the only way to check their compliance is to have their
+      father node.
+  """
   tlist=[]
   if (node[3] == CK.CGNSTree_ts): return tlist
   try:
@@ -2316,15 +2316,15 @@ def getNodeAllowedChildrenTypes(pnode,node):
 
 # --------------------------------------------------
 def getNodeAllowedDataTypes(node):
-  # """Returns a list of string with all allowed CGNS data types for the node::
-  #      node=['ReferenceState',numpy.array((1,2,3)),[],'ReferenceState_t']
-  #      if (getValueDataType(node) not in getNodeAllowedDataTypes(node)):
-  #         print 'Node %s has bad value type'%(node[0])
-  # :arg CGNS/Python node: target node
-  # :return:
-  #   - A list of CGNS/SIDS value data types (strings)
-  #   - see also :py:func:`getValueDataType`
-  # """
+  """Returns a list of string with all allowed CGNS data types for the node::
+       node=['ReferenceState',numpy.array((1,2,3)),[],'ReferenceState_t']
+       if (getValueDataType(node) not in getNodeAllowedDataTypes(node)):
+          print 'Node %s has bad value type'%(node[0])
+  :arg CGNS/Python node: target node
+  :return:
+    - A list of CGNS/SIDS value data types (strings)
+    - see also :py:func:`getValueDataType`
+  """
   tlist=[]
   try:
     tlist=CT.types[node[3]].datatype
@@ -2334,12 +2334,22 @@ def getNodeAllowedDataTypes(node):
 
 # --------------------------------------------------
 def getAllFamilies(tree):
+  """Return all the Family_t of the tree (all CGNSBases)"""
   fpth=[CK.CGNSTree_ts,CK.CGNSBase_ts,CK.Family_ts]
   famlist=getAllNodesByTypeOrNameList(tree,fpth)
   return [getPathLeaf(f) for f in famlist]
 
 # --------------------------------------------------
 def getZoneFromFamily(tree,families,additional=True):
+  """Return the Zone paths for all Zones having the target families as
+  FamilyName_t or AdditionalFamilyName_t.
+
+  :arg CGNS/Python tree: target tree to parse
+  :arg list str families: list of family names to look for
+  :arg boolean additional: also looks for AdditionalFamilyName_t (default True)
+  :return: list of Zone paths
+  
+  """  
   fpth1=[CK.CGNSTree_ts,CK.CGNSBase_ts,CK.Zone_ts,CK.FamilyName_ts]
   fpth2=[CK.CGNSTree_ts,CK.CGNSBase_ts,CK.Zone_ts,CK.AdditionalFamilyName_ts]
   zlist=getAllNodesByTypeOrNameList(tree,fpth1)
@@ -2352,6 +2362,15 @@ def getZoneFromFamily(tree,families,additional=True):
 
 # --------------------------------------------------
 def getBCFromFamily(tree,families,additional=True):
+  """Return the BC paths for all BCs having the target families as
+  FamilyName_t or AdditionalFamilyName_t.
+
+  :arg CGNS/Python tree: target tree to parse
+  :arg list str families: list of family names to look for
+  :arg boolean additional: also looks for AdditionalFamilyName_t (default True)
+  :return: list of BC paths
+  
+  """  
   fpth0=[CK.CGNSTree_ts,CK.CGNSBase_ts,CK.Zone_ts,CK.ZoneBC_ts,CK.BC_ts]
   fpth1=fpth0+[CK.FamilyName_ts]
   fpth2=fpth0+[CK.AdditionalFamilyName_ts]
@@ -2365,6 +2384,15 @@ def getBCFromFamily(tree,families,additional=True):
 
 # --------------------------------------------------
 def getZoneSubRegionFromFamily(tree,families):
+  """Return the ZoneSubRegion paths for all having the target families as
+  FamilyName_t or AdditionalFamilyName_t.
+
+  :arg CGNS/Python tree: target tree to parse
+  :arg list str families: list of family names to look for
+  :arg boolean additional: also looks for AdditionalFamilyName_t (default True)
+  :return: list of ZoneSubRegion paths
+  
+  """  
   fpth0=[CK.CGNSTree_ts,CK.CGNSBase_ts,CK.Zone_ts,CK.ZoneBC_ts,
          CK.ZoneSubRegion_ts]
   fpth1=fpth0+[CK.FamilyName_ts]
@@ -2379,10 +2407,24 @@ def getZoneSubRegionFromFamily(tree,families):
 
 # --------------------------------------------------
 def getFamiliesFromZone(tree,zonepath):
+  """Return all the Zone's FamilyName_t or AdditionalFamilyName_t.
+
+  :arg CGNS/Python tree: target tree to parse
+  :arg str zonepath: target zone
+  :return: list of family names
+  
+  """  
   return getFamiliesFromBC(tree,zonepath)
 
 # --------------------------------------------------
 def getFamiliesFromBC(tree,bcpath):
+  """Return all the BC's FamilyName_t or AdditionalFamilyName_t.
+
+  :arg CGNS/Python tree: target tree to parse
+  :arg str zonepath: target zone
+  :return: list of family names
+  
+  """  
   bcnode=getNodeByPath(tree,bcpath)
   l1=hasChildType(bcnode,CK.FamilyName_ts)
   l2=hasChildType(bcnode,CK.AdditionalFamilyName_ts)
@@ -2395,6 +2437,13 @@ def getFamiliesFromBC(tree,bcpath):
   
 # --------------------------------------------------
 def getFamiliesFromZoneSubRegion(tree,zsrpath):
+  """Return all the ZoneSubRegion's FamilyName_t or AdditionalFamilyName_t.
+
+  :arg CGNS/Python tree: target tree to parse
+  :arg str zonepath: target zone
+  :return: list of family names
+  
+  """  
   return getFamiliesFromBC(tree,zonepath)
 
 # -----------------------------------------------------------------------------
@@ -2558,6 +2607,7 @@ def stringValueMatches(node,reval):
 
 # --------------------------------------------------
 def stringValueInList(node,listval):
+  """True if the value list contains the node value"""
   if (node is None):             return False
   if (node[1] is None):          return False
   if (getNodeType(node)!=CK.C1): return False
@@ -2570,11 +2620,12 @@ def stringValueInList(node,listval):
 
 # --------------------------------------------------
 def isLinkNode(tree,links,node):
-  """Returns True if the node is a linked node"""
+  #"""Returns True if the node is a linked node"""
   pass
 
 # --------------------------------------------------
 def checkLinkFile(lkfile,lksearch=['']):
+  """Checks if the file exists"""
   found=(None,None)
   if (lksearch==[]): lksearch=['']
   for spath in lksearch:
@@ -2597,6 +2648,7 @@ def copyArray(a):
 
 # --------------------------------------------------
 def toStringValue(v):
+  """ASCII pretty print of one node value."""
   if (v is None): return None
   ao='C'
   if (numpy.isfortran(v)): ao='F'
@@ -2606,6 +2658,7 @@ def toStringValue(v):
 
 # --------------------------------------------------
 def toStringChildren(l,readable=False,shift=0):
+  """ASCII pretty print of one children node list."""
   s="["
   for c in l:
     s+=toString(c,readable,shift)
@@ -2615,6 +2668,7 @@ def toStringChildren(l,readable=False,shift=0):
 
 # --------------------------------------------------
 def prettyPrint(tree,path='',depth=0):
+  """ASCII pretty print of the whole tree."""
   print depth*' ',
   n="%s(%s)"%(tree[0],tree[3]),
   print "%-32s"%n
