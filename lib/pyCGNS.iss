@@ -7,12 +7,13 @@
 
 [Setup]
 AppName=pyCGNS
-AppVersion=4.3
+AppVersion=4.6
 DefaultDirName={src}\pyCGNS
 DefaultGroupName=pyCGNS
-UninstallDisplayIcon={app}\CGNSNAV.exe
+UninstallDisplayIcon={app}\cg_look.exe
 OutputDir="..\build"
-SetupIconFile=pyCGNS-small.ico
+OutputBaseFilename="pyCGNS-v4.6-win64-py2.7"
+SetupIconFile="pyCGNS-small.ico"
 PrivilegesRequired=none
 Compression=lzma2
 SolidCompression=yes
@@ -22,14 +23,19 @@ WizardSmallImageFile=pyCGNS-small.bmp
 LicenseFile=..\license.txt
 
 [Files]
-Source: "..\build\exe.win32-2.7\*"; DestDir: "{app}"
-Source: "..\build\exe.win32-2.7\lib\*"; DestDir: "{app}"
-Source: "..\build\exe.win32-2.7\demo\*"; DestDir: "{app}"
+Source: "..\build\exe.win-amd64-2.7\*"; DestDir: "{app}"
+; Source: "..\build\exe.win-amd64-2.7\demo\*"; DestDir: "{app}"
+Source: "pyCGNS.ico"; DestDir: "{app}"
 
 [Run]
-Filename: "{app}\CGNSNAV.exe"; Description: "Launch CGNS.NAV"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\cg_look.exe"; Description: "Launch cg_look"; Flags: nowait postinstall skipifsilent
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Icons]
-Name: {userdesktop}\pyCGNS; FileName: {app}\CGNSNAV.exe; WorkingDir: {app}; IconFilename:  {app}\pyCGNS-small.ico
+Name: {userdesktop}\pyCGNS; FileName: {app}\cg_look.exe; WorkingDir: {app}; IconFilename:  {app}\pyCGNS.ico
+
 
 ; --- last line
