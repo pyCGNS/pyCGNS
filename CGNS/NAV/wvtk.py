@@ -292,7 +292,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       
   def mouseReleaseEvent(self, ev):
         self._ActiveButton=ev.button()
-        ctrl=self._iren.GetControlKey()
+        try:
+          ctrl=self._iren.GetControlKey()
+        except AttributeError: return
         shift=self._iren.GetShiftKey()
         self._iren.SetEventInformationFlipY(ev.x(),ev.y(),
                                             ctrl,shift,chr(0),0,None)
@@ -1147,6 +1149,8 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._iren.Render()
         
   def reject(self):
+      # some blocking cases may lead to a not-already defined self._master
+      # thus closing the window raises an AttributeError
       if (self._master._vtkwindow is not None):
           self._vtk.GetRenderWindow().Finalize()
           self._master._vtkwindow=None
