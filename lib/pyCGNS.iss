@@ -8,6 +8,7 @@
 [Setup]
 AppName=pyCGNS
 AppVersion=4.6
+AppPublisher="Marc Poinot"
 DefaultDirName={src}\pyCGNS
 DefaultGroupName=pyCGNS
 UninstallDisplayIcon={app}\cg_look.exe
@@ -17,9 +18,9 @@ SetupIconFile="pyCGNS-small.ico"
 PrivilegesRequired=none
 Compression=lzma2
 SolidCompression=yes
-WizardImageFile=pyCGNS.bmp
+WizardImageFile=pyCGNS-wizard.bmp
 WizardImageStretch=no
-WizardSmallImageFile=pyCGNS-small.bmp
+WizardSmallImageFile=pyCGNS-wizard-small.bmp
 LicenseFile=..\license.txt
 
 [Files]

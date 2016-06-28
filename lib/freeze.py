@@ -33,10 +33,16 @@ build_exe_options = {
 ], 
 "excludes": ["tkinter","tcl","tk8.5","PySide","PySide.QtCore","PySide.QtGui",
 ],
-"include_files": ["lib/pyCGNS.ico","lib/pyCGNS.bmp",
-                  "lib/pyCGNS-small.ico","lib/pyCGNS-small.bmp",
+"include_files": ["lib/pyCGNS.ico","lib/pyCGNS-wizard.bmp",
+                  "lib/pyCGNS-small.ico","lib/pyCGNS-wizard-small.bmp",
                   "license.txt",
                   "demo/SquaredNozzle.cgns",
+                  "demo/124Disk/124Disk_FamilyName.hdf",
+                  "demo/124Disk/124Disk_ReferenceState.hdf",
+                  "demo/124Disk/124Disk_zone1.hdf",
+                  "demo/124Disk/124Disk_zone1_GridCoordinates.hdf",
+                  "demo/124Disk/124Disk_zone1_GridCoordinates_X.hdf",
+                  "demo/124Disk/124Disk_zone1_ZoneType.hdf",
                   
 ],
 }
