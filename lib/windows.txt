@@ -1,0 +1,26 @@
+#  -------------------------------------------------------------------------
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source  
+#  -------------------------------------------------------------------------
+#
+# windows port, the way I did it (far to be the best)
+#
+# all installs in USER/AppData/Local
+#
+# install hdf5 win64 msvc
+# install Anaconda win64 py2.7
+# install Anaconda extra packages: scons, vtk, cython
+#   conda.exe install --force --offline ...
+# overwrite numpy with Gohlke numpy+mkl (Anaconda fails as stand alone)
+#   install in Anaconda site-packages
+# install msvc compiler for python
+#   check vcvarsall.bat used is the one you want
+# install CHLone
+#   install in Anaconda site-packages
+# install pyCGNS
+#   install in Anaconda site-packages
+# build windows installer
+#   python lib/freeze.py build_exe
+#   run inno compiler on lib/pyCGNS.iss
+#   result found in the inno build directory
+#

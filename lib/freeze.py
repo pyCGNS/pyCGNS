@@ -3,25 +3,7 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-# Posted by Cacasodo (http://www.techanswerguy.com)
-# creating a transparent favicon.ico with Gimp
-#I'm always forgetting the steps to do this properly. Here you go:
-#1) open a favorite image that you'd like to turn into a favicon to appear in your browser's location bar
-#2) click Image->Mode->RGB
-#3) using the erase tool, erase any areas of the graphic that you'd like to be transparent
-#4) using Image->Scale, resize the image to 32x32, the proper size for a favicon
-#5) first save the file as a GIF
-#- Gimp will popup a dialog that says "GIF can only handle grayscale or indexed images"
-#6) select * Convert to Indexed using default settings
-#7) click Export
-#8) save a copy as .ico. It will give you a number of choices for bits/pixel:
-#1 bpp, 1 bit alpha, 2-slot palette
-#4 bpp, 1 bit alpha, 16-slot palette
-#8 bpp, 1 bit alpha, 256-slot palette
-#32 bpp, 8 bit alpha, no palette
-#
-#Choose 4bpp. However, I have seen with some images that 8bpp needs to be used.
-#9) upload to your website and enjoy!
+# for windows port see windows.txt file
 
 import sys
 from cx_Freeze import setup, Executable

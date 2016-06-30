@@ -20,17 +20,13 @@ else:
     if (os.path.exists("%s%s%s"%(pp,os.path.sep,prog))):
       dpref=os.path.dirname("%s%s%s"%(pp,os.path.sep,prog))
       break
+
 ppref=dpref+'/../lib/python%s/site-packages'%sys.version[:3]
 ppref=os.path.normpath(os.path.abspath(ppref))
 if (ppref not in sys.path):
   sys.path.append(ppref)
 
 ppref=dpref+'/../Lib/site-packages'
-ppref=os.path.normpath(os.path.abspath(ppref))
-if (ppref not in sys.path):
-  sys.path.append(ppref)
-
-ppref=dpref+'/build/exe/win32-2.7'
 ppref=os.path.normpath(os.path.abspath(ppref))
 if (ppref not in sys.path):
   sys.path.append(ppref)
@@ -42,13 +38,6 @@ except KeyError:
   sys.exit(-1)
 
 try:
-  import CGNS.MAP
-  import CGNS.version
-except:
-  print """CGNS.NAV: FATAL error, cannot import CGNS.MAP..."""
-  sys.exit(-1)
-  
-try:
   import PyQt4.QtCore
 except:
   print """CGNS.NAV: FATAL error, cannot import PyQt4.QtCore..."""
@@ -58,6 +47,14 @@ try:
   import vtk
 except:
   print """CGNS.NAV: Warning, cannot import vtk..."""
+
+try:
+  import CGNS.MAP
+  import CGNS.version
+except:
+  print """CGNS.NAV: FATAL error, cannot import CGNS.MAP..."""
+  sys.exit(-1)
+  
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -71,8 +68,6 @@ doc2="""
   
   The browser provides the user with many different views of the CGNS tree.
   Each view has its on on-line self-contained contextual doc (no web access)
-  
-  Examples:
 
 """
 
