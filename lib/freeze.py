@@ -24,21 +24,36 @@
 #9) upload to your website and enjoy!
 
 import sys
+
 from cx_Freeze import setup, Executable
-#sys.path.append("d:\poinot\AppData\Local\pyCGNS\dist\Lib\site-packages")
+import cx_Freeze
+print cx_Freeze.__file__
+
+
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {
 "packages": ["os","sys","numpy","vtk","PyQt4.QtCore","PyQt4.QtGui",
              "CGNS.NAV","CGNS.MAP","CGNS.PAT","CGNS.VAL","CGNS.APP",
+             "CHLone","numpy.core.multiarray"
 ], 
 "excludes": ["tkinter","tcl","tk8.5","PySide","PySide.QtCore","PySide.QtGui",
 ],
-"include_files": ["lib/pyCGNS.ico","lib/pyCGNS.bmp",
-                  "lib/pyCGNS-small.ico","lib/pyCGNS-small.bmp",
-                  "license.txt",
-                  "demo/SquaredNozzle.cgns",
+"include_files": ["license.txt",
+r"D:\poinot\AppData\Local\Continuum\Anaconda\Lib\site-packages\pyCGNS-4.6.542-py2.7-win-amd64.egg",
+#r"D:\poinot\AppData\Local\Continuum\Anaconda\Lib",
+#r"D:\poinot\AppData\Local\Continuum\Anaconda\DLLs",
+"lib/pyCGNS.ico","lib/pyCGNS-wizard.bmp",
+"lib/pyCGNS-small.ico","lib/pyCGNS-wizard-small.bmp",
+"demo/SquaredNozzle.cgns",
+"demo/124Disk/124Disk_FamilyName.hdf",
+"demo/124Disk/124Disk_ReferenceState.hdf",
+"demo/124Disk/124Disk_zone1.hdf",
+"demo/124Disk/124Disk_zone1_GridCoordinates.hdf",
+"demo/124Disk/124Disk_zone1_GridCoordinates_X.hdf",
+"demo/124Disk/124Disk_zone1_ZoneType.hdf",
                   
 ],
+"add_to_path":True,
 }
 
 # GUI applications require a different base on Windows (the default is for a
@@ -55,13 +70,13 @@ import setuputils
 # ---
 
 setup(  
-name = "cg_look",
+name = "pyCGNS",
 version = '4.6',
 description  = "pyCGNS - CGNS/Python trees navigator and editor",
 author       = "Marc Poinot",
 author_email = "marc.poinot@onera.fr",
 license      = "LGPL 2",
-options = {"build_exe": build_exe_options},
-    executables = [Executable("CGNS/App/tools/cg_look",base=base)])
+options = {"build_exe": build_exe_options,"build_msi": build_exe_options},
+           executables = [Executable("CGNS/App/tools/cg_look",base=base)])
 
 # --- last line

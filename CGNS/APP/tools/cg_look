@@ -30,24 +30,12 @@ ppref=os.path.normpath(os.path.abspath(ppref))
 if (ppref not in sys.path):
   sys.path.append(ppref)
 
-ppref=dpref+'/build/exe/win32-2.7'
-ppref=os.path.normpath(os.path.abspath(ppref))
-if (ppref not in sys.path):
-  sys.path.append(ppref)
-
 try:
   import numpy
 except KeyError:
   print """CGNS.NAV: FATAL error, cannot import numpy..."""
   sys.exit(-1)
 
-try:
-  import CGNS.MAP
-  import CGNS.version
-except:
-  print """CGNS.NAV: FATAL error, cannot import CGNS.MAP..."""
-  sys.exit(-1)
-  
 try:
   import PyQt4.QtCore
 except:
@@ -58,6 +46,14 @@ try:
   import vtk
 except:
   print """CGNS.NAV: Warning, cannot import vtk..."""
+
+try:
+  import CGNS.MAP
+  import CGNS.version
+except:
+  print """CGNS.NAV: FATAL error, cannot import CGNS.MAP..."""
+  sys.exit(-1)
+  
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
