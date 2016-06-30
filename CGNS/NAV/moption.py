@@ -146,7 +146,7 @@ Copyright (c) Onera - The French Aerospace Labs<br>
 <tr><td>Elise Hénaux</td><td>-ONERA (Student FIIFO Orsay, France)</td></tr>
 <tr><td>Grégory Laheurte</td><td>-ONERA (DSNA/CS2A), France</td></tr>
 <tr><td>Pierre-Jacques Legay</td><td>-BERTIN, France</td></tr>
-<tr><td>Bill Perkins</td><td>-Pacific Northwest National Laboratory, U.S.A.</td></tr>
+<tr><td>Bill Perkins</td><td>-Pacific Northwest Ntl Lab, U.S.A.</td></tr>
 <tr><td>Jérôme Regis</td><td>-STILOG, France</td></tr>
 <tr><td>Benoit Rodriguez</td><td>-ONERA (DAAP/H2T), France</td></tr>
 <tr><td>Tristan Soubrié</td><td>-ANDHEO, France</td></tr>
@@ -192,7 +192,6 @@ Copyright (c) 2005, NumPy Developers<br>
 HDF5 Copyright (c)<br>
 HDF5 (Hierarchical Data Format 5) Software Library and Utilities<br>
 Copyright 2006-2013 by The HDF Group.<br>
-
 NCSA HDF5 (Hierarchical Data Format 5) Software Library and Utilities<br>
 Copyright 1998-2006 by the Board of Trustees of the University of Illinois.<br>
 <hr>
@@ -214,68 +213,45 @@ icons provided by Mark James (Birmingham, UK).<br>
 Please visit his web site: http://www.famfamfam.com/<br>
 
 """
-    if (WINOPTS):
-      _Default_Fonts={
-          'Label_Family':'Microsoft Sans Serif',
-          'Label_Size':12,
+
+    __fv=QFont().defaultFamily()
+    __fc=QFont('Courier new')
+
+    _Label_Font=QFont(__fv)
+    _Button_Font=QFont(__fv)
+    _Table_Font=QFont(__fc)
+    _Edit_Font=QFont(__fc)
+    _RName_Font=QFont(__fc)
+    _NName_Font=QFont(__fc)
+    _NName_Font.setBold(True)
+    
+    _Default_Fonts={
+          'Label_Family':_Label_Font.family(),
+          'Label_Size':_Label_Font.pointSize(),
           'Label_Bold':False,
           'Label_Italic':False,
-          'Edit_Family':'courier',
-          'Edit_Size':12,
-          'Edit_Bold':False,
-          'Edit_Italic':False,
-          'Table_Family':'courier',
-          'Table_Size':12,
+          'Table_Family':_Table_Font.family(),
+          'Table_Size':_Table_Font.pointSize(),
           'Table_Bold':False,
           'Table_Italic':False,
-          'Button_Family':'Microsoft Sans Serif',
-          'Button_Size':12,
-          'Button_Bold':False,
-          'Button_Italic':False,
-          'RName_Family':'DejaVu Sans',
-          'RName_Size':12,
-          'RName_Bold':False,
-          'RName_Italic':False,
-          'NName_Family':'DejaVu Sans',
-          'NName_Size':12,
-          'NName_Bold':False,
-          'NName_Italic':False,
-       }
-    else:
-      _Default_Fonts={
-          'Label_Family':'DejaVu Sans',
-          'Label_Size':12,
-          'Label_Bold':False,
-          'Label_Italic':False,
-          'Edit_Family':'courier',
-          'Edit_Size':12,
+          'Edit_Family':_Edit_Font.family(),
+          'Edit_Size':_Edit_Font.pointSize(),
           'Edit_Bold':False,
           'Edit_Italic':False,
-          'Table_Family':'courier',
-          'Table_Size':12,
-          'Table_Bold':False,
-          'Table_Italic':False,
-          'Button_Family':'DejaVu Sans',
-          'Button_Size':12,
+          'Button_Family':_Button_Font.family(),
+          'Button_Size':_Button_Font.pointSize(),
           'Button_Bold':False,
           'Button_Italic':False,
-          'RName_Family':'DejaVu Sans',
-          'RName_Size':12,
+          'RName_Family':_RName_Font.family(),
+          'RName_Size':_RName_Font.pointSize(),
           'RName_Bold':False,
           'RName_Italic':False,
-          'NName_Family':'DejaVu Sans',
-          'NName_Size':12,
+          'NName_Family':_NName_Font.family(),
+          'NName_Size':_NName_Font.pointSize(),
           'NName_Bold':False,
-          'NName_Italic':False,
+          'NName_Italic':True,
        }
 
-    _Label_Font=QFont("Arial")
-    _Table_Font=QFont("Courier")
-    _Edit_Font=QFont("Courier")
-    _Button_Font=QFont("Arial")
-    _RName_Font=QFont("Courier")
-    _NName_Font=QFont("Courier bold")
-    
     UserColors=[
         'gray',
         'red',
@@ -449,103 +425,7 @@ Please visit his web site: http://www.famfamfam.com/<br>
 
     _ReservedNames=CGK.cgnsnames
     _ReservedTypes=CGK.cgnstypes
-
-    _SortedTypeList=[\
-    CGK.CGNSTree_ts,
-    CGK.Family_ts,
-    CGK.FamilyName_ts,
-    CGK.AdditionalFamilyName_ts,
-    CGK.CGNSBase_ts,
-    CGK.Zone_ts,
-    CGK.ZoneType_ts,
-    CGK.GridCoordinates_ts,
-    CGK.Elements_ts,
-    CGK.ZoneBC_ts,
-    CGK.AdditionalExponents_ts,
-    CGK.AdditionalUnits_ts,
-    CGK.ArbitraryGridMotionType_ts,
-    CGK.ArbitraryGridMotion_ts,
-    CGK.AreaType_ts,
-    CGK.Area_ts,
-    CGK.AverageInterfaceType_ts,
-    CGK.AverageInterface_ts,
-    CGK.Axisymmetry_ts,
-    CGK.BCDataSet_ts,
-    CGK.BCData_ts,
-    CGK.BCProperty_ts,
-    CGK.BCTypeSimple_ts,
-    CGK.BCType_ts,
-    CGK.BC_ts,
-    CGK.BaseIterativeData_ts,
-    CGK.ChemicalKineticsModelType_ts,
-    CGK.ChemicalKineticsModel_ts,
-    CGK.ConvergenceHistory_ts,
-    CGK.DataArray_ts,
-    CGK.DataClass_ts,
-    CGK.DataConversion_ts,
-    CGK.DataType_ts,
-    CGK.Descriptor_ts,
-    CGK.DiffusionModel_ts,
-    CGK.DimensionalExponents_ts,
-    CGK.DimensionalUnits_ts,
-    CGK.DiscreteData_ts,
-    CGK.EMConductivityModelType_ts,
-    CGK.EMConductivityModel_ts,
-    CGK.EMElectricFieldModelType_ts,
-    CGK.EMElectricFieldModel_ts,
-    CGK.EMMagneticFieldModelType_ts,
-    CGK.EMMagneticFieldModel_ts,
-    CGK.ElementType_ts,
-    CGK.EquationDimension_ts,
-    CGK.FamilyBC_ts,
-    CGK.FlowEquationSet_ts,
-    CGK.FlowSolution_ts,
-    CGK.GasModelType_ts,
-    CGK.GasModel_ts,
-    CGK.GeometryEntity_ts,
-    CGK.GeometryFile_ts,
-    CGK.GeometryFormat_ts,
-    CGK.GeometryReference_ts,
-    CGK.GoverningEquationsType_ts,
-    CGK.GoverningEquations_ts,
-    CGK.Gravity_ts,
-    CGK.GridConnectivity1to1_ts,
-    CGK.GridConnectivityProperty_ts,
-    CGK.GridConnectivityType_ts,
-    CGK.GridConnectivity_ts,
-    CGK.GridLocation_ts,
-    CGK.IndexArray_ts,
-    CGK.IndexRange_ts,
-    CGK.IntegralData_ts,
-    CGK.InwardNormalIndex_ts,
-    CGK.InwardNormalList_ts,
-    CGK.Ordinal_ts,
-    CGK.OversetHoles_ts,
-    CGK.Periodic_ts,
-    CGK.ReferenceState_ts,
-    CGK.RigidGridMotionType_ts,
-    CGK.RigidGridMotion_ts,
-    CGK.Rind_ts,
-    CGK.RotatingCoordinates_ts,
-    CGK.SimulationType_ts,
-    CGK.ThermalConductivityModelType_ts,
-    CGK.ThermalConductivityModel_ts,
-    CGK.ThermalRelaxationModelType_ts,
-    CGK.ThermalRelaxationModel_ts,
-    CGK.Transform_ts,
-    CGK.TurbulenceClosureType_ts,
-    CGK.TurbulenceClosure_ts,
-    CGK.TurbulenceModelType_ts,
-    CGK.TurbulenceModel_ts,
-    CGK.UserDefinedData_ts,
-    CGK.ViscosityModelType_ts,
-    CGK.ViscosityModel_ts,
-    CGK.WallFunctionType_ts,
-    CGK.WallFunction_ts,
-    CGK.ZoneGridConnectivity_ts,
-    CGK.ZoneIterativeData_ts,
-    CGK.CGNSLibraryVersion_ts,
-    ]
+    _SortedTypeList=CGK.sortedtypelist
 
     _UsualQueries=[
 
