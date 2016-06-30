@@ -24,11 +24,20 @@ WizardSmallImageFile=pyCGNS-wizard-small.bmp
 LicenseFile=..\license.txt
 
 [Files]
-Source: "..\build\exe.win-amd64-2.7\*"; DestDir: "{app}"
+Source: "..\build\exe.win-amd64-2.7\demo\*"; Excludes: "..\build\exe.win-amd64-2.7\demo\DPW5"; DestDir: "{app}\demo"; Components: Demo/Basic
+Source: "..\build\exe.win-amd64-2.7\demo\DPW5\*"; DestDir: "{app}\demo\DPW5"; Components: Demo/Large
+Source: "..\build\exe.win-amd64-2.7\*"; Excludes: "..\build\exe.win-amd64-2.7\demo\*"; DestDir: "{app}"; Components: Core
 Source: "pyCGNS.ico"; DestDir: "{app}"
 
+[Components]
+Name: "Core"; Description: "Core files"; Types: full compact custom; Flags: fixed
+Name: "Demo"; Description: "Demo files"; Types: full
+Name: "Demo/Basic"; Description: "Basic"; Types: full
+Name: "Demo/Large"; Description: "Large"; Types: full
+
+
 [Run]
-Filename: "{app}\cg_look.exe"; Description: "Launch cg_look"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\cg_look.exe"; Description: "Launch cg_look"; WorkingDir: "{app}\demo"; Flags: nowait postinstall skipifsilent
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
