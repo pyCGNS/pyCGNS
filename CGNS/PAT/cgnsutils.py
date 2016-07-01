@@ -784,6 +784,10 @@ def getValueType(v):
    
 # -----------------------------------------------------------------------------
 def setValue(node,value):
+  """
+  Sets an arbitrary value in the node, replacing the existing one.
+  The value is refered-to, no copy, data type is deduced from numpy array
+  data type."""
   if (node is None): return None
   t=getValueType(value)
   if (t == None): node[1]=None
@@ -799,6 +803,7 @@ def setStringByPath(T,path,s):
     p='/{Base#1}/BaseIterativeData/DataClass'
     setStringByPath(T,p,'UserDefined')
 
+    Remark: target node should already exist
   """
   node=getNodeByPath(T,path)
   v=setStringAsArray(s)
@@ -811,6 +816,7 @@ def setStringAsArray(a):
 
        setStringAsArray('UserDefined')
 
+     Remark: target node should already exist
   """
   if ((type(a)==type(numpy.array((1))))
       and (a.shape != ()) and (a.dtype.kind=='S')):
@@ -824,6 +830,8 @@ def setIntegerByPath(T,path,*i):
   """Creates a 1D numpy.ndarray from one or more integers,
      set to node by path. Same as :py:func:`setLongByPath` but with a
      numpy.int32 data type.
+
+     Remark: target node should already exist
   """
   if (type(i)==type(None) or (len(i)==0)): raise CE.cgnsNameError(112)
   node=getNodeByPath(T,path)
@@ -835,6 +843,7 @@ def setIntegerAsArray(*i):
   """Creates a 1D numpy.ndarray from one or more integers.
      Same as :py:func:`setLongAsArray` but with a
      numpy.int32 data type.
+
   """
   if (type(i)==type(None) or (len(i)==0)): raise CE.cgnsNameError(112)
   return numpy.array(i,dtype='i')
@@ -853,6 +862,7 @@ def setLongByPath(T,path,*l):
 
      The set value has numpy.int64 data type
 
+     Remark: target node should already exist
      """
   if (type(l)==type(None) or (len(l)==0)): raise CE.cgnsNameError(112)
   node=getNodeByPath(T,path)
@@ -886,6 +896,7 @@ def setFloatByPath(T,path,*f):
 
      The set value has numpy.float32 data type
 
+     Remark: target node should already exist
      """
   if (type(f)==type(None) or (len(f)==0)): raise CE.cgnsNameError(112)
   node=getNodeByPath(T,path)
@@ -910,7 +921,10 @@ def setFloatAsArray(*f):
 def setDoubleByPath(T,path,*d):
   """Creates a 1D numpy.ndarray from one or more doubles,
      set to node by path. Same as :py:func:`setFloatByPath` but with a
-     numpy.float64 data type."""
+     numpy.float64 data type.
+
+     Remark: target node should already exist
+     """
   if (type(d)==type(None) or (len(d)==0)): raise CE.cgnsNameError(112)
   node=getNodeByPath(T,path)
   setValue(node,numpy.array(d,dtype='d'))
@@ -920,7 +934,9 @@ def setDoubleByPath(T,path,*d):
 def setDoubleAsArray(*d):
   """Creates a 1D numpy.ndarray from one or more doubles.
      Same as :py:func:`setFloatAsArray` but with a
-     numpy.float64 data type."""
+     numpy.float64 data type.
+
+     """
   if (type(d)==type(None) or (len(d)==0)): raise CE.cgnsNameError(112)
   return numpy.array(d,dtype='d')
 

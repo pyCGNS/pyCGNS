@@ -278,10 +278,10 @@ def newDataArray(parent,name,value=None):
   ## code correction:  Add a specific array for string type
   ## code correction:  Modify array check
   if (type(value)==type(3)):
-    vv=NPY.array([value],dtype=NPY.int32,order='Fortran')
+    vv=NPY.array([value],dtype=NPY.int64,order='Fortran')
     CU.checkArray(vv)
   elif(type(value)==type(3.2)):
-    vv=NPY.array([value],dtype=NPY.float32,order='Fortran')
+    vv=NPY.array([value],dtype=NPY.float64,order='Fortran')
     CU.checkArray(vv)
   elif(type(value)==type("s")):
     vv=CU.setStringAsArray(value)
