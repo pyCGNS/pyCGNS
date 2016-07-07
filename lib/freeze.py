@@ -42,7 +42,7 @@ build_exe_options = {
 "excludes": ["tkinter","tcl","tk8.5","PySide","PySide.QtCore","PySide.QtGui",
 ],
 "include_files": ["license.txt",
-r"D:\poinot\AppData\Local\Continuum\Anaconda\Lib\site-packages\pyCGNS-4.6.542-py2.7-win-amd64.egg",
+r"D:\poinot\AppData\Local\Continuum\Anaconda\Lib\site-packages\pyCGNS-4.6.561-py2.7-win-amd64.egg",
 #r"D:\poinot\AppData\Local\Continuum\Anaconda\Lib",
 #r"D:\poinot\AppData\Local\Continuum\Anaconda\DLLs",
 "lib/pyCGNS.ico","lib/pyCGNS-wizard.bmp",

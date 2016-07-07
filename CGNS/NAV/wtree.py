@@ -638,7 +638,9 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
           self._vtkwindow=Q7VTK(self._control,self,node,self.FG.index,
                                 self.model(),zlist)
           if (self._vtkwindow._vtkstatus): self._vtkwindow.show()
-          else: self._vtkwindow=None
+          else: 
+              self._vtkwindow.close()
+              self._vtkwindow=None
           self.readyCursor()
         else:
           self._vtkwindow.raise_()

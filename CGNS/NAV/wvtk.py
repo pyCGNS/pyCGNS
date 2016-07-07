@@ -65,7 +65,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._control=control
       self._fgindex=fgprintindex
       self._tree=Q7FingerPrint.getByIndex(self._fgindex).tree
-      self._vtkstatus=True
+      self._parent=parent
+      self._master=parent
+      self._vtk=None
       if (VTK_VERSION_MAJOR<6):
           MSG.wError(self._control,
                      501,"Your VTK version is lower than v6.0, you should consider upgrading","Oups...")
@@ -77,13 +79,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       # if the parse fails (no data, bad data...) the window has to be deleted
       Q7Window.__init__(self,Q7Window.VIEW_VTK,control,pth,self._fgindex)
       if (not self.wCGNSTreeParse(self._tree,zlist)): return
+      self._vtkstatus=True
       self._xmin=self._ymin=self._zmin=self._xmax=self._ymax=self._zmax=0.0
       self._epix=QIcon(QPixmap(":/images/icons/empty.png"))
       self._spix=QIcon(QPixmap(":/images/icons/selected.png"))
       self._npix=QIcon(QPixmap(":/images/icons/unselected.png"))
       self._hpix=QIcon(QPixmap(":/images/icons/hidden.png"))
-      self._parent=parent
-      self._master=parent
       self.lut=None
       self.grid_dims=None
       self.mincolor=None
@@ -1151,9 +1152,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
   def reject(self):
       # some blocking cases may lead to a not-already defined self._master
       # thus closing the window raises an AttributeError
-      if (self._master._vtkwindow is not None):
+      if (self._vtk is not None):
           self._vtk.GetRenderWindow().Finalize()
-          self._master._vtkwindow=None
+      self._master._vtkwindow=None
         
   def changeCurrentActor(self,act,combo=True):
     self._selected=[]
@@ -1217,11 +1218,12 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       self._vtkren.AddActor(actor2)
       self.CurrentRenderer=self._vtkren
       self.Outline=vtk.vtkStructuredGridOutlineFilter()
-      self.Outline.SetInputData(actor2.GetMapper().GetInput())
       self.OutlineMapper=vtk.vtkPolyDataMapper()
       if (VTK_VERSION_MAJOR<6):
+          self.Outline.SetInput(actor2.GetMapper().GetInput())
           self.OutlineMapper.SetInput(self.Outline.GetOutput())
       else:
+          self.Outline.SetInputData(actor2.GetMapper().GetInput())
           self.OutlineMapper.SetInputConnection(self.Outline.GetOutputPort())
       if (None not in [self.PickedRenderer,self.OutlineActor]):
           self.PickedRenderer.RemoveActor(self.OutlineActor)
