@@ -505,6 +505,7 @@ class Q7TreeItem(object):
         self._title=COLUMN_TITLE
         if (parent is not None): self._path=parent.sidsPath()+'/'+data[0]
         else:                    self._path=''
+        self._path=CGU.getPathNormalize(self._path)
         self._depth=self._path.count('/')
         self._size=None
         self._fgindex=fgprintindex

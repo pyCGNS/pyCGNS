@@ -136,7 +136,7 @@ class CGNSparser:
 
   def parseZones(self,zlist=[]):
     T=self._tree
-    if (T[0]==None):
+    if (T[0] is None):
       T[0]=CGK.CGNSTree_s
       T[3]=CGK.CGNSTree_ts
     for r in CGU.getAllNodesByTypeSet(T,[CGK.ConvergenceHistory_ts]):
@@ -160,7 +160,7 @@ class CGNSparser:
           zonetype=CGU.getAllNodesByTypeSet(zT,[CGK.ZoneType_ts])
           ztype=CGU.nodeByPath(zonetype[0],zT)
           if (ztype[1].tostring()==CGK.Structured_s):
-            if (cx[1]==None) : return False
+            if (cx[1] is None) : return False
             acx=cx[1]
             acy=cy[1]
             acz=cz[1]

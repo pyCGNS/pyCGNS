@@ -26,14 +26,16 @@ LicenseFile=..\license.txt
 [Files]
 Source: "..\build\exe.win-amd64-2.7\demo\*"; Excludes: "..\build\exe.win-amd64-2.7\demo\DPW5"; DestDir: "{app}\demo"; Components: Demo/Basic
 Source: "..\build\exe.win-amd64-2.7\demo\DPW5\*"; DestDir: "{app}\demo\DPW5"; Components: Demo/Large
+Source: "..\build\exe.win-amd64-2.7\demo\124Disk-PASS\*"; DestDir: "{app}\demo\124Disk-PASS"; Components: Demo/Basic
+Source: "..\build\exe.win-amd64-2.7\demo\124Disk-FAIL\*"; DestDir: "{app}\demo\124Disk-FAIL"; Components: Demo/Basic
 Source: "..\build\exe.win-amd64-2.7\*"; Excludes: "..\build\exe.win-amd64-2.7\demo\*"; DestDir: "{app}"; Components: Core
 Source: "pyCGNS.ico"; DestDir: "{app}"
 
 [Components]
 Name: "Core"; Description: "Core files"; Types: full compact custom; Flags: fixed
 Name: "Demo"; Description: "Demo files"; Types: full
-Name: "Demo/Basic"; Description: "Basic"; Types: full
-Name: "Demo/Large"; Description: "Large"; Types: full
+Name: "Demo/Basic"; Description: "Basic example files"; Types: full
+Name: "Demo/Large"; Description: "Large example files"; Types: full
 
 
 [Run]

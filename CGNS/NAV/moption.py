@@ -707,14 +707,14 @@ Once found, the parent <b>BC_t</b> value is forced to <b>FamilySpecified</b>
  """,
  """Find all <b>Elements_t</b> nodes of type <b>NGON_n</b>""",False,False),
 
-('024 Elements HEXA',
+('024. Elements HEXA',
  'Find Elements_t',
  """if (SIDSTYPE==CGK.Elements_ts):
    RESULT=VALUE[0] in (CGK.HEXA_8, CGK.HEXA_20, CGK.HEXA_27)
  """,
  """Find all <b>Elements_t</b> nodes of type <b>HEXA</b>""",False,False),
 
-('025 Elements TETRA',
+('025. Elements TETRA',
  'Find Elements_t',
  """if (SIDSTYPE==CGK.Elements_ts):
    RESULT=VALUE[0] in (CGK.TETRA_4, CGK.TETRA_10)

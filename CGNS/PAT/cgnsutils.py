@@ -10,6 +10,7 @@ import CGNS.PAT.cgnserrors   as CE
 
 import numpy
 
+from os import sep as SEPARATOR
 import os.path as PTH
 import string
 import re
@@ -2080,7 +2081,7 @@ def getPathLeaf(path):
 # --------------------------------------------------   
 def getPathNoRoot(path):
   """
-  Return the path without the implementation nodes 'HDF5 Mother node'
+  Return an absolute path without the implementation nodes 'HDF5 Mother node'
   or 'CGNSTree' if detected as first element::
 
     print getPathNoRoot('/HDF5 Mother Node/Base/Zone/ZoneBC')
@@ -2089,6 +2090,7 @@ def getPathNoRoot(path):
   :arg str path: the path of the node
   :return: The new path without root implementation node if found
   :Remarks:
+    - a '/' is expected as first char, it is forced if not found
     - The path is processed by :py:func:`getPathNormalize`
     - Implementation root can be CGNS.PAT.cgnskeywords.CGNSHDF5ROOT_s as 
       well as CGNS.PAT.cgnskeywords.CGNSTree_s
@@ -2096,12 +2098,14 @@ def getPathNoRoot(path):
   """
   path=getPathNormalize(path)
   if (path in [None,"",".",'/',"/"+CK.CGNSHDF5ROOT_s, "/"+CK.CGNSTree_s]): return "/"
+  if (path[0]!='/'): path='/'+path
   lp=path.split('/')
   if (lp[0] in [CK.CGNSHDF5ROOT_s, CK.CGNSTree_s]): lp=lp[1:]
   if ((lp[0]=='')
       and (len(lp)>1)
       and (lp[1] in [CK.CGNSHDF5ROOT_s, CK.CGNSTree_s])): lp=[lp[0]]+lp[2:]
   path='/'.join(lp)
+  if ((path=='') or (path[0]!='/')): path='/'+path
   return path
 
 # --------------------------------------------------   
@@ -2135,30 +2139,40 @@ def getPathAsTypes(tree,path,legacy=True):
 
 # --------------------------------------------------   
 def getPathNormalize(path):
-  """Return the same path as minimal string, removes `////` and `/./` and
-  other simplifiable UNIX-like path elements::
-
-      # a checkPath here would fail, because single or double dots are not
-      # allowed as a node name. But actually this is allowed as a
-      # path description
-      p=getPathNormalize('///Base/././//Zone/../Zone/./ZoneBC//.')
+    """Return the same path as minimal string, removes `////` and `/./` and
+       other simplifiable UNIX-like path elements::
     
-      # would return '/Base/Zone/ZoneBC'
-      if (not checkPath(p)):
-         print 'something bad happens'
-
-  :arg str path: the path of the node
-  :return: The simplified path
-  :Remarks:
-    - Uses *os.path.normpath* and replaces \\ if windows os.path
-    - Before its normalization a path can be **non-compliant**
-   
-  """
-  if (path is None): return None
-  if (path and ((path[0]=='/') or (path[0]=='\\'))): path='///'+path
-  if (PTH.sep=='\\'):path.replace('/','\\')
-  path=PTH.normpath(path).replace('\\','/')
-  return path
+          # a checkPath here would fail, because single or double dots are not
+          # allowed as a node name. But actually this is allowed as a
+          # path description
+          p=getPathNormalize('///Base/././//Zone/../Zone/./ZoneBC//.')
+        
+          # would return '/Base/Zone/ZoneBC'
+          if (not checkPath(p)):
+             print 'something bad happens'
+    
+      :arg str path: the path of the node
+      :return: The simplified path
+      :Remarks:
+        - Uses *os.path.normpath* and replaces \\ if windows os.path
+        - Before its normalization a path can be **non-compliant**
+       
+    """
+    if (path==''): return '.'
+    if (path is None): return '/'
+    first=((len(path)>0) and (path[0]=='/'))
+    result_tokens=[]
+    tokens=path.split('/')
+    for token in tokens:
+        if (token in ['','.']): continue
+        if (result_tokens and (token=='..')):
+            result_tokens.pop()
+        else:
+            result_tokens.append(token)
+    path='/'.join(result_tokens)
+    if (first): path='/'+path
+    if (path==''): path='.'
+    return path
 
 # --------------------------------------------------
 def childNames(node):
