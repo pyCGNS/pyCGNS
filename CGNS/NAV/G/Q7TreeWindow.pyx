@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7TreeWindow.ui'
 #
-# Created: Thu Jun 30 10:51:23 2016
+# Created: Thu Jul  7 14:45:06 2016
 #      by: PyQt4 UI code generator 4.11.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -309,8 +309,8 @@ class Ui_Q7TreeWindow(object):
         self.lineEditLock.setMaximumSize(QtCore.QSize(25, 25))
         self.lineEditLock.setText(_fromUtf8(""))
         icon27 = QtGui.QIcon()
-        icon27.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/optional-sids-node.gif")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon27.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/lock-scroll.gif")), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon27.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/optional-sids-node.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon27.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/lock-scroll.png")), QtGui.QIcon.Normal, QtGui.QIcon.On)
         self.lineEditLock.setIcon(icon27)
         self.lineEditLock.setCheckable(True)
         self.lineEditLock.setObjectName(_fromUtf8("lineEditLock"))

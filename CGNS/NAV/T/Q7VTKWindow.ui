@@ -697,7 +697,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/user-U.gif</normaloff>:/images/icons/user-U.gif</iconset>
+         <normaloff>:/images/icons/user-U.png</normaloff>:/images/icons/user-U.png</iconset>
        </property>
       </widget>
      </item>
@@ -742,7 +742,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/user-U.gif</normaloff>:/images/icons/user-U.gif</iconset>
+         <normaloff>:/images/icons/user-U.png</normaloff>:/images/icons/user-U.png</iconset>
        </property>
       </widget>
      </item>

@@ -307,7 +307,7 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/flag-none.gif</normaloff>:/images/icons/flag-none.gif</iconset>
+           <normaloff>:/images/icons/flag-none.png</normaloff>:/images/icons/flag-none.png</iconset>
          </property>
         </widget>
         <widget class="QFrame" name="bApplyBox">
@@ -977,7 +977,7 @@
              </property>
              <property name="icon">
               <iconset resource="../R/Res.qrc">
-               <normaloff>:/images/icons/operate-execute.gif</normaloff>:/images/icons/operate-execute.gif</iconset>
+               <normaloff>:/images/icons/operate-execute.png</normaloff>:/images/icons/operate-execute.png</iconset>
              </property>
             </widget>
             <widget class="Line" name="line">

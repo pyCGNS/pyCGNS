@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7MergeWindow.ui'
 #
-# Created: Thu Jun 30 10:51:25 2016
+# Created: Thu Jul  7 14:45:09 2016
 #      by: PyQt4 UI code generator 4.11.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -39,7 +39,7 @@ class Ui_Q7MergeWindow(object):
         self.bSelectA.setMaximumSize(QtCore.QSize(24, 24))
         self.bSelectA.setText(_fromUtf8(""))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/user-A.gif")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/user-A.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bSelectA.setIcon(icon1)
         self.bSelectA.setCheckable(True)
         self.bSelectA.setChecked(True)
@@ -50,7 +50,7 @@ class Ui_Q7MergeWindow(object):
         self.bSelectOrderSwap.setMaximumSize(QtCore.QSize(24, 24))
         self.bSelectOrderSwap.setText(_fromUtf8(""))
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/reverse.gif")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/reverse.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bSelectOrderSwap.setIcon(icon2)
         self.bSelectOrderSwap.setObjectName(_fromUtf8("bSelectOrderSwap"))
         self.horizontalLayout.addWidget(self.bSelectOrderSwap)
@@ -59,7 +59,7 @@ class Ui_Q7MergeWindow(object):
         self.bSelectB.setMaximumSize(QtCore.QSize(24, 24))
         self.bSelectB.setText(_fromUtf8(""))
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/user-B.gif")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/user-B.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bSelectB.setIcon(icon3)
         self.bSelectB.setCheckable(True)
         self.bSelectB.setChecked(True)

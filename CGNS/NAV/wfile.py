@@ -92,8 +92,8 @@ class Q7FileIconProvider(QFileIconProvider):
     slist=['hdf','HDF','cgns','CGNS','adf','ADF']
     def __init__(self):
         super(Q7FileIconProvider, self).__init__()
-        self.dir=QIcon(QPixmap(":/images/icons/folder.gif"))
-        self.cgns=QIcon(QPixmap(":/images/icons/tree-load.gif"))
+        self.dir=QIcon(QPixmap(":/images/icons/folder.png"))
+        self.cgns=QIcon(QPixmap(":/images/icons/tree-load.png"))
         self.empty=QIcon()
     def icon(self,fileinfo):
         if (type(fileinfo) is not QFileInfo): return self.empty

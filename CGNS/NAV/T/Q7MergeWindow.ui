@@ -39,7 +39,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/user-A.gif</normaloff>:/images/icons/user-A.gif</iconset>
+         <normaloff>:/images/icons/user-A.png</normaloff>:/images/icons/user-A.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -71,7 +71,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/reverse.gif</normaloff>:/images/icons/reverse.gif</iconset>
+         <normaloff>:/images/icons/reverse.png</normaloff>:/images/icons/reverse.png</iconset>
        </property>
       </widget>
      </item>
@@ -94,7 +94,7 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/user-B.gif</normaloff>:/images/icons/user-B.gif</iconset>
+         <normaloff>:/images/icons/user-B.png</normaloff>:/images/icons/user-B.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7LogWindow.ui'
 #
-# Created: Thu Jun 30 10:51:38 2016
+# Created: Thu Jul  7 14:45:23 2016
 #      by: PyQt4 UI code generator 4.11.1
 #
 # WARNING! All changes made in this file will be lost!

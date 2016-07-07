@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ToolsWindow.ui'
 #
-# Created: Thu Jun 30 10:51:35 2016
+# Created: Thu Jul  7 14:45:19 2016
 #      by: PyQt4 UI code generator 4.11.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -124,7 +124,7 @@ class Ui_Q7ToolsWindow(object):
         self.pushButton.setMaximumSize(QtCore.QSize(25, 25))
         self.pushButton.setText(_fromUtf8(""))
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/flag-none.gif")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/flag-none.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton.setIcon(icon2)
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.bApplyBox = QtGui.QFrame(self.Queries)
@@ -310,9 +310,7 @@ class Ui_Q7ToolsWindow(object):
         self.bRunSearch.setMinimumSize(QtCore.QSize(24, 24))
         self.bRunSearch.setMaximumSize(QtCore.QSize(24, 24))
         self.bRunSearch.setText(_fromUtf8(""))
-        icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/operate-execute.gif")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bRunSearch.setIcon(icon7)
+        self.bRunSearch.setIcon(icon3)
         self.bRunSearch.setObjectName(_fromUtf8("bRunSearch"))
         self.line = QtGui.QFrame(self.groupBox)
         self.line.setGeometry(QtCore.QRect(10, 215, 516, 16))
@@ -332,9 +330,9 @@ class Ui_Q7ToolsWindow(object):
         self.bFindQuery.setMinimumSize(QtCore.QSize(24, 24))
         self.bFindQuery.setMaximumSize(QtCore.QSize(24, 24))
         self.bFindQuery.setText(_fromUtf8(""))
-        icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/zoompoint.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bFindQuery.setIcon(icon8)
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/zoompoint.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bFindQuery.setIcon(icon7)
         self.bFindQuery.setObjectName(_fromUtf8("bFindQuery"))
         self.eWithLinks = QtGui.QCheckBox(self.groupBox)
         self.eWithLinks.setGeometry(QtCore.QRect(385, 180, 111, 20))
@@ -447,9 +445,9 @@ class Ui_Q7ToolsWindow(object):
         self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
         self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
         self.bInfo.setText(_fromUtf8(""))
-        icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/help-view.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bInfo.setIcon(icon9)
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/help-view.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bInfo.setIcon(icon8)
         self.bInfo.setObjectName(_fromUtf8("bInfo"))
         self.horizontalLayout.addWidget(self.bInfo)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)

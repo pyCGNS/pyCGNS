@@ -1118,7 +1118,7 @@
          </property>
          <property name="icon">
           <iconset resource="../R/Res.qrc">
-           <normaloff>:/images/icons/undo-last-modification.gif</normaloff>:/images/icons/undo-last-modification.gif</iconset>
+           <normaloff>:/images/icons/undo-last-modification.png</normaloff>:/images/icons/undo-last-modification.png</iconset>
          </property>
         </widget>
        </widget>

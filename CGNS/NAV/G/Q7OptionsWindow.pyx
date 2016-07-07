@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created: Thu Jun 30 11:10:59 2016
+# Created: Thu Jul  7 14:45:10 2016
 #      by: PyQt4 UI code generator 4.11.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -365,7 +365,7 @@ class Ui_Q7OptionsWindow(object):
         self.bResetFonts.setMaximumSize(QtCore.QSize(25, 25))
         self.bResetFonts.setText(_fromUtf8(""))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/undo-last-modification.gif")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/undo-last-modification.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bResetFonts.setIcon(icon1)
         self.bResetFonts.setObjectName(_fromUtf8("bResetFonts"))
         self.tabs.addTab(self.tab_3, _fromUtf8(""))

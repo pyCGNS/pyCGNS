@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7SelectionWindow.ui'
 #
-# Created: Thu Jun 30 10:51:31 2016
+# Created: Thu Jul  7 14:45:15 2016
 #      by: PyQt4 UI code generator 4.11.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -35,7 +35,7 @@ class Ui_Q7SelectionWindow(object):
         Q7SelectionWindow.setMinimumSize(QtCore.QSize(0, 0))
         Q7SelectionWindow.setMaximumSize(QtCore.QSize(90000, 90000))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/cgSpy.gif")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/cgSpy.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Q7SelectionWindow.setWindowIcon(icon)
         self.gridLayout = QtGui.QGridLayout(Q7SelectionWindow)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))

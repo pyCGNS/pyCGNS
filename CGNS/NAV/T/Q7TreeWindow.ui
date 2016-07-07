@@ -913,8 +913,8 @@
        </property>
        <property name="icon">
         <iconset resource="../R/Res.qrc">
-         <normaloff>:/images/icons/optional-sids-node.gif</normaloff>
-         <normalon>:/images/icons/lock-scroll.gif</normalon>:/images/icons/optional-sids-node.gif</iconset>
+         <normaloff>:/images/icons/optional-sids-node.png</normaloff>
+         <normalon>:/images/icons/lock-scroll.png</normalon>:/images/icons/optional-sids-node.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>

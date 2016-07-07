@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7VTKWindow.ui'
 #
-# Created: Thu Jun 30 10:51:39 2016
+# Created: Thu Jul  7 14:45:23 2016
 #      by: PyQt4 UI code generator 4.11.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -283,7 +283,7 @@ class Ui_Q7VTKWindow(object):
         self.bUpdateFromTree.setMaximumSize(QtCore.QSize(25, 25))
         self.bUpdateFromTree.setText(_fromUtf8(""))
         icon15 = QtGui.QIcon()
-        icon15.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/user-U.gif")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon15.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/icons/user-U.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bUpdateFromTree.setIcon(icon15)
         self.bUpdateFromTree.setObjectName(_fromUtf8("bUpdateFromTree"))
         self.horizontalLayout_4.addWidget(self.bUpdateFromTree)
