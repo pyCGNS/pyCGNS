@@ -39,6 +39,7 @@ except KeyError:
 
 try:
   import PyQt4.QtCore
+  import PyQt4.QtGui
 except:
   print """CGNS.NAV: FATAL error, cannot import PyQt4.QtCore..."""
   sys.exit(-1)

@@ -50,7 +50,7 @@ actual CFD data!
 
 .. sidebar:: Release 4.6 (June 2016)
 
-   - Move to PyQt
+   - Move to PyQt (NOT PySide compatible)
    - Windows version update
 
 There are seven sub-modules in
