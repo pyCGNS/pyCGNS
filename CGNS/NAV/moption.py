@@ -134,8 +134,8 @@ except NameError:
     
     _CopyrightNotice=u"""
 Copyright (c) Marc Poinot <br>
-Copyright (c) Onera - The French Aerospace Labs<br>
-<b>all other copyrights at the end of this page</b>
+Copyright (c) Onera - The French Aerospace Labs<br><br>
+<b>all other copyrights and used versions listed below</b>
 
 <hr>
 <h3>Contributors (alphabetic order)</h3>
@@ -155,23 +155,27 @@ Copyright (c) Onera - The French Aerospace Labs<br>
 <tr><td>Ching-Yang Wang</td><td>-U.S.A.</td></tr>
 </table>
 
-<h2>Copyrights</h2>
+<h2>Copyrights & Versions</h2>
 <hr>
+%(pycgnsversion)s<br>
 All <b>pyCGNS</b> 
 rights reserved in accordance with GPL v2 <br><br>
 <b>NO WARRANTY :</b><br>
 Check GPL v2 sections 15 and 16
 about <font color=red>loss of data or corrupted data</font><br>
 <hr>
+%(pyqtversion)s<br>
 PyQt Copyright (c) Riverbank Computing Limited. <br>
 Usage within the terms of the GPL v2.<br>
 All Rights Reserved.<br>
 <hr>
+%(qtversion)s<br>
 Qt Copyright (c)<br>
 The Qt4 Library is (c) 2011 Nokia Corporation and/or its subsidiary(-ies),
 and is licensed under the GNU Lesser General Public License version 2.1
 with Nokia Qt LGPL exception version 1.1. <br>
 <hr>
+%(pythonversion)s<br>
 Python Copyright (c)<br>
 Copyright (c) 2001-2011 Python Software Foundation.<br>
 All Rights Reserved.<br>
@@ -186,23 +190,28 @@ Copyright (c) 1991-1995 Stichting Mathematisch Centrum, Amsterdam.<br>
 All Rights Reserved.<br>
 <br>
 <hr>
+%(numpyversion)s<br>
 Numpy Copyright (c)<br>
 Copyright (c) 2005, NumPy Developers<br>
 <hr>
+%(hdf5version)s<br>
 HDF5 Copyright (c)<br>
 HDF5 (Hierarchical Data Format 5) Software Library and Utilities<br>
 Copyright 2006-2013 by The HDF Group.<br>
 NCSA HDF5 (Hierarchical Data Format 5) Software Library and Utilities<br>
 Copyright 1998-2006 by the Board of Trustees of the University of Illinois.<br>
 <hr>
+%(chloneversion)s<br>
 CHLone Copyright (c)<br>
 Copyright (c) Marc Poinot <br>
 Copyright (c) Onera - The French Aerospace Labs<br>
 <hr>
+%(vtkversion)s<br>
 VTK Copyright (c)<br>
 Copyright (c) 1993-2008 Ken Martin, Will Schroeder, Bill Lorensen <br>
 All rights reserved.<br>
 <hr>
+%(cythonversion)s<br>
 Cython Copyright (c)<br>
 (c) Copyright 2012, Stefan Behnel, Robert Bradshaw, Dag Sverre Seljebotn,
 Greg Ewing, William Stein, Gabriel Gellner, et al.

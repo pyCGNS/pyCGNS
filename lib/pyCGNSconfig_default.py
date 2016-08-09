@@ -30,6 +30,7 @@ HAS_HDF5=False
 
 # useless with distutils but maybe required for other external libs
 PYTHON_VERSION          = "%d.%d"%(sys.version_info[0],sys.version_info[1])
+PYTHON_VERSION_FULL     = "%d.%d.%d"%sys.version_info[0:3]
 PYTHON_PATH_INCLUDES    = [sys.prefix+'/include']
 PYTHON_PATH_LIBRARIES   = [sys.prefix+'/lib']
 PYTHON_LINK_LIBRARIES   = [] 
@@ -50,6 +51,7 @@ MLL_VERSION           = ''
 MLL_EXTRA_ARGS        = []
 
 NUMPY_VERSION         = ''
+NUMPY_VERSION_API     = ''
 NUMPY_PATH_INCLUDES   = []
 NUMPY_PATH_LIBRARIES  = []
 NUMPY_LINK_LIBRARIES  = []
@@ -60,6 +62,11 @@ CHLONE_PATH_INCLUDES   = []
 CHLONE_PATH_LIBRARIES  = []
 CHLONE_LINK_LIBRARIES  = []
 CHLONE_EXTRA_ARGS      = []
+
+PYQT_VERSION=''
+QT_VERSION=''
+CYTHON_VERSION=''
+VTK_VERSION=''
 
 # cannot manage include orders here...
 INCLUDE_DIRS=INCLUDE_DIRS+PYTHON_PATH_INCLUDES+HDF5_PATH_INCLUDES\
@@ -73,8 +80,8 @@ LIBRARY_DIRS+=LIBRARY_DIRS+PYTHON_PATH_LIBRARIES+HDF5_PATH_LIBRARIES\
 PFX='### pyCGNS:'
 #
 __version__=4 # @@UPDATEVERSION@@
-__release__=6 # @@UPDATERELEASE@@
-__revision__=569 # @@UPDATEREVISION@@
+__release__=7 # @@UPDATERELEASE@@
+__revision__=571 # @@UPDATEREVISION@@
 __vid__="%s.%s.%s"%(__version__,__release__,__revision__)
 __doc__="""pyCGNS - %s - Python package for CFD General Notation System"""\
         %(__vid__)
@@ -100,6 +107,7 @@ INCLUDE_DIRS=%(INCLUDE_DIRS)s
 LIBRARY_DIRS=%(LIBRARY_DIRS)s
 
 PYTHON_VERSION='%(PYTHON_VERSION)s'
+PYTHON_VERSION_FULL='%(PYTHON_VERSION_FULL)s'
 PYTHON_PATH_LIBRARIES=%(PYTHON_PATH_LIBRARIES)s
 PYTHON_LINK_LIBRARIES=%(PYTHON_LINK_LIBRARIES)s
 PYTHON_PATH_INCLUDES=%(PYTHON_PATH_INCLUDES)s
@@ -124,14 +132,20 @@ CHLONE_LINK_LIBRARIES=%(CHLONE_LINK_LIBRARIES)s
 CHLONE_EXTRA_ARGS=%(CHLONE_EXTRA_ARGS)s
 
 NUMPY_VERSION='%(NUMPY_VERSION)s'
+NUMPY_VERSION_API='%(NUMPY_VERSION_API)s'
 NUMPY_PATH_INCLUDES=%(NUMPY_PATH_INCLUDES)s
 NUMPY_PATH_LIBRARIES=%(NUMPY_PATH_LIBRARIES)s
 NUMPY_LINK_LIBRARIES=%(NUMPY_LINK_LIBRARIES)s
 NUMPY_EXTRA_ARGS=%(NUMPY_EXTRA_ARGS)s
 
+PYQT_VERSION='%(PYQT_VERSION)s'
+QT_VERSION='%(QT_VERSION)s'
+CYTHON_VERSION='%(CYTHON_VERSION)s'
+VTK_VERSION='%(VTK_VERSION)s'
+
 __version__=4 # @@UPDATEVERSION@@
-__release__=6 # @@UPDATERELEASE@@
-__revision__=569 # @@UPDATEREVISION@@
+__release__=7 # @@UPDATERELEASE@@
+__revision__=571 # @@UPDATEREVISION@@
 __vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
 __doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
         %%(__vid__)

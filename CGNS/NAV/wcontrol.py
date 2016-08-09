@@ -7,6 +7,8 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import sys
 
+import CGNS.config as config
+
 import CGNS.PAT.cgnslib   as CGL
 import CGNS.PAT.cgnsutils as CGU
 
@@ -52,6 +54,16 @@ class Q7Main(QW, Ui_Q7ControlWindow):
     def __init__(self, parent=None):
         QW.control_log=MSG.Q7Log()
         QW.__init__(self,QW.VIEW_CONTROL,self,None,None)
+        self.versions={'pycgnsversion':'pyCGNS v%s'%config.version,
+                       'chloneversion':'CHLone %s'%config.CHLONE_VERSION,
+                       'vtkversion':'VTK v%s'%config.VTK_VERSION,
+                       'cythonversion':'Cython v%s'%config.CYTHON_VERSION,
+                       'hdf5version':'HDF5 v%s'%config.HDF5_VERSION,
+                       'numpyversion':'numpy v%s'%config.NUMPY_VERSION,
+                       'pythonversion':'python v%s'%config.PYTHON_VERSION_FULL,
+                       'pyqtversion':'PyQt v%s'%config.PYQT_VERSION,
+                       'qtversion':'Qt v%s'%config.QT_VERSION,
+                       }
         self.getHistory()
         self.bAbout.clicked.connect(self.about)
         self.bOptionView.clicked.connect(self.option)
@@ -175,7 +187,7 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.wOption.show()
     def about(self):
         MSG.wInfo(self,100,"pyCGNS v%s"%(OCTXT._ToolVersion),
-                  OCTXT._CopyrightNotice,again=False)
+                  OCTXT._CopyrightNotice%self.versions,again=False)
     def closeApplication(self):
         reply = MSG.wQuestion(self,101,'Double check...',
                             """Do you want to quit %s,<b>close all views</b>

@@ -4,7 +4,7 @@
 #  -------------------------------------------------------------------------
 #
 MAJORVERSION=4
-MINORVERSION=6
+MINORVERSION=7
 REVISION=0
 # --------------------------------------------------------------------
 
@@ -120,6 +120,7 @@ def search(incs,libs,tag='pyCGNS',
         C.HAS_CYTHON=True
         print pfx+'using Cython v%s'%Cython.__version__
         C.HAS_CYTHON_2PLUS=False
+        C.CYTHON_VERSION=Cython.__version__
         try:
           if (float(Cython.__version__[:3])>0.1):
             C.HAS_CYTHON_2PLUS=True
@@ -142,6 +143,8 @@ def search(incs,libs,tag='pyCGNS',
         
         C.HAS_PYQT4=True
         print pfx+'using PyQt4 v%s (Qt v%s)'%(PYQT_VERSION_STR,QT_VERSION_STR)
+        C.PYQT_VERSION=PYQT_VERSION_STR
+        C.QT_VERSION=QT_VERSION_STR
       except:
         C.HAS_PYQT4=False
         print pfx+'ERROR PyQt4 not found'
@@ -153,6 +156,7 @@ def search(incs,libs,tag='pyCGNS',
         v=vtk.vtkVersion()
         C.HAS_VTK=True
         print pfx+'using vtk (python module) v%s'%v.GetVTKVersion()
+        C.VTK_VERSION=v.GetVTKVersion()
       except:
         C.HAS_VTK=False
         print pfx+'ERROR no vtk python module'
@@ -166,11 +170,13 @@ def search(incs,libs,tag='pyCGNS',
         print pfx+'FATAL: setup cannot find Numpy'
         sys.exit(1)
       (C.NUMPY_VERSION,
+       C.NUMPY_VERSION_API,
        C.NUMPY_PATH_INCLUDES,
        C.NUMPY_PATH_LIBRARIES,
        C.NUMPY_LINK_LIBRARIES,
        C.NUMPY_EXTRA_ARGS)=tp
-      print pfx+'using Numpy API version %s'%(C.NUMPY_VERSION,)
+      print pfx+'using Numpy version %s'%(C.NUMPY_VERSION,)
+      print pfx+'using Numpy API version %s'%(C.NUMPY_VERSION_API,)
       print pfx+'using Numpy headers from %s'%(C.NUMPY_PATH_INCLUDES[0])
       C.HAS_NUMPY=True
       incs=incs+C.NUMPY_PATH_INCLUDES
@@ -223,7 +229,7 @@ def search(incs,libs,tag='pyCGNS',
         import CHLone
         C.HAS_CHLONE=True
         print pfx+'using CHLone %s'%CHLone.version
-        
+        C.CHLONE_VERSION=CHLone.version
       except:
         print pfx+'ERROR setup cannot import CHLone!'
         C.HAS_CHLONE=False
@@ -508,7 +514,8 @@ def find_MLL(pincs,plibs,libs,extraargs):
 # --------------------------------------------------------------------
 def find_numpy(pincs,plibs,libs):
   import numpy
-  vers=''
+  apivers=''
+  vers=numpy.version.version
   extraargs=[]
   pdir=os.path.normpath(sys.prefix)
   xdir=os.path.normpath(sys.exec_prefix)
@@ -528,7 +535,7 @@ def find_numpy(pincs,plibs,libs):
       found=0
       for ifh in fl:
         if (ifh[:20] == "#define NPY_VERSION "):
-          vers=ifh.split()[-1]
+          apivers=ifh.split()[-1]
           found=1
       if found:
         pincs=[pth]
@@ -541,7 +548,7 @@ def find_numpy(pincs,plibs,libs):
       found=0
       for ifh in fl:
         if (ifh[:24] == "#define NPY_ABI_VERSION "):
-          vers=ifh.split()[-1]
+          apivers=ifh.split()[-1]
           found=1
       if found:
         pincs=[pth]
@@ -552,7 +559,7 @@ def find_numpy(pincs,plibs,libs):
     print pfx,pincs
     return None
   
-  return (vers,pincs,plibs,libs,extraargs)
+  return (vers,apivers,pincs,plibs,libs,extraargs)
 
 # --------------------------------------------------------------------
 def touch(filename):
