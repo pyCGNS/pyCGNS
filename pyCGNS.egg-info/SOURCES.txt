@@ -13,6 +13,7 @@ CGNS/APP/lib/cg_com.py
 CGNS/APP/lib/hashutils.c
 CGNS/APP/lib/linkZoneGridConnectivities.py
 CGNS/APP/lib/mergeTrees.py
+CGNS/APP/lib/queries.py
 CGNS/APP/lib/unstructured.py
 CGNS/APP/misc/checktypes.py
 CGNS/APP/test/__init__.py
@@ -73,7 +74,9 @@ CGNS/NAV/mpattern.pyx
 CGNS/NAV/mquery.pyx
 CGNS/NAV/mtable.pyx
 CGNS/NAV/mtree.pyx
+CGNS/NAV/pqueries.py
 CGNS/NAV/script.py
+CGNS/NAV/uqueries.py
 CGNS/NAV/wcontrol.py
 CGNS/NAV/wdiag.py
 CGNS/NAV/wdifftreeview.py
