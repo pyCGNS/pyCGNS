@@ -26,6 +26,7 @@ doc1="""
   pyCGNS v%s
   
   The result of the list is one line per found file/node.
+
 """%(CGNS.version.id)
 
 doc2="""

@@ -20,6 +20,7 @@ CGNS/APP/test/__init__.py
 CGNS/APP/test/cgu.py
 CGNS/APP/tools/cg_checksum
 CGNS/APP/tools/cg_diff
+CGNS/APP/tools/cg_dump
 CGNS/APP/tools/cg_gather
 CGNS/APP/tools/cg_grep
 CGNS/APP/tools/cg_iges

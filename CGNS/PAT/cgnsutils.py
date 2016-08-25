@@ -2687,26 +2687,41 @@ def toStringValue(v):
   return "numpy.array(%s,dtype='%s',order='%s')"%(av,at,ao)
 
 # --------------------------------------------------
-def toStringChildren(l,readable=False,shift=0):
+def toStringChildren(l,readable=False,shift=0,keywords=False,pycgns=False):
   """ASCII pretty print of one children node list."""
   s="["
   for c in l:
-    s+=toString(c,readable,shift)
+    s+=toString(c,readable,shift,keywords)
     s+=','
-  s+=']'
+  if (l): s=s[:-1]
+  if (readable and l): s+='],\n'+(shift-1)*' '
+  else: s+='],'
   return s
 
 # --------------------------------------------------
-def prettyPrint(tree,path='',depth=0):
+def prettyPrint(tree,path='',depth=0,sort=False,links=[],paths=[]):
   """ASCII pretty print of the whole tree."""
   print depth*' ',
-  n="%s(%s)"%(tree[0],tree[3]),
+  path=path+'/'+tree[0]
+  pnr=getPathNoRoot(path)
+  nt=getNodeType(tree)
+  ns=getShape(tree)
+  if (paths):
+    d={p[0]:p[2:] for p in paths}
+    if (pnr in d):
+      nt=d[pnr][0]
+      ns=d[pnr][1]
+  n="%s(%s) %s:%s"%(tree[0],tree[3],nt,ns),
   print "%-32s"%n
-  for c in tree[2]:
-    prettyPrint(c,path='/'+tree[0],depth=depth+2)
+  if (not sort):
+    for c in tree[2]:
+      prettyPrint(c,path,depth=depth+2,links=links,paths=paths)
+  else:
+    for c in getNextChildSortByType(tree,criteria=CK.sortedtypelist):
+      prettyPrint(c,path,depth=depth+2,sort=True,links=links,paths=paths)
 
 # --------------------------------------------------
-def toString(tree,readable=False,shift=0):
+def toString(tree,readable=False,shift=0,keywords=False,pycgns=False):
   """
   Returns the full sub-tree as a single line string::
 
@@ -2720,16 +2735,29 @@ def toString(tree,readable=False,shift=0):
       representation of a `numpy` array, include `dtype` and `order`
 
   """
+  if (pycgns): keywords=True
   n=tree
   prefix=''
-  if (readable and shift):
-    prefix='\n'+shift*' '
+  if (pycgns and (shift==0)):
+    prefix+="""# ---
+import numpy
+import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils as CGU
+
+tree=\\\n"""
+  if (readable and shift): prefix='\n'+shift*' '
   if (n is None): return 'None'
-  s="%s['%s',%s,%s,'%s']"%(prefix,
-                           n[0],
-                           toStringValue(n[1]),
-                           toStringChildren(n[2],readable,shift+2),
-                           n[3])
+  name=n[0]
+  if (keywords and name in CK.cgnsnames): name='CGK.%s_s'%n[0]
+  else: name="'%s'"%n[0]
+  s="%s[%s,%s,%s"%(prefix,
+                   name,
+                   toStringValue(n[1]),
+                   toStringChildren(n[2],readable,shift+2,keywords,pycgns))
+  if (keywords):
+    s+='CGK.%ss ]'%n[3]
+  else:
+    s+="'%s' ]"%n[3]
   return s
 
 # --------------------------------------------------

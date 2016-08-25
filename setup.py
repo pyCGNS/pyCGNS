@@ -133,7 +133,7 @@ if (args.update):
 # -------------------------------------------------------------------------
 if APP:
   slist=['cg_grep','cg_list','cg_link','cg_iges','cg_diff','cg_checksum',
-         'cg_gather','cg_scatter',
+         'cg_gather','cg_scatter','cg_dump',
          'cg_scan','cg_look']
 
   ALL_SCRIPTS+=['CGNS/APP/tools/%s'%f for f in slist]
