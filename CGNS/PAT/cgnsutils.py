@@ -2158,7 +2158,7 @@ def getPathNormalize(path):
         - Before its normalization a path can be **non-compliant**
        
     """
-    if (path==''): return '.'
+    if (path==''): return ''
     if (path is None): return '/'
     first=((len(path)>0) and (path[0]=='/'))
     result_tokens=[]
