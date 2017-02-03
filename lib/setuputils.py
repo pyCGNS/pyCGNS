@@ -112,6 +112,8 @@ def search(incs,libs,tag='pyCGNS',
           C.COM_CYTHON='cython'
         else:
           raise Exception
+        C.COM_UIC='true'
+        C.COM_RCC='true'
         if (which('pyuic') is not None):  C.COM_UIC='pyuic'
         if (which('pyrcc') is not None):  C.COM_RCC='pyrcc'
         if (which('pyuic4') is not None): C.COM_UIC='pyuic4'
@@ -513,7 +515,11 @@ def find_MLL(pincs,plibs,libs,extraargs):
 
 # --------------------------------------------------------------------
 def find_numpy(pincs,plibs,libs):
-  import numpy
+  try:
+    import numpy
+  except ImportError:
+    print pfx,"**** FATAL cannot import numpy"
+    sys.exit(0)
   apivers=''
   vers=numpy.version.version
   extraargs=[]

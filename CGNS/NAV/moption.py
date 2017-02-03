@@ -88,7 +88,6 @@ except NameError:
     RecursiveTreeDisplay=False
     OneViewPerTreeNode=False
     ShowTableIndex=True
-    ShowColumnIndex=True
     RecursiveSIDSPatternsLoad=True
     DoNotDisplayLargeData=False
     CheckOnTheFly=False
@@ -106,6 +105,13 @@ except NameError:
     FileUpdateRemovesChildren=True
     TransposeArrayForView=True
     Show1DAsPlain=True
+    ShowSIDSColumn=True
+    ShowLinkColumn=True
+    ShowSelectColumn=True
+    ShowUserColumn=True
+    ShowCheckColumn=True
+    ShowShapeColumn=True
+    ShowDataTypeColumn=True
     UserCSS=""
     SelectionListDirectory=OP.normpath('~/.CGNS.NAV/selections')
     QueriesDirectory=OP.normpath('~/.CGNS.NAV/queries')
@@ -792,13 +798,14 @@ if (PARENT[0]=='.Solver#Param'):
     @classmethod
     def _writeFile(cls,tag,name,udata,filename,prefix=""):
       gdate=strftime("%Y-%m-%d %H:%M:%S", gmtime())
-      s="""# %s - %s file - Generated %s\n# coding: utf-8\n%s\n%s="""%\
+      s="""# %s - %s - Generated %s\n# coding: utf-8\n%s\nimport PyQt4\n%s="""%\
          (cls._ToolName,tag,gdate,prefix,name)
       if (type(udata)==dict):
         s+="""{\n"""
         for k in udata:
+#          print 'K',k,'V',udata[k],'T',type(udata[k])
           if (k[0]!='_'):
-            val=str(udata[k])
+            val='%s'%str(udata[k])
             if (type(udata[k]) == unicode):
               val='u"""%s"""'%udata[k].encode('utf-8')
             elif (type(udata[k]) == str):

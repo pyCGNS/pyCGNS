@@ -299,9 +299,10 @@ if (NAV and CONFIG.HAS_PYQT4):
                             libraries    = CONFIG.NUMPY_LINK_LIBRARIES,
                             )]
      g=("CGNS/NAV/T/%s.ui"%m,"CGNS/NAV/G/%s.pyx"%m)
-     if (not os.path.exists(g[1])
-         or args.generate
-         or os.path.getmtime(g[0])>os.path.getmtime(g[1])): modgenlist+=[m]
+     if (('true' not in [cui,crc]) and
+         (not os.path.exists(g[1])
+          or args.generate
+          or os.path.getmtime(g[0])>os.path.getmtime(g[1]))): modgenlist+=[m]
                   
   for m in modgenlist:
       print '# Generate from updated Qt templates  (%s): %s'%(cui,m)

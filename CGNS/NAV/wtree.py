@@ -17,7 +17,7 @@ try:
   import vtk
   from CGNS.NAV.wvtk import Q7VTK
   has_vtk=True
-except IndexError:
+except ImportError:
   has_vtk=False
     
 from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
@@ -178,7 +178,13 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self._querywindow=None
         self._vtkwindow=None
         self._selectwindow=None
-
+        self._column={NMT.COLUMN_SIDS:OCTXT.ShowSIDSColumn,
+                      NMT.COLUMN_FLAG_LINK:OCTXT.ShowLinkColumn,
+                      NMT.COLUMN_FLAG_SELECT:OCTXT.ShowSelectColumn,
+                      NMT.COLUMN_FLAG_CHECK:OCTXT.ShowCheckColumn,
+                      NMT.COLUMN_FLAG_USER:OCTXT.ShowUserColumn,
+                      NMT.COLUMN_SHAPE:OCTXT.ShowShapeColumn,
+                      NMT.COLUMN_DATATYPE:OCTXT.ShowDataTypeColumn}
         self.selectForLinkSrc=None # one link source per tree view allowed
 
         QObject.connect(self.treeview,
@@ -246,7 +252,34 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         QObject.connect(self.lineEdit,
                         SIGNAL("returnPressed()"),
                         self.jumpToNode)
+        tvh=self.treeview.header()
+        tvh.setContextMenuPolicy(Qt.CustomContextMenu)
+        tvh.customContextMenuRequested.connect(self.headerMenu)
+        self._hmenu = QMenu()
+        self._hmenu._idx={}
+        self._tlist=( ('SIDS type',NMT.COLUMN_SIDS),
+                      ('Link flag',NMT.COLUMN_FLAG_LINK),
+                      ('Mark flag',NMT.COLUMN_FLAG_SELECT),
+                      ('Check flag',NMT.COLUMN_FLAG_CHECK),
+                      ('User flag',NMT.COLUMN_FLAG_USER),
+                      ('Shape', NMT.COLUMN_SHAPE),
+                      ('Data type',NMT.COLUMN_DATATYPE))
+        for (tag,idx) in self._tlist:
+          a=QAction(tag,self._hmenu, checkable=True)
+          self._hmenu._idx[idx]=a
+          if (self._column[idx]): a.setChecked(True)
+          else: a.setChecked(False)
+          self._hmenu.addAction(a)
+          self.treeview.setColumnHidden(idx,not self._column[idx])
         self.updateTreeStatus()
+    def headerMenu(self,pos):
+        for (tag,idx) in self._tlist: 
+          self._hmenu._idx[idx].setChecked(self._column[idx])
+        self._hmenu.exec_(self.treeview.mapToGlobal(pos))
+        for (tag,idx) in self._tlist:
+          if (self._hmenu._idx[idx].isChecked()): self._column[idx]=True
+          else: self._column[idx]=False
+          self.treeview.setColumnHidden(idx,not self._column[idx])
     def model(self):
         return self.FG.model
     def modelIndex(self,idx):

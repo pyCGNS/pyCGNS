@@ -1323,7 +1323,23 @@ ElementRangeList_s = "ElementRangeList"
 # ---
 cgnsnames=[globals()[k] for k in dir() if (k[-2:]=='_s')]
 cgnstypes=[globals()[k] for k in dir() if (k[-3:]=='_ts')]+weirdSIDStypes.keys()
-cgnsenums={}
+cgnsenums={
+GoverningEquations_ts:GoverningEquationsType_l,
+GasModel_ts:GasModelType_l,
+GasModelType_ts:GasModelIdentifier_l,
+TurbulenceModel_ts:TurbulenceModelType_l,
+ViscosityModel_ts:ViscosityModelType_l,
+ViscosityModelType_ts:ViscosityModelIdentifier_l,
+ThermalConductivityModel_ts:ThermalConductivityModelType_l,
+ThermalConductivityModelType_ts:ThermalConductivityModelIdentifier_l,
+ThermalRelaxationModel_ts:ThermalRelaxationModelType_l,
+ChemicalKineticsModel_ts:ChemicalKineticsModelType_l,
+ChemicalKineticsModelType_ts:ChemicalKineticsModelIdentifier_l,
+EMElectricFieldModel_ts:EMElectricFieldModelType_l,
+EMMagneticFieldModel_ts:EMMagneticFieldModelType_l,
+EMConductivityModel_ts:EMConductivityModelType_l,
+EMConductivityModelType_ts:EMConductivityModelIdentifier_l,
+}
 for k in dir():
   if (k[-2:]=='_l'): cgnsenums[k[:-1]+'t']=locals()[k]
 #

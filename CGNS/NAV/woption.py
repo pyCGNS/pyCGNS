@@ -76,7 +76,7 @@ class Q7Option(Q7Window,Ui_Q7OptionsWindow):
               try:
                 self.getopt(k).setText(data[k])
               except AttributeError:
-                self.getopt(k).setEditText(data[k])
+                pass #self.getopt(k).setEditText(data[k])
             elif (type(data[k]) is list):
               s=''
               for l in data[k]:

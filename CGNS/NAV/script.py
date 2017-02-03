@@ -13,9 +13,10 @@ from PyQt4.QtGui import QApplication, QPixmap, QSplashScreen
 from CGNS.NAV.wcontrol import Q7Main
 
 # -----------------------------------------------------------------
-def run(args=[],files=[],
-        flags=(False,False,False,False,False),
+def run(args=[],files=[],datasets=[],
+        flags=(False,False,False,False,False,False,False),
         ppath=None,query=None):
+  hidecontrol=False
   if (flags[4]):
     from CGNS.NAV.wquery import Q7Query
     Q7Query.loadUserQueries()
@@ -26,11 +27,12 @@ def run(args=[],files=[],
       print ' ',q
   else:    
     app=QApplication(args)
-    pixmap = QPixmap(":/images/splash.png")
-    splash = QSplashScreen(pixmap,Qt.WindowStaysOnTopHint)
-    splash.show()
-    splash.showMessage("Release v%s"%OCTXT._ToolVersion,
-                       Qt.AlignHCenter|Qt.AlignBottom)
+    if (not flags[5]):
+      pixmap = QPixmap(":/images/splash.png")
+      splash = QSplashScreen(pixmap,Qt.WindowStaysOnTopHint)
+      splash.show()
+      splash.showMessage("Release v%s"%OCTXT._ToolVersion,
+                         Qt.AlignHCenter|Qt.AlignBottom)
     app.processEvents()
     t1=time.time()
     Q7Main.verbose=flags[2]
@@ -42,13 +44,27 @@ def run(args=[],files=[],
     wcontrol.query=query
     wcontrol._T('start')
     wcontrol.setDefaults()
-    if (flags[1]):  wcontrol.loadlast()
+    if (flags[1]):  
+      wcontrol.loadlast()
+      hidecontrol=flags[6]
     if files:
-      wcontrol.loadfile(files[0]) # loop on file list broken in wfingerprint
-    t2=time.time()
-    if (t2-t1<2.0): time.sleep(2)
+      for ff in files:
+        wcontrol.loadfile(ff)
+      hidecontrol=flags[6]
+    if datasets:
+      for dd in datasets:
+        wcontrol.loadCompleted(dataset_name='FFFF',
+                               dataset_base='BASE',
+                               dataset_tree=dd,
+                               dataset_references=[],
+                               dataset_paths=[])
+      hidecontrol=flags[6]
     wcontrol.show()
-    splash.finish(wcontrol)
+    if (hidecontrol): wcontrol.hide()
+    if (not flags[5]): 
+      t2=time.time()
+      if (t2-t1<2.0): time.sleep(2)
+      splash.finish(wcontrol)
     app.exec_()
     wcontrol._T('leave')
   sys.exit()

@@ -554,6 +554,21 @@ def getVersion(tree):
 
 # -----------------------------------------------------------------------------
 # Arbitrary and incomplete node comparison (lazy evaluation)
+def checkSameTree(treeA,treeB,dienow=False):
+  """
+  Checks if two trees are the same, recursive use of CheckSameNode
+  Does not says where it may differ, only True or False is returned 
+  """
+  try:
+    checkSameNode(treeA,treeB,dienow=True)
+    for a,b in zip(getNextChildSortByType(treeA),getNextChildSortByType(treeB)):
+      checkSameNode(a,b,dienow=True)                       
+  except CE.cgnsNodeError:
+    return False
+  return True
+
+# -----------------------------------------------------------------------------
+# Arbitrary and incomplete node comparison (lazy evaluation)
 def checkSameNode(nodeA,nodeB,dienow=False):
   """
   Checks if two nodes have the same contents: same name, same CGNS/SIDS type,
@@ -791,9 +806,13 @@ def setValue(node,value):
   data type."""
   if (node is None): return None
   t=getValueType(value)
-  if (t == None): node[1]=None
-  if (t in [CK.Integer_s,CK.LongInteger_s,CK.RealDouble_s,
-            CK.RealSingle_s,CK.Character_s]): node[1]=value
+  if (t == None): 
+    node[1]=None
+  elif (t in [CK.Integer_s,CK.LongInteger_s,CK.RealDouble_s,
+              CK.RealSingle_s,CK.Character_s]): 
+    node[1]=value
+  else:
+    return None
   return node
   
 # -----------------------------------------------------------------------------
@@ -2675,6 +2694,96 @@ def copyArray(a):
   else:
     b=numpy.array(a,copy=True)
   return b
+
+# --------------------------------------------------
+def getChildren(t):
+    s=set([c[0] for c in t[2]])
+    cl={}
+    for c in t[2]: cl[c[0]]=c
+    return (s,cl)
+
+# --------------------------------------------------
+# should merge with checkSameValue that returns True/False
+# 
+def compareValues(na,nb):
+    va=na[1]
+    vb=nb[1]
+    eps=1e-12
+    if (va is None and vb is not None): return 1
+    if (va is not None and vb is None): return 2
+    if (va is None and vb is None): return 0
+    if (va.dtype.char!=vb.dtype.char): return 3
+    if (va.size!=vb.size): return 4
+    if (va.shape!=vb.shape): return 5
+    if (va.dtype.char not in ['c','S']):
+        vd=numpy.abs(va-vb)
+        if (numpy.any(vd > eps)): return 6
+    elif (va.ravel().tostring()!=vb.ravel().tostring()):
+        return 7
+    return 0
+
+# --------------------------------------------------
+def diff(ta,tb,path='',tag='A',diag={},trace=False):
+    diag[path]=[]
+    if (ta[3] != tb[3]):
+        diag[path].append(('CT',))
+        if trace: print 'CT %s %s'%(tag,path)
+    dta=CGNS.PAT.cgnsutils.getValueDataType(ta)
+    dtb=CGNS.PAT.cgnsutils.getValueDataType(tb)
+    if (dta is not CGNS.PAT.cgnskeywords.MT):
+        dnum=compareValues(ta,tb)
+        if (dnum):
+            diag[path].append(('C%d'%dnum,))
+            if trace: print 'C%d %s %s'%(dnum,tag,path)
+    (sa,da)=getChildren(ta)
+    (sb,db)=getChildren(tb)
+    a2b=sa.difference(sb)
+    sn=sa.union(sb)
+    for cn in sn:
+      np=path+'/'+cn
+      A=cn in sa
+      B=cn in sb
+      if ( not A and B ):
+          diag[path].append(('NA',np))
+          if trace: print 'NA %s %s'%(tag,np)
+      if ( A and not B ):
+          diag[path].append(('ND',np))
+          if trace: print 'ND %s %s'%(tag,np)
+      if ( A and B ):
+          diff(da[cn],db[cn],np,tag,diag,trace)
+    if (diag[path]==[]): del diag[path]
+    return diag
+
+# --------------------------------------------------
+def diffAnalysis(diag):
+  s ='## ++ A node not in B\n'
+  s+='## -- B node not in A\n'
+  s+='## >t A and B node SIDS type differ\n'
+  s+='## >a A and B node values differ (one has None)\n'
+  s+='## >x A and B node values differ (not same data type)\n'
+  s+='## >n A and B node values differ (not same total size)\n'
+  s+='## >d A and B node values differ (not same shape)\n'
+  s+='## >c A and B node values differ (not same contents)\n'
+  s+='## >s A and B node values differ (string values)\n'
+  paths=diag.keys()
+  paths.sort()
+  for k in paths:
+    for d in diag[k]:
+      ldiag=''
+      if (d[0]=='NA'): ldiag='++'
+      if (d[0]=='ND'): ldiag='--'
+      if (d[0] in ['CT']): ldiag='>t'
+      if (d[0] in ['C1','C2']): ldiag='>a'
+      if (d[0] in ['C3']): ldiag='>x'
+      if (d[0] in ['C6']): ldiag='>c'
+      if (d[0] in ['C7']): ldiag='>s'
+      if (d[0] in ['C4']): ldiag='>n'
+      if (d[0] in ['C5']): ldiag='>d'
+      if (len(d)>1):
+        s+='%s %s\n'%(ldiag,d[1])
+      else:
+        s+='%s %s\n'%(ldiag,k)
+  return s
 
 # --------------------------------------------------
 def toStringValue(v):

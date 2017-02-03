@@ -646,41 +646,43 @@ class Q7FingerPrint:
         d['eNodes']=self.nodes
         d['eVersion']=str(self.version)
         d['eVersionHDF5']='???'
-        st=os.stat(f)
-        d['eFileSize']="%.3f Mb"%(1.0*st[6]/(1024*1024))
-        d['eMergeSize']="%.3f Mb"%(1.0*st[6]/(1024*1024))
-        dfmt="%Y-%m-%d %H:%M"
-        d['eLastDate']=time.strftime(dfmt,time.localtime(int(st[7])))
-        d['eModifDate']=time.strftime(dfmt,time.localtime(int(st[8])))
-        e=getpwuid(st[4])
-        g=getgrgid(st[5])
-        d['eOwner']=e[0]
-        d['eGroup']=g[0]
-        d['cNoFollow']=False
-        d['cHasLinks']=(len(self.links)!=0)
-        d['cSameFS']=False
-        d['cBadLinks']=False
-        d['cModeProp']=False
-        m=""
-        if (st[0] & stat.S_IRUSR):m+="r"
-        else: m+="-"
-        if (st[0] & stat.S_IWUSR):m+="w"
-        else: m+="-"
-        if (st[0] & stat.S_IXUSR):m+="x"
-        else: m+="-"
-        if (st[0] & stat.S_IRGRP):m+="r"
-        else: m+="-"
-        if (st[0] & stat.S_IWGRP):m+="w"
-        else: m+="-"
-        if (st[0] & stat.S_IXGRP):m+="x"
-        else: m+="-"
-        if (st[0] & stat.S_IROTH):m+="r"
-        else: m+="-"
-        if (st[0] & stat.S_IWOTH):m+="w"
-        else: m+="-"
-        if (st[0] & stat.S_IXOTH):m+="x"
-        else: m+="-"
-        d['eRights']=m
+        try:
+          st=os.stat(f)
+          d['eFileSize']="%.3f Mb"%(1.0*st[6]/(1024*1024))
+          d['eMergeSize']="%.3f Mb"%(1.0*st[6]/(1024*1024))
+          dfmt="%Y-%m-%d %H:%M"
+          d['eLastDate']=time.strftime(dfmt,time.localtime(int(st[7])))
+          d['eModifDate']=time.strftime(dfmt,time.localtime(int(st[8])))
+          e=getpwuid(st[4])
+          g=getgrgid(st[5])
+          d['eOwner']=e[0]
+          d['eGroup']=g[0]
+          d['cNoFollow']=False
+          d['cHasLinks']=(len(self.links)!=0)
+          d['cSameFS']=False
+          d['cBadLinks']=False
+          d['cModeProp']=False
+          m=""
+          if (st[0] & stat.S_IRUSR):m+="r"
+          else: m+="-"
+          if (st[0] & stat.S_IWUSR):m+="w"
+          else: m+="-"
+          if (st[0] & stat.S_IXUSR):m+="x"
+          else: m+="-"
+          if (st[0] & stat.S_IRGRP):m+="r"
+          else: m+="-"
+          if (st[0] & stat.S_IWGRP):m+="w"
+          else: m+="-"
+          if (st[0] & stat.S_IXGRP):m+="x"
+          else: m+="-"
+          if (st[0] & stat.S_IROTH):m+="r"
+          else: m+="-"
+          if (st[0] & stat.S_IWOTH):m+="w"
+          else: m+="-"
+          if (st[0] & stat.S_IXOTH):m+="x"
+          else: m+="-"
+          d['eRights']=m
+        except OSError: pass
         d['cConverted']=self.converted
         d['cADF']=self.converted
         d['cHDF5']=not self.converted
@@ -691,9 +693,11 @@ class Q7FingerPrint:
         return d
     def getInfo(self,force=False):
         if (force or not self.infoData): 
-            self.readInfoFromOS(self.infoData)
+          if (self.isFile): self.readInfoFromOS(self.infoData)
+          else: print 'MEMORY TREE'
         return self.infoData
     def raiseControlView(self):
+        self.control.show()
         self.control.raise_()
     def addChild(self,viewtype,view):
         Q7FingerPrint.__viewscounter+=1

@@ -92,6 +92,10 @@ pr.add_argument("-q","--query",dest="query",
                 help='run query and open selection view')
 pr.add_argument('-g','--graphic',action='store_true',
                 help='open VTK view')
+pr.add_argument('-S','--nosplash',action='store_true',
+                help='no splash screen')
+pr.add_argument('-C','--hidecontrol',action='store_true',
+                help='hide control window at start')
 pr.add_argument('-v','--verbose',action='store_true',
                 help='trace mode')
 pr.add_argument('files',nargs=argparse.REMAINDER)
@@ -110,10 +114,12 @@ except KeyError:
 
 if (args.path is not None): ppath=Q.path
 
-flags=(args.recurse,args.last,args.verbose,args.graphic,args.querylist)
+flags=(args.recurse,args.last,args.verbose,args.graphic,args.querylist,
+       args.nosplash,args.hidecontrol)
 files=args.files
+datasets=[]
 
 import CGNS.NAV.script
-CGNS.NAV.script.run(sys.argv,files,flags,ppath,args.query)
+CGNS.NAV.script.run(sys.argv,files,datasets,flags,ppath,args.query)
 
 # --- last line

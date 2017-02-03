@@ -3,16 +3,16 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-import CGNS.PAT.cgnskeywords as CK
+import CGNS.PAT.cgnskeywords as CGK
 
 tlistA=[
-    CK.Descriptor_ts,
-    CK.UserDefinedData_ts,
-    CK.DataClass_ts,
-    CK.DimensionalUnits_ts,
+    CGK.Descriptor_ts,
+    CGK.UserDefinedData_ts,
+    CGK.DataClass_ts,
+    CGK.DimensionalUnits_ts,
     ]
 
-allDT=[CK.C1,CK.MT,CK.I4,CK.I8,CK.R4,CK.R8] # LK is default
+allDT=[CGK.C1,CGK.MT,CGK.I4,CGK.I8,CGK.R4,CGK.R8] # LK is default
 
 C_00='Zero/Zero'
 C_01='Zero/One'
@@ -27,9 +27,9 @@ allCARD=[C_01,C_11,C_0N,C_1N,C_NN]
 
 # --------------------------------------------------------
 class CGNStype:
-  def __init__(self,ntype,dtype=[CK.MT],names=[UD]):
+  def __init__(self,ntype,dtype=[CGK.MT],names=[UD]):
     self.type=ntype
-    self.datatype=[CK.LK]+dtype
+    self.datatype=[CGK.LK]+dtype
     self.enumerate=[]
     self.shape=()
     self.names=names
@@ -39,7 +39,7 @@ class CGNStype:
     for c in self.children:
       if (c[0]==ctype): return True
     return False
-  def addChild(self,ctype,cname=UD,dtype=CK.MT,card=C_0N):
+  def addChild(self,ctype,cname=UD,dtype=CGK.MT,card=C_0N):
     if (type(cname)!=list): lname=[cname]
     else: lname=cname
     self.children.append((ctype,lname,dtype,card))
@@ -62,756 +62,756 @@ class CGNStype:
 cgt={}
 
 # --------------------------------------------------------
-t=CK.CGNSLibraryVersion_ts
-cgt[t]=CGNStype(t,dtype=[CK.R4],names=[CK.CGNSLibraryVersion_s])
+t=CGK.CGNSLibraryVersion_ts
+cgt[t]=CGNStype(t,dtype=[CGK.R4],names=[CGK.CGNSLibraryVersion_s])
 cgt[t].shape=(1,)
 
 # --------------------------------------------------------
-t=CK.Descriptor_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1])
+t=CGK.Descriptor_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
-t=CK.Ordinal_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4],names=[CK.Ordinal_s])
+t=CGK.Ordinal_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4],names=[CGK.Ordinal_s])
 cgt[t].shape=(1,)
 
 # --------------------------------------------------------
-t=CK.DataClass_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.DataClass_s])
+t=CGK.DataClass_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.DataClass_s])
 cgt[t].shape=(0,)
-cgt[t].enumerate=CK.DataClass_l
+cgt[t].enumerate=CGK.DataClass_l
 
 # --------------------------------------------------------
-t=CK.DimensionalUnits_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.DimensionalUnits_s])
+t=CGK.DimensionalUnits_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.DimensionalUnits_s])
 cgt[t].shape=(32,5)
-cgt[t].enumerate=CK.AllDimensionalUnits_l
-cgt[t].addChild(CK.AdditionalUnits_ts,CK.AdditionalUnits_s)
+cgt[t].enumerate=CGK.AllDimensionalUnits_l
+cgt[t].addChild(CGK.AdditionalUnits_ts,CGK.AdditionalUnits_s)
 
 # --------------------------------------------------------
-t=CK.AdditionalUnits_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.AdditionalUnits_s])
+t=CGK.AdditionalUnits_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.AdditionalUnits_s])
 cgt[t].shape=(32,3)
-cgt[t].enumerate=CK.AllAdditionalUnits_l
+cgt[t].enumerate=CGK.AllAdditionalUnits_l
 
 # --------------------------------------------------------
-t=CK.DataConversion_ts
-cgt[t]=CGNStype(t,dtype=[CK.R4,CK.R8],names=[CK.DataConversion_s])
+t=CGK.DataConversion_ts
+cgt[t]=CGNStype(t,dtype=[CGK.R4,CGK.R8],names=[CGK.DataConversion_s])
 cgt[t].shape=(2,)
 
 # --------------------------------------------------------
-t=CK.DimensionalExponents_ts
-cgt[t]=CGNStype(t,dtype=[CK.R4,CK.R8],names=[CK.DimensionalExponents_s])
+t=CGK.DimensionalExponents_ts
+cgt[t]=CGNStype(t,dtype=[CGK.R4,CGK.R8],names=[CGK.DimensionalExponents_s])
 cgt[t].shape=(5,)
 
 # --------------------------------------------------------
-t=CK.AdditionalExponents_ts
-cgt[t]=CGNStype(t,dtype=[CK.R4,CK.R8],names=[CK.AdditionalExponents_s])
+t=CGK.AdditionalExponents_ts
+cgt[t]=CGNStype(t,dtype=[CGK.R4,CGK.R8],names=[CGK.AdditionalExponents_s])
 cgt[t].shape=(3,)
 
 # --------------------------------------------------------
-t=CK.DataArray_ts
+t=CGK.DataArray_ts
 cgt[t]=CGNStype(t,dtype=allDT)
-cgt[t].addChild(CK.DimensionalExponents_ts,CK.DimensionalExponents_s)
-cgt[t].addChild(CK.DataConversion_ts,CK.DataConversion_s)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DimensionalExponents_ts,CGK.DimensionalExponents_s)
+cgt[t].addChild(CGK.DataConversion_ts,CGK.DataConversion_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
 
 # --------------------------------------------------------
-t=CK.Transform_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4],names=[CK.Transform_s])
+t=CGK.Transform_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4],names=[CGK.Transform_s])
 cgt[t].shape=(0,)
-t=CK.Transform_ts2
-cgt[t]=CGNStype(t,dtype=[CK.I4],names=[CK.Transform_s])
-cgt[t].shape=(0,)
-
-# --------------------------------------------------------
-t=CK.DiffusionModel_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4],names=[CK.DiffusionModel_s])
-cgt[t].shape=(0,)
-t=CK.DiffusionModel_ts2
-cgt[t]=CGNStype(t,dtype=[CK.I4],names=[CK.DiffusionModel_s])
+t=CGK.Transform_ts2
+cgt[t]=CGNStype(t,dtype=[CGK.I4],names=[CGK.Transform_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
-t=CK.InwardNormalIndex_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4],names=[CK.InwardNormalIndex_s])
+t=CGK.DiffusionModel_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4],names=[CGK.DiffusionModel_s])
 cgt[t].shape=(0,)
-t=CK.InwardNormalIndex_ts2
-cgt[t]=CGNStype(t,dtype=[CK.I4],names=[CK.InwardNormalIndex_s])
+t=CGK.DiffusionModel_ts2
+cgt[t]=CGNStype(t,dtype=[CGK.I4],names=[CGK.DiffusionModel_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
-t=CK.EquationDimension_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4],names=[CK.EquationDimension_s])
+t=CGK.InwardNormalIndex_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4],names=[CGK.InwardNormalIndex_s])
+cgt[t].shape=(0,)
+t=CGK.InwardNormalIndex_ts2
+cgt[t]=CGNStype(t,dtype=[CGK.I4],names=[CGK.InwardNormalIndex_s])
+cgt[t].shape=(0,)
+
+# --------------------------------------------------------
+t=CGK.EquationDimension_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4],names=[CGK.EquationDimension_s])
 cgt[t].shape=(1,)
-t=CK.EquationDimension_ts2
-cgt[t]=CGNStype(t,dtype=[CK.I4],names=[CK.EquationDimension_s])
+t=CGK.EquationDimension_ts2
+cgt[t]=CGNStype(t,dtype=[CGK.I4],names=[CGK.EquationDimension_s])
 cgt[t].shape=(1,)
 
 # --------------------------------------------------------
-t=CK.GridLocation_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.GridLocation_s])
+t=CGK.GridLocation_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.GridLocation_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
-t=CK.Rind_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4,CK.I8],names=[CK.Rind_s])
+t=CGK.Rind_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4,CGK.I8],names=[CGK.Rind_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
-t=CK.IndexRange_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4,CK.I8])
+t=CGK.IndexRange_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4,CGK.I8])
 cgt[t].shape=(0,2)
-cgt[t].names=[CK.PointRange_s,CK.PointRangeDonor_s,CK.ElementRange_s,UD]
+cgt[t].names=[CGK.PointRange_s,CGK.PointRangeDonor_s,CGK.ElementRange_s,UD]
 
 # --------------------------------------------------------
-t=CK.IndexArray_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4,CK.I8,CK.R4,CK.R8])
+t=CGK.IndexArray_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4,CGK.I8,CGK.R4,CGK.R8])
 cgt[t].shape=(0,0)
-cgt[t].names=[CK.PointList_s,CK.PointListDonor_s,CK.CellListDonor_s,
-              CK.InwardNormalList_s,UD]
+cgt[t].names=[CGK.PointList_s,CGK.PointListDonor_s,CGK.CellListDonor_s,
+              CGK.InwardNormalList_s,UD]
 
 # --------------------------------------------------------
-t=CK.ReferenceState_ts
-cgt[t]=CGNStype(t,names=[CK.ReferenceState_s])
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.Descriptor_ts,CK.ReferenceStateDescription_s)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+t=CGK.ReferenceState_ts
+cgt[t]=CGNStype(t,names=[CGK.ReferenceState_s])
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.Descriptor_ts,CGK.ReferenceStateDescription_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.ConvergenceHistory_ts
-cgt[t]=CGNStype(t,names=[CK.GlobalConvergenceHistory_s,
-                         CK.ZoneConvergenceHistory_s],dtype=[CK.I4])
+t=CGK.ConvergenceHistory_ts
+cgt[t]=CGNStype(t,names=[CGK.GlobalConvergenceHistory_s,
+                         CGK.ZoneConvergenceHistory_s],dtype=[CGK.I4])
 cgt[t].shape=(1,)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.Descriptor_ts,CK.NormDefinitions_s)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.Descriptor_ts,CGK.NormDefinitions_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.IntegralData_ts
+t=CGK.IntegralData_ts
 cgt[t]=CGNStype(t)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.UserDefinedData_ts
+t=CGK.UserDefinedData_ts
 cgt[t]=CGNStype(t)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
-cgt[t].addChild(CK.IndexRange_ts,CK.PointRange_s)
-cgt[t].addChild(CK.IndexArray_ts,CK.PointList_s)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.FamilyName_ts,[CK.FamilyName_s],card=C_01)
-cgt[t].addChild(CK.AdditionalFamilyName_ts,card=C_0N)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.Ordinal_ts,CK.Ordinal_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.GridLocation_ts,CGK.GridLocation_s)
+cgt[t].addChild(CGK.IndexRange_ts,CGK.PointRange_s)
+cgt[t].addChild(CGK.IndexArray_ts,CGK.PointList_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.FamilyName_ts,[CGK.FamilyName_s],card=C_01)
+cgt[t].addChild(CGK.AdditionalFamilyName_ts,card=C_0N)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.Ordinal_ts,CGK.Ordinal_s)
 
 # --------------------------------------------------------
-t=CK.Gravity_ts
+t=CGK.Gravity_ts
 cgt[t]=CGNStype(t)
-cgt[t].addChild(CK.DataArray_ts,CK.GravityVector_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].addChild(CGK.DataArray_ts,CGK.GravityVector_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.FlowEquationSet_ts
-cgt[t]=CGNStype(t,names=[CK.FlowEquationSet_s])
-cgt[t].addChild(CK.GoverningEquations_ts,CK.GoverningEquations_s)
-cgt[t].addChild(CK.EquationDimension_ts,CK.EquationDimension_s)
-cgt[t].addChild(CK.GasModel_ts,CK.GasModel_s)
-cgt[t].addChild(CK.ViscosityModel_ts,CK.ViscosityModel_s)
-cgt[t].addChild(CK.ThermalRelaxationModel_ts,CK.ThermalRelaxationModel_s)
-cgt[t].addChild(CK.ThermalConductivityModel_ts,CK.ThermalConductivityModel_s)
-cgt[t].addChild(CK.TurbulenceModel_ts,CK.TurbulenceModel_s)
-cgt[t].addChild(CK.TurbulenceClosure_ts,CK.TurbulenceClosure_s)
-cgt[t].addChild(CK.ChemicalKineticsModel_ts,CK.ChemicalKineticsModel_s)
-cgt[t].addChild(CK.EMMagneticFieldModel_ts,CK.EMMagneticFieldModel_s)
-cgt[t].addChild(CK.EMElectricFieldModel_ts,CK.EMElectricFieldModel_s)
-cgt[t].addChild(CK.EMConductivityModel_ts,CK.EMConductivityModel_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.UserDefinedData_ts)
+t=CGK.FlowEquationSet_ts
+cgt[t]=CGNStype(t,names=[CGK.FlowEquationSet_s])
+cgt[t].addChild(CGK.GoverningEquations_ts,CGK.GoverningEquations_s)
+cgt[t].addChild(CGK.EquationDimension_ts,CGK.EquationDimension_s)
+cgt[t].addChild(CGK.GasModel_ts,CGK.GasModel_s)
+cgt[t].addChild(CGK.ViscosityModel_ts,CGK.ViscosityModel_s)
+cgt[t].addChild(CGK.ThermalRelaxationModel_ts,CGK.ThermalRelaxationModel_s)
+cgt[t].addChild(CGK.ThermalConductivityModel_ts,CGK.ThermalConductivityModel_s)
+cgt[t].addChild(CGK.TurbulenceModel_ts,CGK.TurbulenceModel_s)
+cgt[t].addChild(CGK.TurbulenceClosure_ts,CGK.TurbulenceClosure_s)
+cgt[t].addChild(CGK.ChemicalKineticsModel_ts,CGK.ChemicalKineticsModel_s)
+cgt[t].addChild(CGK.EMMagneticFieldModel_ts,CGK.EMMagneticFieldModel_s)
+cgt[t].addChild(CGK.EMElectricFieldModel_ts,CGK.EMElectricFieldModel_s)
+cgt[t].addChild(CGK.EMConductivityModel_ts,CGK.EMConductivityModel_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.GoverningEquations_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.GoverningEquations_s])
+t=CGK.GoverningEquations_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.GoverningEquations_s])
 cgt[t].shape=(0,)
-cgt[t].enumerate=CK.GoverningEquationsType_l
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DiffusionModel_ts,CK.DiffusionModel_s)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].enumerate=CGK.GoverningEquationsType_l
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DiffusionModel_ts,CGK.DiffusionModel_s)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.GasModel_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.GasModel_s])
+t=CGK.GasModel_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.GasModel_s])
 cgt[t].shape=(0,)
-cgt[t].enumerate=CK.GasModelType_l
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].enumerate=CGK.GasModelType_l
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.ViscosityModel_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.ViscosityModel_s])
+t=CGK.ViscosityModel_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.ViscosityModel_s])
 cgt[t].shape=(0,)
-cgt[t].enumerate=CK.ViscosityModelType_l
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].enumerate=CGK.ViscosityModelType_l
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.ThermalConductivityModel_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.ThermalConductivityModel_s])
+t=CGK.ThermalConductivityModel_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.ThermalConductivityModel_s])
 cgt[t].shape=(0,)
-cgt[t].enumerate=CK.ThermalConductivityModelType_l
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].enumerate=CGK.ThermalConductivityModelType_l
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.TurbulenceClosure_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.TurbulenceClosure_s])
+t=CGK.TurbulenceClosure_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.TurbulenceClosure_s])
 cgt[t].shape=(0,)
-cgt[t].enumerate=CK.TurbulenceClosureType_l
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].enumerate=CGK.TurbulenceClosureType_l
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.TurbulenceModel_ts
+t=CGK.TurbulenceModel_ts
+cgt[t]=CGNStype(t,names=[CGK.TurbulenceModel_s])
+cgt[t].datatype=[CGK.C1]
+cgt[t].shape=(0,)
+cgt[t].enumerate=CGK.TurbulenceModelType_l
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DiffusionModel_ts,CGK.DiffusionModel_s)
+
+# --------------------------------------------------------
+t=CGK.ThermalRelaxationModel_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.ThermalRelaxationModel_s])
+cgt[t].shape=(0,)
+cgt[t].enumerate=CGK.ThermalRelaxationModelType_l
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+
+# --------------------------------------------------------
+t=CGK.ChemicalKineticsModel_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.ChemicalKineticsModel_s])
+cgt[t].shape=(0,)
+cgt[t].enumerate=CGK.ChemicalKineticsModelType_l
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+
+# --------------------------------------------------------
+t=CGK.EMElectricFieldModel_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.EMElectricFieldModel_s])
+cgt[t].shape=(0,)
+cgt[t].enumerate=CGK.EMElectricFieldModelType_l
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+
+# --------------------------------------------------------
+t=CGK.EMMagneticFieldModel_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.EMMagneticFieldModel_s])
+cgt[t].shape=(0,)
+cgt[t].enumerate=CGK.EMMagneticFieldModelType_l
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+
+# --------------------------------------------------------
+t=CGK.EMConductivityModel_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.EMConductivityModel_s])
+cgt[t].shape=(0,)
+cgt[t].enumerate=CGK.EMConductivityModelType_l
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+
+# --------------------------------------------------------
+t=CGK.ZoneType_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.ZoneType_s])
+cgt[t].shape=(0,)
+cgt[t].enumerate=CGK.ZoneType_l
+
+# --------------------------------------------------------
+t=CGK.SimulationType_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.SimulationType_s])
+cgt[t].shape=(0,)
+cgt[t].enumerate=CGK.SimulationType_l
+
+# --------------------------------------------------------
+t=CGK.GridConnectivityType_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.GridConnectivityType_s])
+cgt[t].shape=(0,)
+cgt[t].enumerate=CGK.GridConnectivityType_l
+
+# --------------------------------------------------------
+t=CGK.Family_ts
 cgt[t]=CGNStype(t)
-cgt[t].datatype=[CK.C1]
-cgt[t].shape=(0,)
-cgt[t].enumerate=CK.TurbulenceModelType_l
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DiffusionModel_ts,CK.DiffusionModel_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.Ordinal_ts,CGK.Ordinal_s)
+cgt[t].addChild(CGK.FamilyBC_ts,card=C_01)
+cgt[t].addChild(CGK.GeometryReference_ts)
+cgt[t].addChild(CGK.RotatingCoordinates_ts,CGK.RotatingCoordinates_s)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.ThermalRelaxationModel_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.ThermalRelaxationModel_s])
+t=CGK.FamilyName_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.FamilyName_s])
 cgt[t].shape=(0,)
-cgt[t].enumerate=CK.ThermalRelaxationModelType_l
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.ChemicalKineticsModel_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.ChemicalKineticsModel_s])
+t=CGK.AdditionalFamilyName_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1])
 cgt[t].shape=(0,)
-cgt[t].enumerate=CK.ChemicalKineticsModelType_l
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.EMElectricFieldModel_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.EMElectricFieldModel_s])
+t=CGK.FamilyBC_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.FamilyBC_s])
 cgt[t].shape=(0,)
-cgt[t].enumerate=CK.EMElectricFieldModelType_l
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].enumerate=CGK.BCType_l
+cgt[t].addChild(CGK.BCDataSet_ts)
 
 # --------------------------------------------------------
-t=CK.EMMagneticFieldModel_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.EMMagneticFieldModel_s])
-cgt[t].shape=(0,)
-cgt[t].enumerate=CK.EMMagneticFieldModelType_l
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-
-# --------------------------------------------------------
-t=CK.EMConductivityModel_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.EMConductivityModel_s])
-cgt[t].shape=(0,)
-cgt[t].enumerate=CK.EMConductivityModelType_l
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-
-# --------------------------------------------------------
-t=CK.ZoneType_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.ZoneType_s])
-cgt[t].shape=(0,)
-cgt[t].enumerate=CK.ZoneType_l
-
-# --------------------------------------------------------
-t=CK.SimulationType_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.SimulationType_s])
-cgt[t].shape=(0,)
-cgt[t].enumerate=CK.SimulationType_l
-
-# --------------------------------------------------------
-t=CK.GridConnectivityType_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.GridConnectivityType_s])
-cgt[t].shape=(0,)
-cgt[t].enumerate=CK.GridConnectivityType_l
-
-# --------------------------------------------------------
-t=CK.Family_ts
+t=CGK.GeometryReference_ts
 cgt[t]=CGNStype(t)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.Ordinal_ts,CK.Ordinal_s)
-cgt[t].addChild(CK.FamilyBC_ts,card=C_01)
-cgt[t].addChild(CK.GeometryReference_ts)
-cgt[t].addChild(CK.RotatingCoordinates_ts,CK.RotatingCoordinates_s)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.GeometryFile_ts,CGK.GeometryFile_s)
+cgt[t].addChild(CGK.GeometryFormat_ts,CGK.GeometryFormat_s)
+cgt[t].addChild(CGK.GeometryEntity_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.FamilyName_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.FamilyName_s])
+t=CGK.GeometryFile_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.GeometryFile_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
-t=CK.AdditionalFamilyName_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1])
+t=CGK.GeometryFormat_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.GeometryFormat_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
-t=CK.FamilyBC_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.FamilyBC_s])
-cgt[t].shape=(0,)
-cgt[t].enumerate=CK.BCType_l
-cgt[t].addChild(CK.BCDataSet_ts)
-
-# --------------------------------------------------------
-t=CK.GeometryReference_ts
-cgt[t]=CGNStype(t)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.GeometryFile_ts,CK.GeometryFile_s)
-cgt[t].addChild(CK.GeometryFormat_ts,CK.GeometryFormat_s)
-cgt[t].addChild(CK.GeometryEntity_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-
-# --------------------------------------------------------
-t=CK.GeometryFile_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.GeometryFile_s])
-cgt[t].shape=(0,)
-
-# --------------------------------------------------------
-t=CK.GeometryFormat_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.GeometryFormat_s])
-cgt[t].shape=(0,)
-
-# --------------------------------------------------------
-t=CK.GeometryEntity_ts
+t=CGK.GeometryEntity_ts
 cgt[t]=CGNStype(t)
 
 # --------------------------------------------------------
-t=CK.CGNSTree_ts
-cgt[t]=CGNStype(t,names=[CK.CGNSTree_s,UD])
-cgt[t].addChild(CK.CGNSLibraryVersion_ts,[CK.CGNSLibraryVersion_s],card=C_11)
-cgt[t].addChild(CK.CGNSBase_ts,card=C_0N)
+t=CGK.CGNSTree_ts
+cgt[t]=CGNStype(t,names=[CGK.CGNSTree_s,UD])
+cgt[t].addChild(CGK.CGNSLibraryVersion_ts,[CGK.CGNSLibraryVersion_s],card=C_11)
+cgt[t].addChild(CGK.CGNSBase_ts,card=C_0N)
 
 # --------------------------------------------------------
-t=CK.CGNSBase_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4])
+t=CGK.CGNSBase_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4])
 cgt[t].shape=(0,0)
-cgt[t].addChild(CK.Zone_ts,card=C_0N)
-cgt[t].addChild(CK.SimulationType_ts,[CK.SimulationType_s],card=C_01)
-cgt[t].addChild(CK.BaseIterativeData_ts,card=C_01)
-cgt[t].addChild(CK.IntegralData_ts,card=C_0N)
-cgt[t].addChild(CK.ConvergenceHistory_ts,[CK.GlobalConvergenceHistory_s],card=C_01)
-cgt[t].addChild(CK.Family_ts,card=C_0N)
-cgt[t].addChild(CK.FlowEquationSet_ts,[CK.FlowEquationSet_s],card=C_01)
-cgt[t].addChild(CK.ReferenceState_ts,[CK.ReferenceState_s],card=C_01)
-cgt[t].addChild(CK.Axisymmetry_ts,[CK.Axisymmetry_s],card=C_01)
-cgt[t].addChild(CK.RotatingCoordinates_ts,[CK.RotatingCoordinates_s],card=C_01)
-cgt[t].addChild(CK.Gravity_ts,[CK.Gravity_s],card=C_01)
-cgt[t].addChild(CK.DataClass_ts,[CK.DataClass_s],card=C_01)
-cgt[t].addChild(CK.DimensionalUnits_ts,[CK.DimensionalUnits_s],card=C_01)
-cgt[t].addChild(CK.Descriptor_ts,card=C_0N)
-cgt[t].addChild(CK.UserDefinedData_ts,card=C_0N)
+cgt[t].addChild(CGK.Zone_ts,card=C_0N)
+cgt[t].addChild(CGK.SimulationType_ts,[CGK.SimulationType_s],card=C_01)
+cgt[t].addChild(CGK.BaseIterativeData_ts,card=C_01)
+cgt[t].addChild(CGK.IntegralData_ts,card=C_0N)
+cgt[t].addChild(CGK.ConvergenceHistory_ts,[CGK.GlobalConvergenceHistory_s],card=C_01)
+cgt[t].addChild(CGK.Family_ts,card=C_0N)
+cgt[t].addChild(CGK.FlowEquationSet_ts,[CGK.FlowEquationSet_s],card=C_01)
+cgt[t].addChild(CGK.ReferenceState_ts,[CGK.ReferenceState_s],card=C_01)
+cgt[t].addChild(CGK.Axisymmetry_ts,[CGK.Axisymmetry_s],card=C_01)
+cgt[t].addChild(CGK.RotatingCoordinates_ts,[CGK.RotatingCoordinates_s],card=C_01)
+cgt[t].addChild(CGK.Gravity_ts,[CGK.Gravity_s],card=C_01)
+cgt[t].addChild(CGK.DataClass_ts,[CGK.DataClass_s],card=C_01)
+cgt[t].addChild(CGK.DimensionalUnits_ts,[CGK.DimensionalUnits_s],card=C_01)
+cgt[t].addChild(CGK.Descriptor_ts,card=C_0N)
+cgt[t].addChild(CGK.UserDefinedData_ts,card=C_0N)
 
 # --------------------------------------------------------
-t=CK.Zone_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4,CK.I8])
+t=CGK.Zone_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4,CGK.I8])
 cgt[t].shape=(0,3)
-cgt[t].addChild(CK.GridCoordinates_ts,card=C_0N)
-cgt[t].addChild(CK.DiscreteData_ts,card=C_0N)
-cgt[t].addChild(CK.Elements_ts,card=C_0N)
-cgt[t].addChild(CK.ZoneBC_ts,CK.ZoneBC_s,card=C_01)
-cgt[t].addChild(CK.FlowSolution_ts,card=C_0N)
-cgt[t].addChild(CK.ZoneSubRegion_ts,card=C_0N)
-cgt[t].addChild(CK.ZoneType_ts,CK.ZoneType_s,card=C_11)
-cgt[t].addChild(CK.Ordinal_ts,CK.Ordinal_s,card=C_01)
-cgt[t].addChild(CK.ZoneGridConnectivity_ts,CK.ZoneGridConnectivity_s,card=C_01)
-cgt[t].addChild(CK.ZoneIterativeData_ts,card=C_01)
-cgt[t].addChild(CK.RigidGridMotion_ts,card=C_0N)
-cgt[t].addChild(CK.ReferenceState_ts,CK.ReferenceState_s,card=C_01)
-cgt[t].addChild(CK.IntegralData_ts,card=C_0N)
-cgt[t].addChild(CK.ArbitraryGridMotion_ts,card=C_0N)
-cgt[t].addChild(CK.FamilyName_ts,CK.FamilyName_s,card=C_01)
-cgt[t].addChild(CK.AdditionalFamilyName_ts,card=C_0N)
-cgt[t].addChild(CK.FlowEquationSet_ts,CK.FlowEquationSet_s,card=C_01)
-cgt[t].addChild(CK.ConvergenceHistory_ts,CK.ZoneConvergenceHistory_s,card=C_01)
-cgt[t].addChild(CK.RotatingCoordinates_ts,CK.RotatingCoordinates_s,card=C_01)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s,card=C_01)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s,card=C_01)
-cgt[t].addChild(CK.Descriptor_ts,card=C_0N)
-cgt[t].addChild(CK.UserDefinedData_ts,card=C_0N)
+cgt[t].addChild(CGK.GridCoordinates_ts,card=C_0N)
+cgt[t].addChild(CGK.DiscreteData_ts,card=C_0N)
+cgt[t].addChild(CGK.Elements_ts,card=C_0N)
+cgt[t].addChild(CGK.ZoneBC_ts,CGK.ZoneBC_s,card=C_01)
+cgt[t].addChild(CGK.FlowSolution_ts,card=C_0N)
+cgt[t].addChild(CGK.ZoneSubRegion_ts,card=C_0N)
+cgt[t].addChild(CGK.ZoneType_ts,CGK.ZoneType_s,card=C_11)
+cgt[t].addChild(CGK.Ordinal_ts,CGK.Ordinal_s,card=C_01)
+cgt[t].addChild(CGK.ZoneGridConnectivity_ts,CGK.ZoneGridConnectivity_s,card=C_01)
+cgt[t].addChild(CGK.ZoneIterativeData_ts,card=C_01)
+cgt[t].addChild(CGK.RigidGridMotion_ts,card=C_0N)
+cgt[t].addChild(CGK.ReferenceState_ts,CGK.ReferenceState_s,card=C_01)
+cgt[t].addChild(CGK.IntegralData_ts,card=C_0N)
+cgt[t].addChild(CGK.ArbitraryGridMotion_ts,card=C_0N)
+cgt[t].addChild(CGK.FamilyName_ts,CGK.FamilyName_s,card=C_01)
+cgt[t].addChild(CGK.AdditionalFamilyName_ts,card=C_0N)
+cgt[t].addChild(CGK.FlowEquationSet_ts,CGK.FlowEquationSet_s,card=C_01)
+cgt[t].addChild(CGK.ConvergenceHistory_ts,CGK.ZoneConvergenceHistory_s,card=C_01)
+cgt[t].addChild(CGK.RotatingCoordinates_ts,CGK.RotatingCoordinates_s,card=C_01)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s,card=C_01)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s,card=C_01)
+cgt[t].addChild(CGK.Descriptor_ts,card=C_0N)
+cgt[t].addChild(CGK.UserDefinedData_ts,card=C_0N)
 
 # --------------------------------------------------------
-t=CK.GridCoordinates_ts
-cgt[t]=CGNStype(t,names=[CK.GridCoordinates_s,UD])
-cgt[t].addChild(CK.DataArray_ts,card=C_0N)
-cgt[t].addChild(CK.Rind_ts,CK.Rind_s,card=C_01)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s,card=C_01)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s,card=C_01)
-cgt[t].addChild(CK.Descriptor_ts,card=C_0N)
-cgt[t].addChild(CK.UserDefinedData_ts,card=C_0N)
+t=CGK.GridCoordinates_ts
+cgt[t]=CGNStype(t,names=[CGK.GridCoordinates_s,UD])
+cgt[t].addChild(CGK.DataArray_ts,card=C_0N)
+cgt[t].addChild(CGK.Rind_ts,CGK.Rind_s,card=C_01)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s,card=C_01)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s,card=C_01)
+cgt[t].addChild(CGK.Descriptor_ts,card=C_0N)
+cgt[t].addChild(CGK.UserDefinedData_ts,card=C_0N)
 
 # --------------------------------------------------------
-t=CK.ZoneSubRegion_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4])
+t=CGK.ZoneSubRegion_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4])
 cgt[t].shape=(1,)
-cgt[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
-cgt[t].addChild(CK.IndexRange_ts,CK.PointRange_s,card=C_01)
-cgt[t].addChild(CK.IndexArray_ts,CK.PointList_s,card=C_01)
-cgt[t].addChild(CK.FamilyName_ts,CK.FamilyName_s,card=C_01)
-cgt[t].addChild(CK.AdditionalFamilyName_ts,card=C_0N)
-cgt[t].addChild(CK.DataArray_ts,card=C_0N)
-cgt[t].addChild(CK.Rind_ts,CK.Rind_s,card=C_01)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s,card=C_01)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s,card=C_01)
-cgt[t].addChild(CK.Descriptor_ts,[CK.BCRegionName_s,CK.GridConnectivityRegionName_s],card=C_0N)
-cgt[t].addChild(CK.UserDefinedData_ts,card=C_0N)
+cgt[t].addChild(CGK.GridLocation_ts,CGK.GridLocation_s)
+cgt[t].addChild(CGK.IndexRange_ts,CGK.PointRange_s,card=C_01)
+cgt[t].addChild(CGK.IndexArray_ts,CGK.PointList_s,card=C_01)
+cgt[t].addChild(CGK.FamilyName_ts,CGK.FamilyName_s,card=C_01)
+cgt[t].addChild(CGK.AdditionalFamilyName_ts,card=C_0N)
+cgt[t].addChild(CGK.DataArray_ts,card=C_0N)
+cgt[t].addChild(CGK.Rind_ts,CGK.Rind_s,card=C_01)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s,card=C_01)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s,card=C_01)
+cgt[t].addChild(CGK.Descriptor_ts,[CGK.BCRegionName_s,CGK.GridConnectivityRegionName_s],card=C_0N)
+cgt[t].addChild(CGK.UserDefinedData_ts,card=C_0N)
 
 
 # --------------------------------------------------------
-t=CK.Elements_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4])
+t=CGK.Elements_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4])
 cgt[t].shape=(2,)
-cgt[t].addChild(CK.IndexRange_ts,CK.PointRange_s)
-cgt[t].addChild(CK.IndexArray_ts,CK.PointList_s)
-cgt[t].addChild(CK.DataArray_ts,CK.ElementConnectivity_s,card=C_0N)
-cgt[t].addChild(CK.DataArray_ts,CK.ParentElements_s,card=C_01)
-cgt[t].addChild(CK.DataArray_ts,CK.ParentElementsPosition_s,card=C_01)
-cgt[t].addChild(CK.DataArray_ts,CK.ParentData_s,card=C_01)
-cgt[t].addChild(CK.Rind_ts,CK.Rind_s,card=C_01)
-cgt[t].addChild(CK.Descriptor_ts,card=C_0N)
-cgt[t].addChild(CK.UserDefinedData_ts,card=C_0N)
+cgt[t].addChild(CGK.IndexRange_ts,CGK.PointRange_s)
+cgt[t].addChild(CGK.IndexArray_ts,CGK.PointList_s)
+cgt[t].addChild(CGK.DataArray_ts,CGK.ElementConnectivity_s,card=C_0N)
+cgt[t].addChild(CGK.DataArray_ts,CGK.ParentElements_s,card=C_01)
+cgt[t].addChild(CGK.DataArray_ts,CGK.ParentElementsPosition_s,card=C_01)
+cgt[t].addChild(CGK.DataArray_ts,CGK.ParentData_s,card=C_01)
+cgt[t].addChild(CGK.Rind_ts,CGK.Rind_s,card=C_01)
+cgt[t].addChild(CGK.Descriptor_ts,card=C_0N)
+cgt[t].addChild(CGK.UserDefinedData_ts,card=C_0N)
 
 # --------------------------------------------------------
-t=CK.Axisymmetry_ts
-cgt[t]=CGNStype(t,names=[CK.Axisymmetry_s])
-cgt[t].addChild(CK.DataArray_ts,CK.AxisymmetryReferencePoint_s)
-cgt[t].addChild(CK.DataArray_ts,CK.AxisymmetryAxisVector_s)
-cgt[t].addChild(CK.DataArray_ts,CK.AxisymmetryAngle_s)
-cgt[t].addChild(CK.DataArray_ts,CK.CoordinateNames_s)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+t=CGK.Axisymmetry_ts
+cgt[t]=CGNStype(t,names=[CGK.Axisymmetry_s])
+cgt[t].addChild(CGK.DataArray_ts,CGK.AxisymmetryReferencePoint_s)
+cgt[t].addChild(CGK.DataArray_ts,CGK.AxisymmetryAxisVector_s)
+cgt[t].addChild(CGK.DataArray_ts,CGK.AxisymmetryAngle_s)
+cgt[t].addChild(CGK.DataArray_ts,CGK.CoordinateNames_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.RotatingCoordinates_ts
-cgt[t]=CGNStype(t,names=[CK.RotatingCoordinates_s])
-cgt[t].addChild(CK.DataArray_ts,CK.RotationCenter_s)
-cgt[t].addChild(CK.DataArray_ts,CK.RotationRateVector_s)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+t=CGK.RotatingCoordinates_ts
+cgt[t]=CGNStype(t,names=[CGK.RotatingCoordinates_s])
+cgt[t].addChild(CGK.DataArray_ts,CGK.RotationCenter_s)
+cgt[t].addChild(CGK.DataArray_ts,CGK.RotationRateVector_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.FlowSolution_ts
+t=CGK.FlowSolution_ts
 cgt[t]=CGNStype(t)
-cgt[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.Rind_ts,CK.Rind_s)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].addChild(CGK.GridLocation_ts,CGK.GridLocation_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.Rind_ts,CGK.Rind_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.DiscreteData_ts
+t=CGK.DiscreteData_ts
 cgt[t]=CGNStype(t)
-cgt[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.Rind_ts,CK.Rind_s)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].addChild(CGK.GridLocation_ts,CGK.GridLocation_s)
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.Rind_ts,CGK.Rind_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.ZoneBC_ts
-cgt[t]=CGNStype(t,names=[CK.ZoneBC_s])
-cgt[t].addChild(CK.BC_ts)
-cgt[t].addChild(CK.ReferenceState_ts,CK.ReferenceState_s)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+t=CGK.ZoneBC_ts
+cgt[t]=CGNStype(t,names=[CGK.ZoneBC_s])
+cgt[t].addChild(CGK.BC_ts)
+cgt[t].addChild(CGK.ReferenceState_ts,CGK.ReferenceState_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.BCProperty_ts
-cgt[t]=CGNStype(t,names=[CK.BCProperty_s])
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.WallFunction_ts,CK.WallFunction_s)
-cgt[t].addChild(CK.Area_ts,CK.Area_s)
+t=CGK.BCProperty_ts
+cgt[t]=CGNStype(t,names=[CGK.BCProperty_s])
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.WallFunction_ts,CGK.WallFunction_s)
+cgt[t].addChild(CGK.Area_ts,CGK.Area_s)
 
 # --------------------------------------------------------
-t=CK.BCData_ts
-cgt[t]=CGNStype(t,names=[CK.DirichletData_s,CK.NeumannData_s])
-cgt[t].addChild(CK.DataArray_ts)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+t=CGK.BCData_ts
+cgt[t]=CGNStype(t,names=[CGK.DirichletData_s,CGK.NeumannData_s])
+cgt[t].addChild(CGK.DataArray_ts)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.BCDataSet_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1])
-cgt[t].enumerate=CK.BCTypeSimple_l
-cgt[t].addChild(CK.BCData_ts,CK.NeumannData_s)
-cgt[t].addChild(CK.BCData_ts,CK.DirichletData_s)
-cgt[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
-cgt[t].addChild(CK.IndexRange_ts,CK.PointRange_s)
-cgt[t].addChild(CK.IndexArray_ts,CK.PointList_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.ReferenceState_ts,CK.ReferenceState_s)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.UserDefinedData_ts)
+t=CGK.BCDataSet_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1])
+cgt[t].enumerate=CGK.BCTypeSimple_l
+cgt[t].addChild(CGK.BCData_ts,CGK.NeumannData_s)
+cgt[t].addChild(CGK.BCData_ts,CGK.DirichletData_s)
+cgt[t].addChild(CGK.GridLocation_ts,CGK.GridLocation_s)
+cgt[t].addChild(CGK.IndexRange_ts,CGK.PointRange_s)
+cgt[t].addChild(CGK.IndexArray_ts,CGK.PointList_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.ReferenceState_ts,CGK.ReferenceState_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.BC_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1])
-cgt[t].enumerate=CK.BCType_l
+t=CGK.BC_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1])
+cgt[t].enumerate=CGK.BCType_l
 cgt[t].shape=(0,)
-cgt[t].addChild(CK.ReferenceState_ts,CK.ReferenceState_s)
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.Ordinal_ts,CK.Ordinal_s)
-cgt[t].addChild(CK.FamilyName_ts,CK.FamilyName_s)
-cgt[t].addChild(CK.AdditionalFamilyName_ts,card=C_0N)
-cgt[t].addChild(CK.IndexArray_ts,CK.InwardNormalList_s)
-cgt[t].addChild(CK.BCDataSet_ts)
-cgt[t].addChild(CK.InwardNormalIndex_ts,CK.InwardNormalIndex_s)
-cgt[t].addChild(CK.IndexArray_ts,CK.ElementList_s)
-cgt[t].addChild(CK.IndexArray_ts,CK.PointList_s)
-cgt[t].addChild(CK.IndexRange_ts,CK.ElementRange_s)
-cgt[t].addChild(CK.IndexRange_ts,CK.PointRange_s)
-cgt[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
-cgt[t].addChild(CK.BCProperty_ts,CK.BCProperty_s)
+cgt[t].addChild(CGK.ReferenceState_ts,CGK.ReferenceState_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.Ordinal_ts,CGK.Ordinal_s)
+cgt[t].addChild(CGK.FamilyName_ts,CGK.FamilyName_s)
+cgt[t].addChild(CGK.AdditionalFamilyName_ts,card=C_0N)
+cgt[t].addChild(CGK.IndexArray_ts,CGK.InwardNormalList_s)
+cgt[t].addChild(CGK.BCDataSet_ts)
+cgt[t].addChild(CGK.InwardNormalIndex_ts,CGK.InwardNormalIndex_s)
+cgt[t].addChild(CGK.IndexArray_ts,CGK.ElementList_s)
+cgt[t].addChild(CGK.IndexArray_ts,CGK.PointList_s)
+cgt[t].addChild(CGK.IndexRange_ts,CGK.ElementRange_s)
+cgt[t].addChild(CGK.IndexRange_ts,CGK.PointRange_s)
+cgt[t].addChild(CGK.GridLocation_ts,CGK.GridLocation_s)
+cgt[t].addChild(CGK.BCProperty_ts,CGK.BCProperty_s)
 
 # --------------------------------------------------------
-t=CK.ArbitraryGridMotionType_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],
-                  names=[CK.ArbitraryGridMotionType_s])
-cgt[t].shape=(0,)
-
-# --------------------------------------------------------
-t=CK.RigidGridMotionType_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.RigidGridMotionType_s])
+t=CGK.ArbitraryGridMotionType_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],
+                  names=[CGK.ArbitraryGridMotionType_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
-t=CK.WallFunctionType_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.WallFunctionType_s])
+t=CGK.RigidGridMotionType_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.RigidGridMotionType_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
-t=CK.WallFunction_ts
-cgt[t]=CGNStype(t,names=[CK.WallFunction_s])
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.WallFunctionType_ts,CK.WallFunctionType_s)
-
-# --------------------------------------------------------
-t=CK.AreaType_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.AreaType_s])
+t=CGK.WallFunctionType_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.WallFunctionType_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
-t=CK.Area_ts
-cgt[t]=CGNStype(t,names=[CK.Area_s])
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.AreaType_ts,CK.AreaType_s)
-cgt[t].addChild(CK.DataArray_ts,CK.SurfaceArea_s)
-cgt[t].addChild(CK.DataArray_ts,CK.RegionName_s)
+t=CGK.WallFunction_ts
+cgt[t]=CGNStype(t,names=[CGK.WallFunction_s])
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.WallFunctionType_ts,CGK.WallFunctionType_s)
 
 # --------------------------------------------------------
-t=CK.BaseIterativeData_ts
-cgt[t]=CGNStype(t,dtype=[CK.I4])
+t=CGK.AreaType_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.AreaType_s])
+cgt[t].shape=(0,)
+
+# --------------------------------------------------------
+t=CGK.Area_ts
+cgt[t]=CGNStype(t,names=[CGK.Area_s])
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.AreaType_ts,CGK.AreaType_s)
+cgt[t].addChild(CGK.DataArray_ts,CGK.SurfaceArea_s)
+cgt[t].addChild(CGK.DataArray_ts,CGK.RegionName_s)
+
+# --------------------------------------------------------
+t=CGK.BaseIterativeData_ts
+cgt[t]=CGNStype(t,dtype=[CGK.I4])
 cgt[t].shape=(1,)
-cgt[t].addChild(CK.DataClass_ts,[CK.DataClass_s],card=C_01)
-cgt[t].addChild(CK.DimensionalUnits_ts,[CK.DimensionalUnits_s],card=C_01)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.DataArray_ts)
+cgt[t].addChild(CGK.DataClass_ts,[CGK.DataClass_s],card=C_01)
+cgt[t].addChild(CGK.DimensionalUnits_ts,[CGK.DimensionalUnits_s],card=C_01)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.DataArray_ts)
 
 # --------------------------------------------------------
-t=CK.ZoneIterativeData_ts
+t=CGK.ZoneIterativeData_ts
 cgt[t]=CGNStype(t)
-cgt[t].addChild(CK.DataClass_ts,[CK.DataClass_s],card=C_01)
-cgt[t].addChild(CK.DimensionalUnits_ts,[CK.DimensionalUnits_s],card=C_01)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.DataArray_ts,[CK.RigidGridMotionPointers_s,
-                                 CK.ArbitraryGridMotionPointers_s,
-                                 CK.FlowSolutionPointers_s,
-                                 CK.ZoneGridConnectivityPointers_s,
-                                 CK.ZoneSubRegionPointers_s])
+cgt[t].addChild(CGK.DataClass_ts,[CGK.DataClass_s],card=C_01)
+cgt[t].addChild(CGK.DimensionalUnits_ts,[CGK.DimensionalUnits_s],card=C_01)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.DataArray_ts,[CGK.RigidGridMotionPointers_s,
+                                 CGK.ArbitraryGridMotionPointers_s,
+                                 CGK.FlowSolutionPointers_s,
+                                 CGK.ZoneGridConnectivityPointers_s,
+                                 CGK.ZoneSubRegionPointers_s])
 
 # --------------------------------------------------------
-t=CK.RigidGridMotion_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1])
+t=CGK.RigidGridMotion_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1])
 cgt[t].shape=(0,)
-cgt[t].enumerate=CK.RigidGridMotionType_l
-cgt[t].addChild(CK.DataClass_ts,[CK.DataClass_s],card=C_01)
-cgt[t].addChild(CK.DimensionalUnits_ts,[CK.DimensionalUnits_s],card=C_01)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.DataArray_ts,[CK.OriginLocation_s,
-                                 CK.RigidRotationAngle_s,
-                                 CK.RigidRotationRate_s,
-                                 CK.RigidVelocity_s])
+cgt[t].enumerate=CGK.RigidGridMotionType_l
+cgt[t].addChild(CGK.DataClass_ts,[CGK.DataClass_s],card=C_01)
+cgt[t].addChild(CGK.DimensionalUnits_ts,[CGK.DimensionalUnits_s],card=C_01)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.DataArray_ts,[CGK.OriginLocation_s,
+                                 CGK.RigidRotationAngle_s,
+                                 CGK.RigidRotationRate_s,
+                                 CGK.RigidVelocity_s])
 
 # --------------------------------------------------------
-t=CK.ArbitraryGridMotion_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1])
+t=CGK.ArbitraryGridMotion_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1])
 cgt[t].shape=(0,)
-cgt[t].enumerate=CK.ArbitraryGridMotionType_l
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
-cgt[t].addChild(CK.Rind_ts,CK.Rind_s)
-cgt[t].addChild(CK.DataArray_ts)
+cgt[t].enumerate=CGK.ArbitraryGridMotionType_l
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.GridLocation_ts,CGK.GridLocation_s)
+cgt[t].addChild(CGK.Rind_ts,CGK.Rind_s)
+cgt[t].addChild(CGK.DataArray_ts)
 
 # --------------------------------------------------------
-t=CK.ZoneGridConnectivity_ts
-cgt[t]=CGNStype(t,names=[CK.ZoneGridConnectivity_s])
-cgt[t].addChild(CK.GridConnectivity1to1_ts)
-cgt[t].addChild(CK.GridConnectivity_ts)
-cgt[t].addChild(CK.OversetHoles_ts)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+t=CGK.ZoneGridConnectivity_ts
+cgt[t]=CGNStype(t,names=[CGK.ZoneGridConnectivity_s])
+cgt[t].addChild(CGK.GridConnectivity1to1_ts)
+cgt[t].addChild(CGK.GridConnectivity_ts)
+cgt[t].addChild(CGK.OversetHoles_ts)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
-t=CK.GridConnectivityProperty_ts
-cgt[t]=CGNStype(t,names=[CK.GridConnectivityProperty_s])
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.Periodic_ts,CK.Periodic_s)
-cgt[t].addChild(CK.AverageInterface_ts,CK.AverageInterface_s)
+t=CGK.GridConnectivityProperty_ts
+cgt[t]=CGNStype(t,names=[CGK.GridConnectivityProperty_s])
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.Periodic_ts,CGK.Periodic_s)
+cgt[t].addChild(CGK.AverageInterface_ts,CGK.AverageInterface_s)
 
 # --------------------------------------------------------
-t=CK.Periodic_ts
-cgt[t]=CGNStype(t,names=[CK.Periodic_s])
-cgt[t].addChild(CK.DataClass_ts,CK.DataClass_s)
-cgt[t].addChild(CK.DimensionalUnits_ts,CK.DimensionalUnits_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.DataArray_ts,CK.RotationCenter_s)
-cgt[t].addChild(CK.DataArray_ts,CK.RotationAngle_s)
-cgt[t].addChild(CK.DataArray_ts,CK.Translation_s)
+t=CGK.Periodic_ts
+cgt[t]=CGNStype(t,names=[CGK.Periodic_s])
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.DataArray_ts,CGK.RotationCenter_s)
+cgt[t].addChild(CGK.DataArray_ts,CGK.RotationAngle_s)
+cgt[t].addChild(CGK.DataArray_ts,CGK.Translation_s)
 
 # --------------------------------------------------------
-t=CK.AverageInterfaceType_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.AverageInterfaceType_s])
-cgt[t].shape=(0,)
-
-# --------------------------------------------------------
-t=CK.AverageInterface_ts
-cgt[t]=CGNStype(t,names=[CK.AverageInterface_s])
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-cgt[t].addChild(CK.AverageInterfaceType_ts,CK.AverageInterfaceType_s)
-
-# --------------------------------------------------------
-t=CK.GridConnectivity1to1_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1])
-cgt[t].shape=(0,)
-cgt[t].addChild(CK.Transform_ts,CK.Transform_s)
-cgt[t].addChild(CK.IntIndexDimension_ts,CK.Transform_s)
-cgt[t].addChild(CK.Transform_ts2,CK.Transform_s)
-cgt[t].addChild(CK.IndexRange_ts,CK.PointRange_s)
-cgt[t].addChild(CK.IndexRange_ts,CK.PointRangeDonor_s)
-cgt[t].addChild(CK.Ordinal_ts,CK.Ordinal_s)
-cgt[t].addChild(CK.GridConnectivityProperty_ts,CK.GridConnectivityProperty_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
-
-# --------------------------------------------------------
-t=CK.GridConnectivityType_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1],names=[CK.GridConnectivityType_s])
+t=CGK.AverageInterfaceType_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.AverageInterfaceType_s])
 cgt[t].shape=(0,)
 
 # --------------------------------------------------------
-t=CK.GridConnectivity_ts
-cgt[t]=CGNStype(t,dtype=[CK.C1])
-cgt[t].shape=(0,)
-cgt[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
-cgt[t].addChild(CK.Ordinal_ts,CK.Ordinal_s)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.IndexRange_ts,CK.PointRange_s)
-cgt[t].addChild(CK.IndexArray_ts,CK.PointList_s)
-cgt[t].addChild(CK.IndexArray_ts,CK.PointListDonor_s)
-cgt[t].addChild(CK.IndexArray_ts,CK.CellListDonor_s)
-cgt[t].addChild(CK.GridConnectivityProperty_ts,CK.GridConnectivityProperty_s)
-cgt[t].addChild(CK.GridConnectivityType_ts,CK.GridConnectivityType_s)
-cgt[t].addChild(CK.DataArray_ts,CK.InterpolantsDonor_s)
-cgt[t].addChild(CK.UserDefinedData_ts)
+t=CGK.AverageInterface_ts
+cgt[t]=CGNStype(t,names=[CGK.AverageInterface_s])
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.AverageInterfaceType_ts,CGK.AverageInterfaceType_s)
 
 # --------------------------------------------------------
-t=CK.OversetHoles_ts
+t=CGK.GridConnectivity1to1_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1])
+cgt[t].shape=(0,)
+cgt[t].addChild(CGK.Transform_ts,CGK.Transform_s)
+cgt[t].addChild(CGK.IntIndexDimension_ts,CGK.Transform_s)
+cgt[t].addChild(CGK.Transform_ts2,CGK.Transform_s)
+cgt[t].addChild(CGK.IndexRange_ts,CGK.PointRange_s)
+cgt[t].addChild(CGK.IndexRange_ts,CGK.PointRangeDonor_s)
+cgt[t].addChild(CGK.Ordinal_ts,CGK.Ordinal_s)
+cgt[t].addChild(CGK.GridConnectivityProperty_ts,CGK.GridConnectivityProperty_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+
+# --------------------------------------------------------
+t=CGK.GridConnectivityType_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.GridConnectivityType_s])
+cgt[t].shape=(0,)
+
+# --------------------------------------------------------
+t=CGK.GridConnectivity_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1])
+cgt[t].shape=(0,)
+cgt[t].addChild(CGK.GridLocation_ts,CGK.GridLocation_s)
+cgt[t].addChild(CGK.Ordinal_ts,CGK.Ordinal_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.IndexRange_ts,CGK.PointRange_s)
+cgt[t].addChild(CGK.IndexArray_ts,CGK.PointList_s)
+cgt[t].addChild(CGK.IndexArray_ts,CGK.PointListDonor_s)
+cgt[t].addChild(CGK.IndexArray_ts,CGK.CellListDonor_s)
+cgt[t].addChild(CGK.GridConnectivityProperty_ts,CGK.GridConnectivityProperty_s)
+cgt[t].addChild(CGK.GridConnectivityType_ts,CGK.GridConnectivityType_s)
+cgt[t].addChild(CGK.DataArray_ts,CGK.InterpolantsDonor_s)
+cgt[t].addChild(CGK.UserDefinedData_ts)
+
+# --------------------------------------------------------
+t=CGK.OversetHoles_ts
 cgt[t]=CGNStype(t)
-cgt[t].addChild(CK.Descriptor_ts)
-cgt[t].addChild(CK.IndexArray_ts,CK.PointList_s)
-cgt[t].addChild(CK.GridLocation_ts,CK.GridLocation_s)
-cgt[t].addChild(CK.IndexRange_ts)
-cgt[t].addChild(CK.UserDefinedData_ts)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.IndexArray_ts,CGK.PointList_s)
+cgt[t].addChild(CGK.GridLocation_ts,CGK.GridLocation_s)
+cgt[t].addChild(CGK.IndexRange_ts)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 types=cgt
@@ -821,5 +821,29 @@ for pk in tk:
   for ck in tk:
     if ((ck!=pk) and (types[pk].hasChild(ck))):
         types[ck].addParent(pk)
-  
+
+# --- reserved names / SIDS types
+cgnsnametypes={
+CGK.Density_s                     : (CGK.DataArray_ts,None),
+CGK.Pressure_s                    : (CGK.DataArray_ts,None),
+CGK.Temperature_s                 : (CGK.DataArray_ts,None),
+CGK.EnergyInternal_s              : (CGK.DataArray_ts,None),
+CGK.Enthalpy_s                    : (CGK.DataArray_ts,None),
+CGK.Entropy_s                     : (CGK.DataArray_ts,None),
+CGK.EntropyApprox_s               : (CGK.DataArray_ts,None),
+CGK.DensityStagnation_s           : (CGK.DataArray_ts,None),
+CGK.PressureStagnation_s          : (CGK.DataArray_ts,None),
+CGK.TemperatureStagnation_s       : (CGK.DataArray_ts,None),
+CGK.EnergyStagnation_s            : (CGK.DataArray_ts,None),
+CGK.EnthalpyStagnation_s          : (CGK.DataArray_ts,None),
+CGK.EnergyStagnationDensity_s     : (CGK.DataArray_ts,None),
+}
+
+for pk in tk:
+  pkn=types[pk].names
+  if (pkn != [UD]):
+    for name in pkn:
+      if (pkn != UD):
+        cgnsnametypes[name]=(types[pk].type,types[pk].enumerate)
+
 # --- last line

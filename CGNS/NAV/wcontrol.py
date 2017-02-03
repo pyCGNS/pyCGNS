@@ -328,9 +328,18 @@ class Q7Main(QW, Ui_Q7ControlWindow):
     def setDefaults(self):
         self.loadOptions()
         self._application.setStyleSheet(self.wOption._options['UserCSS'])
-    def loadCompleted(self,*args):
+    def loadCompleted(self,*args,**kwargs):
         self.lockView(False)
-        fgprint=self.signals.fgprint
+        if ('dataset_name' in kwargs):
+            filedir=kwargs['dataset_base']
+            filename=kwargs['dataset_name']
+            tree=kwargs['dataset_tree']
+            links=kwargs['dataset_references']
+            paths=kwargs['dataset_paths']
+            fgprint=Q7FingerPrint(self,filedir,filename,
+                                  tree,links,paths,**kwargs)
+        else:
+            fgprint=self.signals.fgprint
         if (len(fgprint)>1):
             MSG.wError(self,200,'Load error',fgprint[1])
         elif (fgprint.tree is None):

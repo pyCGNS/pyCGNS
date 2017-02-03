@@ -27,6 +27,7 @@ from CGNS.NAV.wfingerprint import Q7FingerPrint
 import sys
 import os
 import linecache
+import string
 
 def trace(f):
     def globaltrace(frame, why, arg):
@@ -119,10 +120,13 @@ STUSR_9='@@USR_9@@'
 STUSR_A='@@USR_A@@'
 STUSR_B='@@USR_B@@'
 STUSR_C='@@USR_C@@'
+STUSR_D='@@USR_D@@'
+STUSR_E='@@USR_E@@'
+STUSR_F='@@USR_F@@'
 
 USERSTATES=[STUSR_0,STUSR_1,STUSR_2,STUSR_3,STUSR_4,
             STUSR_5,STUSR_6,STUSR_7,STUSR_8,STUSR_9,
-            STUSR_A,STUSR_B,STUSR_C]
+            STUSR_A,STUSR_B,STUSR_C,STUSR_D,STUSR_E,STUSR_F]
 
 STMARK_ON='@@MARK_ON@@'
 STMARKOFF='@@MARKOFF@@'
@@ -160,9 +164,18 @@ USERFLAG_6='@@USER6@@'
 USERFLAG_7='@@USER7@@'
 USERFLAG_8='@@USER8@@'
 USERFLAG_9='@@USER9@@'
+USERFLAG_A='@@USERA@@'
+USERFLAG_B='@@USERB@@'
+USERFLAG_C='@@USERC@@'
+USERFLAG_D='@@USERD@@'
+USERFLAG_E='@@USERE@@'
+USERFLAG_F='@@USERF@@'
 
 USERFLAGS=[USERFLAG_0,USERFLAG_1,USERFLAG_2,USERFLAG_3,USERFLAG_4,
-           USERFLAG_5,USERFLAG_6,USERFLAG_7,USERFLAG_8,USERFLAG_9]
+           USERFLAG_5,USERFLAG_6,USERFLAG_7,USERFLAG_8,USERFLAG_9,
+           USERFLAG_A,USERFLAG_B,USERFLAG_C,USERFLAG_D,USERFLAG_E,
+           USERFLAG_F,
+          ]
 
 ICONMAPPING={
  STLKNOLNK:":/images/icons/empty.png",
@@ -195,6 +208,9 @@ ICONMAPPING={
  STUSR_A:  ":/images/icons/user-A.png",
  STUSR_B:  ":/images/icons/user-B.png",
  STUSR_C:  ":/images/icons/user-C.png",
+ STUSR_D:  ":/images/icons/user-D.png",
+ STUSR_E:  ":/images/icons/user-E.png",
+ STUSR_F:  ":/images/icons/user-F.png",
 }
 
 KEYMAPPING={
@@ -232,6 +248,12 @@ KEYMAPPING={
  USERFLAG_7:              Qt.Key_7,
  USERFLAG_8:              Qt.Key_8,
  USERFLAG_9:              Qt.Key_9,  
+ USERFLAG_A:              Qt.Key_A,
+ USERFLAG_B:              Qt.Key_B,
+ USERFLAG_C:              Qt.Key_C,
+ USERFLAG_D:              Qt.Key_D,
+ USERFLAG_E:              Qt.Key_E,
+ USERFLAG_F:              Qt.Key_F,  
 }
 
 MODIFIERMAPPING={
@@ -273,7 +295,11 @@ USERKEYMAPPINGS=[ KEYMAPPING[USERFLAG_0],KEYMAPPING[USERFLAG_1],
                   KEYMAPPING[USERFLAG_2],KEYMAPPING[USERFLAG_3],
                   KEYMAPPING[USERFLAG_4],KEYMAPPING[USERFLAG_5],
                   KEYMAPPING[USERFLAG_6],KEYMAPPING[USERFLAG_7],
-                  KEYMAPPING[USERFLAG_8],KEYMAPPING[USERFLAG_9] ]
+                  KEYMAPPING[USERFLAG_8],KEYMAPPING[USERFLAG_9],
+                  KEYMAPPING[USERFLAG_A],KEYMAPPING[USERFLAG_B],
+                  KEYMAPPING[USERFLAG_C],KEYMAPPING[USERFLAG_D],
+                  KEYMAPPING[USERFLAG_E],KEYMAPPING[USERFLAG_F],
+                ]
 
 ALLKEYMAPPINGS=[KEYMAPPING[v] for v in KEYMAPPING]
 
@@ -382,7 +408,8 @@ class Q7TreeView(QTreeView):
                 if (kval==KEYMAPPING[PASTEBROTHERSELECTED]):
                   self.model().pasteAsBrotherAllSelectedNodes()
                   self.exclusiveSelectRow()
-          elif (kval in USERKEYMAPPINGS):
+          # --- same keys different meta
+          if (kval in USERKEYMAPPINGS):
               last.setUserState(kval-48)
               self.exclusiveSelectRow(nix)
           elif (kval==KEYMAPPING[EDITNODE]):
@@ -602,6 +629,7 @@ class Q7TreeItem(object):
             return numpy.isfortran(self.sidsValue())
         return False
     def sidsValueEnum(self):
+        print 'TYPE',self.sidsType()
         if (self.sidsType() in CGK.cgnsenums):
           return CGK.cgnsenums[self.sidsType()]
         return None
@@ -879,10 +907,9 @@ class Q7TreeItem(object):
     def setUserStatePrivate(self,s):
         self._states['user']=STUSR__%s
     def setUserState(self,s):
-        try:
-            if (int(s) not in range(10)): return
-        except ValueError: return
-        state=STUSR_P%int(s)
+        if (int(s) in range(10)): state=STUSR_P%int(s)
+        else:                     
+            state=STUSR__%chr(s+48) # hmmm quite tricky
         if (self._states['user']==state): self._states['user']=STUSR_X
         else: self._states['user']=state
     def lastEdited(self):
