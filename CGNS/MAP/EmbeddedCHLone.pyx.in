@@ -1,0 +1,478 @@
+# ======================================================================
+# CHLone - CGNS HDF5 LIBRARY only node edition
+# See license.txt in the root directory of this source release
+# ====================================================================== 
+#
+import os
+import sys
+import copy
+
+# ---------------------------------------------------------------------------
+class CHLoneExceptionInternal(Exception):
+  def __str__(self):
+    s='CHLone.CHLoneException'+Exception.__str__(self)
+    return s
+
+class CHLoneException(Exception):
+  mTable={
+    900:'No such file [%%s]',
+    901:'File already exists [%%s]',
+    902:'File name should be a string',
+    903:'Cannot propagate save to non-existant linked-to file [%%s]',
+    904:'Cannot propagate save to unreadable linked-to file [%%s]',
+    905:'Cannot propagate save to non-existant node in linked-to file [%%s]',
+    906:'Bad tree structure (root should be list of 4 items, refer to doc)',
+    907:'Invalid combination of flags (refer to doc)',
+    908:'Using a maxdata implies FNODATA flag',
+    909:'Cannot have attributes %%s at the same time',
+    910:'Keyword argument [%%s] unknown',
+    911:'Bad [flag] argument (should be int)',
+    912:'Bad [depth] argument (should be int)',
+    913:'Bad [path] argument (should be str)',
+    914:'Bad [lksearch] argument (should be list of str)',
+    915:'Bad [maxdata] argument (should be int)',
+    916:'Bad [skip] argument (should be list of str)',
+    917:'Bad [links] argument (refer to doc)',
+    920:'Cannot write in file [%%s]',
+    930:'Filter dict requires a path (str) as key',
+    931:'Filter dict value should be a tuple with int as first arg',
+    932:'SPARTIAL Filter requires a "list of 8 lists of integers" as value"',
+    933:'SPARTIAL Filter bad parameters',
+    934:'SCONTIGUOUS Filter requires a tuple of index,rank (integers) as value',
+  }
+
+def raiseException(code,*args):
+  if (args):
+    raise  CHLoneException, (code,CHLoneException.mTable[code]%%args)
+  else:
+    raise  CHLoneException, (code,CHLoneException.mTable[code])
+
+def checkUpdate(update):
+    if (type(update)!=dict): update=None
+    return update
+
+def checkFlags(flags,save=False):
+  if (not isinstance(flags,int)): raiseException(911)
+  if (save): pass
+  else:      flags|=S2P_FREADONLY
+  return flags
+
+def checkDepth(depth):
+  if (not isinstance(depth,int)): raiseException(912)
+  if (depth<1):  depth=999
+  return depth
+
+def checkThreshold(maxdata):
+  if (not isinstance(maxdata,int)): raiseException(915)
+  if (maxdata<1): maxdata=-1
+  return maxdata
+
+def checkObjectPath(path):
+  if (path is None): path=''
+  if (not isinstance(path,str)): raiseException(913)
+  return path
+
+def checkObjectDict(odict):
+  return odict
+
+def checkPathList(lpath):
+  if (not lpath): return []
+  if (type(lpath)!=list): raiseException(916)
+  for p in lpath: 
+    if (type(p) not in [str, unicode]): raiseException(916)
+  return lpath
+
+def checkLinkList(links,linkfull=False):
+  if (not links): return []
+  if (type(links) not in [list,tuple]): raiseException(917)
+  # expected: destdir destfile destnode srcnode
+  # old: destdir destfile destnode srcnode status
+  # new: srcdir srcfile srcnode destdir destfile destnode status
+  if (type(links[0]) not in [list,tuple]): raiseException(917)
+  if (len(links[0])==5): links=[l[:-1] for l in links]
+  if (len(links[0]) in [6,7]):
+    links=[ [l[3],l[4],l[5],l[2]] for l in links]
+  elif linkfull:
+    raiseException(917)
+  list_links=[]
+  for lk in links:
+    if ((type(lk) not in [list,tuple])
+        or (len(lk) not in [4])):
+      raiseException(917)
+    for p in lk: 
+      if (type(p) not in [str, unicode]): raiseException(917)
+    list_links.append(list(lk))
+  return list_links
+
+def checkHyperslabBounds(h):
+  ss=set([len(e) for e in h[:4]])
+  ds=set([len(e) for e in h[4:]])
+  if ((len(ss)>1) or (len(ds)>2)): raiseException(933)
+
+def fillMaxRankForAll(adict):
+  ctg_dict=copy.copy(adict)
+  cd={}
+  for k in ctg_dict.keys():
+    if ((ctg_dict[k][0] & SCONTIGUOUS) or (ctg_dict[k][0] & SINTERLACED)):
+      if (not cd.has_key(ctg_dict[k][1])):
+        cd[ctg_dict[k][1]]=[[k],1]
+      else:
+        cd[ctg_dict[k][1]][0].append(k)
+        cd[ctg_dict[k][1]][1]+=1
+    ctg_dict.pop(k)
+  for k in adict:
+    if ((adict[k][0] & SCONTIGUOUS) or (adict[k][0] & SINTERLACED)):
+      for ik in cd:
+        if (k in cd[ik][0]):
+          mode=SCONTIGUOUS
+          if (adict[k][0]==SINTERLACED): mode=SINTERLACED|SCONTIGUOUS
+          adict[k]=(mode,adict[k][1],adict[k][2],cd[ik][1])
+  return adict
+  
+def checkFilter(adict):
+  for k in adict:
+    if (type(k) not in [str,unicode]): raiseException(930)
+    v=adict[k]
+    if (type(v) != tuple): raiseException(931)
+    if ((len(v) > 1) and (type(v[0]) != int)): raiseException(931)
+    if (v[0]==SPARTIAL):
+      if (len(v) != 2): raiseException(932)
+      if (type(v[1]) not in [list, tuple]): raiseException(932)
+      if (len(v[1])!=8): raiseException(932)
+      checkHyperslabBounds(v[1])
+    elif (v[0]==SCONTIGUOUS):
+      if (len(v) != 3): raiseException(934)
+      if ((type(v[1]) != int) or (type(v[2]) != int)): raiseException(934)
+  adict=fillMaxRankForAll(adict)
+  return adict
+
+def checkLinkPath(lksearch):
+  r=[]
+  if (not lksearch): return ''
+  if (type(lksearch) not in [list,tuple]): raiseException(914)
+  for p in lksearch: 
+    if (type(p) not in [str, unicode]): raiseException(914)
+    r.append(str(p))
+  if (sys.platform in ['win32']):
+    return ';'.join(r)
+  else:
+    return ':'.join(r)
+
+def checkFast(tree):
+  if ((not isinstance(tree,list)) or (len(tree)!=4)): raiseException(906)
+
+def hasFlags(allflags,flag):
+  return allflags&flag
+
+def propagateUpdatePaths(links,obdict):
+  upaths=obdict.keys()
+  fpaths={}
+  for upath in upaths:
+    for lk in links:
+      if (lk[3] in upath):
+        if (lk[3]==upath): continue
+#        fpaths[(lk[0],lk[1])].append(=obdict[lk[3]]
+
+def propagateSkipPaths(links,sklist):
+  pass
+
+def checkLinkedToFiles(links,propagate=True):
+  for lk in links:
+    if (lk[0] is None): fname='./%%s'%%(lk[1])
+    else: fname='%%s/%%s'%%(lk[0],lk[1])
+    fname=os.path.normpath(fname)
+    if (propagate):
+      if (not os.path.exists(fname)): raiseException(903,fname)
+      if (not os.access(fname, os.R_OK|os.W_OK)): raiseException(904,fname)
+      if (not probe(fname)): raiseException(904,fname)
+      if (not probe(fname,lk[2])): raiseException(905,fname)
+  
+# ---------------------------------------------------------------------------
+cdef extern from "CGNS/MAP/SIDStoPython.h":
+
+  long S2P_FNONE
+  long S2P_FALL
+  long S2P_FTRACE
+  long S2P_FDEBUG
+  long S2P_FFOLLOWLINKS
+  long S2P_FNODATA
+  long S2P_FKEEPLIST
+  long S2P_FCOMPRESS
+  long S2P_FREVERSEDIMS
+  long S2P_FOWNDATA
+  long S2P_FUPDATE
+  long S2P_FDELETEMISSING
+  long S2P_FALTERNATESIDS
+  long S2P_FUPDATEONLY
+  long S2P_FFORTRANFLAG
+  long S2P_FDEFAULT
+  long S2P_FREADONLY
+  long S2P_FNEW
+  long S2P_FNOLINKSHARE
+  long S2P_FPROPAGATE
+  long S2P_FLINKOVERRIDE
+  long S2P_FCHECKSUM
+
+  int  S2P_LKOK
+  int  S2P_LKFAIL
+  int  S2P_LKBADSYNTAX
+  int  S2P_LKNOFILE
+  int  S2P_LKFILENOREAD
+  int  S2P_LKNONODE
+  int  S2P_LKLOOP
+  int  S2P_LKIGNORED
+
+  int  S2P_SNONE          
+  int  S2P_SALL           
+  int  S2P_SNODATA        
+  int  S2P_SPARTIAL       
+  int  S2P_SCONTIGUOUS    
+  int  S2P_SINTERLACED
+  int  S2P_SSKIP
+
+  int SIDSTOPYTHON_MAJOR
+  int SIDSTOPYTHON_MINOR
+  
+  object s2p_loadAsHDF(char   *dirname,
+                       char   *filename,
+                       int     flags,
+                       int     depth,
+                       int     maxdata,
+                       char   *path,
+                       char   *searchpath,
+                       object  update,
+                       object  dfilter,
+                       object  skip,
+                       object  xcept)
+
+  object s2p_saveAsHDF(char   *dirname,
+    	               char   *filename,
+    	               object  tree,
+    	               object  links,
+    	               int     flags,
+    	               int     depth,
+		       char   *searchpath,
+                       object  update,
+                       object  dfilter,
+                       object  skip,
+                       object  lkupdate,
+                       object  lkskip,
+                       object  xcept)
+
+  int s2p_probe(char *filename,char *path)
+  int s2p_garbage(object tree)
+
+FNONE          = S2P_FNONE
+FALL           = S2P_FALL
+FTRACE         = S2P_FTRACE
+FDEBUG         = S2P_FDEBUG
+FFOLLOWLINKS   = S2P_FFOLLOWLINKS
+FNODATA        = S2P_FNODATA
+FKEEPLIST      = S2P_FKEEPLIST
+FCOMPRESS      = S2P_FCOMPRESS
+FREVERSEDIMS   = S2P_FREVERSEDIMS
+FOWNDATA       = S2P_FOWNDATA
+FUPDATE        = S2P_FUPDATE
+FDELETEMISSING = S2P_FDELETEMISSING
+FALTERNATESIDS = S2P_FALTERNATESIDS
+FLINKOVERRIDE  = S2P_FLINKOVERRIDE
+FUPDATEONLY    = S2P_FUPDATEONLY
+FPROPAGATE     = S2P_FPROPAGATE
+FFORTRANFLAG   = S2P_FFORTRANFLAG
+FDEFAULT       = S2P_FDEFAULT
+FCHECKSUM      = S2P_FCHECKSUM
+
+FDEFAULTS      = FDEFAULT
+
+LKOK         = S2P_LKOK        
+LKFAIL       = S2P_LKFAIL      
+LKBADSYNTAX  = S2P_LKBADSYNTAX 
+LKNOFILE     = S2P_LKNOFILE    
+LKFILENOREAD = S2P_LKFILENOREAD
+LKNONODE     = S2P_LKNONODE    
+LKLOOP       = S2P_LKLOOP      
+LKIGNORED    = S2P_LKIGNORED
+
+SNONE        = S2P_SNONE          
+SALL         = S2P_SALL           
+SNODATA      = S2P_SNODATA        
+SPARTIAL     = S2P_SPARTIAL       
+SCONTIGUOUS  = S2P_SCONTIGUOUS    
+SINTERLACED  = S2P_SINTERLACED
+SSKIP        = S2P_SSKIP
+
+S_ALLOWED=[S2P_SNONE,S2P_SPARTIAL,S2P_SCONTIGUOUS,S2P_SSKIP]
+
+version_major=SIDSTOPYTHON_MAJOR
+version_minor=SIDSTOPYTHON_MINOR
+
+version="v%%d.%%d"%%(version_major,version_minor)
+
+class Config:
+  pass
+
+# GENERATED STUFF HERE ----------------------------------------------
+config=Config()
+config.libraries='%(CHLONE_INSTALL_LIBRARIES)s'
+config.includes='%(CHLONE_INSTALL_INCLUDES)s'
+config.h5version='%(HDF5_VERSION)s'
+# -------------------------------------------------------------------
+
+load_keys=['updatedict','subtree','linkpaths','filter','contiguous',
+           'flags','depth','path','lksearch','update','maxdata','threshold',
+           'linkfull','skip','skiplist']
+
+# ---------------------------------------------------------------------------
+def garbage(tree):
+  s2p_garbage(tree)
+  
+# ---------------------------------------------------------------------------
+def probe(filename,path=None):
+  tfile=os.path.normpath(os.path.expanduser(filename))
+  if (not os.path.exists(tfile)): raiseException(900,tfile)
+  if (path is None): r=s2p_probe(tfile,'')
+  else: r=s2p_probe(tfile,path)
+  return r
+
+def showrefs(t,path=''):
+  vc=sys.getrefcount(t[1])-1
+  if (t[1] is None):
+    vc=1
+    fg=True
+  else:
+    fg=t[1].flags['OWNDATA']
+  print "%%d %%d %%d %%d (%%s) %%s"%%(sys.getrefcount(t[0])-1,
+                               vc,
+                               sys.getrefcount(t[2])-1,
+                               sys.getrefcount(t[3])-1,path,
+                               fg)
+  for c in t[2]:
+    showrefs(c,path+'/'+c[0])
+    
+# ---------------------------------------------------------------------------
+def load(filename,**kw):
+  for k in kw:
+    if (k not in load_keys): raiseException(910,k)
+  if (('linkpaths' in kw) and ('lksearch' in kw)): 
+    raiseException(909,['linkpaths','lksearch'])
+  if (('subtree' in kw) and ('path' in kw)): 
+    raiseException(909,['subtree','path'])
+  if (('maxdata' in kw) and ('threshold' in kw)): 
+    raiseException(909,['maxdata','threshold'])
+  if (('updatedict' in kw) and ('update' in kw)): 
+    raiseException(909,['updatedict','update'])
+  flags=S2P_FDEFAULT
+  depth=0
+  path=''
+  lksearch=[]
+  update={}
+  maxdata=-1
+  filter={}
+  skip=[]
+  linkfull=False
+  tpath=os.path.normpath(os.path.expanduser(filename))
+  tdir=os.path.split(tpath)[0]
+  tfile=os.path.split(tpath)[1]
+  if (not os.path.exists(tpath)): raiseException(900,tpath)
+  if ('subtree'    in kw): path=kw['subtree']
+  if ('path'       in kw): path=kw['path']
+  if ('linkpaths'  in kw): lksearch=kw['linkpaths']
+  if ('lksearch'   in kw): lksearch=kw['lksearch']
+  if ('updatedict' in kw): update=kw['updatedict']
+  if ('update'     in kw): update=kw['update']
+  if ('contiguous' in kw): filter=kw['contiguous']
+  if ('filter'     in kw): filter=kw['filter']
+  if ('flags'      in kw): flags=kw['flags']
+  if ('depth'      in kw): depth=kw['depth']
+  if ('maxdata'    in kw): maxdata=kw['maxdata']
+  if ('threshold'  in kw): maxdata=kw['threshold']
+  if ('linkfull'   in kw): linkfull=kw['linkfull']
+  if ('skip'       in kw): skip=kw['skip']
+  if ('skiplist'   in kw): skip=kw['skiplist']
+  _flags=checkFlags(flags)
+  _depth=checkDepth(depth)
+  _maxdata=checkThreshold(maxdata)
+  _lkpath=checkLinkPath(lksearch)
+  _obpath=checkObjectPath(path)
+  _update=checkUpdate(update)
+  _filter=checkFilter(filter)
+  _sklist=checkPathList(skip)
+  if ((_maxdata!=-1) and (not _flags&FNODATA)): raiseException(908)
+  x=CHLoneExceptionInternal()
+  try:
+    t=s2p_loadAsHDF(tdir,tfile,_flags,_depth,_maxdata,_obpath,_lkpath,
+                    _update,_filter,_sklist,x)
+    if (t[0][2] is not None): t[0][2]=t[0][2][2]
+    # handle old/new link table format, linkfull=True means new
+    # old: destdir destfile destnode srcnode status
+    # new: srcdir srcfile srcnode destdir destfile destnode status
+    if (not linkfull and t[1]): lk=[[l[3],l[4],l[5],l[2],l[6]] for l in t[1]]
+    else: lk=t[1]
+    t=(t[0],lk,t[2])
+  except CHLoneExceptionInternal, v: raise CHLoneException, v
+  del x
+  return t
+    
+save_keys=['links','skip','flags','depth','lksearch','filter','update',
+           'updatepaths','updatedict','linkpaths','skiplist',
+           'linkfull']
+
+# ---------------------------------------------------------------------------
+def save(filename,tree,**kw):
+  if (type(filename) not in [str,unicode]):
+    raiseException(902)
+  for k in kw:
+    if (k not in save_keys): raiseException(910,k)
+  if (('updatedict' in kw) and ('update' in kw)): 
+    raiseException(909,['updatedict','update'])
+  links=[]
+  flags=S2P_FDEFAULT
+  depth=0
+  lksearch=[]
+  update={}
+  filter={}
+  skip=[]
+  linkfull=False
+  _lkobdict=None
+  _lksklist=None
+  tpath=os.path.normpath(os.path.expanduser(filename))
+  tdir=os.path.split(tpath)[0]
+  tfile=os.path.split(tpath)[1]
+  if ((flags&S2P_FUPDATE) and (not os.path.exists(tfile))):
+    raiseException(901,filename)
+  if ((flags&S2P_FUPDATE) and (not os.access(tfile, os.W_OK))):
+    raiseException(920,filename)
+  if ('updatedict' in kw): update=kw['updatedict']
+  if ('update'     in kw): update=kw['update']
+  if ('updatepaths' in kw): update=kw['update']
+  if ('flags'      in kw): flags=kw['flags']
+  if ('depth'      in kw): depth=kw['depth']
+  if ('linkpaths'  in kw): lksearch=kw['linkpaths']
+  if ('lksearch'   in kw): lksearch=kw['lksearch']
+  if ('filter'     in kw): filter=kw['filter']
+  if ('skip'       in kw): skip=kw['skip']
+  if ('skiplist'   in kw): skip=kw['skiplist']
+  if ('links'      in kw): links=kw['links']
+  if ('linkfull'   in kw): linkfull=kw['linkfull']
+  _links=checkLinkList(links,linkfull)
+  _flags=checkFlags(flags,save=True)
+  _depth=checkDepth(depth)
+  _lkpath=checkLinkPath(lksearch)
+  _obdict=checkObjectDict(update)
+  _filter=checkFilter(filter)
+  _sklist=checkPathList(skip)
+  if (flags&S2P_FPROPAGATE):
+    checkLinkedToFiles(_links)
+    _lkobdict=propagateUpdatePaths(_links,_obdict)
+    _lksklist=propagateSkipPaths(_links,_sklist)
+  checkFast(tree)
+  x=CHLoneExceptionInternal()
+  try:
+    s2p_saveAsHDF(tdir,tfile,tree,
+                  _links,_flags,_depth,_lkpath,_obdict,_filter,_sklist,
+                  _lkobdict,_lksklist,
+                  x)
+  except CHLoneExceptionInternal, v: raise CHLoneException, v
+  return None
+
+# --- last line

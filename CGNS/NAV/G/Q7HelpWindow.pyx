@@ -67,4 +67,4 @@ class Ui_Q7HelpWindow(object):
     def retranslateUi(self, Q7HelpWindow):
         Q7HelpWindow.setWindowTitle(_translate("Q7HelpWindow", "Form", None))
 
-import Res_rc
+#import Res_rc

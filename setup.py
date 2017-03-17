@@ -81,7 +81,7 @@ except OSError:
 
 APP=True
 MAP=True
-WRA=True
+WRA=False
 MAP=True
 PAT=True
 VAL=True
@@ -91,9 +91,12 @@ NAV=True
 ALL_PACKAGES=[]
 ALL_SCRIPTS=[]
 ALL_EXTENSIONS=[]
+OTHER_INCLUDES_PATHS=[]
+OTHER_LIBRARIES_PATHS=[]
 
-OTHER_INCLUDES_PATHS=['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\include']+['c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\include']
-OTHER_LIBRARIES_PATHS=['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\lib\\amd64']+['c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Lib\\x64']
+if 0: #CHLONE_ON_WINDOWS:
+  OTHER_INCLUDES_PATHS=['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\include']+['c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\include']
+  OTHER_LIBRARIES_PATHS=['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\lib\\amd64']+['c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Lib\\x64']
 
 modules=""
 
@@ -130,6 +133,20 @@ if (args.update):
   setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py',
                                  CONFIG.PRODUCTION_DIR)
 
+def hasToGenerate(source,destination,force):
+  return (force or not os.path.exists(destination)
+          or os.path.getmtime(source)>os.path.getmtime(destination))
+
+def resolveVars(filename,conf,force):
+  if (hasToGenerate(filename+'.in',filename,args.generate)):
+    fg1=open('%s.in'%filename,'r')
+    l1=fg1.readlines()
+    fg1.close()
+    l2=[ll%conf for ll in l1]
+    fg2=open(filename,'w')
+    fg2.writelines(l2)
+    fg2.close()
+
 # -------------------------------------------------------------------------
 if APP:
   slist=['cg_grep','cg_list','cg_link','cg_iges','cg_diff','cg_checksum',
@@ -154,7 +171,49 @@ else:
   modules+="\n# APP   skip build *"
 
 # -------------------------------------------------------------------------  
-if (MAP and CONFIG.HAS_CHLONE):
+if MAP:
+  # generate files
+  # config.h.in -> config.h
+  # pyCHLone.pyx.in -> pyCHLone.pyx
+  #
+  # --- config values
+  hdfplib=CONFIG.HDF5_PATH_LIBRARIES
+  hdflib=CONFIG.HDF5_LINK_LIBRARIES
+  hdfpinc=CONFIG.HDF5_PATH_INCLUDES
+  mh='/softs/intel/compilers_and_libraries_2016.0.109/linux/mpi/intel64/include'
+  include_dirs=['.',mh]+hdfpinc+CONFIG.INCLUDE_DIRS+OTHER_INCLUDES_PATHS
+  library_dirs=hdfplib
+  optional_libs=hdflib
+    
+  conf={'CHLONE_INSTALL_LIBRARIES':'.',
+        'CHLONE_INSTALL_INCLUDES':'.',
+        'CHLONE_HAS_PTHREAD':1,
+        'CHLONE_HAS_REGEXP':1,
+        'CHLONE_PRINTF_TRACE':0,
+        'CHLONE_ON_WINDOWS':0,
+        'CHLONE_H5CONF_STD':1,
+        'CHLONE_H5CONF_64':0,
+        'HDF5_VERSION':CONFIG.HDF5_VERSION,
+        }
+
+  depfiles=['CGNS/MAP/CHLone_config.h','CGNS/MAP/EmbeddedCHLone.pyx']
+
+  for d in depfiles: resolveVars(d,conf,args.generate)
+  
+  ALL_EXTENSIONS+=[Extension("CGNS.MAP.EmbeddedCHLone",
+                             ["CGNS/MAP/EmbeddedCHLone.pyx",
+                              "CGNS/MAP/SIDStoPython.c",
+                              "CGNS/MAP/l3.c",
+                              "CGNS/MAP/error.c",
+                              "CGNS/MAP/linksearch.c",
+                              "CGNS/MAP/sha256.c",                              
+                             ],
+                             include_dirs = include_dirs,
+                             library_dirs = library_dirs,
+                             libraries    = optional_libs,
+                             depends      = depfiles,
+                             extra_compile_args=[])]
+  
   ALL_PACKAGES+=['CGNS.MAP','CGNS.MAP.test']
   modules+="\n# MAP   add  build"
 else:
@@ -299,10 +358,8 @@ if (NAV and CONFIG.HAS_PYQT4):
                             libraries    = CONFIG.NUMPY_LINK_LIBRARIES,
                             )]
      g=("CGNS/NAV/T/%s.ui"%m,"CGNS/NAV/G/%s.pyx"%m)
-     if (('true' not in [cui,crc]) and
-         (not os.path.exists(g[1])
-          or args.generate
-          or os.path.getmtime(g[0])>os.path.getmtime(g[1]))): modgenlist+=[m]
+     if (('true' not in [cui,crc]) and hasToGenerate(g[0],g[1],args.generate)):
+       modgenlist+=[m]
                   
   for m in modgenlist:
       print '# Generate from updated Qt templates  (%s): %s'%(cui,m)
@@ -310,8 +367,7 @@ if (NAV and CONFIG.HAS_PYQT4):
       #print com
       os.system(com)
 
-  opg=os.path.getmtime
-  if (args.generate or opg('CGNS/NAV/R/Res.qrc')>opg('CGNS/NAV/Res_rc.py')):
+  if (hasToGenerate('CGNS/NAV/R/Res.qrc','CGNS/NAV/Res_rc.py',args.generate)):
       print '# Generate from updated Qt Ressources (%s): Res_rc.py'%(crc)
       com="(%s -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc)2>/dev/null"%(crc)
       os.system(com)

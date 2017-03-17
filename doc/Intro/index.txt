@@ -48,9 +48,9 @@ file format, you can use pyCGNS without any file at all for your
 actual CFD data! 
 
 
-.. sidebar:: Release 4.6 (June 2016)
+.. sidebar:: Release 5.0 (Feb 2017)
 
-   - Move to PyQt (NOT PySide compatible)
+   - Embedded CHLone (CGNS/HDF5 mapping)
    - Windows version update
 
 There are seven sub-modules in
@@ -74,7 +74,7 @@ you should install before pyCGNS.
 The *CGNS.NAV* graphical tool uses :term:`Qt` and has a :term:`VTK` viewer,
 the tool requires the *Qt libs*, *VTK libs* and their python interfaces.
 The *CGNS/SIDS* data model has a mapping the *HDF5* for file storage. The
-*MAP* module uses :term:`CHLone` 
+*MAP* module uses :term:`CHLone` (now embedded into *pyCGNS*)
 instead of :term:`CGNS/MLL` to map its :term:`CGNS/Python` trees to *HDF5*.
 
 .. note::

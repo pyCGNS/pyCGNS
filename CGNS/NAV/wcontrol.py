@@ -55,7 +55,7 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         QW.control_log=MSG.Q7Log()
         QW.__init__(self,QW.VIEW_CONTROL,self,None,None)
         self.versions={'pycgnsversion':'pyCGNS v%s'%config.version,
-                       'chloneversion':'CHLone %s'%config.CHLONE_VERSION,
+#                       'chloneversion':'CHLone %s'%config.CHLONE_VERSION,
                        'vtkversion':'VTK v%s'%config.VTK_VERSION,
                        'cythonversion':'Cython v%s'%config.CYTHON_VERSION,
                        'hdf5version':'HDF5 v%s'%config.HDF5_VERSION,

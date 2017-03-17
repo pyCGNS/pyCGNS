@@ -978,6 +978,7 @@ def getValueAsStringEval(value):
    - numpy array of chars
   
   """
+  if (eval(value) is None): return None
   from numpy import * # required for eval() below
   try:
       v=numpy.array(value,dtype=numpy.int64)
@@ -1058,6 +1059,10 @@ def getShape(node):
   elif (node[1].shape in ['',(0,),()]): r=(0,)
   else: r=node[1].shape
   return r
+
+# --------------------------------------------------
+def getNodeAllowedChildrenNames(node):
+  return getAuthNames(node)
 
 # --------------------------------------------------
 def getAuthNames(node):
@@ -1510,6 +1515,48 @@ def getPathsByNameFilter(tree,filter):
   return rpth
 
 # --------------------------------------------------
+def getPathAsTemplate(sidslist,namelist,required=[],enclosed=False):
+  """
+  Return a list of CGNS/SIDS type or name (strings) by replacing in a path
+  all the user defined names by their CGNS/SIDS type. If the name is a
+  non-ambiguous SIDS name, it is kept as name (for example GridLocation and
+  GridLocation_t, ZoneBC_t and ZoneBC...).
+  The required list of boolean forces the name to be kept if True.
+  For example:
+
+    sidslist=[CGNSBase_t, Zone_t, ZoneBC_t, BC_t, GridLocation_t]
+    namelist=[Base#1, Zone#1, ZoneBC, BC#1, GridLocation]
+
+    returns=[CGNSBase_t, Zone_t, ZoneBC, BC_t, GridLocation]
+
+    # add a required list
+    required=[False, True, False, False, False]
+    returns=[CGNSBase_t, Zone#1, ZoneBC, BC_t, GridLocation]
+
+  This function is used for pattern storage/check.
+
+  Return [] in failure (should be an except).
+  """
+  if (len(sidslist) != len(namelist)): return []
+  if (required==[]): required=[False]*len(namelist)
+
+  r=[]
+  for idx in range(len(namelist)):
+    name=namelist[idx]
+    if (required[idx]):
+      r+=[name]
+    else:
+      sids=sidslist[idx]
+      e=CT.types[sids]
+      if (enclosed): sids='{%s}'%sids
+      if (CT.UD not in e.names):
+        if (name in e.names): r+=[name]
+        else: r+=[sids]
+      else:
+        r+=[sids]
+  return r
+    
+# --------------------------------------------------
 def getPathByTypeFilter(tree,filter):
   return getPathsByTypeFilter(tree,filter)
 
@@ -1732,6 +1779,46 @@ def getPathFromNode(tree,node,path=''):
   return None
 
 # --------------------------------------------------
+def zipTypeOrNameList(tlist,nlist):
+  """
+  Mixes two lists for pattern search: the CGNS/SIDS type list and the
+  name list.
+
+  For example with two lists::
+
+   >>> for q in zipTypeOrNameList([1,2,3,4],['a','b','c','d']): print q
+   [1, 2, 3, 4]
+   [1, 2, 3, 'd']
+   [1, 2, 'c', 4]
+   [1, 2, 'c', 'd']
+   [1, 'b', 3, 4]
+   [1, 'b', 3, 'd']
+   [1, 'b', 'c', 4]
+   [1, 'b', 'c', 'd']
+   ['a', 2, 3, 4]
+   ['a', 2, 3, 'd']
+   ['a', 2, 'c', 4]
+   ['a', 2, 'c', 'd']
+   ['a', 'b', 3, 4]
+   ['a', 'b', 3, 'd']
+   ['a', 'b', 'c', 4]
+   ['a', 'b', 'c', 'd']
+
+  """
+  w=[]
+  r=[]
+  z=len(tlist)
+  for b in range(2**z):
+    w.append([int(x) for x in '{0:0{width}{base}}'.format(b,base='b',width=z)])
+  for b in w:
+    h=[]
+    for u in range(len(b)):
+      if (b[u]): h.append(nlist[u])
+      else: h.append(tlist[u])
+    r.append(h)
+  return r
+
+# --------------------------------------------------
 def getAllNodesByTypeOrNameList(tree,typeornamelist):
   return getPathsByTypeOrNameList(tree,typeornamelist)
 
@@ -1913,7 +2000,7 @@ def getPathFullTree(tree,width=False):
     return getPathsFullTree(tree,width)
 
 # --------------------------------------------------   
-def getPathsFullTree(tree,width=False):
+def getPathsFullTree(tree,width=False,raw=False):
   """
   Returns the list of all possible node paths of a CGNS/Python tree::
 
@@ -1921,15 +2008,18 @@ def getPathsFullTree(tree,width=False):
         print path
         
   :arg CGNS/Python tree: target tree to parse
-  :arb bool width: set to ``True`` (default is ``False``) for width sorting
+  :arb bool width: ``True`` for width sorting (default is ``False``) 
+  :arb bool raw: ``True`` to add top node (default is ``False``)
   :return:
     - A list of strings, each is a path
     - Empty list if tree is empty or invalid
   :Remarks:
+    - The top node is ignored (usually /CGNSTree) unless you set ``raw``
     - When sorting with **width** the paths are listed as width-first parse
     - See also :py:func:`getPathListAsWidthFirstIndex`
   
   """
+  if (raw): tree=[None,None,[tree],None]
   r=getAllPaths(tree)
   if (width):
     s=[]
@@ -2077,6 +2167,10 @@ def getPathAncestor(path,level=1,noroot=True):
   if (level >1):
     ancestor=getPathAncestor(ancestor,level-1)
   return ancestor
+
+# --------------------------------------------------   
+def getDepth(path):
+  return len(getPathToList(path,True))
 
 # --------------------------------------------------   
 def getPathLeaf(path):

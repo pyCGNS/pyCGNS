@@ -77,7 +77,7 @@ def unique_but_keep_order(lst):
     
 # --------------------------------------------------------------------
 def search(incs,libs,tag='pyCGNS',
-           deps=['Cython','HDF5','MLL','numpy','vtk','CHLone',
+           deps=['Cython','HDF5','MLL','numpy','vtk',
                  'PyQt4','SQLAlchemy']):
   state=1
   for com in sys.argv:
@@ -226,17 +226,6 @@ def search(incs,libs,tag='pyCGNS',
       libs=libs+C.MLL_PATH_LIBRARIES
        
     # -----------------------------------------------------------------------
-    if ('CHLone' in deps):
-      try:
-        import CHLone
-        C.HAS_CHLONE=True
-        print pfx+'using CHLone %s'%CHLone.version
-        C.CHLONE_VERSION=CHLone.version
-      except:
-        print pfx+'ERROR setup cannot import CHLone!'
-        C.HAS_CHLONE=False
-       
-    # -----------------------------------------------------------------------
 
   except ImportError:
     print pfx+'ERROR setup cannot find pyCGNSconfig.py file!'
@@ -245,8 +234,6 @@ def search(incs,libs,tag='pyCGNS',
   C.MLL_PATH_LIBRARIES=list(set(C.MLL_PATH_LIBRARIES))
   C.HDF5_PATH_INCLUDES=list(set(C.HDF5_PATH_INCLUDES))
   C.HDF5_PATH_LIBRARIES=list(set(C.HDF5_PATH_LIBRARIES))
-  C.CHLONE_PATH_INCLUDES=list(set(C.CHLONE_PATH_INCLUDES))
-  C.CHLONE_PATH_LIBRARIES=list(set(C.CHLONE_PATH_LIBRARIES))
   C.NUMPY_PATH_INCLUDES=list(set(C.NUMPY_PATH_INCLUDES))
   C.NUMPY_PATH_LIBRARIES=list(set(C.NUMPY_PATH_LIBRARIES))
 

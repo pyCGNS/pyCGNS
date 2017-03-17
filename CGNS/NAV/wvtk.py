@@ -331,7 +331,9 @@ class Q7VTK(Q7Window,Ui_Q7VTKWindow):
       if (self.OutlineActor is None):
           self._vtkren.ResetCamera()
       else:
-          self._vtkren.ResetCamera(self.OutlineActor.GetBounds())
+          v=self.OutlineActor.GetBounds()
+          print 'BOUNDS ',v
+          self._vtkren.ResetCamera(v)
       self._iren.Render()                                       
                   
   def RubberbandZoom(self,*args):

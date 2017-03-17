@@ -66,6 +66,13 @@ t=CGK.CGNSLibraryVersion_ts
 cgt[t]=CGNStype(t,dtype=[CGK.R4],names=[CGK.CGNSLibraryVersion_s])
 cgt[t].shape=(1,)
 
+#(CGK.CGNSLibraryVersion_ts,   # SIDS type
+# [CGK.CGNSLibraryVersion_s],  # Names
+# [CGK.R4],                    # Datatypes
+# (1,),                        # Shape
+# [2.3,2.4,3.2,3.3],           # Values
+#)
+
 # --------------------------------------------------------
 t=CGK.Descriptor_ts
 cgt[t]=CGNStype(t,dtype=[CGK.C1])
@@ -413,7 +420,19 @@ t=CGK.FamilyBC_ts
 cgt[t]=CGNStype(t,dtype=[CGK.C1],names=[CGK.FamilyBC_s])
 cgt[t].shape=(0,)
 cgt[t].enumerate=CGK.BCType_l
-cgt[t].addChild(CGK.BCDataSet_ts)
+cgt[t].addChild(CGK.FamilyBCDataSet_ts)
+
+# --------------------------------------------------------
+t=CGK.FamilyBCDataSet_ts
+cgt[t]=CGNStype(t,dtype=[CGK.C1])
+cgt[t].enumerate=CGK.BCTypeSimple_l
+cgt[t].addChild(CGK.BCData_ts,CGK.NeumannData_s)
+cgt[t].addChild(CGK.BCData_ts,CGK.DirichletData_s)
+cgt[t].addChild(CGK.Descriptor_ts)
+cgt[t].addChild(CGK.ReferenceState_ts,CGK.ReferenceState_s)
+cgt[t].addChild(CGK.DataClass_ts,CGK.DataClass_s)
+cgt[t].addChild(CGK.DimensionalUnits_ts,CGK.DimensionalUnits_s)
+cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t=CGK.GeometryReference_ts
