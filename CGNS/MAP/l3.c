@@ -2236,7 +2236,7 @@ int L3_nodeChildrenFree(L3_Node_t **nodeptr)
   return 1;
 }
 /* ------------------------------------------------------------------------- */
-int L3_nodeRelease(L3_Node_t **nodeptr,int flags)
+int L3_nodeRelease(L3_Node_t **nodeptr,unsigned int flags)
 {
   L3_Node_t *node;
 
@@ -2246,22 +2246,27 @@ int L3_nodeRelease(L3_Node_t **nodeptr,int flags)
   /*  printf("# L3 :L3_nodeRelease [%d]\n",node->id); */
   if ((flags&L3F_R_HID_CHILDREN) && (node->children!=NULL))
   {
+    /* printf("# L3 :L3_nodeRelease [%d] R_HID_CHILDREN\n",node->id); */
     L3_nodeChildrenFree(nodeptr);
   }
   else if ((flags&L3F_R_MEM_CHILDREN) && (node->children!=NULL))
   {
+    /* printf("# L3 :L3_nodeRelease [%d] R_MEM_CHILDREN\n",node->id); */
     free(node->children); 
   }
   if ((flags&L3F_R_HID_NODE)&&(node->id>0)&&(H5Iis_valid(node->id)))
   {
+    /* printf("# L3 :L3_nodeRelease [%d] R_HID_NODE\n",node->id); */
     L3_H5_GCLOSE("NODE RELEASE\n",node->id); 
   }
   if ((flags&L3F_R_MEM_DATA)&&(node!=NULL)&&(node->data!=NULL))
   {
+    /* printf("# L3 :L3_nodeRelease [%d] R_MEM_DATA\n",node->id); */
     free(node->data);
   }
   if ((flags&L3F_R_MEM_NODE)&&(node!=NULL))
   {
+    /* printf("# L3 :L3_nodeRelease [%d] R_MEM_NODE\n",node->id); */
     free(node);
     __node_count--;
     *nodeptr=NULL;

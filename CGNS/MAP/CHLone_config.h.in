@@ -30,10 +30,19 @@
 
 /* Manage public conf header wrt actual distribution changes */
 #if (CHLONE_H5CONF_STD==1)
+#if (CHLONE_H5CONF_UP==1)
 #include "H5pubconf.h"
+#else
+#include "h5pubconf.h"
 #endif
+#endif
+
 #if (CHLONE_H5CONF_64==1)
+#if (CHLONE_H5CONF_UP==1)
 #include "H5pubconf-64.h"
+#else
+#include "h5pubconf-64.h"
+#endif
 #endif
 
 #ifdef H5_HAVE_THREADSAFE

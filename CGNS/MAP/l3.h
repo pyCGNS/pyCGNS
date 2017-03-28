@@ -101,6 +101,9 @@
 #define L3F_R_MEM_NODE     0x0008 /*=* release node itself */
 #define L3F_R_MEM_DATA     0x0010 /*=* actual data memory of node */
 
+#define __L3F_R_ALL L3F_R_HID_NODE|L3F_R_MEM_CHILDREN|L3F_R_HID_CHILDREN|\
+L3F_R_MEM_NODE|L3F_R_MEM_DATA 
+
 #define L3F_DEFAULT \
 L3F_FOLLOWLINKS|L3F_WITHDATA|L3F_WITHMUTEX|\
 L3F_WITHCHILDREN|L3F_SKIPONERROR
@@ -303,7 +306,7 @@ nodeptr->flags=L3F_NONE;\
 @@ see 'L3 node release Flags' at the top of this file
 @@ The node pointer is set to NULL
 */
-/*#*/int L3_nodeRelease(L3_Node_t **nodeptr,int flags);
+/*#*/int L3_nodeRelease(L3_Node_t **nodeptr,unsigned int flags);
 
 /* ------------------------------------------------------------------------- */
 /*

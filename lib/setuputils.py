@@ -127,12 +127,12 @@ def search(incs,libs,tag='pyCGNS',
           if (float(Cython.__version__[:3])>0.1):
             C.HAS_CYTHON_2PLUS=True
           else:
-            print pfx+'***** warning Cython version cannot build CGNS/WRA'
+            print pfx+'***** SKIP WRA: Cython version cannot build CGNS/WRA'
         except:
-          print pfx+'***** warning Cython version cannot build CGNS/WRA'
+          print pfx+'***** SKIP WRA: Cython version cannot build CGNS/WRA'
       except:
         C.HAS_CYTHON=False
-        print pfx+'FATAL: Cython not found'
+        print pfx+'***** FATAL: Cython not found'
 
     # -----------------------------------------------------------------------
     if ('PyQt4' in deps):
@@ -149,7 +149,7 @@ def search(incs,libs,tag='pyCGNS',
         C.QT_VERSION=QT_VERSION_STR
       except:
         C.HAS_PYQT4=False
-        print pfx+'ERROR PyQt4 not found'
+        print pfx+'***** SKIP NAV: PyQt4 not found'
 
     # -----------------------------------------------------------------------
     if ('vtk' in deps):
@@ -161,7 +161,7 @@ def search(incs,libs,tag='pyCGNS',
         C.VTK_VERSION=v.GetVTKVersion()
       except:
         C.HAS_VTK=False
-        print pfx+'ERROR no vtk python module'
+        print pfx+'***** SKIP NAV/VTK: no vtk python module'
 
     # -----------------------------------------------------------------------
     if ('numpy' in deps):
@@ -190,13 +190,16 @@ def search(incs,libs,tag='pyCGNS',
       libs=libs+C.HDF5_PATH_LIBRARIES+C.LIBRARY_DIRS
       tp=find_HDF5(incs,libs,C.HDF5_LINK_LIBRARIES)
       if (tp is None):
-        print pfx+'ERROR setup cannot find HDF5!'
+        print pfx+'***** FATAL: setup cannot find HDF5!'
         sys.exit(1)
       (C.HDF5_VERSION,
        C.HDF5_PATH_INCLUDES,
        C.HDF5_PATH_LIBRARIES,
        C.HDF5_LINK_LIBRARIES,
-       C.HDF5_EXTRA_ARGS)=tp
+       C.HDF5_EXTRA_ARGS,
+       C.HDF5_HST,
+       C.HDF5_H64,
+       C.HDF5_HUP)=tp
       print pfx+'using HDF5 %s'%(C.HDF5_VERSION,)
       print pfx+'using HDF5 headers from %s'%(C.HDF5_PATH_INCLUDES[0])
       print pfx+'using HDF5 libs from %s'%(C.HDF5_PATH_LIBRARIES[0])
@@ -210,7 +213,7 @@ def search(incs,libs,tag='pyCGNS',
       libs=libs+C.MLL_PATH_LIBRARIES
       tp=find_MLL(incs,libs,C.MLL_LINK_LIBRARIES,C.MLL_EXTRA_ARGS)
       if (tp is None):
-        print pfx+'ERROR setup cannot find cgns.org library (MLL)!'
+        print pfx+'***** SKIP WRA: setup cannot find cgns.org library (MLL)!'
         C.HAS_MLL=False
       else:
         (C.MLL_VERSION,
@@ -228,7 +231,7 @@ def search(incs,libs,tag='pyCGNS',
     # -----------------------------------------------------------------------
 
   except ImportError:
-    print pfx+'ERROR setup cannot find pyCGNSconfig.py file!'
+    print pfx+'***** FATAL: setup cannot find pyCGNSconfig.py file!'
     sys.exit(1)
   C.MLL_PATH_INCLUDES=list(set(C.MLL_PATH_INCLUDES))
   C.MLL_PATH_LIBRARIES=list(set(C.MLL_PATH_LIBRARIES))
@@ -398,14 +401,14 @@ def find_HDF5(pincs,plibs,libs):
       plibs=[pth]
       break
   if notfound:
-    print pfx+"ERROR libhdf5 not found, please check paths:"
+    print pfx+"***** FATAL: libhdf5 not found, please check paths:"
     for ppl in plibs:
       print pfx,ppl
   notfound=1
   for pth in pincs:
     if (os.path.exists(pth+'/hdf5.h')): notfound=0
   if notfound:
-    print pfx,"ERROR hdf5.h not found, please check paths"
+    print pfx,"***** FATAL: hdf5.h not found, please check paths"
     for ppi in pincs:
       print pfx,ppi
     return None
@@ -427,12 +430,28 @@ def find_HDF5(pincs,plibs,libs):
         notfound=0
         break
   if notfound:
-      print pfx,"ERROR cannot find hdf5 version, please check paths"
+      print pfx,"***** FATAL: cannot find hdf5 version, please check paths"
       for ppi in pincs:
         print pfx,pincs
       return None
 
-  return (vers,pincs,plibs,libs,extraargs)
+  h64=False
+  hup=True
+  hst=True
+  if (os.path.exists(pth+'/h5pubconf.h')): 
+    hup=True
+    hst=True
+  if (os.path.exists(pth+'/h5pubconf.h')): 
+    hup=False
+    hst=True
+  if (os.path.exists(pth+'/H5pubconf-64.h')): 
+    h64=True
+    hup=True
+  if (os.path.exists(pth+'/h5pubconf-64.h')):
+    h64=True
+    hup=False
+
+  return (vers,pincs,plibs,libs,extraargs,hst,h64,hup)
 
 # --------------------------------------------------------------------
 def find_MLL(pincs,plibs,libs,extraargs):
@@ -458,12 +477,12 @@ def find_MLL(pincs,plibs,libs,extraargs):
         if (ll[:20]=="#define CGNS_VERSION"):
           cgnsversion=ll.split()[2]
           if (cgnsversion<'3200'):
-            print pfx,"ERROR version should be v3.2 for MLL"
+            print pfx,"***** SKIP WRA: version should be v3.2 for MLL"
             return None
       ifound=pth
       break
   if notfound:
-    print pfx+"ERROR cgnslib.h not found, please check paths"
+    print pfx+"***** SKIP WRA: cgnslib.h not found, please check paths"
     for ppi in pincs:
       print pfx,ppi
     return None
@@ -478,7 +497,7 @@ def find_MLL(pincs,plibs,libs,extraargs):
       lfound=pth
       break
   if notfound:
-    print pfx+"ERROR libcgns not found, please check paths:"
+    print pfx+"***** SKIP WRA: libcgns not found, please check paths:"
     for ppl in plibs:
       print pfx,ppl
     return None
@@ -548,7 +567,7 @@ def find_numpy(pincs,plibs,libs):
         notfound=0
         break
   if notfound:
-    print pfx,"ERROR numpy headers not found, please check your paths"
+    print pfx,"***** FATAL: numpy headers not found, please check your paths"
     print pfx,pincs
     return None
   

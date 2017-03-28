@@ -99,10 +99,13 @@ ALL_EXTENSIONS=[]
 OTHER_INCLUDES_PATHS=[]
 OTHER_LIBRARIES_PATHS=[]
 
-if 0: #CHLONE_ON_WINDOWS:
+if (sys.platform=='win32'):
   OTHER_INCLUDES_PATHS=['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\include']+['c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\include']
   OTHER_LIBRARIES_PATHS=['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\lib\\amd64']+['c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Lib\\x64']
-
+  PLATFORM_WINDOWS=True
+else:
+  PLATFORM_WINDOWS=False
+  
 modules=""
 
 incs=[]
@@ -190,14 +193,13 @@ if MAP:
   optional_libs=hdflib
   extra_compile_args=CONFIG.HDF5_EXTRA_ARGS
     
-  conf={'CHLONE_INSTALL_LIBRARIES':'.',
-        'CHLONE_INSTALL_INCLUDES':'.',
-        'CHLONE_HAS_PTHREAD':1,
+  conf={'CHLONE_HAS_PTHREAD':1,
         'CHLONE_HAS_REGEXP':1,
         'CHLONE_PRINTF_TRACE':0,
-        'CHLONE_ON_WINDOWS':0,
-        'CHLONE_H5CONF_STD':1,
-        'CHLONE_H5CONF_64':0,
+        'CHLONE_ON_WINDOWS':PLATFORM_WINDOWS,
+        'CHLONE_H5CONF_STD':CONFIG.HDF5_HST,
+        'CHLONE_H5CONF_64':CONFIG.HDF5_H64,
+        'CHLONE_H5CONF_UP':CONFIG.HDF5_HUP,
         'HDF5_VERSION':CONFIG.HDF5_VERSION,
         }
 

@@ -2016,7 +2016,7 @@ static PyObject* s2p_parseAndReadHDF(L3_Node_t   *anode,
   }
   else
   {
-    L3_nodeRelease(&rnode,L3F_R_MEM_CHILDREN);
+    L3_nodeRelease(&rnode,L3F_R_HID_CHILDREN);
   }
   /*
   if (H5Iis_valid(actualid))
@@ -2127,16 +2127,13 @@ static int s2p_parseAndWriteHDF(hid_t        id,
     {
       /* if (S2P_HASFLAG(S2P_FUPDATE)) */
       /* { */
-      /*        printf("HERE 1 %s\n",curpath); */
-      /*   oldid=L3_nodeFind(l3db,l3db->root_id,curpath); */
+      /*        oldid=L3_nodeFind(l3db,l3db->root_id,curpath); */
       /*        if (H5Iis_valid(oldid)) */
       /*        { */
       /*          L3M_NEWNODE(node); */
       /*          L3M_UNSETFLAG(l3db,L3F_WITHDATA); */
       /*          L3M_UNSETFLAG(l3db,L3F_WITHCHILDREN); */
-      /*          printf("HERE 2\n"); */
       /*          node=L3_nodeRetrieve(l3db,oldid,node); */
-      /*          printf("HERE 3\n"); */
       /*          toupdate=1; */
       /*        } */
       /* } */
