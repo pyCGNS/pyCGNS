@@ -10,12 +10,12 @@
   - please refer to CHLone python module for documentation
 """
 #
-from EmbeddedCHLone import load
-from EmbeddedCHLone import save
-from EmbeddedCHLone import probe
-from EmbeddedCHLone import CHLoneException as error
+from .EmbeddedCHLone import load
+from .EmbeddedCHLone import save
+from .EmbeddedCHLone import probe
+from .EmbeddedCHLone import CHLoneException as error
 #
-import EmbeddedCHLone as CHL
+from . import EmbeddedCHLone as CHL
 #
 S2P_NONE = CHL.FNONE
 S2P_ALL = CHL.FALL

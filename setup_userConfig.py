@@ -7,43 +7,40 @@
 # --- If you leave empty the variables below the build process would
 #     try to guess for you, using your current environment variables.
 #     Change these values only if you need to add/change something.
-#     Remove the comment (the first #) and change the value
 #
-# --- stuff to add for HDF5 
-#HDF5_VERSION          = ''
-#HDF5_PATH_INCLUDES    = ['']
-#HDF5_PATH_LIBRARIES   = ['']
-#HDF5_LINK_LIBRARIES   = []
-#HDF5_EXTRA_ARGS       = []
+# --- stuff to add for numpy (used by NAV)
+#     you should not change this, the numpy stuff is expected to be detected
+#     using the numpy import itself
 #
-# --- stuff to add for numpy
-#NUMPY_VERSION         = ''
-#NUMPY_PATH_INCLUDES   = []
-#NUMPY_PATH_LIBRARIES  = ['']
-#NUMPY_LINK_LIBRARIES  = ['']
-#NUMPY_EXTRA_ARGS      = [] 
+if False:
+  NUMPY_VERSION         = ''
+  NUMPY_PATH_INCLUDES   = []
+  NUMPY_PATH_LIBRARIES  = ['']
+  NUMPY_LINK_LIBRARIES  = ['']
+  NUMPY_EXTRA_ARGS      = [] 
 #
-# --- stuff to add for CGNS/MLL (set the HAS_MLL to True)
-#HAS_MLL               = True 
-#MLL_VERSION           = '' 
-#MLL_PATH_INCLUDES     = [''] 
-#MLL_PATH_LIBRARIES    = ['']
-#MLL_LINK_LIBRARIES    = ['']
-#MLL_EXTRA_ARGS        = []
+# --- stuff to add for HDF5 (used by MAP and WRA)
+#     the hdf5 install is detected using a 'which h5dump' and then we parse the
+#     installation. Thus non-standard installs would require to set these vars
 #
-# --- stuff to add for Python
-#PYTHON_VERSION          = ''
-#PYTHON_PATH_INCLUDES    = []
-#PYTHON_PATH_LIBRARIES   = []
-#PYTHON_LINK_LIBRARIES   = [] 
-#PYTHON_EXTRA_ARGS       = []
+if False:
+  HDF5_VERSION          = ''
+  HDF5_PATH_INCLUDES    = ['']
+  HDF5_PATH_LIBRARIES   = ['']
+  HDF5_LINK_LIBRARIES   = []
+  HDF5_EXTRA_ARGS       = ['-Wno-return-type']
 #
-# --- stuff to add for CHLone
-#CHLONE_VERSION          = ''
-#CHLONE_PATH_INCLUDES    = ['']
-#CHLONE_PATH_LIBRARIES   = ['']
-#CHLONE_LINK_LIBRARIES   = [] 
-#CHLONE_EXTRA_ARGS       = []
+# --- stuff to add for CGNS/MLL (used by WRA)
+#     the cgns/mll install is detected using a 'which cgnscheck' then we parse 
+#     the installation. Non-standard installs would require to set these vars
+#
+if False:
+  HAS_MLL               = True 
+  MLL_VERSION           = '' 
+  MLL_PATH_INCLUDES     = [''] 
+  MLL_PATH_LIBRARIES    = ['']
+  MLL_LINK_LIBRARIES    = ['']
+  MLL_EXTRA_ARGS        = []
 #
 # -------------------------------------------------------------------------
 

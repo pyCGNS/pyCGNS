@@ -36,6 +36,11 @@ doc1="""
   See doc for more installation details and depend:
   http://pycgns.sourceforge.net/install.html
 
+  MPI: using HDF5 with parallel features adds dependancies on mpi. The
+  simple way to resolve these deps is to force mpicc instead of cc:
+
+  CC=mpicc python setup.py build
+
 """
 
 doc2="""
@@ -158,7 +163,7 @@ if APP:
   ALL_EXTENSIONS+=[Extension("CGNS.APP.lib.arrayutils",
                              ["CGNS/APP/lib/arrayutils.pyx",
                               "CGNS/APP/lib/hashutils.c"],
-                             include_dirs = CONFIG.INCLUDE_DIRS+OTHER_INCLUDES_PATHS,
+                             include_dirs=CONFIG.INCLUDE_DIRS+OTHER_INCLUDES_PATHS,
                              extra_compile_args=[])]
   ALL_PACKAGES+=['CGNS.APP',
                  'CGNS.APP.lib',
@@ -173,17 +178,17 @@ else:
 # -------------------------------------------------------------------------  
 if MAP:
   # generate files
-  # config.h.in -> config.h
+  # CHLone_config.h.in -> CHLone_config.h
   # pyCHLone.pyx.in -> pyCHLone.pyx
   #
   # --- config values
   hdfplib=CONFIG.HDF5_PATH_LIBRARIES
   hdflib=CONFIG.HDF5_LINK_LIBRARIES
   hdfpinc=CONFIG.HDF5_PATH_INCLUDES
-  mh='/softs/intel/compilers_and_libraries_2016.0.109/linux/mpi/intel64/include'
-  include_dirs=['.',mh]+hdfpinc+CONFIG.INCLUDE_DIRS+OTHER_INCLUDES_PATHS
+  include_dirs=['.']+hdfpinc+CONFIG.INCLUDE_DIRS+OTHER_INCLUDES_PATHS
   library_dirs=hdfplib
   optional_libs=hdflib
+  extra_compile_args=CONFIG.HDF5_EXTRA_ARGS
     
   conf={'CHLONE_INSTALL_LIBRARIES':'.',
         'CHLONE_INSTALL_INCLUDES':'.',
@@ -198,6 +203,8 @@ if MAP:
 
   depfiles=['CGNS/MAP/CHLone_config.h','CGNS/MAP/EmbeddedCHLone.pyx']
 
+  EXTRA_MAP_COMPILE_ARGS=''
+  
   for d in depfiles: resolveVars(d,conf,args.generate)
   
   ALL_EXTENSIONS+=[Extension("CGNS.MAP.EmbeddedCHLone",
@@ -212,7 +219,7 @@ if MAP:
                              library_dirs = library_dirs,
                              libraries    = optional_libs,
                              depends      = depfiles,
-                             extra_compile_args=[])]
+                             extra_compile_args=extra_compile_args)]
   
   ALL_PACKAGES+=['CGNS.MAP','CGNS.MAP.test']
   modules+="\n# MAP   add  build"
@@ -271,7 +278,6 @@ if (WRA and CONFIG.HAS_MLL and CONFIG.HAS_CYTHON_2PLUS):
   mlllib=CONFIG.MLL_LINK_LIBRARIES
   mllpinc=CONFIG.MLL_PATH_INCLUDES
   mllversion=CONFIG.MLL_VERSION
-  numpinc=CONFIG.NUMPY_PATH_INCLUDES
 
   lname    = "CGNS.WRA"
 
@@ -287,7 +293,8 @@ if (WRA and CONFIG.HAS_MLL and CONFIG.HAS_CYTHON_2PLUS):
                                                'CGNS/WRA/mll_utils.c'],
                                include_dirs = include_dirs+['WRA'],
                                library_dirs = library_dirs,
-                               libraries    = optional_libs)]
+                               libraries    = optional_libs,
+                               extra_compile_args=extraargs)]
 
   modules+="\n# WRA   add  build"
 else:
