@@ -59,10 +59,10 @@ class Q7Main(QW, Ui_Q7ControlWindow):
                        'vtkversion':'VTK v%s'%config.VTK_VERSION,
                        'cythonversion':'Cython v%s'%config.CYTHON_VERSION,
                        'hdf5version':'HDF5 v%s'%config.HDF5_VERSION,
-                       'numpyversion':'numpy v%s'%config.NUMPY_VERSION,
-                       'pythonversion':'python v%s'%config.PYTHON_VERSION_FULL,
-                       'pyqtversion':'PyQt v%s'%config.PYQT_VERSION,
-                       'qtversion':'Qt v%s'%config.QT_VERSION,
+#                       'numpyversion':'numpy v%s'%config.NUMPY_VERSION,
+#                       'pythonversion':'python v%s'%config.PYTHON_VERSION_FULL,
+#                       'pyqtversion':'PyQt v%s'%config.PYQT_VERSION,
+#                       'qtversion':'Qt v%s'%config.QT_VERSION,
                        }
         self.getHistory()
         self.bAbout.clicked.connect(self.about)

@@ -23,11 +23,11 @@ if False:
 #     the hdf5 install is detected using a 'which h5dump' and then we parse the
 #     installation. Thus non-standard installs would require to set these vars
 #
-if False:
+if True:
   HDF5_VERSION          = ''
-  HDF5_PATH_INCLUDES    = ['']
-  HDF5_PATH_LIBRARIES   = ['']
-  HDF5_LINK_LIBRARIES   = []
+  HDF5_PATH_INCLUDES    = ['C:\Appl\Anaconda2\Library\include']
+  HDF5_PATH_LIBRARIES   = ['C:\Appl\Anaconda2\Library\lib']
+  HDF5_LINK_LIBRARIES   = ['hdf5']
   HDF5_EXTRA_ARGS       = ['-Wno-return-type']
 #
 # --- stuff to add for CGNS/MLL (used by WRA)

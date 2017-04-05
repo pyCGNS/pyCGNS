@@ -37,16 +37,19 @@ demo_files=[(f,f) for f in df]
 build_exe_options = {
 "packages": ["os","sys","numpy","vtk","PyQt4.QtCore","PyQt4.QtGui",
              "CGNS.NAV","CGNS.MAP","CGNS.PAT","CGNS.VAL","CGNS.APP",
-             "CHLone","numpy.core.multiarray"
+             "numpy.core.multiarray"
 ], 
 "excludes": ["tkinter","tcl","tk8.5","PySide","PySide.QtCore","PySide.QtGui",
 ],
 "include_files": ["license.txt",
-r"D:\poinot\AppData\Local\Continuum\Anaconda\Lib\site-packages\pyCGNS-4.6.561-py2.7-win-amd64.egg",
+r"C:\Users\D589055\Documents\I\Lib\site-packages\pyCGNS-4.7.571-py2.7-win-amd64.egg",
+#r"D:\poinot\AppData\Local\Continuum\Anaconda\Lib\site-packages\pyCGNS-4.6.561-py2.7-win-amd64.egg",
 #r"D:\poinot\AppData\Local\Continuum\Anaconda\Lib",
 #r"D:\poinot\AppData\Local\Continuum\Anaconda\DLLs",
-"lib/pyCGNS.ico","lib/pyCGNS-wizard.bmp",
-"lib/pyCGNS-small.ico","lib/pyCGNS-wizard-small.bmp",                  
+"lib/pyCGNS.ico",
+"lib/pyCGNS-wizard.bmp",
+"lib/pyCGNS-small.ico",
+"lib/pyCGNS-wizard-small.bmp",                  
 ]+demo_files,
 "add_to_path":True,
 }
@@ -69,7 +72,7 @@ name = "pyCGNS",
 version = '4.6',
 description  = "pyCGNS - CGNS/Python trees navigator and editor",
 author       = "Marc Poinot",
-author_email = "marc.poinot@onera.fr",
+author_email = "marc.poinot@safrangroup.com",
 license      = "LGPL 2",
 options = {"build_exe": build_exe_options,"build_msi": build_exe_options},
            executables = [Executable("CGNS/App/tools/cg_look",base=base)])

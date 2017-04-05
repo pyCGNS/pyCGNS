@@ -435,21 +435,21 @@ def find_HDF5(pincs,plibs,libs):
         print pfx,pincs
       return None
 
-  h64=False
-  hup=True
-  hst=True
+  h64=0
+  hup=1
+  hst=1
   if (os.path.exists(pth+'/h5pubconf.h')): 
-    hup=True
-    hst=True
+    hup=1
+    hst=1
   if (os.path.exists(pth+'/h5pubconf.h')): 
-    hup=False
-    hst=True
+    hup=0
+    hst=1
   if (os.path.exists(pth+'/H5pubconf-64.h')): 
-    h64=True
-    hup=True
+    h64=1
+    hup=1
   if (os.path.exists(pth+'/h5pubconf-64.h')):
-    h64=True
-    hup=False
+    h64=1
+    hup=0
 
   return (vers,pincs,plibs,libs,extraargs,hst,h64,hup)
 

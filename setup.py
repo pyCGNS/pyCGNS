@@ -102,9 +102,9 @@ OTHER_LIBRARIES_PATHS=[]
 if (sys.platform=='win32'):
   OTHER_INCLUDES_PATHS=['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\include']+['c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\include']
   OTHER_LIBRARIES_PATHS=['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\lib\\amd64']+['c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Lib\\x64']
-  PLATFORM_WINDOWS=True
+  PLATFORM_WINDOWS=1
 else:
-  PLATFORM_WINDOWS=False
+  PLATFORM_WINDOWS=0
   
 modules=""
 
@@ -142,6 +142,7 @@ if (args.update):
                                  CONFIG.PRODUCTION_DIR)
 
 def hasToGenerate(source,destination,force):
+  if (PLATFORM_WINDOWS): return False
   return (force or not os.path.exists(destination)
           or os.path.getmtime(source)>os.path.getmtime(destination))
 
@@ -201,6 +202,8 @@ if MAP:
         'CHLONE_H5CONF_64':CONFIG.HDF5_H64,
         'CHLONE_H5CONF_UP':CONFIG.HDF5_HUP,
         'HDF5_VERSION':CONFIG.HDF5_VERSION,
+		'CHLONE_INSTALL_LIBRARIES':"",
+		'CHLONE_INSTALL_INCLUDES':"",
         }
 
   depfiles=['CGNS/MAP/CHLone_config.h','CGNS/MAP/EmbeddedCHLone.pyx']
@@ -208,8 +211,9 @@ if MAP:
   EXTRA_MAP_COMPILE_ARGS=''
   
   for d in depfiles: resolveVars(d,conf,args.generate)
+  library_dirs=[l for l in library_dirs if l!='']
   
-  ALL_EXTENSIONS+=[Extension("CGNS.MAP.EmbeddedCHLone",
+  ALL_EXTENSIONS+=[Extension( "CGNS.MAP.EmbeddedCHLone",
                              ["CGNS/MAP/EmbeddedCHLone.pyx",
                               "CGNS/MAP/SIDStoPython.c",
                               "CGNS/MAP/l3.c",

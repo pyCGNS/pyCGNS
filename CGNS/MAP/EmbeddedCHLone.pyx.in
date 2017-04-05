@@ -312,10 +312,10 @@ class Config:
   pass
 
 # GENERATED STUFF HERE ----------------------------------------------
-config=Config()
-config.libraries='%(CHLONE_INSTALL_LIBRARIES)s'
-config.includes='%(CHLONE_INSTALL_INCLUDES)s'
-config.h5version='%(HDF5_VERSION)s'
+#config=Config()
+#config.libraries='%(CHLONE_INSTALL_LIBRARIES)s'
+#config.includes='%(CHLONE_INSTALL_INCLUDES)s'
+#config.h5version='%(HDF5_VERSION)s'
 # -------------------------------------------------------------------
 
 load_keys=['updatedict','subtree','linkpaths','filter','contiguous',

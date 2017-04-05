@@ -19,6 +19,8 @@
 #   install in Anaconda site-packages
 # install pyCGNS
 #   install in Anaconda site-packages
+# install cx_freeze
+# install inno
 # build windows installer
 #   python lib/freeze.py build_exe
 #   run inno compiler on lib/pyCGNS.iss

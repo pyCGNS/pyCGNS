@@ -763,7 +763,6 @@ int HDF_Get_DataDimensionsPartial(L3_Cursor_t *ctxt, hid_t nid, int *dims,
 				  hsize_t *dst_block)
 {
   int n,ndims;
-  hid_t did,sid;
 
   L3M_CLEARDIMS(dims);
 
@@ -884,7 +883,7 @@ void *HDF_Get_DataArrayPartial(L3_Cursor_t *ctxt, hid_t nid, int *dst_dims,
   }
   else
   {
-    *data=*base+(blk_size*rank*eltsize);
+    *data=(char*)(*base)+(blk_size*rank*eltsize);
     L3M_DBG(ctxt,("HDF_Get_DataArrayPartial SIZE %dx%dx%d = %d\n",blk_size,rank,eltsize,blk_size*rank*eltsize));
   }
   stat=H5Dread(did,yid,mid,sid,H5P_DEFAULT,*base);/* hyperslab does shift */
