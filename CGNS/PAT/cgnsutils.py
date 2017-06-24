@@ -2987,4 +2987,37 @@ def toFile(tree,filename):
   f.write(toString(tree,readable=True))
   f.close()
 
+# --------------------------------------------------
+def getNodesFromTypeSet(tree, typeset):
+  """  **Iterator** returns the children nodes of the argument CGNS/Python
+  matching one of the type in the list. It allows an alternate traversal
+  of the CGNS/Python tree::
+
+    for path, child in getNodesFromTypeSet(tree, [CGK.Zone_ts]):
+        print 'Next child:', child[0]
+
+  :arg CGNS/Python tree: the tree structure to save
+  :arg list typeset: the list of CGNS/SIDS types as strings
+  :return:
+  - This is an iterator, it returns a tuple (path, CGNS/Python node)
+  :Remarks:
+    - this iterator must be used carefully to scan a CGNS/Python tree
+      or do inplace modification. Modification of tree structure while
+      using this iterator is hazardous.
+
+  """
+  def genNodesFromTypeSet(typelist, node, path):
+    for c in node:
+      if c[3] in typelist:
+        yield ("%s/%s"%(path,c[0]),c)
+      for curpath, curnode in genNodesFromTypeSet(typelist, c[2], "%s/%s"%(path, c[0])):
+        yield (curpath, curnode)
+     
+  if tree[3] == CK.CGNSTree_ts:
+    start=""
+  else:
+    start="%s"%tree[0]
+  for path, node in genNodesFromTypeSet(typeset, tree[2], start):
+    yield (path, node)
+
 # ----
