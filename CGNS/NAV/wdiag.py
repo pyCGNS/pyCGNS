@@ -13,8 +13,9 @@ import CGNS.VAL.parse.messages as CGM
 
 from CGNS.VAL.parse.findgrammar import locateGrammars
 
-from PyQt4.QtCore  import *
-from PyQt4.QtGui   import *
+from qtpy.QtCore  import *
+from qtpy.QtGui   import *
+from qtpy.QtWidgets  import *
 
 from CGNS.NAV.Q7DiagWindow import Ui_Q7DiagWindow
 from CGNS.NAV.wfingerprint import Q7Window as QW

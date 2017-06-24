@@ -9,8 +9,9 @@ import sys
 import re
 import string
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui  import *
+from qtpy.QtCore import *
+from qtpy.QtWidgets  import *
+from qtpy.QtGui import *
 
 # -----------------------------------------------------------------
 class Q7DocEditor(QTextEdit):  

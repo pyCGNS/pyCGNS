@@ -12,8 +12,9 @@ import CGNS.config as config
 import CGNS.PAT.cgnslib   as CGL
 import CGNS.PAT.cgnsutils as CGU
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui  import *
+from qtpy.QtCore import *
+from qtpy.QtWidgets  import *
+from qtpy.QtGui  import *
 
 from CGNS.NAV.Q7ControlWindow import Ui_Q7ControlWindow
 from CGNS.NAV.wfile           import Q7File
@@ -31,10 +32,10 @@ from CGNS.NAV.wfingerprint import Q7Window as QW
 
 # -----------------------------------------------------------------
 class Q7SignalPool(QObject):
-    loadFile=pyqtSignal()
-    saveFile=pyqtSignal()
-    cancel=pyqtSignal()
-    loadCompleted=pyqtSignal()
+    loadFile=Signal()
+    saveFile=Signal()
+    cancel=Signal()
+    loadCompleted=Signal()
     buffer=None
     fgprint=None
     saveAs=False

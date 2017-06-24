@@ -12,8 +12,8 @@ import numpy
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui  import *
+from qtpy.QtCore import *
+from qtpy.QtWidgets  import *
 
 # -----------------------------------------------------------------
 class Q7TableView(QTableView):

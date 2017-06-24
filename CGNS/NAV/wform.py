@@ -10,8 +10,8 @@ import sys
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui  import *
+from qtpy.QtCore import *
+from qtpy.QtWidgets  import *
 
 from CGNS.NAV.Q7FormWindow import Ui_Q7FormWindow
 from CGNS.NAV.mtable       import Q7TableModel

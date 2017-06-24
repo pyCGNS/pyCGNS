@@ -16,9 +16,10 @@ import sys
 import CGNS.MAP
 import CGNS.PAT.cgnsutils as CGU
 
-from PyQt4.QtCore import QCoreApplication
-from PyQt4.QtCore import *
-from PyQt4.QtGui  import *
+from qtpy.QtCore import QCoreApplication
+from qtpy.QtCore import *
+from qtpy.QtWidgets  import *
+from qtpy.QtGui  import *
 
 from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
 from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
@@ -58,7 +59,7 @@ class Q7CHLoneProxy(object):
     @property
     def data(self):
         return self._data
-    @pyqtSlot(str)
+    @Slot(str)
     def proxyCompleted(self, data):
         if (data[0] is None):  self._data=data
         else : self._data=data[0]
@@ -67,7 +68,7 @@ class Q7CHLoneProxy(object):
 
 # -----------------------------------------------------------------
 class Q7CHLoneThread(QThread):
-    datacompleted=pyqtSignal(tuple)
+    datacompleted=Signal(tuple)
     def __init__(self, control, selectedfile):
         super(Q7CHLoneThread, self).__init__(None)
         self._control=control

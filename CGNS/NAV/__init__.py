@@ -20,8 +20,8 @@
 
 def show(T,*args):
   from CGNS.NAV.moption import Q7OptionContext as OCTXT
-  from PyQt4.QtCore import *
-  from PyQt4.QtGui import QApplication, QPixmap, QSplashScreen
+  from qtpy.QtCore import *
+  from qtpy.QtWidgets import QApplication, QPixmap, QSplashScreen
   from CGNS.NAV.wcontrol import Q7Main
 
   from CGNS.NAV.wfile           import Q7File

@@ -32,9 +32,9 @@ class NAVTestCase(unittest.TestCase):
   def setUp(self):
     pass
   def test_000_Module(self):
-    import PySide
-    import PySide.QtCore
-    import PySide.QtGui
+    import qtpy
+    import qtpy.QtCore
+    import qtpy.QtWidgets
   def test_001_Script(self):
     import CGNS.NAV
 

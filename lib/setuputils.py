@@ -78,7 +78,7 @@ def unique_but_keep_order(lst):
 # --------------------------------------------------------------------
 def search(incs,libs,tag='pyCGNS',
            deps=['Cython','HDF5','MLL','numpy','vtk',
-                 'PyQt4','SQLAlchemy']):
+                 'qtpy','SQLAlchemy']):
   state=1
   for com in sys.argv:
     if com in ['help','clean']: state=0

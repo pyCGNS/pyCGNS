@@ -35,7 +35,7 @@ demo_files=[(f,f) for f in df]
 
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {
-"packages": ["os","sys","numpy","vtk","PyQt4.QtCore","PyQt4.QtGui",
+"packages": ["os","sys","numpy","vtk","qtpy","qtpy.QtCore","qtpy.QtGui","qtpy.QtWidgets",
              "CGNS.NAV","CGNS.MAP","CGNS.PAT","CGNS.VAL","CGNS.APP",
              "numpy.core.multiarray"
 ], 

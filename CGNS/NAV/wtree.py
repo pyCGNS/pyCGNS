@@ -10,8 +10,9 @@ import functools
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui  import *
+from qtpy.QtCore import *
+from qtpy.QtWidgets import *
+from qtpy.QtGui import *
 
 try:
   import vtk
@@ -187,18 +188,23 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
                       NMT.COLUMN_DATATYPE:OCTXT.ShowDataTypeColumn}
         self.selectForLinkSrc=None # one link source per tree view allowed
 
-        QObject.connect(self.treeview,
-                        SIGNAL("expanded(QModelIndex)"),
-                        self.expandNode)
-        QObject.connect(self.treeview,
-                        SIGNAL("collapsed()"),
-                        self.collapseNode)
-        QObject.connect(self.treeview,
-                        SIGNAL("pressed(QModelIndex)"),
-                        self.clickedPressedNode)
-        QObject.connect(self.treeview,
-                        SIGNAL("customContextMenuRequested(QPoint)"),
-                        self.clickedNode)
+        self.treeview.expanded.connect(self.expandNode)
+        self.treeview.pressed.connect(self.clickedPressedNode)
+        self.treeview.customContextMenuRequested.connect(self.clickedNode)
+
+        #QObject.connect(self.treeview,
+        #                SIGNAL("expanded(QModelIndex)"),
+        #                self.expandNode)
+        #QObject.connect(self.treeview,
+        #                SIGNAL("collapsed()"),
+        #                self.collapseNode)
+        #QObject.connect(self.treeview,
+        #                SIGNAL("pressed(QModelIndex)"),
+        #                self.clickedPressedNode)
+        #QObject.connect(self.treeview,
+        #                SIGNAL("customContextMenuRequested(QPoint)"),
+        #                self.clickedNode)
+
         self.bSave.clicked.connect(self.savetree)
         self.lockable(self.bSave)
         self.bQueryView.clicked.connect(self.queryview)
@@ -249,9 +255,10 @@ class Q7Tree(Q7Window,Ui_Q7TreeWindow):
         self.bSelectLinkSrc.clicked.connect(self.linkselectsrc)
         self.bSelectLinkDst.clicked.connect(self.linkselectdst)
         self.bAddLink.setDisabled(True)
-        QObject.connect(self.lineEdit,
-                        SIGNAL("returnPressed()"),
-                        self.jumpToNode)
+        self.lineEdit.returnPressed.connect(self.jumpToNode)
+        #QObject.connect(self.lineEdit,
+        #                SIGNAL("returnPressed()"),
+        #                self.jumpToNode)
         tvh=self.treeview.header()
         tvh.setContextMenuPolicy(Qt.CustomContextMenu)
         tvh.customContextMenuRequested.connect(self.headerMenu)

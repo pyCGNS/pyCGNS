@@ -321,7 +321,7 @@ else:
   modules+="\n# DAT   skip build *"
 
 # -------------------------------------------------------------------------  
-if (NAV and CONFIG.HAS_PYQT4):
+if (NAV and CONFIG.HAS_QTPY):
   cui=CONFIG.COM_UIC
   crc=CONFIG.COM_RCC
   ccy=CONFIG.COM_CYTHON

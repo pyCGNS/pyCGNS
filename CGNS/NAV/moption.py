@@ -20,7 +20,8 @@ if (sys.platform=='win32'):  WINOPTS=True
 
 import CGNS.PAT.cgnskeywords as CGK
 
-from PyQt4.QtGui import *
+from qtpy.QtWidgets import *
+from qtpy.QtGui import *
 
 # -----------------------------------------------------------------
 def removeSubDirAndFiles(path):

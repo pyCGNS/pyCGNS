@@ -28,11 +28,11 @@ Changes by Phil Thompson, Mar. 2008
 """
 
 
-from PyQt4 import QtCore, QtGui
+from qtpy import QtCore, QtWidgets
 import vtk
 
 
-class QVTKRenderWindowInteractor(QtGui.QWidget):
+class QVTKRenderWindowInteractor(QtWidgets.QWidget):
 
     """ A QVTKRenderWindowInteractor for Python and Qt.  Uses a
     vtkGenericRenderWindowInteractor to handle the interactions.  Use
@@ -142,7 +142,7 @@ class QVTKRenderWindowInteractor(QtGui.QWidget):
             rw = kw['rw']
 
         # create qt-level widget
-        QtGui.QWidget.__init__(self, parent, wflags|QtCore.Qt.MSWindowsOwnDC)
+        QtWidgets.QWidget.__init__(self, parent, wflags|QtCore.Qt.MSWindowsOwnDC)
 
         if rw: # user-supplied render window
             self._RenderWindow = rw
@@ -163,10 +163,10 @@ class QVTKRenderWindowInteractor(QtGui.QWidget):
         self.setAttribute(QtCore.Qt.WA_PaintOnScreen)
         self.setMouseTracking(True) # get all mouse events
         self.setFocusPolicy(QtCore.Qt.WheelFocus)
-        self.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding))
+        self.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding))
 
         self._Timer = QtCore.QTimer(self)
-        self.connect(self._Timer, QtCore.SIGNAL('timeout()'), self.TimerEvent)
+        self._Timer.timeout.connect(self.TimerEvent)
 
         self._Iren.AddObserver('CreateTimerEvent', self.CreateTimer)
         self._Iren.AddObserver('DestroyTimerEvent', self.DestroyTimer)
@@ -341,7 +341,7 @@ def QVTKRenderWidgetConeExample():
     """A simple example that uses the QVTKRenderWindowInteractor class."""
 
     # every QT app needs an app
-    app = QtGui.QApplication(['QVTKRenderWindowInteractor'])
+    app = QtWidgets.QApplication(['QVTKRenderWindowInteractor'])
 
     # create the widget
     widget = QVTKRenderWindowInteractor()

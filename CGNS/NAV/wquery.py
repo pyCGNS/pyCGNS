@@ -12,9 +12,10 @@ import os
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui  import QFileDialog
-from PyQt4.QtGui  import *
+from qtpy.QtCore import *
+from qtpy.QtWidgets import QFileDialog
+from qtpy.QtWidgets import *
+from qtpy.QtGui  import *
 
 from CGNS.NAV.Q7QueryWindow     import Ui_Q7QueryWindow
 from CGNS.NAV.Q7SelectionWindow import Ui_Q7SelectionWindow
@@ -154,10 +155,12 @@ class Q7SelectionList(Q7Window,Ui_Q7SelectionWindow):
         self._tb=self.selectionTable
         self.bSave.clicked.connect(self.selectionsave)
         self.bInfo.clicked.connect(self.infoSelectView)
-        QObject.connect(self.cShowPath,
-                        SIGNAL("stateChanged(int)"),self.colCheck)
-        QObject.connect(self.cShowSIDS,
-                        SIGNAL("stateChanged(int)"),self.colCheck)
+        self.cShowPath.stateChanged.connect(self.colCheck)
+        self.cShowSIDS.stateChanged.connect(self.colCheck)
+        #QObject.connect(self.cShowPath,
+        #                SIGNAL("stateChanged(int)"),self.colCheck)
+        #QObject.connect(self.cShowSIDS,
+        #                SIGNAL("stateChanged(int)"),self.colCheck)
         self.bFirst.clicked.connect(self.sClear)
         self._tb.setItemDelegate(Q7SelectionItemDelegate(self,self.FG.model))
         self.bRemoveToSelect.clicked.connect(self.sRemove)
@@ -300,25 +303,33 @@ class Q7Query(Q7Window,Ui_Q7QueryWindow):
         self.bSave.clicked.connect(self.queriesSave)
         self.bSaveAsScript.clicked.connect(self.queryScriptSave)
         self._master=treeview
-        QObject.connect(self.cQueryName,
-                        SIGNAL("currentIndexChanged(int)"),
-                        self.changeCurrentQuery)
-        QObject.connect(self.cQueryGroup,
-                        SIGNAL("currentIndexChanged(int)"),
-                        self.changeCurrentGroup)
+        #
+        self.cQueryName.currentIndexChanged.connect(self.changeCurrentQuery)
+        self.cQueryGroup.currentIndexChanged.connect(self.changeCurrentGroup)
+        #
+        #QObject.connect(self.cQueryName,
+        #                SIGNAL("currentIndexChanged(int)"),
+        #                self.changeCurrentQuery)
+        #QObject.connect(self.cQueryGroup,
+        #                SIGNAL("currentIndexChanged(int)"),
+        #                self.changeCurrentGroup)
         self.cQueryName.editTextChanged.connect(self.checkNewQueryName)
-        QObject.connect(self.cQueryName,
-                        SIGNAL("editTextChanged()"),
-                        self.checkNewQueryName)
-        QObject.connect(self.cQueryName,
-                        SIGNAL("editTextChanged(QString)"),
-                        self.checkNewQueryName)
-        QObject.connect(self.eText,
-                        SIGNAL("textChanged()"),
-                        self.changeText)
-        QObject.connect(self.eQueryDoc,
-                        SIGNAL("textChanged()"),
-                        self.changeText)
+        #
+        self.eText.textChanged.connect(self.changeText)
+        self.eQueryDoc.textChanged.connect(self.changeText)
+        #
+        # QObject.connect(self.cQueryName,
+        #                SIGNAL("editTextChanged()"),
+        #                self.checkNewQueryName)
+        #QObject.connect(self.cQueryName,
+        #                SIGNAL("editTextChanged(QString)"),
+        #                self.checkNewQueryName)
+        #QObject.connect(self.eText,
+        #                SIGNAL("textChanged()"),
+        #                self.changeText)
+        #QObject.connect(self.eQueryDoc,
+        #                SIGNAL("textChanged()"),
+        #                self.changeText)
         self.bInfo.clicked.connect(self.infoQueryView)
         self.bAdd.setEnabled(False)
         self.setCurrentQuery()

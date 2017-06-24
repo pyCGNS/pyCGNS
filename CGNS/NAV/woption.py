@@ -8,8 +8,9 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import sys
 import string
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui  import *
+from qtpy.QtCore import *
+from qtpy.QtWidgets  import *
+from qtpy.QtGui  import *
 
 from CGNS.NAV.Q7OptionsWindow import Ui_Q7OptionsWindow
 from CGNS.NAV.wfingerprint    import Q7Window

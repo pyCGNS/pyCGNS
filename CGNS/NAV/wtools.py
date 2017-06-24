@@ -5,8 +5,11 @@
 #
 import sys
 import string
-from PyQt4.QtCore  import *
-from PyQt4.QtGui   import *
+
+from qtpy.QtCore  import *
+from qtpy.QtWidgets   import *
+from qtpy.QtGui   import *
+
 from CGNS.NAV.wfingerprint import Q7FingerPrint
 from CGNS.NAV.Q7ToolsWindow import Ui_Q7ToolsWindow
 from CGNS.NAV.wfingerprint import Q7Window
@@ -40,12 +43,14 @@ class Q7ToolsView(Q7Window,Ui_Q7ToolsWindow):
         self._fgprint=fgprint
         self._model=fgprint.model
         self._treeview=master.treeview
-        QObject.connect(self.cGroup,
-                        SIGNAL("currentIndexChanged(int)"),
-                        self.fillqueries)
-        QObject.connect(self.cQuery,
-                        SIGNAL("valueChanged(int)"),
-                        self.checkquery)
+        self.cGroup.currentIndexChanged.connect(self.fillqueries)
+        self.cQuery.valueChanged.connect(self.checkquery)
+        #QObject.connect(self.cGroup,
+        #                SIGNAL("currentIndexChanged(int)"),
+        #                self.fillqueries)
+        # QObject.connect(self.cQuery,
+        #                SIGNAL("valueChanged(int)"),
+        #                self.checkquery)
         qlist=Q7Query.queriesNamesList()
         qlist.sort()
         for q in qlist: self.cQuery.addItem(q)
@@ -67,12 +72,15 @@ class Q7ToolsView(Q7Window,Ui_Q7ToolsWindow):
                 self.cQuery.setCurrentIndex(ix)
             self.applyquery()
             self.selectionlist()
-        QObject.connect(self.sLevel,
-                        SIGNAL("valueChanged(int)"),
-                        self.updateCriteria)
-        QObject.connect(self.cSIDStype,
-                        SIGNAL("editTextChanged(QString)"),
-                        self.updateSIDStypeEntry)
+        self.sLevel.valueChanged.connect(self.updateCriteria)
+        self.sSIDStype.editTextChanged.connect(self.updateSIDStypeEntry)
+
+        #QObject.connect(self.sLevel,
+        #                SIGNAL("valueChanged(int)"),
+        #                self.updateCriteria)
+        #QObject.connect(self.cSIDStype,
+        #                SIGNAL("editTextChanged(QString)"),
+        #                self.updateSIDStypeEntry)
         self.criteria=[]
         for l in range(3):
             self.criteria.append(Q7Criteria())
