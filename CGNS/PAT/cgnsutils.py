@@ -2996,7 +2996,7 @@ def getNodesFromTypeSet(tree, typeset):
     for path, child in getNodesFromTypeSet(tree, [CGK.Zone_ts]):
         print 'Next child:', child[0]
 
-  :arg CGNS/Python tree: the tree structure to save
+  :arg CGNS/Python tree: the tree structure to traverse
   :arg list typeset: the list of CGNS/SIDS types as strings
   :return:
   - This is an iterator, it returns a tuple (path, CGNS/Python node)
