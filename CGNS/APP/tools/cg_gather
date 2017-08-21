@@ -14,8 +14,7 @@ import CGNS.MAP as CGM
 import argparse
 
 parser = argparse.ArgumentParser()
-args=parser.parse_args()
+args = parser.parse_args()
 
 # --- last line
 
-    

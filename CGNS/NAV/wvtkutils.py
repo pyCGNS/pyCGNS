@@ -3,41 +3,45 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import print_function
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 from qtpy.QtCore import *
-from qtpy.QtWidgets  import *
+from qtpy.QtWidgets import *
 from qtpy.QtGui import *
+
 
 # -----------------------------------------------------------------
 class Q7ComboBox(QComboBox):
-    def __init__(self,arg):
-        QComboBox.__init__(self,arg)
-        self.actorlist=QListWidget()
+    def __init__(self, arg):
+        QComboBox.__init__(self, arg)
+        self.actorlist = QListWidget()
         self.setModel(self.actorlist.model())
         self.setView(self.actorlist)
         self.view().installEventFilter(self)
-        self.parent=None
-    def setParent(self,parent):
-        self.parent=parent
-    def eventFilter(self,o,e):
-        if (e.type()==QEvent.KeyPress):
-            kmod=e.modifiers()
-            kval=e.key()
-            if (kval in [Qt.Key_Z]):
-               path=self.actorlist.currentItem().text()
-               actor=self.parent.findPathObject(path)
-               self.parent.changeCurrentActor([path,actor])
-               return True
-            if (kval in [Qt.Key_H]):
-               path=self.actorlist.currentItem().text()
-               actor=self.parent.findPathObject(path)
-               self.parent.changeCurrentActor([path,actor])
-               self.parent.hideActor(None)
-               return True
-        return QComboBox.eventFilter(self,o,e)
-    def keyPressEvent(self,event):
-        kmod=event.modifiers()
-        kval=event.key()
-        print kmod,kval
-        
+        self.parent = None
+
+    def setParent(self, parent):
+        self.parent = parent
+
+    def eventFilter(self, o, e):
+        if e.type() == QEvent.KeyPress:
+            kmod = e.modifiers()
+            kval = e.key()
+            if kval in [Qt.Key_Z]:
+                path = self.actorlist.currentItem().text()
+                actor = self.parent.findPathObject(path)
+                self.parent.changeCurrentActor([path, actor])
+                return True
+            if kval in [Qt.Key_H]:
+                path = self.actorlist.currentItem().text()
+                actor = self.parent.findPathObject(path)
+                self.parent.changeCurrentActor([path, actor])
+                self.parent.hideActor(None)
+                return True
+        return QComboBox.eventFilter(self, o, e)
+
+    def keyPressEvent(self, event):
+        kmod = event.modifiers()
+        kval = event.key()
+        print(kmod, kval)

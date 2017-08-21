@@ -3,6 +3,7 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-print '### pyCGNS ERROR: please import now CGNS.WRA'
+from __future__ import print_function
+print('### pyCGNS ERROR: please import now CGNS.WRA')
 
 # --- last line

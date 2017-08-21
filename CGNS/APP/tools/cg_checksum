@@ -4,21 +4,23 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import print_function
+import os.path
+import argparse
+import re
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.MAP as CGM
 import CGNS.VAL.simplecheck as CGV
 import CGNS.version
 
-import os.path
-
-doc1="""
+doc1 = """
   CGNS/Python checksum tool
   (part of pyCGNS distribution http://pycgns.sourceforge.net)
   pyCGNS v%s
 
-"""%(CGNS.version.id)
+""" % (CGNS.version.id)
 
-doc2="""
+doc2 = """
   Examples:
 
   About checksum:
@@ -48,41 +50,41 @@ doc2="""
   
 """
 
-import argparse
-import re
-
-pr=argparse.ArgumentParser(description=doc1,epilog=doc2,
-                           formatter_class=argparse.RawDescriptionHelpFormatter,
-                           usage='%(prog)s [options] file1 file2 ...')
-pr.add_argument("-p","--path",dest="path",
+pr = argparse.ArgumentParser(description=doc1, epilog=doc2,
+                             formatter_class=argparse.RawDescriptionHelpFormatter,
+                             usage='%(prog)s [options] file1 file2 ...')
+pr.add_argument("-p", "--path", dest="path",
                 help='start diff at this node')
-pr.add_argument('-f','--flat',action='store_true',
+pr.add_argument('-f', '--flat', action='store_true',
                 help='flat mode, do not recurse on tree')
-pr.add_argument('-v','--verbose',action='store_true',
+pr.add_argument('-v', '--verbose', action='store_true',
                 help='trace mode')
-pr.add_argument('files',nargs=argparse.REMAINDER)
+pr.add_argument('files', nargs=argparse.REMAINDER)
 
-args=pr.parse_args()
+args = pr.parse_args()
+
 
 class Query(object):
-  def __init__(self):
-    self.userkeys=['DEFAULT']
-    self.idlist=[]
+    def __init__(self):
+        self.userkeys = ['DEFAULT']
+        self.idlist = []
+
 
 def checksumFile(filename):
-    flags=CGM.S2P_DEFAULT|CGM.S2P_CHECKSUM
-    (t,l,p)=CGM.load(filename,flags=flags,lksearch=['.'])
+    flags = CGM.S2P_DEFAULT | CGM.S2P_CHECKSUM
+    (t, l, p) = CGM.load(filename, flags=flags, lksearch=['.'])
     return t[1].tostring()
 
-Q=Query()
-Q.path=args.path
-Q.flat=args.flat
-Q.verbose=args.verbose
+
+Q = Query()
+Q.path = args.path
+Q.flat = args.flat
+Q.verbose = args.verbose
 
 for F in args.files:
     try:
-      print checksumFile(F),F
+        print(checksumFile(F), F)
     except CGM.CHLone.CHLoneException:
-      pass
+        pass
 
 # --- last line

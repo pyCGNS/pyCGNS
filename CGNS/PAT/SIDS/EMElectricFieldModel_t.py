@@ -7,15 +7,16 @@ import CGNS.PAT.cgnslib      as C
 import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
+
 #
-data=C.newEMElectricFieldModel(None)
-C.newDataArray(data,'{DataArray}')
+data = C.newEMElectricFieldModel(None)
+C.newDataArray(data, '{DataArray}')
 C.newDataClass(data)
 C.newDimensionalUnits(data)
-C.newUserDefinedData(data,'{UserDefinedData}')
-C.newDescriptor(data,'{Descriptor}')
+C.newUserDefinedData(data, '{UserDefinedData}')
+C.newDescriptor(data, '{Descriptor}')
 #
-status='10.9.1'
-comment='Full SIDS with all optionals'
-pattern=[data, status, comment]
+status = '10.9.1'
+comment = 'Full SIDS with all optionals'
+pattern = [data, status, comment]
 #

@@ -5,7 +5,7 @@
 #
 # TESTING VAL
 #
-
+from __future__ import print_function
 import unittest
 
 import CGNS.PAT.cgnslib as CGL
@@ -18,15 +18,18 @@ import os
 import string
 import subprocess
 
+
 class VALTestCase(unittest.TestCase):
-  def setUp(self):
-    pass
-  def test_001_Base_write_close(self):
-    import CGNS.VAL.suite.run
-    CGNS.VAL.suite.run.runall()
+    def setUp(self):
+        pass
+
+    def test_001_Base_write_close(self):
+        import CGNS.VAL.suite.run
+        CGNS.VAL.suite.run.runall()
+
 
 # ---
-print '-'*70+'\nCGNS.VAL test suite'
+print('-' * 70 + '\nCGNS.VAL test suite')
 suite = unittest.TestLoader().loadTestsFromTestCase(VALTestCase)
 unittest.TextTestRunner(verbosity=2).run(suite)
 

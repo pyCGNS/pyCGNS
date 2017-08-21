@@ -8,7 +8,7 @@ import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 
-data=['PointRange',None,[],'PointRange_t']
-status=''
-comment=''
-pattern=[data, status, comment]
+data = ['PointRange', None, [], 'PointRange_t']
+status = ''
+comment = ''
+pattern = [data, status, comment]

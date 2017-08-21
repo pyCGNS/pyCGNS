@@ -8,9 +8,10 @@
 # see the foreignKeys.py file
 #
 import foreignKeys as mapping
+
 #
 # ------------------------------------------------------------
-cgnsPlatformTable="""
+cgnsPlatformTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsPlatform (
   -- ---------------------------------------------------------
@@ -23,7 +24,7 @@ cgnsPlatformTable="""
   )
 """
 # ------------------------------------------------------------
-cgnsPerfMeasureTable="""
+cgnsPerfMeasureTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsPerfMeasure (
   -- ---------------------------------------------------------
@@ -36,7 +37,7 @@ cgnsPerfMeasureTable="""
   )
 """
 # ------------------------------------------------------------
-cgnsPDMDataTable="""
+cgnsPDMDataTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsPDMData (
   -- ---------------------------------------------------------
@@ -60,7 +61,7 @@ cgnsPDMDataTable="""
   )
 """
 # ------------------------------------------------------------
-cgnsSystemTable="""
+cgnsSystemTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsSystem (
   -- ---------------------------------------------------------
@@ -90,7 +91,7 @@ cgnsSystemTable="""
 """
 #
 # ------------------------------------------------------------
-cgnsTestTable="""
+cgnsTestTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsTest (
   -- ---------------------------------------------------------
@@ -111,7 +112,7 @@ cgnsTestTable="""
   -- ---------------------------------------------------------
   )
 """
-cgnsTestFamilyTable="""
+cgnsTestFamilyTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsTestFamily (
   -- ---------------------------------------------------------
@@ -123,7 +124,7 @@ cgnsTestFamilyTable="""
   )
 """
 # ------------------------------------------------------------
-cgnsLogTable="""
+cgnsLogTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsLog (
   -- ---------------------------------------------------------
@@ -136,42 +137,42 @@ cgnsLogTable="""
   )
 """
 # ------------------------------------------------------------
-cgnsPTx="CREATE UNIQUE INDEX cgnsPlatformIX on cgnsPlatform (id)"
-cgnsPMx="CREATE UNIQUE INDEX cgnsPerfMeasureIX on cgnsPerfMeasure(id)"
-cgnsPDx="CREATE UNIQUE INDEX cgnsPDMDataIX on cgnsPDMData (id)"
-cgnsPDxfke="CREATE UNIQUE INDEX cgnsPDMDataIXfke on cgnsPDMData(entry_id)"
-cgnsSx="CREATE UNIQUE INDEX cgnsSystemIX on cgnsSystem (id)"
-cgnsSxfke="CREATE UNIQUE INDEX cgnsSystemIXfke on cgnsSystem (entry_id)"
-cgnsSxfkp="CREATE UNIQUE INDEX cgnsSystemIXfkp on cgnsSystem (platform_id)"
-cgnsSxfkm="CREATE UNIQUE INDEX cgnsSystemIXfkm on cgnsSystem (perfmeasure_id)"
-cgnsSxfkv="CREATE UNIQUE INDEX cgnsSystemIXfkv on cgnsSystem (pdm_id)"
-cgnsTx="CREATE UNIQUE INDEX cgnsTestIX on cgnsTest (id)"
-cgnsTxfke="CREATE UNIQUE INDEX cgnsTestIXfke on cgnsTest (entry_id)"
-cgnsTxfkf="CREATE UNIQUE INDEX cgnsTestIXfkf on cgnsTest (family_id)"
+cgnsPTx = "CREATE UNIQUE INDEX cgnsPlatformIX on cgnsPlatform (id)"
+cgnsPMx = "CREATE UNIQUE INDEX cgnsPerfMeasureIX on cgnsPerfMeasure(id)"
+cgnsPDx = "CREATE UNIQUE INDEX cgnsPDMDataIX on cgnsPDMData (id)"
+cgnsPDxfke = "CREATE UNIQUE INDEX cgnsPDMDataIXfke on cgnsPDMData(entry_id)"
+cgnsSx = "CREATE UNIQUE INDEX cgnsSystemIX on cgnsSystem (id)"
+cgnsSxfke = "CREATE UNIQUE INDEX cgnsSystemIXfke on cgnsSystem (entry_id)"
+cgnsSxfkp = "CREATE UNIQUE INDEX cgnsSystemIXfkp on cgnsSystem (platform_id)"
+cgnsSxfkm = "CREATE UNIQUE INDEX cgnsSystemIXfkm on cgnsSystem (perfmeasure_id)"
+cgnsSxfkv = "CREATE UNIQUE INDEX cgnsSystemIXfkv on cgnsSystem (pdm_id)"
+cgnsTx = "CREATE UNIQUE INDEX cgnsTestIX on cgnsTest (id)"
+cgnsTxfke = "CREATE UNIQUE INDEX cgnsTestIXfke on cgnsTest (entry_id)"
+cgnsTxfkf = "CREATE UNIQUE INDEX cgnsTestIXfkf on cgnsTest (family_id)"
 # ------------------------------------------------------------
 # Table list is a dictionnary ;)
-tableList=[
-  ['cgnsPlatform',         cgnsPlatformTable],
-  ['cgnsTest',             cgnsTestTable],
-  ['cgnsTestFamily',       cgnsTestFamilyTable],
-  ['cgnsPerfMeasure',      cgnsPerfMeasureTable],    
-  ['cgnsPDMData',          cgnsPDMDataTable],    
-  ['cgnsSystem',           cgnsSystemTable],
-  ['cgnsLog',              cgnsLogTable],      
+tableList = [
+    ['cgnsPlatform', cgnsPlatformTable],
+    ['cgnsTest', cgnsTestTable],
+    ['cgnsTestFamily', cgnsTestFamilyTable],
+    ['cgnsPerfMeasure', cgnsPerfMeasureTable],
+    ['cgnsPDMData', cgnsPDMDataTable],
+    ['cgnsSystem', cgnsSystemTable],
+    ['cgnsLog', cgnsLogTable],
 ]
-indexList=[
-  ['cgnsPTx',              cgnsPTx],
-  ['cgnsPMx',              cgnsPMx],
-  ['cgnsPDx',              cgnsPDx],
-  ['cgnsPDxfke',           cgnsPDxfke],
-  ['cgnsSx',               cgnsSx],
-  ['cgnsSxfke',            cgnsSxfke],
-  ['cgnsSxfkp',            cgnsSxfkp],
-  ['cgnsSxfkm',            cgnsSxfkm],
-  ['cgnsSxfkv',            cgnsSxfkv],
-  ['cgnsTx',               cgnsTx],
-  ['cgnsTxfke',            cgnsTxfke],
-  ['cgnsTxfkf',            cgnsTxfkf],
+indexList = [
+    ['cgnsPTx', cgnsPTx],
+    ['cgnsPMx', cgnsPMx],
+    ['cgnsPDx', cgnsPDx],
+    ['cgnsPDxfke', cgnsPDxfke],
+    ['cgnsSx', cgnsSx],
+    ['cgnsSxfke', cgnsSxfke],
+    ['cgnsSxfkp', cgnsSxfkp],
+    ['cgnsSxfkm', cgnsSxfkm],
+    ['cgnsSxfkv', cgnsSxfkv],
+    ['cgnsTx', cgnsTx],
+    ['cgnsTxfke', cgnsTxfke],
+    ['cgnsTxfkf', cgnsTxfkf],
 ]
 #
 # ------------------------------------------------------------

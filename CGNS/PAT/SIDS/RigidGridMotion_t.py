@@ -8,7 +8,7 @@ import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 
-data=['RigidGridMotion',None,[],'RigidGridMotion_t']
-status=''
-comment=''
-pattern=[data, status, comment]
+data = ['RigidGridMotion', None, [], 'RigidGridMotion_t']
+status = ''
+comment = ''
+pattern = [data, status, comment]

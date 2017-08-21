@@ -7,9 +7,10 @@ import CGNS.PAT.cgnslib      as C
 import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
+
 #
-data=C.newDimensionalUnits(None)
-status='4.3'
-comment='Full SIDS with all optionals'
-pattern=[data, status, comment]
+data = C.newDimensionalUnits(None)
+status = '4.3'
+comment = 'Full SIDS with all optionals'
+pattern = [data, status, comment]
 #

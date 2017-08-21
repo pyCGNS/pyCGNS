@@ -5,8 +5,10 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import print_function
 from CGNS.APP.lib.queries import asQuery
 from CGNS.APP.lib.queries import runQuery
+
 
 @asQuery
 def nodeNameSearch(C):
@@ -23,8 +25,10 @@ def nodeNameSearch(C):
     'ZoneType'
     ('ZoneType',)
     """
-    if (C.NAME==C.ARGS[0]): return C.PATH
-    
+    if C.NAME == C.ARGS[0]:
+        return C.PATH
+
+
 @asQuery
 def nodeTokenSearch(C):
     """
@@ -40,13 +44,16 @@ def nodeTokenSearch(C):
     'ZoneBC'
     ('ZoneBC',)
     """
-    if (C.ARGS[0] in C.PATH): return C.PATH
-    
-FILE='HYB/vbv-part32_comp_period_links_dom_32_SUB.hdf'
-ARGS=['GridLocation']
+    if C.ARGS[0] in C.PATH:
+        return C.PATH
+
+
+FILE = 'HYB/vbv-part32_comp_period_links_dom_32_SUB.hdf'
+ARGS = ['GridLocation']
 
 # -----------------------------------------------------------------
 import CGNS.MAP as CGM
-(t,l,p)=CGM.load(FILE)
-print runQuery(t,l,p,nodeNameSearch,['GridLocation'])
-print runQuery(t,l,p,nodeTokenSearch,['Zone'])
+
+(t, l, p) = CGM.load(FILE)
+print(runQuery(t, l, p, nodeNameSearch, ['GridLocation']))
+print(runQuery(t, l, p, nodeTokenSearch, ['Zone']))

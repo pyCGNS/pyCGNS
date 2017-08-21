@@ -3,8 +3,10 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+
+
 def asQuery(f):
-    def prepostquery(node,parent,tree,links,skips,path,args,selected):
+    def prepostquery(node, parent, tree, links, skips, path, args, selected):
         global CGK
         global CGU
         global CGL
@@ -30,53 +32,57 @@ def asQuery(f):
         import CGNS.MAP as CGM
         import numpy
 
-        QueryNoException=True
+        QueryNoException = True
 
-        NODE=node
-        PARENT=parent
-        NAME=node[0]
-        VALUE=node[1]
-        CGNSTYPE=node[3]
-        CHILDREN=node[2]
-        TREE=tree
-        PATH=path
-        LINKS=links
-        SKIPS=skips
-        USER=args
-        SELECTED=selected
-        RESULT_LIST=[False]
+        NODE = node
+        PARENT = parent
+        NAME = node[0]
+        VALUE = node[1]
+        CGNSTYPE = node[3]
+        CHILDREN = node[2]
+        TREE = tree
+        PATH = path
+        LINKS = links
+        SKIPS = skips
+        USER = args
+        SELECTED = selected
+        RESULT_LIST = [False]
 
-        if (QueryNoException):
-            RESULT=f()
+        if QueryNoException:
+            RESULT = f()
         else:
             try:
-                RESULT=f()
-                if (RESULT not in [True, False]): RESULT=False
-                RESULT_LIST[0]=RESULT
+                RESULT = f()
+                if RESULT not in [True, False]:
+                    RESULT = False
+                RESULT_LIST[0] = RESULT
             except Exception:
-                RESULT_LIST[0]=False
+                RESULT_LIST[0] = False
 
         return RESULT
+
     return prepostquery
 
-# -----------------------------------------------------------------
-def parseAndSelect(tree,node,parent,links,skips,path,query,args,selected,
-                   result):
-    path=path+'/'+node[0]
-    Q=query(node,parent,tree,links,skips,path,args,selected)
-    R=[]
-    if (Q):
-        if (result):
-            R=[Q]
-        else:
-            R=[path]
-    for C in node[2]:
-        R+=parseAndSelect(tree,C,node,links,skips,path,query,args,selected,
-                          result)
-    return R
 
 # -----------------------------------------------------------------
-def runQuery(tree,links,paths,query,args,selected=[],mode=True):
+def parseAndSelect(tree, node, parent, links, skips, path, query, args, selected,
+                   result):
+    path = path + '/' + node[0]
+    Q = query(node, parent, tree, links, skips, path, args, selected)
+    R = []
+    if Q:
+        if result:
+            R = [Q]
+        else:
+            R = [path]
+    for C in node[2]:
+        R += parseAndSelect(tree, C, node, links, skips, path, query, args, selected,
+                            result)
+    return R
+
+
+# -----------------------------------------------------------------
+def runQuery(tree, links, paths, query, args, selected=None, mode=True):
     """Recursively applies a function on all nodes of a tree, breadth-first
     parse, results returned in a list (breadth-first order of the list).
 
@@ -92,17 +98,21 @@ def runQuery(tree,links,paths,query,args,selected=[],mode=True):
     The match between results and paths can be performed with help of the
     breadth-first paths order function in CGNS.PAT
     """
-    v=None
+    if selected is None:
+        selected = []
+    v = None
     try:
-        if (args): v=eval(args)
-        if ((v is not None) and (type(v)!=tuple)): v=(v,)
+        if args:
+            v = eval(args)
+        if (v is not None) and not isinstance(v, tuple):
+            v = (v,)
     except NameError:
-        v=(str(args),)
+        v = (str(args),)
     except:
         pass
-    _args=v
-    if (type(query) in [str, unicode]): query=eval(query)
-    result=parseAndSelect(tree,tree,[None,None,[],None],links,paths,'',
-                          query,_args,selected,mode)
+    _args = v
+    if isinstance(query, (str, unicode)):
+        query = eval(query)
+    result = parseAndSelect(tree, tree, [None, None, [], None], links, paths, '',
+                            query, _args, selected, mode)
     return result
-

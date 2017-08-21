@@ -3,9 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 
+
 def run():
-  import CGNS.PAT.test.cgu
+    import CGNS.PAT.test.cgu
 
 # --- last line
-
-

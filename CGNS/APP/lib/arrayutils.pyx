@@ -20,7 +20,8 @@ cdef int _trisFromTri(NPY.ndarray[NPY.int32_t, ndim=1] itris,
                       int npe,int minr, int bnd,
                       HUT.F_entry_ptr h,int hsz,int sn):
   cdef int p=0,rix=0,f=0,dix,maxc
-  cdef int *d, *r
+  cdef int *d
+  cdef int *r
   maxc=itriscount
   if (bnd): maxc=bnd
   r  =<int*>otris.data
@@ -44,7 +45,8 @@ cdef int _quadsFromQuad(NPY.ndarray[NPY.int32_t, ndim=1] iquads,
                         int npe,int minr, int bnd,
                         HUT.F_entry_ptr h,int hsz,int sn):
   cdef int p=0,rix=0,f=0,dix,maxc
-  cdef int *d, *r
+  cdef int *d
+  cdef int *r
   maxc=iquadscount
   if (bnd): maxc=bnd
   r  =<int*>oquads.data
@@ -69,7 +71,8 @@ cdef int _trisFromTetra(NPY.ndarray[NPY.int32_t, ndim=1] tetras,
                         int npe,int minr, int bnd,
                         HUT.F_entry_ptr h,int hsz,int sn):
   cdef int p=0,rix=0,f=0,dix,maxc
-  cdef int *d, *r
+  cdef int *d
+  cdef int *r
   maxc=tetrascount
   if (bnd): maxc=bnd
   r  =<int*>tris.data
@@ -114,7 +117,10 @@ cdef int _trisFromPyra(NPY.ndarray[NPY.int32_t, ndim=1] pyras,
                        int npe,int minr, int bnd,
                        HUT.F_entry_ptr h,int hsz,int sn):
   cdef int p=0,rix=0,m=0,f=0,dix,maxc
-  cdef int *d, *r, *pr, *ps
+  cdef int *d
+  cdef int *r
+  cdef int *pr
+  cdef int *ps
   maxc=pyrascount
   if (bnd): maxc=bnd
   r  =<int*>tris.data
@@ -159,7 +165,8 @@ cdef int _quadsFromPyra(NPY.ndarray[NPY.int32_t, ndim=1] pyras,
                         int npe,int minr, int bnd,
                         HUT.F_entry_ptr h,int hsz,int sn):
   cdef int p=0,rix=0,f=0,dix,maxc
-  cdef int *d, *r
+  cdef int *d
+  cdef int *r
   maxc=pyrascount
   if (bnd): maxc=bnd
   r  =<int*>quads.data
@@ -184,7 +191,10 @@ cdef int _trisFromPenta(NPY.ndarray[NPY.int32_t, ndim=1] pentas,
                         int npe,int minr, int bnd,
                         HUT.F_entry_ptr h,int hsz,int sn):
   cdef int p=0,rix=0,m=0,f=0,dix,maxc
-  cdef int *d, *r, *pr, *ps
+  cdef int *d
+  cdef int *r
+  cdef int *pr
+  cdef int *ps
   maxc=pentascount
   if (bnd): maxc=bnd
   r  =<int*>tris.data
@@ -215,7 +225,8 @@ cdef int _quadsFromPenta(NPY.ndarray[NPY.int32_t, ndim=1] pentas,
                          int npe,int minr, int bnd,
                          HUT.F_entry_ptr h,int hsz,int sn):
   cdef int p=0,rix=0,f=0,dix,maxc
-  cdef int *d, *r
+  cdef int *d
+  cdef int *r
   maxc=pentascount
   if (bnd): maxc=bnd
   r  =<int*>quads.data
@@ -256,7 +267,8 @@ cdef int _quadsFromHexa(NPY.ndarray[NPY.int32_t, ndim=1] hexas,
                         int npe,int minr, int bnd,
                         HUT.F_entry_ptr h,int hsz,int sn):
   cdef int p=0,rix=0,m=0,f=0,dix,maxc
-  cdef int *d, *r
+  cdef int *d
+  cdef int *r
   maxc=hexascount
   if (bnd): maxc=bnd
   r  =<int*>quads.data
@@ -321,7 +333,8 @@ cdef int _exteriorFaces(NPY.ndarray[NPY.int32_t, ndim=1] elts,
                         int npe,
                         HUT.F_entry_ptr h,int hsz,int sn):
   cdef int p=0,rix=0,f=0,dix,dp=0
-  cdef int *d, *r
+  cdef int *d
+  cdef int *r
   r  =<int*>xfaces.data
   d  =<int*>elts.data
   while (p<eltscount):

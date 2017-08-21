@@ -6,11 +6,12 @@
 from CGNS.APP.lib import mergeTrees
 import CGNS.MAP as CGM
 
+
 def treeLinkZGC(T1):
     pass
 
+
 def fileLinkZGC(*files):
-    l=[]
+    l = []
     for f in files:
-        l+=[CGM.load(f)[0]]
-        
+        l += [CGM.load(f)[0]]

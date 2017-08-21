@@ -3,7 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 
+
 def run():
-  import CGNS.NAV.test.cgu
+    import CGNS.NAV.test.cgu
 
 # --- last line

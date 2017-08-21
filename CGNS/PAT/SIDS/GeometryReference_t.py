@@ -7,13 +7,14 @@ import CGNS.PAT.cgnslib      as C
 import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
+
 #
-data=C.newGeometryReference(None)
-C.newDataArray(data,'{GeometryEntity}')
-C.newUserDefinedData(data,'{UserDefinedData}')
-C.newDescriptor(data,'{Descriptor}')
+data = C.newGeometryReference(None)
+C.newDataArray(data, '{GeometryEntity}')
+C.newUserDefinedData(data, '{UserDefinedData}')
+C.newDescriptor(data, '{Descriptor}')
 #
-status='12.7'
-comment='Full SIDS with all optionals'
-pattern=[data, status, comment]
+status = '12.7'
+comment = 'Full SIDS with all optionals'
+pattern = [data, status, comment]
 #

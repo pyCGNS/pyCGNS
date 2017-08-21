@@ -4,31 +4,27 @@
 #  -------------------------------------------------------------------------
 #
 import CGNS.PAT.cgnsutils as CGU
-import CGNS.PAT.cgnskeywords as CGK
-import numpy
 
-def mergeAB(ta,tb,tc,tag,diag,pfxA,pfxB,trace=False):
-    paths=CGU.getAllPaths(ta)
-    tc[2]=[]
+def mergeAB(ta, tb, tc, tag, diag, pfxA, pfxB, trace=False):
+    paths = CGU.getAllPaths(ta)
+    tc[2] = []
     for cta in ta[2]:
         tc[2].append(CGU.nodeCopy(cta))
     for path in paths:
-      if (path in diag):
-        pdg=diag[path]
-        for dg in pdg:
-          if (dg[0]=='NA'):
-            nt=CGU.getNodeByPath(tb,dg[1])
-            nd=CGU.nodeCopy(nt,str(nt[0]+pfxB))
-            np=CGU.getNodeByPath(tc,path)
-            CGU.setChild(np,nd)
-          elif (dg[0]=='ND'):
-            nt=CGU.getNodeByPath(ta,dg[1])
-            nd=CGU.nodeCopy(nt,str(nt[0]+pfxA))
-            np=CGU.getNodeByPath(tc,path)
-            CGU.setChild(np,nd)
-          else:
-            nt=CGU.getNodeByPath(ta,path)
-            nt[0]=str(nt[0]+pfxA)
-              
+        if path in diag:
+            pdg = diag[path]
+            for dg in pdg:
+                if dg[0] == 'NA':
+                    nt = CGU.getNodeByPath(tb, dg[1])
+                    nd = CGU.nodeCopy(nt, str(nt[0] + pfxB))
+                    np = CGU.getNodeByPath(tc, path)
+                    CGU.setChild(np, nd)
+                elif dg[0] == 'ND':
+                    nt = CGU.getNodeByPath(ta, dg[1])
+                    nd = CGU.nodeCopy(nt, str(nt[0] + pfxA))
+                    np = CGU.getNodeByPath(tc, path)
+                    CGU.setChild(np, nd)
+                else:
+                    nt = CGU.getNodeByPath(ta, path)
+                    nt[0] = str(nt[0] + pfxA)
     return tc
-                    

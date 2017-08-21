@@ -8,9 +8,10 @@
 # ------------------------------------------------------------
 #
 import foreignKeys as mapping
+
 #
 # ------------------------------------------------------------
-cgnsBaseInfoTable="""
+cgnsBaseInfoTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsBaseInfo (
   -- ---------------------------------------------------------
@@ -40,7 +41,7 @@ cgnsBaseInfoTable="""
   -- ---------------------------------------------------------
  )
 """
-cgnsReferenceInfoTable="""
+cgnsReferenceInfoTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsReferenceInfo (
   -- ---------------------------------------------------------
@@ -60,7 +61,7 @@ cgnsReferenceInfoTable="""
   )
 """
 # ------------------------------------------------------------
-cgnsFlowEquationSetInfoTable="""
+cgnsFlowEquationSetInfoTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsFlowEquationSetInfo (
   -- ---------------------------------------------------------
@@ -79,7 +80,7 @@ cgnsFlowEquationSetInfoTable="""
   )
 """
 # ------------------------------------------------------------
-cgnsAttributeListTable="""
+cgnsAttributeListTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsAttributeList (
   -- ---------------------------------------------------------
@@ -96,7 +97,7 @@ cgnsAttributeListTable="""
   )
 """
 # ------------------------------------------------------------
-cgnsAttributeTable="""
+cgnsAttributeTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsAttribute (
   -- ---------------------------------------------------------
@@ -113,7 +114,7 @@ cgnsAttributeTable="""
   )
 """
 # ------------------------------------------------------------
-cgnsZoneInfoTable="""
+cgnsZoneInfoTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsZoneInfo (
   -- ---------------------------------------------------------
@@ -127,9 +128,9 @@ cgnsZoneInfoTable="""
   nflowsolutions INT UNSIGNED NOT NULL
   -- ---------------------------------------------------------
   )
-"""%mapping.defaultMapping
+""" % mapping.defaultMapping
 # ------------------------------------------------------------
-cgnsExperimentalDataTable="""
+cgnsExperimentalDataTable = """
   -- ---------------------------------------------------------
   -- NOT USED YET
   -- ---------------------------------------------------------  
@@ -140,10 +141,10 @@ cgnsExperimentalDataTable="""
                  REFERENCES %(FK_TEST)s
   -- ---------------------------------------------------------
   )
-"""%mapping.defaultMapping
+""" % mapping.defaultMapping
 #
 # ------------------------------------------------------------
-cgnsSolverInfoTable="""
+cgnsSolverInfoTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsSolverInfo (
   -- ---------------------------------------------------------
@@ -161,10 +162,10 @@ cgnsSolverInfoTable="""
   nbparallel       INT UNSIGNED DEFAULT 1
   -- ---------------------------------------------------------
   )
-"""%mapping.defaultMapping
+""" % mapping.defaultMapping
 #
 # ------------------------------------------------------------
-cgnsFlowSolutionInfoTable="""
+cgnsFlowSolutionInfoTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsFlowSolutionInfo (
   -- ---------------------------------------------------------
@@ -178,10 +179,10 @@ cgnsFlowSolutionInfoTable="""
   name           varchar(32) NOT NULL
   -- ---------------------------------------------------------
   )
-"""%mapping.defaultMapping
+""" % mapping.defaultMapping
 #
 # ------------------------------------------------------------
-cgnsFlowSolutionFieldInfoTable="""
+cgnsFlowSolutionFieldInfoTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsFlowSolutionFieldInfo (
   -- ---------------------------------------------------------
@@ -193,63 +194,63 @@ cgnsFlowSolutionFieldInfoTable="""
   remark         text DEFAULT '' NOT NULL
   -- ---------------------------------------------------------
   )
-"""%mapping.defaultMapping
+""" % mapping.defaultMapping
 #
 # ------------------------------------------------------------
-cgnsBx="CREATE UNIQUE INDEX cgnsBaseInfoIX on cgnsBaseInfo(id)"
-cgnsBxfke="CREATE UNIQUE INDEX cgnsBaseInfoIXfke on cgnsBaseInfo(entry_id)"
-cgnsBxfkr="CREATE UNIQUE INDEX cgnsBaseInfoIXfkr on cgnsBaseInfo(reference_id)"
-cgnsBxfkf="CREATE UNIQUE INDEX cgnsBaseInfoIXfkf on cgnsBaseInfo(floweq_id)"
-cgnsRx="CREATE UNIQUE INDEX cgnsReferenceInfoIX on cgnsReferenceInfo (id)"
-cgnsRxb="CREATE UNIQUE INDEX cgnsReferenceInfoIXb on cgnsReferenceInfo(base_id)"
-cgnsRxa="CREATE UNIQUE INDEX cgnsReferenceInfoIXa on cgnsReferenceInfo(attlist_id)"
-cgnsFx="CREATE UNIQUE INDEX cgnsFlowEquationSetInfoIX on cgnsFlowEquationSetInfo (id)"
-cgnsFxb="CREATE UNIQUE INDEX cgnsFlowEquationSetInfoIXb on cgnsFlowEquationSetInfo (base_id)"
-cgnsFxa="CREATE UNIQUE INDEX cgnsFlowEquationSetInfoIXa on cgnsFlowEquationSetInfo (attlist_id)"
-cgnsALx="CREATE UNIQUE INDEX cgnsAttributeListIX on cgnsAttributeList(id)"
-cgnsALxp="CREATE UNIQUE INDEX cgnsAttributeListIXp on cgnsAttributeList (path)"
-cgnsALxfke="CREATE UNIQUE INDEX cgnsAttributeListIXfke on cgnsAttributeList(entry_id)"
-cgnsAx="CREATE UNIQUE INDEX cgnsAttributeIX on cgnsAttribute (id)"
-cgnsAxfk="CREATE UNIQUE INDEX cgnsAttributeIXfk on cgnsAttribute(alist_id)"
-cgnsZx="CREATE UNIQUE INDEX cgnsZoneInfoIX on cgnsZoneInfo (id,entry_id,name)"
-cgnsEx="CREATE UNIQUE INDEX cgnsExperimentalDataIX on cgnsExperimentalData (id,test_id)"
-cgnsSx="CREATE UNIQUE INDEX cgnsSolverInfoIX on cgnsSolverInfo (id,entry_id,solvername)"
-cgnsFSx="CREATE UNIQUE INDEX cgnsFlowSolutionInfoIX on cgnsFlowSolutionInfo (id,entry_id,zone_id,name)"
-cgnsFFx="CREATE UNIQUE INDEX cgnsFlowSolutionFieldInfoIX on cgnsFlowSolutionFieldInfo (id,solution_id,name)"
+cgnsBx = "CREATE UNIQUE INDEX cgnsBaseInfoIX on cgnsBaseInfo(id)"
+cgnsBxfke = "CREATE UNIQUE INDEX cgnsBaseInfoIXfke on cgnsBaseInfo(entry_id)"
+cgnsBxfkr = "CREATE UNIQUE INDEX cgnsBaseInfoIXfkr on cgnsBaseInfo(reference_id)"
+cgnsBxfkf = "CREATE UNIQUE INDEX cgnsBaseInfoIXfkf on cgnsBaseInfo(floweq_id)"
+cgnsRx = "CREATE UNIQUE INDEX cgnsReferenceInfoIX on cgnsReferenceInfo (id)"
+cgnsRxb = "CREATE UNIQUE INDEX cgnsReferenceInfoIXb on cgnsReferenceInfo(base_id)"
+cgnsRxa = "CREATE UNIQUE INDEX cgnsReferenceInfoIXa on cgnsReferenceInfo(attlist_id)"
+cgnsFx = "CREATE UNIQUE INDEX cgnsFlowEquationSetInfoIX on cgnsFlowEquationSetInfo (id)"
+cgnsFxb = "CREATE UNIQUE INDEX cgnsFlowEquationSetInfoIXb on cgnsFlowEquationSetInfo (base_id)"
+cgnsFxa = "CREATE UNIQUE INDEX cgnsFlowEquationSetInfoIXa on cgnsFlowEquationSetInfo (attlist_id)"
+cgnsALx = "CREATE UNIQUE INDEX cgnsAttributeListIX on cgnsAttributeList(id)"
+cgnsALxp = "CREATE UNIQUE INDEX cgnsAttributeListIXp on cgnsAttributeList (path)"
+cgnsALxfke = "CREATE UNIQUE INDEX cgnsAttributeListIXfke on cgnsAttributeList(entry_id)"
+cgnsAx = "CREATE UNIQUE INDEX cgnsAttributeIX on cgnsAttribute (id)"
+cgnsAxfk = "CREATE UNIQUE INDEX cgnsAttributeIXfk on cgnsAttribute(alist_id)"
+cgnsZx = "CREATE UNIQUE INDEX cgnsZoneInfoIX on cgnsZoneInfo (id,entry_id,name)"
+cgnsEx = "CREATE UNIQUE INDEX cgnsExperimentalDataIX on cgnsExperimentalData (id,test_id)"
+cgnsSx = "CREATE UNIQUE INDEX cgnsSolverInfoIX on cgnsSolverInfo (id,entry_id,solvername)"
+cgnsFSx = "CREATE UNIQUE INDEX cgnsFlowSolutionInfoIX on cgnsFlowSolutionInfo (id,entry_id,zone_id,name)"
+cgnsFFx = "CREATE UNIQUE INDEX cgnsFlowSolutionFieldInfoIX on cgnsFlowSolutionFieldInfo (id,solution_id,name)"
 # ------------------------------------------------------------
-tableList=[
-  ['cgnsExperimentalData',           cgnsExperimentalDataTable],
-  ['cgnsSolverInfo',                 cgnsSolverInfoTable],
-  ['cgnsFlowEquationSetInfo',        cgnsFlowEquationSetInfoTable],  
-  ['cgnsZoneInfo',                   cgnsZoneInfoTable],
-  ['cgnsFlowSolutionInfo',           cgnsFlowSolutionInfoTable],
-  ['cgnsFlowSolutionFieldInfo',      cgnsFlowSolutionFieldInfoTable],
-  ['cgnsAttributeList',              cgnsAttributeListTable],
-  ['cgnsAttribute',                  cgnsAttributeTable],      
-  ['cgnsReferenceInfo',              cgnsReferenceInfoTable],  
-  ['cgnsBaseInfo',                   cgnsBaseInfoTable],
+tableList = [
+    ['cgnsExperimentalData', cgnsExperimentalDataTable],
+    ['cgnsSolverInfo', cgnsSolverInfoTable],
+    ['cgnsFlowEquationSetInfo', cgnsFlowEquationSetInfoTable],
+    ['cgnsZoneInfo', cgnsZoneInfoTable],
+    ['cgnsFlowSolutionInfo', cgnsFlowSolutionInfoTable],
+    ['cgnsFlowSolutionFieldInfo', cgnsFlowSolutionFieldInfoTable],
+    ['cgnsAttributeList', cgnsAttributeListTable],
+    ['cgnsAttribute', cgnsAttributeTable],
+    ['cgnsReferenceInfo', cgnsReferenceInfoTable],
+    ['cgnsBaseInfo', cgnsBaseInfoTable],
 ]
-indexList=[
-  ['cgnsBx', cgnsBx],
-  ['cgnsBxfke', cgnsBxfke],
-  ['cgnsBxfkr', cgnsBxfkr],
-  ['cgnsBxfkf', cgnsBxfkf],
-  ['cgnsRx', cgnsRx],
-  ['cgnsRxa', cgnsRxa],
-  ['cgnsRxb', cgnsRxb],
-  ['cgnsFx', cgnsFx],
-  ['cgnsFxb', cgnsFxb],
-  ['cgnsFxa', cgnsFxa],
-  ['cgnsALx', cgnsALx],
-  ['cgnsALxp', cgnsALxp],
-  ['cgnsALxfke', cgnsALxfke],
-  ['cgnsAx', cgnsAx],
-  ['cgnsAxfk', cgnsAxfk],
-  ['cgnsZx', cgnsZx],
-  ['cgnsEx', cgnsEx],
-  ['cgnsSx', cgnsSx],
-  ['cgnsFSx', cgnsFSx],
-  ['cgnsFFx', cgnsFFx],
+indexList = [
+    ['cgnsBx', cgnsBx],
+    ['cgnsBxfke', cgnsBxfke],
+    ['cgnsBxfkr', cgnsBxfkr],
+    ['cgnsBxfkf', cgnsBxfkf],
+    ['cgnsRx', cgnsRx],
+    ['cgnsRxa', cgnsRxa],
+    ['cgnsRxb', cgnsRxb],
+    ['cgnsFx', cgnsFx],
+    ['cgnsFxb', cgnsFxb],
+    ['cgnsFxa', cgnsFxa],
+    ['cgnsALx', cgnsALx],
+    ['cgnsALxp', cgnsALxp],
+    ['cgnsALxfke', cgnsALxfke],
+    ['cgnsAx', cgnsAx],
+    ['cgnsAxfk', cgnsAxfk],
+    ['cgnsZx', cgnsZx],
+    ['cgnsEx', cgnsEx],
+    ['cgnsSx', cgnsSx],
+    ['cgnsFSx', cgnsFSx],
+    ['cgnsFFx', cgnsFFx],
 ]
 #
 # ------------------------------------------------------------

@@ -22,13 +22,13 @@
 #
 #Choose 4bpp. However, I have seen with some images that 8bpp needs to be used.
 #9) upload to your website and enjoy!
-
+from __future__ import print_function
 import sys
 import glob
 
 from cx_Freeze import setup, Executable
 import cx_Freeze
-print cx_Freeze.__file__
+print(cx_Freeze.__file__)
 
 df=glob.glob('demo/*')+glob.glob('demo/124Disk-PASS/*')+glob.glob('demo/124Disk-FAIL/*')+glob.glob('demo/DPW5/*')
 demo_files=[(f,f) for f in df]

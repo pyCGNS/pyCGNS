@@ -4,11 +4,12 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import print_function
 import CGNS.MAP
 
 (tree,links,paths)=CGNS.MAP.load("./data/T0.cgns",flags=CGNS.MAP.S2P_DEFAULT)
 
-print tree
-print links
+print(tree)
+print(links)
 
 # --- last line

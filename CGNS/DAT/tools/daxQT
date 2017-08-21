@@ -4,85 +4,91 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import print_function
 import CGNS.DAT.db.connect as dx
 import CGNS.DAT.exceptions as ex
 import CGNS.DAT.utils      as ut
 #
 import getopt
-daxQToptionError="daxQToptionError"
+
+daxQToptionError = "daxQToptionError"
+
+
 # ------------------------------------------------------------
 def sqlprint(r):
-  if (type(r[0]) == type ("")):
-    for rs in r[1]:
-      print r[0]%rs
-  if (type(r[0]) == type(sqlprint)):
-    r[0](r[1])
-    
+    if isinstance(r[0], str):
+        for rs in r[1]:
+            print(r[0] % rs)
+    if isinstance(r[0], type(sqlprint)):
+        r[0](r[1])
+
+
 # ------------------------------------------------------------
 def parseAndRun(args):
-  opt,valuelist=getopt.getopt(args,"tTx:q:plQ:")
-  connection = None
-  command    = None
-  query      = None
-  pquery     = None
-  pyoutput   = None
-  for o,v in opt:
-    if (o == "-T"):
-      ut.DAXtraceFlag=2
-    elif (o == "-t"):
-      ut.DAXtraceFlag=1
-    elif (o == "-x"):
-      connection=tuple(v.split(":"))
-    elif (o == "-p"):
-      pyoutput=1
-    elif (o == "-l"):
-      if (not connection): raise daxQToptionError
-      if (command):        raise daxQToptionError
-      command=o
-    elif (o == "-q"):
-      if (not connection): raise daxQToptionError
-      if (command):        raise daxQToptionError
-      if (query):          raise daxQToptionError
-      if (pquery):         raise daxQToptionError            
-      query=v
-      command=o
-    elif (o == "-Q"):
-      if (not connection): raise daxQToptionError
-      if (command):        raise daxQToptionError
-      if (query):          raise daxQToptionError
-      if (pquery):         raise daxQToptionError            
-      pquery=v
-      command=o
-    else:
-      raise daxQToptionError
-  if (   (not command)
-      or (not connection)): raise daxQToptionError
-  # ----------    
-  if (command == "-l"):
-    d=dx.daxQT(connection)
-    r=d.list()
-    for q in r:
-      print "%16s:%s"%(q, r[q][1])
-    del d
-  # ----------    
-  if (command == "-q"):
-    d=dx.daxQT(connection)
-    r=d.query(query)
-    print r
-    del d
-  # ----------    
-  if (command == "-Q"):
-    d=dx.daxQT(connection)
-    r=d.pquery(pquery,valuelist)
-    if (pyoutput):
-      print r[1]
-    else:
-      sqlprint(r)
-    del d
-    
+    opt, valuelist = getopt.getopt(args, "tTx:q:plQ:")
+    connection = None
+    command = None
+    query = None
+    pquery = None
+    pyoutput = None
+    for o, v in opt:
+        if (o == "-T"):
+            ut.DAXtraceFlag = 2
+        elif (o == "-t"):
+            ut.DAXtraceFlag = 1
+        elif (o == "-x"):
+            connection = tuple(v.split(":"))
+        elif (o == "-p"):
+            pyoutput = 1
+        elif (o == "-l"):
+            if (not connection): raise daxQToptionError
+            if (command):        raise daxQToptionError
+            command = o
+        elif (o == "-q"):
+            if (not connection): raise daxQToptionError
+            if (command):        raise daxQToptionError
+            if (query):          raise daxQToptionError
+            if (pquery):         raise daxQToptionError
+            query = v
+            command = o
+        elif (o == "-Q"):
+            if (not connection): raise daxQToptionError
+            if (command):        raise daxQToptionError
+            if (query):          raise daxQToptionError
+            if (pquery):         raise daxQToptionError
+            pquery = v
+            command = o
+        else:
+            raise daxQToptionError
+    if ((not command)
+        or (not connection)): raise daxQToptionError
+    # ----------
+    if (command == "-l"):
+        d = dx.daxQT(connection)
+        r = d.list()
+        for q in r:
+            print("%16s:%s" % (q, r[q][1]))
+        del d
+    # ----------
+    if (command == "-q"):
+        d = dx.daxQT(connection)
+        r = d.query(query)
+        print(r)
+        del d
+    # ----------
+    if (command == "-Q"):
+        d = dx.daxQT(connection)
+        r = d.pquery(pquery, valuelist)
+        if pyoutput:
+            print(r[1])
+        else:
+            sqlprint(r)
+        del d
+
+
 # ------------------------------------------------------------
 def usage():
-    print """\
+    print("""\
 daxQT   : DAX Query tool
 usage   : daxQT -x <database-connection> [command and option]
         : commands are exclusives, options should be ordered
@@ -92,17 +98,21 @@ commands:
  -q query          = [-t|-T] -q <sql-statement> [-p]
  -Q prepared query = [-t|-T] -Q <query-name> [-p] [value]+ 
  -l list queries   = [-t|-T] -l
-"""
-if (__name__ == "__main__"):
-  import sys
-  try:
-    parseAndRun(sys.argv[1:])
-  except daxQToptionError:   usage()
-  except IndexError:         usage()
-  except getopt.GetoptError: usage()
+""")
 
-  # DAX exceptions
-  except ex.DAXException, e: print e
 
-    
-    
+if __name__ == "__main__":
+    import sys
+
+    try:
+        parseAndRun(sys.argv[1:])
+    except daxQToptionError:
+        usage()
+    except IndexError:
+        usage()
+    except getopt.GetoptError:
+        usage()
+
+    # DAX exceptions
+    except ex.DAXException as e:
+        print(e)

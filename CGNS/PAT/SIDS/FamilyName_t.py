@@ -8,7 +8,7 @@ import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 
-data=C.newFamilyName(None,family='{FamilyName}')
-status='-'
-comment='SIDS Leaf node'
-pattern=[data, status, comment]
+data = C.newFamilyName(None, family='{FamilyName}')
+status = '-'
+comment = 'SIDS Leaf node'
+pattern = [data, status, comment]

@@ -9,11 +9,12 @@ import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 #
 import BCDataSet_t
+
 #
-data=C.newFamilyBC(None)
+data = C.newFamilyBC(None)
 data[2].append(BCDataSet_t.pattern[0])
 #
-status='12.8'
-comment='Full SIDS with all optionals'
-pattern=[data, status, comment]
+status = '12.8'
+comment = 'Full SIDS with all optionals'
+pattern = [data, status, comment]
 #

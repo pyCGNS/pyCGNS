@@ -8,8 +8,8 @@ import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 
-data=C.newGravity(None)
-status='-'
-comment=''
+data = C.newGravity(None)
+status = '-'
+comment = ''
 
-pattern=[data,status,comment]
+pattern = [data, status, comment]

@@ -3,67 +3,73 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import print_function
+
+
 def asQuery(f):
-    def prepostquery(node,parent,tree,links,skips,path,args,selected):
+    def prepostquery(node, parent, tree, links, skips, path, args, selected):
         import CGNS.PAT.cgnskeywords as CGK
         import CGNS.PAT.cgnsutils as CGU
         import CGNS.PAT.cgnslib as CGL
         import CGNS.MAP as CGM
         import numpy
 
-        QueryNoException=True
+        QueryNoException = True
 
         class Context(object):
             pass
 
-        C=Context()
-        C.NODE=node
-        C.PARENT=parent
-        C.NAME=node[0]
-        C.VALUE=node[1]
-        C.CGNSTYPE=node[3]
-        C.CHILDREN=node[2]
-        C.TREE=tree
-        C.PATH=path
-        C.LINKS=links
-        C.SKIPS=skips
-        C.USER=args
-        C.ARGS=args
-        C.SELECTED=selected
-        C.RESULT_LIST=[False]
+        C = Context()
+        C.NODE = node
+        C.PARENT = parent
+        C.NAME = node[0]
+        C.VALUE = node[1]
+        C.CGNSTYPE = node[3]
+        C.CHILDREN = node[2]
+        C.TREE = tree
+        C.PATH = path
+        C.LINKS = links
+        C.SKIPS = skips
+        C.USER = args
+        C.ARGS = args
+        C.SELECTED = selected
+        C.RESULT_LIST = [False]
 
         if (QueryNoException):
-            RESULT=f(C)
+            RESULT = f(C)
         else:
             try:
-                RESULT=f(C)
-                if (RESULT not in [True, False]): RESULT=False
-                RESULT_LIST[0]=RESULT
+                RESULT = f(C)
+                if (RESULT not in [True, False]): RESULT = False
+                RESULT_LIST[0] = RESULT
             except Exception:
-                RESULT_LIST[0]=False
+                RESULT_LIST[0] = False
 
         return RESULT
+
     return prepostquery
 
-# -----------------------------------------------------------------
-def parseAndSelect(tree,node,parent,links,skips,path,query,args,selected,
-                   result):
-    path=path+'/'+node[0]
-    print 'ARGS ',args
-    Q=query(node,parent,tree,links,skips,path,args,selected)
-    R=[]
-    if (Q):
-        if (result):
-            R=[Q]
-        else:
-            R=[path]
-    for C in node[2]:
-        R+=parseAndSelect(tree,C,node,links,skips,path,query,args,selected,
-                          result)
-    return R
 
 # -----------------------------------------------------------------
-def runQuery(tree,links,paths,query,args,selected=[],mode=True):
+def parseAndSelect(tree, node, parent, links, skips, path, query, args, selected,
+                   result):
+    path = path + '/' + node[0]
+    print('ARGS ', args)
+    Q = query(node, parent, tree, links, skips, path, args, selected)
+    R = []
+    if (Q):
+        if (result):
+            R = [Q]
+        else:
+            R = [path]
+    for C in node[2]:
+        R += parseAndSelect(tree, C, node, links, skips, path, query, args, selected,
+                            result)
+    return R
+
+
+# -----------------------------------------------------------------
+def runQuery(tree, links, paths, query, args, selected=[], mode=True):
     """Recursively applies a function on all nodes of a tree, breadth-first
     parse, results returned in a list (breadth-first order of the list).
 
@@ -79,20 +85,19 @@ def runQuery(tree,links,paths,query,args,selected=[],mode=True):
     The match between results and paths can be performed with help of the
     breadth-first paths order function in CGNS.PAT
     """
-    v=None
+    v = None
     try:
         try:
-            if (args): v=eval(args)
+            if (args): v = eval(args)
         except TypeError:
-            v=args
-        if ((v is not None) and (type(v) not in [tuple, list])): v=(v,)
+            v = args
+        if ((v is not None) and (type(v) not in [tuple, list])): v = (v,)
     except NameError:
-        v=(str(args),)
+        v = (str(args),)
     except:
         pass
-    _args=v
-    if (type(query) in [str, unicode]): query=eval(query)
-    result=parseAndSelect(tree,tree,[None,None,[],None],links,paths,'',
-                          query,_args,selected,mode)
+    _args = v
+    if (type(query) in [str, unicode]): query = eval(query)
+    result = parseAndSelect(tree, tree, [None, None, [], None], links, paths, '',
+                            query, _args, selected, mode)
     return result
-

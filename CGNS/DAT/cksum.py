@@ -34,9 +34,11 @@
 # - Data is completely read as a binary string
 # - Uses pyCGNS, numpy, may lead to not portable fingerprint result
 #
+from __future__ import print_function
 import CGNS
 import numpy
-import md5
+import hashlib
+
 
 # ----------------------------------------------------------------------
 # checksums are made in a way it could be done by another software using
@@ -45,48 +47,54 @@ import md5
 #   using %-32.32s format
 # - integers are %d format
 # - actual node data is seen as an hexa string
-def nodeChecksum(node,data,cks):
-  cks.update("%-32.32s"%node['name'])          
-  cks.update("%-32.32s"%node['label'])          
-  cks.update("%-32.32s"%node['datatype'])       
-  cks.update("%d"%len(node['dimensions']))
-  for n in range(len(node['dimensions'])-1):
-    cks.update("%d"%node['dimensions'][n])
-  if (data != None): cks.update(data.tostring())  
-    
-# ----------------------------------------------------------------------
-def parseAndUpdate(db,nodeid,cks):
-  node=db.nodeAsDict(nodeid)
-  dt=node['datatype']
-  if (node['name'] != '.checksum'):
-    if ((dt != "MT") and (dt != "LK")): data=db.read_all_data(nodeid)
-    else:                               data=None
-    nodeChecksum(node,data,cks)
-  if (dt != "LK"):
-    clist=list(node['children'])
-    clist.sort()
-    for c in clist:
-      parseAndUpdate(db,db.get_node_id(nodeid,c),cks)
-  
-# ----------------------------------------------------------------------
-def checksumtree(f,cks):
-  parseAndUpdate(f,f.root(),cks)
-  return cks
-    
-# ----------------------------------------------------------------------
-usage="""usage: adfchecksum.py <filename>"""
+def nodeChecksum(node, data, cks):
+    cks.update("%-32.32s" % node['name'])
+    cks.update("%-32.32s" % node['label'])
+    cks.update("%-32.32s" % node['datatype'])
+    cks.update("%d" % len(node['dimensions']))
+    for n in range(len(node['dimensions']) - 1):
+        cks.update("%d" % node['dimensions'][n])
+    if data is not None: cks.update(data.tostring())
 
-if (__name__ == "__main__"):
-  import sys
-  import os
-  try:
-    filename=sys.argv[1]
-  except IndexError:
-    raise usage
-  if (os.path.isfile(filename)):
-      f=CGNS.pyADF(filename,CGNS.READ_ONLY,CGNS.NATIVE)
-      cks=md5.new()
-      print checksumtree(f,cks).hexdigest()
-      f.database_close()
-  else:
-      raise usage
+
+# ----------------------------------------------------------------------
+def parseAndUpdate(db, nodeid, cks):
+    node = db.nodeAsDict(nodeid)
+    dt = node['datatype']
+    if node['name'] != '.checksum':
+        if (dt != "MT") and (dt != "LK"):
+            data = db.read_all_data(nodeid)
+        else:
+            data = None
+        nodeChecksum(node, data, cks)
+    if dt != "LK":
+        clist = list(node['children'])
+        clist.sort()
+        for c in clist:
+            parseAndUpdate(db, db.get_node_id(nodeid, c), cks)
+
+
+# ----------------------------------------------------------------------
+def checksumtree(f, cks):
+    parseAndUpdate(f, f.root(), cks)
+    return cks
+
+
+# ----------------------------------------------------------------------
+usage = """usage: adfchecksum.py <filename>"""
+
+if __name__ == "__main__":
+    import sys
+    import os
+
+    try:
+        filename = sys.argv[1]
+    except IndexError:
+        raise usage
+    if os.path.isfile(filename):
+        f = CGNS.pyADF(filename, CGNS.READ_ONLY, CGNS.NATIVE)
+        cks = hashlib.new('md5')
+        print(checksumtree(f, cks).hexdigest())
+        f.database_close()
+    else:
+        raise usage

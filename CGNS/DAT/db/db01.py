@@ -8,11 +8,12 @@
 # see the foreignKeys.py file
 #
 import foreignKeys as mapping
+
 #
 # --- SYNTAX *IS* SQLITE3
 #
 # ------------------------------------------------------------
-cgnsEntryTable="""
+cgnsEntryTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsEntry (
   -- ---------------------------------------------------------
@@ -36,9 +37,9 @@ cgnsEntryTable="""
                                ON DELETE NO ACTION
   -- ---------------------------------------------------------
   )
-"""%mapping.defaultMapping
+""" % mapping.defaultMapping
 # ------------------------------------------------------------
-cgnsBlobEntryTable="""
+cgnsBlobEntryTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsBlobEntry (
   -- ---------------------------------------------------------
@@ -54,7 +55,7 @@ cgnsBlobEntryTable="""
   )
 """
 # ------------------------------------------------------------
-cgnsOwnerTable="""
+cgnsOwnerTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsOwner (
   -- ---------------------------------------------------------
@@ -67,10 +68,10 @@ cgnsOwnerTable="""
      PRIMARY KEY (id)
   -- ---------------------------------------------------------
   )
-"""%mapping.defaultMapping
+""" % mapping.defaultMapping
 #
 # ------------------------------------------------------------
-cgnsLinkTable="""
+cgnsLinkTable = """
   -- ---------------------------------------------------------
   CREATE TABLE cgnsLink (
   -- ---------------------------------------------------------
@@ -91,39 +92,39 @@ cgnsLinkTable="""
                              ON DELETE NO ACTION
   -- ---------------------------------------------------------  
   )
-"""%mapping.defaultMapping
+""" % mapping.defaultMapping
 #
 # ------------------------------------------------------------
-cgnsEx   ="CREATE UNIQUE INDEX cgnsEntryIX on cgnsEntry(id)"
-cgnsExf  ="CREATE UNIQUE INDEX cgnsEntryIXf on cgnsEntry(fileid)"
-cgnsExfk ="CREATE UNIQUE INDEX cgnsEntryIXfk on cgnsEntry(filedata_id)"
-cgnsExfko="CREATE UNIQUE INDEX cgnsEntryIXfko on cgnsEntry(owner_id)"
-cgnsBx   ="CREATE UNIQUE INDEX cgnsBlobEntryIX on cgnsBlobEntry(id)"
-cgnsBxfke="CREATE UNIQUE INDEX cgnsBlobEntryIXfke on cgnsBlobEntry(entry_id)"
-cgnsOx   ="CREATE UNIQUE INDEX cgnsOwnerIX on cgnsOwner(id)"
-cgnsLx   ="CREATE UNIQUE INDEX cgnsLinkIX on cgnsLink(id)"
-cgnsLxfke="CREATE UNIQUE INDEX cgnsLinkIXfke on cgnsLink(entry_id)"
-cgnsLxfkl="CREATE UNIQUE INDEX cgnsLinkIXfkl on cgnsLink(linked_id)"
+cgnsEx = "CREATE UNIQUE INDEX cgnsEntryIX on cgnsEntry(id)"
+cgnsExf = "CREATE UNIQUE INDEX cgnsEntryIXf on cgnsEntry(fileid)"
+cgnsExfk = "CREATE UNIQUE INDEX cgnsEntryIXfk on cgnsEntry(filedata_id)"
+cgnsExfko = "CREATE UNIQUE INDEX cgnsEntryIXfko on cgnsEntry(owner_id)"
+cgnsBx = "CREATE UNIQUE INDEX cgnsBlobEntryIX on cgnsBlobEntry(id)"
+cgnsBxfke = "CREATE UNIQUE INDEX cgnsBlobEntryIXfke on cgnsBlobEntry(entry_id)"
+cgnsOx = "CREATE UNIQUE INDEX cgnsOwnerIX on cgnsOwner(id)"
+cgnsLx = "CREATE UNIQUE INDEX cgnsLinkIX on cgnsLink(id)"
+cgnsLxfke = "CREATE UNIQUE INDEX cgnsLinkIXfke on cgnsLink(entry_id)"
+cgnsLxfkl = "CREATE UNIQUE INDEX cgnsLinkIXfkl on cgnsLink(linked_id)"
 # ------------------------------------------------------------
 # order is significant...
 #
-tableList=[
-  ['cgnsOwner',      cgnsOwnerTable],
-  ['cgnsBlobEntry',  cgnsBlobEntryTable],  
-  ['cgnsEntry',      cgnsEntryTable],
-  ['cgnsLink' ,      cgnsLinkTable],
+tableList = [
+    ['cgnsOwner', cgnsOwnerTable],
+    ['cgnsBlobEntry', cgnsBlobEntryTable],
+    ['cgnsEntry', cgnsEntryTable],
+    ['cgnsLink', cgnsLinkTable],
 ]
-indexList=[
-  ['cgnsEntryIX',    cgnsEx],
-  ['cgnsEntryIXf',   cgnsExf],
-  ['cgnsEntryIXfk',  cgnsExfk],
-  ['cgnsEntryIXfko', cgnsExfko],
-  ['cgnsBx',         cgnsBx],
-  ['cgnsBxfke',      cgnsBxfke],
-  ['cgnsOx',         cgnsOx],
-  ['cgnsLx',         cgnsLx],
-  ['cgnsLxfke',      cgnsLxfke],
-  ['cgnsLxfkl',      cgnsLxfkl],
+indexList = [
+    ['cgnsEntryIX', cgnsEx],
+    ['cgnsEntryIXf', cgnsExf],
+    ['cgnsEntryIXfk', cgnsExfk],
+    ['cgnsEntryIXfko', cgnsExfko],
+    ['cgnsBx', cgnsBx],
+    ['cgnsBxfke', cgnsBxfke],
+    ['cgnsOx', cgnsOx],
+    ['cgnsLx', cgnsLx],
+    ['cgnsLxfke', cgnsLxfke],
+    ['cgnsLxfkl', cgnsLxfkl],
 ]
 #
 # ------------------------------------------------------------

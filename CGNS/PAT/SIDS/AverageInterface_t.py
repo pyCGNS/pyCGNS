@@ -3,16 +3,17 @@
 #  See license.txt file in the root directory of this Python module source  
 #  ---------------------------------------------------------------------------
 #
-import CGNS.PAT.cgnslib      as C
-import CGNS.PAT.cgnserrors   as E
+import CGNS.PAT.cgnslib as C
+import CGNS.PAT.cgnserrors as E
 import CGNS.PAT.cgnskeywords as K
-import numpy                 as N
+import numpy as N
+
 #
-data=C.newAverageInterface(None)
-C.newUserDefinedData(data,'{UserDefinedData}')
-C.newDescriptor(data,'{Descriptor}')
+data = C.newAverageInterface(None)
+C.newUserDefinedData(data, '{UserDefinedData}')
+C.newDescriptor(data, '{Descriptor}')
 #
-status='8.5.2'
-comment='Full SIDS with all optionals'
-pattern=[data, status, comment]
+status = '8.5.2'
+comment = 'Full SIDS with all optionals'
+pattern = [data, status, comment]
 #

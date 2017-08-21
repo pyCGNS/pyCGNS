@@ -7,10 +7,11 @@ import CGNS.PAT.cgnslib      as C
 import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
+
 #
-data=C.newDataConversion(None)
+data = C.newDataConversion(None)
 #
-status='5.1.1'
-comment='Full SIDS with all optionals'
-pattern=[data, status, comment]
+status = '5.1.1'
+comment = 'Full SIDS with all optionals'
+pattern = [data, status, comment]
 #

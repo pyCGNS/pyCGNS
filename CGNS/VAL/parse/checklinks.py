@@ -81,6 +81,7 @@
 # in the current node chain of indices, there is a loop...
 #
 #  -------------------------------------------------------------------------
+from __future__ import print_function
 import CGNS.MAP
 import CGNS.PAT.cgnsutils      as CGU
 import CGNS.PAT.cgnstypes      as CGT
@@ -88,55 +89,65 @@ import CGNS.PAT.cgnskeywords   as CGK
 import math
 import os
 
+
 def canonicalName(filename):
-    fn=os.path.expanduser(os.path.expandvars(filename))
-    fn=os.path.realpath(os.path.abspath(fn))
-    fn=os.path.normpath(fn)
+    fn = os.path.expanduser(os.path.expandvars(filename))
+    fn = os.path.realpath(os.path.abspath(fn))
+    fn = os.path.normpath(fn)
     return fn
 
+
 class CGNSGraph(object):
-    pending={}
-    fileindex=[]
-    index=[]
-    def __init__(self,filename=None):
+    pending = {}
+    fileindex = []
+    index = []
+
+    def __init__(self, filename=None):
         if (filename is not None):
             self.parseOneFile(filename)
-    def addCanonicalFilename(self,filename):
-        fn=canonicalName(filename)
+
+    def addCanonicalFilename(self, filename):
+        fn = canonicalName(filename)
         if (fn not in self.fileindex):
-            self.fileindex+=[fn]
+            self.fileindex += [fn]
             return True
         return False
-    def filenameIndex(self,filename):
-        fn=canonicalName(filename)
-        return self.fileindex.index(fn)+1
-    def parseOneFile(self,filename):
+
+    def filenameIndex(self, filename):
+        fn = canonicalName(filename)
+        return self.fileindex.index(fn) + 1
+
+    def parseOneFile(self, filename):
         if (not self.addCanonicalFilename(filename)): return
-        flags=CGNS.MAP.S2P_NODATA|CGNS.MAP.S2P_FOLLOWLINKS
-        (t,l,p)=CGNS.MAP.load(filename,flags,lksearch=['.'])
-        idx=self.filenameIndex(filename)
-        self.index+=CGU.getAllNodesAsWidthFirstIndex(t,idx)
-        self.fillLinksList(idx,l)
+        flags = CGNS.MAP.S2P_NODATA | CGNS.MAP.S2P_FOLLOWLINKS
+        (t, l, p) = CGNS.MAP.load(filename, flags, lksearch=['.'])
+        idx = self.filenameIndex(filename)
+        self.index += CGU.getAllNodesAsWidthFirstIndex(t, idx)
+        self.fillLinksList(idx, l)
         for el in l:
-            self.parseOneFile(el[0]+'/'+el[1])
+            self.parseOneFile(el[0] + '/' + el[1])
         self.solveLinks()
-    def fillLinksList(self,idx,l):
+
+    def fillLinksList(self, idx, l):
         for lk in l:
-            fn=canonicalName(lk[0]+os.sep+lk[1])
-            print 'FILE',fn
-        print len(self.fileindex)
+            fn = canonicalName(lk[0] + os.sep + lk[1])
+            print('FILE', fn)
+        print(len(self.fileindex))
         for i in self.fileindex:
-            print i
+            print(i)
+
     def solveLinks(self):
         pass
-    def showIndex(self,sort=False):
-        if (sort): self.__index.sort()
-        sz=int(math.log10(max([i[1] for i in self.index]))+1)
-        fmt="%%.2d %%.%dd %%s"%sz
+
+    def showIndex(self, sort=False):
+        if (sort):
+            self.__index.sort()
+        sz = int(math.log10(max([i[1] for i in self.index])) + 1)
+        fmt = "%%.2d %%.%dd %%s" % sz
         for e in self.index:
-            print fmt%(e[0],e[1],e[2])
+            print(fmt % (e[0], e[1], e[2]))
+
 
 for i in range(12):
-    g=CGNSGraph('/tmp/CHLone-test-008-%.2d.hdf'%i)
-    g.showIndex()        
-
+    g = CGNSGraph('/tmp/CHLone-test-008-%.2d.hdf' % i)
+    g.showIndex()

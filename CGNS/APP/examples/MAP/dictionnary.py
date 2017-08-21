@@ -6,8 +6,7 @@
 #
 import CGNS.MAP
 
-print CGNS.MAP.flags
+print(CGNS.MAP.flags)
 
 for k in CGNS.MAP.flags:
-  print k, CGNS.MAP.__dict__[k]
-  
+    print(k, CGNS.MAP.__dict__[k])

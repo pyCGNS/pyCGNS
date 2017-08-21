@@ -7,16 +7,17 @@ import CGNS.PAT.cgnslib      as C
 import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
+
 #
-data=C.newConvergenceHistory(None)
-C.newDescriptor(data,'NormDefinition')
-C.newDataArray(data,'{DataArray}')
+data = C.newConvergenceHistory(None)
+C.newDescriptor(data, 'NormDefinition')
+C.newDataArray(data, '{DataArray}')
 C.newDataClass(data)
 C.newDimensionalUnits(data)
-C.newUserDefinedData(data,'{UserDefinedData}')
-C.newDescriptor(data,'{Descriptor}')
+C.newUserDefinedData(data, '{UserDefinedData}')
+C.newDescriptor(data, '{Descriptor}')
 #
-status='12.3'
-comment='Full SIDS with all optionals'
-pattern=[data, status, comment]
+status = '12.3'
+comment = 'Full SIDS with all optionals'
+pattern = [data, status, comment]
 #

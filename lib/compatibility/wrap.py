@@ -4,6 +4,6 @@
 #  -------------------------------------------------------------------------
 #
 
-print 'pyCGNS ERROR: please now import CGNS.WRA'
+print('pyCGNS ERROR: please now import CGNS.WRA')
 
 # --- last line

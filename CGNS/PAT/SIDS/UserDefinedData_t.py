@@ -8,7 +8,7 @@ import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 
-data=['UserDefinedData',None,[],'UserDefinedData_t']
-status=''
-comment=''
-pattern=[data, status, comment]
+data = ['UserDefinedData', None, [], 'UserDefinedData_t']
+status = ''
+comment = ''
+pattern = [data, status, comment]

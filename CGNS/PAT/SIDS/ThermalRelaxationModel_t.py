@@ -8,7 +8,7 @@ import CGNS.PAT.cgnserrors   as E
 import CGNS.PAT.cgnskeywords as K
 import numpy             as N
 
-data=['ThermalRelaxationModel',None,[],'ThermalRelaxationModel_t']
-status=''
-comment=''
-pattern=[data, status, comment]
+data = ['ThermalRelaxationModel', None, [], 'ThermalRelaxationModel_t']
+status = ''
+comment = ''
+pattern = [data, status, comment]

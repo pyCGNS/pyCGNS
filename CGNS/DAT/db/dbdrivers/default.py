@@ -10,61 +10,75 @@
 # DBMS connection and drivers
 # - The DB2 API actually does the job...
 #
-import CGNS.DAT.utils           as dxUT
-import CGNS.DAT.exceptions      as dxEX
+import CGNS.DAT.utils as dxUT
+import CGNS.DAT.exceptions as dxEX
+
+
 #
 # ------------------------------------------------------------
 class daxDriver:
-  def __init__(self,base,user,passwd):
-    self.name=base
-    self._user=user
-    self._passwd=passwd
-  def __del__(self):
-    dxUT.ptrace("SQL # (close)")
-    if self._db:
-      self._db.close()
-  def cursor(self):
-    return self._db.cursor()
-  def runSQLgeneric(self,stmt):
-    cs=self.cursor()
-    dxUT.ptrace("SQL # %s"%stmt)
-    cs.execute(stmt)
-    return cs.fetchall()    
-  def runSQLgenericMany(self,stmt,values):
-    cs=self.cursor()
-    dxUT.ptrace("SQL # %s"%stmt)
-    cs.executemany(stmt,values)
-    return cs.fetchall()
+    def __init__(self, base, user, passwd):
+        self.name = base
+        self._user = user
+        self._passwd = passwd
+
+    def __del__(self):
+        dxUT.ptrace("SQL # (close)")
+        if self._db:
+            self._db.close()
+
+    def cursor(self):
+        return self._db.cursor()
+
+    def runSQLgeneric(self, stmt):
+        cs = self.cursor()
+        dxUT.ptrace("SQL # %s" % stmt)
+        cs.execute(stmt)
+        return cs.fetchall()
+
+    def runSQLgenericMany(self, stmt, values):
+        cs = self.cursor()
+        dxUT.ptrace("SQL # %s" % stmt)
+        cs.executemany(stmt, values)
+        return cs.fetchall()
+
 
 # -----------------------------------------------------------------------------
 # No DB found
 # -----------------------------------------------------------------------------
 class daxDriverNoneDumbDB():
-  def __init__(self):
-    pass
-  def close(self):
-    pass
-  def cursor(self):
-    return None
-  
-class daxDriverNone(daxDriver):
-  def __init__(self,base,user='',passwd=''):
-    self._db = daxDriverNoneDumbDB()
-    daxDriver.__init__(self,base,user,passwd)
-  def commit(self):
-    pass
-  def rollback(self):
-    pass
-  def runSQL(self,stmt,commit=0,values=None):
-    pass
+    def __init__(self):
+        pass
 
-daxDriverDefault=daxDriverNone
+    def close(self):
+        pass
+
+    def cursor(self):
+        return None
+
+
+class daxDriverNone(daxDriver):
+    def __init__(self, base, user='', passwd=''):
+        self._db = daxDriverNoneDumbDB()
+        daxDriver.__init__(self, base, user, passwd)
+
+    def commit(self):
+        pass
+
+    def rollback(self):
+        pass
+
+    def runSQL(self, stmt, commit=0, values=None):
+        pass
+
+
+daxDriverDefault = daxDriverNone
 
 # -----------------------------------------------------------------------------
 # mySQL - *** NOT USABLE ANYMORE BECAUSE SCHEMA REALLY IS DIFFERENT
 #         *** MOVE TO SQLITE (below)
 # -----------------------------------------------------------------------------
-__d_mysql=0
+__d_mysql = 0
 # try:
 #   import MySQLdb
 #   import MySQLdb.cursors
@@ -122,31 +136,39 @@ __d_mysql=0
 # -----------------------------------------------------------------------------
 # sqlite3
 # -----------------------------------------------------------------------------
-__d_sqlite3=0
+__d_sqlite3 = 0
 try:
-  import sqlite3
-  __d_sqlite3=1
+    import sqlite3
+
+    __d_sqlite3 = 1
 except:
-  pass
+    pass
 
 if __d_sqlite3:
-  class daxDriverSqlite3(daxDriver):
-    def __init__(self,base,user='',passwd=''):
-      self._db = None
-      daxDriver.__init__(self,base,user,passwd)
-      self._db = sqlite3.connect(database=base)
-    def commit(self):
-      self._db.commit()
-    def rollback(self):
-      self._db.rollback()
-    def runSQL(self,stmt,commit=0,values=None):
-      r=None
-      dxUT.perror(stmt)
-      if (values): r=self.runSQLgenericMany(stmt,values)
-      else:        r=self.runSQLgeneric(stmt)
-      if (commit):
-        self._db.commit()
-      return r
-  daxDriverDefault=daxDriverSqlite3
+    class daxDriverSqlite3(daxDriver):
+        def __init__(self, base, user='', passwd=''):
+            self._db = None
+            daxDriver.__init__(self, base, user, passwd)
+            self._db = sqlite3.connect(database=base)
+
+        def commit(self):
+            self._db.commit()
+
+        def rollback(self):
+            self._db.rollback()
+
+        def runSQL(self, stmt, commit=0, values=None):
+            r = None
+            dxUT.perror(stmt)
+            if values:
+                r = self.runSQLgenericMany(stmt, values)
+            else:
+                r = self.runSQLgeneric(stmt)
+            if commit:
+                self._db.commit()
+            return r
+
+
+    daxDriverDefault = daxDriverSqlite3
 
 # --- last line

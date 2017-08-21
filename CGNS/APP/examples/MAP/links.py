@@ -4,14 +4,15 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import print_function
 import CGNS.MAP
 import time
 
-print 'CGNS.MAP.load(links)'
+print('CGNS.MAP.load(links)')
 flags=CGNS.MAP.S2P_DEFAULTS|CGNS.MAP.S2P_FOLLOWLINKS|CGNS.MAP.S2P_TRACE
 start=time.clock()
 (tree,links,paths)=CGNS.MAP.load("T1.cgns",flags=flags)
-print links
+print(links)
 end=time.clock()
-print 'time =',end-start
+print('time =',end-start)
 

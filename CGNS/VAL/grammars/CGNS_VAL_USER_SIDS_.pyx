@@ -1080,7 +1080,10 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
       # list of element1,element2, depending on type of Elements
       cdef int i,er_start,er_end,ndata,elementdatasize,elementsize,index,ecsize,j,l
       cdef NCY.ndarray econnectarray,etypearray,element1,element2
-      cdef int *ecdata, *etdata, *el1data, *el2data
+      cdef int *ecdata
+      cdef int *etdata
+      cdef int *el1data
+      cdef int *el2data
       
       etypearray    = NPY.array(CGK.ElementTypeNPE_l,dtype='i')
       econnectarray = econnect[1]

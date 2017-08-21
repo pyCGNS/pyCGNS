@@ -4,47 +4,56 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import print_function
 import CGNS.DAT.db.overwriteSchema as dbw
 import CGNS.DAT.exceptions as ex
-import CGNS.DAT.utils      as ut
+import CGNS.DAT.utils as ut
 #
 import getopt
 
+
 # ------------------------------------------------------------
 def parseAndRun(args):
-  opt,arg=getopt.getopt(args,"tTx:")
-  connection = None
-  command    = None
-  path       = None
-  compress   = 1
-  for o,v in opt:
-    if (o == "-T"):
-      ut.DAXtraceFlag=2
-    if (o == "-t"):
-      ut.DAXtraceFlag=1
-    if (o == "-x"):
-      connection=v
-  if (not connection): raise ex.DAXDBOptionError()
-  # ----------    
-  d=dbw.overWrite(connection)
-    
+    opt, arg = getopt.getopt(args, "tTx:")
+    connection = None
+    command = None
+    path = None
+    compress = 1
+    for o, v in opt:
+        if (o == "-T"):
+            ut.DAXtraceFlag = 2
+        if (o == "-t"):
+            ut.DAXtraceFlag = 1
+        if (o == "-x"):
+            connection = v
+    if (not connection):
+        raise ex.DAXDBOptionError()
+    # ----------
+    d = dbw.overWrite(connection)
+
+
 # ------------------------------------------------------------
 def usage():
-    print """\
+    print("""\
 CGNA.DAT.create : CGNS Database creation
 usage   : CGNS.DAT.create -x <database-connection> [command and option]
         : commands are exclusives, options should be ordered
         : <database-connection> is <databasename>:<username>:<password>
-"""
+""")
+
+
 if (__name__ == "__main__"):
-  import sys
-  try:
-    parseAndRun(sys.argv[1:])
-  except ex.DAXDBOptionError:   usage()
-  except IndexError:         usage()
-  except getopt.GetoptError: usage()
+    import sys
 
-  # DAX exceptions
-  except ex.DAXException, e: print e
+    try:
+        parseAndRun(sys.argv[1:])
+    except ex.DAXDBOptionError:
+        usage()
+    except IndexError:
+        usage()
+    except getopt.GetoptError:
+        usage()
 
-    
+    # DAX exceptions
+    except ex.DAXException as e:
+        print(e)
