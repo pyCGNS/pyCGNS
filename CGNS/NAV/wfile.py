@@ -65,7 +65,9 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
 
     def filterAcceptsRow(self, row, parentindex):
         idx = self.model.index(row, 1, parentindex)
-        p = str(self.model.filePath(idx))
+        #p = str(self.model.filePath(idx))
+        if not isinstance(p, unicode):
+            p = str(self.model.filePath(idx)).decode('utf-8')
         if not self.checkPermission(p):
             return False
         if os.path.isdir(p):
