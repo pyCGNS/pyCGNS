@@ -587,7 +587,7 @@ int L3_closeShutDown(L3_Cursor_t **ctxt_ptr);
 @@ Remarks:   
 @@ Increments the hid_t so that you can call l3_freeNode and still use id
 */
-/*#*/int L3_incRef(L3_Cursor_t *ctxt,hid_t id);
+/*#*/hid_t L3_incRef(L3_Cursor_t *ctxt,hid_t id);
 
 /* ------------------------------------------------------------------------- */
 /*

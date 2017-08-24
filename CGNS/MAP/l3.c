@@ -2518,7 +2518,7 @@ int L3_closeShutDown(L3_Cursor_t **ctxt_ptr)
 			for (n = 0; n < p; n++)
 			{
 				printf("N %d > P %d\n", n, p);
-				H5O_close(obj_id_list[n]);
+				H5Oclose(obj_id_list[n]);
 			}
 
 			H5Fflush(ctxt->file_id, H5F_SCOPE_LOCAL);
@@ -2698,7 +2698,7 @@ void  *L3_initData(int  *dims, void *data, int dtype, ...)
 		n = 0;
 		while (n < dsize)
 		{
-			d_f = va_arg(stack, float);
+			d_f = (float) va_arg(stack, double);
 			((float*)data)[n++] = d_f;
 		}
 		break;
@@ -2764,7 +2764,7 @@ void  *L3_fillData(int  *dims, void *data, int dtype, ...)
 	case L3E_R4:
 	{
 		data = (void*)malloc(dsize * sizeof(float));
-		d_f = va_arg(stack, float);
+		d_f = (float) va_arg(stack, double);
 		n = 0; while (n < dsize) { ((float *)data)[n++] = d_f; }
 		break;
 	}
