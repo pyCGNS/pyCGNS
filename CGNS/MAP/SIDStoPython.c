@@ -1230,7 +1230,7 @@ static int s2p_getData(PyArrayObject *dobject,
 		pshape *= dshape[n];
 	}
 	if (S2P_HASFLAG(S2P_FFORTRANFLAG)
-		&& (pshape > 1 && !PyArray_ISFORTRAN(dobject))
+		&& (pshape > 1 && !PyArray_IS_F_CONTIGUOUS(dobject))
 		&& (PyArray_NDIM(dobject) > 1)
 		&& (PyArray_NDIM(dobject) < MAXDIMENSIONVALUES))
 	{
