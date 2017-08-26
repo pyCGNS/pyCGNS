@@ -1085,7 +1085,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
       cdef int *el1data
       cdef int *el2data
       
-      etypearray    = NPY.array(CGK.ElementTypeNPE_l,dtype='i')
+      etypearray    = NPY.array(CGK.ElementTypeNPE_l,dtype='int32')
       econnectarray = econnect[1]
       ecdata        = <int*>econnectarray.data
       etdata        = <int*>etypearray.data
@@ -1171,7 +1171,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
       ejrange = erange*jrange 
       aet = val_u.getAuthElementTypes(et) # authorized element types for the face   
       if (not aet):     return rs
-      aetarray = NPY.array(aet,dtype='i')
+      aetarray = NPY.array(aet,dtype='int32')
       laet     = len(aetarray)        
       pearray = penode[1].flatten()
       if (ppnode is not None):

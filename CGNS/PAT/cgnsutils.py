@@ -917,13 +917,13 @@ def getValueType(v):
     if isinstance(v, numpy.ndarray):
         if v.dtype.kind in ['S', 'a']:
             return CK.Character_s
-        if v.dtype.char in ['f']:
+        if v.dtype.name in ['float32']:
             return CK.RealSingle_s
-        if v.dtype.char in ['d']:
+        if v.dtype.name in ['float64']:
             return CK.RealDouble_s
-        if v.dtype.char in ['i']:
+        if v.dtype.name in ['int32']:
             return CK.Integer_s
-        if v.dtype.char in ['l']:
+        if v.dtype.name in ['int64']:
             return CK.LongInteger_s
     return None
 
@@ -991,7 +991,7 @@ def setIntegerByPath(tree, path, *i):
     if isinstance(i, type(None)) or (len(i) == 0):
         raise CE.cgnsNameError(112)
     node = getNodeByPath(tree, path)
-    setValue(node, numpy.array(i, dtype='i'))
+    setValue(node, numpy.array(i, dtype=numpy.int32))
     return node
 
 
@@ -1004,7 +1004,7 @@ def setIntegerAsArray(*i):
     """
     if isinstance(i, type(None)) or (len(i) == 0):
         raise CE.cgnsNameError(112)
-    return numpy.array(i, dtype='i')
+    return numpy.array(i, dtype=numpy.int32)
 
 
 # -----------------------------------------------------------------------------
@@ -1026,7 +1026,7 @@ def setLongByPath(tree, path, *l):
     if isinstance(l, type(None)) or (len(l) == 0):
         raise CE.cgnsNameError(112)
     node = getNodeByPath(tree, path)
-    setValue(node, numpy.array(l, dtype='l'))
+    setValue(node, numpy.array(l, dtype=numpy.int64))
     return node
 
 
@@ -1042,7 +1042,7 @@ def setLongAsArray(*l):
     """
     if isinstance(l, type(None)) or (len(l) == 0):
         raise CE.cgnsNameError(112)
-    return numpy.array(l, dtype='l')
+    return numpy.array(l, dtype=numpy.int64)
 
 
 # -----------------------------------------------------------------------------
@@ -1063,7 +1063,7 @@ def setFloatByPath(tree, path, *f):
     if isinstance(f, type(None)) or (len(f) == 0):
         raise CE.cgnsNameError(112)
     node = getNodeByPath(tree, path)
-    setValue(node, numpy.array(f, dtype='f'))
+    setValue(node, numpy.array(f, dtype=numpy.float32))
     return node
 
 
@@ -1079,7 +1079,7 @@ def setFloatAsArray(*f):
     """
     if isinstance(f, type(None)) or (len(f) == 0):
         raise CE.cgnsNameError(112)
-    return numpy.array(f, dtype='f')
+    return numpy.array(f, dtype=numpy.float32)
 
 
 # -----------------------------------------------------------------------------
@@ -1093,7 +1093,7 @@ def setDoubleByPath(tree, path, *d):
     if isinstance(d, type(None)) or (len(d) == 0):
         raise CE.cgnsNameError(112)
     node = getNodeByPath(tree, path)
-    setValue(node, numpy.array(d, dtype='d'))
+    setValue(node, numpy.array(d, dtype=numpy.float64))
     return node
 
 
@@ -1106,7 +1106,7 @@ def setDoubleAsArray(*d):
     """
     if isinstance(d, type(None)) or (len(d) == 0):
         raise CE.cgnsNameError(112)
-    return numpy.array(d, dtype='d')
+    return numpy.array(d, dtype=numpy.float64)
 
 
 # -----------------------------------------------------------------------------
@@ -1392,13 +1392,13 @@ def getNodeType(node):
     if isinstance(data, numpy.ndarray):
         if data.dtype.kind in ['S', 'a']:
             return CK.C1
-        if data.dtype.char in ['f', 'F']:
+        if data.dtype.name in ['float32', 'Float32']:
             return CK.R4
-        if data.dtype.char in ['D', 'd']:
+        if data.dtype.name in ['float64', 'Float64']:
             return CK.R8
-        if data.dtype.char in ['i', 'I']:
+        if data.dtype.name in ['int32', 'Int32']:
             return CK.I4
-        if data.dtype.char in ['l']:
+        if data.dtype.name in ['int64', 'Int64']:
             return CK.I8
     if isinstance(data, list) and (len(data)):  # oups !
         if isinstance(data[0], str):
@@ -3274,7 +3274,7 @@ def toStringValue(v):
     ao = 'C'
     if numpy.isfortran(v):
         ao = 'F'
-    at = v.dtype.char
+    at = v.dtype.name
     av = v.tolist()
     return "numpy.array(%s,dtype='%s',order='%s')" % (av, at, ao)
 

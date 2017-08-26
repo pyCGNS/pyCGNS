@@ -48,7 +48,7 @@ def newCGNSTree(version=CK.CGNSLIBRARYVERSION):
 
 def newCGNS(version=CK.CGNSLIBRARYVERSION):
     node = [CK.CGNSLibraryVersion_s,
-            numpy.array([version], dtype='float32'),
+            numpy.array([version], dtype=numpy.float32),
             [],
             CK.CGNSLibraryVersion_ts]
     badnode = [CK.CGNSTree_s, None, [node], CK.CGNSTree_ts]
@@ -152,7 +152,7 @@ def newZone(parent, name, zsize=None,
     """
     *Zone* node creation, the sub-tree defining a topological domain::
 
-      s=NPY.array([[10],[2],[0]],dtype='i')
+      s=NPY.array([[10],[2],[0]],dtype=NPY.int32)
 
       T=newCGNSTree()
       B=newBase(T,'Box-1',3,3)
@@ -297,7 +297,7 @@ def newDataArray(parent, name, value=None):
 
       import numpy as NPY
 
-      da=newDataArray(dd,'{DataArray}',value=NPY.array(((1,3),(5,7)),dtype='d'))
+      da=newDataArray(dd,'{DataArray}',value=NPY.array(((1,3),(5,7)),dtype=NPY.float64))
 
     :arg CGNS/Python node parent: the parent node (`<node>` or `None`)
     :arg str name: array name
@@ -353,7 +353,7 @@ def newDataClass(parent, value=CK.UserDefined_s):
       # N is an already existing CGNS/Python node
       dd=newDiscreteData(N,'{DiscreteData}')
       dc=newDataClass(dd,CK.DimensionalUnits_s)
-      da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype='d'))
+      da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype=NPY.float64))
 
     :arg CGNS/Python node parent: the parent node (`<node>` or `None`)
     :arg str value: DataClass type to set
@@ -428,7 +428,7 @@ def newDimensionalUnits(parent, value=None):
       dc=newDataClass(dd,CK.DimensionalUnits_s)
       units=(CK.Gram_s,CK.Foot_s,CK.UserDefined_s,CK.Celcius_s,CK.Degree_s)
       du=newDimensionalUnits(dd,units)
-      da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype='d'))
+      da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype=NPY.float64))
 
     :arg CGNS/Python node parent: the parent node (`<node>` or `None`)
     :arg list(str) value: list of 5 units, order is significant
@@ -507,7 +507,7 @@ def newDimensionalExponents(parent,
       du=newDimensionalUnits(dd,units)
       exps=(1,-1,-2,0,0)
       du=newDimensionalExponents(dd,exps)
-      da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype='d'))
+      da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype=NPY.float64))
 
     :arg CGNS/Python node parent: the parent node (`<node>` or `None`)
     :arg float MassExponent: exponent for mass
@@ -531,7 +531,7 @@ def newDimensionalExponents(parent,
                                    LengthExponent,
                                    TimeExponent,
                                    TemperatureExponent,
-                                   AngleExponent], dtype='Float64', order='Fortran'),
+                                   AngleExponent], dtype=numpy.float64, order='Fortran'),
                       [], CK.DimensionalExponents_ts, parent)
     return node
 
@@ -552,7 +552,7 @@ def newDataConversion(parent, ConversionScale=1.0, ConversionOffset=1.0):
       exps=(1,-1,-2,0,0)
       du=newDimensionalExponents(dd,exps)
       ds=newDataConversion(dd,2.0,0.0)
-      da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype='d'))
+      da=newDataArray(dd,'{DataArray}',value=NPY.array((1,),dtype=NPY.float64))
 
     :arg CGNS/Python node parent: the parent node (`<node>` or `None`)
     :arg float ConversionScale: scale of the conversion to apply
@@ -567,7 +567,7 @@ def newDataConversion(parent, ConversionScale=1.0, ConversionOffset=1.0):
     CU.checkDuplicatedName(parent, CK.DataConversion_s)
     node = CU.newNode(CK.DataConversion_s,
                       numpy.array([ConversionScale, ConversionOffset],
-                                  dtype='Float64', order='Fortran'),
+                                  dtype=numpy.float64, order='Fortran'),
                       [], CK.DataConversion_ts, parent)
     return node
 
@@ -896,7 +896,7 @@ def newElements(parent, name,
         etp = CK.ElementType[etype]
     else:
         raise CE.cgnsException(250, etype)
-    v = numpy.array([etp, eboundary], dtype='i')
+    v = numpy.array([etp, eboundary], dtype=numpy.int32)
     enode = CU.newNode(name, v, [], CK.Elements_ts, parent)
     newDataArray(enode, CK.ElementConnectivity_s, econnectivity)
     newPointRange(enode, CK.ElementRange_s, erange)
@@ -1255,7 +1255,7 @@ def newOversetHoles(parent, name, hrange):
     if hrange is not None:
         # code correction: Modify PointRange shape and order
         newPointRange(node, CK.PointRange_s, numpy.array(hrange, dtype=numpy.int32, order='Fortran'))
-        # newNode(CK.PointRange_s,NPY.array(list(hrange),'i'),[],CK.IndexRange_ts,node)
+        # newNode(CK.PointRange_s,NPY.array(list(hrange),NPY.int32),[],CK.IndexRange_ts,node)
     return node
 
 
@@ -1533,8 +1533,8 @@ def newBaseIterativeData(parent, name, nsteps=0,
     CU.checkType(parent, CK.CGNSBase_ts, CK.BaseIterativeData_ts)
     if not isinstance(nsteps, int) or (nsteps < 0):
         raise CE.cgnsException(209)
-    asteps = numpy.arange(1, nsteps + 1, dtype='i')
-    node = CU.newNode(name, numpy.array([nsteps], dtype='i'), [],
+    asteps = numpy.arange(1, nsteps + 1, dtype=numpy.int32)
+    node = CU.newNode(name, numpy.array([nsteps], dtype=numpy.int32), [],
                       CK.BaseIterativeData_ts, parent)
     if itype not in [CK.IterationValues_s, CK.TimeValues_s]:
         raise CE.cgnsException(210, (CK.IterationValues_s, CK.TimeValues_s))
@@ -1623,7 +1623,7 @@ def newConvergenceHistory(parent, name=CK.GlobalConvergenceHistory_s,
     if name == CK.ZoneConvergenceHistory_s:
         CU.checkType(parent, CK.Zone_ts, name)
     CU.checkDuplicatedName(parent, name)
-    node = CU.newNode(name, numpy.array([iterations], dtype='i'), [], CK.ConvergenceHistory_ts, parent)
+    node = CU.newNode(name, numpy.array([iterations], dtype=numpy.int32), [], CK.ConvergenceHistory_ts, parent)
     return node
 
 
@@ -1814,7 +1814,7 @@ def newParentElementsPosition(parent, value):
 def nextRange(previous, etype, earray):
     r = previous
     if previous is None:
-        r = numpy.array([0, 0], dtype='i')
+        r = numpy.array([0, 0], dtype=numpy.int32)
     npe = CK.ElementTypeNPE[etype]
     if npe:
         nelems = len(earray.flat) // npe
@@ -1822,4 +1822,4 @@ def nextRange(previous, etype, earray):
         raise NotImplementedError('Oupss not implemented variable number of elems')
     start = r[1] + 1
     end = start + nelems - 1
-    return numpy.array([start, end], dtype='i')
+    return numpy.array([start, end], dtype=numpy.int32)

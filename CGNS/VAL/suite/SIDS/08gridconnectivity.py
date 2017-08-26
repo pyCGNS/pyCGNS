@@ -23,18 +23,18 @@ def makeCorrectTree():
     b = CGL.newBase(T, 'Base', 3, 3)
     z1 = CGL.newZone(b, 'Zone1', NPY.array([[5, 4, 0], [7, 6, 0], [9, 8, 0]], order='F'))
     g = CGL.newGridCoordinates(z1, 'GridCoordinates')
-    d = CGL.newDataArray(g, CGK.CoordinateX_s, NPY.ones((5, 7, 9), dtype='d', order='F'))
-    d = CGL.newDataArray(g, CGK.CoordinateY_s, NPY.ones((5, 7, 9), dtype='d', order='F'))
-    d = CGL.newDataArray(g, CGK.CoordinateZ_s, NPY.ones((5, 7, 9), dtype='d', order='F'))
-    s = NPY.array([[vertexsize, cellsize, 0]], dtype='i', order='F')
+    d = CGL.newDataArray(g, CGK.CoordinateX_s, NPY.ones((5, 7, 9), dtype='float64', order='F'))
+    d = CGL.newDataArray(g, CGK.CoordinateY_s, NPY.ones((5, 7, 9), dtype='float64', order='F'))
+    d = CGL.newDataArray(g, CGK.CoordinateZ_s, NPY.ones((5, 7, 9), dtype='float64', order='F'))
+    s = NPY.array([[vertexsize, cellsize, 0]], dtype='int32', order='F')
     z2 = CGL.newZone(b, 'Zone2', s, CGK.Unstructured_s)
     g = CGL.newGridCoordinates(z2, 'GridCoordinates')
-    d = CGL.newDataArray(g, CGK.CoordinateX_s, NPY.ones((vertexsize), dtype='d', order='F'))
-    d = CGL.newDataArray(g, CGK.CoordinateY_s, NPY.ones((vertexsize), dtype='d', order='F'))
-    d = CGL.newDataArray(g, CGK.CoordinateZ_s, NPY.ones((vertexsize), dtype='d', order='F'))
-    tetras = CGL.newElements(z2, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='i'),
+    d = CGL.newDataArray(g, CGK.CoordinateX_s, NPY.ones((vertexsize), dtype='float64', order='F'))
+    d = CGL.newDataArray(g, CGK.CoordinateY_s, NPY.ones((vertexsize), dtype='float64', order='F'))
+    d = CGL.newDataArray(g, CGK.CoordinateZ_s, NPY.ones((vertexsize), dtype='float64', order='F'))
+    tetras = CGL.newElements(z2, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
                              NPY.array([[1, cellsize]], 'i', order='F'))
-    tris = CGL.newElements(z2, 'TRIS', CGK.TRI_3_s, NPY.ones((ntris * 3), dtype='i'),
+    tris = CGL.newElements(z2, 'TRIS', CGK.TRI_3_s, NPY.ones((ntris * 3), dtype='int32'),
                            NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'))
     z3 = CGU.copyNode(z1, 'Zone3')
     b[2].append(z3)

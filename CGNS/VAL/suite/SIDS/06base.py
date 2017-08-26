@@ -31,15 +31,15 @@ tag = 'bad base dims #2'
 diag = False
 T = CGL.newCGNSTree()
 b = CGL.newBase(T, '{Base#1}', 3, 3)
-b[1] = NPY.array([0, 0], dtype='i')
+b[1] = NPY.array([0, 0], dtype='int32')
 b = CGL.newBase(T, '{Base#2}', 3, 3)
-b[1] = NPY.array([-2, 0], dtype='i')
+b[1] = NPY.array([-2, 0], dtype='int32')
 b = CGL.newBase(T, '{Base#3}', 3, 3)
-b[1] = NPY.array([2, 2], dtype='f')
+b[1] = NPY.array([2, 2], dtype='float32')
 b = CGL.newBase(T, '{Base#4}', 3, 3)
-b[1] = NPY.array([1, 2], dtype='i')
+b[1] = NPY.array([1, 2], dtype='int32')
 b = CGL.newBase(T, '{Base#5}', 3, 3)
-b[1] = NPY.array([[1, 2]], dtype='i')
+b[1] = NPY.array([[1, 2]], dtype='int32')
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------

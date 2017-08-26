@@ -28,7 +28,7 @@ tag = 'bad version #1'
 diag = False
 T = CGL.newCGNSTree()
 v = CGU.hasChildName(T, CGK.CGNSLibraryVersion_s)
-v[1] = NPY.array([6.8], dtype='f')
+v[1] = NPY.array([6.8], dtype='float32')
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------

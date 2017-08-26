@@ -152,29 +152,29 @@ class PATTestCase(unittest.TestCase):
         self.assertTrue(CGU.stringValueMatches(n, 'Structured'))
         # set*AsArray
         self.assertEqual(CGU.setStringAsArray('Structured').tostring(), 'Structured')
-        self.assertEqual(CGU.setIntegerAsArray(1), numpy.array(1, dtype='i'))
-        self.assertTrue((CGU.setIntegerAsArray(1, 2, 3) == numpy.array([1, 2, 3], dtype='i')).all())
-        self.assertEqual(CGU.setLongAsArray(1), numpy.array(1, dtype='l'))
-        self.assertTrue((CGU.setLongAsArray(1, 2, 3) == numpy.array([1, 2, 3], dtype='l')).all())
-        self.assertEqual(CGU.setFloatAsArray(1), numpy.array(1, dtype='f'))
-        self.assertTrue((CGU.setFloatAsArray(1, 2, 3) == numpy.array([1, 2, 3], dtype='f')).all())
-        self.assertEqual(CGU.setDoubleAsArray(1), numpy.array(1, dtype='d'))
-        self.assertTrue((CGU.setDoubleAsArray(1, 2, 3) == numpy.array([1, 2, 3], dtype='d')).all())
+        self.assertEqual(CGU.setIntegerAsArray(1), numpy.array(1, dtype='int32'))
+        self.assertTrue((CGU.setIntegerAsArray(1, 2, 3) == numpy.array([1, 2, 3], dtype='int32')).all())
+        self.assertEqual(CGU.setLongAsArray(1), numpy.array(1, dtype='int64'))
+        self.assertTrue((CGU.setLongAsArray(1, 2, 3) == numpy.array([1, 2, 3], dtype='int64')).all())
+        self.assertEqual(CGU.setFloatAsArray(1), numpy.array(1, dtype='float32'))
+        self.assertTrue((CGU.setFloatAsArray(1, 2, 3) == numpy.array([1, 2, 3], dtype='float32')).all())
+        self.assertEqual(CGU.setDoubleAsArray(1), numpy.array(1, dtype='float64'))
+        self.assertTrue((CGU.setDoubleAsArray(1, 2, 3) == numpy.array([1, 2, 3], dtype='float64')).all())
         self.assertTrue((CGU.setDoubleAsArray(tuple(range(10, 1010, 10))) == numpy.array(tuple(range(10, 1010, 10)),
-                                                                                         dtype='d')).all())
+                                                                                         dtype='float64')).all())
         n = ['ZoneType', None, [], 'ZoneType_t']
         # set*ByPath
         self.assertTrue(CGU.stringValueMatches(CGU.setStringByPath(n, '/', 'Structured'), 'Structured'))
-        self.assertEqual(CGU.setIntegerByPath(n, '/', 1)[1], numpy.array(1, dtype='i'))
-        self.assertTrue(numpy.array_equal(CGU.setIntegerByPath(n, '/', 1, 2, 3)[1], numpy.array([1, 2, 3], dtype='i')))
-        self.assertEqual(CGU.setLongByPath(n, '/', 1)[1], numpy.array(1, dtype='l'))
-        self.assertTrue(numpy.array_equal(CGU.setLongByPath(n, '/', 1, 2, 3)[1], numpy.array([1, 2, 3], dtype='l')))
-        self.assertEqual(CGU.setFloatByPath(n, '/', 1)[1], numpy.array(1, dtype='f'))
-        self.assertTrue(numpy.array_equal(CGU.setFloatByPath(n, '/', 1, 2, 3)[1], numpy.array([1, 2, 3], dtype='f')))
-        self.assertEqual(CGU.setDoubleByPath(n, '/', 1)[1], numpy.array(1, dtype='d'))
-        self.assertTrue(numpy.array_equal(CGU.setDoubleByPath(n, '/', 1, 2, 3)[1], numpy.array([1, 2, 3], dtype='d')))
+        self.assertEqual(CGU.setIntegerByPath(n, '/', 1)[1], numpy.array(1, dtype='int32'))
+        self.assertTrue(numpy.array_equal(CGU.setIntegerByPath(n, '/', 1, 2, 3)[1], numpy.array([1, 2, 3], dtype='int32')))
+        self.assertEqual(CGU.setLongByPath(n, '/', 1)[1], numpy.array(1, dtype='int64'))
+        self.assertTrue(numpy.array_equal(CGU.setLongByPath(n, '/', 1, 2, 3)[1], numpy.array([1, 2, 3], dtype='int64')))
+        self.assertEqual(CGU.setFloatByPath(n, '/', 1)[1], numpy.array(1, dtype='float32'))
+        self.assertTrue(numpy.array_equal(CGU.setFloatByPath(n, '/', 1, 2, 3)[1], numpy.array([1, 2, 3], dtype='float32')))
+        self.assertEqual(CGU.setDoubleByPath(n, '/', 1)[1], numpy.array(1, dtype='float64'))
+        self.assertTrue(numpy.array_equal(CGU.setDoubleByPath(n, '/', 1, 2, 3)[1], numpy.array([1, 2, 3], dtype='float64')))
         self.assertTrue(numpy.array_equal(CGU.setDoubleByPath(n, '/', range(10, 1010, 10))[1],
-                                          numpy.array([range(10, 1010, 10)], dtype='d')))
+                                          numpy.array([range(10, 1010, 10)], dtype='float64')))
 
     def test_06NodeType(self):
         import CGNS.PAT.cgnsutils as CGU

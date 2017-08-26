@@ -18,15 +18,15 @@ diag = True
 def makeCorrectTree(vertexsize, cellsize, ntris):
     T = CGL.newCGNSTree()
     b = CGL.newBase(T, 'Base', 3, 3)
-    s = NPY.array([[vertexsize, cellsize, 0]], dtype='i', order='F')
+    s = NPY.array([[vertexsize, cellsize, 0]], dtype='int32', order='F')
     z = CGL.newZone(b, 'Zone', s, CGK.Unstructured_s)
     g = CGL.newGridCoordinates(z, 'GridCoordinates')
-    d = CGL.newDataArray(g, CGK.CoordinateX_s, NPY.ones((vertexsize), dtype='d', order='F'))
-    d = CGL.newDataArray(g, CGK.CoordinateY_s, NPY.ones((vertexsize), dtype='d', order='F'))
-    d = CGL.newDataArray(g, CGK.CoordinateZ_s, NPY.ones((vertexsize), dtype='d', order='F'))
-    tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='i'),
+    d = CGL.newDataArray(g, CGK.CoordinateX_s, NPY.ones((vertexsize), dtype='float64', order='F'))
+    d = CGL.newDataArray(g, CGK.CoordinateY_s, NPY.ones((vertexsize), dtype='float64', order='F'))
+    d = CGL.newDataArray(g, CGK.CoordinateZ_s, NPY.ones((vertexsize), dtype='float64', order='F'))
+    tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
                              NPY.array([[1, cellsize]], 'i', order='F'))
-    tris = CGL.newElements(z, 'TRIS', CGK.TRI_3_s, NPY.ones((ntris * 3), dtype='i'),
+    tris = CGL.newElements(z, 'TRIS', CGK.TRI_3_s, NPY.ones((ntris * 3), dtype='int32'),
                            NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'))
     zbc = CGL.newZoneBC(z)
     n = CGL.newBoundary(zbc, 'BC', [range(cellsize + 1, cellsize + ntris + 1)], btype=CGK.Null_s, family=None,
@@ -42,24 +42,24 @@ ntris = 11
 zsr1 = CGU.newNode('SubRegion1', NPY.array([3], dtype=NPY.int32, order='Fortran'), [], CGK.ZoneSubRegion_ts, parent=z)
 CGU.newNode(CGK.PointRange_s, NPY.array([[1, vertexsize]], dtype=NPY.int32, order='Fortran'), [], CGK.IndexRange_ts,
             parent=zsr1)
-CGL.newDataArray(zsr1, 'var', value=NPY.ones(vertexsize, dtype='d', order='Fortran'))
+CGL.newDataArray(zsr1, 'var', value=NPY.ones(vertexsize, dtype='float64', order='Fortran'))
 zsr2 = CGU.newNode('SubRegion2', NPY.array([3], dtype=NPY.int32, order='Fortran'), [], CGK.ZoneSubRegion_ts, parent=z)
 CGU.newNode(CGK.PointList_s, NPY.array([range(1, vertexsize + 1)], dtype=NPY.int32, order='Fortran'), [],
             CGK.IndexArray_ts, parent=zsr2)
-CGL.newDataArray(zsr2, 'var', value=NPY.ones(vertexsize, dtype='d', order='Fortran'))
+CGL.newDataArray(zsr2, 'var', value=NPY.ones(vertexsize, dtype='float64', order='Fortran'))
 zsr3 = CGU.newNode('SubRegion3', NPY.array([2], dtype=NPY.int32, order='Fortran'), [], CGK.ZoneSubRegion_ts, parent=z)
 CGU.newNode(CGK.BCRegionName_s, CGU.setStringAsArray('BC'), [], CGK.Descriptor_ts, parent=zsr3)
-CGL.newDataArray(zsr3, 'var', value=NPY.ones(ntris, dtype='d', order='Fortran'))
+CGL.newDataArray(zsr3, 'var', value=NPY.ones(ntris, dtype='float64', order='Fortran'))
 zsr5 = CGU.newNode('SubRegion5', NPY.array([3], dtype=NPY.int32, order='Fortran'), [], CGK.ZoneSubRegion_ts, parent=z)
 CGU.newNode(CGK.PointRange_s, NPY.array([[1, cellsize]], dtype=NPY.int32, order='Fortran'), [], CGK.IndexRange_ts,
             parent=zsr5)
 CGL.newGridLocation(zsr5, value=CGK.CellCenter_s)
-CGL.newDataArray(zsr5, 'var', value=NPY.ones(cellsize, dtype='d', order='Fortran'))
+CGL.newDataArray(zsr5, 'var', value=NPY.ones(cellsize, dtype='float64', order='Fortran'))
 zsr6 = CGU.newNode('SubRegion6', NPY.array([3], dtype=NPY.int32, order='Fortran'), [], CGK.ZoneSubRegion_ts, parent=z)
 CGU.newNode(CGK.PointList_s, NPY.array([range(1, cellsize + 1)], dtype=NPY.int32, order='Fortran'), [],
             CGK.IndexArray_ts, parent=zsr6)
 CGL.newGridLocation(zsr6, value=CGK.CellCenter_s)
-CGL.newDataArray(zsr6, 'var', value=NPY.ones(cellsize, dtype='d', order='Fortran'))
+CGL.newDataArray(zsr6, 'var', value=NPY.ones(cellsize, dtype='float64', order='Fortran'))
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
@@ -110,14 +110,14 @@ diag = False
 zsr1 = CGU.newNode('SubRegion1', NPY.array([3], dtype=NPY.int32, order='Fortran'), [], CGK.ZoneSubRegion_ts, parent=z)
 CGU.newNode(CGK.PointRange_s, NPY.array([[1, vertexsize]], dtype=NPY.int32, order='Fortran'), [], CGK.IndexRange_ts,
             parent=zsr1)
-CGL.newDataArray(zsr1, 'var', value=NPY.ones(vertexsize + 1, dtype='d', order='Fortran'))
+CGL.newDataArray(zsr1, 'var', value=NPY.ones(vertexsize + 1, dtype='float64', order='Fortran'))
 zsr2 = CGU.newNode('SubRegion2', NPY.array([3], dtype=NPY.int32, order='Fortran'), [], CGK.ZoneSubRegion_ts, parent=z)
 CGU.newNode(CGK.PointList_s, NPY.array([range(1, vertexsize + 1)], dtype=NPY.int32, order='Fortran'), [],
             CGK.IndexArray_ts, parent=zsr2)
-CGL.newDataArray(zsr2, 'var', value=NPY.ones(vertexsize + 1, dtype='d', order='Fortran'))
+CGL.newDataArray(zsr2, 'var', value=NPY.ones(vertexsize + 1, dtype='float64', order='Fortran'))
 zsr3 = CGU.newNode('SubRegion3', NPY.array([2], dtype=NPY.int32, order='Fortran'), [], CGK.ZoneSubRegion_ts, parent=z)
 CGU.newNode(CGK.BCRegionName_s, CGU.setStringAsArray('BC'), [], CGK.Descriptor_ts, parent=zsr3)
-CGL.newDataArray(zsr3, 'var', value=NPY.ones(cellsize, dtype='d', order='Fortran'))
+CGL.newDataArray(zsr3, 'var', value=NPY.ones(cellsize, dtype='float64', order='Fortran'))
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
