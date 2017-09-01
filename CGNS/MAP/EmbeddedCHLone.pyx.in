@@ -3,7 +3,9 @@
 # See license.txt in the root directory of this source release
 # ====================================================================== 
 #
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (str, bytes, range, dict)
 import os
 import sys
 import copy
@@ -87,8 +89,10 @@ def checkThreshold(maxdata):
 def checkObjectPath(path):
     if path is None:
         path = ''
-    if not isinstance(path, str):
+    if not isinstance(path, (bytes, str)):
         raiseException(913)
+    if isinstance(path, bytes):
+        return path.decode('utf-8')
     return path
 
 
@@ -102,7 +106,7 @@ def checkPathList(lpath):
     if not isinstance(lpath, list):
         raiseException(916)
     for p in lpath:
-        if not isinstance(p, (str, unicode)):
+        if not isinstance(p, (bytes, str)):
             raiseException(916)
     return lpath
 
@@ -129,7 +133,7 @@ def checkLinkList(links, linkfull=False):
                 (len(lk) not in [4])):
             raiseException(917)
         for p in lk:
-            if not isinstance(p, (str, unicode)):
+            if not isinstance(p, (bytes, str)):
                 raiseException(917)
         list_links.append(list(lk))
     return list_links
@@ -166,7 +170,7 @@ def fillMaxRankForAll(adict):
 
 def checkFilter(adict):
     for k in adict:
-        if not isinstance(k, (str, unicode)):
+        if not isinstance(k, (bytes, str)):
             raiseException(930)
         v = adict[k]
         if not isinstance(v, tuple):
@@ -197,9 +201,12 @@ def checkLinkPath(lksearch):
     if not isinstance(lksearch, (list, tuple)):
         raiseException(914)
     for p in lksearch:
-        if not isinstance(p, (str, unicode)):
+        if not isinstance(p, (bytes, str)):
             raiseException(914)
-        r.append(str(p))
+        if isinstance(p, bytes):
+            r.append(str(p.decode('utf-8')))
+        else:
+            r.append(str(p))
     if sys.platform in ['win32']:
         return ';'.join(r)
     else:
@@ -513,7 +520,7 @@ save_keys = ['links', 'skip', 'flags', 'depth', 'lksearch', 'filter', 'update',
 
 # ---------------------------------------------------------------------------
 def save(filename, tree, **kw):
-    if not isinstance(filename, (str, unicode)):
+    if not isinstance(filename, (bytes, str)):
         raiseException(902)
     for k in kw:
         if k not in save_keys:

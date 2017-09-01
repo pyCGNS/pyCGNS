@@ -9,6 +9,7 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 
 #include "Python.h"
+#include "bytesobject.h"
 
 #include "CGNS/MAP/CHLone_config.h"
 #include "CGNS/MAP/sha256.h"
