@@ -6,7 +6,10 @@
 # TESTING RAW CHLONE INTERFACE ***
 # - test save first
 # - test load
+
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (bytes, str, range, dict)
 import os
 import subprocess
 import unittest
