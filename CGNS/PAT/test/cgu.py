@@ -3,7 +3,9 @@
 #  See license.txt file in the root directory of this Python module source  
 #  ---------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (bytes, str, range, dict)
 import unittest
 
 
@@ -273,7 +275,6 @@ class PATTestCase(unittest.TestCase):
         self.assertIsNotNone(CGU.getNodeByPath(n, '/Base/ReferenceState/Data'))
         CGU.removeChildByName(r, 'Data')
         self.assertIsNone(CGU.hasChildName(r, 'Data'))
-
 
 # ---
 print('-' * 70 + '\nCGNS.PAT test suite')

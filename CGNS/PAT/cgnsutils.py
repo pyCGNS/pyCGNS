@@ -3,7 +3,9 @@
 #  See license.txt file in the root directory of this Python module source
 #  ---------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (bytes, str, range, dict)
 import hashlib
 import os.path as op
 import re
@@ -228,7 +230,7 @@ def checkName(name, dienow=False, strict=False):
 
     :raises: codes 22,23,24,25,29,31,32,33,34 if `dienow` is True
     """
-    if not isinstance(name, (str, unicode)):
+    if not isinstance(name, str):
         if dienow:
             raise CE.cgnsNameError(22)
         return False
@@ -975,8 +977,12 @@ def setStringAsArray(a):
     if isinstance(a, numpy.ndarray):
         if (a.shape != ()) and (a.dtype.kind == 'S'):
             return a
-    if isinstance(a, (str, unicode)) or isinstance(a, numpy.ndarray):
-        return numpy.array(tuple(a), dtype='|S', order='Fortran')
+        else:
+            return numpy.array(tuple(a), dtype='|S', order='Fortran')
+    if isinstance(a, bytes):
+        return numpy.array([bytes([x]) for x in a], dtype='|S', order='Fortran')
+    if isinstance(a, str):
+        return numpy.array([x.encode('ascii') for x in a], dtype='|S', order='Fortran')
     return None
 
 
@@ -2300,7 +2306,7 @@ def checkPath(path, dienow=False):
     :return: ``True`` if the path is ok, ``False`` if a problem is found
 
     """
-    if not isinstance(path, (str, unicode)) or not path:
+    if not isinstance(path, str) or not path:
         return False
     if path[0] == '/':
         path = path[1:]

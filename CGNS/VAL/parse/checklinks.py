@@ -81,6 +81,7 @@
 # in the current node chain of indices, there is a loop...
 #
 #  -------------------------------------------------------------------------
+from __future__ import unicode_literals
 from __future__ import print_function
 import CGNS.MAP
 import CGNS.PAT.cgnsutils      as CGU

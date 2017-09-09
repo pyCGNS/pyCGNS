@@ -7,6 +7,7 @@
 #
 # - Revision numbers are in setuputils.py
 #
+from __future__ import unicode_literals
 import sys
 
 
