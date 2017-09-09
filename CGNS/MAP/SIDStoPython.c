@@ -604,18 +604,9 @@ static s2p_ctx_t *s2p_filllinktable(PyObject *linktable, s2p_ctx_t *context)
 
 			if (PySequence_GetItem(lke, 0) != Py_None)
 			{
-				if (PyBytes_Check(PySequence_GetItem(lke, 0)))
-				{
-					sz = PyBytes_Size(PySequence_GetItem(lke, 0));
-					st = PyBytes_AsString(PySequence_GetItem(lke, 0));
-				}
-				else if (PyUnicode_Check(PySequence_GetItem(lke, 0)))
-				{
-					ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 0));
-					sz = PyBytes_Size(ascii_string);
-					st = PyBytes_AsString(ascii_string);
-				}
-
+				ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 0));
+				sz = PyBytes_Size(ascii_string);
+				st = PyBytes_AsString(ascii_string);
 				nextlink->dst_dirname = (char*)malloc(sizeof(char)*sz + 1);
 				strcpy(nextlink->dst_dirname, st);
 				Py_DECREF(ascii_string);
@@ -626,45 +617,23 @@ static s2p_ctx_t *s2p_filllinktable(PyObject *linktable, s2p_ctx_t *context)
 				strcpy(nextlink->dst_dirname, "");
 			}
 
-			if (PyUnicode_Check(PySequence_GetItem(lke, 1)))
-			{
-				ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 1));
-				sz = PyBytes_Size(ascii_string);
-				st = PyBytes_AsString(ascii_string);
-			}
-			else
-			{
-				sz = PyBytes_Size(PySequence_GetItem(lke, 1));
-				st = PyBytes_AsString(PySequence_GetItem(lke, 1));
-			}
+			ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 1));
+			sz = PyBytes_Size(ascii_string);
+			st = PyBytes_AsString(ascii_string);
+
 			nextlink->dst_filename = (char*)malloc(sizeof(char)*sz + 1);
 			strcpy(nextlink->dst_filename, st);
 			if (ascii_string != NULL) { Py_DECREF(ascii_string); }
-			if (PyUnicode_Check(PySequence_GetItem(lke, 2)))
-			{
-				ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 2));
-				sz = PyBytes_Size(ascii_string);
-				st = PyBytes_AsString(ascii_string);
-			}
-			else
-			{
-				sz = PyBytes_Size(PySequence_GetItem(lke, 2));
-				st = PyBytes_AsString(PySequence_GetItem(lke, 2));
-			}
+
+			ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 2));
+			sz = PyBytes_Size(ascii_string);
+			st = PyBytes_AsString(ascii_string);
 			nextlink->dst_nodename = (char*)malloc(sizeof(char)*sz + 1);
 			strcpy(nextlink->dst_nodename, st);
 			if (ascii_string != NULL) { Py_DECREF(ascii_string); }
-			if (PyUnicode_Check(PySequence_GetItem(lke, 3)))
-			{
-				ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 3));
-				sz = PyBytes_Size(ascii_string);
-				st = PyBytes_AsString(ascii_string);
-			}
-			else
-			{
-				sz = PyBytes_Size(PySequence_GetItem(lke, 3));
-				st = PyBytes_AsString(PySequence_GetItem(lke, 3));
-			}
+			ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 3));
+			sz = PyBytes_Size(ascii_string);
+			st = PyBytes_AsString(ascii_string);
 			nextlink->src_nodename = (char*)malloc(sizeof(char)*sz + 1);
 			strcpy(nextlink->src_nodename, st);
 			if (ascii_string != NULL) { Py_DECREF(ascii_string); }
@@ -1134,13 +1103,6 @@ static int s2p_pathToSkip(s2p_ctx_t *context, char *path)
 	for (n = 0; n < sz; n++)
 	{
 		opth = PyList_GetItem(context->skp_pth, n);
-		if (PyBytes_Check(opth))
-		{
-			if (s2p_issubpath(PyBytes_AsString(opth), path, 1))
-			{
-				return S2P_HASFLAG(S2P_FKEEPLIST) ? 0 : 1;
-			}
-		}
 		if (PyUnicode_Check(opth))
 		{
 			PyObject *ascii = PyUnicode_AsASCIIString(opth);
@@ -1497,15 +1459,9 @@ static void s2p_removeMissingChildren(hid_t        id,
 			for (n = 0; n < sz; n++)
 			{
 				PyObject * ascii_string = NULL;
-				if (PyBytes_Check(PyList_GetItem(PyList_GetItem(ctree, n), 0)))
-				{
-					tnodename = PyBytes_AsString(PyList_GetItem(PyList_GetItem(ctree, n), 0));
-				}
-				else if (PyUnicode_Check(PyList_GetItem(PyList_GetItem(ctree, n), 0)))
-				{
-					ascii_string = PyUnicode_AsASCIIString(PyList_GetItem(PyList_GetItem(ctree, n), 0));
-					tnodename = PyBytes_AsString(ascii_string);
-				}
+				ascii_string = PyUnicode_AsASCIIString(PyList_GetItem(PyList_GetItem(ctree, n), 0));
+				tnodename = PyBytes_AsString(ascii_string);
+
 
 				if (!strcmp(tnodename, cnode->name))
 				{
@@ -2606,15 +2562,9 @@ PyObject* s2p_saveAsHDF(char     *dirname,
 			for (n = 0; n < PyList_Size(paths); n++)
 			{
 				PyObject *ascii_tdat = NULL;
-				if PyUnicode_Check(PyList_GetItem(paths, n))
-				{
-					ascii_tdat = PyUnicode_AsASCIIString(PyList_GetItem(paths, n));
-					tdat = PyBytes_AsString(ascii_tdat);
-				}
-				else
-				{
-					tdat = PyBytes_AsString(PyList_GetItem(paths, n));
-				}
+				ascii_tdat = PyUnicode_AsASCIIString(PyList_GetItem(paths, n));
+				tdat = PyBytes_AsString(ascii_tdat);
+
 				L3M_ECLEAR(l3db);
 				nodeid = L3_nodeFind(l3db, l3db->root_id, tdat);
 				L3M_NEWNODE(node);
@@ -2702,15 +2652,8 @@ PyObject* s2p_saveAsHDF(char     *dirname,
 					PyObject *ascii_label = NULL;
 					otree = PyList_GetItem(rtree, n);
 
-					if (PyUnicode_Check(PyList_GetItem(otree, 3)))
-					{
-						ascii_label = PyUnicode_AsASCIIString(PyList_GetItem(otree, 3));
-						clabel = PyBytes_AsString(ascii_label);
-					}
-					else if (PyBytes_Check(PyList_GetItem(otree, 3)))
-					{
-						clabel = PyBytes_AsString(PyList_GetItem(otree, 3));
-					}
+					ascii_label = PyUnicode_AsASCIIString(PyList_GetItem(otree, 3));
+					clabel = PyBytes_AsString(ascii_label);
 
 					if (S2P_CHECKNODENOCACHE(otree, context)
 						&& !strcmp(clabel, CG_CGNSLibraryVersion_ts))
@@ -2812,16 +2755,11 @@ int s2p_garbage(PyObject *tree)
 	int n;
 	PyObject *ar;
 	PyArrayObject *aro;
-	if (PyUnicode_Check(PyList_GetItem(tree, 0)))
-	{
-		PyObject *ascii_string = PyUnicode_AsASCIIString(PyList_GetItem(tree, 0));
-		printf("\n> %s", PyBytes_AsString(ascii_string)); fflush(stdout);
-		Py_DECREF(ascii_string);
-	}
-	else
-	{
-		printf("\n> %s", PyBytes_AsString(PyList_GetItem(tree, 0))); fflush(stdout);
-	}
+
+	PyObject *ascii_string = PyUnicode_AsASCIIString(PyList_GetItem(tree, 0));
+	printf("\n> %s", PyBytes_AsString(ascii_string)); fflush(stdout);
+	Py_DECREF(ascii_string);
+
 	Py_DECREF(PyList_GetItem(tree, 0));
 	ar = PyList_GetItem(tree, 1);
 	if (PyArray_Check(ar))
