@@ -3,6 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
+from builtins import (str, bytes, range, dict)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import re
@@ -91,7 +93,7 @@ class Q7PythonEditorHighlighter(QSyntaxHighlighter):
         QSyntaxHighlighter.__init__(self, *args)
 
     def highlightBlock(self, textblock):
-        text = unicode(textblock)
+        text = str(textblock)
         fdef = self.format(0)
         fmax = len(text)
         for (rex, fmt) in self.r_syntax:

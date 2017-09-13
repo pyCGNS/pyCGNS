@@ -3,6 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
+from builtins import (str, bytes, range, dict)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import linecache
@@ -681,7 +683,7 @@ class Q7TreeItem(object):
         return self._itemnode[0]
 
     def sidsNameSet(self, name):
-        if not isinstance(name, (str, unicode)):
+        if not isinstance(name, (str, bytes)):
             return False
         try:
             name = str(name)
@@ -752,7 +754,7 @@ class Q7TreeItem(object):
             self._itemnode[1] = None
             return True
         if odt == CGK.C1:
-            if not isinstance(value, (str, unicode)):
+            if not isinstance(value, (str, bytes)):
                 return False
             try:
                 value = str(value)
@@ -773,7 +775,7 @@ class Q7TreeItem(object):
                                   legacy=False)
 
     def sidsTypeSet(self, value):
-        if not isinstance(value, (str, unicode)):
+        if not isinstance(value, (str, bytes)):
             return False
         try:
             value = str(value)

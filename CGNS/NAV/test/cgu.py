@@ -5,6 +5,7 @@
 #
 # TESTING NAV (imports & functions, no GUI) ***
 #
+from __future__ import unicode_literals
 from __future__ import print_function
 import unittest
 

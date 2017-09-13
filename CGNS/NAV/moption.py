@@ -5,6 +5,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
+from builtins import (str, bytes, range, dict)
 import shutil
 import os
 import os.path as op
@@ -815,12 +817,12 @@ if (CGU.getValueDataType(NODE)==CGK.C1):
                 #          print 'K',k,'V',udata[k],'T',type(udata[k])
                 if k[0] != '_':
                     val = '%s' % str(udata[k])
-                    if isinstance(udata[k], unicode):
+                    if isinstance(udata[k], str):
                         val = 'u"""%s"""' % repr(udata[k].encode('utf-8')).lstrip("u'").rstrip("'")
-                    elif isinstance(udata[k], str):
-                        val = 'u"""%s"""' % repr(unicode(udata[k], 'utf-8')).lstrip("u'").rstrip("'")
-                    if not isinstance(k, unicode):
-                        uk = "u'%s'" % repr(unicode(k, 'utf-8')).lstrip("u'").rstrip("'")
+                    elif isinstance(udata[k], bytes):
+                        val = 'u"""%s"""' % repr(udata[k].decode('utf-8')).lstrip("u'").rstrip("'")
+                    if not isinstance(k, str):
+                        uk = "u'%s'" % repr(k.decode('utf-8')).lstrip("u'").rstrip("'")
                     else:
                         uk = "u'%s'" % repr(k.encode('utf-8')).lstrip("u'").rstrip("'")
                     s += """%s:%s,\n""" % (uk, val)
