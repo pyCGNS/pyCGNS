@@ -75,10 +75,12 @@ def which(program):
 
 # --------------------------------------------------------------------
 def unique_but_keep_order(lst):
-    if (len(lst) < 2): return lst
+    if len(lst) < 2:
+        return lst
     r = [lst[0]]
     for p in lst[1:]:
-        if (p not in r): r.append(p)
+        if p not in r:
+            r.append(p)
     return r
 
 
@@ -357,7 +359,8 @@ def updateConfig(pfile, gfile, config_default, config_previous=None):
         from pyCGNSconfig_default import file_pattern as fpat
         cfg = config_default
         for ck in config_previous:
-            if (not cfg.has_key(ck)): cfg[ck] = config_previous[ck]
+            if ck not in cfg:
+                cfg[ck] = config_previous[ck]
         f = open("%s/pyCGNSconfig.py" % (gfile), 'w+')
         f.writelines(fpat % cfg)
         f.close()
