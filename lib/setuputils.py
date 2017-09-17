@@ -356,7 +356,8 @@ def updateConfig(pfile, gfile, config_default, config_previous=None):
         from pyCGNSconfig_default import file_pattern as fpat
         cfg = config_default
         for ck in config_previous:
-            if (not cfg.has_key(ck)): cfg[ck] = config_previous[ck]
+            if ck not in cfg:
+                cfg[ck] = config_previous[ck]
         f = open("%s/pyCGNSconfig.py" % (gfile), 'w+')
         f.writelines(fpat % cfg)
         f.close()
