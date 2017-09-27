@@ -102,7 +102,8 @@ def search(incs, libs, tag='pyCGNS',
     import pyCGNSconfig_default as C_D
     sys.path = oldsyspath
     for ck in dir(C_D):
-        if (ck[0] != '_'): cfgdict[ck] = C_D.__dict__[ck]
+        if ck[0] != '_':
+            cfgdict[ck] = C_D.__dict__[ck]
     pg = prodtag()
     cfgdict['PFX'] = pfx
     cfgdict['DATE'] = pg[0]
@@ -395,7 +396,7 @@ def updateConfig(pfile, gfile, config_default, config_previous=None):
 # --------------------------------------------------------------------
 def frompath_HDF5():
     h5p = which("h5dump")
-    if (h5p is not None):
+    if h5p is not None:
         h5root = '/'.join(h5p.split('/')[:-2])
     else:
         h5root = '/usr/local'

@@ -104,7 +104,7 @@ diffAB(R1[0], R2[0], '', 'A', diag, False)
 
 
 def diagAnalysis(diag):
-    paths = diag.keys()
+    paths = list(diag)
     paths.sort()
     for k in paths:
         for d in diag[k]:

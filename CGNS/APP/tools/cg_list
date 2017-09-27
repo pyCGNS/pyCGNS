@@ -232,9 +232,8 @@ def sortResult(L, A, hdr):
 #  -------------------------------------------------------------------------
 if (args.keys):
     kl = Entry.keys()
-    kl.sort()
     print('# List of keys')
-    for (k, d) in kl:
+    for (k, d) in sorted(kl):
         print(k, ':', d)
     sys.exit(0)
 

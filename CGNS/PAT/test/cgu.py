@@ -56,7 +56,7 @@ class PATTestCase(unittest.TestCase):
         self.assertFalse(CGU.checkName('name"test"', strict=True))
         self.assertFalse(CGU.checkName(' name', strict=True))
         import string
-        clist = list(string.letters + string.digits + string.punctuation + ' ')
+        clist = list(string.ascii_letters + string.digits + string.punctuation + ' ')
         clist.remove('/')
         for c in clist:
             self.assertTrue(CGU.checkName('_' + c))
@@ -138,7 +138,7 @@ class PATTestCase(unittest.TestCase):
         d = {'None': None, 'String': 'string value', 'Integer': 10, 'Float': 1.4}
         for n, v in d.items():
             CGL.newDataArray(A, n, v)
-        for name in d.keys():
+        for name in d:
             self.assertTrue(CGU.hasChildName(A, name))
 
     def test_05NodeValue(self):
@@ -153,7 +153,7 @@ class PATTestCase(unittest.TestCase):
              'ZoneType_t']
         self.assertTrue(CGU.stringValueMatches(n, 'Structured'))
         # set*AsArray
-        self.assertEqual(CGU.setStringAsArray('Structured').tostring(), 'Structured')
+        self.assertEqual(CGU.setStringAsArray('Structured').tostring().decode('ascii'), 'Structured')
         self.assertEqual(CGU.setIntegerAsArray(1), numpy.array(1, dtype='int32'))
         self.assertTrue((CGU.setIntegerAsArray(1, 2, 3) == numpy.array([1, 2, 3], dtype='int32')).all())
         self.assertEqual(CGU.setLongAsArray(1), numpy.array(1, dtype='int64'))

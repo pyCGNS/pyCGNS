@@ -853,7 +853,7 @@ cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 types = cgt
-tk = types.keys()
+tk = list(types)
 tk.sort()
 for pk in tk:
     for ck in tk:

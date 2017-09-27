@@ -260,7 +260,7 @@ def findAllAttributes(fid, csr, a, id, currentpath, dct):
 # ----------------------------------------------------------------------
 def checkAttributes(attlist):
     for a in attlist:
-        if (a not in withinDAXModifiableAttributes.keys()):
+        if (a not in list(withinDAXModifiableAttributes)):
             raise DAXNoSuchAttribute("No update allowed on '%s'" % a)
 
 

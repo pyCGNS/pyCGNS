@@ -134,7 +134,7 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
         v = self.diagTable
         v.clear()
         v.setHeaderHidden(True)
-        plist = self._data.keys()
+        plist = list(self._data)
         plist.sort()
         plist.reverse()
         keyset = set()

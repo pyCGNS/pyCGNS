@@ -64,7 +64,7 @@ class IGESentity(object):
 
     @classmethod
     def sortedentities(cls):
-        k = cls._directoryentries.keys()
+        k = list(cls._directoryentries)
         k.sort()
         for e in k:
             yield cls._directoryentries[e]
@@ -75,8 +75,8 @@ class IGESentity(object):
 
     @classmethod
     def stat(self):
-        print(IGESentity._directoryentries.keys())
-        print(IGESentity._parameters.keys())
+        print(list(IGESentity._directoryentries))
+        print(list(IGESentity._parameters))
 
     @classmethod
     def allentities(self, code=None):

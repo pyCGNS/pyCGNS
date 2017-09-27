@@ -498,7 +498,7 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
         v = self.eUserVariable.text()
         q = Q7QueryEntry('__tmp__query__')
         q.setScript(com)
-        skp = self.FG.lazy.keys()
+        skp = list(self.FG.lazy)
         r = q.run(self.FG.tree, self.FG.links, skp, False, v,
                   self.FG.model.getSelected())
         self.eResult.initText(str(r))
@@ -551,7 +551,7 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
 
     @classmethod
     def queriesNamesList(cls):
-        k = Q7Query._allQueries.keys()
+        k = list(Q7Query._allQueries)
         k.sort()
         return k
 

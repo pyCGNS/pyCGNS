@@ -370,15 +370,15 @@ class Q7File(QWidget, Ui_Q7FileWindow):
         hlist = self.parent.getHistory(fromfile=False)
         flist = []
         self.fileentries.addItem("")
-        for i in hlist.keys():
+        for i in list(hlist):
             if i != self.parent.getHistoryLastKey():
                 self.direntries.addItem(str(i))
                 flist = flist + hlist[i]
         for i in flist:
             self.fileentries.addItem(str(i))
         self.historyfiles = flist
-        self.historydirs = hlist.keys()
-        if self.parent.getHistoryLastKey() in hlist.keys():
+        self.historydirs = list(hlist)
+        if self.parent.getHistoryLastKey() in list(hlist):
             self.selecteddir = hlist[self.parent.getHistoryLastKey()][0]
             self.selectedfile = hlist[self.parent.getHistoryLastKey()][1]
             # ixd=self.direntries.findText(self.selecteddir)

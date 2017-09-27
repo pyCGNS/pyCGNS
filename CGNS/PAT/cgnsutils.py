@@ -204,7 +204,7 @@ def checkName(name, dienow=False, strict=False):
     * No ``/`` in the string
     * Empty name or name with only spaces is forbidden
     * Names ``.`` and ``..`` are forbidden
-    * Allowed chars are :py:data:`string.letters` + :py:data:`string.digits` + :py:data:`string.punctuation` + ``' '``
+    * Allowed chars are :py:data:`string.ascii_letters` + :py:data:`string.digits` + :py:data:`string.punctuation` + ``' '``
 
     Additional checks can be performed with the `strict` flag set to True, these
     checks are not CGNS compliant:
@@ -240,7 +240,7 @@ def checkName(name, dienow=False, strict=False):
         return False
     sname = set(name)
     rname = set(string.digits
-                + string.letters
+                + string.ascii_letters
                 + string.punctuation + ' ')
     rname.remove('/')
     if not sname.issubset(rname):
@@ -537,7 +537,7 @@ def checkNode(node, dienow=False):
         if dienow:
             raise CE.cgnsException(2)
         return False
-    if not isinstance(node[0], (str, unicode)):
+    if not isinstance(node[0], str):
         if dienow:
             raise CE.cgnsException(3)
         return False
@@ -1118,7 +1118,7 @@ def setDoubleAsArray(*d):
 # -----------------------------------------------------------------------------
 def getValueAsString(node):
     """Returns node value as a Python string"""
-    return node[1].tostring()
+    return node[1].tostring().decode("ascii", "strict")
 
 
 # -----------------------------------------------------------------------------
@@ -2244,16 +2244,16 @@ def getAllPaths(tree):
     return plist
 
 
-def wsort(a, b):
-    if a[0] < b[0]:
-        return -1
-    if a[0] > b[0]:
-        return 1
-    if a[1] < b[1]:
-        return -1
-    if a[1] > b[1]:
-        return 1
-    return 0
+# def wsort(a, b):
+#     if a[0] < b[0]:
+#         return -1
+#     if a[0] > b[0]:
+#         return 1
+#     if a[1] < b[1]:
+#         return -1
+#     if a[1] > b[1]:
+#         return 1
+#     return 0
 
 
 # --------------------------------------------------
@@ -2284,13 +2284,7 @@ def getPathsFullTree(tree, width=False, raw=False):
         tree = [None, None, [tree], None]
     r = getAllPaths(tree)
     if width:
-        s = []
-        for p in r:
-            s.append((p.count('/'), p))
-        s.sort(cmp=wsort)
-        r = []
-        for p in s:
-            r.append(p[1])
+        r.sort(key=lambda p: (p.count('/'), p))
     return r
 
 
@@ -2706,7 +2700,7 @@ def getPathListAsWidthFirstIndex(paths, fileindex=1):
         dpth[d].append(p)
     for d in dpth:
         dpth[d].sort()
-    k = dpth.keys()
+    k = list(dpth)
     k.sort()
     count = 0
     ix = []
@@ -2838,7 +2832,7 @@ def getBCFromFamily(tree, families, additional=True):
         zlist += getAllNodesByTypeOrNameList(tree, fpth2)
     r = []
     for pth in zlist:
-        if getValueByPath(tree, pth).tostring() in families:
+        if getValueByPath(tree, pth).tostring().decode('ascii') in families:
             r += [getPathAncestor(pth)]
     return r
 
@@ -2862,7 +2856,7 @@ def getZoneSubRegionFromFamily(tree, families, additional=True):
         zlist += getAllNodesByTypeOrNameList(tree, fpth2)
     r = []
     for pth in zlist:
-        if getValueByPath(tree, pth).tostring() in families:
+        if getValueByPath(tree, pth).tostring().decode('ascii') in families:
             r += [getPathAncestor(pth)]
     return r
 
@@ -2895,7 +2889,7 @@ def getFamiliesFromBC(tree, path):
         l2 = []
     r = []
     for nd in l1 + l2:
-        r.append(nd[1].tostring())
+        r.append(nd[1].tostring().decode('ascii'))
     return r
 
 
@@ -2976,7 +2970,7 @@ def hasEnumValue(node):
     stp = node[3]
     if stp == CK.Elements_ts:
         stp = CK.ElementType_ts
-    if stp in CK.cgnsenums.keys():
+    if stp in CK.cgnsenums:
         return True
     return False
 
@@ -3089,7 +3083,7 @@ def stringValueMatches(node, reval):
     if isinstance(node[1], str):
         vn = node[1]
     elif isinstance(node[1], numpy.ndarray) and (node[1].dtype.kind in ['S', 'a']):
-        vn = node[1].tostring()
+        vn = node[1].tostring().decode('ascii', 'strict')
     else:
         return False
     if stringMatches(vn, reval) is not None:
@@ -3110,7 +3104,7 @@ def stringValueInList(node, listval):
     if isinstance(node[1], str):
         vn = node[1]
     elif isinstance(node[1], numpy.ndarray) and (node[1].dtype.kind in ['S', 's']):
-        vn = node[1].tostring()
+        vn = node[1].tostring().decode('ascii', 'strict')
     else:
         return False
     return vn in listval
@@ -3242,7 +3236,7 @@ def diffAnalysis(diag):
     s += '## >d A and B node values differ (not same shape)\n'
     s += '## >c A and B node values differ (not same contents)\n'
     s += '## >s A and B node values differ (string values)\n'
-    paths = diag.keys()
+    paths = list(diag)
     paths.sort()
     for k in paths:
         for d in diag[k]:

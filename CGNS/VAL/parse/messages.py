@@ -15,9 +15,9 @@ CHECK_BAD = CHECK_ERROR = CHECK_FAIL = 3
 CHECK_USER = 4
 
 
-def sortDiagByKey(d1, d2):
-    (k1, k2) = (d1.key, d2.key)
-    return k1 > k2
+# def sortDiagByKey(d1, d2):
+#     (k1, k2) = (d1.key, d2.key)
+#     return k1 > k2
 
 
 def getWorst(st1, st2):
@@ -115,10 +115,10 @@ class DiagnosticLog(dict):
         return DiagnosticLog.__messages[messagekey].level
 
     def __len__(self):
-        return len(self.keys())
+        return len(list(self))
 
     def shift(self, path, shiftstring=' '):
-        n = string.split(path, '/')
+        n = path.split('/')
         return len(n) * shiftstring
 
     def getWorst(self, st1, st2):
@@ -165,17 +165,17 @@ class DiagnosticLog(dict):
         return mlist
 
     def allPathKeys(self):
-        return self.keys()
+        return list(self)
 
     def diagnosticsByPath(self, path):
         if (self.diagForPath(path) is not None):
             dlist = self[path]
-            dlist.sort(sortDiagByKey)
+            dlist.sort(key=lambda x: x.key)
             for diag in dlist:
                 yield (diag, path)
 
     def diagnosticsByMessage(self, msg):
-        plist = self.keys()
+        plist = list(self)
         plist.sort()
         for path in plist:
             for diag in self[path]:

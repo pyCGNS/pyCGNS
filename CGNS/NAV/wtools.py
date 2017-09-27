@@ -216,7 +216,7 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         s += "rt=t1 and t2 and t3\n"
         s += "RESULT=rn and rt\n"
         q = Q7QueryEntry('TMP', script=s)
-        skp = self._fgprint.lazy.keys()
+        skp = list(self._fgprint.lazy)
         sl = q.run(self._fgprint.tree, self._fgprint.links, skp, False, '',
                    self._model.getSelected())
         self._model.markExtendToList(sl)
@@ -232,7 +232,7 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         qry = Q7Query
         if q in qry.queriesNamesList():
             sl = qry.getQuery(q).run(self._fgprint.tree, self._fgprint.links,
-                                     self._fgprint.lazy.keys(),
+                                     list(self._fgprint.lazy),
                                      False, v, self.model().getSelected())
             self.model().markExtendToList(sl)
             self.model().updateSelected()

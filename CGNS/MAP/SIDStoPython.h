@@ -177,7 +177,7 @@ PyObject* s2p_loadAsHDF(char      *dirname,
 			char      *searchpath,
 			PyObject  *update,
 			PyObject  *filter,
-                        PyObject  *skip,
+            PyObject  *skip,
 			PyObject  *except);
 /* ------------------------------------------------------------------------- */
 PyObject* s2p_saveAsHDF(char      *dirname,

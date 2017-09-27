@@ -1162,7 +1162,7 @@ class Q7TreeModel(QAbstractItemModel):
         self._selectedIndex = -1
 
     def nodeFromPath(self, path):
-        if path in self._extension.keys():
+        if path in self._extension:
             return self._extension[path]
         return None
 
@@ -1302,7 +1302,7 @@ class Q7TreeModel(QAbstractItemModel):
                 return None
         # if ((index.column()==COLUMN_FLAG_USER) and (role == Qt.DisplayRole)):
         #     return None
-        if disp in ICONMAPPING.keys():
+        if disp in ICONMAPPING:
             disp = Q7TreeModel._icons[disp]
         return disp
 
@@ -1638,7 +1638,7 @@ class Q7TreeModel(QAbstractItemModel):
                 checkdiag = mod.CGNS_VAL_USER_Checks(None)
             checkdiag.checkTree(T, False)
         if pathlist == []:
-            pathlist = self._extension.keys()
+            pathlist = list(self._extension)
         for path in pathlist:
             pth = CGU.getPathNoRoot(path)
             if checkdiag.log.has_key(pth):

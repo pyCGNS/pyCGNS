@@ -4,62 +4,63 @@
 #  ---------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-import CGNSBase_t
-import Zone_t
-import ZoneBC_t
-import BC_t
-import DataClass_t
-import Descriptor_t
-import DimensionalUnits_t
-import DimensionalExponents_t
-import GridLocation_t
-import PointList_t
-import PointRange_t
-import Rind_t
-import DataConversion_t
-import SimulationType_t
-import Ordinal_t
-import GridCoordinates_t
-import DataArray_t
-import DiscreteData_t
-import Elements_t
-import BCDataSet_t
-import BCData_t
-import BCProperty_t
-import RotatingCoordinates_t
-import ZoneGridConnectivity_t
-import GridConnectivity1to1_t
-import GridConnectivity_t
-import GridConnectivityProperty_t
-import AverageInterface_t
-import OversetHoles_t
-import FlowSolution_t
-import FlowEquationSet_t
-import GoverningEquations_t
-import GasModel_t
-import ThermalConductivityModel_t
-import ThermalRelaxationModel_t
-import ChemicalKineticModel_t
-import EMElectricFieldModel_t
-import EMMagneticFieldModel_t
-import EMConductivityModel_t
-import ViscosityModel_t
-import TurbulenceClosure_t
-import TurbulenceModel_t
-import AxiSymmetry_t
-import BaseIterativeData_t
-import ZoneIterativeData_t
-import RigidGridMotion_t
-import ArbitraryGridMotion_t
-import ReferenceState_t
-import ConvergenceHistory_t
-import IntegralData_t
-import UserDefinedData_t
-import Gravity_t
-import Family_t
-import FamilyName_t
-import FamilyBC_t
-import GeometryReference_t
+from __future__ import absolute_import
+from . import CGNSBase_t
+from . import Zone_t
+from . import ZoneBC_t
+from . import BC_t
+from . import DataClass_t
+from . import Descriptor_t
+from . import DimensionalUnits_t
+from . import DimensionalExponents_t
+from . import GridLocation_t
+from . import PointList_t
+from . import PointRange_t
+from . import Rind_t
+from . import DataConversion_t
+from . import SimulationType_t
+from . import Ordinal_t
+from . import GridCoordinates_t
+from . import DataArray_t
+from . import DiscreteData_t
+from . import Elements_t
+from . import BCDataSet_t
+from . import BCData_t
+from . import BCProperty_t
+from . import RotatingCoordinates_t
+from . import ZoneGridConnectivity_t
+from . import GridConnectivity1to1_t
+from . import GridConnectivity_t
+from . import GridConnectivityProperty_t
+from . import AverageInterface_t
+from . import OversetHoles_t
+from . import FlowSolution_t
+from . import FlowEquationSet_t
+from . import GoverningEquations_t
+from . import GasModel_t
+from . import ThermalConductivityModel_t
+from . import ThermalRelaxationModel_t
+from . import ChemicalKineticModel_t
+from . import EMElectricFieldModel_t
+from . import EMMagneticFieldModel_t
+from . import EMConductivityModel_t
+from . import ViscosityModel_t
+from . import TurbulenceClosure_t
+from . import TurbulenceModel_t
+from . import AxiSymmetry_t
+from . import BaseIterativeData_t
+from . import ZoneIterativeData_t
+from . import RigidGridMotion_t
+from . import ArbitraryGridMotion_t
+from . import ReferenceState_t
+from . import ConvergenceHistory_t
+from . import IntegralData_t
+from . import UserDefinedData_t
+from . import Gravity_t
+from . import Family_t
+from . import FamilyName_t
+from . import FamilyBC_t
+from . import GeometryReference_t
 
 profile = {
     'CGNSBase_t': CGNSBase_t.pattern,

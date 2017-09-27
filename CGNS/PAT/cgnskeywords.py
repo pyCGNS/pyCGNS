@@ -27,7 +27,7 @@
 
  [6] The variables are declared with an integer value (not enumerates)
  wrt their position in the _l list, for example:
- (Null,UserDefined,Structured,Unstructured)=ZoneType_.keys()
+ (Null,UserDefined,Structured,Unstructured)=list(ZoneType_)
 
  [7] The _t type names are reserved for Cython, enums are then used as int:
  ctypedef int DataType_t
@@ -131,7 +131,7 @@ MassUnits_l = [Null_s, UserDefined_s,
 MassUnits = stringAsKeyDict(MassUnits_l)
 MassUnits_ = enumAsKeyDict(MassUnits_l)
 (MassUnitsNull, MassUnitsUserDefined,
- Kilogram, Gram, Slug, PoundMass) = MassUnits_.keys()
+ Kilogram, Gram, Slug, PoundMass) = list(MassUnits_)
 
 # --------------------------------------------------
 Meter_s = "Meter"
@@ -145,7 +145,7 @@ LengthUnits_l = [Null_s, UserDefined_s,
 LengthUnits = stringAsKeyDict(LengthUnits_l)
 LengthUnits_ = enumAsKeyDict(LengthUnits_l)
 (LengthUnitsNull, LengthUnitsUserDefined,
- Meter, Centimeter, Millimeter, Foot, Inch) = LengthUnits_.keys()
+ Meter, Centimeter, Millimeter, Foot, Inch) = list(LengthUnits_)
 
 # --------------------------------------------------
 Second_s = "Second"
@@ -153,7 +153,7 @@ TimeUnits_l = [Null_s, UserDefined_s, Second_s]
 
 TimeUnits = stringAsKeyDict(TimeUnits_l)
 TimeUnits_ = enumAsKeyDict(TimeUnits_l)
-(TimeUnitsNull, TimeUnitsUserDefined, Second) = TimeUnits_.keys()
+(TimeUnitsNull, TimeUnitsUserDefined, Second) = list(TimeUnits_)
 
 # --------------------------------------------------
 Kelvin_s = "Kelvin"
@@ -166,7 +166,7 @@ TemperatureUnits_l = [Null_s, UserDefined_s,
 TemperatureUnits = stringAsKeyDict(TemperatureUnits_l)
 TemperatureUnits_ = enumAsKeyDict(TemperatureUnits_l)
 (TemperatureUnitsNull, TemperatureUnitsUserDefined,
- Kelvin, Celcius, Rankine, Fahrenheit) = TemperatureUnits_.keys()
+ Kelvin, Celcius, Rankine, Fahrenheit) = list(TemperatureUnits_)
 
 # --------------------------------------------------
 Degree_s = "Degree"
@@ -175,7 +175,7 @@ AngleUnits_l = [Null_s, UserDefined_s, Degree_s, Radian_s]
 
 AngleUnits = stringAsKeyDict(AngleUnits_l)
 AngleUnits_ = enumAsKeyDict(AngleUnits_l)
-(AngleUnitsNull, AngleUnitsUserDefined, Degree, Radian) = AngleUnits_.keys()
+(AngleUnitsNull, AngleUnitsUserDefined, Degree, Radian) = list(AngleUnits_)
 
 # --------------------------------------------------
 Ampere_s = "Ampere"
@@ -191,7 +191,7 @@ ElectricCurrentUnits = stringAsKeyDict(ElectricCurrentUnits_l)
 ElectricCurrentUnits_ = enumAsKeyDict(ElectricCurrentUnits_l)
 (ElectricCurrentUnitsNull, ElectricCurrentUnitsUserDefined,
  Ampere, Abampere, Statampere,
- Edison, auCurrent) = ElectricCurrentUnits_.keys()
+ Edison, auCurrent) = list(ElectricCurrentUnits_)
 
 # --------------------------------------------------
 Mole_s = "Mole"
@@ -206,7 +206,7 @@ SubstanceAmountUnits = stringAsKeyDict(SubstanceAmountUnits_l)
 SubstanceAmountUnits_ = enumAsKeyDict(SubstanceAmountUnits_l)
 (SubstanceAmountUnitsNull, SubstanceAmountUnitsUserDefined,
  Mole, Entities,
- StandardCubicFoot, StandardCubicMeter) = SubstanceAmountUnits_.keys()
+ StandardCubicFoot, StandardCubicMeter) = list(SubstanceAmountUnits_)
 
 # --------------------------------------------------
 Candela_s = "Candela"
@@ -220,7 +220,7 @@ LuminousIntensityUnits_l = [Null_s, UserDefined_s,
 LuminousIntensityUnits = stringAsKeyDict(LuminousIntensityUnits_l)
 LuminousIntensityUnits_ = enumAsKeyDict(LuminousIntensityUnits_l)
 (LuminousIntensityUnitsNull, LuminousIntensityUnitsUserDefined,
- Candela, Candle, Carcel, Hefner, Violle) = LuminousIntensityUnits_.keys()
+ Candela, Candle, Carcel, Hefner, Violle) = list(LuminousIntensityUnits_)
 
 # --------------------------------------------------
 DimensionalUnits_s = "DimensionalUnits"
@@ -250,7 +250,7 @@ DataClass = stringAsKeyDict(DataClass_l)
 DataClass_ = enumAsKeyDict(DataClass_l)
 (Null, UserDefined, Dimensional, NormalizedByDimensional,
  NormalizedByUnknownDimensional, NondimensionalParameter,
- DimensionlessConstant) = DataClass_.keys()
+ DimensionlessConstant) = list(DataClass_)
 
 # ------------------------------------------------------------
 GridLocation_ts = "GridLocation_t"
@@ -273,7 +273,7 @@ GridLocation_l = [Null_s, UserDefined_s, Vertex_s, CellCenter_s, FaceCenter_s,
 GridLocation = stringAsKeyDict(GridLocation_l)
 GridLocation_ = enumAsKeyDict(GridLocation_l)
 (Null, UserDefined, Vertex, CellCenter, FaceCenter,
- IFaceCenter, JFaceCenter, KFaceCenter, EdgeCenter) = GridLocation_.keys()
+ IFaceCenter, JFaceCenter, KFaceCenter, EdgeCenter) = list(GridLocation_)
 
 VertexSize_s = "VertexSize"
 CellSize_s = "CellSize"
@@ -297,7 +297,7 @@ PointSetType_l = [Null_s, UserDefined_s,
 PointSetType = stringAsKeyDict(PointSetType_l)
 PointSetType_ = enumAsKeyDict(PointSetType_l)
 (Null, UserDefined, PointList, PointListDonor, PointRange, PointRangeDonor,
- ElementRange, ElementList, CellListDonor) = PointSetType_.keys()
+ ElementRange, ElementList, CellListDonor) = list(PointSetType_)
 
 ZoneDonorName_s = "ZoneDonorName"
 
@@ -313,7 +313,7 @@ Neumann_s = "Neumann"
 BCDataType_l = [Null_s, UserDefined_s, Dirichlet_s, Neumann_s]
 BCDataType = stringAsKeyDict(BCDataType_l)
 BCDataType_ = enumAsKeyDict(BCDataType_l)
-(BCDataTypeNull, BCDataTypeUserDefined, Dirichlet, Neumann) = BCDataType_.keys()
+(BCDataTypeNull, BCDataTypeUserDefined, Dirichlet, Neumann) = list(BCDataType_)
 
 FullPotential_s = "FullPotential"
 Euler_s = "Euler"
@@ -377,7 +377,7 @@ DataType = stringAsKeyDict(DataType_l)
 DataType_ = enumAsKeyDict(DataType_l)
 
 (DataTypeNull, DataTypeUserDefined,
- Integer, RealSingle, RealDouble, Character, LongInteger) = DataType_.keys()
+ Integer, RealSingle, RealDouble, Character, LongInteger) = list(DataType_)
 
 # --------------------------------------------------
 GridConnectivityType_ts = "GridConnectivityType_t"
@@ -396,7 +396,7 @@ GridConnectivityType = stringAsKeyDict(GridConnectivityType_l)
 GridConnectivityType_ = enumAsKeyDict(GridConnectivityType_l)
 
 (Null, UserDefined,
- Overset, Abutting, Abutting1to1) = GridConnectivityType_.keys()
+ Overset, Abutting, Abutting1to1) = list(GridConnectivityType_)
 
 # --------------------------------------------------
 ZoneType_ts = "ZoneType_t"
@@ -410,7 +410,7 @@ ZoneType_l = [Null_s, UserDefined_s, Structured_s, Unstructured_s]
 ZoneType = stringAsKeyDict(ZoneType_l)
 ZoneType_ = enumAsKeyDict(ZoneType_l)
 
-(ZoneTypeNull, ZoneTypeUserdefined, Structured, Unstructured) = ZoneType_.keys()
+(ZoneTypeNull, ZoneTypeUserdefined, Structured, Unstructured) = list(ZoneType_)
 
 ZoneSubRegion_ts = "ZoneSubRegion_t"
 BCRegionName_s = "BCRegionName"
@@ -427,7 +427,7 @@ SimulationType_l = [Null_s, UserDefined_s, TimeAccurate_s, NonTimeAccurate_s]
 SimulationType = stringAsKeyDict(SimulationType_l)
 SimulationType_ = enumAsKeyDict(SimulationType_l)
 
-(Null, UserDefined, TimeAccurate, NonTimeAccurate) = SimulationType_.keys()
+(Null, UserDefined, TimeAccurate, NonTimeAccurate) = list(SimulationType_)
 
 # --------------------------------------------------
 RigidGridMotionType_s = "RigidGridMotionType"
@@ -440,7 +440,7 @@ RigidGridMotionType_l = [Null_s, UserDefined_s, ConstantRate_s, VariableRate_s]
 RigidGridMotionType = stringAsKeyDict(RigidGridMotionType_l)
 RigidGridMotionType_ = enumAsKeyDict(RigidGridMotionType_l)
 
-(Null, UserDefined, ConstantRate, VariableRate) = RigidGridMotionType_.keys()
+(Null, UserDefined, ConstantRate, VariableRate) = list(RigidGridMotionType_)
 
 ArbitraryGridMotionType_s = "ArbitraryGridMotionType"
 ArbitraryGridMotionType_ts = "ArbitraryGridMotionType_t"
@@ -455,7 +455,7 @@ ArbitraryGridMotionType_l = [Null_s, UserDefined_s,
 ArbitraryGridMotion = stringAsKeyDict(ArbitraryGridMotionType_l)
 ArbitraryGridMotion_ = enumAsKeyDict(ArbitraryGridMotionType_l)
 
-(Null, UserDefined, NonDeformingGrid, DeformingGrid) = ArbitraryGridMotion_.keys()
+(Null, UserDefined, NonDeformingGrid, DeformingGrid) = list(ArbitraryGridMotion_)
 
 # --------------------------------------------------
 WallFunction_ts = "WallFunction_t"
@@ -470,7 +470,7 @@ WallFunctionType_l = [Null_s, UserDefined_s, Generic_s]
 WallFunctionType = stringAsKeyDict(WallFunctionType_l)
 WallFunctionType_ = enumAsKeyDict(WallFunctionType_l)
 
-(Null, UserDefined, Generic) = WallFunctionType_.keys()
+(Null, UserDefined, Generic) = list(WallFunctionType_)
 
 # --------------------------------------------------
 Area_ts = "Area_t"
@@ -484,7 +484,7 @@ AreaType_s = "AreaType"
 AreaType_l = [Null_s, UserDefined_s, BleedArea_s, CaptureArea_s]
 AreaType = stringAsKeyDict(AreaType_l)
 AreaType_ = enumAsKeyDict(AreaType_l)
-(Null, UserDefined, BleedArea, CaptureArea) = AreaType_.keys()
+(Null, UserDefined, BleedArea, CaptureArea) = list(AreaType_)
 
 # --------------------------------------------------
 ZoneBC_ts = "ZoneBC_t"
@@ -888,7 +888,7 @@ GoverningEquationsType_ = enumAsKeyDict(GoverningEquationsType_l)
 (GoverningEquationsNull, GoverningEquationUserDefined,
  FullPotential, Euler, NSLaminar,
  NSTurbulent, NSLaminarIncompressible,
- NSTurbulentIncompressible_s) = GoverningEquationsType_.keys()
+ NSTurbulentIncompressible) = list(GoverningEquationsType_)
 
 # --------------------------------------------------
 BCType_s = "BCType"
@@ -943,7 +943,7 @@ BCType_ = enumAsKeyDict(BCType_l)
  BCTunnelInflow, BCTunnelOutflow,
  BCWall, BCWallInviscid, BCWallViscous,
  BCWallViscousHeatFlux, BCWallViscousIsothermal,
- FamilySpecified) = BCType_.keys()
+ FamilySpecified) = list(BCType_)
 
 BC_l = BCType_l
 BC = BCType
@@ -1102,7 +1102,7 @@ ModelType_ = enumAsKeyDict(ModelType_l)
  ChemicalEquilibMinimization, ChemicalNonequilib,
  EMElectricField, EMMagneticField, EMConductivity,
  Voltage, Interpolated, Equilibrium_LinRessler,
- Chemistry_LinRessler) = ModelType_.keys()
+ Chemistry_LinRessler) = list(ModelType_)
 
 DiffusionModel_s = 'DiffusionModel'
 EquationDimension_s = 'EquationDimension'
@@ -1119,7 +1119,7 @@ AverageInterfaceType = stringAsKeyDict(AverageInterfaceType_l)
 AverageInterfaceType_ = enumAsKeyDict(AverageInterfaceType_l)
 (Null, UserDefined,
  AverageAll, AverageCircumferential,
- AverageRadial, AverageI, AverageJ, AverageK) = AverageInterfaceType_.keys()
+ AverageRadial, AverageI, AverageJ, AverageK) = list(AverageInterfaceType_)
 
 AverageInterface_s = "AverageInterface"
 AverageInterface_ts = "AverageInterface_t"
@@ -1289,7 +1289,7 @@ ElementTypeNPE = dict(zip(ElementType_l, ElementTypeNPE_l))
  TETRA_35, PYRA_P4_29, PYRA_50, PYRA_55,
  PENTA_33,
  PENTA_66, PENTA_75,
- HEXA_44, HEXA_98, HEXA_125) = ElementType_.keys()
+ HEXA_44, HEXA_98, HEXA_125) = list(ElementType_)
 
 ElementType3D = [TETRA_4, TETRA_10, PYRA_5, PYRA_14,
                  PENTA_6, PENTA_15, PENTA_18,
@@ -1325,7 +1325,7 @@ ElementRangeList_s = "ElementRangeList"
 
 # ---
 cgnsnames = [globals()[k] for k in dir() if (k[-2:] == '_s')]
-cgnstypes = [globals()[k] for k in dir() if (k[-3:] == '_ts')] + weirdSIDStypes.keys()
+cgnstypes = [globals()[k] for k in dir() if (k[-3:] == '_ts')] + list(weirdSIDStypes)
 cgnsenums = {
     GoverningEquations_ts: GoverningEquationsType_l,
     GasModel_ts: GasModelType_l,

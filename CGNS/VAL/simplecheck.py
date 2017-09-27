@@ -49,7 +49,7 @@ def listdiags(trace, userlist):
     for user in userlist:
         parser = getParser(trace, user)
         mlist = parser.listDiagnostics()
-        ld += mlist.keys()
+        ld += list(mlist)
     ld.sort()
     s = ''
     for d in ld:

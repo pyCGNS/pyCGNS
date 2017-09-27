@@ -517,7 +517,7 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
 
     def _runAndSelect(self, qname, value):
         q = Q7Query.getQuery(qname)
-        sl = q.run(self.FG.tree, self.FG.links, self.FG.lazy.keys(), False, value)
+        sl = q.run(self.FG.tree, self.FG.links, list(self.FG.lazy), False, value)
         self.model().markExtendToList(sl)
         self.model().updateSelected()
         self.treeview.refreshView()

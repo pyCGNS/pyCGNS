@@ -828,7 +828,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
 
     def getRandomColor(self):
         clst = OCTXT._ColorList
-        cl = clst[clst.keys()[random.randrange(len(clst.keys()))]]
+        cl = clst[list(clst)[random.randrange(len(list(clst)))]]
         return cl
 
     def setColors(self, randcolors=False):
@@ -932,7 +932,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
             self._iren.Render()
 
     def updateViewList(self):
-        k = self._camera.keys()
+        k = list(self._camera)
         k.sort()
         self.cViews.clear()
         self.cViews.addItem("")

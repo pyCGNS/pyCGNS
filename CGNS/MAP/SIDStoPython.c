@@ -10,6 +10,7 @@
 #include "SIDStoPython.h"
 #include "numpy/ndarraytypes.h"
 #include "numpy/arrayobject.h"
+#include "Python.h"
 
 #ifndef CHLONE_ON_WINDOWS
 #define S2P_PLATFORM_CURRENT S2P_PLATFORM_UNIX
@@ -167,7 +168,7 @@ static char *DT_C1 = "C1";
 
 #define S2P_AS_HSIZE(val,validx) \
 arg=PyList_GetItem(obj,validx); \
-for (n=0;n<PyList_Size(arg);n++){val[n]=PyInt_AsLong(PyList_GetItem(arg,n));} \
+for (n=0;n<PyList_Size(arg);n++){val[n]=PyLong_AsLong(PyList_GetItem(arg,n));} \
 val[n]=-1;
 
 #ifdef __THREADING__
@@ -308,7 +309,8 @@ static void setError(int code, char* message, char* value, s2p_ctx_t *context)
 	{
 		strncat(buff, message, MAXERRORMESSAGE);
 	}
-	PyErr_SetObject(context->err, Py_BuildValue("(is)", code, buff));
+
+	PyErr_SetObject(context->err->ob_type, Py_BuildValue("(is)", code, buff));
 
 }
 /* ------------------------------------------------------------------------- */
@@ -1055,7 +1057,7 @@ static PyObject *s2p_getpathtable(s2p_ctx_t *context)
 		{
 			if (paths->dims[n] != -1)
 			{
-				PyTuple_SetItem(tp, n, PyInt_FromLong((long)(paths->dims[n])));
+				PyTuple_SetItem(tp, n, PyLong_FromLong((long)(paths->dims[n])));
 			}
 		}
 		pth = Py_BuildValue("(sisO)", paths->path, paths->state,
@@ -1130,12 +1132,12 @@ static int s2p_filterDataContiguous(s2p_ctx_t *context, char *path,
 	/* checks performed at python level */
 	if (obj != NULL)
 	{
-		s = PyInt_AsLong(PyTuple_GetItem(obj, 0));
+		s = PyLong_AsLong(PyTuple_GetItem(obj, 0));
 		if (s&S2P_SCONTIGUOUS)
 		{
-			*index = PyInt_AsLong(PyTuple_GetItem(obj, 1));
-			*rank = PyInt_AsLong(PyTuple_GetItem(obj, 2));
-			*count = PyInt_AsLong(PyTuple_GetItem(obj, 3));
+			*index = PyLong_AsLong(PyTuple_GetItem(obj, 1));
+			*rank = PyLong_AsLong(PyTuple_GetItem(obj, 2));
+			*count = PyLong_AsLong(PyTuple_GetItem(obj, 3));
 
 			if (s&S2P_SINTERLACED)
 			{
@@ -1169,7 +1171,7 @@ static int s2p_filterDataPartial(s2p_ctx_t *context, char *path,
 	/* checks performed at python level */
 	if (obj != NULL)
 	{
-		s = PyInt_AsLong(PyTuple_GetItem(obj, 0));
+		s = PyLong_AsLong(PyTuple_GetItem(obj, 0));
 		if (s == S2P_SPARTIAL)
 		{
 			obj = PyTuple_GetItem(obj, 1);

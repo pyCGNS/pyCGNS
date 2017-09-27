@@ -10,6 +10,7 @@ import os
 import sys
 import copy
 
+PY3 = sys.version_info[0] == 3
 
 # ---------------------------------------------------------------------------
 class CHLoneExceptionInternal(Exception):
@@ -147,7 +148,7 @@ def checkHyperslabBounds(h):
 def fillMaxRankForAll(adict):
     ctg_dict = copy.copy(adict)
     cd = {}
-    for k in ctg_dict.keys():
+    for k in list(ctg_dict):
         if (ctg_dict[k][0] & SCONTIGUOUS) or (ctg_dict[k][0] & SINTERLACED):
             if ctg_dict[k][1] not in cd:
                 cd[ctg_dict[k][1]] = [[k], 1]
@@ -218,7 +219,7 @@ def hasFlags(allflags, flag):
 
 
 def propagateUpdatePaths(links, obdict):
-    upaths = obdict.keys()
+    upaths = list(obdict)
     fpaths = {}
     for upath in upaths:
         for lk in links:
@@ -490,7 +491,8 @@ def load(filename, **kw):
         raiseException(908)
     x = CHLoneExceptionInternal()
     try:
-        t = s2p_loadAsHDF(tdir, tfile, _flags, _depth, _maxdata, _obpath, _lkpath,
+        t = s2p_loadAsHDF(tdir.encode('utf-8'), tfile.encode('utf-8'), _flags, _depth, _maxdata,
+                          _obpath.encode('utf-8'), _lkpath.encode('utf-8'),
                           _update, _filter, _sklist, x)
         if t[0][2] is not None:
             t[0][2] = t[0][2][2]
@@ -503,7 +505,10 @@ def load(filename, **kw):
             lk = t[1]
         t = (t[0], lk, t[2])
     except CHLoneExceptionInternal as v:
-        raise CHLoneException(v)
+        if PY3:
+            raise CHLoneException(v) from None
+        else:
+            raise CHLoneException(v)
     del x
     return t
 
@@ -577,12 +582,14 @@ def save(filename, tree, **kw):
     checkFast(tree)
     x = CHLoneExceptionInternal()
     try:
-        s2p_saveAsHDF(tdir, tfile, tree,
-                      _links, _flags, _depth, _lkpath, _obdict, _filter, _sklist,
-                      _lkobdict, _lksklist,
-                      x)
+        s2p_saveAsHDF(tdir.encode('utf-8'), tfile.encode('utf-8'), tree,
+                      _links, _flags, _depth, _lkpath.encode('utf-8'), _obdict, _filter, _sklist,
+                      _lkobdict, _lksklist, x)
     except CHLoneExceptionInternal as v:
-        raise CHLoneException(v)
+        if PY3:
+            raise CHLoneException(v) from None
+        else:
+            raise CHLoneException(v)
     return None
 
 # --- last line
