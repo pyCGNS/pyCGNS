@@ -5,6 +5,7 @@
 #
 from __future__ import unicode_literals
 from __future__ import print_function
+from functools import cmp_to_key
 from builtins import (bytes, str, range, dict)
 import hashlib
 import os.path as op
@@ -1459,9 +1460,9 @@ def removeFirstPathItem(path):
     """
     p = path.split('/')
     if (p[0] == '') and (len(p) > 2):
-        return string.join([''] + p[2:], '/')
+        return str.join('/', [''] + p[2:])
     elif len(p) > 1:
-        return string.join(p[1:], '/')
+        return str.join('/', p[1:])
     else:
         return '/'
 
@@ -1627,7 +1628,7 @@ def getNextChildSortByType(node, parent=None, criteria=None):
     r = []
     for i, c in enumerate(node[2]):
         r += [(c[3], c[0], __criteria, i)]
-    r.sort(sortbytypesasincriteria)
+    r.sort(key=cmp_to_key(sortbytypesasincriteria))
     for i in r:
         yield node[2][i[3]]
 

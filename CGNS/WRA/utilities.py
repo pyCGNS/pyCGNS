@@ -176,7 +176,7 @@ def getSingleNodeFromADF(rfile, path, flink, maxread, dmax, ptarget, lksearch):
     nodeinfo = db.nodeAsDict(db.root())
     for child in nodeinfo['children']:
         info = __singleNodeFromADF(db, db.get_node_id(db.root(), child),
-                                   string.split(path, '/')[1:],
+                                   path.split('/')[1:],
                                    flink, maxread, dmax, ptarget, lksearch)
         if (info != None): return info
     db.database_close()
@@ -301,7 +301,7 @@ def __parseAndWriteADF(db, tree, parent_id, links, path):
     ar = None
     sz = None
     isLink = 0
-    lpath = string.join(path + [tree[0]], '/')
+    lpath = str.join('/', path + [tree[0]])
     for lk in links:
         if (lk[1] == lpath):
             isLink = 1

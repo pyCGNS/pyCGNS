@@ -108,8 +108,8 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
                 (bv, bu) = b.split()
             except ValueError:
                 return a < b
-            av = float(string.replace(av, ',', '.')) * wg[au]
-            bv = float(string.replace(bv, ',', '.')) * wg[bu]
+            av = float(str.replace(av, ',', '.')) * wg[au]
+            bv = float(str.replace(bv, ',', '.')) * wg[bu]
             return av < bv
         return 1
 
@@ -230,7 +230,7 @@ class Q7File(QWidget, Ui_Q7FileWindow):
         self.setBoxes()
 
     def getOpt(self, name):
-        return getattr(self, '_Ui_Q7FileWindow__O_' + string.lower(name))
+        return getattr(self, '_Ui_Q7FileWindow__O_' + name.lower())
 
     def setBoxes(self):
         ckh = self.getOpt('FilterHDFFiles')

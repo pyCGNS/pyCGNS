@@ -171,13 +171,13 @@ def transAsPossible(s):
     except TypeError:
         v = s
     try:
-        return string.atoi(v)
+        return int(v)
     except ValueError:
         pass
     except TypeError:
         pass
     try:
-        return string.atof(v)
+        return float(v)
     except ValueError:
         pass
     except TypeError:

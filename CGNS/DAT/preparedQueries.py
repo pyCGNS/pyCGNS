@@ -87,7 +87,7 @@ def PQpBase(s, compact=None):
         d['change'] = e[6]
         d['mdate'] = e[7]
         if compact:
-            d['attribute'] = string.split(e[9], '/')[-1]
+            d['attribute'] = e[9].split('/')[-1]
         else:
             d['attribute'] = e[9]
         d['value'] = asReportString(transAsPossible(e[10]))

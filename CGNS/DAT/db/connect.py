@@ -175,7 +175,7 @@ class daxDB:
             self._db.runSQL(stmt)
         for lk in dct[dxPS.linkslist]:
             pth = lk[0].split('/')
-            tp = (eid, string.join(pth[:-1], '/'), pth[-1], lk[1], lk[2])
+            tp = (eid, str.join('/', pth[:-1]), pth[-1], lk[1], lk[2])
             stmt = """insert into cgnsLink (entry_id, \
                                     localpath,\
                                     localnode,\
@@ -199,7 +199,7 @@ class daxDB:
             stmt = """select id from cgnsLink where entry_id=%s \
                                         and localpath="%s" \
                                         and localnode="%s" """ % \
-                   (eid, string.join(pth[:-1], '/'), pth[-1])
+                   (eid, str.join('/', pth[:-1]), pth[-1])
             nlid = self._db.runSQL(stmt)[0][0]
             stmt = """update cgnsLink set linked_id='%s' where id=%s""" % (elid, nlid)
             self._db.runSQL(stmt)

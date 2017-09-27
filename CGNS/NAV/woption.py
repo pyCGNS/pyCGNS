@@ -51,7 +51,7 @@ class Q7Option(Q7Window, Ui_Q7OptionsWindow):
         if name[0] == '_':
             return None
         try:
-            a = getattr(self, '_Ui_Q7OptionsWindow__O_' + string.lower(name))
+            a = getattr(self, '_Ui_Q7OptionsWindow__O_' + name.lower())
         except AttributeError:
             return None
         return a

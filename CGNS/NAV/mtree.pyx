@@ -980,7 +980,9 @@ class Q7TreeItem(object):
             if not self.sidsValue().shape:
                 return False
             try:
-                vsize = reduce(lambda x, y: x * y, self.sidsValue().shape)
+                vsize = 1
+                for x in self.sidsValue().shape:
+                    vsize *= x
             except TypeError:
                 print '# CGNS.NAV unexpected (mtree.hasValueView)', \
                     self.sidsPath()
@@ -1031,7 +1033,9 @@ class Q7TreeItem(object):
                     vsize = 0
                 else:
                     try:
-                        vsize = reduce(lambda x, y: x * y, self.sidsValue().shape)
+                        vsize = 1
+                        for x in self.sidsValue().shape:
+                            vsize *= x
                     except TypeError:
                         print '# CGNS.NAV unexpected (mtree.data)', self.sidsPath()
                 if ((vsize > OCTXT.MaxDisplayDataSize) and
