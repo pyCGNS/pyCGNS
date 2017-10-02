@@ -52,7 +52,7 @@ class daxDB:
 
     # ----------------------------------------------------------
     def __del__(self):
-        if (self.__dict__.has_key('_db')):
+        if '_db' in self.__dict__:
             self._db.rollback()  # Abort transaction
 
     # ----------------------------------------------------------

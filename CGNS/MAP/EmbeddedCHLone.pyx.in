@@ -400,9 +400,9 @@ def probe(filename, path=None):
     if not os.path.exists(tfile):
         raiseException(900, tfile)
     if path is None:
-        r = s2p_probe(tfile, '')
+        r = s2p_probe(tfile.encode('utf-8'), ''.encode('utf-8'))
     else:
-        r = s2p_probe(tfile, path)
+        r = s2p_probe(tfile.encode('utf-8'), path.encode('utf-8'))
     return r
 
 

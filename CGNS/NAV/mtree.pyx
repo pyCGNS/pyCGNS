@@ -1645,7 +1645,7 @@ class Q7TreeModel(QAbstractItemModel):
             pathlist = list(self._extension)
         for path in pathlist:
             pth = CGU.getPathNoRoot(path)
-            if checkdiag.log.has_key(pth):
+            if pth in checkdiag.log:
                 item = self._extension[path]
                 stat = checkdiag.log.getWorstDiag(pth)
                 if stat == CGM.CHECK_NONE:

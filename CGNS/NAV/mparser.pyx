@@ -328,7 +328,7 @@ class Mesh(CGNSparser):
         fd = {}
         for a in self._actors:
             for f in a[0].families():
-                if (f and not fd.has_key(f)):
+                if (f and f not in fd):
                     g = a[0].GetMapper().GetInput()
                     fd[f] = [Q7vtkAssembly(), None, g, f, (1, None), None]
                 fd[f][0].AddPart(a[0])
@@ -342,7 +342,7 @@ class Mesh(CGNSparser):
             if (a[0].alone()):
                 for zn in ZoneData.zonelist():
                     if (a[0].zonepath() == zn.path):
-                        if (not fd.has_key(zn.path)):
+                        if (zn.path not in fd):
                             g = a[0].GetMapper().GetInput()
                             fd[zn.path] = [Q7vtkAssembly(), None, g, zn.path, (1, None), None]
                         fd[zn.path][0].AddPart(a[0])
@@ -605,8 +605,6 @@ class Mesh(CGNSparser):
         return actors
 
     def def_volume(self, n):
-        if self._vtkelts.has_key(n):
-            return self._vtkelts[n]
-        return None
+        return self._vtkelts.get(n, None)
 
 # ----------------------------------------------------------------------------

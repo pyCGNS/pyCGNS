@@ -458,14 +458,14 @@ def findLinkAsADF(file, lksearch, level=0, path='', dbs={}):
         for f in dbs:
             if ((dbs[f] == dbs[rfile]) and (f != lastfileentry)): rfile = f
     try:
-        if (not dbs.has_key(rfile)):
+        if (rfile not in dbs):
             # print 'pyCGNS: findLinkAsADF',file
             db = WRP.pyADF(file, ADF.READ_ONLY, ADF.NATIVE)
             dbs[rfile] = db
             dbs[lastfileentry] = db
             __links = __parseAndFindLinksADF(db, db.root(), level, path, dbs, file, lksearch)
         if (level == 0):
-            kdbs = dbs.keys()
+            kdbs = list(dbs)
             for kdb in kdbs:
                 dbs[kdb].database_close()
                 del dbs[kdb]
@@ -516,7 +516,7 @@ def loadAsADF(file, link=1, max=0, depth=999, path=None, dbs={},
         for f in dbs:
             if ((dbs[f] == dbs[rfile]) and (f != lastfileentry)): rfile = f
     try:
-        if (not dbs.has_key(rfile)):
+        if (rfile not in dbs):
             db = WRP.pyADF(file, ADF.READ_ONLY, ADF.NATIVE)
             r = __parseAndReadADF(db, db.root(), link, max, depth, path, dbs, lksearch)
             db.database_close()
@@ -526,7 +526,7 @@ def loadAsADF(file, link=1, max=0, depth=999, path=None, dbs={},
         else:
             __tree = dbs[rfile]
         if (start):
-            kdbs = dbs.keys()
+            kdbs = list(dbs)
             for kdb in kdbs:
                 del dbs[kdb]
     except ADF.error as e:
