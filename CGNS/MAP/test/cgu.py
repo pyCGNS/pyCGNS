@@ -6,7 +6,10 @@
 # TESTING RAW CHLONE INTERFACE ***
 # - test save first
 # - test load
+
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (bytes, str, range, dict)
 import os
 import subprocess
 import unittest
@@ -50,6 +53,7 @@ class MAPTestCase(unittest.TestCase):
     def getDump(self, filename, path, format, fct):
         com = "h5dump -d \"%s/ data%s\" %s" % (path, format, filename)
         r = subprocess.check_output(com, shell=True)
+        r = r.decode('ascii')
         d = r.split('\n')[10]
         v = d.split('): ')[1:][0]
         return fct(v)

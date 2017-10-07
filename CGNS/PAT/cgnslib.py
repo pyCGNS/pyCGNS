@@ -3,7 +3,10 @@
 #  See license.txt file in the root directory of this Python module source
 #  ---------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import division
+from builtins import (bytes, str, range, dict)
+
 import numpy
 
 import CGNS.PAT.cgnserrors as CE
@@ -386,7 +389,7 @@ def checkDataClass(node, parent=None):
         raise CE.cgnsException(27, node[3])
     if len(node[2]) != 0:
         raise CE.cgnsException(28, node[0])
-    value = CU.getValue(node).tostring()
+    value = CU.getValue(node).tostring().decode('ascii', 'strict')
     if value not in CK.DataClass_l:
         raise CE.cgnsException(207, value)
     if parent is not None:

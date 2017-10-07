@@ -3,6 +3,7 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 import CGNS.PAT.cgnsutils      as CGU
 import CGNS.PAT.cgnstypes      as CGT
 import CGNS.PAT.cgnskeywords   as CGK
@@ -187,7 +188,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
           else:
             famtarget=famdefinition[1].tostring().rstrip()
             famtargetpath="/%s/%s"%(parent[0],famtarget)
-            if (not self.context.has_key(famtargetpath)):
+            if (famtargetpath not in self.context):
               famtargetnode=CGU.getNodeByPath(tree,famtargetpath)
               if (famtargetnode is None):
                 rs=log.push(pth,diagmessage,famtarget)
@@ -595,7 +596,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
       famtarget=famdefinition[1].tostring().rstrip()
       basename=val_u.getBase(pth,node,parent,tree,log)
       famtargetpath="/%s/%s"%(basename,famtarget)
-      if (not self.context.has_key(famtargetpath)):
+      if (famtargetpath not in self.context):
         famtargetnode=CGU.getNodeByPath(tree,famtargetpath)
         if (famtargetnode is None):
           rs=log.push(pth,'s0000.0301',famtarget)

@@ -3,9 +3,11 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
 import sys
 import os
+import os.path
 import fnmatch
 import imp
 import CGNS.VAL.grammars.etablesids as STB
@@ -20,7 +22,7 @@ def readProfile():
     except:
         return {}
     pdir = '%s%s.CGNS.NAV' % (hdir, os.path.sep)
-    if (not os.exists(pdir)):
+    if not os.path.exists(pdir):
         return {}
     sys.path.append(pdir)
     fp, pth, des = imp.find_module('grammars')

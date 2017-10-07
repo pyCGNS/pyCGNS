@@ -5,6 +5,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
+from builtins import (str, bytes, range, dict)
 import shutil
 import os
 import os.path as op
@@ -567,7 +569,7 @@ Please visit his web site: http://www.famfamfam.com/<br>
          'Search by',
          """
          if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
-             (VALUE.tostring()==ARGS[0])):
+             (VALUE.tostring().decode('ascii')==ARGS[0])):
              RESULT=True
          """,
          """
@@ -655,7 +657,7 @@ if ((SIDSTYPE==CGK.Zone_ts) and (NAME[:l1]==ARGS[0])):
   RESULT=True
 
 if (CGU.getValueDataType(NODE)==CGK.C1):
-  v=VALUE.tostring()
+  v=VALUE.tostring().decode('ascii')
   if (v[:l1]==ARGS[0]):
     v=ARGS[1]+v[l1:]
     NODE[1]=CGU.setStringAsArray(v)
@@ -681,7 +683,7 @@ if (CGU.getValueDataType(NODE)==CGK.C1):
          'Replace',
          """
          if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
-             (VALUE.tostring()==ARGS[0]) and (PARENT[3]==CGK.BC_ts)):
+             (VALUE.tostring().decode('ascii')==ARGS[0]) and (PARENT[3]==CGK.BC_ts)):
              PARENT[1]=CGU.setStringAsArray(CGK.FamilySpecified_s)
              RESULT=True
          """,
@@ -807,29 +809,29 @@ if (CGU.getValueDataType(NODE)==CGK.C1):
     @classmethod
     def _writeFile(cls, tag, name, udata, filename, prefix=""):
         gdate = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-        s = """# %s - %s - Generated %s\n# coding: utf-8\n%s\nimport PyQt5\n%s=""" % \
+        s = u"""# %s - %s - Generated %s\n# coding: utf-8\n%s\nimport PyQt5\n%s=""" % \
             (cls._ToolName, tag, gdate, prefix, name)
         if isinstance(udata, dict):
-            s += """{\n"""
+            s += u"""{\n"""
             for k in udata:
                 #          print 'K',k,'V',udata[k],'T',type(udata[k])
                 if k[0] != '_':
                     val = '%s' % str(udata[k])
-                    if isinstance(udata[k], unicode):
-                        val = 'u"""%s"""' % repr(udata[k].encode('utf-8')).lstrip("u'").rstrip("'")
-                    elif isinstance(udata[k], str):
-                        val = 'u"""%s"""' % repr(unicode(udata[k], 'utf-8')).lstrip("u'").rstrip("'")
-                    if not isinstance(k, unicode):
-                        uk = "u'%s'" % repr(unicode(k, 'utf-8')).lstrip("u'").rstrip("'")
+                    if isinstance(udata[k], str):
+                        val = u'u"""%s"""' % repr(udata[k]).lstrip("u'").lstrip("'").rstrip("'") # Error
+                    elif isinstance(udata[k], bytes):
+                        val = u'u"""%s"""' % repr(udata[k].decode('utf-8')).lstrip("u'").lstrip("'").rstrip("'")
+                    if not isinstance(k, str):
+                        uk = u"u'%s'" % repr(k.decode('utf-8')).lstrip("u'").lstrip("'").rstrip("'")
                     else:
-                        uk = "u'%s'" % repr(k.encode('utf-8')).lstrip("u'").rstrip("'")
+                        uk = u"u'%s'" % repr(k).lstrip("u'").lstrip("'").rstrip("'")
                     s += """%s:%s,\n""" % (uk, val)
-            s += """}\n\n# --- last line\n"""
+            s += u"""}\n\n# --- last line\n"""
         elif isinstance(udata, list):
-            s += """[\n"""
+            s += u"""[\n"""
             for k in udata:
-                s += """%s,\n""" % (k)
-            s += """]\n\n# --- last line\n"""
+                s += u"""%s,\n""" % (k)
+            s += u"""]\n\n# --- last line\n"""
         cls._crpath(filename)
         with open(filename, 'w+') as f:
             f.write(s)

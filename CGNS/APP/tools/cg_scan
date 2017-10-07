@@ -107,7 +107,7 @@ else:
     for F in args.files:
         try:
             parseFile(F, Q)
-        except CGM.CHLone.CHLoneException:
+        except CGM.EmbeddedCHLone.CHLoneException:
             pass
 
 # --- last line

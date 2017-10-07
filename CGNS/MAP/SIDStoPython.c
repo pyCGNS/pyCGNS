@@ -10,6 +10,7 @@
 #include "SIDStoPython.h"
 #include "numpy/ndarraytypes.h"
 #include "numpy/arrayobject.h"
+#include "Python.h"
 
 #ifndef CHLONE_ON_WINDOWS
 #define S2P_PLATFORM_CURRENT S2P_PLATFORM_UNIX
@@ -154,20 +155,20 @@ static char *DT_C1 = "C1";
 
 #define S2P_CHECKNODE( node, ctxt )                       \
 ((PyList_Check(node)) && (PyList_Size(node) == 4) \
-  && (PyString_Check(PyList_GetItem(node,0))) \
+  && (PyUnicode_Check(PyList_GetItem(node, 0))) \
   && (PyList_Check(PyList_GetItem(node,2))) \
-  && (PyString_Check(PyList_GetItem(node,3))) \
+  && (PyUnicode_Check(PyList_GetItem(node, 3))) \
   && (s2p_nodeNotAlreadyParsed(node,ctxt)))
 
 #define S2P_CHECKNODENOCACHE( node, ctxt )                        \
 ((PyList_Check(node)) && (PyList_Size(node) == 4) \
-  && (PyString_Check(PyList_GetItem(node,0))) \
+  && (PyUnicode_Check(PyList_GetItem(node,0))) \
   && (PyList_Check(PyList_GetItem(node,2))) \
-  && (PyString_Check(PyList_GetItem(node,3))))
+  && (PyUnicode_Check(PyList_GetItem(node,3))))
 
 #define S2P_AS_HSIZE(val,validx) \
 arg=PyList_GetItem(obj,validx); \
-for (n=0;n<PyList_Size(arg);n++){val[n]=PyInt_AsLong(PyList_GetItem(arg,n));} \
+for (n=0;n<PyList_Size(arg);n++){val[n]=PyLong_AsLong(PyList_GetItem(arg,n));} \
 val[n]=-1;
 
 #ifdef __THREADING__
@@ -267,7 +268,7 @@ static int is_fortran_contiguous(PyArrayObject *ap)
    the sub path, so that it is completly included inside the current path     */
 static int s2p_issubpath(char *subpathtofind, char* currentpath, int exact)
 {
-	int l_subpathtofind, l_currentpath;
+	size_t l_subpathtofind, l_currentpath;
 
 	l_subpathtofind = strlen(subpathtofind);
 	l_currentpath = strlen(currentpath);
@@ -308,7 +309,8 @@ static void setError(int code, char* message, char* value, s2p_ctx_t *context)
 	{
 		strncat(buff, message, MAXERRORMESSAGE);
 	}
-	PyErr_SetObject(context->err, Py_BuildValue("(is)", code, buff));
+
+	PyErr_SetObject(context->err->ob_type, Py_BuildValue("(is)", code, buff));
 
 }
 /* ------------------------------------------------------------------------- */
@@ -333,7 +335,8 @@ static L3_Cursor_t *s2p_addoneHDF(char* dirname, char *filename,
 	s2p_ctx_t *context, int excpt)
 {
 	L3_Cursor_t *l3dbptr = NULL;
-	int newentry = 0, ishdf = 0, szd, szf;
+	int newentry = 0, ishdf = 0;
+	size_t szd, szf;
 	s2p_ent_t *nextdbs = NULL, *prevdbs = NULL;
 	struct stat *sbuff = NULL;
 	long l3flag = L3F_DEFAULT;
@@ -550,10 +553,12 @@ static void s2p_closeallHDF(s2p_ctx_t *context)
 /* ------------------------------------------------------------------------- */
 static s2p_ctx_t *s2p_filllinktable(PyObject *linktable, s2p_ctx_t *context)
 {
-	int linktablesize = 0, n = 0, sz = 0;
+	//int linktablesize = 0, n = 0;
+	Py_ssize_t linktablesize = 0, n = 0, sz = 0;
 	char *st = NULL;
 	s2p_lnk_t *nextlink = NULL, *previouslink = NULL;
 	PyObject  *lke = NULL;
+	PyObject * ascii_string = NULL;
 
 	S2P_TRACE(("# CHL:fill link table\n"));
 
@@ -576,11 +581,15 @@ static s2p_ctx_t *s2p_filllinktable(PyObject *linktable, s2p_ctx_t *context)
 
 		if (PyList_Check(lke)
 			&& (PyList_Size(lke) >= 4)
-			&& ((PyString_Check(PySequence_GetItem(lke, 0)))
+			&& ((PyBytes_Check(PySequence_GetItem(lke, 0)))
+				|| (PyUnicode_Check(PySequence_GetItem(lke, 0)))
 				|| (PySequence_GetItem(lke, 0) == Py_None))
-			&& (PyString_Check(PySequence_GetItem(lke, 1)))
-			&& (PyString_Check(PySequence_GetItem(lke, 2)))
-			&& (PyString_Check(PySequence_GetItem(lke, 3))))
+			&& (PyBytes_Check(PySequence_GetItem(lke, 1))
+				|| PyUnicode_Check(PySequence_GetItem(lke, 1)))
+			&& (PyBytes_Check(PySequence_GetItem(lke, 2))
+				|| PyUnicode_Check(PySequence_GetItem(lke, 2)))
+			&& (PyBytes_Check(PySequence_GetItem(lke, 3))
+				|| PyUnicode_Check(PySequence_GetItem(lke, 3))))
 		{
 			if (previouslink != NULL)
 			{
@@ -597,10 +606,12 @@ static s2p_ctx_t *s2p_filllinktable(PyObject *linktable, s2p_ctx_t *context)
 
 			if (PySequence_GetItem(lke, 0) != Py_None)
 			{
-				sz = PyString_Size(PySequence_GetItem(lke, 0));
-				st = PyString_AsString(PySequence_GetItem(lke, 0));
+				ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 0));
+				sz = PyBytes_Size(ascii_string);
+				st = PyBytes_AsString(ascii_string);
 				nextlink->dst_dirname = (char*)malloc(sizeof(char)*sz + 1);
 				strcpy(nextlink->dst_dirname, st);
+				Py_DECREF(ascii_string);
 			}
 			else
 			{
@@ -608,21 +619,26 @@ static s2p_ctx_t *s2p_filllinktable(PyObject *linktable, s2p_ctx_t *context)
 				strcpy(nextlink->dst_dirname, "");
 			}
 
-			sz = PyString_Size(PySequence_GetItem(lke, 1));
-			st = PyString_AsString(PySequence_GetItem(lke, 1));
+			ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 1));
+			sz = PyBytes_Size(ascii_string);
+			st = PyBytes_AsString(ascii_string);
+
 			nextlink->dst_filename = (char*)malloc(sizeof(char)*sz + 1);
 			strcpy(nextlink->dst_filename, st);
+			if (ascii_string != NULL) { Py_DECREF(ascii_string); }
 
-			sz = PyString_Size(PySequence_GetItem(lke, 2));
-			st = PyString_AsString(PySequence_GetItem(lke, 2));
+			ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 2));
+			sz = PyBytes_Size(ascii_string);
+			st = PyBytes_AsString(ascii_string);
 			nextlink->dst_nodename = (char*)malloc(sizeof(char)*sz + 1);
 			strcpy(nextlink->dst_nodename, st);
-
-			sz = PyString_Size(PySequence_GetItem(lke, 3));
-			st = PyString_AsString(PySequence_GetItem(lke, 3));
+			if (ascii_string != NULL) { Py_DECREF(ascii_string); }
+			ascii_string = PyUnicode_AsASCIIString(PySequence_GetItem(lke, 3));
+			sz = PyBytes_Size(ascii_string);
+			st = PyBytes_AsString(ascii_string);
 			nextlink->src_nodename = (char*)malloc(sizeof(char)*sz + 1);
 			strcpy(nextlink->src_nodename, st);
-
+			if (ascii_string != NULL) { Py_DECREF(ascii_string); }
 			nextlink->status = S2P_LKFAIL;
 
 			S2P_TRACE(("# CHL:link data [%s]->[%s][%s][%s]\n", \
@@ -995,7 +1011,8 @@ static void s2p_pathstack(char *path, int state, int dtype, int *dims,
 	s2p_ctx_t *context)
 {
 	s2p_pth_t *nextpath = NULL, *curpath = NULL;
-	int sz = 0, n;
+	int n;
+	size_t sz = 0;
 
 	nextpath = context->pth;
 	if (nextpath != NULL)
@@ -1040,7 +1057,7 @@ static PyObject *s2p_getpathtable(s2p_ctx_t *context)
 		{
 			if (paths->dims[n] != -1)
 			{
-				PyTuple_SetItem(tp, n, PyInt_FromLong((long)(paths->dims[n])));
+				PyTuple_SetItem(tp, n, PyLong_FromLong((long)(paths->dims[n])));
 			}
 		}
 		pth = Py_BuildValue("(sisO)", paths->path, paths->state,
@@ -1061,8 +1078,8 @@ static PyObject* s2p_getUpdateObjectByPath(PyObject* updict, char *path)
 		if (obj != NULL)
 		{
 			if (PyList_Check(obj) && (PyList_Size(obj) == 4)
-				&& (PyString_Check(PyList_GetItem(obj, 0)))
-				&& (PyString_Check(PyList_GetItem(obj, 3))))
+				&& (PyUnicode_Check(PyList_GetItem(obj, 0)))
+				&& (PyUnicode_Check(PyList_GetItem(obj, 3))))
 			{
 				tab = PyList_GetItem(obj, 1);
 				if ((PyArray_Check(tab)) || (tab == Py_None))
@@ -1077,7 +1094,7 @@ static PyObject* s2p_getUpdateObjectByPath(PyObject* updict, char *path)
 /* ------------------------------------------------------------------------- */
 static int s2p_pathToSkip(s2p_ctx_t *context, char *path)
 {
-	int sz, n;
+	Py_ssize_t sz, n;
 	PyObject *opth;
 
 	if (context->skp_pth == NULL) { return S2P_HASFLAG(S2P_FKEEPLIST) ? 1 : 0; }
@@ -1088,12 +1105,15 @@ static int s2p_pathToSkip(s2p_ctx_t *context, char *path)
 	for (n = 0; n < sz; n++)
 	{
 		opth = PyList_GetItem(context->skp_pth, n);
-		if (PyString_Check(opth))
+		if (PyUnicode_Check(opth))
 		{
-			if (s2p_issubpath(PyString_AsString(opth), path, 1))
+			PyObject *ascii = PyUnicode_AsASCIIString(opth);
+			if (s2p_issubpath(PyBytes_AsString(ascii), path, 1))
 			{
+				Py_DECREF(ascii);
 				return S2P_HASFLAG(S2P_FKEEPLIST) ? 0 : 1;
 			}
+			Py_DECREF(ascii);
 		}
 	}
 	return S2P_HASFLAG(S2P_FKEEPLIST) ? 1 : 0;
@@ -1112,12 +1132,12 @@ static int s2p_filterDataContiguous(s2p_ctx_t *context, char *path,
 	/* checks performed at python level */
 	if (obj != NULL)
 	{
-		s = PyInt_AsLong(PyTuple_GetItem(obj, 0));
+		s = PyLong_AsLong(PyTuple_GetItem(obj, 0));
 		if (s&S2P_SCONTIGUOUS)
 		{
-			*index = PyInt_AsLong(PyTuple_GetItem(obj, 1));
-			*rank = PyInt_AsLong(PyTuple_GetItem(obj, 2));
-			*count = PyInt_AsLong(PyTuple_GetItem(obj, 3));
+			*index = PyLong_AsLong(PyTuple_GetItem(obj, 1));
+			*rank = PyLong_AsLong(PyTuple_GetItem(obj, 2));
+			*count = PyLong_AsLong(PyTuple_GetItem(obj, 3));
 
 			if (s&S2P_SINTERLACED)
 			{
@@ -1151,7 +1171,7 @@ static int s2p_filterDataPartial(s2p_ctx_t *context, char *path,
 	/* checks performed at python level */
 	if (obj != NULL)
 	{
-		s = PyInt_AsLong(PyTuple_GetItem(obj, 0));
+		s = PyLong_AsLong(PyTuple_GetItem(obj, 0));
 		if (s == S2P_SPARTIAL)
 		{
 			obj = PyTuple_GetItem(obj, 1);
@@ -1305,7 +1325,7 @@ static int s2p_hasToTransposeData(char *name, char *label, s2p_ctx_t *context)
 /* ------------------------------------------------------------------------- */
 static void s2p_trackRefs(s2p_ctx_t *context, PyObject *tree)
 {
-	int n, ct, st;
+	Py_ssize_t n, ct, st;
 
 	if (S2P_HASFLAG(S2P_FDEBUG))
 	{
@@ -1411,7 +1431,7 @@ static void s2p_removeMissingChildren(hid_t        id,
 	s2p_ctx_t   *context,
 	L3_Cursor_t *l3db)
 {
-	int sz, n, child, toremove = 0;
+	Py_ssize_t sz, n, child, toremove = 0;
 	L3_Node_t *node = NULL, *cnode = NULL;
 	PyObject *ctree;
 	char *tnodename;
@@ -1440,13 +1460,19 @@ static void s2p_removeMissingChildren(hid_t        id,
 			toremove = 1;
 			for (n = 0; n < sz; n++)
 			{
-				tnodename = PyString_AsString(PyList_GetItem(PyList_GetItem(ctree, n), 0));
+				PyObject * ascii_string = NULL;
+				ascii_string = PyUnicode_AsASCIIString(PyList_GetItem(PyList_GetItem(ctree, n), 0));
+				tnodename = PyBytes_AsString(ascii_string);
+
+
 				if (!strcmp(tnodename, cnode->name))
 				{
 					S2P_TRACE(("# CHL:found in tree and file [%s]\n", tnodename));
 					toremove = 0;
+					if (ascii_string != NULL) { Py_DECREF(ascii_string); }
 					break;
 				}
+				if (ascii_string != NULL) { Py_DECREF(ascii_string); }
 			}
 			if (toremove)
 			{
@@ -1493,6 +1519,11 @@ static PyObject* s2p_parseAndReadHDF(L3_Node_t   *anode,
 	hsize_t d_offset[L3C_MAX_DIMS], d_stride[L3C_MAX_DIMS];
 	hsize_t d_count[L3C_MAX_DIMS], d_block[L3C_MAX_DIMS];
 	char altlabel[L3C_MAX_NAME + 1];
+
+	PyObject *o_name = NULL;
+	PyObject *b_name = NULL;
+	PyObject *o_altlabel = NULL;
+	PyObject *b_altlabel = NULL;
 
 	id = anode->id;
 	name = anode->name;
@@ -2009,10 +2040,16 @@ static PyObject* s2p_parseAndReadHDF(L3_Node_t   *anode,
 		/* printf("NODE [%s]\n",buf1); */
 	}
 	o_node = PyList_New(4);
-	PyList_SetItem(o_node, 0, PyString_FromString(name));
+	b_name = PyBytes_FromString(name);
+	b_altlabel = PyBytes_FromString(altlabel);
+	o_name = PyUnicode_FromEncodedObject(b_name, "ascii", "strict");
+	o_altlabel = PyUnicode_FromEncodedObject(b_altlabel, "ascii", "strict");
+	Py_DECREF(b_name);
+	Py_DECREF(b_altlabel);
+	PyList_SetItem(o_node, 0, o_name);
 	PyList_SetItem(o_node, 1, o_value);
 	PyList_SetItem(o_node, 2, o_clist);
-	PyList_SetItem(o_node, 3, PyString_FromString(altlabel));
+	PyList_SetItem(o_node, 3, o_altlabel);
 	ENTER_NOGIL_BLOCK(1);
 	context->dpt += 1;
 	if (islinknode)
@@ -2042,7 +2079,8 @@ static int s2p_parseAndWriteHDF(hid_t        id,
 	L3_Cursor_t *l3db)
 {
 	char *name = NULL, *label = NULL, *tdat = NULL, *altlabel;
-	int sz = 0, n = 0, tsize = 1, transpose = 0, reverse = 0, toupdate = 0, toskip = 0;
+	int tsize = 1, transpose = 0, reverse = 0, toupdate = 0, toskip = 0;
+	Py_ssize_t sz = 0, n = 0;
 	int ndat = 0, ret = 1, child = 0, ispartial = 0;
 	char *vdat = NULL;
 	L3_Node_t *node = NULL, *cnode = NULL;
@@ -2053,6 +2091,8 @@ static int s2p_parseAndWriteHDF(hid_t        id,
 	hsize_t s_count[L3C_MAX_DIMS], s_block[L3C_MAX_DIMS];
 	hsize_t d_offset[L3C_MAX_DIMS], d_stride[L3C_MAX_DIMS];
 	hsize_t d_count[L3C_MAX_DIMS], d_block[L3C_MAX_DIMS];
+	PyObject *ascii_name = NULL;
+	PyObject *ascii_label = NULL;
 
 	STR_ALLOC(altlabel, L3C_MAX_NAME + 1);
 	DIM_ALLOC(ddat, int, NPY_MAXDIMS);
@@ -2066,8 +2106,46 @@ static int s2p_parseAndWriteHDF(hid_t        id,
 	}
 	else if (S2P_CHECKNODENOCACHE(tree, context))
 	{
-		name = PyString_AsString(PyList_GetItem(tree, 0));
-		label = PyString_AsString(PyList_GetItem(tree, 3));
+		if (PyUnicode_Check(PyList_GetItem(tree, 0)))
+		{
+			ascii_name = PyUnicode_AsASCIIString(PyList_GetItem(tree, 0));
+			if (ascii_name != NULL)
+			{
+				name = PyBytes_AsString(ascii_name);
+			}
+			else
+			{
+				setError(S2P_EBADSTRUCTOB,
+					"Failed to retrieve an ASCII name for node [%s]",
+					curpath, context);
+				ret = 0;
+				name = "\0";
+			}
+		}
+		else
+		{
+			name = PyBytes_AsString(PyList_GetItem(tree, 0));
+		}
+		if (PyUnicode_Check(PyList_GetItem(tree, 3)))
+		{
+			ascii_label = PyUnicode_AsASCIIString(PyList_GetItem(tree, 3));
+			if (ascii_label != NULL)
+			{
+				label = PyBytes_AsString(ascii_label);
+			}
+			else
+			{
+				setError(S2P_EBADSTRUCTOB,
+					"Failed to retrieve an ASCII label for node [%s]",
+					curpath, context);
+				ret = 0;
+				label = "\0";
+			}
+		}
+		else
+		{
+			label = PyBytes_AsString(PyList_GetItem(tree, 3));
+		}
 		strcpy(altlabel, label);
 		if (!strcmp(altlabel, "DiffusionModel_t"))
 		{
@@ -2251,6 +2329,14 @@ static int s2p_parseAndWriteHDF(hid_t        id,
 			L3_nodeFree(&node);
 		}
 		curpath[strlen(curpath) - strlen(name) - 1] = '\0';
+		if (ascii_name != NULL)
+		{
+			Py_DECREF(ascii_name);
+		}
+		if (ascii_label != NULL)
+		{
+			Py_DECREF(ascii_label);
+		}
 	}
 	else
 	{
@@ -2352,7 +2438,7 @@ PyObject* s2p_loadAsHDF(char     *dirname,
 	{
 		load_return = PyList_New(0);
 		tree = PyList_New(0);
-		PyList_Append(tree, PyString_FromString(CG_CGNSTree_n));
+		PyList_Append(tree, PyUnicode_DecodeASCII(CG_CGNSTree_n, 8, "strict"));
 		if (S2P_HASFLAG(S2P_FCHECKSUM))
 		{
 			npy_intp npy_dim_vals[NPY_MAXDIMS];
@@ -2377,7 +2463,7 @@ PyObject* s2p_loadAsHDF(char     *dirname,
 			PyList_Append(tree, Py_None);
 		}
 		PyList_Append(tree, ret);
-		PyList_Append(tree, PyString_FromString(CG_CGNSTree_ts));
+		PyList_Append(tree, PyUnicode_DecodeASCII(CG_CGNSTree_ts, 10, "strict"));
 		PyList_Append(load_return, tree);
 		PyList_Append(load_return, links);
 		PyList_Append(load_return, paths);
@@ -2410,12 +2496,15 @@ PyObject* s2p_saveAsHDF(char     *dirname,
 	PyObject *lkskip,
 	PyObject *except)
 {
-	int sz = -1, toupdate = 0, i = 0;
+	int toupdate = 0;
+	Py_ssize_t sz = -1, i = 0;
+	Py_ssize_t n = 0;
 	char *tdat = NULL, parentnodename[256], *pt, *cpath, *path;
 	s2p_ctx_t *context = NULL;
 	PyObject *rtree = NULL, *otree = NULL, *paths = NULL;
-	int ndat = 0, n = 0, ret = 1, *dims, *ddat;
+	int ndat = 0, ret = 1, *dims, *ddat;
 	char *vdat = NULL;
+	char *clabel = NULL;
 	L3_Cursor_t *l3db = NULL;
 	L3_Node_t *node = NULL, *rnode = NULL;
 	hid_t nodeid = -1, oldid = -1, parentid = -1;
@@ -2452,7 +2541,7 @@ PyObject* s2p_saveAsHDF(char     *dirname,
   /* update paths at save time:
 	 - start to save from each path sub-tree, do not avoid links that
 	   would lead to another subtree.
-	 - update dict value is acutal CGNS/Python node for this path key */
+	 - update dict value is actual CGNS/Python node for this path key */
 
 	if (PyDict_Size(context->upd_pth) && S2P_HASFLAG(S2P_FUPDATE))
 	{
@@ -2474,7 +2563,10 @@ PyObject* s2p_saveAsHDF(char     *dirname,
 			paths = PyDict_Keys(context->upd_pth);
 			for (n = 0; n < PyList_Size(paths); n++)
 			{
-				tdat = PyString_AsString(PyList_GetItem(paths, n));
+				PyObject *ascii_tdat = NULL;
+				ascii_tdat = PyUnicode_AsASCIIString(PyList_GetItem(paths, n));
+				tdat = PyBytes_AsString(ascii_tdat);
+
 				L3M_ECLEAR(l3db);
 				nodeid = L3_nodeFind(l3db, l3db->root_id, tdat);
 				L3M_NEWNODE(node);
@@ -2509,6 +2601,7 @@ PyObject* s2p_saveAsHDF(char     *dirname,
 						PyDict_GetItemString(context->upd_pth, tdat),
 						parentnodename, "", context, l3db);
 				}
+				if (ascii_tdat != NULL) Py_DECREF(ascii_tdat);
 			}
 			s2p_closeallHDF(context);
 			s2p_freelinktable(context);
@@ -2558,10 +2651,14 @@ PyObject* s2p_saveAsHDF(char     *dirname,
 				sz = PyList_Size(rtree);
 				for (n = 0; n < sz; n++)
 				{
+					PyObject *ascii_label = NULL;
 					otree = PyList_GetItem(rtree, n);
+
+					ascii_label = PyUnicode_AsASCIIString(PyList_GetItem(otree, 3));
+					clabel = PyBytes_AsString(ascii_label);
+
 					if (S2P_CHECKNODENOCACHE(otree, context)
-						&& !strcmp(PyString_AsString(PyList_GetItem(otree, 3)),
-							CG_CGNSLibraryVersion_ts))
+						&& !strcmp(clabel, CG_CGNSLibraryVersion_ts))
 					{
 						S2P_TRACE(("# CHL:node [CGNSLibraryVersion]\n"));
 						s2p_getData((PyArrayObject*)PyList_GetItem(otree, 1),
@@ -2605,6 +2702,7 @@ PyObject* s2p_saveAsHDF(char     *dirname,
 							cpath, path, context, l3db);
 						if (!ret) { break; }
 					}
+					if (ascii_label != NULL) { Py_DECREF(ascii_label); }
 				}
 				s2p_removeMissingChildren(l3db->root_id, tree, context, l3db);
 				if (s2p_atleastonelink(context))
@@ -2660,7 +2758,10 @@ int s2p_garbage(PyObject *tree)
 	PyObject *ar;
 	PyArrayObject *aro;
 
-	printf("\n> %s", PyString_AsString(PyList_GetItem(tree, 0))); fflush(stdout);
+	PyObject *ascii_string = PyUnicode_AsASCIIString(PyList_GetItem(tree, 0));
+	printf("\n> %s", PyBytes_AsString(ascii_string)); fflush(stdout);
+	Py_DECREF(ascii_string);
+
 	Py_DECREF(PyList_GetItem(tree, 0));
 	ar = PyList_GetItem(tree, 1);
 	if (PyArray_Check(ar))

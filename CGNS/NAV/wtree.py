@@ -3,6 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
+from builtins import (str, bytes, range, dict)
 import sys
 import gc
 import functools
@@ -83,9 +85,9 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
                     editor.transgeometry = (xs, ys, ws, hs)
                     editor.addItems(en)
                     try:
-                        tix = en.index(node.sidsValue().tostring())
+                        tix = en.index(node.sidsValue().tostring().decode('ascii'))
                     except ValueError:
-                        editor.insertItem(0, node.sidsValue().tostring())
+                        editor.insertItem(0, node.sidsValue().tostring().decode('ascii'))
                         tix = 0
                     editor.setCurrentIndex(tix)
                 editor.installEventFilter(self)
@@ -515,7 +517,7 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
 
     def _runAndSelect(self, qname, value):
         q = Q7Query.getQuery(qname)
-        sl = q.run(self.FG.tree, self.FG.links, self.FG.lazy.keys(), False, value)
+        sl = q.run(self.FG.tree, self.FG.links, list(self.FG.lazy), False, value)
         self.model().markExtendToList(sl)
         self.model().updateSelected()
         self.treeview.refreshView()

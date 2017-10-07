@@ -17,7 +17,7 @@
    the model itself but with some of local stuff and I want two
    separate classes.
 """
-
+from __future__ import unicode_literals
 
 def show(T, *args):
     from CGNS.NAV.moption import Q7OptionContext as OCTXT

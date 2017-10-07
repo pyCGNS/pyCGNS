@@ -15,7 +15,7 @@ def showConfig():
     print(" pyCGNS v%s" % __vid__)
     print('-' * 70)
     print(" build on %s\n for %s " % (pyCGNSconfig.DATE,
-                                      string.join([pyCGNSconfig.PLATFORM[0],
+                                      str.join('',[pyCGNSconfig.PLATFORM[0],
                                                    pyCGNSconfig.PLATFORM[2],
                                                    pyCGNSconfig.PLATFORM[4], ])))
     print('-' * 70)

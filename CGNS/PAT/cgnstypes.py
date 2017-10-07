@@ -3,6 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
+from builtins import (bytes, str, range, dict)
 import CGNS.PAT.cgnskeywords as CGK
 
 tlistA = [
@@ -851,7 +853,7 @@ cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 types = cgt
-tk = types.keys()
+tk = list(types)
 tk.sort()
 for pk in tk:
     for ck in tk:

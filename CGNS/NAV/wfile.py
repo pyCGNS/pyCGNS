@@ -3,12 +3,17 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
+from builtins import (str, bytes, range, dict)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import os.path
 import stat
 import string
 import time
+import sys
+
+PY2 = sys.version[0] == '2'
 
 from qtpy.QtCore import *
 from qtpy.QtWidgets import *
@@ -66,8 +71,8 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
     def filterAcceptsRow(self, row, parentindex):
         idx = self.model.index(row, 1, parentindex)
         p = self.model.filePath(idx)
-        if not isinstance(p, unicode):
-            p = str(self.model.filePath(idx)).decode('utf-8')
+        if isinstance(p, bytes):
+            p = str(self.model.filePath(idx).decode('utf-8'))
         if not self.checkPermission(p):
             return False
         if os.path.isdir(p):
@@ -103,8 +108,8 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
                 (bv, bu) = b.split()
             except ValueError:
                 return a < b
-            av = float(string.replace(av, ',', '.')) * wg[au]
-            bv = float(string.replace(bv, ',', '.')) * wg[bu]
+            av = float(str.replace(av, ',', '.')) * wg[au]
+            bv = float(str.replace(bv, ',', '.')) * wg[bu]
             return av < bv
         return 1
 
@@ -162,7 +167,10 @@ class Q7File(QWidget, Ui_Q7FileWindow):
             (self.rClearNotFound, "toggled(bool)", self.updateClearNotFound),
         ]
         #
-        self.model.directoryLoaded[str].connect(self.expandCols)
+        if PY2:
+            self.model.directoryLoaded[unicode].connect(self.expandCols)
+        else:
+            self.model.directoryLoaded[str].connect(self.expandCols)
         self.treeview.expanded[QModelIndex].connect(self.expandCols)
         self.treeview.clicked[QModelIndex].connect(self.clickedNode)
         self.treeview.doubleClicked[QModelIndex].connect(self.clickedNodeAndLoad)
@@ -222,7 +230,7 @@ class Q7File(QWidget, Ui_Q7FileWindow):
         self.setBoxes()
 
     def getOpt(self, name):
-        return getattr(self, '_Ui_Q7FileWindow__O_' + string.lower(name))
+        return getattr(self, '_Ui_Q7FileWindow__O_' + name.lower())
 
     def setBoxes(self):
         ckh = self.getOpt('FilterHDFFiles')
@@ -362,15 +370,15 @@ class Q7File(QWidget, Ui_Q7FileWindow):
         hlist = self.parent.getHistory(fromfile=False)
         flist = []
         self.fileentries.addItem("")
-        for i in hlist.keys():
+        for i in list(hlist):
             if i != self.parent.getHistoryLastKey():
                 self.direntries.addItem(str(i))
                 flist = flist + hlist[i]
         for i in flist:
             self.fileentries.addItem(str(i))
         self.historyfiles = flist
-        self.historydirs = hlist.keys()
-        if self.parent.getHistoryLastKey() in hlist.keys():
+        self.historydirs = list(hlist)
+        if self.parent.getHistoryLastKey() in list(hlist):
             self.selecteddir = hlist[self.parent.getHistoryLastKey()][0]
             self.selectedfile = hlist[self.parent.getHistoryLastKey()][1]
             # ixd=self.direntries.findText(self.selecteddir)

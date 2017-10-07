@@ -158,7 +158,7 @@ for F in args.files:
     try:
         parseFile(F, P, Q)
         if (P and Q.stop): break
-    except CGM.CHLone.CHLoneException:
+    except CGM.EmbeddedCHLone.CHLoneException:
         pass
 
 for p in P:

@@ -3,6 +3,7 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
 MAJORVERSION = 4
 MINORVERSION = 7
@@ -74,10 +75,12 @@ def which(program):
 
 # --------------------------------------------------------------------
 def unique_but_keep_order(lst):
-    if (len(lst) < 2): return lst
+    if len(lst) < 2:
+        return lst
     r = [lst[0]]
     for p in lst[1:]:
-        if (p not in r): r.append(p)
+        if p not in r:
+            r.append(p)
     return r
 
 
@@ -99,7 +102,8 @@ def search(incs, libs, tag='pyCGNS',
     import pyCGNSconfig_default as C_D
     sys.path = oldsyspath
     for ck in dir(C_D):
-        if (ck[0] != '_'): cfgdict[ck] = C_D.__dict__[ck]
+        if ck[0] != '_':
+            cfgdict[ck] = C_D.__dict__[ck]
     pg = prodtag()
     cfgdict['PFX'] = pfx
     cfgdict['DATE'] = pg[0]
@@ -392,7 +396,7 @@ def updateConfig(pfile, gfile, config_default, config_previous=None):
 # --------------------------------------------------------------------
 def frompath_HDF5():
     h5p = which("h5dump")
-    if (h5p is not None):
+    if h5p is not None:
         h5root = '/'.join(h5p.split('/')[:-2])
     else:
         h5root = '/usr/local'

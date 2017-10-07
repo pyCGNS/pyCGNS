@@ -232,9 +232,8 @@ def sortResult(L, A, hdr):
 #  -------------------------------------------------------------------------
 if (args.keys):
     kl = Entry.keys()
-    kl.sort()
     print('# List of keys')
-    for (k, d) in kl:
+    for (k, d) in sorted(kl):
         print(k, ':', d)
     sys.exit(0)
 
@@ -266,7 +265,7 @@ for F in files:
             fmt = R[1]
             mxl.append(R[2])
             vls.append(R[3])
-    except CGM.CHLone.CHLoneException:
+    except CGM.EmbeddedCHLone.CHLoneException:
         pass
 
 vls = sortResult(vls, args, hdr)

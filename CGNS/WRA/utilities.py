@@ -176,7 +176,7 @@ def getSingleNodeFromADF(rfile, path, flink, maxread, dmax, ptarget, lksearch):
     nodeinfo = db.nodeAsDict(db.root())
     for child in nodeinfo['children']:
         info = __singleNodeFromADF(db, db.get_node_id(db.root(), child),
-                                   string.split(path, '/')[1:],
+                                   path.split('/')[1:],
                                    flink, maxread, dmax, ptarget, lksearch)
         if (info != None): return info
     db.database_close()
@@ -301,7 +301,7 @@ def __parseAndWriteADF(db, tree, parent_id, links, path):
     ar = None
     sz = None
     isLink = 0
-    lpath = string.join(path + [tree[0]], '/')
+    lpath = str.join('/', path + [tree[0]])
     for lk in links:
         if (lk[1] == lpath):
             isLink = 1
@@ -458,14 +458,14 @@ def findLinkAsADF(file, lksearch, level=0, path='', dbs={}):
         for f in dbs:
             if ((dbs[f] == dbs[rfile]) and (f != lastfileentry)): rfile = f
     try:
-        if (not dbs.has_key(rfile)):
+        if (rfile not in dbs):
             # print 'pyCGNS: findLinkAsADF',file
             db = WRP.pyADF(file, ADF.READ_ONLY, ADF.NATIVE)
             dbs[rfile] = db
             dbs[lastfileentry] = db
             __links = __parseAndFindLinksADF(db, db.root(), level, path, dbs, file, lksearch)
         if (level == 0):
-            kdbs = dbs.keys()
+            kdbs = list(dbs)
             for kdb in kdbs:
                 dbs[kdb].database_close()
                 del dbs[kdb]
@@ -516,7 +516,7 @@ def loadAsADF(file, link=1, max=0, depth=999, path=None, dbs={},
         for f in dbs:
             if ((dbs[f] == dbs[rfile]) and (f != lastfileentry)): rfile = f
     try:
-        if (not dbs.has_key(rfile)):
+        if (rfile not in dbs):
             db = WRP.pyADF(file, ADF.READ_ONLY, ADF.NATIVE)
             r = __parseAndReadADF(db, db.root(), link, max, depth, path, dbs, lksearch)
             db.database_close()
@@ -526,7 +526,7 @@ def loadAsADF(file, link=1, max=0, depth=999, path=None, dbs={},
         else:
             __tree = dbs[rfile]
         if (start):
-            kdbs = dbs.keys()
+            kdbs = list(dbs)
             for kdb in kdbs:
                 del dbs[kdb]
     except ADF.error as e:

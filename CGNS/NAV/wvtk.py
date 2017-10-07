@@ -3,8 +3,10 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
+from builtins import (str, bytes, range, dict)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import numpy as NPY
@@ -826,7 +828,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
 
     def getRandomColor(self):
         clst = OCTXT._ColorList
-        cl = clst[clst.keys()[random.randrange(len(clst.keys()))]]
+        cl = clst[list(clst)[random.randrange(len(list(clst)))]]
         return cl
 
     def setColors(self, randcolors=False):
@@ -930,7 +932,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
             self._iren.Render()
 
     def updateViewList(self):
-        k = self._camera.keys()
+        k = list(self._camera)
         k.sort()
         self.cViews.clear()
         self.cViews.addItem("")

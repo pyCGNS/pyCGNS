@@ -3,7 +3,10 @@
 #  See license.txt file in the root directory of this Python module source
 #  ---------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
+from functools import cmp_to_key
+from builtins import (bytes, str, range, dict)
 import hashlib
 import os.path as op
 import re
@@ -202,7 +205,7 @@ def checkName(name, dienow=False, strict=False):
     * No ``/`` in the string
     * Empty name or name with only spaces is forbidden
     * Names ``.`` and ``..`` are forbidden
-    * Allowed chars are :py:data:`string.letters` + :py:data:`string.digits` + :py:data:`string.punctuation` + ``' '``
+    * Allowed chars are :py:data:`string.ascii_letters` + :py:data:`string.digits` + :py:data:`string.punctuation` + ``' '``
 
     Additional checks can be performed with the `strict` flag set to True, these
     checks are not CGNS compliant:
@@ -228,7 +231,7 @@ def checkName(name, dienow=False, strict=False):
 
     :raises: codes 22,23,24,25,29,31,32,33,34 if `dienow` is True
     """
-    if not isinstance(name, (str, unicode)):
+    if not isinstance(name, str):
         if dienow:
             raise CE.cgnsNameError(22)
         return False
@@ -238,7 +241,7 @@ def checkName(name, dienow=False, strict=False):
         return False
     sname = set(name)
     rname = set(string.digits
-                + string.letters
+                + string.ascii_letters
                 + string.punctuation + ' ')
     rname.remove('/')
     if not sname.issubset(rname):
@@ -535,7 +538,7 @@ def checkNode(node, dienow=False):
         if dienow:
             raise CE.cgnsException(2)
         return False
-    if not isinstance(node[0], (str, unicode)):
+    if not isinstance(node[0], str):
         if dienow:
             raise CE.cgnsException(3)
         return False
@@ -975,8 +978,12 @@ def setStringAsArray(a):
     if isinstance(a, numpy.ndarray):
         if (a.shape != ()) and (a.dtype.kind == 'S'):
             return a
-    if isinstance(a, (str, unicode)) or isinstance(a, numpy.ndarray):
-        return numpy.array(tuple(a), dtype='|S', order='Fortran')
+        else:
+            return numpy.array(tuple(a), dtype='|S', order='Fortran')
+    if isinstance(a, bytes):
+        return numpy.array([bytes([x]) for x in a], dtype='|S', order='Fortran')
+    if isinstance(a, str):
+        return numpy.array([x.encode('ascii') for x in a], dtype='|S', order='Fortran')
     return None
 
 
@@ -1112,7 +1119,7 @@ def setDoubleAsArray(*d):
 # -----------------------------------------------------------------------------
 def getValueAsString(node):
     """Returns node value as a Python string"""
-    return node[1].tostring()
+    return node[1].tostring().decode("ascii", "strict")
 
 
 # -----------------------------------------------------------------------------
@@ -1453,9 +1460,9 @@ def removeFirstPathItem(path):
     """
     p = path.split('/')
     if (p[0] == '') and (len(p) > 2):
-        return string.join([''] + p[2:], '/')
+        return str.join('/', [''] + p[2:])
     elif len(p) > 1:
-        return string.join(p[1:], '/')
+        return str.join('/', p[1:])
     else:
         return '/'
 
@@ -1621,7 +1628,7 @@ def getNextChildSortByType(node, parent=None, criteria=None):
     r = []
     for i, c in enumerate(node[2]):
         r += [(c[3], c[0], __criteria, i)]
-    r.sort(sortbytypesasincriteria)
+    r.sort(key=cmp_to_key(sortbytypesasincriteria))
     for i in r:
         yield node[2][i[3]]
 
@@ -2238,16 +2245,16 @@ def getAllPaths(tree):
     return plist
 
 
-def wsort(a, b):
-    if a[0] < b[0]:
-        return -1
-    if a[0] > b[0]:
-        return 1
-    if a[1] < b[1]:
-        return -1
-    if a[1] > b[1]:
-        return 1
-    return 0
+# def wsort(a, b):
+#     if a[0] < b[0]:
+#         return -1
+#     if a[0] > b[0]:
+#         return 1
+#     if a[1] < b[1]:
+#         return -1
+#     if a[1] > b[1]:
+#         return 1
+#     return 0
 
 
 # --------------------------------------------------
@@ -2278,13 +2285,7 @@ def getPathsFullTree(tree, width=False, raw=False):
         tree = [None, None, [tree], None]
     r = getAllPaths(tree)
     if width:
-        s = []
-        for p in r:
-            s.append((p.count('/'), p))
-        s.sort(cmp=wsort)
-        r = []
-        for p in s:
-            r.append(p[1])
+        r.sort(key=lambda p: (p.count('/'), p))
     return r
 
 
@@ -2300,7 +2301,7 @@ def checkPath(path, dienow=False):
     :return: ``True`` if the path is ok, ``False`` if a problem is found
 
     """
-    if not isinstance(path, (str, unicode)) or not path:
+    if not isinstance(path, str) or not path:
         return False
     if path[0] == '/':
         path = path[1:]
@@ -2700,7 +2701,7 @@ def getPathListAsWidthFirstIndex(paths, fileindex=1):
         dpth[d].append(p)
     for d in dpth:
         dpth[d].sort()
-    k = dpth.keys()
+    k = list(dpth)
     k.sort()
     count = 0
     ix = []
@@ -2832,7 +2833,7 @@ def getBCFromFamily(tree, families, additional=True):
         zlist += getAllNodesByTypeOrNameList(tree, fpth2)
     r = []
     for pth in zlist:
-        if getValueByPath(tree, pth).tostring() in families:
+        if getValueByPath(tree, pth).tostring().decode('ascii') in families:
             r += [getPathAncestor(pth)]
     return r
 
@@ -2856,7 +2857,7 @@ def getZoneSubRegionFromFamily(tree, families, additional=True):
         zlist += getAllNodesByTypeOrNameList(tree, fpth2)
     r = []
     for pth in zlist:
-        if getValueByPath(tree, pth).tostring() in families:
+        if getValueByPath(tree, pth).tostring().decode('ascii') in families:
             r += [getPathAncestor(pth)]
     return r
 
@@ -2889,7 +2890,7 @@ def getFamiliesFromBC(tree, path):
         l2 = []
     r = []
     for nd in l1 + l2:
-        r.append(nd[1].tostring())
+        r.append(nd[1].tostring().decode('ascii'))
     return r
 
 
@@ -2970,7 +2971,7 @@ def hasEnumValue(node):
     stp = node[3]
     if stp == CK.Elements_ts:
         stp = CK.ElementType_ts
-    if stp in CK.cgnsenums.keys():
+    if stp in CK.cgnsenums:
         return True
     return False
 
@@ -3083,7 +3084,7 @@ def stringValueMatches(node, reval):
     if isinstance(node[1], str):
         vn = node[1]
     elif isinstance(node[1], numpy.ndarray) and (node[1].dtype.kind in ['S', 'a']):
-        vn = node[1].tostring()
+        vn = node[1].tostring().decode('ascii', 'strict')
     else:
         return False
     if stringMatches(vn, reval) is not None:
@@ -3104,7 +3105,7 @@ def stringValueInList(node, listval):
     if isinstance(node[1], str):
         vn = node[1]
     elif isinstance(node[1], numpy.ndarray) and (node[1].dtype.kind in ['S', 's']):
-        vn = node[1].tostring()
+        vn = node[1].tostring().decode('ascii', 'strict')
     else:
         return False
     return vn in listval
@@ -3236,7 +3237,7 @@ def diffAnalysis(diag):
     s += '## >d A and B node values differ (not same shape)\n'
     s += '## >c A and B node values differ (not same contents)\n'
     s += '## >s A and B node values differ (string values)\n'
-    paths = diag.keys()
+    paths = list(diag)
     paths.sort()
     for k in paths:
         for d in diag[k]:

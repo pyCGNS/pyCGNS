@@ -4,6 +4,7 @@
 #  -------------------------------------------------------------------------
 #
 #
+from __future__ import unicode_literals
 import CGNS.VAL.simplecheck as CGV
 import CGNS.MAP
 import importlib
@@ -24,13 +25,13 @@ except ImportError:
     pass
 
 try:
-    if os.environ.has_key('CGNS_VAL_SAVE_FILES'):
+    if 'CGNS_VAL_SAVE_FILES' in os.environ:
         FILES = True
 except:
     pass
 
 try:
-    if os.environ.has_key('CGNS_VAL_RUN_CGNSCHECK'):
+    if 'CGNS_VAL_RUN_CGNSCHECK' in os.environ:
         CGNSCHECK = True
 except:
     pass
@@ -50,7 +51,8 @@ def runSuite(suite, trace, savefile=False, cgnscheck=False):
         for t in l:
             if ((t[0] != '_') and (t[-3:] == '.py')
                 and (t[0] in string.digits)
-                and (t[1] in string.digits)): tlist.append(t[:-3])
+                and (t[1] in string.digits)):
+                tlist.append(t[:-3])
     for t in tlist:
         tdlist = loadTree(suite, t)
         for (tag, T, diag) in tdlist:

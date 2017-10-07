@@ -1,5 +1,7 @@
 # cannot be used for CFD
+from __future__ import unicode_literals
 import numpy
+
 
 T = ['CGNSTree', None, [
     ['CGNSLibraryVersion', numpy.array([3.200000047683716], dtype='float32', order='C'), [], 'CGNSLibraryVersion_t'],

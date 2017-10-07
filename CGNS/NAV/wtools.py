@@ -3,7 +3,12 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (str, bytes, range, dict)
+
+import sys
+PY2 = sys.version[0] == '2'
 
 from qtpy.QtCore import *
 from qtpy.QtWidgets import *
@@ -52,7 +57,10 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         self._model = fgprint.model
         self._treeview = master.treeview
         self.cGroup.currentIndexChanged.connect(self.fillqueries)
-        self.cQuery.currentTextChanged[str].connect(self.checkquery)
+        if PY2:
+            self.cQuery.currentTextChanged[unicode].connect(self.checkquery)
+        else:
+            self.cQuery.currentTextChanged[str].connect(self.checkquery)
         # QObject.connect(self.cGroup,
         #                SIGNAL("currentIndexChanged(int)"),
         #                self.fillqueries)
@@ -83,7 +91,10 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
             self.applyquery()
             self.selectionlist()
         self.sLevel.valueChanged[int].connect(self.updateCriteria)
-        self.cSIDStype.editTextChanged[str].connect(self.updateSIDStypeEntry)
+        if PY2:
+            self.cSIDStype.editTextChanged[unicode].connect(self.updateSIDStypeEntry)
+        else:
+            self.cSIDStype.editTextChanged[str].connect(self.updateSIDStypeEntry)
         # QObject.connect(self.sLevel,
         #                SIGNAL("valueChanged(int)"),
         #                self.updateCriteria)
@@ -205,7 +216,7 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         s += "rt=t1 and t2 and t3\n"
         s += "RESULT=rn and rt\n"
         q = Q7QueryEntry('TMP', script=s)
-        skp = self._fgprint.lazy.keys()
+        skp = list(self._fgprint.lazy)
         sl = q.run(self._fgprint.tree, self._fgprint.links, skp, False, '',
                    self._model.getSelected())
         self._model.markExtendToList(sl)
@@ -221,7 +232,7 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         qry = Q7Query
         if q in qry.queriesNamesList():
             sl = qry.getQuery(q).run(self._fgprint.tree, self._fgprint.links,
-                                     self._fgprint.lazy.keys(),
+                                     list(self._fgprint.lazy),
                                      False, v, self.model().getSelected())
             self.model().markExtendToList(sl)
             self.model().updateSelected()

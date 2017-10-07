@@ -3,7 +3,9 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import division
+from builtins import (str, bytes, range, dict)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import sys
@@ -133,11 +135,11 @@ class Q7Form(Q7Window, Ui_Q7FormWindow):
         self.tPython.setDisabled(True)
         if self._node.sidsDataType() == CGK.C1:
             if self._node.sidsValue().ndim > 1:
-                txt = self._node.sidsValue().T.tostring()
+                txt = self._node.sidsValue().T.tostring().decode('ascii')
                 self.cFortranOrderOff.setChecked(True)
                 self.cFortranOrderOff.setDisabled(True)
             else:
-                txt = self._node.sidsValue().tostring()
+                txt = self._node.sidsValue().tostring().decode('ascii')
             self.eText.initText(txt)
 
     def resizeTable(self):

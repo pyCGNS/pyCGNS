@@ -3,6 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
+from builtins import (str, bytes, range, dict)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import sys
@@ -132,7 +134,7 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
         v = self.diagTable
         v.clear()
         v.setHeaderHidden(True)
-        plist = self._data.keys()
+        plist = list(self._data)
         plist.sort()
         plist.reverse()
         keyset = set()

@@ -43,7 +43,7 @@ stringsphinx4 = """   * %s\n"""
 # a ref is :ref:`XCGNSBase_t`
 def showBoxes():
     s = ""
-    lt = CT.types.keys()
+    lt = list(CT.types)
     lt.sort()
     for t in lt:
         st = "-" * len(t)

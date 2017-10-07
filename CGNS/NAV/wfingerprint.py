@@ -3,7 +3,9 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (str, bytes, range, dict)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import os
@@ -336,14 +338,14 @@ class Q7Window(QWidget, object):
 
     def getDirNotFoundFromHistory(self):
         nf = []
-        for d in self._history.keys():
+        for d in list(self._history):
             if not os.path.exists(d) and not (d == Q7Window.HISTORYLASTKEY):
                 nf.append(d)
         return nf
 
     def getDirNoHDFFromHistory(self):
         nf = []
-        for d in self._history.keys():
+        for d in list(self._history):
             if not os.path.exists(d) or (d == Q7Window.HISTORYLASTKEY):
                 pass
             else:
@@ -370,7 +372,7 @@ class Q7Window(QWidget, object):
         OCTXT._writeHistory(self)
 
     def setHistory(self, filedir, filename):
-        for d in self._history.keys():
+        for d in list(self._history):
             if d == filedir:
                 if filename not in self._history[filedir]:
                     self._history[filedir].append(filename)
@@ -528,7 +530,7 @@ class Q7FingerPrint:
             flags |= CGNS.MAP.S2P_UPDATE
             flags |= CGNS.MAP.S2P_DELETEMISSING
         tree = fgprint.tree
-        lazylist = [CGU.getPathNoRoot(path) for path in fgprint.lazy.keys()]
+        lazylist = [CGU.getPathNoRoot(path) for path in list(fgprint.lazy)]
         try:
             CGNS.MAP.save(f, tree, links=fgprint.links, flags=flags, skip=lazylist)
         except (CGNS.MAP.error,) as chlex:
@@ -698,7 +700,7 @@ class Q7FingerPrint:
         tfile = "%s/%s" % (self.filedir, self.filename)
         slp = OCTXT.LinkSearchPathList
         slp += [self.filedir]
-        minpath = CGU.getPathListCommonAncestor(pathdict.keys())
+        minpath = CGU.getPathListCommonAncestor(list(pathdict))
         flags = CGNS.MAP.S2P_DEFAULTS
         if OCTXT.CHLoneTrace:
             flags |= CGNS.MAP.S2P_TRACE
@@ -860,13 +862,13 @@ class Q7FingerPrint:
         self.lockAllViews(lock=False)
 
     def lockAllViews(self, lock=True):
-        vtlist = self.views.keys()
+        vtlist = list(self.views)
         for vtype in vtlist:
             for (v, i) in self.views[vtype]:
                 v.lockView(lock)
 
     def closeAllViews(self):
-        vtlist = self.views.keys()
+        vtlist = list(self.views)
         for vtype in vtlist:
             for (v, i) in self.views[vtype]:
                 self.closeView(i)

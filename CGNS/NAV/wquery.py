@@ -3,7 +3,9 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (str, bytes, range, dict)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import sys
@@ -99,9 +101,9 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
                     editor.transgeometry = (xs, ys, ws, hs)
                     editor.addItems(en)
                     try:
-                        tix = en.index(tnode.sidsValue().tostring())
+                        tix = en.index(tnode.sidsValue().tostring().decode('ascii'))
                     except ValueError:
-                        editor.insertItem(0, tnode.sidsValue().tostring())
+                        editor.insertItem(0, tnode.sidsValue().tostring().decode('ascii'))
                         tix = 0
                     editor.setCurrentIndex(tix)
                 editor.installEventFilter(self)
@@ -250,7 +252,7 @@ class Q7SelectionList(Q7Window, Ui_Q7SelectionWindow):
             v = node.sidsValue()
             if isinstance(v, numpy.ndarray):
                 if v.dtype.char in ['S', 'c']:
-                    s = '"' + v.tostring() + '"'
+                    s = '"' + v.tostring().decode('ascii') + '"'
                 else:
                     s = str(v.tolist())
             else:
@@ -496,7 +498,7 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
         v = self.eUserVariable.text()
         q = Q7QueryEntry('__tmp__query__')
         q.setScript(com)
-        skp = self.FG.lazy.keys()
+        skp = list(self.FG.lazy)
         r = q.run(self.FG.tree, self.FG.links, skp, False, v,
                   self.FG.model.getSelected())
         self.eResult.initText(str(r))
@@ -549,7 +551,7 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
 
     @classmethod
     def queriesNamesList(cls):
-        k = Q7Query._allQueries.keys()
+        k = list(Q7Query._allQueries)
         k.sort()
         return k
 

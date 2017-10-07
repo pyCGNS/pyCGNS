@@ -3,11 +3,14 @@
 # See license.txt in the root directory of this source release
 # ====================================================================== 
 #
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (str, bytes, range, dict)
 import os
 import sys
 import copy
 
+PY3 = sys.version_info[0] == 3
 
 # ---------------------------------------------------------------------------
 class CHLoneExceptionInternal(Exception):
@@ -102,7 +105,7 @@ def checkPathList(lpath):
     if not isinstance(lpath, list):
         raiseException(916)
     for p in lpath:
-        if not isinstance(p, (str, unicode)):
+        if not isinstance(p, str):
             raiseException(916)
     return lpath
 
@@ -129,7 +132,7 @@ def checkLinkList(links, linkfull=False):
                 (len(lk) not in [4])):
             raiseException(917)
         for p in lk:
-            if not isinstance(p, (str, unicode)):
+            if not isinstance(p, str):
                 raiseException(917)
         list_links.append(list(lk))
     return list_links
@@ -145,7 +148,7 @@ def checkHyperslabBounds(h):
 def fillMaxRankForAll(adict):
     ctg_dict = copy.copy(adict)
     cd = {}
-    for k in ctg_dict.keys():
+    for k in list(ctg_dict):
         if (ctg_dict[k][0] & SCONTIGUOUS) or (ctg_dict[k][0] & SINTERLACED):
             if ctg_dict[k][1] not in cd:
                 cd[ctg_dict[k][1]] = [[k], 1]
@@ -166,7 +169,7 @@ def fillMaxRankForAll(adict):
 
 def checkFilter(adict):
     for k in adict:
-        if not isinstance(k, (str, unicode)):
+        if not isinstance(k, str):
             raiseException(930)
         v = adict[k]
         if not isinstance(v, tuple):
@@ -197,7 +200,7 @@ def checkLinkPath(lksearch):
     if not isinstance(lksearch, (list, tuple)):
         raiseException(914)
     for p in lksearch:
-        if not isinstance(p, (str, unicode)):
+        if not isinstance(p, str):
             raiseException(914)
         r.append(str(p))
     if sys.platform in ['win32']:
@@ -216,7 +219,7 @@ def hasFlags(allflags, flag):
 
 
 def propagateUpdatePaths(links, obdict):
-    upaths = obdict.keys()
+    upaths = list(obdict)
     fpaths = {}
     for upath in upaths:
         for lk in links:
@@ -397,9 +400,9 @@ def probe(filename, path=None):
     if not os.path.exists(tfile):
         raiseException(900, tfile)
     if path is None:
-        r = s2p_probe(tfile, '')
+        r = s2p_probe(tfile.encode('utf-8'), ''.encode('utf-8'))
     else:
-        r = s2p_probe(tfile, path)
+        r = s2p_probe(tfile.encode('utf-8'), path.encode('utf-8'))
     return r
 
 
@@ -488,7 +491,8 @@ def load(filename, **kw):
         raiseException(908)
     x = CHLoneExceptionInternal()
     try:
-        t = s2p_loadAsHDF(tdir, tfile, _flags, _depth, _maxdata, _obpath, _lkpath,
+        t = s2p_loadAsHDF(tdir.encode('utf-8'), tfile.encode('utf-8'), _flags, _depth, _maxdata,
+                          _obpath.encode('utf-8'), _lkpath.encode('utf-8'),
                           _update, _filter, _sklist, x)
         if t[0][2] is not None:
             t[0][2] = t[0][2][2]
@@ -501,7 +505,10 @@ def load(filename, **kw):
             lk = t[1]
         t = (t[0], lk, t[2])
     except CHLoneExceptionInternal as v:
-        raise CHLoneException(v)
+        if PY3:
+            raise CHLoneException(v) from None
+        else:
+            raise CHLoneException(v)
     del x
     return t
 
@@ -513,7 +520,7 @@ save_keys = ['links', 'skip', 'flags', 'depth', 'lksearch', 'filter', 'update',
 
 # ---------------------------------------------------------------------------
 def save(filename, tree, **kw):
-    if not isinstance(filename, (str, unicode)):
+    if not isinstance(filename, str):
         raiseException(902)
     for k in kw:
         if k not in save_keys:
@@ -575,12 +582,14 @@ def save(filename, tree, **kw):
     checkFast(tree)
     x = CHLoneExceptionInternal()
     try:
-        s2p_saveAsHDF(tdir, tfile, tree,
-                      _links, _flags, _depth, _lkpath, _obdict, _filter, _sklist,
-                      _lkobdict, _lksklist,
-                      x)
+        s2p_saveAsHDF(tdir.encode('utf-8'), tfile.encode('utf-8'), tree,
+                      _links, _flags, _depth, _lkpath.encode('utf-8'), _obdict, _filter, _sklist,
+                      _lkobdict, _lksklist, x)
     except CHLoneExceptionInternal as v:
-        raise CHLoneException(v)
+        if PY3:
+            raise CHLoneException(v) from None
+        else:
+            raise CHLoneException(v)
     return None
 
 # --- last line

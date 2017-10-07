@@ -84,7 +84,7 @@ Q.verbose = args.verbose
 for F in args.files:
     try:
         print(checksumFile(F), F)
-    except CGM.CHLone.CHLoneException:
+    except CGM.EmbeddedCHLone.CHLoneException:
         pass
 
 # --- last line

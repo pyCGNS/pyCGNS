@@ -39,7 +39,8 @@ Changes by Alex Tsui, Apr. 2015
 Changes by Fabian Wenzel, Jan. 2016
  Support for Python3
 """
-
+from __future__ import unicode_literals
+from builtins import (str, bytes, range, dict)
 # Check whether a specific PyQt implementation was chosen
 try:
     import vtk.qt

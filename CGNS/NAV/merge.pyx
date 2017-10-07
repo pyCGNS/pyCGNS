@@ -3,6 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
+from builtins import (str, bytes, range, dict)
 import CGNS.PAT.cgnsutils as CGU
 
 def mergeAB(ta, tb, tc, tag, diag, pfxA, pfxB, trace=False):

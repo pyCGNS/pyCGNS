@@ -3,6 +3,7 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
 import CGNS.PAT.cgnsutils      as CGU
 import CGNS.PAT.cgnstypes      as CGT
@@ -143,7 +144,7 @@ class GenericParser(object):
         status2 = status1
         ntype = CGU.getTypeAsGrammarToken(node[3])
         if (len(node) == 4) and (ntype in self.methods):
-            status2 = apply(getattr(self, ntype), [path, node, parent, T, self.log])
+            status2 = getattr(self, ntype)(*[path, node, parent, T, self.log])
         else:
             # if (ntype in CGK.cgnstypes): print '\nSKIP ',ntype
             pass

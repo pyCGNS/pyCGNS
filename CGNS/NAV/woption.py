@@ -3,7 +3,9 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (str, bytes, range, dict)
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -49,7 +51,7 @@ class Q7Option(Q7Window, Ui_Q7OptionsWindow):
         if name[0] == '_':
             return None
         try:
-            a = getattr(self, '_Ui_Q7OptionsWindow__O_' + string.lower(name))
+            a = getattr(self, '_Ui_Q7OptionsWindow__O_' + name.lower())
         except AttributeError:
             return None
         return a

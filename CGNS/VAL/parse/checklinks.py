@@ -81,6 +81,7 @@
 # in the current node chain of indices, there is a loop...
 #
 #  -------------------------------------------------------------------------
+from __future__ import unicode_literals
 from __future__ import print_function
 import CGNS.MAP
 import CGNS.PAT.cgnsutils      as CGU
@@ -141,7 +142,7 @@ class CGNSGraph(object):
 
     def showIndex(self, sort=False):
         if (sort):
-            self.__index.sort()
+            self.index.sort()
         sz = int(math.log10(max([i[1] for i in self.index])) + 1)
         fmt = "%%.2d %%.%dd %%s" % sz
         for e in self.index:

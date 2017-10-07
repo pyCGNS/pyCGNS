@@ -3,6 +3,9 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
+from __future__ import print_function
+from builtins import (str, bytes, range, dict)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import linecache
@@ -44,9 +47,9 @@ def trace(f):
             lineno = frame.f_lineno
 
             bname = os.path.basename(filename)
-            print "{}({}): {}".format(bname,
+            print("{}({}): {}".format(bname,
                                       lineno,
-                                      linecache.getline(filename, lineno)),
+                                      linecache.getline(filename, lineno)),)
         return localtrace
 
     def _f(*args, **kwds):
@@ -608,8 +611,8 @@ def __sortItems(i1, i2):
 # -----------------------------------------------------------------
 class Q7TreeItem(object):
     stype = {'MT': 0, 'I4': 4, 'I8': 8, 'R4': 4, 'R8': 8, 'C1': 1, 'LK': 0}
-    atype = {'I4': 'i', 'I8': 'l',
-             'R4': 'f', 'R8': 'd',
+    atype = {'I4': 'int32', 'I8': 'int64',
+             'R4': 'float32', 'R8': 'float64',
              'LK': 'S', 'MT': 'S', 'C1': 'S'}
     __lastEdited = None
 
@@ -681,7 +684,7 @@ class Q7TreeItem(object):
         return self._itemnode[0]
 
     def sidsNameSet(self, name):
-        if not isinstance(name, (str, unicode)):
+        if not isinstance(name, (str, bytes)):
             return False
         try:
             name = str(name)
@@ -713,7 +716,6 @@ class Q7TreeItem(object):
         return False
 
     def sidsValueEnum(self):
-        print 'TYPE', self.sidsType()
         if self.sidsType() in CGK.cgnsenums:
             return CGK.cgnsenums[self.sidsType()]
         return None
@@ -741,18 +743,18 @@ class Q7TreeItem(object):
             return False
         odt = self.sidsDataType()
         if odt == CGK.R4:
-            return self.trySetAs(value, 'f')
+            return self.trySetAs(value, 'float32')
         if odt == CGK.R8:
-            return self.trySetAs(value, 'd')
+            return self.trySetAs(value, 'float64')
         if odt == CGK.I4:
-            return self.trySetAs(value, 'i')
+            return self.trySetAs(value, 'int32')
         if odt == CGK.I8:
-            return self.trySetAs(value, 'l')
+            return self.trySetAs(value, 'int64')
         if odt == CGK.MT:
             self._itemnode[1] = None
             return True
         if odt == CGK.C1:
-            if not isinstance(value, (str, unicode)):
+            if not isinstance(value, (str, bytes)):
                 return False
             try:
                 value = str(value)
@@ -773,7 +775,7 @@ class Q7TreeItem(object):
                                   legacy=False)
 
     def sidsTypeSet(self, value):
-        if not isinstance(value, (str, unicode)):
+        if not isinstance(value, (str, bytes)):
             return False
         try:
             value = str(value)
@@ -978,10 +980,12 @@ class Q7TreeItem(object):
             if not self.sidsValue().shape:
                 return False
             try:
-                vsize = reduce(lambda x, y: x * y, self.sidsValue().shape)
+                vsize = 1
+                for x in self.sidsValue().shape:
+                    vsize *= x
             except TypeError:
-                print '# CGNS.NAV unexpected (mtree.hasValueView)', \
-                    self.sidsPath()
+                print('# CGNS.NAV unexpected (mtree.hasValueView)',
+                    self.sidsPath())
             if ((vsize > OCTXT.MaxDisplayDataSize) and
                     (OCTXT.MaxDisplayDataSize > 0)):
                 return False
@@ -1029,9 +1033,11 @@ class Q7TreeItem(object):
                     vsize = 0
                 else:
                     try:
-                        vsize = reduce(lambda x, y: x * y, self.sidsValue().shape)
+                        vsize = 1
+                        for x in self.sidsValue().shape:
+                            vsize *= x
                     except TypeError:
-                        print '# CGNS.NAV unexpected (mtree.data)', self.sidsPath()
+                        print('# CGNS.NAV unexpected (mtree.data)', self.sidsPath())
                 if ((vsize > OCTXT.MaxDisplayDataSize) and
                         (OCTXT.MaxDisplayDataSize > 0)):
                     return HIDEVALUE
@@ -1039,13 +1045,13 @@ class Q7TreeItem(object):
                     if vsize == 0:
                         return ''
                     if len(self.sidsValue().shape) == 1:
-                        return self.sidsValue().tostring()
+                        return self.sidsValue().tostring().decode('ascii')
                     if len(self.sidsValue().shape) > 2:
                         return HIDEVALUE
                     # TODO: use qtextedit for multiple lines
                     # v=self.sidsValue().T
                     # v=numpy.append(v,numpy.array([['\n']]*v.shape[0]),1)
-                    # v=v.tostring()
+                    # v=v.tostring().decode('ascii')
                     # return v
                     return HIDEVALUE
                 if (self.sidsValue().shape == (1,)) and OCTXT.Show1DAsPlain:
@@ -1160,7 +1166,7 @@ class Q7TreeModel(QAbstractItemModel):
         self._selectedIndex = -1
 
     def nodeFromPath(self, path):
-        if path in self._extension.keys():
+        if path in self._extension:
             return self._extension[path]
         return None
 
@@ -1300,7 +1306,7 @@ class Q7TreeModel(QAbstractItemModel):
                 return None
         # if ((index.column()==COLUMN_FLAG_USER) and (role == Qt.DisplayRole)):
         #     return None
-        if disp in ICONMAPPING.keys():
+        if disp in ICONMAPPING:
             disp = Q7TreeModel._icons[disp]
         return disp
 
@@ -1636,10 +1642,10 @@ class Q7TreeModel(QAbstractItemModel):
                 checkdiag = mod.CGNS_VAL_USER_Checks(None)
             checkdiag.checkTree(T, False)
         if pathlist == []:
-            pathlist = self._extension.keys()
+            pathlist = list(self._extension)
         for path in pathlist:
             pth = CGU.getPathNoRoot(path)
-            if checkdiag.log.has_key(pth):
+            if pth in checkdiag.log:
                 item = self._extension[path]
                 stat = checkdiag.log.getWorstDiag(pth)
                 if stat == CGM.CHECK_NONE:

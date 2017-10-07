@@ -89,13 +89,13 @@ if (len(args.files) != 2):
 
 try:
     R1 = openFile(args.files[0])
-except CGM.CHLone.CHLoneException:
+except CGM.EmbeddedCHLone.CHLoneException:
     print('cg_diff cannot open file [%s]' % args.files[0])
     sys.exit(0)
 
 try:
     R2 = openFile(args.files[1])
-except CGM.CHLone.CHLoneException:
+except CGM.EmbeddedCHLone.CHLoneException:
     print('cg_diff cannot open file [%s]' % args.files[1])
     sys.exit(0)
 
@@ -104,7 +104,7 @@ diffAB(R1[0], R2[0], '', 'A', diag, False)
 
 
 def diagAnalysis(diag):
-    paths = diag.keys()
+    paths = list(diag)
     paths.sort()
     for k in paths:
         for d in diag[k]:

@@ -5,7 +5,7 @@
 #
 # actual versions number are in setuputils.py
 #
-import pyCGNSconfig
+from CGNS import pyCGNSconfig
 __version__ = pyCGNSconfig.__version__
 __release__ = pyCGNSconfig.__release__
 __vid__ = pyCGNSconfig.__vid__

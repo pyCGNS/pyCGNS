@@ -3,6 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
+from builtins import (str, bytes, range, dict)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import sys
@@ -103,7 +105,7 @@ class Q7PythonEditorHighlighter(QSyntaxHighlighter):
         QSyntaxHighlighter.__init__(self, *args)
 
     def highlightBlock(self, textblock):
-        text = unicode(textblock)
+        text = str(textblock)
         fdef = self.format(0)
         fmax = len(text)
         for (rex, fmt) in self.r_syntax:
@@ -157,7 +159,7 @@ class Q7MessageBox(QDialog, Ui_Q7MessageWindow):
         self.bOK.setText(buttons[0])
         if len(buttons) > 1:
             self.bCANCEL.setText(buttons[1])
-        self.eMessage.setText(unicode(text))
+        self.eMessage.setText(str(text))
         self._text = text
         self.eMessage.setReadOnly(True)
         self.setMode(cancel, again)

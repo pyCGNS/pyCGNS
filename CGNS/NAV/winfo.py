@@ -2,7 +2,9 @@
 #  pyCGNS - Python package for CFD General Notation System - 
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-# 
+#
+from __future__ import unicode_literals
+from builtins import (str, bytes, range, dict)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import sys
@@ -45,7 +47,7 @@ class Q7Info(Q7Window, Ui_Q7InfoWindow):
                     else:
                         getattr(self, k).setCheckState(Qt.Unchecked)
                     getattr(self, k).setEnabled(False)
-                if isinstance(v, (str, unicode, int, float)):
+                if isinstance(v, (str, bytes, int, float)):
                     getattr(self, k).setText(str(v))
                     # getattr(self,k).setFont(OCTXT.FixedFontTable)
 

@@ -12,6 +12,7 @@
 #     you should not change this, the numpy stuff is expected to be detected
 #     using the numpy import itself
 #
+
 if False:
     NUMPY_VERSION = ''
     NUMPY_PATH_INCLUDES = []

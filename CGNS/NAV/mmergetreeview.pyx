@@ -3,7 +3,9 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (str, bytes, range, dict)
 
 import numpy
 
@@ -92,7 +94,7 @@ class Q7MergeItem(Q7TreeItem):
                     return NMT.HIDEVALUE
                 if self.sidsValue().dtype.char in ['S', 'c']:
                     if len(self.sidsValue().shape) == 1:
-                        return self.sidsValue().tostring()
+                        return self.sidsValue().tostring().decode('ascii')
                     if len(self.sidsValue().shape) > 2:
                         return NMT.HIDEVALUE
                     return NMT.HIDEVALUE
