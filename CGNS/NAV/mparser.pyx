@@ -187,7 +187,7 @@ class CGNSparser(object):
                         return False
                     zonetype = CGU.getAllNodesByTypeSet(zT, [CGK.ZoneType_ts])
                     ztype = CGU.nodeByPath(zonetype[0], zT)
-                    if ztype[1].tostring() == CGK.Structured_s:
+                    if ztype[1].tostring().decode('ascii') == CGK.Structured_s:
                         if cx[1] is None:
                             return False
                         acx = cx[1]
@@ -255,7 +255,7 @@ class CGNSparser(object):
                                                    ctlist, bclist,
                                                    z, ctpaths, bcpaths, solutions,
                                                    bcfams, ctfams)
-                    elif ztype[1].tostring() == CGK.Unstructured_s:
+                    elif ztype[1].tostring().decode('ascii') == CGK.Unstructured_s:
                         volume = {}
                         surface = {}
                         typeset = [CGK.Elements_ts]

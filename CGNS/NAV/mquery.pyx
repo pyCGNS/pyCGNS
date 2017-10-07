@@ -97,7 +97,7 @@ def sameVal(n, v):
             return True
         return False
     if n.dtype.char in ['S', 'c']:
-        return n.tostring() == v
+        return n.tostring().decode('ascii') == v
     if n.dtype.char in ['d', 'f', 'i', 'l', 'q']:
         return n.flat[0] == v
     if n == v:

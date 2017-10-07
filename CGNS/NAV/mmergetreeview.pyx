@@ -94,7 +94,7 @@ class Q7MergeItem(Q7TreeItem):
                     return NMT.HIDEVALUE
                 if self.sidsValue().dtype.char in ['S', 'c']:
                     if len(self.sidsValue().shape) == 1:
-                        return self.sidsValue().tostring()
+                        return self.sidsValue().tostring().decode('ascii')
                     if len(self.sidsValue().shape) > 2:
                         return NMT.HIDEVALUE
                     return NMT.HIDEVALUE

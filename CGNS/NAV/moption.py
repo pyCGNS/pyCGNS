@@ -569,7 +569,7 @@ Please visit his web site: http://www.famfamfam.com/<br>
          'Search by',
          """
          if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
-             (VALUE.tostring()==ARGS[0])):
+             (VALUE.tostring().decode('ascii')==ARGS[0])):
              RESULT=True
          """,
          """
@@ -657,7 +657,7 @@ if ((SIDSTYPE==CGK.Zone_ts) and (NAME[:l1]==ARGS[0])):
   RESULT=True
 
 if (CGU.getValueDataType(NODE)==CGK.C1):
-  v=VALUE.tostring()
+  v=VALUE.tostring().decode('ascii')
   if (v[:l1]==ARGS[0]):
     v=ARGS[1]+v[l1:]
     NODE[1]=CGU.setStringAsArray(v)
@@ -683,7 +683,7 @@ if (CGU.getValueDataType(NODE)==CGK.C1):
          'Replace',
          """
          if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
-             (VALUE.tostring()==ARGS[0]) and (PARENT[3]==CGK.BC_ts)):
+             (VALUE.tostring().decode('ascii')==ARGS[0]) and (PARENT[3]==CGK.BC_ts)):
              PARENT[1]=CGU.setStringAsArray(CGK.FamilySpecified_s)
              RESULT=True
          """,

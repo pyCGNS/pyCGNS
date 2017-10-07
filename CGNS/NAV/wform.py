@@ -135,11 +135,11 @@ class Q7Form(Q7Window, Ui_Q7FormWindow):
         self.tPython.setDisabled(True)
         if self._node.sidsDataType() == CGK.C1:
             if self._node.sidsValue().ndim > 1:
-                txt = self._node.sidsValue().T.tostring()
+                txt = self._node.sidsValue().T.tostring().decode('ascii')
                 self.cFortranOrderOff.setChecked(True)
                 self.cFortranOrderOff.setDisabled(True)
             else:
-                txt = self._node.sidsValue().tostring()
+                txt = self._node.sidsValue().tostring().decode('ascii')
             self.eText.initText(txt)
 
     def resizeTable(self):

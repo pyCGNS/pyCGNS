@@ -101,9 +101,9 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
                     editor.transgeometry = (xs, ys, ws, hs)
                     editor.addItems(en)
                     try:
-                        tix = en.index(tnode.sidsValue().tostring())
+                        tix = en.index(tnode.sidsValue().tostring().decode('ascii'))
                     except ValueError:
-                        editor.insertItem(0, tnode.sidsValue().tostring())
+                        editor.insertItem(0, tnode.sidsValue().tostring().decode('ascii'))
                         tix = 0
                     editor.setCurrentIndex(tix)
                 editor.installEventFilter(self)
@@ -252,7 +252,7 @@ class Q7SelectionList(Q7Window, Ui_Q7SelectionWindow):
             v = node.sidsValue()
             if isinstance(v, numpy.ndarray):
                 if v.dtype.char in ['S', 'c']:
-                    s = '"' + v.tostring() + '"'
+                    s = '"' + v.tostring().decode('ascii') + '"'
                 else:
                     s = str(v.tolist())
             else:

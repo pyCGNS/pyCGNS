@@ -85,9 +85,9 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
                     editor.transgeometry = (xs, ys, ws, hs)
                     editor.addItems(en)
                     try:
-                        tix = en.index(node.sidsValue().tostring())
+                        tix = en.index(node.sidsValue().tostring().decode('ascii'))
                     except ValueError:
-                        editor.insertItem(0, node.sidsValue().tostring())
+                        editor.insertItem(0, node.sidsValue().tostring().decode('ascii'))
                         tix = 0
                     editor.setCurrentIndex(tix)
                 editor.installEventFilter(self)
