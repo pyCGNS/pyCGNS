@@ -821,6 +821,8 @@ class IGESbase:
 
 # -----------------------------------------------------------------------------
 debug = 1
+if len(args.files) < 2:
+    sys.exit(1)
 
 f = IGESfile(args.files[0])
 f.parse()

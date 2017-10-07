@@ -207,7 +207,7 @@ if (__name__ == '__main__'):
     if (C.verbose):
         excpt = IndexError
     else:
-        excpt = CGM.CHLone.CHLoneException
+        excpt = CGM.EmbeddedCHLone.CHLoneException
     for F in args.files:
         try:
             if (C.translate):

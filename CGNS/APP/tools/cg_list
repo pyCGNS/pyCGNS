@@ -265,7 +265,7 @@ for F in files:
             fmt = R[1]
             mxl.append(R[2])
             vls.append(R[3])
-    except CGM.CHLone.CHLoneException:
+    except CGM.EmbeddedCHLone.CHLoneException:
         pass
 
 vls = sortResult(vls, args, hdr)
