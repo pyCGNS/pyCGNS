@@ -145,7 +145,10 @@ for arg in sys.argv:
 sys.argv = new_args
 
 if args.update:
-    os.system('hg parents --template="{rev}\n" > %s/revision.tmp' \
+    #os.system('hg parents --template="{rev}\n" > %s/revision.tmp' \
+    #          % CONFIG.PRODUCTION_DIR)
+    # Quick and dirty revision, should use git describe --always instead
+    os.system('git rev-list --reverse HEAD | awk "{ print NR }" | tail -n 1 > %s/revision.tmp' \
               % CONFIG.PRODUCTION_DIR)
     setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py',
                                    CONFIG.PRODUCTION_DIR)

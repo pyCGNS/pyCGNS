@@ -66,9 +66,9 @@ LIBRARY_DIRS += LIBRARY_DIRS + HDF5_PATH_LIBRARIES \
 #
 PFX = '### pyCGNS:'
 #
-__version__ = 4  # @@UPDATEVERSION@@
-__release__ = 7  # @@UPDATERELEASE@@
-__revision__ = 571  # @@UPDATEREVISION@@
+__version__ = 5  # @@UPDATEVERSION@@
+__release__ = 0  # @@UPDATERELEASE@@
+__revision__ = 565  # @@UPDATEREVISION@@
 __vid__ = "%s.%s.%s" % (__version__, __release__, __revision__)
 __doc__ = """pyCGNS - %s - Python package for CFD General Notation System""" \
           % (__vid__)
@@ -115,9 +115,9 @@ QT_VERSION='%(QT_VERSION)s'
 CYTHON_VERSION='%(CYTHON_VERSION)s'
 VTK_VERSION='%(VTK_VERSION)s'
 
-__version__=4 # @@UPDATEVERSION@@
-__release__=7 # @@UPDATERELEASE@@
-__revision__=571 # @@UPDATEREVISION@@
+__version__=5 # @@UPDATEVERSION@@
+__release__=0 # @@UPDATERELEASE@@
+__revision__=565 # @@UPDATEREVISION@@
 __vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
 __doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
         %%(__vid__)
@@ -138,7 +138,7 @@ NAME = 'pyCGNS'
 VERSION = __vid__
 DESCRIPTION = __doc__
 AUTHOR = 'Marc Poinot'
-EMAIL = "marc.poinot@onera.fr"
+EMAIL = "marc.poinot@safrangroup.com"
 LICENSE = "LGPL 2"
 
 # --- last line

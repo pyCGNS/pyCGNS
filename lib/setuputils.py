@@ -5,8 +5,8 @@
 #
 from __future__ import unicode_literals
 from __future__ import print_function
-MAJORVERSION = 4
-MINORVERSION = 7
+MAJORVERSION = 5
+MINORVERSION = 0
 REVISION = 0
 # --------------------------------------------------------------------
 
