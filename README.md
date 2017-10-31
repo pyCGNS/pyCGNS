@@ -16,6 +16,8 @@ patches.
 
 ## Usage
 
+Online documentation is available at https://pycgns.github.io
+
 ## License
 
 The distribution and use of the pyCGNS software is covered by the LGPL v2.1 license.
