@@ -1,5 +1,7 @@
 # pyCGNS
 
+![alt text](https://github.com/pyCGNS/pyCGNS/blob/master/doc/images/intro-logo-small.png)
+
 The [user documentation](http://pycgns.github.io) is available online, it
 contains the installation requirements and process, the usage docs and
 the reference docs.
