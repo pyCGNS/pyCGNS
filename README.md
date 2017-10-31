@@ -4,8 +4,7 @@ The [user documentation](http://pycgns.github.io) is available online, it
 contains the installation requirements and process, the usage docs and
 the reference docs.
 
-## About
-
+## About 
 pyCGNS is a set of Python modules about the
 [CFD General Notation System standard](https://cgns.github.io),
 the standard of the CFD data representation.
