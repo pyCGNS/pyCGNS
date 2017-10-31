@@ -1,6 +1,6 @@
 # pyCGNS
 
-## About
+## About 
 
 pyCGNS is a set of Python modules about the CFD General Notation System standard
 
