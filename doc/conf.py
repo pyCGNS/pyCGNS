@@ -4,7 +4,6 @@ extensions = ['sphinx.ext.autodoc','sphinx.ext.intersphinx',
               'sphinx.ext.extlinks']
 mapdir='%s/../build/doc/html'%os.path.abspath('.')
 intersphinx_mapping={'topix': (mapdir+'/',None),
-                     'wraix': (mapdir+'/WRA',None),
                      'mapix': (mapdir+'/MAP',None),
                      'patix': (mapdir+'/PAT',None),
                      'navix': (mapdir+'/NAV',None),

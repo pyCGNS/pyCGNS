@@ -13,13 +13,6 @@ from CGNS.PAT.test import run as PAT_test
 PAT_test()
 
 try:
-    from CGNS.WRA.test import run as WRA_test
-
-    WRA_test()
-except ImportError:
-    pass
-
-try:
     from CGNS.VAL.test import run as VAL_test
 
     VAL_test()

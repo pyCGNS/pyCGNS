@@ -13,7 +13,6 @@
     * CGNS.MAP
     * CGNS.APP
     * CGNS.NAV
-    * CGNS.WRA
     * CGNS.DAT
     * CGNS.VAL
     * CGNS.PAT

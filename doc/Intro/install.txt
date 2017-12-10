@@ -29,14 +29,10 @@ be a difficult task to install all by yourself...
 
 The mandatory libs are *Python*, *numpy*, *HDF5* and *CHLone*, *VTK*
 and *Qt*. The *cython* compiler and *scons* (for CHLone) are also required.
-Then, if you want to build *CGNS.WRA* (we recommend to do so), you 
-need *libcgns*.
 
 .. warning::
 
   The *libcgns* (:term:`CGNS/MLL`) is **NOT** required for pyCGNS.
-  You need it if you want the **WRA** module, all other pyCGNS tools
-  are using :term:`CHLone` and have 100% features even without `CGNS/MLL`.
 
 The complete set of required tools/modules/libraries contains Python, HDF5
 and other graphical toolkits:
@@ -64,8 +60,6 @@ No Python binding is required for HDF5.
 Optional libraries
 ~~~~~~~~~~~~~~~~~~
 The so-called `mid-level` library is not mandatory, 
-the `WRA module`
-is the only one to have dependancies on.
 
  * `CGNS/MLL (libcgns) <http://www.cgns.org>`_ (starting v3.0) 
 
@@ -120,7 +114,7 @@ a standard installation. All you have to declare is the directory in which
 we can find *Python/numpy/hdf5/CHLone/cgns* libraries.
 
 If you have specific installations you can change some paths/flags for each
-external library: *hdf5*, *numpy*, *CGNS/MLL* and *CHLone*. The configuration
+external library: *hdf5*, *numpy*. The configuration
 file is a Python file, it is imported after the default configuration. The
 changes you make in the configuration file will overwrite the defaults::
 
@@ -153,9 +147,8 @@ gives you the required modules (or optional) for each of them.
 
  - MAP : None
  - PAT : MAP
- - WRA : PAT MAP
  - APP : PAT MAP
- - NAV : PAT MAP APP (WRA)
+ - NAV : PAT MAP APP
 
 NAV depends
 ~~~~~~~~~~~
@@ -192,7 +185,7 @@ MAP depends
 
 The *CHLone* librarie is required and thus *HDF5* is required.
 
-WRA depends
+CGNS/MLL
 ~~~~~~~~~~~
 
 *CGNS/MLL* and *CGNS/ADF* libraries are required.
@@ -211,7 +204,7 @@ Set the following variable to ``ON`` in the ``CMakeCache.txt`` file::
  //Enable or disable HDF5 interface
  ENABLE_HDF5:BOOL=ON
 
-The WRA and NAV modules (and CHLone by the way) are using cython. You can
+The NAV module (and CHLone by the way) is using cython. You can
 check your cython is present using::
 
    cython --version
@@ -229,10 +222,9 @@ pyCGNS, you can run each test suite from another user account/directory::
   python -c 'import CGNS.MAP.test;CGNS.MAP.test.run()'
 
 All modules tests can be run the same way, replace ``MAP`` by any of
-``PAT``, ``WRA``, ``VAL``, ``NAV``, ``APP``, ``DAT``. You can run all the
+``PAT``, ``VAL``, ``NAV``, ``APP``, ``DAT``. You can run all the
 tests by importing ``CGNS.test``::
 
-  python -c 'import CGNS.WRAP.test;CGNS.WRA.test.run()'
   python -c 'import CGNS.PAT.test;CGNS.PAT.test.run()'
 
   python -c 'import CGNS.test'

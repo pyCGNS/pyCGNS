@@ -24,7 +24,7 @@ from distutils.util import get_platform
 from distutils.command.clean import clean as _clean
 
 rootfiles = ['__init__.py', 'errors.py', 'version.py', 'config.py', 'test.py']
-compfiles = ['midlevel.py', 'wrap.py']
+compfiles = []
 
 pfx = '# '
 
@@ -86,7 +86,7 @@ def unique_but_keep_order(lst):
 
 # --------------------------------------------------------------------
 def search(incs, libs, tag='pyCGNS',
-           deps=['Cython', 'HDF5', 'MLL', 'numpy', 'vtk',
+           deps=['Cython', 'HDF5', 'numpy', 'vtk',
                  'qtpy', 'SQLAlchemy']):
     state = 1
     for com in sys.argv:
@@ -137,9 +137,9 @@ def search(incs, libs, tag='pyCGNS',
                     if (float(Cython.__version__[:3]) > 0.1):
                         C.HAS_CYTHON_2PLUS = True
                     else:
-                        print(pfx + '***** SKIP WRA: Cython version cannot build CGNS/WRA')
+                        print(pfx + '***** SKIP Cython version cannot build CGNS')
                 except:
-                    print(pfx + '***** SKIP WRA: Cython version cannot build CGNS/WRA')
+                    print(pfx + '***** SKIP Cython version cannot build CGNS')
             except:
                 C.HAS_CYTHON = False
                 print(pfx + '***** FATAL: Cython not found')
@@ -231,34 +231,11 @@ def search(incs, libs, tag='pyCGNS',
             incs = incs + C.HDF5_PATH_INCLUDES + C.INCLUDE_DIRS
             libs = libs + C.HDF5_PATH_LIBRARIES + C.LIBRARY_DIRS
 
-        # -----------------------------------------------------------------------
-        if ('MLL' in deps):
-            incs = incs + C.MLL_PATH_INCLUDES
-            libs = libs + C.MLL_PATH_LIBRARIES
-            tp = find_MLL(incs, libs, C.MLL_LINK_LIBRARIES, C.MLL_EXTRA_ARGS)
-            if (tp is None):
-                print(pfx + '***** SKIP WRA: setup cannot find cgns.org library (MLL)!')
-                C.HAS_MLL = False
-            else:
-                (C.MLL_VERSION,
-                 C.MLL_PATH_INCLUDES,
-                 C.MLL_PATH_LIBRARIES,
-                 C.MLL_LINK_LIBRARIES,
-                 C.MLL_EXTRA_ARGS, ifound, lfound) = tp
-                print(pfx + 'using CGNS/MLL %s' % (C.MLL_VERSION))
-                print(pfx + 'using CGNS/MLL headers from %s' % ifound)
-                print(pfx + 'using CGNS/MLL libs from %s' % lfound)
-                C.HAS_MLL = True
-            incs = incs + C.MLL_PATH_INCLUDES
-            libs = libs + C.MLL_PATH_LIBRARIES
-
             # -----------------------------------------------------------------------
 
     except ImportError:
         print(pfx + '***** FATAL: setup cannot find pyCGNSconfig.py file!')
         sys.exit(1)
-    C.MLL_PATH_INCLUDES = list(set(C.MLL_PATH_INCLUDES))
-    C.MLL_PATH_LIBRARIES = list(set(C.MLL_PATH_LIBRARIES))
     C.HDF5_PATH_INCLUDES = list(set(C.HDF5_PATH_INCLUDES))
     C.HDF5_PATH_LIBRARIES = list(set(C.HDF5_PATH_LIBRARIES))
     C.NUMPY_PATH_INCLUDES = list(set(C.NUMPY_PATH_INCLUDES))
@@ -404,22 +381,6 @@ def frompath_HDF5():
 
 
 # --------------------------------------------------------------------
-def frompath_MLL():
-    try:
-        mllp = subprocess.check_output(["which", "cgnscheck"], stderr=subprocess.STDOUT)
-    except:
-        try:
-            mllp = subprocess.check_output(["whence", "cgnscheck"], stderr=subprocess.STDOUT)
-        except:
-            mllp = None
-    if (mllp is not None):
-        mllroot = '/'.join(mllp.split('/')[:-2])
-    else:
-        mllroot = '/usr/local'
-    return mllroot
-
-
-# --------------------------------------------------------------------
 def find_HDF5(pincs, plibs, libs):
     notfound = 1
     extraargs = []
@@ -489,74 +450,6 @@ def find_HDF5(pincs, plibs, libs):
         hup = 0
     print("HUP", hup)
     return (vers, pincs, plibs, libs, extraargs, hst, h64, hup)
-
-
-# --------------------------------------------------------------------
-def find_MLL(pincs, plibs, libs, extraargs):
-    notfound = 1
-    vers = ''
-    cgnsversion = '3200'
-    mllroot = frompath_MLL()
-    pincs += [mllroot, '%s/include' % mllroot]
-    plibs += [mllroot, '%s/lib' % mllroot]
-    libs = ['cgns', 'hdf5'] + libs
-    pincs = unique_but_keep_order(pincs)
-    plibs = unique_but_keep_order(plibs)
-    extraargs = []  # '-DCG_BUILD_SCOPE']
-    lfound = ''
-    ifound = ''
-    for pth in pincs:
-        if (os.path.exists(pth + '/cgnslib.h')):
-            notfound = 0
-            f = open(pth + '/cgnslib.h', 'r')
-            l = f.readlines()
-            f.close()
-            for ll in l:
-                if (ll[:20] == "#define CGNS_VERSION"):
-                    cgnsversion = ll.split()[2]
-                    if (cgnsversion < '3200'):
-                        print(pfx, "***** SKIP WRA: version should be v3.2 for MLL")
-                        return None
-            ifound = pth
-            break
-    if notfound:
-        print(pfx + "***** SKIP WRA: cgnslib.h not found, please check paths")
-        for ppi in pincs:
-            print(pfx, ppi)
-        return None
-
-    notfound = 1
-    for pth in plibs:
-        if ((os.path.exists(pth + '/libcgns.a'))
-            or (os.path.exists(pth + '/libcgns.so'))
-            or (os.path.exists(pth + '/libcgns.sl'))):
-            cgnslib = 'cgns'
-            notfound = 0
-            lfound = pth
-            break
-    if notfound:
-        print(pfx + "***** SKIP WRA: libcgns not found, please check paths:")
-        for ppl in plibs:
-            print(pfx, ppl)
-        return None
-
-    notfound = 1
-    for pth in pincs:
-        if (os.path.exists(pth + '/adfh/ADFH.h')):
-            extraargs += ['-D__ADF_IN_SOURCES__']
-            notfound = 0
-            break
-        if (os.path.exists(pth + '/ADFH.h')):
-            notfound = 0
-            break
-
-    if notfound:
-        print(pfx + "***** warning ADFH.h not found, using pyCGNS own headers")
-        extraargs += ['-U__ADF_IN_SOURCES__']
-
-    libs = list(set(libs))
-    return (cgnsversion, pincs, plibs, libs, extraargs, ifound, lfound)
-
 
 # --------------------------------------------------------------------
 def find_numpy(pincs, plibs, libs):

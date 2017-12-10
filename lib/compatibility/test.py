@@ -10,9 +10,6 @@ test.run()
 from CGNS.PAT import test
 test.run()
 
-from CGNS.WRA import test
-test.run()
-
 from CGNS.VAL import test
 test.run()
 

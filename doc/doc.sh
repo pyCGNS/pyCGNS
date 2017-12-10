@@ -28,7 +28,6 @@ do_mod PAT _index doc/mods/PAT PAT /PAT
 do_mod NAV _index doc/mods/NAV NAV /NAV
 do_mod MAP _index doc/mods/MAP MAP /MAP
 do_mod DAT _index doc/mods/DAT DAT /DAT
-do_mod WRA _index doc/mods/WRA WRA /WRA
 do_mod APP _index doc/mods/APP APP /APP
 do_mod VAL _index doc/mods/VAL VAL /VAL
 fi

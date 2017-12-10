@@ -7,8 +7,7 @@
 # 
 # CGNS.MAP implements CGNS/Python physical representation of CGNS/SIDS
 # CGNS.PAT has a large set of fonctions for CGNS/Python tree handling
-# CGNS.NAV is a CGNS/Python tree browser 
-# CGNS.WRA wraps CGNS/MLL in Python
+# CGNS.NAV is a CGNS/Python tree browser
 # CGNS.VAL checks CGNS/SIDS compliance of CGNS/Python trees
 # CGNS.APP is a set of all-purpose utilities
 # CGNS.DAT is not maintained today

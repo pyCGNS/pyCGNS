@@ -57,9 +57,9 @@ VTK_VERSION = ''
 
 # cannot manage include orders here...
 INCLUDE_DIRS = INCLUDE_DIRS + HDF5_PATH_INCLUDES \
-               + MLL_PATH_INCLUDES + NUMPY_PATH_INCLUDES
+                + NUMPY_PATH_INCLUDES
 LIBRARY_DIRS += LIBRARY_DIRS + HDF5_PATH_LIBRARIES \
-                + MLL_PATH_LIBRARIES + NUMPY_PATH_LIBRARIES
+                + NUMPY_PATH_LIBRARIES
 #
 # -------------------------------------------------------------------------
 # You should not change values beyond this point
