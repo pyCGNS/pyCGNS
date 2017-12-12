@@ -1197,7 +1197,7 @@ static int s2p_getData(PyArrayObject *dobject,
 	char **dtype, int *ddims, int *dshape, char **dvalue,
 	int reversedims, int transposedata, s2p_ctx_t  *context)
 {
-	int n = 0, total = 1;
+	int n = 0;
 	int pshape = 1;
 
 	ddims[0] = 0;
@@ -1216,17 +1216,17 @@ static int s2p_getData(PyArrayObject *dobject,
 		ddims[0] = PyArray_NDIM(dobject);
 		transposedata = !is_fortran_contiguous(dobject);
 		/* S2P_TRACE(("\n# CHL:is_fortran_contiguous : %d\n",transposedata)); */
-		for (n = 0; n < ddims[0]; n++)
+		if (transposedata || reversedims)
 		{
-			if (transposedata || reversedims)
+			for (n = 0; n < ddims[0]; n++)
 			{
 				dshape[n] = (int)PyArray_DIM(dobject, ddims[0] - n - 1);
-				total *= dshape[ddims[0] - n - 1];
 			}
-			else
+		else
+		{
+			for (n = 0; n < ddims[0]; n++)
 			{
 				dshape[n] = (int)PyArray_DIM(dobject, n);
-				total *= dshape[n];
 			}
 		}
 		if (transposedata)
