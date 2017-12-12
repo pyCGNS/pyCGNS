@@ -1258,38 +1258,33 @@ static int s2p_getData(PyArrayObject *dobject,
 		return 0;
 	}
 
+	switch(PyArray_TYPE(dobject))
+	{
 	/* --- Integer */
-	if (PyArray_Check(dobject) && (PyArray_TYPE(dobject) == NPY_INT32))
-	{
+	case NPY_INT32:
 		*dtype = DT_I4;
-		return 1;
-	}
+		break;
 	/* --- Long */
-	if (PyArray_Check(dobject) && (PyArray_TYPE(dobject) == NPY_INT64))
-	{
+	case NPY_INT64:
 		*dtype = DT_I8;
-		return 1;
-	}
+		break;
 	/* --- Float */
-	if ((PyArray_Check(dobject) && (PyArray_TYPE(dobject) == NPY_FLOAT32)))
-	{
+	case NPY_FLOAT32:
 		*dtype = DT_R4;
-		return 1;
-	}
+		break;
 	/* --- Double */
-	if ((PyArray_Check(dobject) && (PyArray_TYPE(dobject) == NPY_FLOAT64)))
-	{
+	case NPY_FLOAT64:
 		*dtype = DT_R8;
-		return 1;
-	}
+		break;
 	/* --- String */
-	if ((PyArray_Check(dobject) && (PyArray_TYPE(dobject) == NPY_STRING)))
-	{
+	case NPY_STRING:
 		*dtype = DT_C1;
-		return 1;
+		break;
+	case default:
+		S2P_TRACE(("\n# CHL: ERROR - numpy array dtype not in [C1,I4,I8,R4,R8]\n"));
+		return 0;
 	}
-	S2P_TRACE(("\n# CHL: ERROR - numpy array dtype not in [C1,I4,I8,R4,R8]\n"));
-	return 0;
+	return 1;
 }
 /* ------------------------------------------------------------------------- */
 static int s2p_hasToReverseDims(char *name, char *label, s2p_ctx_t *context)
@@ -1890,35 +1885,37 @@ static PyObject* s2p_parseAndReadHDF(L3_Node_t   *anode,
 				}
 			}
 		}
-		if ((rnode->dtype == L3E_I4) || (rnode->dtype == L3E_I4ptr))
+		switch(rnode->dtype)
 		{
+		case L3E_I4:
+		case L3E_I4ptr:
 			arraytype = NPY_INT32;
 			memsize = sizeof(int)*tsize;
-		}
-		else if ((rnode->dtype == L3E_C1) || (rnode->dtype == L3E_C1ptr))
-		{
+			break;
+		case L3E_C1:
+		case L3E_C1ptr:
 			arraytype = NPY_CHAR;
 			memsize = sizeof(char)*tsize;
-		}
-		else if ((rnode->dtype == L3E_R8) || (rnode->dtype == L3E_R8ptr))
-		{
+			break;
+		case L3E_R8:
+		case L3E_R8ptr:
 			arraytype = NPY_FLOAT64;
 			memsize = sizeof(double)*tsize;
-		}
-		else if ((rnode->dtype == L3E_I8) || (rnode->dtype == L3E_I8ptr))
-		{
+			break;
+		case L3E_I8:
+		case L3E_I8ptr:
 			arraytype = NPY_INT64;
 			memsize = sizeof(long)*tsize;
-		}
-		else if ((rnode->dtype == L3E_R4) || (rnode->dtype == L3E_R4ptr))
-		{
+			break;
+		case L3E_R4:
+		case L3E_R4ptr:
 			arraytype = NPY_FLOAT32;
 			memsize = sizeof(float)*tsize;
-		}
-		else
-		{
+			break;
+		case default:
 			arraytype = -1;
 			memsize = 0;
+			break;
 		}
 		LEAVE_NOGIL_BLOCK();
 		if (arraytype != -1)
