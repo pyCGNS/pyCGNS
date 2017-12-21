@@ -66,7 +66,7 @@ extern int __node_count;
 #define MAXFILENAMESIZE    1024
 #define MAXDATATYPESIZE    32
 
-#ifdef WIN32
+#if defined(WIN32) || (defined(__APPLE__) && defined(__clang__))
 #define CHL_import_array() {if (_import_array() < 0)\
  {PyErr_Print(); PyErr_SetString(PyExc_ImportError, "CHLone: numpy.core.multiarray failed to import"); return 0;} }
 #else
