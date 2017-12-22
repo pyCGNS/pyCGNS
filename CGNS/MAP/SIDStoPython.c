@@ -1222,6 +1222,7 @@ static int s2p_getData(PyArrayObject *dobject,
 			{
 				dshape[n] = (int)PyArray_DIM(dobject, ddims[0] - n - 1);
 			}
+		}
 		else
 		{
 			for (n = 0; n < ddims[0]; n++)
@@ -1280,7 +1281,7 @@ static int s2p_getData(PyArrayObject *dobject,
 	case NPY_STRING:
 		*dtype = DT_C1;
 		break;
-	case default:
+	default:
 		S2P_TRACE(("\n# CHL: ERROR - numpy array dtype not in [C1,I4,I8,R4,R8]\n"));
 		return 0;
 	}
@@ -1912,7 +1913,7 @@ static PyObject* s2p_parseAndReadHDF(L3_Node_t   *anode,
 			arraytype = NPY_FLOAT32;
 			memsize = sizeof(float)*tsize;
 			break;
-		case default:
+		default:
 			arraytype = -1;
 			memsize = 0;
 			break;
