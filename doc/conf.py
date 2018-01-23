@@ -53,10 +53,10 @@ latex_use_modindex = True
 
 autodoc_member_order='bysource'
 
-extlinks={'rsids':('http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/sids/%s',
+extlinks={'rsids':('http://cgns.github.io/CGNS_docs_current/sids/%s',
                    'rsids')}
 
-sids_url='http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/sids'
+sids_url='http://cgns.github.io/CGNS_docs_current/sids'
 rst_epilog='.. |sids_url| replace:: %s' %sids_url
 
 # --- last line

@@ -49,6 +49,7 @@ actual CFD data!
 
    - Embedded CHLone (CGNS/HDF5 mapping)
    - Windows version update
+   - Python 3.6 support
 
 There are seven sub-modules in
 *pyCGNS*, some of them are libraries of functions, some other are
@@ -74,9 +75,9 @@ instead of :term:`CGNS/MLL` to map its :term:`CGNS/Python` trees to *HDF5*.
 .. note::
   The *pyCGNS* python package is released 
   under `LGPL2 license <http://opensource.org/licenses/lgpl-2.1>`_ and hosted 
-  by `sourceforge <http://sourceforge.net/projects/pycgns>`_
+  by `github <http://github.com/pyCGNS/pyCGNS>`_
   where you can find there the
-  `source download <http://sourceforge.net/projects/pycgns/files>`_.
+  `source download <http://github.com/pyCGNS/pyCGNS/releases>`_.
 
 The listed chapters are the introduction chapters, each MAP, PAT,
 NAV, VAL module has its own documentation which doesn't appear below.

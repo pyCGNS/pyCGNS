@@ -734,11 +734,11 @@ keep in mind is that *numpy* copies do *NOT* propagate *Fortran* flag.
 .. [#n8] The CGNS/SIDS type (see [CG1]_) is the type of the node, *NOT* the 
          type of the data contained into the node.
 
-.. [CG1] CGNS SIDS - Standard Interface Data Structure http://www.grc.nasa.gov/WWW/cgns/sids
+.. [CG1] CGNS SIDS - Standard Interface Data Structure http://cgns.github.io/sids
 
-.. [CG2] SIDS-to-ADF Mapping Reference Manual http://www.grc.nasa.gov/WWW/cgns/filemap
+.. [CG2] SIDS-to-ADF Mapping Reference Manual http://cgns.github.io/filemap
 
-.. [CG3] SIDS-to-HDF Mapping Reference Manual http://www.grc.nasa.gov/WWW/cgns/filemap_hdf
+.. [CG3] SIDS-to-HDF Mapping Reference Manual http://cgns.github.io/filemap_hdf
 
 .. [PY1] Python Programming langage http://www.python.org
 

@@ -4,4 +4,4 @@
 References
 ++++++++++
 
- CGNSBase_t  `+ <http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/sids/cgnsbase.html#CGNSBase>`_ `+ <http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/filemap/figures/CGNSBase.html>`_ 
+ CGNSBase_t  `+ <http://cgns.github.io/CGNS_docs_current/sids/cgnsbase.html#CGNSBase>`_ `+ <http://cgns.github.io/CGNS_docs_current/filemap/figures/CGNSBase.html>`_ 

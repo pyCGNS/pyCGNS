@@ -21,28 +21,28 @@ Glossary
    :ref:`How to? <topix:cgnshowto>`.
 
  CGNS/SIDS 
-   The `Standard Interface Data Structure <http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/sids/index.html>`_ is the
+   The `Standard Interface Data Structure <http://cgns.github.io/CGNS_docs_current/sids/index.html>`_ is the
    specification of the data model.  This public document describes
    the syntax and the semantics of all tree-structured data required
    or proposed for a CFD simulation.
 
  CGNS/MLL 
-   The `Mid-Level Library <http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/lidlevel/index.html>`_ 
+   The `Mid-Level Library <http://cgns.github.io/CGNS_docs_current/lidlevel/index.html>`_ 
    is an example implementation of
    *CGNS/SIDS* on top of *CGNS/ADF* and *CGNS/HDF5* mappings. This
    library has a C and a Fortran API.
 
  CGNS/ADF
-   The `Advanced Data Format *CGNS/SIDS* implementation <http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/adf/index.html>`_. A binary
+   The `Advanced Data Format *CGNS/SIDS* implementation <http://cgns.github.io/CGNS_docs_current/adf/index.html>`_. A binary
    storage format and its companion library, developped by *Boeing*.
 
  CGNS/HDF5
-   The `Hierarchical Data Format *CGNS/SIDS* implementation <http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/hdf5/index.html>`_. A binary
+   The `Hierarchical Data Format *CGNS/SIDS* implementation <http://cgns.github.io/CGNS_docs_current/hdf5/index.html>`_. A binary
    storage format and its companion library (see below).
 
  CGNS/Python
    The `Python programming language *CGNS/SIDS* 
-   implementation <http://www.grc.nasa.gov/WWW/cgns/CGNS_docs_current/python/index.html>`_. 
+   implementation <http://cgns.github.io/CGNS_docs_current/python/index.html>`_. 
 
  CHLone 
    A *CGNS/HDF5* compliant implementation. The `CHLone

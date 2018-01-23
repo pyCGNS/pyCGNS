@@ -37,12 +37,12 @@ and *Qt*. The *cython* compiler and *scons* (for CHLone) are also required.
 The complete set of required tools/modules/libraries contains Python, HDF5
 and other graphical toolkits:
 
-* `Python <http://www.python.org>`_ (starting from v2.4)
+* `Python <http://www.python.org>`_ (starting from v2.7 or v3.6)
 * `numpy <http://numpy.scipy.org>`_ (v1.1 +)
 * `cython <http://www.cython.org>`_ (v0.19 +)
 * `hdf5 <http://www.hdfgroup.org>`_ (v1.8.5 +)
 * `CHLone <http://chlone.sourceforge.net>`_ (v0.39 +)
-* `VTK <http://www.vtk.org>`_ (v5.8 +)
+* `VTK <http://www.vtk.org>`_ (v8.0 +)
 * `Qt <http://qt.nokia.com/products>`_ (v4.7 +)
 * `pySide <http://www.pyside.org>`_ (v4.7 +)
 
@@ -183,7 +183,7 @@ Both should not fail...
 MAP depends
 ~~~~~~~~~~~
 
-The *CHLone* librarie is required and thus *HDF5* is required.
+The embedded *CHLone* librarie is required and thus *HDF5* is required.
 
 CGNS/MLL
 ~~~~~~~~~~~
