@@ -43,7 +43,7 @@ and other graphical toolkits:
 * `hdf5 <http://www.hdfgroup.org>`_ (v1.8.5 +)
 * `CHLone <http://chlone.sourceforge.net>`_ (v0.39 +)
 * `VTK <http://www.vtk.org>`_ (v8.0 +)
-* `Qt <http://www.qt.io/downloads>`_ (v4.7 +)
+* `Qt <http://www.qt.io/download>`_ (v4.7 +)
 * `pySide <http://www.pyside.org>`_ (v4.7 +)
 
 The *VTK* and the *Qt* graphical toolkits need to have a Python binding.

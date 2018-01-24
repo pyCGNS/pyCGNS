@@ -75,6 +75,6 @@ Glossary
    The `Python interface <http://www.pyside.org>`_ for the Qt toolkit. PySide
 
  Qt
-   `A powerful graphical toolkit <http://www.qt.io/downloads>`_ available 
+   `A powerful graphical toolkit <http://www.qt.io/download>`_ available 
    under GPL v3, LGPL v2 and a commercial license. The current use of Qt is 
    under LGPL v2 in pyCGNS.
