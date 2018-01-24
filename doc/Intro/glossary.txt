@@ -27,7 +27,7 @@ Glossary
    or proposed for a CFD simulation.
 
  CGNS/MLL 
-   The `Mid-Level Library <http://cgns.github.io/CGNS_docs_current/lidlevel/index.html>`_ 
+   The `Mid-Level Library <http://cgns.github.io/CGNS_docs_current/midlevel/index.html>`_ 
    is an example implementation of
    *CGNS/SIDS* on top of *CGNS/ADF* and *CGNS/HDF5* mappings. This
    library has a C and a Fortran API.
@@ -69,12 +69,12 @@ Glossary
 
  VTK 
    A `visualization toolkit <http://www.vtk.org>`_ used to display
-   3D objects ni *CGNS.NAV*.
+   3D objects in *CGNS.NAV*.
 
  PySide
    The `Python interface <http://www.pyside.org>`_ for the Qt toolkit. PySide
 
  Qt
-   `A powerful graphical toolkit <http://qt.nokia.com/products>`_ available 
+   `A powerful graphical toolkit <http://www.qt.io/downloads>`_ available 
    under GPL v3, LGPL v2 and a commercial license. The current use of Qt is 
    under LGPL v2 in pyCGNS.

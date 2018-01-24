@@ -43,7 +43,7 @@ and other graphical toolkits:
 * `hdf5 <http://www.hdfgroup.org>`_ (v1.8.5 +)
 * `CHLone <http://chlone.sourceforge.net>`_ (v0.39 +)
 * `VTK <http://www.vtk.org>`_ (v8.0 +)
-* `Qt <http://qt.nokia.com/products>`_ (v4.7 +)
+* `Qt <http://www.qt.io/downloads>`_ (v4.7 +)
 * `pySide <http://www.pyside.org>`_ (v4.7 +)
 
 The *VTK* and the *Qt* graphical toolkits need to have a Python binding.
@@ -170,20 +170,20 @@ Then edit the `CMakeCache.txt` file::
 
 And build/install...
 
-The Qt toolkit is used with the PySide Python binding, which is its official
-bindingwith this langage. We do not use pyQt. You can check you have the 
+The Qt toolkit is used with the qtpy package and provides support for PyQt5 or PySide Python bindings, which are official
+binding with this langage. You can check you have the 
 correct bindings by typing::
 
   python
   >>>import vtk
-  >>>import PySide
+  >>>import qtpy
 
 Both should not fail...
 
 MAP depends
 ~~~~~~~~~~~
 
-The embedded *CHLone* librarie is required and thus *HDF5* is required.
+The embedded *CHLone* library is required and thus *HDF5* is required.
 
 CGNS/MLL
 ~~~~~~~~~~~
