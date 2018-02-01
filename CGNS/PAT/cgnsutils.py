@@ -19,7 +19,8 @@ import CGNS.PAT.cgnserrors as CE
 import CGNS.PAT.cgnskeywords as CK
 import CGNS.PAT.cgnstypes as CT
 
-# import sys
+import sys
+PY3 = sys.version_info[0] == 3
 # from os import sep as SEPARATOR
 
 __I4 = numpy.dtype(numpy.int32)
@@ -981,9 +982,15 @@ def setStringAsArray(a):
         else:
             return numpy.array(tuple(a), dtype='|S', order='Fortran')
     if isinstance(a, bytes):
-        return numpy.array([bytes([x]) for x in a], dtype='|S', order='Fortran')
+        lst_bytes = [bytes([x]) for x in a]
+        if not PY3:
+            lst_bytes = [x.decode('ascii') for x in lst_bytes]
+        return numpy.array(lst_bytes, dtype='|S', order='Fortran')
     if isinstance(a, str):
-        return numpy.array([x.encode('ascii') for x in a], dtype='|S', order='Fortran')
+        lst_bytes = [x.encode('ascii') for x in a]
+        if not PY3:
+            lst_bytes = [x.decode('ascii') for x in lst_bytes]
+        return numpy.array(lst_bytes, dtype='|S', order='Fortran')
     return None
 
 
