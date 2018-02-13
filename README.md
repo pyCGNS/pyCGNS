@@ -9,7 +9,7 @@ and the reference docs.
 
 ## Bugs/Feature and issue tracking
 
-Please use the [issue-tracker](https://github.com/pycgns/pycgns) at github
+Please use the [issue-tracker](https://github.com/pycgns/pycgns/issues) at github
 to report bugs, evolution proposals and submit patches.
 
 ## License
