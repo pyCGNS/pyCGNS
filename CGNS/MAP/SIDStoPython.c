@@ -278,20 +278,20 @@ static int s2p_issubpath(char *subpathtofind, char* currentpath, int exact)
 	}
 	if (l_subpathtofind > l_currentpath)
 	{
-		if (!strncmp(subpathtofind, currentpath, l_currentpath))
+		if (!strncmp(subpathtofind, currentpath, l_currentpath) &&
+		    subpathtofind[l_currentpath] == '/')
 		{
 			return 1;
 		}
-		else
-		{
-			return 0;
-		}
 	}
-	if ((l_subpathtofind <= l_currentpath)
-		&& (!strncmp(subpathtofind, currentpath, l_subpathtofind)))
+	else 
 	{
-		if (l_currentpath == l_subpathtofind) { return 1; }
-		else if (currentpath[l_subpathtofind] == '/') { return 1; }
+		/* (l_subpathtofind <= l_currentpath) */
+		if (!strncmp(subpathtofind, currentpath, l_subpathtofind))
+		{
+			if (l_currentpath == l_subpathtofind) { return 1; }
+			else if (currentpath[l_subpathtofind] == '/') { return 1; }
+		}
 	}
 	return 0;
 }
