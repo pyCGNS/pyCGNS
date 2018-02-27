@@ -6,9 +6,9 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 try:
-  from builtins import (str, bytes, range, dict)
+  from builtins import (str, bytes, range, dict, unicode)
 except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+  from __builtin__ import (str, bytes, range, dict, unicode)
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -88,7 +88,7 @@ class Q7Option(Q7Window, Ui_Q7OptionsWindow):
                         self.getopt(k).setCheckState(Qt.Unchecked)
                 elif isinstance(data[k], int):
                     self.getopt(k).setValue(data[k])
-                elif isinstance(data[k], str):
+                elif isinstance(data[k], (str, unicode)):
                     try:
                         self.getopt(k).setText(data[k])
                     except AttributeError:
@@ -126,7 +126,7 @@ class Q7Option(Q7Window, Ui_Q7OptionsWindow):
                     v = self.getopt(k).value()
                     if self.validateOption(k, v):
                         data[k] = self.getopt(k).value()
-                elif isinstance(data[k], str):
+                elif isinstance(data[k], (str, unicode)):
                     v = self.getopt(k).text()
                     if self.validateOption(k, v):
                         data[k] = self.getopt(k).text()
