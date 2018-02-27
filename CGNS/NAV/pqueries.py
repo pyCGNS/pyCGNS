@@ -4,7 +4,10 @@
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+try:
+  from builtins import (str, bytes, range, dict)
+except ImportError:
+  from __builtin__ import (str, bytes, range, dict)
 
 def asQuery(f):
     def prepostquery(node, parent, tree, links, skips, path, args, selected):

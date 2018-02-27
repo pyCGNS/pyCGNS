@@ -5,7 +5,10 @@
 #
 from __future__ import unicode_literals
 from __future__ import division
-from builtins import (bytes, str, range, dict)
+try:
+  from builtins import (str, bytes, range, dict)
+except ImportError:
+  from __builtin__ import (str, bytes, range, dict)
 
 import numpy
 
@@ -893,7 +896,8 @@ def newElements(parent, name,
         if etype not in CK.ElementType.values():
             raise CE.cgnsException(250, etype)
         etp = etype
-    elif isinstance(etype, str):
+    elif isinstance(etype, str) or isinstance(etype, unicode):
+        etype=str(etype)
         if etype not in CK.ElementType_l:
             raise CE.cgnsException(250, etype)
         etp = CK.ElementType[etype]
@@ -904,7 +908,6 @@ def newElements(parent, name,
     newDataArray(enode, CK.ElementConnectivity_s, econnectivity)
     newPointRange(enode, CK.ElementRange_s, erange)
     return enode
-
 
 # -----------------------------------------------------------------------------
 def newZoneBC(parent):

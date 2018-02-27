@@ -6,7 +6,10 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 from functools import cmp_to_key
-from builtins import (bytes, str, range, dict)
+try:
+  from builtins import (str, bytes, range, dict)
+except ImportError:
+  from __builtin__ import (str, bytes, range, dict)
 import hashlib
 import os.path as op
 import re
@@ -822,7 +825,6 @@ def checkArrayInteger(a, dienow=False):
         return False
     return True
 
-
 # -----------------------------------------------------------------------------
 def checkSingleValue(a):
     """checks if a value is a single value, that is a single integer,
@@ -836,7 +838,6 @@ def checkSingleValue(a):
             return True
         return False
     return False
-
 
 # -----------------------------------------------------------------------------
 def checkNodeCompliant(node, parent=None, dienow=False):
@@ -867,7 +868,7 @@ def checkNodeCompliant(node, parent=None, dienow=False):
 def concatenateForArrayChar(nlist):
     nl = []
     for n in nlist:
-        if isinstance(n, str):
+        if isinstance(n, str) or isinstance(n, unicode):
             nl += [setStringAsArray(("%-32s" % n)[:32])]
         else:
             checkArrayChar(n)
@@ -898,7 +899,7 @@ def concatenateForArrayChar3D(nlist):
     for p in nlist:
         nl = []
         for n in p:
-            if isinstance(n, str):
+            if isinstance(n, str) or isinstance(n, unicode):
                 nl += [setStringAsArray(("%-32s" % n)[:32])]
             else:
                 checkArrayChar(n)
@@ -967,14 +968,12 @@ def setStringByPath(tree, path, s):
         setValue(node, v)
     return node
 
-
 # -----------------------------------------------------------------------------
 def setStringAsArray(a):
     """Creates a numpy.ndarray from a string::
 
        setStringAsArray('UserDefined')
 
-    Remark: target node should already exist
     """
     if isinstance(a, numpy.ndarray):
         if (a.shape != ()) and (a.dtype.kind == 'S'):
@@ -986,13 +985,12 @@ def setStringAsArray(a):
         if not PY3:
             lst_bytes = [x.decode('ascii') for x in lst_bytes]
         return numpy.array(lst_bytes, dtype='|S', order='Fortran')
-    if isinstance(a, str):
+    if isinstance(a, str) or isinstance(a, unicode):
         lst_bytes = [x.encode('ascii') for x in a]
         if not PY3:
             lst_bytes = [x.decode('ascii') for x in lst_bytes]
         return numpy.array(lst_bytes, dtype='|S', order='Fortran')
     return None
-
 
 # -----------------------------------------------------------------------------
 def setIntegerByPath(tree, path, *i):
@@ -1008,7 +1006,6 @@ def setIntegerByPath(tree, path, *i):
     setValue(node, numpy.array(i, dtype=numpy.int32))
     return node
 
-
 # -----------------------------------------------------------------------------
 def setIntegerAsArray(*i):
     """Creates a 1D numpy.ndarray from one or more integers.
@@ -1019,7 +1016,6 @@ def setIntegerAsArray(*i):
     if isinstance(i, type(None)) or (len(i) == 0):
         raise CE.cgnsNameError(112)
     return numpy.array(i, dtype=numpy.int32)
-
 
 # -----------------------------------------------------------------------------
 def setLongByPath(tree, path, *l):
@@ -1043,7 +1039,6 @@ def setLongByPath(tree, path, *l):
     setValue(node, numpy.array(l, dtype=numpy.int64))
     return node
 
-
 # -----------------------------------------------------------------------------
 def setLongAsArray(*l):
     """Creates a 1D numpy.ndarray from one or more longs::
@@ -1057,7 +1052,6 @@ def setLongAsArray(*l):
     if isinstance(l, type(None)) or (len(l) == 0):
         raise CE.cgnsNameError(112)
     return numpy.array(l, dtype=numpy.int64)
-
 
 # -----------------------------------------------------------------------------
 def setFloatByPath(tree, path, *f):
@@ -1079,7 +1073,6 @@ def setFloatByPath(tree, path, *f):
     node = getNodeByPath(tree, path)
     setValue(node, numpy.array(f, dtype=numpy.float32))
     return node
-
 
 # -----------------------------------------------------------------------------
 def setFloatAsArray(*f):

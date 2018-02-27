@@ -4,7 +4,10 @@
 #  ---------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (bytes, str, range, dict)
+try:
+  from builtins import (str, bytes, range, dict)
+except ImportError:
+  from __builtin__ import (str, bytes, range, dict)
 import CGNS
 import CGNS.PAT.cgnskeywords as CK
 import CGNS.PAT.cgnstypes as CT

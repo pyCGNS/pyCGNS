@@ -7,7 +7,10 @@
 #
 from __future__ import unicode_literals
 from __future__ import print_function
-from builtins import (str, bytes, range, dict)
+try:
+  from builtins import (str, bytes, range, dict)
+except ImportError:
+  from __builtin__ import (str, bytes, range, dict)
 from CGNS.APP.lib.queries import asQuery
 from CGNS.APP.lib.queries import runQuery
 

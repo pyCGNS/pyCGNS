@@ -448,7 +448,7 @@ def find_HDF5(pincs, plibs, libs):
     if (os.path.exists(pth + '/h5pubconf-64.h')):
         h64 = 1
         hup = 0
-    print("HUP", hup)
+    #print("HUP", hup)
     return (vers, pincs, plibs, libs, extraargs, hst, h64, hup)
 
 # --------------------------------------------------------------------

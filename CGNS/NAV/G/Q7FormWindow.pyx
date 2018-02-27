@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.6
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -102,7 +102,6 @@ class Ui_Q7FormWindow(object):
         self.tData.setSizePolicy(sizePolicy)
         self.tData.setObjectName("tData")
         self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.tData)
-        self.verticalLayout_8.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
@@ -198,7 +197,6 @@ class Ui_Q7FormWindow(object):
         self.tFiles.setSizePolicy(sizePolicy)
         self.tFiles.setObjectName("tFiles")
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.tFiles)
-        self.verticalLayout_9.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_9.setObjectName("verticalLayout_9")
         self.verticalLayout_6 = QtWidgets.QVBoxLayout()
         self.verticalLayout_6.setObjectName("verticalLayout_6")
@@ -272,7 +270,6 @@ class Ui_Q7FormWindow(object):
         self.tText.setSizePolicy(sizePolicy)
         self.tText.setObjectName("tText")
         self.verticalLayout_10 = QtWidgets.QVBoxLayout(self.tText)
-        self.verticalLayout_10.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_10.setObjectName("verticalLayout_10")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
@@ -312,7 +309,6 @@ class Ui_Q7FormWindow(object):
         self.tPython.setSizePolicy(sizePolicy)
         self.tPython.setObjectName("tPython")
         self.verticalLayout_11 = QtWidgets.QVBoxLayout(self.tPython)
-        self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_11.setObjectName("verticalLayout_11")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout()
         self.verticalLayout_7.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
