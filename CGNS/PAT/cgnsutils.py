@@ -7,9 +7,9 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from functools import cmp_to_key
 try:
-  from builtins import (str, bytes, range, dict)
+  from builtins import (str, bytes, range, dict, unicode)
 except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+  from __builtin__ import (str, bytes, range, dict, unicode)
 import hashlib
 import os.path as op
 import re
@@ -235,7 +235,7 @@ def checkName(name, dienow=False, strict=False):
 
     :raises: codes 22,23,24,25,29,31,32,33,34 if `dienow` is True
     """
-    if not isinstance(name, str):
+    if not isinstance(name, (str, unicode)):
         if dienow:
             raise CE.cgnsNameError(22)
         return False
@@ -542,7 +542,7 @@ def checkNode(node, dienow=False):
         if dienow:
             raise CE.cgnsException(2)
         return False
-    if not isinstance(node[0], str):
+    if not isinstance(node[0], (str, unicode)):
         if dienow:
             raise CE.cgnsException(3)
         return False
