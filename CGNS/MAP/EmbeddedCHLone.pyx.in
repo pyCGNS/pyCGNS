@@ -16,6 +16,11 @@ import copy
 PY3 = sys.version_info[0] == 3
 
 # ---------------------------------------------------------------------------
+# THIS FILE IS PRE-PROCESSED
+# ALWAYS USE DOUBLE %% INSTEAD OF A SINGLE ONE
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
 class CHLoneExceptionInternal(Exception):
     def __str__(self):
         s = 'CHLone.CHLoneException' + Exception.__str__(self)
@@ -47,7 +52,7 @@ class CHLoneException(Exception):
         931: 'Filter dict value should be a tuple with int as first arg',
         932: 'SPARTIAL Filter requires a "list of 8 lists of integers" as value"',
         933: 'SPARTIAL Filter bad parameters',
-        934: 'SCONTIGUOUS Filter requires a tuple of index,rank (integers) as value',
+        934: 'SCONTIGUOUS requires a tuple of index,rank (integers) as value',
     }
 
 
@@ -93,7 +98,7 @@ def checkThreshold(maxdata):
 def checkObjectPath(path):
     if path is None:
         path = ''
-    if not isinstance(path, str):
+    if not isinstance(path, (str, unicode)):
         raiseException(913)
     return path
 

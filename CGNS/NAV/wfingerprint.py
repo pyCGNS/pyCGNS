@@ -6,9 +6,9 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 try:
-  from builtins import (str, bytes, range, dict)
+  from builtins import (str, bytes, range, dict, type)
 except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+  from __builtin__ import (str, bytes, range, dict, type)
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import os
@@ -60,8 +60,7 @@ class Q7CHLoneProxy(object):
     def load(self, control, selectedfile):
         self._control = control
         self._thread = Q7CHLoneThread(control, selectedfile)
-        self._thread.datacompleted.connect(self.proxyCompleted,
-                                           Qt.QueuedConnection)
+        self._thread.datacompleted.connect(self.proxyCompleted,Qt.QueuedConnection)
         self._data = None
         if self._hasthreads:
             self._thread.start()
@@ -72,7 +71,8 @@ class Q7CHLoneProxy(object):
     def data(self):
         return self._data
 
-    @Slot(str, name='proxyCompleted')
+    # not useful anymore ?
+    #@Slot(tuple, name='proxyCompleted')
     def proxyCompleted(self, data):
         if data[0] is None:
             self._data = data
@@ -94,7 +94,7 @@ class Q7CHLoneThread(QThread):
 
     def run(self):
         control = self._control
-        selectedfile = self._selectedfile
+        selectedfile = str(self._selectedfile)
         Q7FingerPrint.Lock()
         kw = {}
         (filedir, filename) = (os.path.abspath(os.path.dirname(selectedfile)),
@@ -108,6 +108,7 @@ class Q7CHLoneThread(QThread):
             return
         slp = OCTXT.LinkSearchPathList
         slp += [filedir]
+        slp = [str(lp) for lp in slp]
         loadfilename = selectedfile
         flags = CGNS.MAP.S2P_DEFAULTS
         maxdataload = -1
@@ -133,16 +134,18 @@ class Q7CHLoneThread(QThread):
             else:
                 (tree, links, paths) = CGNS.MAP.load(loadfilename, flags=flags,
                                                      lksearch=slp)
-        except (CGNS.MAP.error,) as chlex:
+        except CGNS.MAP.error as chlex:
             Q7FingerPrint.Unlock()
-            txt = """The current load operation has been aborted:"""
-            self._data = (None, (chlex[0], txt, chlex[1]))
+            txt = """Load aborted by CGNS.MAP (file:%s)"""%loadfilename
+            code = chlex.args[0][0]
+            msg = chlex.args[0][1]
+            self._data = (None, (code, msg, txt))
             self.datacompleted.emit(self._data)
             control.readyCursor()
             return
         except Exception as e:
             Q7FingerPrint.Unlock()
-            txt = """The current operation has been aborted: %s""" % e
+            txt = """Aborted: %s""" % e
             self._data = (None, (0, txt, ''))
             self.datacompleted.emit(self._data)
             control.readyCursor()
