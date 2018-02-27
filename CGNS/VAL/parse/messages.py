@@ -115,7 +115,7 @@ class DiagnosticLog(dict):
         return DiagnosticLog.__messages[messagekey].level
 
     def __len__(self):
-        return len(list(self))
+        return len(self.keys())
 
     def shift(self, path, shiftstring=' '):
         n = path.split('/')
