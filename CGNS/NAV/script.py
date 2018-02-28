@@ -25,12 +25,12 @@ from qtpy.QtGui import QPixmap
 from qtpy.QtGui import *
 from CGNS.NAV.wcontrol import Q7Main
 
-
 # -----------------------------------------------------------------
 def run(args=[], files=[], datasets=[],
         flags=(False, False, False, False, False, False, False),
         ppath=None, query=None):
     hidecontrol = False
+    
     if flags[4]:
         from CGNS.NAV.wquery import Q7Query
         Q7Query.loadUserQueries()
@@ -86,5 +86,6 @@ def run(args=[], files=[], datasets=[],
     sys.exit()
 
 
-run()
+# run()
+
 # -----------------------------------------------------------------

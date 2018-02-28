@@ -121,6 +121,7 @@ if (args.path is not None):
 
 flags = (args.recurse, args.last, args.verbose, args.graphic, args.querylist,
          args.nosplash, args.hidecontrol)
+
 files = args.files
 datasets = []
 

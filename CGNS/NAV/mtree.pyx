@@ -163,6 +163,9 @@ LOADNODEDATA = '@@LOADNODEDATA@@'
 RELEASENODEDATA = '@@RELEASENODEDATA@@'
 OPENLINKEDTOFILE = '@@OPENLINKEDTOFILE@@'
 
+DT_LARGE = '@@DATALARGE@@'
+DT_LAZY = '@@DATALAZY@@'
+
 USERFLAG_0 = '@@USER0@@'
 USERFLAG_1 = '@@USER1@@'
 USERFLAG_2 = '@@USER2@@'
@@ -220,6 +223,9 @@ ICONMAPPING = {
     STUSR_D: ":/images/icons/user-D.png",
     STUSR_E: ":/images/icons/user-E.png",
     STUSR_F: ":/images/icons/user-F.png",
+
+    DT_LARGE: ":/images/icons/data-array-large.png",
+    DT_LAZY:  ":/images/icons/data-array-lazy.png",
 }
 
 KEYMAPPING = {
@@ -335,7 +341,8 @@ class Q7TreeView(QTreeView):
         self._parent = parent
         self._control = None
         self._fgindex = -1
-
+        self.setUniformRowHeights(True)
+        
     @property
     def FG(self):
         return Q7FingerPrint.getByIndex(self._fgindex)
@@ -620,16 +627,11 @@ class Q7TreeItem(object):
     __lastEdited = None
 
     def __init__(self, fgprintindex, data, model, tag="", parent=None):
+        self._model = model
         self._parentitem = parent
         self._itemnode = data
         self._childrenitems = []
         self._title = COLUMN_TITLE
-        if parent is not None:
-            self._path = parent.sidsPath() + '/' + data[0]
-        else:
-            self._path = ''
-        self._path = CGU.getPathNormalize(self._path)
-        self._depth = self._path.count('/')
         self._size = None
         self._fgindex = fgprintindex
         self._log = None
@@ -637,17 +639,25 @@ class Q7TreeItem(object):
         self._diag = None
         self._states = {'mark': STMARKOFF, 'check': STCHKUNKN,
                         'user': STUSR_X, 'shared': STSHRUNKN}
-        self._model = model
         self._tag = tag
-        if (parent is not None) and (model is not None):
-            self._model._extension[self._path] = self
-            self._nodes = len(self._model._extension)
+        self._nodes = 0
+        if parent is not None:
+            self._path = CGU.getPathNormalize(parent.sidsPath() + '/' + data[0])
+            self._path_no_root = CGU.getPathNoRoot(self._path)
+            if (model is not None):
+              self._model._extension[self._path] = self
+              self._nodes = len(self._model._extension)
         else:
-            self._nodes = 0
+            self._path = ''
+            self._path_no_root = ''
+        self._depth = self._path.count('/')
         if self._path in self.FG.lazy:
             self._lazy = True
         else:
             self._lazy = False
+        self.set_sidsIsLinkChild()        
+        self.set_sidsLinkStatus()
+        self.set_sidsDataType()
 
     @property
     def FG(self):
@@ -790,10 +800,16 @@ class Q7TreeItem(object):
         self._checkable = True
         return True
 
+    def set_sidsDataType(self, all=False):
+        if self._itemnode is None:
+            return None
+        self._datatype = CGU.getValueDataType(self._itemnode)
+        return self._datatype
+
     def sidsDataType(self, all=False):
         if all:
             return CGK.adftypes
-        return CGU.getValueDataType(self._itemnode)
+        return self._datatype
 
     def sidsDataTypeSet(self, value):
         if value not in CGK.adftypes:
@@ -820,7 +836,7 @@ class Q7TreeItem(object):
         return True
 
     def sidsDataTypeSize(self):
-        return Q7TreeItem.stype[CGU.getValueDataType(self._itemnode)]
+        return Q7TreeItem.stype[self._datatype]
 
     def sidsTypeList(self):
         tlist = CGU.getNodeAllowedChildrenTypes(self._parentitem._itemnode,
@@ -832,26 +848,35 @@ class Q7TreeItem(object):
             return self.sidsValue().shape
         return (0,)
 
-    def sidsLinkStatus(self):
-        pth = CGU.getPathNoRoot(self.sidsPath())
-        if pth in [lk[-2] for lk in self.FG.links]:
-            return STLKTOPOK
-        if self.sidsIsLinkChild():
-            return STLKCHDOK
-        return STLKNOLNK
+    def set_sidsLinkStatus(self):
+        self._link_status = STLKNOLNK
+        self._is_link = False
+        if self._path_no_root in [lk[-2] for lk in self.FG.links]:
+            self._link_status = STLKTOPOK
+            self._is_link = True
+        elif self.sidsIsLinkChild():
+            self._link_status = STLKCHDOK
+            self._is_link = True
 
-    def sidsIsLink(self):
-        if self.sidsLinkStatus() == STLKNOLNK:
-            return False
-        return True
-
-    def sidsIsLinkChild(self):
+    def set_sidsIsLinkChild(self):
+        self._is_link_child = False
         pit = self.parentItem()
+        if (pit is None): return False
         while not pit.sidsIsRoot():
             if pit.sidsIsLink():
+                self._is_link_child = True
                 return True
             pit = pit.parentItem()
         return False
+
+    def sidsLinkStatus(self):
+        return self._link_status
+
+    def sidsIsLink(self):
+        return self._is_link
+
+    def sidsIsLinkChild(self):
+        return self._is_link_child
 
     def sidsLinkFilename(self):
         pth = CGU.getPathNoRoot(self.sidsPath())
@@ -1278,33 +1303,33 @@ class Q7TreeModel(QAbstractItemModel):
     def data(self, index, role):
         if not index.isValid():
             return None
+        col = index.column()
+        item = index.internalPointer()
         if role == Qt.UserRole:
-            return index.internalPointer().sidsPath()
+            return item.sidsPath()
         if role == Qt.ToolTipRole:
-            if index.column() == COLUMN_FLAG_LINK:
-                lk = index.internalPointer().sidsLinkValue()
+            if col == COLUMN_FLAG_LINK:
+                lk = item.sidsLinkValue()
                 if lk is not None:
                     return lk
-            if index.column() == COLUMN_FLAG_CHECK:
-                dg = index.internalPointer().getDiag()
+            if col == COLUMN_FLAG_CHECK:
+                dg = item.getDiag()
                 if dg is not None:
                     return dg
             return None
         if role not in [Qt.EditRole, Qt.DisplayRole, Qt.DecorationRole]:
             return None
-        if ((role == Qt.DecorationRole) and
-                (index.column() not in COLUMN_ICO)):
+        if ((role == Qt.DecorationRole) and (col not in COLUMN_ICO)):
             return None
-        item = index.internalPointer()
-        disp = item.data(index.column())
-        if (index.column() == COLUMN_VALUE) and (role == Qt.DecorationRole):
+        disp = item.data(col)
+        if (col == COLUMN_VALUE) and (role == Qt.DecorationRole):
             if disp == HIDEVALUE:
-                disp = QIcon(QPixmap(":/images/icons/data-array-large.png"))
+                return Q7TreeModel._icons[DT_LARGE]
             elif disp == LAZYVALUE:
-                disp = QIcon(QPixmap(":/images/icons/data-array-lazy.png"))
+                return Q7TreeModel._icons[DT_LAZY]
             else:
                 return None
-        if (index.column() == COLUMN_VALUE) and (role == Qt.DisplayRole):
+        if (col == COLUMN_VALUE) and (role == Qt.DisplayRole):
             if disp in [HIDEVALUE, LAZYVALUE]:
                 return None
         # if ((index.column()==COLUMN_FLAG_USER) and (role == Qt.DisplayRole)):

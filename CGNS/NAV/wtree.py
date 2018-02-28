@@ -203,7 +203,7 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
                         NMT.COLUMN_DATATYPE: OCTXT.ShowDataTypeColumn}
         self.selectForLinkSrc = None  # one link source per tree view allowed
 
-        self.treeview.expanded[QModelIndex].connect(self.expandNode)
+        #self.treeview.expanded[QModelIndex].connect(self.expandNode)
         self.treeview.collapsed.connect(self.collapseNode)
         self.treeview.pressed[QModelIndex].connect(self.clickedPressedNode)
         self.treeview.customContextMenuRequested.connect(self.clickedNode)

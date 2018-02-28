@@ -464,7 +464,7 @@ class Q7Window(QWidget, object):
 
     def _T(self, msg):
         if self.getOptionValue('NAVTrace'):
-            print('### CGNS.NAV:', msg)
+            print('### cg_look:', msg)
 
 
 # -----------------------------------------------------------------
