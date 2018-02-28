@@ -6,10 +6,8 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
-try:
-  from builtins import (str, bytes, range, dict)
-except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+from builtins import (str, bytes, range, dict)
+
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import numpy as NPY

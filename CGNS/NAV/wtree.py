@@ -4,10 +4,8 @@
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-try:
-  from builtins import (str, bytes, range, dict)
-except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+from builtins import (str, bytes, range, dict)
+
 import sys
 import gc
 import functools
@@ -19,12 +17,7 @@ from qtpy.QtCore import *
 from qtpy.QtWidgets import *
 from qtpy.QtGui import *
 
-try:
-    import vtk
-    from CGNS.NAV.wvtk import Q7VTK
-    has_vtk = True
-except ImportError:
-    has_vtk = False
+from CGNS.pyCGNSconfig import HAS_VTK
 
 from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.wform import Q7Form
@@ -761,7 +754,8 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
         form.show()
 
     def vtkview(self):
-        if (not has_vtk): return
+        if (not HAS_VTK): return
+        from CGNS.NAV.wvtk import Q7VTK
         if (self._vtkwindow is None):
             self.busyCursor()
             ix = self.treeview.modelCurrentIndex()

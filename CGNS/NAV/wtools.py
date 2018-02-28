@@ -5,13 +5,9 @@
 #
 from __future__ import unicode_literals
 from __future__ import print_function
-try:
-  from builtins import (str, bytes, range, dict)
-except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+from builtins import (str, bytes, range, dict)
 
-import sys
-PY2 = sys.version[0] == '2'
+from CGNS.pyCGNSconfig import HAS_PY2
 
 from qtpy.QtCore import *
 from qtpy.QtWidgets import *
@@ -60,7 +56,7 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         self._model = fgprint.model
         self._treeview = master.treeview
         self.cGroup.currentIndexChanged.connect(self.fillqueries)
-        if PY2:
+        if HAS_PY2:
             self.cQuery.currentTextChanged[unicode].connect(self.checkquery)
         else:
             self.cQuery.currentTextChanged[str].connect(self.checkquery)
@@ -94,7 +90,7 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
             self.applyquery()
             self.selectionlist()
         self.sLevel.valueChanged[int].connect(self.updateCriteria)
-        if PY2:
+        if HAS_PY2:
             self.cSIDStype.editTextChanged[unicode].connect(self.updateSIDStypeEntry)
         else:
             self.cSIDStype.editTextChanged[str].connect(self.updateSIDStypeEntry)

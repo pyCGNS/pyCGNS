@@ -4,6 +4,15 @@
 #  -------------------------------------------------------------------------
 #
 from __future__ import print_function
+
+import sys
+if sys.version_info[0] < 3:
+    HAS_PY3=False
+    HAS_PY2=True
+else:
+    HAS_PY3=True
+    HAS_PY2=False
+
 import os
 import sys
 import string
@@ -422,7 +431,8 @@ setup(
     packages=ALL_PACKAGES,
     scripts=ALL_SCRIPTS,
     ext_modules=ALL_EXTENSIONS,
-    cmdclass=cmd, install_requires=['numpy']
+    cmdclass=cmd,
+    install_requires=['numpy','future']
 )
 # -------------------------------------------------------------------------  
 # --- last line

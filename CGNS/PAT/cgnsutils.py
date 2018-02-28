@@ -6,10 +6,8 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 from functools import cmp_to_key
-try:
-  from builtins import (str, bytes, range, dict, unicode)
-except ImportError:
-  from __builtin__ import (str, bytes, range, dict, unicode)
+from builtins import (str, bytes, range, dict, unicode)
+
 import hashlib
 import os.path as op
 import re

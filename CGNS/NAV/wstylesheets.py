@@ -4,10 +4,7 @@
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-try:
-  from builtins import (str, bytes, range, dict)
-except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+from builtins import (str, bytes, range, dict)
 
 colordict = {'high': '#7ebaff', 'low': '#78b5e9', 'high2': '#bad5f4', 'low2': '#bad5ff'}
 

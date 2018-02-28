@@ -4,10 +4,8 @@
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-try:
-  from builtins import (str, bytes, range, dict)
-except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+from builtins import (str, bytes, range, dict)
+
 from qtpy.QtCore import *
 from qtpy.QtWidgets import (QAction, QStyledItemDelegate, QStyleOptionViewItem,
                             QMenu, QTableWidgetItem, QHeaderView)

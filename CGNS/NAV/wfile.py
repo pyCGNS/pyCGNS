@@ -4,10 +4,8 @@
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-try:
-  from builtins import (str, bytes, range, dict)
-except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+from builtins import (str, bytes, range, dict)
+
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import os.path
@@ -16,7 +14,7 @@ import string
 import time
 import sys
 
-PY2 = sys.version[0] == '2'
+from CGNS.pyCGNSconfig import HAS_PY2
 
 from qtpy.QtCore import *
 from qtpy.QtWidgets import *
@@ -170,7 +168,7 @@ class Q7File(QWidget, Ui_Q7FileWindow):
             (self.rClearNotFound, "toggled(bool)", self.updateClearNotFound),
         ]
         #
-        if PY2:
+        if HAS_PY2:
             self.model.directoryLoaded[unicode].connect(self.expandCols)
         else:
             self.model.directoryLoaded[str].connect(self.expandCols)

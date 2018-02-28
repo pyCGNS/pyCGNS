@@ -6,10 +6,8 @@
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-try:
-  from builtins import (str, bytes, range, dict)
-except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+from builtins import (str, bytes, range, dict)
+
 import shutil
 import os
 import os.path as op
@@ -19,15 +17,12 @@ import tempfile
 
 from time import gmtime, strftime
 from CGNS.pyCGNSconfig import version as __vid__
+from CGNS.pyCGNSconfig import HAS_MSW 
 
-WINOPTS = False
-if sys.platform == 'win32':
-    WINOPTS = True
+WINOPTS = HAS_MSW
 
 import CGNS.PAT.cgnskeywords as CGK
 
-# from qtpy.QtWidgets import *
-# from qtpy.QtGui import *
 from qtpy.QtGui import QFont, QFontDatabase, QTextCursor
 
 # User file paths:

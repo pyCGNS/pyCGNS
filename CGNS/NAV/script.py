@@ -5,14 +5,14 @@
 #
 from __future__ import unicode_literals
 from __future__ import print_function
-try:
-  from builtins import (str, bytes, range, dict)
-except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+from builtins import (str, bytes, range, dict)
+
 import sys
 import time
 
-if sys.platform == "win32":
+from CGNS.pyCGNSconfig import HAS_MSW
+
+if HAS_MSW:
     import ctypes
     myappid = u'pycgns.pycgns.cglook.version' # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
@@ -59,7 +59,6 @@ def run(args=[], files=[], datasets=[],
                                Qt.AlignHCenter | Qt.AlignBottom)
             timer = QTimer.singleShot(3000,closeSplash)
         app.processEvents()
-#        t1 = time.time()
         Q7Main.verbose = flags[2]
         wcontrol = Q7Main()
         wcontrol._application = app
@@ -87,11 +86,6 @@ def run(args=[], files=[], datasets=[],
         wcontrol.show()
         if hidecontrol:
             wcontrol.hide()
-#        if not flags[5]:
-#            t2 = time.time()
-#            if t2 - t1 < 1.5:
-#                time.sleep(1.5 - t2 + t1)
-#            splash.finish(wcontrol)
         app.exec_()
         wcontrol._T('leave')
     sys.exit()

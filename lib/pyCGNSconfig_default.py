@@ -10,7 +10,6 @@
 from __future__ import unicode_literals
 import sys
 
-
 # --------------------------------------------------------------------
 def pathfromexec(execname):
     import os
@@ -28,6 +27,25 @@ LIBRARY_DIRS = ['%s/lib' % mylocal]
 
 HAS_MLL = False
 HAS_HDF5 = False
+
+try:
+    import vtk
+    from CGNS.NAV.wvtk import Q7VTK
+    HAS_VTK = True
+except ImportError:
+    HAS_VTK = False
+
+if sys.version_info[0] < 3:
+    HAS_PY3=False
+    HAS_PY2=True
+else:
+    HAS_PY3=True
+    HAS_PY2=False
+
+if sys.platform == 'win32':
+  HAS_MSW = True
+else:  
+  HAS_MSW = False
 
 hdf5path = pathfromexec('h5dump')
 HDF5_VERSION = '1.8'
@@ -87,6 +105,10 @@ PFX='%(PFX)s'
 
 HAS_HDF5=%(HAS_HDF5)s
 HAS_MLL=%(HAS_MLL)s
+HAS_PY2=%(HAS_PY2)s
+HAS_PY3=%(HAS_PY3)s
+HAS_VTK=%(HAS_VTK)s
+HAS_MSW=%(HAS_MSW)s
 
 INCLUDE_DIRS=%(INCLUDE_DIRS)s
 LIBRARY_DIRS=%(LIBRARY_DIRS)s

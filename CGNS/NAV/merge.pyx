@@ -4,10 +4,8 @@
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-try:
-  from builtins import (str, bytes, range, dict)
-except ImportError:
-  from __builtin__ import (str, bytes, range, dict)
+from builtins import (str, bytes, range, dict)
+
 import CGNS.PAT.cgnsutils as CGU
 
 def mergeAB(ta, tb, tc, tag, diag, pfxA, pfxB, trace=False):
