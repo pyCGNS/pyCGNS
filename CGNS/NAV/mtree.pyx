@@ -33,9 +33,8 @@ import CGNS.VAL.parse.findgrammar
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
+#from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.wfingerprint import Q7FingerPrint
-
 
 def trace(f):
     def globaltrace(frame, why, arg):

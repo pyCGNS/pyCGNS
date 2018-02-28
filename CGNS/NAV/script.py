@@ -25,11 +25,21 @@ from qtpy.QtGui import QPixmap
 from qtpy.QtGui import *
 from CGNS.NAV.wcontrol import Q7Main
 
+splash = None
+wcontrol = None
+
+def closeSplash():
+    global splash
+    global wcontrol
+    splash.finish(wcontrol)
+    
 # -----------------------------------------------------------------
 def run(args=[], files=[], datasets=[],
         flags=(False, False, False, False, False, False, False),
         ppath=None, query=None):
     hidecontrol = False
+    global splash
+    global wcontrol
     
     if flags[4]:
         from CGNS.NAV.wquery import Q7Query
@@ -47,8 +57,9 @@ def run(args=[], files=[], datasets=[],
             splash.show()
             splash.showMessage("Release v%s" % OCTXT._ToolVersion,
                                Qt.AlignHCenter | Qt.AlignBottom)
+            timer = QTimer.singleShot(3000,closeSplash)
         app.processEvents()
-        t1 = time.time()
+#        t1 = time.time()
         Q7Main.verbose = flags[2]
         wcontrol = Q7Main()
         wcontrol._application = app
@@ -76,11 +87,11 @@ def run(args=[], files=[], datasets=[],
         wcontrol.show()
         if hidecontrol:
             wcontrol.hide()
-        if not flags[5]:
-            t2 = time.time()
-            if t2 - t1 < 2.0:
-                time.sleep(2)
-            splash.finish(wcontrol)
+#        if not flags[5]:
+#            t2 = time.time()
+#            if t2 - t1 < 1.5:
+#                time.sleep(1.5 - t2 + t1)
+#            splash.finish(wcontrol)
         app.exec_()
         wcontrol._T('leave')
     sys.exit()
