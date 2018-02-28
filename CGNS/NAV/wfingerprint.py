@@ -680,8 +680,6 @@ class Q7FingerPrint:
         self._kw = kw
         self._status = []
         self._locked = False
-        if checkFilePermission(filedir + '/' + filename, write=True):
-            self._status = [Q7FingerPrint.STATUS_SAVEABLE]
         if 'isfile' in kw:
             self.isfile = True
         if 'converted' in kw:
@@ -692,6 +690,9 @@ class Q7FingerPrint:
         self.lazy = {}
         for p in paths:
             self.lazy['/CGNSTree' + p[0]] = p[1]
+        if ((self.lazy == {}) and
+            (checkFilePermission(filedir + '/' + filename, write=True))):
+            self._status = [Q7FingerPrint.STATUS_SAVEABLE]
         Q7FingerPrint.__extension.append(self)
         Q7FingerPrint.__fingerprintcounter += 1
         self.updateFileStats(filedir + '/' + filename)
