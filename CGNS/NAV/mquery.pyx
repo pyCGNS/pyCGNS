@@ -157,8 +157,8 @@ def parseAndSelect(tree, node, parent, links, skips, path, script, args, selecte
         else:
             R = [path]
     for C in node[2]:
-        R += parseAndSelect(tree, C, node, links, skips, path, script, args, selected,
-                            result)
+        R += parseAndSelect(tree, C, node, links, skips, path, script, args,
+                            selected, result)
     return R
 
 

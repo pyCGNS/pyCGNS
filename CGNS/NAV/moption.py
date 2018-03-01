@@ -452,203 +452,209 @@ Please visit his web site: http://www.famfamfam.com/<br>
 
     _UsualQueries = [
 
-        # --- Search -----------------------------------------------------------
-        # last two booleans: Update tree, has args
-        ('001. Node name',
-         'Search by',
-         'RESULT=(NAME==ARGS[0])',
-         """
-        Search by
-        Node name
-        
-        Search all nodes with the exact NAME as argument.
-        
-        The argument name need not to be a tuple or to have quotes,
-        all the following values are ok and would match the NAME <i>ZoneType</i>:
-        
-        ZoneType
-        'ZoneType'
-        ('ZoneType',)
-        """, False, True),
+# ---------------------------------------------------------------------------
+# INDENTATION IS SIGNIFICANT
+# ---------------------------------------------------------------------------
+    
+# --- Search -----------------------------------------------------------
+# last two booleans: Update tree, has args
+('001. Node name',
+'Search by',
+'RESULT=(NAME==ARGS[0])',
+"""
+Search by
+Node name
 
-        ('002. Wildcard node name',
-         'Search by',
-         """import fnmatch
-         RESULT=fnmatch.fnmatchcase(NAME,ARGS[0])
-         """,
-         """
-         Search by
-         Wildcard node name
-         
-         Search all nodes with the wildcard NAME as argument.
-         
-         Warning: the <b>argument name</b> should be quoted:
-         
-         'BC*' is ok
-         
-         BC* would fail
-         """, False, True),
+Search all nodes with the exact NAME as argument.
 
-        ('003. Node type',
-         'Search by',
-         'RESULT=(SIDSTYPE==ARGS[0])',
-         """search all nodes with argument SIDS type.""", False, True),
+The argument name need not to be a tuple or to have quotes,
+all the following values are ok and would match the NAME <i>ZoneType</i>:
 
-        ('005. Node value',
-         'Search by',
-         """
-        from numpy import *
-        target=eval(ARGS[0])
-        if   (VALUE is None and target is None): RESULT=True
-        elif (VALUE is None)            : RESULT=False
-        elif (target.dtype!=VALUE.dtype): RESULT=False
-        elif (target.size!=VALUE.size):   RESULT=False
-        elif (target.shape!=VALUE.shape): RESULT=False
-        elif (target.tolist()==VALUE.tolist()): RESULT=True
-        else:                             RESULT=False
-         """,
-         """search all nodes with argument value. The compare is performed
-         using a straightforward '==' and then relies on the Python/Numpy comparison
-         operator.""", False, True),
+ZoneType
+'ZoneType'
+('ZoneType',)
+""", False, True),
 
-        ('010. Node with truncated data',
-         'Search by',
-         'if (PATH in SKIPS): RESULT=PATH',
-         """search all nodes with truncated or unread data, for example if you have set
-         the maximum data argument for the load, or if you release the memory of a
-         node.""", False, False),
+('002. Wildcard node name',
+'Search by',
+"""import fnmatch
+RESULT=fnmatch.fnmatchcase(NAME,ARGS[0])
+""",
+"""
+Search by
+Wildcard node name
 
-        ('004. Wildcard node type',
-         'Search by',
-         """
-         import fnmatch
-         RESULT=fnmatch.fnmatchcase(SIDSTYPE,ARGS[0])
-         """,
-         """
-         Search by
-         Wildcard node type
-         
-         Search all nodes with wildcard argument SIDS type.
-         Warning: the <b>argument type</b> should be quoted:
-         
-         'Turb*' is ok
-         
-         Turb* would fail
-         """, False, True),
+Search all nodes with the wildcard NAME as argument.
 
-        ('011. Non-MT UserDefinedData',
-         'Search by',
-         """
-         if (    (SIDSTYPE==CGK.UserDefinedData_ts)
-             and (CGU.getValueDataType(NODE)!=CGK.MT)):
-           RESULT=True
-         """,
-         """
-         Search by
-         Valued UserDefinedData
-         
-         Search all <b>UserDefinedData_t</b> nodes with a non-<b>MT</b> data type.
-         
-         No argument.
-         """, False, False),
-        # -----------------------------------------------------------------------------
-        ('012. FamilyName',
-         'Search by',
-         """
-         if (SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]):
-             RESULT=True
-         """,
-         """
-         Search by
-         All <b>FamilyName_t</b> and <b>AdditionalFamilyname_t</b> nodes.
-         """, False, False),
-        # -----------------------------------------------------------------------------
-        ('013. FamilyName reference',
-         'Search by',
-         """
-         if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
-             (VALUE.tostring().decode('ascii')==ARGS[0])):
-             RESULT=True
-         """,
-         """
-         Search by<br>
-         Reference to a FamilyName<br>
-         
-         Search all <b>FamilyName</b> nodes with the arg string (plain).<br>
-         The string arg should be a valid Python string such as:<br>
-         
-         'BLADE(1)'<br>
-         'Surface ext 1A'<br>
-         'Left/Wing/Flap'<br>
-         
-         """, False, True),
-        # -----------------------------------------------------------------------------
-        ('014. Zones',
-         'Search by',
-         """
-         if (SIDSTYPE in [CGK.Zone_ts]):
-             RESULT=True
-         """,
-         """
-         Search by
-         All <b>Zone_t</b> nodes.
-         """, False, False),
-        # -----------------------------------------------------------------------------
-        ('015. Zones Structured',
-         'Search by',
-         """
-         if (SIDSTYPE in [CGK.Zone_ts]):
-             t=CGU.hasChildName(NODE,CGK.ZoneType_s)
-             if (t is None or CGU.stringValueMatches(t,CGK.Structured_s)):
-               RESULT=True
-         """,
-         """
-         Search by
-         All <b>Zone_t</b> with Structured <b>ZoneType</b> nodes.
-         """, False, False),
-        # -----------------------------------------------------------------------------
-        ('016. Zones Unstructured',
-         'Search by',
-         """
-         if (SIDSTYPE in [CGK.Zone_ts]):
-             t=CGU.hasChildName(NODE,CGK.ZoneType_s)
-             if (t is not None and CGU.stringValueMatches(t,CGK.Unstructured_s)):
-               RESULT=True
-         """,
-         """
-         Search by
-         All <b>Zone_t</b> with Unstructured <b>ZoneType</b> nodes.
-         """, False, False),
-        # -----------------------------------------------------------------------------
-        ('017. BCs',
-         'Search by',
-         """
-         if (SIDSTYPE in [CGK.BC_ts]):
-             RESULT=True
-         """,
-         """
-         Search by
-         All <b>BC_t</b> nodes.
-         """, False, False),
+Warning: the <b>argument name</b> should be quoted:
 
-        # --- Replace
-        # -----------------------------------------------------------------------------
-        ('050. Valued UserDefinedData',
-         'Replace', """
+'BC*' is ok
+
+BC* would fail
+""", False, True),
+
+('003. Node type',
+'Search by',
+'RESULT=(SIDSTYPE==ARGS[0])',
+"""search all nodes with argument SIDS type.""", False, True),
+
+('005. Node value',
+'Search by',
+"""
+from numpy import *
+target=eval(ARGS[0])
+if   (VALUE is None and target is None): RESULT=True
+elif (VALUE is None)            : RESULT=False
+elif (target.dtype!=VALUE.dtype): RESULT=False
+elif (target.size!=VALUE.size):   RESULT=False
+elif (target.shape!=VALUE.shape): RESULT=False
+elif (target.tolist()==VALUE.tolist()): RESULT=True
+else:                             RESULT=False
+""",
+"""search all nodes with argument value. The compare is performed
+using a straightforward '==' and then relies on the Python/Numpy comparison
+operator.""", False, True),
+
+('010. Node with truncated data',
+'Search by',
+'if (PATH in SKIPS): RESULT=PATH',
+"""search all nodes with truncated or unread data, for example if you have set
+the maximum data argument for the load, or if you release the memory of a
+node.""", False, False),
+
+('004. Wildcard node type',
+'Search by',
+"""
+import fnmatch
+RESULT=fnmatch.fnmatchcase(SIDSTYPE,ARGS[0])
+""",
+"""
+Search by
+Wildcard node type
+
+Search all nodes with wildcard argument SIDS type.
+Warning: the <b>argument type</b> should be quoted:
+
+'Turb*' is ok
+
+Turb* would fail
+""", False, True),
+
+('011. Non-MT UserDefinedData',
+'Search by',
+"""
+if (    (SIDSTYPE==CGK.UserDefinedData_ts)
+    and (CGU.getValueDataType(NODE)!=CGK.MT)):
+  RESULT=True
+""",
+"""
+Search by
+Valued UserDefinedData
+
+Search all <b>UserDefinedData_t</b> nodes with a non-<b>MT</b> data type.
+
+No argument.
+""", False, False),
+# -----------------------------------------------------------------------------
+('012. FamilyName',
+'Search by',
+"""
+if (SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]):
+    RESULT=True
+""",
+"""
+Search by
+All <b>FamilyName_t</b> and <b>AdditionalFamilyname_t</b> nodes.
+""", False, False),
+# -----------------------------------------------------------------------------
+('013. FamilyName reference',
+'Search by',
+"""
+if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
+    (VALUE.tostring().decode('ascii')==ARGS[0])):
+    RESULT=True
+""",
+"""
+Search by<br>
+Reference to a FamilyName<br>
+ 
+Search all <b>FamilyName</b> nodes with the arg string (plain).<br>
+The string arg should be a valid Python string such as:<br>
+ 
+'BLADE(1)'<br>
+'Surface ext 1A'<br>
+'Left/Wing/Flap'<br>
+ 
+""", False, True),
+# -----------------------------------------------------------------------------
+('014. Zones',
+'Search by',
+"""
+if (SIDSTYPE in [CGK.Zone_ts]):
+    RESULT=True
+""",
+"""
+Search by
+All <b>Zone_t</b> nodes.
+""", False, False),
+# -----------------------------------------------------------------------------
+('015. Zones Structured',
+'Search by',
+"""
+if (SIDSTYPE in [CGK.Zone_ts]):
+    t=CGU.hasChildName(NODE,CGK.ZoneType_s)
+    if (t is None or CGU.stringValueMatches(t,CGK.Structured_s)):
+      RESULT=True
+""",
+"""
+Search by
+All <b>Zone_t</b> with Structured <b>ZoneType</b> nodes.
+""", False, False),
+# -----------------------------------------------------------------------------
+('016. Zones Unstructured',
+'Search by',
+"""
+if (SIDSTYPE in [CGK.Zone_ts]):
+    t=CGU.hasChildName(NODE,CGK.ZoneType_s)
+    if (t is not None and CGU.stringValueMatches(t,CGK.Unstructured_s)):
+      RESULT=True
+""",
+"""
+Search by
+All <b>Zone_t</b> with Unstructured <b>ZoneType</b> nodes.
+""", False, False),
+# -----------------------------------------------------------------------------
+('017. BCs',
+'Search by',
+"""
+if (SIDSTYPE in [CGK.BC_ts]):
+    RESULT=True
+""",
+"""
+Search by
+All <b>BC_t</b> nodes.
+""", False, False),
+
+# --- Replace
+# -----------------------------------------------------------------------------
+('050. Valued UserDefinedData',
+'Replace',
+"""
 if (     (SIDSTYPE==CGK.UserDefinedData_ts)
      and (CGU.getValueDataType(NODE)!=CGK.MT)):
   NODE[3]=CGK.DataArray_ts
   RESULT=True
 """,
-         """
-         Replace
-         Valued UserDefinedData
-         
-         Search all <b>UserDefinedData_t</b> nodes with a non-<b>MT</b> data type
-          and replace them as <b>DataArray_t</b>.""", False, False),
+"""
+Replace
+Valued UserDefinedData
+ 
+Search all <b>UserDefinedData_t</b> nodes with a non-<b>MT</b> data type
+and replace them as <b>DataArray_t</b>.""", False, False),
 
-        ('051. Substitute Zone name',
-         'Replace', """
+('051. Substitute Zone name',
+'Replace',
+"""
 l1=len(ARGS[0])
 if ((SIDSTYPE==CGK.Zone_ts) and (NAME[:l1]==ARGS[0])):
   NODE[0]=ARGS[1]+NODE[0][l1:]
@@ -661,142 +667,142 @@ if (CGU.getValueDataType(NODE)==CGK.C1):
     NODE[1]=CGU.setStringAsArray(v)
     RESULT=True
 """,
-         """
-         <h1>Replace</h1>
-         <h2>Substitute Zone name</h2>
-         <p>
-         Search all <b>Zone_t</b> nodes with a name pattern, then rename the
-         zone with the substitution pattern. Any other reference in the tree,
-         as a connectivity value for example, is subsitued as well.
-         <p>
-         Argument is a tuple with the first pattern to find and
-         the second as the subsitution pattern. For example:
-         <pre>
-         ('domain.','zone#')
-         </pre>
-         """, True, True),
+"""
+<h1>Replace</h1>
+<h2>Substitute Zone name</h2>
+<p>
+Search all <b>Zone_t</b> nodes with a name pattern, then rename the
+zone with the substitution pattern. Any other reference in the tree,
+as a connectivity value for example, is subsitued as well.
+<p>
+Argument is a tuple with the first pattern to find and
+the second as the subsitution pattern. For example:
+<pre>
+('domain.','zone#')
+</pre>
+""", True, True),
 
-        # -----------------------------------------------------------------------------
-        ('052. FamilySpecified BC type rewrite',
-         'Replace',
-         """
-         if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
-             (VALUE.tostring().decode('ascii')==ARGS[0]) and (PARENT[3]==CGK.BC_ts)):
-             PARENT[1]=CGU.setStringAsArray(CGK.FamilySpecified_s)
-             RESULT=True
-         """,
-         """
-         <h1>Replace</h1>
-         <h2>FamilySpecified BC type rewrite</h2>
-         <p>
-         Search all <b>FamilyName BC</b> nodes with the arg string (plain).<br>
-         The string arg should be a valid Python string such as:<br>
-         
-         'BLADE(1)'<br>
-         'Surface ext 1A'<br>
-         'Left/Wing/Flap'<br>
-         
-         <p>
-         Once found, the parent <b>BC_t</b> value is forced to <b>FamilySpecified</b>
-         
-         """, True, True),
+# -----------------------------------------------------------------------------
+('052. FamilySpecified BC type rewrite',
+'Replace',
+"""
+if ((SIDSTYPE in [CGK.FamilyName_ts, CGK.AdditionalFamilyName_ts]) and
+    (VALUE.tostring().decode('ascii')==ARGS[0]) and (PARENT[3]==CGK.BC_ts)):
+    PARENT[1]=CGU.setStringAsArray(CGK.FamilySpecified_s)
+    RESULT=True
+""",
+"""
+<h1>Replace</h1>
+<h2>FamilySpecified BC type rewrite</h2>
+<p>
+Search all <b>FamilyName BC</b> nodes with the arg string (plain).<br>
+The string arg should be a valid Python string such as:<br>
 
-        # --- Find Elements_t
-        ('020. Elements',
-         'Find Elements_t',
-         """if (SIDSTYPE==CGK.Elements_ts):
-           RESULT=True
-         """,
-         """Find all <b>Elements_t</b> nodes """, False, False),
+'BLADE(1)'<br>
+'Surface ext 1A'<br>
+'Left/Wing/Flap'<br>
 
-        ('021. Elements QUAD',
-         'Find Elements_t',
-         """if (SIDSTYPE==CGK.Elements_ts):
-           RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)
-         """,
-         """Find all <b>Elements_t</b> nodes of type <b>QUAD</b>""", False, False),
+<p>
+Once found, the parent <b>BC_t</b> value is forced to <b>FamilySpecified</b>
 
-        ('022. Elements TRI',
-         'Find Elements_t',
-         """if (SIDSTYPE==CGK.Elements_ts):
-           RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)
-         """,
-         """Find all <b>Elements_t</b> nodes of type <b>TRI</b>""", False, False),
+""", True, True),
 
-        ('023. Elements NGON',
-         'Find Elements_t',
-         """if (SIDSTYPE==CGK.Elements_ts):
-           RESULT=VALUE[0] in (CGK.NGON_n,)
-         """,
-         """Find all <b>Elements_t</b> nodes of type <b>NGON_n</b>""", False, False),
+# --- Find Elements_t
+('020. Elements',
+'Find Elements_t',
+"""if (SIDSTYPE==CGK.Elements_ts):
+  RESULT=True
+""",
+"""Find all <b>Elements_t</b> nodes """, False, False),
 
-        ('024. Elements HEXA',
-         'Find Elements_t',
-         """if (SIDSTYPE==CGK.Elements_ts):
-           RESULT=VALUE[0] in (CGK.HEXA_8, CGK.HEXA_20, CGK.HEXA_27)
-         """,
-         """Find all <b>Elements_t</b> nodes of type <b>HEXA</b>""", False, False),
+('021. Elements QUAD',
+'Find Elements_t',
+"""if (SIDSTYPE==CGK.Elements_ts):
+  RESULT=VALUE[0] in (CGK.QUAD_4, CGK.QUAD_8, CGK.QUAD_9)
+""",
+"""Find all <b>Elements_t</b> nodes of type <b>QUAD</b>""", False, False),
 
-        ('025. Elements TETRA',
-         'Find Elements_t',
-         """if (SIDSTYPE==CGK.Elements_ts):
-           RESULT=VALUE[0] in (CGK.TETRA_4, CGK.TETRA_10)
-         """,
-         """Find all <b>Elements_t</b> nodes of type <b>TETRA</b>""", False, False),
+('022. Elements TRI',
+'Find Elements_t',
+"""if (SIDSTYPE==CGK.Elements_ts):
+  RESULT=VALUE[0] in (CGK.TRI_3, CGK.TRI_6)
+""",
+"""Find all <b>Elements_t</b> nodes of type <b>TRI</b>""", False, False),
 
-        # --- External Tools
-        ('030. Create Cartesian Zone',
-         'External Tools',
-         """
-        if (SIDSTYPE==CGK.CGNSTree_ts):
-            import Generator.PyTree as G
-            z=G.cart((0.,0.,0.), (0.1,0.1,0.2), (10,11,12))
-            b=None
-            base='BASE'
-            if (len(ARGS)>0):
-              base=ARGS[0]
-              b=CGU.hasChildName(NODE,base)
-            if (b is None):
-              base=CGU.checkUniqueChildName(NODE,base)
-              b=CGL.newCGNSBase(NODE,base,3,3)
-            CGU.addChild(b,z)
-         """,
-         """Example of Cartesian zone creation using Cassiopee.
-         The first argument is the base name, if ommitted a name is generated.""",
-         True, True),
-        ('031. Bounding boxes',
-         'External Tools',
-         """
-        if (SIDSTYPE==CGK.Zone_ts):
-            import Generator as G
-            RESULT=G.bbox(NODE)
-         """,
-         """Example of Bounding box computation using Cassiopee"""),
-        ('100. .Solver#Compute children',
-         'Edit filters',
-         """
-        if (PARENT[0]=='.Solver#Compute'):
-            RESULT=PATH
-         """,
-         """Selects all children nodes of the .Solver#Compute elsA userdefined node""",
-         False, False),
-        ('101. ReferenceState children',
-         'Edit filters',
-         """
-        if (PARENT[0]=='ReferenceState'):
-            RESULT=PATH
-         """,
-         """Selects all children nodes of the ReferenceState node""",
-         False, False),
-        ('102. .Solver#Param children',
-         'Edit filters',
-         """
-        if (PARENT[0]=='.Solver#Param'):
-            RESULT=PATH
-         """,
-         """Selects all children nodes of the .Solver#Param elsA userdefined node""",
-         False, False),
+('023. Elements NGON',
+'Find Elements_t',
+"""if (SIDSTYPE==CGK.Elements_ts):
+  RESULT=VALUE[0] in (CGK.NGON_n,)
+""",
+"""Find all <b>Elements_t</b> nodes of type <b>NGON_n</b>""", False, False),
 
+('024. Elements HEXA',
+'Find Elements_t',
+"""if (SIDSTYPE==CGK.Elements_ts):
+  RESULT=VALUE[0] in (CGK.HEXA_8, CGK.HEXA_20, CGK.HEXA_27)
+""",
+"""Find all <b>Elements_t</b> nodes of type <b>HEXA</b>""", False, False),
+
+('025. Elements TETRA',
+'Find Elements_t',
+"""if (SIDSTYPE==CGK.Elements_ts):
+  RESULT=VALUE[0] in (CGK.TETRA_4, CGK.TETRA_10)
+""",
+"""Find all <b>Elements_t</b> nodes of type <b>TETRA</b>""", False, False),
+
+# --- External Tools
+('030. Create Cartesian Zone',
+'External Tools',
+"""
+if (SIDSTYPE==CGK.CGNSTree_ts):
+    import Generator.PyTree as G
+    z=G.cart((0.,0.,0.), (0.1,0.1,0.2), (10,11,12))
+    b=None
+    base='BASE'
+    if (len(ARGS)>0):
+      base=ARGS[0]
+      b=CGU.hasChildName(NODE,base)
+    if (b is None):
+      base=CGU.checkUniqueChildName(NODE,base)
+      b=CGL.newCGNSBase(NODE,base,3,3)
+    CGU.addChild(b,z)
+""",
+"""Example of Cartesian zone creation using Cassiopee.
+The first argument is the base name, if ommitted a name is generated.""",
+True, True),
+('031. Bounding boxes',
+'External Tools',
+"""
+if (SIDSTYPE==CGK.Zone_ts):
+    import Generator as G
+    RESULT=G.bbox(NODE)
+""",
+"""Example of Bounding box computation using Cassiopee"""),
+('100. .Solver#Compute children',
+'Edit filters',
+"""
+if (PARENT[0]=='.Solver#Compute'):
+    RESULT=PATH
+""",
+"""Selects all children nodes of the .Solver#Compute elsA userdefined node""",
+False, False),
+('101. ReferenceState children',
+'Edit filters',
+"""
+if (PARENT[0]=='ReferenceState'):
+    RESULT=PATH
+""",
+"""Selects all children nodes of the ReferenceState node""",
+False, False),
+('102. .Solver#Param children',
+'Edit filters',
+"""
+if (PARENT[0]=='.Solver#Param'):
+   RESULT=PATH
+""",
+"""Selects all children nodes of the .Solver#Param elsA userdefined node""",
+False, False),
+    
     ]
 
     # -----------------------------------------------------------------
