@@ -459,12 +459,17 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
             actlist = (
                 ("%s goodies" % node.sidsType(),),
                 None,
+                ("Expand sub-tree from this node", self.expand_sb, 'Ctrl++', False),
+                ("Collapses sub-tree from this node", self.collapse_sb, 'Ctrl+-', False),                
+                None,
+                ['Mark nodes...',[
+                ("Mark/unmark node", self.marknode, 'Space', False),
+                 None,
                 ("Mark all nodes same SIDS type", self.marknode_t, 'Ctrl+1', False),
                 ("Mark all nodes same name", self.marknode_n, 'Ctrl+2', False),
                 ("Mark all nodes same value", self.marknode_v, 'Ctrl+3', False),
-                ("Mark parent path", self.marknode_p, 'Ctrl+4', False),
-                None,
-                ("Mark/unmark node", self.marknode, 'Space', False),
+                 None,
+                ("Mark parent path", self.marknode_p, 'Ctrl+4', False)]],
                 ("Add new child node", self.newnodechild, 'Ctrl+A', False),
                 ("Add new brother node", self.newnodebrother, 'Ctrl+Z', False),
                 #            None,
@@ -480,15 +485,20 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
                 ("Paste as brother", self.mpasteasbrother, 'Ctrl+V', False),
                 ("Paste as child", self.mpasteaschild, 'Ctrl+Y', False),
                 None,
+                ['On selected nodes...',[
+                ("Expand sub-tree from all selected nodes", self.sexpand_sb, 'Ctrl+Shift++', False),
+                ("Collapses sub-tree from all selected nodes", self.scollapse_sb, 'Ctrl+Shift+-', False),
+                None,
                 ("Cut all selected", self.mcutselected, 'Ctrl+Shift+X', False),
                 ("Paste as brother for each selected",
                  self.mpasteasbrotherselected, 'Ctrl+Shift+V', False),
                 ("Paste as child for each selected",
                  self.mpasteaschildselected, 'Ctrl+Shift+Y', False),
+                 None,
                 ("Load nodes data in memory for each selected",
                  self.dataLoadSelected, 'Ctrl+Shift+L', False),
                 ("Release memory node data for each selected",
-                 self.dataReleaseSelected, 'Ctrl+Shift+R', False),
+                 self.dataReleaseSelected, 'Ctrl+Shift+R', False)]],
             )
             self.popupmenu.clear()
             self.popupmenu.setTitle('Node menu')
@@ -505,10 +515,21 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
                                     triggered=self.aboutSIDS)
                         self.popupmenu.addAction(a)
                 else:
-                    a = QAction(aparam[0], self, triggered=aparam[1])
-                    if (aparam[2] is not None): a.setShortcut(aparam[2])
-                    self.popupmenu.addAction(a)
-                    a.setDisabled(aparam[3])
+                    if isinstance(aparam,list):
+                        subm = self.popupmenu.addMenu(aparam[0])
+                        for aaparam in aparam[1]:
+                            if (aaparam is None):
+                                 subm.addSeparator()
+                            else:
+                                a = QAction(aaparam[0], self, triggered=aaparam[1])
+                                if (aaparam[2] is not None): a.setShortcut(aaparam[2])
+                                subm.addAction(a)
+                                a.setDisabled(aaparam[3])
+                    else:
+                        a = QAction(aparam[0], self, triggered=aparam[1])
+                        if (aparam[2] is not None): a.setShortcut(aparam[2])
+                        self.popupmenu.addAction(a)
+                        a.setDisabled(aparam[3])
             return True
 
     def _runAndSelect(self, qname, value):
@@ -614,6 +635,18 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
     def collapseNode(self, *args):
         pass
 
+    def expand_sb(self):
+        self.treeview.expand_sb()
+    
+    def collapse_sb(self):
+        self.treeview.collapse_sb()
+    
+    def sexpand_sb(self):
+        self.treeview.sexpand_sb()
+    
+    def scollapse_sb(self):
+        self.treeview.scollapse_sb()
+    
     def resizeAll(self):
         for n in range(NMT.COLUMN_LAST + 1):
             self.treeview.resizeColumnToContents(n)

@@ -159,6 +159,10 @@ RELEASENODEDATASELECTED = '@@RELEASENODEDATASELECTED@@'
 LOADNODEDATA = '@@LOADNODEDATA@@'
 RELEASENODEDATA = '@@RELEASENODEDATA@@'
 OPENLINKEDTOFILE = '@@OPENLINKEDTOFILE@@'
+EXPANDSUBTREE = '@@EXPANDSUBTREE@@'
+COLLAPSESUBTREE = '@@COLLAPSESUBTREE@@'
+EXPANDSUBTREESELECTED = '@@EXPANDSUBTREESELECTED@@'
+COLLAPSESUBTREESELECTED = '@@COLLAPSESUBTREESELECTED@@'
 
 DT_LARGE = '@@DATALARGE@@'
 DT_LAZY = '@@DATALAZY@@'
@@ -243,6 +247,11 @@ KEYMAPPING = {
     PASTECHILDSELECTED: Qt.Key_Y,
     PASTEBROTHERSELECTED: Qt.Key_V,
 
+    EXPANDSUBTREE: Qt.Key_Plus,
+    COLLAPSESUBTREE: Qt.Key_Minus,
+    EXPANDSUBTREESELECTED: Qt.Key_Plus,
+    COLLAPSESUBTREESELECTED: Qt.Key_Minus,
+    
     LOADNODEDATA: Qt.Key_L,
     RELEASENODEDATA: Qt.Key_R,
     LOADNODEDATASELECTED: Qt.Key_L,
@@ -271,6 +280,11 @@ KEYMAPPING = {
 MODIFIERMAPPING = {
     OPENFORM: (Qt.Key_Control,),
     OPENVIEW: (Qt.Key_Control,),
+
+    EXPANDSUBTREE: (Qt.Key_Control,),
+    COLLAPSESUBTREE: (Qt.Key_Control,),
+    EXPANDSUBTREESELECTED: (Qt.Key_Control, Qt.Key_Shift),
+    COLLAPSESUBTREESELECTED: (Qt.Key_Control, Qt.Key_Shift),
 
     NEWCHILDNODE: (Qt.Key_Control,),
     NEWBROTHERNODE: (Qt.Key_Control,),
@@ -446,13 +460,29 @@ class Q7TreeView(QTreeView):
             if kval in USERKEYMAPPINGS:
                 last.setUserState(kval - 48)
                 self.exclusiveSelectRow(nix)
+            elif ((kval == KEYMAPPING[EXPANDSUBTREE]) and
+                  (kmod & Qt.ControlModifier) and not
+                  (kmod & Qt.ShiftModifier)):
+                self.expand_sb()
+            elif ((kval == KEYMAPPING[COLLAPSESUBTREE]) and
+                  (kmod & Qt.ControlModifier) and not
+                  (kmod & Qt.ShiftModifier)):
+                self.collapse_sb()
+            elif ((kval == KEYMAPPING[EXPANDSUBTREESELECTED]) and
+                  (kmod & Qt.ControlModifier) and
+                  (kmod & Qt.ShiftModifier)):
+                self.sexpand_sb()
+            elif ((kval == KEYMAPPING[COLLAPSESUBTREESELECTED]) and
+                  (kmod & Qt.ControlModifier) and
+                  (kmod & Qt.ShiftModifier)):
+                self.scollapse_sb()
             elif kval == KEYMAPPING[EDITNODE]:
-                if kmod == Qt.ControlModifier:
+                if kmod & Qt.ControlModifier:
                     eix = self.model().createIndex(nix.row(), COLUMN_SIDS,
                                                    nix.internalPointer())
                     last.setEditCheck(False)
                     self.edit(eix)
-                elif kmod == Qt.ShiftModifier:
+                elif kmod & Qt.ShiftModifier:
                     eix = self.model().createIndex(nix.row(), COLUMN_VALUE,
                                                    nix.internalPointer())
                     last.setEditCheck(False)
@@ -463,18 +493,18 @@ class Q7TreeView(QTreeView):
                 self.markNode(last)
                 self.exclusiveSelectRow(nix)
             elif kval == KEYMAPPING[UPNODE]:
-                if kmod == Qt.ControlModifier:
+                if kmod & Qt.ControlModifier:
                     self.upRowLevel(nix)
-                elif kmod == Qt.ShiftModifier:
+                elif kmod & Qt.ShiftModifier:
                     self.upRowMarked()
                 else:
                     QTreeView.keyPressEvent(self, event)
                     lix = self.modelCurrentIndex()
                     self.exclusiveSelectRow(lix)
             elif kval == KEYMAPPING[DOWNNODE]:
-                if kmod == Qt.ControlModifier:
+                if kmod & Qt.ControlModifier:
                     self.downRowLevel(nix)
-                elif kmod == Qt.ShiftModifier:
+                elif kmod & Qt.ShiftModifier:
                     self.downRowMarked()
                 else:
                     QTreeView.keyPressEvent(self, event)
@@ -607,6 +637,43 @@ class Q7TreeView(QTreeView):
     def doRelease(self):
         self._model = None
 
+    def expand_sb(self):
+        ix=self.modelCurrentIndex()
+        self._expand_sb(ix)
+        self.resizeAll()
+    
+    def _expand_sb(self,ix):
+        self.expand(ix)
+        for c in self.modelData(ix).children():
+            ix2=self.M().indexByPath(c.sidsPath())
+            self._expand_sb(ix2)
+    
+    def collapse_sb(self):
+        ix=self.modelCurrentIndex()
+        self._collapse_sb(ix)
+        self.resizeAll()
+    
+    def _collapse_sb(self,ix):
+        self.collapse(ix)
+        for c in self.modelData(ix).children():
+            ix2=self.M().indexByPath(c.sidsPath())
+            self._collapse_sb(ix2)
+    
+    def sexpand_sb(self):
+        for pth in self.M().selectedNodes:
+            ix=self.M().indexByPath(pth)
+            self._expand_sb(ix)
+        self.resizeAll()
+    
+    def scollapse_sb(self):
+        for pth in self.M().selectedNodes:
+            ix=self.M().indexByPath(pth)
+            self._collapse_sb(ix)
+        self.resizeAll()
+
+    def resizeAll(self):
+        for n in range(COLUMN_LAST + 1):
+            self.resizeColumnToContents(n)
 
 # -----------------------------------------------------------------
 def __sortItems(i1, i2):
@@ -1178,6 +1245,10 @@ class Q7TreeModel(QAbstractItemModel):
     def FG(self):
         return Q7FingerPrint.getByIndex(self._fgindex)
 
+    @property
+    def selectedNodes(self):
+        return self._selected
+    
     def modelReset(self):
         #self.reset()
         self.beginResetModel()
