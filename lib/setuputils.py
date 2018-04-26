@@ -116,14 +116,15 @@ def search(incs, libs, tag='pyCGNS',
         import pyCGNSconfig as C
 
         # -----------------------------------------------------------------------
+        C.COM_UIC = 'true'
+        C.COM_RCC = 'true'
+        C.COM_CYTHON = 'true'        
         if ('Cython' in deps):
             try:
                 if (which('cython') is not None):
                     C.COM_CYTHON = 'cython'
                 else:
                     raise Exception
-                C.COM_UIC = 'true'
-                C.COM_RCC = 'true'
                 if (which('pyuic') is not None):  C.COM_UIC = 'pyuic'
                 if (which('pyrcc') is not None):  C.COM_RCC = 'pyrcc'
                 if (which('pyuic5') is not None): C.COM_UIC = 'pyuic5'
@@ -223,15 +224,18 @@ def search(incs, libs, tag='pyCGNS',
              C.HDF5_EXTRA_ARGS,
              C.HDF5_HST,
              C.HDF5_H64,
-             C.HDF5_HUP) = tp
+             C.HDF5_HUP,
+             C.HDF5_PARALLEL) = tp
             print(pfx + 'using HDF5 %s' % (C.HDF5_VERSION,))
             print(pfx + 'using HDF5 headers from %s' % (C.HDF5_PATH_INCLUDES[0]))
             print(pfx + 'using HDF5 libs from %s' % (C.HDF5_PATH_LIBRARIES[0]))
+            if C.HDF5_PARALLEL:
+                print(pfx + 'using HDF5 parallel version (cython uses $MPICC)')
             C.HAS_HDF5 = True
             incs = incs + C.HDF5_PATH_INCLUDES + C.INCLUDE_DIRS
             libs = libs + C.HDF5_PATH_LIBRARIES + C.LIBRARY_DIRS
 
-            # -----------------------------------------------------------------------
+            # ---------------------------------------------------------------------
 
     except ImportError:
         print(pfx + '***** FATAL: setup cannot find pyCGNSconfig.py file!')
@@ -439,17 +443,29 @@ def find_HDF5(pincs, plibs, libs):
     if (os.path.exists(pth + '/H5pubconf.h')):
         hup = 1
         hst = 1
+        hfn = pth + '/H5pubconf.h'
     if (os.path.exists(pth + '/h5pubconf.h')):
         hup = 0
         hst = 1
+        hfn = pth + '/h5pubconf.h'
     if (os.path.exists(pth + '/H5pubconf-64.h')):
         h64 = 1
         hup = 1
+        hfn = pth + '/H5pubconf-64.h'
     if (os.path.exists(pth + '/h5pubconf-64.h')):
         h64 = 1
         hup = 0
-    #print("HUP", hup)
-    return (vers, pincs, plibs, libs, extraargs, hst, h64, hup)
+        hfn = pth + '/h5pubconf-64.h'
+    has_parallel = False
+    if (os.path.exists(hfn)):
+        fh = open(hfn, 'r')
+        fl = fh.readlines()
+        fh.close()
+        found = 0
+        for ifh in fl:
+            if (ifh[:26] == "#define H5_HAVE_PARALLEL 1"):
+                has_parallel = True
+    return (vers, pincs, plibs, libs, extraargs, hst, h64, hup, has_parallel)
 
 # --------------------------------------------------------------------
 def find_numpy(pincs, plibs, libs):

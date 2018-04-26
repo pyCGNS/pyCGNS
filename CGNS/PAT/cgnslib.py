@@ -893,7 +893,7 @@ def newElements(parent, name,
         if etype not in CK.ElementType.values():
             raise CE.cgnsException(250, etype)
         etp = etype
-    elif isinstance(etype, str) or isinstance(etype, unicode):
+    elif isinstance(etype, str) :
         etype=str(etype)
         if etype not in CK.ElementType_l:
             raise CE.cgnsException(250, etype)

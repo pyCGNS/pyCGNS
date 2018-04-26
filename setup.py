@@ -13,6 +13,11 @@ else:
     HAS_PY3=True
     HAS_PY2=False
 
+# in the case the default python/distutils compiler fails with mpi, set
+# this variable. You should check this compiler is the one used for HDF5 prod
+# in the share/cmake config of your HDF5 installation.
+CYTHON_COMPILER_FOR_MAP = 'mpicc'
+
 import os
 import sys
 import string
@@ -53,6 +58,8 @@ doc1 = """
   simple way to resolve these deps is to force mpicc instead of cc:
 
   CC=mpicc python setup.py build
+
+  or edit the pyCGNS/stup.py file and change CYTHON_COMPILER_FOR_MAP
 
 """
 
@@ -258,6 +265,10 @@ if MAP:
     for d in depfiles: resolveVars(d, conf, args.generate)
     library_dirs = [l for l in library_dirs if l != '']
 
+    # hack: actually shoudl read hdf5/cmake config to get true compiler...
+    if CONFIG.HDF5_PARALLEL:
+        os.environ['CC']=CYTHON_COMPILER_FOR_MAP
+        
     ALL_EXTENSIONS += [Extension("CGNS.MAP.EmbeddedCHLone",
                                  ["CGNS/MAP/EmbeddedCHLone.pyx",
                                   "CGNS/MAP/SIDStoPython.c",
@@ -372,15 +383,15 @@ if NAV and CONFIG.HAS_QTPY:
         mfile_list += ['mparser']
 
     for mfile in mfile_list:
-        modextlist += [Extension("CGNS.NAV.%s" % mfile, ["CGNS/NAV/%s.pyx" % mfile,
-                                                         fakefile],
+        modextlist += [Extension("CGNS.NAV.%s" % mfile,
+                                 ["CGNS/NAV/%s.pyx" % mfile ],
                                  include_dirs=CONFIG.NUMPY_PATH_INCLUDES,
                                  library_dirs=CONFIG.NUMPY_PATH_LIBRARIES,
                                  libraries=CONFIG.NUMPY_LINK_LIBRARIES,
                                  )]
     for m in modnamelist:
-        modextlist += [Extension("CGNS.NAV.%s" % m, ["CGNS/NAV/G/%s.pyx" % m,
-                                                     fakefile],
+        modextlist += [Extension("CGNS.NAV.%s" % m,
+                                 ["CGNS/NAV/G/%s.pyx" % m ],
                                  include_dirs=CONFIG.NUMPY_PATH_INCLUDES,
                                  library_dirs=CONFIG.NUMPY_PATH_LIBRARIES,
                                  libraries=CONFIG.NUMPY_LINK_LIBRARIES,

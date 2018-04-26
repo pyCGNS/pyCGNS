@@ -147,7 +147,6 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
                                      """)
             if reply == MSG.OK:
                 for rw in self._parent.selectedRows():
-                    print('UPDATE',dt[rw])
                     nodelist.append((rw, self._model.nodeFromPath(dt[rw])))
             else:
                 return

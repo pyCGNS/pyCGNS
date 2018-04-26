@@ -6,7 +6,7 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 from functools import cmp_to_key
-from builtins import (str, bytes, range, dict, unicode)
+from builtins import (str, bytes, range, dict)
 
 import hashlib
 import os.path as op
@@ -233,7 +233,7 @@ def checkName(name, dienow=False, strict=False):
 
     :raises: codes 22,23,24,25,29,31,32,33,34 if `dienow` is True
     """
-    if not isinstance(name, (str, unicode)):
+    if not isinstance(name, str):
         if dienow:
             raise CE.cgnsNameError(22)
         return False
@@ -540,7 +540,7 @@ def checkNode(node, dienow=False):
         if dienow:
             raise CE.cgnsException(2)
         return False
-    if not isinstance(node[0], (str, unicode)):
+    if not isinstance(node[0], str):
         if dienow:
             raise CE.cgnsException(3)
         return False
@@ -866,7 +866,7 @@ def checkNodeCompliant(node, parent=None, dienow=False):
 def concatenateForArrayChar(nlist):
     nl = []
     for n in nlist:
-        if isinstance(n, str) or isinstance(n, unicode):
+        if isinstance(n, str):
             nl += [setStringAsArray(("%-32s" % n)[:32])]
         else:
             checkArrayChar(n)
@@ -897,7 +897,7 @@ def concatenateForArrayChar3D(nlist):
     for p in nlist:
         nl = []
         for n in p:
-            if isinstance(n, str) or isinstance(n, unicode):
+            if isinstance(n, str) :
                 nl += [setStringAsArray(("%-32s" % n)[:32])]
             else:
                 checkArrayChar(n)
@@ -983,7 +983,7 @@ def setStringAsArray(a):
         if not PY3:
             lst_bytes = [x.decode('ascii') for x in lst_bytes]
         return numpy.array(lst_bytes, dtype='|S', order='Fortran')
-    if isinstance(a, str) or isinstance(a, unicode):
+    if isinstance(a, str) :
         lst_bytes = [x.encode('ascii') for x in a]
         if not PY3:
             lst_bytes = [x.decode('ascii') for x in lst_bytes]
