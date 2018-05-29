@@ -433,17 +433,18 @@ print("#\n# Running build now...\n#")
 
 # -------------------------------------------------------------------------  
 setup(
-    name=CONFIG.NAME,
-    version=CONFIG.VERSION,
-    description=CONFIG.DESCRIPTION,
-    author=CONFIG.AUTHOR,
-    author_email=CONFIG.EMAIL,
-    license=CONFIG.LICENSE,
-    packages=ALL_PACKAGES,
-    scripts=ALL_SCRIPTS,
-    ext_modules=ALL_EXTENSIONS,
-    cmdclass=cmd,
-    install_requires=['numpy','future']
+    name = CONFIG.NAME,
+    version = CONFIG.VERSION,
+    description = CONFIG.DESCRIPTION,
+    author = CONFIG.AUTHOR,
+    author_email = CONFIG.EMAIL,
+    license = CONFIG.LICENSE,
+    packages = ALL_PACKAGES,
+    scripts = ALL_SCRIPTS,
+    ext_modules = ALL_EXTENSIONS,
+    cmdclass = cmd,
+    install_requires = ['numpy', 'future']
+    setup_requires = ['numpy', 'future', 'Cython>=0.25', 'pkgconfig']
 )
 # -------------------------------------------------------------------------  
 # --- last line
