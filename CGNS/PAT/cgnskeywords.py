@@ -38,8 +38,6 @@ from __future__ import unicode_literals
 from builtins import (str, bytes, range, dict)
 
 # ----------------------------------------------------------------------------
-import CGNS.pyCGNSconfig
-
 
 def stringAsKeyDict(l):
     return dict(zip(l, range(len(l))))
