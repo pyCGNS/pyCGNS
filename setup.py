@@ -464,6 +464,7 @@ setup(
     author = CONFIG.AUTHOR,
     author_email = CONFIG.EMAIL,
     license = CONFIG.LICENSE,
+    url = CONFIG.URL,
     packages = ALL_PACKAGES,
     scripts = ALL_SCRIPTS,
     ext_modules = ALL_EXTENSIONS,

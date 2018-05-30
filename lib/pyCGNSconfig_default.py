@@ -162,5 +162,6 @@ DESCRIPTION = __doc__
 AUTHOR = 'Marc Poinot'
 EMAIL = "marc.poinot@safrangroup.com"
 LICENSE = "LGPL 2"
+URL = "https://github.com/pyCGNS/pyCGNS"
 
 # --- last line
