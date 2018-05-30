@@ -468,7 +468,7 @@ setup(
     scripts = ALL_SCRIPTS,
     ext_modules = ALL_EXTENSIONS,
     cmdclass = cmd,
-    install_requires = ['numpy', 'future']
+    install_requires = ['numpy', 'future'],
     setup_requires = ['numpy', 'future', 'Cython>=0.25', 'pkgconfig']
 )
 # -------------------------------------------------------------------------  
