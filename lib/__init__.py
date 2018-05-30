@@ -19,6 +19,6 @@
     
 """
 #
-from CGNS.pyCGNSconfig import version
+from CGNS.pyCGNSconfig import version as __version__
 #
 # --- last line
