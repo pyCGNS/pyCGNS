@@ -460,6 +460,7 @@ setup(
     name = CONFIG.NAME,
     version = CONFIG.VERSION,
     description = CONFIG.DESCRIPTION,
+    long_description = CONFIG.DESCRIPTION,
     classifiers = [x for x in cls_txt.split("\n") if x],
     author = CONFIG.AUTHOR,
     author_email = CONFIG.EMAIL,
