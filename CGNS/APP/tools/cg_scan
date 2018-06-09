@@ -62,10 +62,10 @@ class Query(object):
 
 
 def checkRawFile(filename):
-    if (not os.path.exists(filename)):
+    if not os.path.isfile(filename):
         print('File not found')
         sys.exit(0)
-    if (not CGM.probe(filename)):
+    if not CGM.probe(filename):
         print('Cannot open file (low level HDF5 error)')
         sys.exit(0)
 

@@ -3,8 +3,9 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
+from __future__ import unicode_literals
 from __future__ import print_function
-
+from builtins import (str, bytes, range, dict)
 
 def asQuery(f):
     def prepostquery(node, parent, tree, links, skips, path, args, selected):
@@ -97,7 +98,7 @@ def runQuery(tree, links, paths, query, args, selected=[], mode=True):
     except:
         pass
     _args = v
-    if (type(query) in [str, unicode]): query = eval(query)
+    if (type(query) in [str,]): query = eval(query)
     result = parseAndSelect(tree, tree, [None, None, [], None], links, paths, '',
                             query, _args, selected, mode)
     return result

@@ -19,7 +19,7 @@ if (prog[0] == os.path.sep):
     dpref = os.path.dirname(prog)
 else:
     for pp in os.environ['PATH'].split(':'):
-        if (os.path.exists("%s%s%s" % (pp, os.path.sep, prog))):
+        if os.path.isfile("%s%s%s" % (pp, os.path.sep, prog)):
             dpref = os.path.dirname("%s%s%s" % (pp, os.path.sep, prog))
             break
 

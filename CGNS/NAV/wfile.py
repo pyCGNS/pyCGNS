@@ -32,7 +32,7 @@ SAVEBUTTON = ['Save', 'Save to selected file']
 # -----------------------------------------------------------------
 def checkFilePermission(path, write=False):
     return True
-    if not os.path.exists(path):
+    if not os.path.isfile(path):
         return False
     r = False
     w = False
@@ -482,9 +482,9 @@ class Q7File(QWidget, Ui_Q7FileWindow):
                         diag, MSG.INFO)
 
     def checkTarget(self, filename, write=False):
-        if os.path.exists(filename) and not write:
+        if os.path.isfile(filename) and not write:
             return None
-        if not os.path.exists(filename) and write:
+        if not os.path.isfile(filename) and write:
             return None
         if self.cOverwrite.isChecked():
             sc = "The file is <b>completely replaced</b> by the current tree"

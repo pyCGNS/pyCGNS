@@ -6,7 +6,9 @@
 # IGES reader -v0.0
 # marc.poinot@onera.fr
 # ??? marks non understandable fixes
+from __future__ import unicode_literals
 from __future__ import print_function
+from builtins import (str, bytes, range, dict)
 import sys
 import re
 import os
@@ -465,7 +467,7 @@ class Property(IGESentity):
 
     def parseparameters(self, n, *data):
         self.properties = data[0:n]
-        if (type(data[0]) not in [str, unicode]):
+        if (type(data[0]) not in [str,]):
             Property._count += 1
             self.property = "P%.4d" % Property._count
         else:
@@ -752,7 +754,7 @@ class IGESfile(object):
 def IGESfactory(index, direntry):
     code = (direntry[0], 0)
     if (code in ENTTABLE and
-            not isinstance(ENTTABLE[code], (str, unicode))):
+            not isinstance(ENTTABLE[code], str)):
         return ENTTABLE[code](index, direntry[1:])
     return IGESentity(direntry[0], '', index, direntry[1:])
 

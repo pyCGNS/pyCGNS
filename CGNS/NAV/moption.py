@@ -821,11 +821,11 @@ False, False),
                 #          print 'K',k,'V',udata[k],'T',type(udata[k])
                 if k[0] != '_':
                     val = '%s' % str(udata[k])
-                    if isinstance(udata[k], (str, unicode)):
+                    if isinstance(udata[k], str):
                         val = u'u"""%s"""' % repr(udata[k]).lstrip("u'").lstrip("'").rstrip("'") # Error
                     elif isinstance(udata[k], bytes):
                         val = u'u"""%s"""' % repr(udata[k].decode('utf-8')).lstrip("u'").lstrip("'").rstrip("'")
-                    if not isinstance(k, (str, unicode)):
+                    if not isinstance(k, str):
                         uk = u"u'%s'" % repr(k.decode('utf-8')).lstrip("u'").lstrip("'").rstrip("'")
                     else:
                         uk = u"u'%s'" % repr(k).lstrip("u'").lstrip("'").rstrip("'")

@@ -143,7 +143,7 @@ def openFile(filename):
 
 #  -------------------------------------------------------------------------
 def parseFile(filename, A):
-    if (not os.path.exists(filename)):
+    if not os.path.isfile(filename):
         return None
     st = os.stat(filename)
     R = Entry()
@@ -151,7 +151,7 @@ def parseFile(filename, A):
         print('# skip file >1Gb :', filename)
         return None
     T = openFile(filename)
-    if (T is None):
+    if T is None:
         return None
     fmt = ''
     hdr = ''
