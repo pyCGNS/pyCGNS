@@ -109,8 +109,8 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
                 (bv, bu) = b.split()
             except ValueError:
                 return a < b
-            av = float(str.replace(av, ',', '.')) * wg[au]
-            bv = float(str.replace(bv, ',', '.')) * wg[bu]
+            av = float(av.replace(',', '.')) * wg[au]
+            bv = float(bv.replace(',', '.')) * wg[bu]
             return av < bv
         return 1
 
