@@ -95,7 +95,12 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         if c in (0, 2):
             return a < b
         if c == 3:
-            fmtr = "%d %b %Y %H:%M:%S"
+            fmt_qt = "dd-MM-yyyy hh:mm:ss"
+            left_time = self.model.lastModified(left)
+            right_time = self.model.lastModified(right)
+            a = left_time.toString(fmt_qt)
+            b = right_time.toString(fmt_qt)
+            fmtr = "%d-%m-%Y %H:%M:%S"
             fmtw = "%Y-%m-%d %H:%M:%S"
             ad = time.strptime(str(a), fmtr)
             bd = time.strptime(str(b), fmtr)
