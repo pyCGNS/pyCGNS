@@ -1,0 +1,42 @@
+include MANIFEST.in
+include README.md
+include LICENSE
+include license.txt
+include readme.txt
+include setup.py
+include setup_userConfig.py
+include tox.ini
+
+recursive-include doc *
+prune doc/_build
+recursive-include demo *
+
+recursive-include CGNS *.h *.pyx *.pxd *.pxi *.py *.txt *.in
+recursive-include CGNS *.c
+recursive-include CGNS *.cgns
+recursive-include CGNS *.gif
+recursive-include CGNS *.hdf
+recursive-include CGNS *.png
+recursive-include CGNS *.qrc
+recursive-include CGNS *.ui
+recursive-include CGNS *.supp
+recursive-include CGNS Makefile
+
+recursive-include lib *.py *.txt *.ico *.bmp *.xcf *.iss *.tmp
+recursive-include windows *.h
+
+include .pylintrc
+include CGNS/NAV/R/icons/ACKNOWLEDGEMENT
+
+recursive-exclude CGNS/NAV *.c
+recursive-exclude CGNS/VAL *.c
+exclude CGNS/APP/lib/arrayutils.c
+exclude CGNS/MAP/CHLone_config.h
+exclude CGNS/MAP/EmbeddedCHLone.c
+exclude CGNS/MAP/EmbeddedCHLone.pyx
+recursive-exclude lib *.pyc
+
+exclude ci .github
+recursive-exclude ci *
+recursive-exclude .github *
+exclude *.yml

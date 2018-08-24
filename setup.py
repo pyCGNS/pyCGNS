@@ -430,19 +430,47 @@ for module_log in module_logs:
     log(module_log)
 line()
 
+# --- Distutils metadata --------------------------------------------
+
+cls_txt = \
+"""
+Development Status :: 3 - Alpha
+Intended Audience :: Developers
+Intended Audience :: Information Technology
+Intended Audience :: Science/Research
+License :: OSI Approved :: GNU LGPL
+Programming Language :: Cython
+Programming Language :: Python
+Programming Language :: Python :: 2.7
+Programming Language :: Python :: 3
+Programming Language :: Python :: 3.6
+Programming Language :: Python :: Implementation :: CPython
+Topic :: Scientific/Engineering
+Topic :: Database
+Topic :: Software Development :: Libraries :: Python Modules
+Operating System :: Unix
+Operating System :: POSIX :: Linux
+Operating System :: MacOS :: MacOS X
+Operating System :: Microsoft :: Windows
+"""
+
 # -------------------------------------------------------------------------  
 setup(
-    name=CONFIG.NAME,
-    version=CONFIG.VERSION,
-    description=CONFIG.DESCRIPTION,
-    author=CONFIG.AUTHOR,
-    author_email=CONFIG.EMAIL,
-    license=CONFIG.LICENSE,
-    packages=ALL_PACKAGES,
-    scripts=ALL_SCRIPTS,
-    ext_modules=ALL_EXTENSIONS,
-    cmdclass=cmd,
-    install_requires=['numpy','future']
+    name = CONFIG.NAME,
+    version = CONFIG.VERSION,
+    description = CONFIG.DESCRIPTION,
+    long_description = CONFIG.DESCRIPTION,
+    classifiers = [x for x in cls_txt.split("\n") if x],
+    author = CONFIG.AUTHOR,
+    author_email = CONFIG.EMAIL,
+    license = CONFIG.LICENSE,
+    url = CONFIG.URL,
+    packages = ALL_PACKAGES,
+    scripts = ALL_SCRIPTS,
+    ext_modules = ALL_EXTENSIONS,
+    cmdclass = cmd,
+    install_requires = ['numpy', 'future'],
+    setup_requires = ['numpy', 'future', 'Cython>=0.25', 'pkgconfig']
 )
 # -------------------------------------------------------------------------  
 # --- last line

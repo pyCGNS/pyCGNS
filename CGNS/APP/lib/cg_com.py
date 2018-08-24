@@ -94,15 +94,15 @@ def asHDFname(FA, C):
 
 
 def convertInPlace(FA, FH, C):
-    if (not os.path.exists(FA)):
-        if (C.verbose):
+    if not os.path.isfile(FA):
+        if C.verbose:
             print('   ' * C.depth + " Error: Unreachable file: %s" % FA)
         return False
-    elif (not CGM.probe(FA)):
+    elif not CGM.probe(FA):
         subprocess.check_output([C.converter, "-h", FA, FH])
         return True
     else:
-        if (C.verbose):
+        if C.verbose:
             print('   ' * C.depth + " Error: Mixing links to ADF and HDF files...")
         return False
 

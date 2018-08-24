@@ -403,7 +403,7 @@ def garbage(tree):
 # ---------------------------------------------------------------------------
 def probe(filename, path=None):
     tfile = os.path.normpath(os.path.expanduser(filename))
-    if not os.path.exists(tfile):
+    if not os.path.isfile(tfile):
         raiseException(900, tfile)
     if path is None:
         r = s2p_probe(tfile.encode('utf-8'), ''.encode('utf-8'))
@@ -453,7 +453,7 @@ def load(filename, **kw):
     tpath = os.path.normpath(os.path.expanduser(filename))
     tdir = os.path.split(tpath)[0]
     tfile = os.path.split(tpath)[1]
-    if not os.path.exists(tpath):
+    if not os.path.isfile(tpath):
         raiseException(900, tpath)
     if 'subtree' in kw:
         path = kw['subtree']
@@ -546,7 +546,7 @@ def save(filename, tree, **kw):
     tpath = os.path.normpath(os.path.expanduser(filename))
     tdir = os.path.split(tpath)[0]
     tfile = os.path.split(tpath)[1]
-    if (flags & S2P_FUPDATE) and (not os.path.exists(tfile)):
+    if (flags & S2P_FUPDATE) and (not os.path.isfile(tfile)):
         raiseException(901, filename)
     if (flags & S2P_FUPDATE) and (not os.access(tfile, os.W_OK)):
         raiseException(920, filename)

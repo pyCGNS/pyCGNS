@@ -32,7 +32,7 @@ SAVEBUTTON = ['Save', 'Save to selected file']
 # -----------------------------------------------------------------
 def checkFilePermission(path, write=False):
     return True
-    if not os.path.exists(path):
+    if not os.path.isfile(path):
         return False
     r = False
     w = False
@@ -95,7 +95,12 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         if c in (0, 2):
             return a < b
         if c == 3:
-            fmtr = "%d %b %Y %H:%M:%S"
+            fmt_qt = "dd-MM-yyyy hh:mm:ss"
+            left_time = self.model.lastModified(left)
+            right_time = self.model.lastModified(right)
+            a = left_time.toString(fmt_qt)
+            b = right_time.toString(fmt_qt)
+            fmtr = "%d-%m-%Y %H:%M:%S"
             fmtw = "%Y-%m-%d %H:%M:%S"
             ad = time.strptime(str(a), fmtr)
             bd = time.strptime(str(b), fmtr)
@@ -109,8 +114,8 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
                 (bv, bu) = b.split()
             except ValueError:
                 return a < b
-            av = float(str.replace(av, ',', '.')) * wg[au]
-            bv = float(str.replace(bv, ',', '.')) * wg[bu]
+            av = float(av.replace(',', '.')) * wg[au]
+            bv = float(bv.replace(',', '.')) * wg[bu]
             return av < bv
         return 1
 
@@ -482,9 +487,9 @@ class Q7File(QWidget, Ui_Q7FileWindow):
                         diag, MSG.INFO)
 
     def checkTarget(self, filename, write=False):
-        if os.path.exists(filename) and not write:
+        if os.path.isfile(filename) and not write:
             return None
-        if not os.path.exists(filename) and write:
+        if not os.path.isfile(filename) and write:
             return None
         if self.cOverwrite.isChecked():
             sc = "The file is <b>completely replaced</b> by the current tree"

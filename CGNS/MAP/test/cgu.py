@@ -43,11 +43,11 @@ class MAPTestCase(unittest.TestCase):
         self.HDF02 = 'T02.hdf'
 
     def unlink(self, filename):
-        if os.path.exists(filename):
+        if os.path.isfile(filename):
             os.unlink(filename)
 
     def chmod(self, filename, mode):
-        if os.path.exists(filename):
+        if os.path.isfile(filename):
             os.chmod(filename, mode)
 
     def getDump(self, filename, path, format, fct):

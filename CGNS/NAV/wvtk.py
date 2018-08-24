@@ -82,6 +82,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         self._parent = parent
         self._master = parent
         self._vtk = None
+        self._lastSelectedType = None
         if VTK_VERSION_MAJOR < 6:
             MSG.wError(self._control,
                        501, "Your VTK version is lower than v6.0, you should consider upgrading", "Oups...")
