@@ -14,7 +14,7 @@ import string
 import time
 import sys
 
-from CGNS.pyCGNSconfig import HAS_PY2
+from CGNS.pyCGNSconfig import HAS_PY2, HAS_MSW
 
 from qtpy.QtCore import *
 from qtpy.QtWidgets import *
@@ -31,7 +31,8 @@ SAVEBUTTON = ['Save', 'Save to selected file']
 
 # -----------------------------------------------------------------
 def checkFilePermission(path, write=False):
-    return True
+    if HAS_MSW:
+        return True
     if not os.path.isfile(path):
         return False
     r = False

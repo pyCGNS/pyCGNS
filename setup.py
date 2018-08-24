@@ -24,7 +24,7 @@ sys.path = ['{}/lib'.format(os.getcwd())] + sys.path
 from setuputils import (MAJOR_VERSION, MINOR_VERSION,
                         HAS_MSW, HAS_PY2, HAS_PY3,
                         log, line, is_windows, fix_path,
-                        search, clean,
+                        search, clean, touch,
                         ConfigException,
                         updateVersionInFile, installConfigFiles)
 
@@ -87,10 +87,10 @@ doc2 = """
 
 """
 
-def str2bool(v):
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+def str2bool(value):
+    if value.lower() in ('yes', 'true', 't', 'y', '1'):
         return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+    elif value.lower() in ('no', 'false', 'f', 'n', '0'):
         return False
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
@@ -342,7 +342,7 @@ if NAV and CONFIG.HAS_QTPY:
 
     fakefile = "./CGNS/NAV/fake.pxi"
     if args.generate:
-        setuputils.touch(fakefile)
+        touch(fakefile)
 
     modnamelist = [
         'Q7TreeWindow',
@@ -456,21 +456,21 @@ Operating System :: Microsoft :: Windows
 
 # -------------------------------------------------------------------------  
 setup(
-    name = CONFIG.NAME,
-    version = CONFIG.VERSION,
-    description = CONFIG.DESCRIPTION,
-    long_description = CONFIG.DESCRIPTION,
-    classifiers = [x for x in cls_txt.split("\n") if x],
-    author = CONFIG.AUTHOR,
-    author_email = CONFIG.EMAIL,
-    license = CONFIG.LICENSE,
-    url = CONFIG.URL,
-    packages = ALL_PACKAGES,
-    scripts = ALL_SCRIPTS,
-    ext_modules = ALL_EXTENSIONS,
-    cmdclass = cmd,
-    install_requires = ['numpy', 'future'],
-    setup_requires = ['numpy', 'future', 'Cython>=0.25', 'pkgconfig']
+    name=CONFIG.NAME,
+    version=CONFIG.VERSION,
+    description=CONFIG.DESCRIPTION,
+    long_description=CONFIG.DESCRIPTION,
+    classifiers=[x for x in cls_txt.split("\n") if x],
+    author=CONFIG.AUTHOR,
+    author_email=CONFIG.EMAIL,
+    license=CONFIG.LICENSE,
+    url=CONFIG.URL,
+    packages=ALL_PACKAGES,
+    scripts=ALL_SCRIPTS,
+    ext_modules=ALL_EXTENSIONS,
+    cmdclass=cmd,
+    install_requires=['numpy', 'future'],
+    setup_requires=['numpy', 'future', 'Cython>=0.25', 'pkgconfig']
 )
 # -------------------------------------------------------------------------  
 # --- last line
