@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7MergeWindow.ui'
+# Form implementation generated from reading ui file 'CGNS\NAV\T\Q7MergeWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #

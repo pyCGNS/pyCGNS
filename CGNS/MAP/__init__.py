@@ -5,9 +5,8 @@
 #
 """
  CGNS.MAP module is the CGNS module interface to CHLone
-  - now all the code is in CHLone and its CGNS/Python interface
-  - contains only renaming and a CGNS.MAP test file
-  - please refer to CHLone python module for documentation
+  - now all the CHLone code is embedded in CGNS.MAP (EmbeddedCHLone)
+  - you DO NOT need to install CHLone on its own
 """
 #
 from .EmbeddedCHLone import load

@@ -1,22 +1,9 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import print_function
-
-import sys
-if sys.version_info[0] < 3:
-    HAS_PY3=False
-    HAS_PY2=True
-else:
-    HAS_PY3=True
-    HAS_PY2=False
-
-# in the case the default python/distutils compiler fails with mpi, set
-# this variable. You should check this compiler is the one used for HDF5 prod
-# in the share/cmake config of your HDF5 installation.
-CYTHON_COMPILER_FOR_MAP = 'mpicc'
 
 import os
 import sys
@@ -27,19 +14,33 @@ import re
 
 from setuptools import setup, Extension
 
+# in the case the default python/distutils compiler fails with mpi, set
+# this variable. You should check this compiler is the one used for HDF5 prod
+# in the share/cmake config of your HDF5 installation.
+CYTHON_COMPILER_FOR_MAP = 'mpicc'
+
 # --- get overall configuration
-sys.path = ['./lib'] + sys.path
-import setuputils
+sys.path = ['{}/lib'.format(os.getcwd())] + sys.path
+from setuputils import (MAJOR_VERSION, MINOR_VERSION,
+                        HAS_MSW, HAS_PY2, HAS_PY3,
+                        log, line, is_windows, fix_path,
+                        search, clean,
+                        ConfigException,
+                        updateVersionInFile, installConfigFiles)
 
 
-def line(m=""):
-    print("#", "-" * 70)
-    if m:
-        print("# ----- %s" % m)
-
-
-line('pyCGNS v%d.%d install' % (setuputils.MAJORVERSION, setuputils.MINORVERSION))
+line('pyCGNS v{}.{} install'.format(MAJOR_VERSION, MINOR_VERSION))
 line()
+if HAS_PY3:
+    log('found Python 3 platform')
+else:
+    log('found Python 2 platform')
+log('using Python from {}'.format(sys.prefix))
+
+if HAS_MSW:
+    log('found Windows platform')
+else:
+    log('found Unix platform')
 
 doc1 = """
   pyCGNS installation setup 
@@ -107,8 +108,8 @@ pr.add_argument("-U", "--update", action='store_true',
 pr.add_argument("-g", "--generate", action='store_true',
                 help='force Qt/creator .pyx files to be regenerated')
 
-modules = {"app":True, "map":True, "pat":True, "val":True,
-           "dat":True, "nav":True}
+modules = {"app": True, "map": True, "pat": True, "val": True,
+           "dat": True, "nav": True}
 
 for name, val in modules.items():
     pr.add_argument("--" + name, type=str2bool, default=val,
@@ -139,21 +140,12 @@ ALL_SCRIPTS = []
 ALL_EXTENSIONS = []
 OTHER_INCLUDES_PATHS = []
 OTHER_LIBRARIES_PATHS = []
+EXTRA_DEFINE_MACROS = []
 
-if sys.platform == 'win32':
-    OTHER_INCLUDES_PATHS = ['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\include'] + [
-        'c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\include']
-    OTHER_INCLUDES_PATHS += ['.\\windows']
-    OTHER_LIBRARIES_PATHS = ['c:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\lib\\amd64'] + [
-        'c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Lib\\x64']
+if HAS_MSW:
     EXTRA_DEFINE_MACROS = [('_HDF5USEDLL_', None), ('H5_BUILT_AS_DYNAMIC_LIB', None)]
-    PLATFORM_WINDOWS = 1
-else:
-    EXTRA_DEFINE_MACROS = []
-    PLATFORM_WINDOWS = 0
 
-modules = ""
-
+module_logs = []
 incs = []
 libs = []
 
@@ -165,12 +157,12 @@ if args.libs is not None:
     libs = [os.path.expanduser(path) for path in args.libs.split(os.path.pathsep)]
 
 try:
-    (CONFIG, status) = setuputils.search(incs, libs)
-except setuputils.ConfigException as val:
-    print('Cannot build pyCGNS without:', val)
+    (CONFIG, status) = search(incs, libs)
+except ConfigException as e:
+    log('***** Cannot build pyCGNS without: {}'.format(e))
     sys.exit(1)
 
-print(setuputils.pfx + '-' * 65)
+line()
 
 new_args = []
 for arg in sys.argv:
@@ -185,24 +177,22 @@ if args.update:
     #os.system('hg parents --template="{rev}\n" > %s/revision.tmp' \
     #          % CONFIG.PRODUCTION_DIR)
     # Quick and dirty revision, should use git describe --always instead
-    os.system('git rev-list --reverse HEAD | awk "{ print NR }" | tail -n 1 > %s/revision.tmp' \
-              % CONFIG.PRODUCTION_DIR)
-    setuputils.updateVersionInFile('./lib/pyCGNSconfig_default.py',
-                                   CONFIG.PRODUCTION_DIR)
+    os.system(r'git rev-list --reverse HEAD | awk "{ print NR }" | tail -n 1 > {}/revision.tmp' \
+              .format(CONFIG.PRODUCTION_DIR))
+    updateVersionInFile(fix_path('./lib/pyCGNSconfig_default.py'),
+                        CONFIG.PRODUCTION_DIR)
 
 
 def hasToGenerate(source, destination, force):
-    if PLATFORM_WINDOWS:
-        return True
     return (force or not os.path.exists(destination) or
-                os.path.getmtime(source) > os.path.getmtime(destination))
+            os.path.getmtime(source) > os.path.getmtime(destination))
 
 
-def resolveVars(filename, conf, force):
-    if hasToGenerate(filename + '.in', filename, args.generate):
-        with open('%s.in' % filename, 'r') as fg1:
+def resolveVars(filename, confvalues, force):
+    if hasToGenerate(filename + '.in', filename, force):
+        with open('{}.in'.format(filename), 'r') as fg1:
             l1 = fg1.readlines()
-        l2 = [ll % conf for ll in l1]
+        l2 = [ll % confvalues for ll in l1]
         with open(filename, 'w') as fg2:
             fg2.writelines(l2)
 
@@ -226,9 +216,9 @@ if APP:
                      'CGNS.APP.examples',
                      'CGNS.APP.misc',
                      'CGNS.APP.test']
-    modules += "\n# APP   add  build"
+    module_logs.append("APP   add  build")
 else:
-    modules += "\n# APP   skip build *"
+    module_logs.append("APP   skip build *")
 
 # -------------------------------------------------------------------------  
 if MAP:
@@ -249,7 +239,7 @@ if MAP:
     conf = {'CHLONE_HAS_PTHREAD': 1,
             'CHLONE_HAS_REGEXP': 1,
             'CHLONE_PRINTF_TRACE': 0,
-            'CHLONE_ON_WINDOWS': PLATFORM_WINDOWS,
+            'CHLONE_ON_WINDOWS': HAS_MSW,
             'CHLONE_H5CONF_STD': CONFIG.HDF5_HST,
             'CHLONE_H5CONF_64': CONFIG.HDF5_H64,
             'CHLONE_H5CONF_UP': CONFIG.HDF5_HUP,
@@ -262,7 +252,8 @@ if MAP:
 
     EXTRA_MAP_COMPILE_ARGS = ''
 
-    for d in depfiles: resolveVars(d, conf, args.generate)
+    resolveVars(fix_path(depfiles[0]), conf, True)
+    resolveVars(fix_path(depfiles[1]), conf, args.generate)
     library_dirs = [l for l in library_dirs if l != '']
 
     # hack: actually shoudl read hdf5/cmake config to get true compiler...
@@ -285,9 +276,9 @@ if MAP:
                                  extra_compile_args=extra_compile_args)]
 
     ALL_PACKAGES += ['CGNS.MAP', 'CGNS.MAP.test']
-    modules += "\n# MAP   add  build"
+    module_logs.append("MAP   add  build")
 else:
-    modules += "\n# MAP   skip build *"
+    module_logs.append("MAP   skip build *")
 
 # -------------------------------------------------------------------------  
 if VAL:
@@ -312,9 +303,9 @@ if VAL:
                                  include_dirs=CONFIG.INCLUDE_DIRS,
                                  extra_compile_args=[])]
 
-    modules += "\n# VAL   add  build"
+    module_logs.append("VAL   add  build")
 else:
-    modules += "\n# VAL   skip build *"
+    module_logs.append("VAL   skip build *")
 
 # -------------------------------------------------------------------------  
 if PAT:
@@ -325,9 +316,9 @@ if PAT:
     ALL_PACKAGES += ['CGNS.PAT',
                      'CGNS.PAT.SIDS',
                      'CGNS.PAT.test']
-    modules += "\n# PAT   add  build"
+    module_logs.append("PAT   add  build")
 else:
-    modules += "\n# PAT   skip build *"
+    module_logs.append("PAT   skip build *")
 
 # -------------------------------------------------------------------------  
 if DAT:
@@ -339,9 +330,9 @@ if DAT:
     ALL_SCRIPTS += ['CGNS/DAT/tools/CGNS.DAT',
                     'CGNS/DAT/tools/daxQT',
                     'CGNS/DAT/tools/CGNS.DAT.create']
-    modules += "\n# DAT   add  build"
+    module_logs.append("DAT   add  build")
 else:
-    modules += "\n# DAT   skip build *"
+    module_logs.append("DAT   skip build *")
 
 # -------------------------------------------------------------------------  
 if NAV and CONFIG.HAS_QTPY:
@@ -396,40 +387,48 @@ if NAV and CONFIG.HAS_QTPY:
                                  library_dirs=CONFIG.NUMPY_PATH_LIBRARIES,
                                  libraries=CONFIG.NUMPY_LINK_LIBRARIES,
                                  )]
-        g = ("CGNS/NAV/T/%s.ui" % m, "CGNS/NAV/G/%s.pyx" % m)
+        g = ("CGNS/NAV/T/{}.ui".format(m), "CGNS/NAV/G/{}.pyx".format(m))
         if (('true' not in [cui, crc]) and hasToGenerate(g[0], g[1], args.generate)):
             modgenlist += [m]
 
     for m in modgenlist:
-        print('# Generate from updated Qt templates  (%s): %s' % (cui, m))
-        com = "(%s -o CGNS/NAV/G/%s.pyx CGNS/NAV/T/%s.ui;(cd CGNS/NAV/G;%s -a %s.pyx))2>/dev/null" % (cui, m, m, ccy, m)
-        # print com
-        os.system(com)
+        log('Generate from updated Qt templates  ({}): {}'.format(cui, m))
+        com = "{} -o CGNS/NAV/G/{}.pyx CGNS/NAV/T/{}.ui".format(cui, m, m)
+        #print(fix_path(com))
+        os.system(fix_path(com))
+        com = "{} -a CGNS/NAV/G/{}.pyx".format(ccy, m)
+        #print(fix_path(com))
+        os.system(fix_path(com))
 
     if (hasToGenerate('CGNS/NAV/R/Res.qrc', 'CGNS/NAV/Res_rc.py', args.generate)):
-        print('# Generate from updated Qt Ressources (%s): Res_rc.py' % (crc))
-        com = "(%s -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc)2>/dev/null" % (crc)
-        os.system(com)
+        log('Generate from updated Qt Ressources ({}): Res_rc.py'.format(crc))
+        com = "{} -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc".format(crc)
+        os.system(fix_path(com))
 
     ALL_PACKAGES += ['CGNS.NAV', 'CGNS.NAV.test']
     ALL_EXTENSIONS += modextlist
 
-    modules += "\n# NAV   add  build"
-else:
-    modules += "\n# NAV   skip build *"
+    if CONFIG.HAS_VTK:
+        module_logs.append("NAV   add  build (with VTK)")
+    else:
+        module_logs.append("NAV   add  build (without VTK)")
 
-setuputils.installConfigFiles(CONFIG.PRODUCTION_DIR)
+else:
+    module_logs.append("NAV   skip build *")
+
+installConfigFiles(CONFIG.PRODUCTION_DIR)
 
 #  -------------------------------------------------------------------------
 if CONFIG.HAS_CYTHON:
     from Cython.Distutils import build_ext
 
-    cmd = {'clean': setuputils.clean, 'build_ext': build_ext}
+    cmd = {'clean': clean, 'build_ext': build_ext}
 else:
-    cmd = {'clean': setuputils.clean}
+    cmd = {'clean': clean}
 
-print("#" + modules)
-print("#\n# Running build now...\n#")
+for module_log in module_logs:
+    log(module_log)
+line()
 
 # -------------------------------------------------------------------------  
 setup(

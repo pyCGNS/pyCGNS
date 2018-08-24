@@ -45,11 +45,13 @@ file format, you can use pyCGNS without any file at all for your
 actual CFD data! 
 
 
-.. sidebar:: Release 5.0 (Feb 2017)
+.. sidebar:: Release 5.0 (Resume 09/2018)
 
    - Embedded CHLone (CGNS/HDF5 mapping)
    - Windows version update
    - Python 3.6 support
+
+   - `Github repository and tickets <http://github.com/pyCGNS/pyCGNS>`_
 
 There are seven sub-modules in
 *pyCGNS*, some of them are libraries of functions, some other are

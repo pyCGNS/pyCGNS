@@ -5,9 +5,11 @@
 #
 from __future__ import unicode_literals
 from __future__ import print_function
-MAJORVERSION = 5
-MINORVERSION = 0
-REVISION = 0
+
+# --------------------------------------------------------------------
+MAJOR_VERSION = 5
+MINOR_VERSION = 0
+REVISION = 1
 # --------------------------------------------------------------------
 
 import os
@@ -26,16 +28,49 @@ from distutils.command.clean import clean as _clean
 rootfiles = ['__init__.py', 'errors.py', 'version.py', 'config.py', 'test.py']
 compfiles = []
 
-pfx = '# '
+pfx = '#'
+def line(msg=""):
+    print("{} {}".format(pfx, "-" * 70))
+    if msg:
+        print("{} --- {}".format(pfx, msg))
+
+def log(msg):
+    print("{} {}".format(pfx, msg))
 
 # if you change this name, also change lines tagged with 'USER CONFIG'
 userconfigfile = 'setup_userConfig.py'
 
-
 class ConfigException(Exception):
     pass
 
+def is_windows():
+    if sys.platform == 'win32':
+        return 1
+    else:
+        return 0
 
+def is_python3():
+    if sys.version_info[0] < 3:
+        return 0
+    else:
+        return 1
+
+
+# Please leave integers here, these will be used in the SIDS-to-Python C code
+HAS_MSW = is_windows()
+HAS_PY3 = is_python3()
+if HAS_PY3:
+    HAS_PY2 = 0
+else:
+    HAS_PY2 = 1
+
+def fix_path(path):
+    """All paths should be POSIX paths. Translation is required only for windows."""
+    if is_windows():
+        return path.replace('/','\\') # os.sep useless here
+    else:
+        return path
+        
 # --------------------------------------------------------------------
 def prodtag():
     from time import gmtime, strftime
@@ -45,7 +80,6 @@ def prodtag():
     except AttributeError:
         prodhost = 'win32'
     return (proddate, prodhost)
-
 
 # http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
 def which(program):
@@ -72,7 +106,6 @@ def which(program):
 
     return None
 
-
 # --------------------------------------------------------------------
 def unique_but_keep_order(lst):
     if len(lst) < 2:
@@ -82,7 +115,6 @@ def unique_but_keep_order(lst):
         if p not in r:
             r.append(p)
     return r
-
 
 # --------------------------------------------------------------------
 def search(incs, libs, tag='pyCGNS',
@@ -131,36 +163,21 @@ def search(incs, libs, tag='pyCGNS',
                 if (which('pyrcc5') is not None): C.COM_RCC = 'pyrcc5'
                 import Cython
                 C.HAS_CYTHON = True
-                print(pfx + 'using Cython v%s' % Cython.__version__)
+                log('found Cython v%s' % Cython.__version__)
+                log('using Cython from {}'.format(os.path.dirname(Cython.__file__)))
                 C.HAS_CYTHON_2PLUS = False
                 C.CYTHON_VERSION = Cython.__version__
                 try:
                     if (float(Cython.__version__[:3]) > 0.1):
                         C.HAS_CYTHON_2PLUS = True
                     else:
-                        print(pfx + '***** SKIP Cython version cannot build CGNS')
+                        log('***** SKIP Cython version cannot build CGNS')
                 except:
-                    print(pfx + '***** SKIP Cython version cannot build CGNS')
+                    log('***** SKIP Cython version cannot build CGNS')
             except:
                 C.HAS_CYTHON = False
-                print(pfx + '***** FATAL: Cython not found')
+                log('***** FATAL: Cython not found')
 
-        # -----------------------------------------------------------------------
-        if ('PyQt4' in deps):
-            try:
-                import PyQt4
-                import PyQt4.QtCore
-                import PyQt4.QtGui
-                from PyQt4.Qt import PYQT_VERSION_STR
-                from PyQt4.QtCore import QT_VERSION_STR
-
-                C.HAS_PYQT4 = True
-                print(pfx + 'using PyQt4 v%s (Qt v%s)' % (PYQT_VERSION_STR, QT_VERSION_STR))
-                C.PYQT_VERSION = PYQT_VERSION_STR
-                C.QT_VERSION = QT_VERSION_STR
-            except:
-                C.HAS_PYQT4 = False
-                print(pfx + '***** SKIP NAV: PyQt4 not found')
         # -----------------------------------------------------------------------
         if ('qtpy' in deps):
             try:
@@ -170,23 +187,26 @@ def search(incs, libs, tag='pyCGNS',
                 import qtpy.QtWidgets
 
                 C.HAS_QTPY = True
-                print(pfx + 'using qtpy v%s (Qt v%s)' % (qtpy.__version__, qtpy.QtCore.__version__))
+                log('found qtpy v{}'.format(qtpy.__version__))
+                log('using qtpy from {}'.format(os.path.dirname(qtpy.__file__)))
+                log('using qtpy with Qt v{}'.format(qtpy.QtCore.__version__))
                 C.PYQT_VERSION = str(qtpy.__version__)
                 C.QT_VERSION = str(qtpy.QtCore.__version__)
             except:
                 C.HAS_QTPY = False
-                print(pfx + '***** SKIP NAV: qtpy not found')
+                log('***** SKIP NAV: qtpy not found')
+
         # -----------------------------------------------------------------------
         if ('vtk' in deps):
             try:
                 import vtk
                 v = vtk.vtkVersion()
                 C.HAS_VTK = True
-                print(pfx + 'using vtk (python module) v%s' % v.GetVTKVersion())
+                log('found vtk (python module) v%s' % v.GetVTKVersion())
                 C.VTK_VERSION = v.GetVTKVersion()
             except:
                 C.HAS_VTK = False
-                print(pfx + '***** SKIP NAV/VTK: no vtk python module')
+                log('***** SKIP NAV/VTK: no vtk python module')
 
         # -----------------------------------------------------------------------
         if ('numpy' in deps):
@@ -194,7 +214,7 @@ def search(incs, libs, tag='pyCGNS',
             libs = libs + C.NUMPY_PATH_LIBRARIES
             tp = find_numpy(incs, libs, C.NUMPY_LINK_LIBRARIES)
             if (tp is None):
-                print(pfx + 'FATAL: setup cannot find Numpy')
+                log('***** FATAL: setup cannot find Numpy')
                 sys.exit(1)
             (C.NUMPY_VERSION,
              C.NUMPY_VERSION_API,
@@ -202,9 +222,9 @@ def search(incs, libs, tag='pyCGNS',
              C.NUMPY_PATH_LIBRARIES,
              C.NUMPY_LINK_LIBRARIES,
              C.NUMPY_EXTRA_ARGS) = tp
-            print(pfx + 'using Numpy version %s' % (C.NUMPY_VERSION,))
-            print(pfx + 'using Numpy API version %s' % (C.NUMPY_VERSION_API,))
-            print(pfx + 'using Numpy headers from %s' % (C.NUMPY_PATH_INCLUDES[0]))
+            log('found Numpy version %s' % (C.NUMPY_VERSION,))
+            log('using Numpy API version %s' % (C.NUMPY_VERSION_API,))
+            log('using Numpy headers from %s' % (C.NUMPY_PATH_INCLUDES[0]))
             C.HAS_NUMPY = True
             incs = incs + C.NUMPY_PATH_INCLUDES
             libs = libs + C.NUMPY_PATH_LIBRARIES
@@ -215,7 +235,7 @@ def search(incs, libs, tag='pyCGNS',
             libs = libs + C.HDF5_PATH_LIBRARIES + C.LIBRARY_DIRS
             tp = find_HDF5(incs, libs, C.HDF5_LINK_LIBRARIES)
             if (tp is None):
-                print(pfx + '***** FATAL: setup cannot find HDF5!')
+                log('***** FATAL: setup cannot find HDF5')
                 sys.exit(1)
             (C.HDF5_VERSION,
              C.HDF5_PATH_INCLUDES,
@@ -226,11 +246,11 @@ def search(incs, libs, tag='pyCGNS',
              C.HDF5_H64,
              C.HDF5_HUP,
              C.HDF5_PARALLEL) = tp
-            print(pfx + 'using HDF5 %s' % (C.HDF5_VERSION,))
-            print(pfx + 'using HDF5 headers from %s' % (C.HDF5_PATH_INCLUDES[0]))
-            print(pfx + 'using HDF5 libs from %s' % (C.HDF5_PATH_LIBRARIES[0]))
+            log('found HDF5 %s' % (C.HDF5_VERSION,))
+            log('using HDF5 headers from %s' % (C.HDF5_PATH_INCLUDES[0]))
+            log('using HDF5 libs from %s' % (C.HDF5_PATH_LIBRARIES[0]))
             if C.HDF5_PARALLEL:
-                print(pfx + 'using HDF5 parallel version (cython uses $MPICC)')
+                log('using HDF5 parallel version (cython uses $MPICC)')
             C.HAS_HDF5 = True
             incs = incs + C.HDF5_PATH_INCLUDES + C.INCLUDE_DIRS
             libs = libs + C.HDF5_PATH_LIBRARIES + C.LIBRARY_DIRS
@@ -238,7 +258,7 @@ def search(incs, libs, tag='pyCGNS',
             # ---------------------------------------------------------------------
 
     except ImportError:
-        print(pfx + '***** FATAL: setup cannot find pyCGNSconfig.py file!')
+        log('***** FATAL: setup cannot find pyCGNSconfig.py file!')
         sys.exit(1)
     C.HDF5_PATH_INCLUDES = list(set(C.HDF5_PATH_INCLUDES))
     C.HDF5_PATH_LIBRARIES = list(set(C.HDF5_PATH_LIBRARIES))
@@ -296,9 +316,9 @@ def updateVersionInFile(filename, bptarget):
 
 # --------------------------------------------------------------------
 # Clean target redefinition - force clean everything
-relist = ['^.*~$', '^core\.*$', '^pyCGNS\.log\..*$',
-          '^#.*#$', '^.*\.aux$', '^.*\.pyc$', '^.*\.bak$', '^.*\.l2h',
-          '^Output.*$']
+relist = [r'^.*~$', r'^core\.*$', r'^pyCGNS\.log\..*$',
+          r'^#.*#$', r'^.*\.aux$', r'^.*\.pyc$', r'^.*\.bak$', r'^.*\.l2h',
+          r'^Output.*$']
 reclean = []
 
 for restring in relist:
@@ -348,7 +368,7 @@ def updateConfig(pfile, gfile, config_default, config_previous=None):
         f.close()
         return
     elif (not os.path.exists("%s/pyCGNSconfig.py" % (gfile))):
-        print("# create new pyCGNSconfig.py file")
+        log("+++++ create new pyCGNSconfig.py file")
         newconf = 1
     else:
         f1 = os.stat("%s/pyCGNSconfig.py" % (gfile))
@@ -358,10 +378,10 @@ def updateConfig(pfile, gfile, config_default, config_previous=None):
             f2 = os.stat("./%s" % userconfigfile)
         if (f1.st_mtime < f2.st_mtime):
             newconf = 1
-            print(pfx + "using modified %s file" % userconfigfile)
+            log("using modified %s file" % userconfigfile)
         else:
             newconf = 0
-            print(pfx + "using existing %s file" % userconfigfile)
+            log("using existing %s file" % userconfigfile)
     if newconf:
         sys.path = ['..'] + ['.'] + sys.path
         import setup_userConfig as UCFG  # USER CONFIG
@@ -383,6 +403,8 @@ def frompath_HDF5():
         h5root = '/usr/local'
     return h5root
 
+def guess_path_python():
+    return os.path.dirname(sys.executable)
 
 # --------------------------------------------------------------------
 def find_HDF5(pincs, plibs, libs):
@@ -391,26 +413,33 @@ def find_HDF5(pincs, plibs, libs):
     vers = ''
     h5root = frompath_HDF5()
     pincs += [h5root, '%s/include' % h5root]
+    if sys.platform == 'win32':
+        pth = guess_path_python()
+        pincs += [h5root, '{}\\Library\\include'.format(pth)]
     plibs += [h5root, '%s/lib64' % h5root]
     plibs += [h5root, '%s/lib' % h5root]
+    if sys.platform == 'win32':
+        pth = guess_path_python()
+        plibs += [h5root, '{}\\Library\\lib'.format(pth)]
     pincs = unique_but_keep_order(pincs)
     plibs = unique_but_keep_order(plibs)
     for pth in plibs:
         if ((os.path.exists(pth + '/libhdf5.a'))
             or (os.path.exists(pth + '/libhdf5.so'))
+            or (os.path.exists(pth + '/libhdf5.lib'))
             or (os.path.exists(pth + '/libhdf5.sl'))):
             notfound = 0
             plibs = [pth]
             break
     if notfound:
-        print(pfx + "***** FATAL: libhdf5 not found, please check paths:")
+        log("***** FATAL: libhdf5 not found, please check paths:")
         for ppl in plibs:
             print(pfx, ppl)
     notfound = 1
     for pth in pincs:
         if (os.path.exists(pth + '/hdf5.h')): notfound = 0
     if notfound:
-        print(pfx, "***** FATAL: hdf5.h not found, please check paths")
+        log("***** FATAL: hdf5.h not found, please check paths")
         for ppi in pincs:
             print(pfx, ppi)
         return None
@@ -432,7 +461,7 @@ def find_HDF5(pincs, plibs, libs):
                 notfound = 0
                 break
     if notfound:
-        print(pfx, "***** FATAL: cannot find hdf5 version, please check paths")
+        log("***** FATAL: cannot find hdf5 version, please check paths")
         for ppi in pincs:
             print(pfx, pincs)
         return None
@@ -472,13 +501,16 @@ def find_numpy(pincs, plibs, libs):
     try:
         import numpy
     except ImportError:
-        print(pfx, "**** FATAL cannot import numpy")
+        log("**** FATAL cannot import numpy")
         sys.exit(0)
     apivers = ''
     vers = numpy.version.version
     extraargs = []
     pdir = os.path.normpath(sys.prefix)
     xdir = os.path.normpath(sys.exec_prefix)
+    if sys.platform == 'win32':
+        pth = guess_path_python()
+        pincs += ['{}\\Library\\include'.format(pth)]
     pincs += ['%s/lib/python%s/site-packages/numpy/core/include' \
               % (xdir, sys.version[:3])]
     pincs += ['%s/lib/python%s/site-packages/numpy/core/include' \
@@ -515,8 +547,8 @@ def find_numpy(pincs, plibs, libs):
                 notfound = 0
                 break
     if notfound:
-        print(pfx, "***** FATAL: numpy headers not found, please check your paths")
-        print(pfx, pincs)
+        log("***** FATAL: numpy headers not found, please check your paths")
+        log(pincs)
         return None
 
     return (vers, apivers, pincs, plibs, libs, extraargs)

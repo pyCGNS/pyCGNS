@@ -2,10 +2,8 @@
 #  pyCGNS - Python package for CFD General Notation System -
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
-# Change these values to fit your installation
-# See notes at end of file about config values
-#
-# - Revision numbers are in setuputils.py
+# 
+# Default values, would be overwritten during install
 #
 from __future__ import unicode_literals
 import sys
@@ -25,27 +23,20 @@ mylocal = sys.prefix
 INCLUDE_DIRS = ['%s/include' % mylocal]
 LIBRARY_DIRS = ['%s/lib' % mylocal]
 
-HAS_MLL = False
-HAS_HDF5 = False
+# Use integers instead of booleans, values are used in C files
+HAS_MLL = 0
+HAS_HDF5 = 1
 
 try:
     import vtk
     from CGNS.NAV.wvtk import Q7VTK
-    HAS_VTK = True
+    HAS_VTK = 1
 except ImportError:
-    HAS_VTK = False
+    HAS_VTK = 0
 
-if sys.version_info[0] < 3:
-    HAS_PY3=False
-    HAS_PY2=True
-else:
-    HAS_PY3=True
-    HAS_PY2=False
-
-if sys.platform == 'win32':
-  HAS_MSW = True
-else:  
-  HAS_MSW = False
+HAS_PY3 = 1
+HAS_PY2 = 0
+HAS_MSW = 0
 
 hdf5path = pathfromexec('h5dump')
 HDF5_VERSION = '1.8'
