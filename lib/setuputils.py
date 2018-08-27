@@ -13,6 +13,7 @@ REVISION = 1
 # --------------------------------------------------------------------
 
 import os
+import platform
 import sys
 import shutil
 import re
@@ -76,9 +77,9 @@ def prodtag():
     from time import gmtime, strftime
     proddate = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     try:
-        prodhost = os.uname()
+        prodhost = platform.uname()
     except AttributeError:
-        prodhost = 'win32'
+        prodhost = ('???', '???', '???')
     return (proddate, prodhost)
 
 # http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
@@ -140,6 +141,9 @@ def search(incs, libs, tag='pyCGNS',
     cfgdict['PFX'] = pfx
     cfgdict['DATE'] = pg[0]
     cfgdict['PLATFORM'] = "%s %s %s" % (pg[1][0], pg[1][1], pg[1][-1])
+    cfgdict['HAS_PY2'] = HAS_PY2
+    cfgdict['HAS_PY3'] = HAS_PY3
+    cfgdict['HAS_MSW'] = HAS_MSW
     updateConfig('..', bptarget, cfgdict)
     sys.path = [bptarget] + sys.path
 
@@ -363,6 +367,8 @@ def updateConfig(pfile, gfile, config_default, config_previous=None):
         for ck in config_previous:
             if ck not in cfg:
                 cfg[ck] = config_previous[ck]
+        log("+++++ update pyCGNSconfig.py file")
+        os.unlink("%s/pyCGNSconfig.py" % (gfile))
         f = open("%s/pyCGNSconfig.py" % (gfile), 'w+')
         f.writelines(fpat % cfg)
         f.close()

@@ -153,7 +153,8 @@ except NameError:
 
     _CopyrightNotice = u"""
 Copyright (c) Marc Poinot <br>
-Copyright (c) Onera - The French Aerospace Labs<br><br>
+Copyright (c) Safran - www.safran-group.com<br><br>
+Copyright (c) Onera - www.onera.fr<br><br>
 <b>all other copyrights and used versions listed below</b>
 
 <hr>
@@ -161,16 +162,18 @@ Copyright (c) Onera - The French Aerospace Labs<br><br>
 <table>
 <tr><td>Florent Cayré</td><td>-SNECMA, France</td></tr>
 <tr><td>Alexandre Fayolle</td><td>-LOGILAB, France</td></tr>
+<tr><td>Xavier Garnaud</td><td>-SAFRAN, France</td></tr>
 <tr><td>Loic Hauchard</td><td>-ONERA (Student INSA Rouen, France)</td></tr>
 <tr><td>Elise Hénaux</td><td>-ONERA (Student FIIFO Orsay, France)</td></tr>
-<tr><td>Grégory Laheurte</td><td>-ONERA (DSNA/CS2A), France</td></tr>
+<tr><td>Grégory Laheurte</td><td>-ONERA, France</td></tr>
 <tr><td>Pierre-Jacques Legay</td><td>-BERTIN, France</td></tr>
 <tr><td>Bill Perkins</td><td>-Pacific Northwest Ntl Lab, U.S.A.</td></tr>
+<tr><td>Mickael Philit</td><td>-SAFRAN, France</td></tr>
 <tr><td>Jérôme Regis</td><td>-STILOG, France</td></tr>
-<tr><td>Benoit Rodriguez</td><td>-ONERA (DAAP/H2T), France</td></tr>
+<tr><td>Benoit Rodriguez</td><td>-ONERA, France</td></tr>
 <tr><td>Tristan Soubrié</td><td>-ANDHEO, France</td></tr>
 <tr><td>Francois Thirifays</td><td>-CENAERO, Belgique</td></tr>
-<tr><td>Simon Verley</td><td>-ONERA (DADS/MSAE), France</td></tr>
+<tr><td>Simon Verley</td><td>-ONERA, France</td></tr>
 <tr><td>Ching-Yang Wang</td><td>-U.S.A.</td></tr>
 </table>
 

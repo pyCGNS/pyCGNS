@@ -53,7 +53,7 @@ doc1 = """
 
   All packages are installed if all expected dependancies are found.
   See doc for more installation details and depend:
-  http://pycgns.sourceforge.net/install.html
+  https://pycgns.github.io/install.html
 
   MPI: using HDF5 with parallel features adds dependancies on mpi. The
   simple way to resolve these deps is to force mpicc instead of cc:
@@ -108,8 +108,7 @@ pr.add_argument("-U", "--update", action='store_true',
 pr.add_argument("-g", "--generate", action='store_true',
                 help='force Qt/creator .pyx files to be regenerated')
 
-modules = {"app": True, "map": True, "pat": True, "val": True,
-           "dat": True, "nav": True}
+modules = {"app": True, "map": True, "pat": True, "val": True, "nav": True}
 
 for name, val in modules.items():
     pr.add_argument("--" + name, type=str2bool, default=val,
@@ -132,7 +131,6 @@ APP = args1.app
 MAP = args1.map
 PAT = args1.pat
 VAL = args1.val
-DAT = args1.dat
 NAV = args1.nav
 
 ALL_PACKAGES = []
@@ -319,20 +317,6 @@ if PAT:
     module_logs.append("PAT   add  build")
 else:
     module_logs.append("PAT   skip build *")
-
-# -------------------------------------------------------------------------  
-if DAT:
-    ALL_PACKAGES += ['CGNS.DAT',
-                     'CGNS.DAT.db',
-                     'CGNS.DAT.db.dbdrivers',
-                     'CGNS.DAT.demo',
-                     'CGNS.DAT.test']
-    ALL_SCRIPTS += ['CGNS/DAT/tools/CGNS.DAT',
-                    'CGNS/DAT/tools/daxQT',
-                    'CGNS/DAT/tools/CGNS.DAT.create']
-    module_logs.append("DAT   add  build")
-else:
-    module_logs.append("DAT   skip build *")
 
 # -------------------------------------------------------------------------  
 if NAV and CONFIG.HAS_QTPY:

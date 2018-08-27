@@ -14,7 +14,7 @@ Build and Install
    pair: Installation; CHLone
 
 The installation described here is for UNIX platforms only. The MS-Windows version is distributed as
-a self-installable Windows package.
+a self-installable Windows package. You can also use an *Anaconda* prebuilt package, see below.
 
 The installation process is easy in the case you already have the required
 libraries and a standard configuration.
@@ -27,12 +27,12 @@ libraries. We have now a quite large set of libraries, we are trying hard to
 use well known and easy to install libraries but we must admit this could
 be a difficult task to install all by yourself...
 
-The mandatory libs are *Python*, *numpy*, *HDF5* and *CHLone*, *VTK*
-and *Qt*. The *cython* compiler and *scons* (for CHLone) are also required.
+The mandatory libs are *Python*, *numpy*, *HDF5*, *Cython*.
+The libs *PyQT*, *Qt*, *VTK* are optional.
 
 .. warning::
 
-  The *libcgns* (:term:`CGNS/MLL`) is **NOT** required for pyCGNS.
+  The *libcgns* (:term:`CGNS/MLL`) is **NOT** used by pyCGNS.
 
 The complete set of required tools/modules/libraries contains Python, HDF5
 and other graphical toolkits:
@@ -41,10 +41,8 @@ and other graphical toolkits:
 * `numpy <http://numpy.scipy.org>`_ (v1.1 +)
 * `cython <http://www.cython.org>`_ (v0.19 +)
 * `hdf5 <http://www.hdfgroup.org>`_ (v1.8.5 +)
-* `CHLone <http://chlone.sourceforge.net>`_ (v0.39 +)
 * `VTK <http://www.vtk.org>`_ (v8.0 +)
 * `Qt <http://www.qt.io/download>`_ (v4.7 +)
-* `pySide <http://www.pyside.org>`_ (v4.7 +)
 
 The *VTK* and the *Qt* graphical toolkits need to have a Python binding.
 The important point is to use the **native** Python binding of these toolkits,
@@ -57,11 +55,6 @@ No Python binding is required for HDF5.
    single: CGNS/ADF
    pair: Installation; CGNS/MLL
 
-Optional libraries
-~~~~~~~~~~~~~~~~~~
-The so-called `mid-level` library is not mandatory, 
-
- * `CGNS/MLL (libcgns) <http://www.cgns.org>`_ (starting v3.0) 
 
 Installation process
 ~~~~~~~~~~~~~~~~~~~~
@@ -138,7 +131,18 @@ To avoid overwriting, use Python to update the config::
 
 You do not have to specify the VTK nor the Qt libraries, there is no direct
 link to these libraries: the Python modules will do that.
+
+Anaconda installation
+---------------------
+
+Anaconda framework is a good options for your windows installation.
+You have to carefully check your Anaconda version:
+
+ * Anaconda v2 comes with HDF5 v1.8 (100% compatible CGNS/HDF5)
+ * Anaconda v3 comes with HDF5 v1.10 (not yet compatbile would require on the fly translation)
   
+We strongly suggest you to use a version 2 of Anaconda.
+
 Module dependancies
 -------------------
 
@@ -185,31 +189,7 @@ MAP depends
 
 The embedded *CHLone* library is required and thus *HDF5* is required.
 
-CGNS/MLL
-~~~~~~~~~~~
-
-*CGNS/MLL* and *CGNS/ADF* libraries are required.
-Set the following variable to ``ON`` in the ``CMakeCache.txt`` file::
-
- 
- //Build the CGNSTools package
- BUILD_CGNSTOOLS:BOOL=ON
-
- //Build a shared version of the library
- CGNS_BUILD_SHARED:BOOL=ON
-
- //Enable or disable the use of Fortran
- ENABLE_FORTRAN:BOOL=ON
-
- //Enable or disable HDF5 interface
- ENABLE_HDF5:BOOL=ON
-
-The NAV module (and CHLone by the way) is using cython. You can
-check your cython is present using::
-
-   cython --version
-
-That should not fail...
+Map also depends on *Cython*.
 
 .. _testsupport:
 
@@ -222,7 +202,7 @@ pyCGNS, you can run each test suite from another user account/directory::
   python -c 'import CGNS.MAP.test;CGNS.MAP.test.run()'
 
 All modules tests can be run the same way, replace ``MAP`` by any of
-``PAT``, ``VAL``, ``NAV``, ``APP``, ``DAT``. You can run all the
+``PAT``, ``VAL``, ``NAV``, ``APP``. You can run all the
 tests by importing ``CGNS.test``::
 
   python -c 'import CGNS.PAT.test;CGNS.PAT.test.run()'

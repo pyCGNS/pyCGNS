@@ -3,16 +3,7 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-# Informal list of people that gave some contributions in patches, demos,
-# remarks, testing, etc...
+# see CGNS/NAV/moption.py variable _CopyrightNotice
+# or click on 'question mark icon button' on the control windows of cg_look
 #
-Grégory Laheurte   - ONERA (DSNA/CS2A)
-Benoit Rodriguez   - ONERA (DAAP/H2T)
-Loic Hauchard      - ONERA (Student INSA Rouen, France)
-Elise Hénaux       - ONERA (Student FIIFO Orsay, France)
-Bill Perkins       - Pacific Northwest National Laboratory, U.S.A.
-Florent Cayré      - SNECMA, France
-Ching-Yang Wang    - U.S.A.
-Alexandre Fayolle  - LOGILAB, France
-Francois Thirifays - CENAERO, Belgique
-#
+
