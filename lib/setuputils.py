@@ -119,8 +119,7 @@ def unique_but_keep_order(lst):
 
 # --------------------------------------------------------------------
 def search(incs, libs, tag='pyCGNS',
-           deps=['Cython', 'HDF5', 'numpy', 'vtk',
-                 'qtpy', 'SQLAlchemy']):
+           deps=['Cython', 'HDF5', 'numpy', 'vtk', 'qtpy']):
     state = 1
     for com in sys.argv:
         if com in ['help', 'clean']: state = 0
@@ -213,6 +212,22 @@ def search(incs, libs, tag='pyCGNS',
                 log('***** SKIP NAV/VTK: no vtk python module')
 
         # -----------------------------------------------------------------------
+        if ('h5py' in deps):
+            log('using h5py alternate implementation for CGNS.MAP')
+            try:
+                import warnings
+                warnings.simplefilter(action='ignore', category=FutureWarning)
+                import h5py
+                v = h5py.version.version
+                C.HDF5_VERSION = h5py.version.hdf5_version
+                log('found h5py (python module) v{}'.format(h5py.version.version))
+                log('using HDF5 v{}'.format(C.HDF5_VERSION))
+                C.HAS_H5PY = 1
+            except:
+                log('***** FATAL: setup cannot find h5py and its HDF5')
+                sys.exit(1)
+
+        # -----------------------------------------------------------------------
         if ('numpy' in deps):
             incs = incs + C.NUMPY_PATH_INCLUDES
             libs = libs + C.NUMPY_PATH_LIBRARIES
@@ -235,6 +250,7 @@ def search(incs, libs, tag='pyCGNS',
 
         # -----------------------------------------------------------------------
         if ('HDF5' in deps):
+            log('using HDF5 raw C API implementation for CGNS.MAP')
             incs = incs + C.HDF5_PATH_INCLUDES + C.INCLUDE_DIRS
             libs = libs + C.HDF5_PATH_LIBRARIES + C.LIBRARY_DIRS
             tp = find_HDF5(incs, libs, C.HDF5_LINK_LIBRARIES)
@@ -256,6 +272,7 @@ def search(incs, libs, tag='pyCGNS',
             if C.HDF5_PARALLEL:
                 log('using HDF5 parallel version (cython uses $MPICC)')
             C.HAS_HDF5 = True
+            C.HAS_H5PY = 0
             incs = incs + C.HDF5_PATH_INCLUDES + C.INCLUDE_DIRS
             libs = libs + C.HDF5_PATH_LIBRARIES + C.LIBRARY_DIRS
 
@@ -292,8 +309,8 @@ def installConfigFiles(bptarget):
 
 
 # --------------------------------------------------------------------
-def updateVersionInFile(filename, bptarget):
-    f = open('%s/revision.tmp' % bptarget)
+def updateVersionInFile(filename, cfg):
+    f = open('{}/revision.tmp'.format(cfg.PRODUCTION_DIR))
     r = int(f.readlines()[0][:-1])
     REVISION = r
     f = open(filename, 'r')
@@ -306,9 +323,9 @@ def updateVersionInFile(filename, bptarget):
     for ll in l:
         rl = ll
         if (ll[-len(vver) - 1:-1] == vver):
-            rl = '__version__=%s # %s\n' % (MAJORVERSION, vver)
+            rl = '__version__=%s # %s\n' % (MAJOR_VERSION, vver)
         if (ll[-len(vrel) - 1:-1] == vrel):
-            rl = '__release__=%s # %s\n' % (MINORVERSION, vrel)
+            rl = '__release__=%s # %s\n' % (MINOR_VERSION, vrel)
         if (ll[-len(vrev) - 1:-1] == vrev):
             ACTUALREV = REVISION
             rl = '__revision__=%s # %s\n' % (ACTUALREV, vrev)
@@ -316,7 +333,7 @@ def updateVersionInFile(filename, bptarget):
     f = open(filename, 'w+')
     f.writelines(r)
     f.close()
-
+    cfg.REVISION = REVISION
 
 # --------------------------------------------------------------------
 # Clean target redefinition - force clean everything

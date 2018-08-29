@@ -3,7 +3,7 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-# TESTING RAW CHLONE INTERFACE ***
+# TESTING RAW HDF5/C API and H5PY IMPLEMENTATIONS ***
 # - test save first
 # - test load
 
@@ -16,11 +16,10 @@ import unittest
 
 import numpy
 
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.cgnslib as CGL
-
-
 def genTrees():
+    import CGNS.PAT.cgnskeywords as CGK
+    import CGNS.PAT.cgnslib as CGL
+
     tree = CGL.newCGNSTree()
     b = CGL.newBase(tree, '{Base}', 2, 3)
     z = CGL.newZone(b, '{Zone}', numpy.array([[5, 4, 0], [7, 6, 0]], order='F'))
@@ -29,7 +28,6 @@ def genTrees():
     d = CGL.newDataArray(g, CGK.CoordinateY_s, numpy.ones((5, 7), dtype='d', order='F'))
     d = CGL.newDataArray(g, CGK.CoordinateZ_s, numpy.ones((5, 7), dtype='d', order='F'))
     return (tree,)
-
 
 class MAPTestCase(unittest.TestCase):
     def setUp(self):
@@ -58,17 +56,34 @@ class MAPTestCase(unittest.TestCase):
         v = d.split('): ')[1:][0]
         return fct(v)
 
-    def test_000_Module(self):
-        pass
+    def test_000_Constants(self):
+        import CGNS
+        import CGNS.MAP
+        from CGNS.MAP import flags, flags_set, flags_unset, flags_check    
+        f1 = flags.NONE
+        f2 = flags.ALL
+        self.assertEqual(flags.NONE & flags.ALL, flags.NONE)
+        self.assertEqual(flags.NONE | flags.ALL & flags.ALL, flags.ALL)
+        self.assertEqual(flags.ALL | ~flags.NONE & flags.ALL, flags.ALL)
+        self.assertEqual(flags.ALL ^ flags.TRACE & flags.ALL, flags.ALL & ~flags.TRACE)
+        l = flags.links.OK
 
-    def test_001_Names(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        l = CHLone.FNONE
-        l = CHLone.FALL
-        l = CHLone.CHLoneException
-        l = CHLone.save
-        l = CHLone.load
+        f = flags_set()
+        self.assertEqual(f, flags.DEFAULT)
+        f = flags_set(f, flags.TRACE)
+        self.assertEqual(f, flags.DEFAULT | flags.TRACE & flags.ALL)
+        c = flags_check(f, flags.TRACE)
+        self.assertTrue(c)
+        f = flags_unset(f, flags.TRACE)
+        self.assertEqual(f, flags.DEFAULT & flags.ALL)
+        c = flags_check(f, flags.TRACE)
+        self.assertFalse(c)
 
+    def test_001_Errors(self):
+        from CGNS.MAP import MAPException, probe
+        self.assertRaisesRegexp(MAPException,
+                                "[900].*", probe, "/Z/ ?/ /U.cgns")
+    
     def test_002_Save_Args(self):
         from CGNS.MAP import EmbeddedCHLone as CHLone
         self.assertRaisesRegexp(CHLone.CHLoneException,
@@ -168,7 +183,6 @@ class MAPTestCase(unittest.TestCase):
         from CGNS.MAP import EmbeddedCHLone as CHLone
         CHLone.save(self.HDF01, self.T)
         (t, l, p) = CHLone.load(self.HDF01)
-
 
 # ---
 print('-' * 70 + '\nCGNS.MAP test suite')

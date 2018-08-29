@@ -83,6 +83,11 @@ or::
 All the modules of the pyCGNS package are installed and you can now
 proceed with tutorial examples.
 
+.. warning:
+   The *install* command runs the *build* as first step. If you run first the
+   *build* with specific options you *DO NOT SET AGAIN* in the *install command
+   line you will have a *NEW* build.
+
 Single module installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -136,12 +141,14 @@ Anaconda installation
 ---------------------
 
 Anaconda framework is a good options for your windows installation.
-You have to carefully check your Anaconda version:
+You have to carefully check your Anaconda/HDF5 version:
 
- * Anaconda v2 comes with HDF5 v1.8 (100% compatible CGNS/HDF5)
- * Anaconda v3 comes with HDF5 v1.10 (not yet compatbile would require on the fly translation)
-  
-We strongly suggest you to use a version 2 of Anaconda.
+ * with HDF5 v1.8 you are 100% compatible CGNS/HDF5
+ * with HDF5 v1.10.1 not yet compatible would require on the fly translation
+ * with HDF5 v1.10.2 (some checks still on the way...)
+ 
+If you have version issues, check this thread:
+https://groups.google.com/forum/#!topic/h5py/j6wolQ1vJgE
 
 Module dependancies
 -------------------
