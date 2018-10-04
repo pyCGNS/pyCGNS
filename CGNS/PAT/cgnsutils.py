@@ -391,8 +391,26 @@ def checkChildName(parent, name, dienow=False):
 
 # -----------------------------------------------------------------------------
 def checkUniqueChildName(parent, name, dienow=False):
-    # todo: fix this should return a boolean
-    return getChildName(parent, name, dienow)
+    """
+    Checks if the name is unique in the children list of the parent::
+
+    :arg CGNS/Python parent: the parent node
+    :arg str name: the child name to look for
+    :return:
+      - True if the child *IS* Unique or Not Used
+      - False if the child *IS NOT* Unique
+
+    :raise: :ref:`cgnsnameerror` code 102 if `dienow` is True
+    """
+    if not parent:
+        return True
+    if parent[2] is None:
+        return True
+    count = sum(1 for child in parent[2] if child[0] == name)
+    status = count < 2
+    if dienow and not status:
+        raise CE.cgnsNameError(102, (name, parent[0]))
+    return status
 
 
 # -----------------------------------------------------------------------------
