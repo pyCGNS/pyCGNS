@@ -326,6 +326,40 @@ def setAsChild(parent, node):
     return setChild(parent, node)
 
 
+def setAsUniqueChild(parent, node, check=False):
+    """
+    Adds a child node to the parent node children list
+    Existing child node with the same name is replaced::
+
+      n1=getNodeByPath(T,'/Base/Zone1/ZoneGridConnectivity')
+      n2=getNodeByPath(T,'/Base/Zone1/ZoneGridConnectivity/Connect1')
+      n3=nodeCopy(n2)
+      setAsUniqueChild(n1,n3)
+
+    :arg CGNS/Python parent: the parent node
+    :arg CGNS/Python node: the child node to add to parent
+    :return: The parent node
+    :Remarks:
+      - Check is performed on duplicated child name.
+      - Check on node is optional
+
+    """
+    if check:
+        valid = (checkNode(node)
+                 and checkName(node[0])
+                 and checkArray(node[1])
+                 and checkNodeType(node))
+        if not valid:
+            return parent
+    for idx, child in enumerate(parent[2]):
+        if child[0] == node[0]:
+            parent[2][idx] = node
+            break
+    else:
+        parent[2].append(node)
+    return parent
+
+
 def setChild(parent, node):
     checkNodeCompliant(node, parent)
     parent[2].append(node)
