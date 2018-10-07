@@ -83,15 +83,10 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         self._master = parent
         self._vtk = None
         self._lastSelectedType = None
-        if VTK_VERSION_MAJOR < 6:
+        if VTK_VERSION_MAJOR < 8:
             MSG.wError(self._control,
-                       501, "Your VTK version is lower than v6.0, you should consider upgrading", "Oups...")
-            if VTK_VERSION_MINOR < 8:
-                MSG.wError(self._control,
-                           502,
-                           "Your VTK version is lower than v5.8, if you have hexahedron in your mesh they cannot be "
-                           "display",
-                           "Oups...")
+                       501, "Your VTK version is lower than v8.0, you should consider upgrading", "Oups...")
+            raise RuntimeError("VTK version is too old, please upgrade")
         # FIXME: options are required for parse, then wCGNSTreeParse should
         # be called AFTER the init (that reads options)
         # if the parse fails (no data, bad data...) the window has to be deleted
@@ -256,17 +251,15 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         bds[2] = (bounds[5] + bounds[4]) / 2.0
         grid = self._currentactor[1].GetMapper().GetInput()
         filter = vtk.vtkStructuredGridGeometryFilter()
-        if VTK_VERSION_MAJOR < 6:
-            filter.SetInput(grid)
-        else:
-            filter.SetInputData(grid)
+        if VTK_VERSION_MAJOR < 8:
+            raise RuntimeError("VTK version is too old, please upgrade")
+        filter.SetInputData(grid)
         self.planeWidget.SetPlaceFactor(1.0)
         self.planeWidget.GetOutlineProperty().SetColor(0, 1, 1)
         self.planeWidget.OutlineTranslationOff()
-        if VTK_VERSION_MAJOR < 6:
-            self.planeWidget.SetInput(filter.GetOutput())
-        else:
-            self.planeWidget.SetInputConnection(filter.GetOutputPort())
+        if VTK_VERSION_MAJOR < 8:
+            raise RuntimeError("VTK version is too old, please upgrade")
+        self.planeWidget.SetInputConnection(filter.GetOutputPort())
         self.planeWidget.PlaceWidget()
         self.planeWidget.SetOrigin(bds[0], bds[1], bds[2])
         self.planeWidget.SetNormal(1, 0, 0)
@@ -291,16 +284,14 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         plane.SetNormal(normal)
         grid = self._currentactor[1].GetMapper().GetInput()
         filter = vtk.vtkStructuredGridGeometryFilter()
-        if VTK_VERSION_MAJOR < 6:
-            filter.SetInput(grid)
-        else:
-            filter.SetInputData(grid)
+        if VTK_VERSION_MAJOR < 8:
+            raise RuntimeError("VTK version is too old, please upgrade")
+        filter.SetInputData(grid)
         cutter = vtk.vtkCutter()
         cutter.SetCutFunction(plane)
-        if VTK_VERSION_MAJOR < 6:
-            filter.SetInput(grid)
-        else:
-            filter.SetInputData(grid)
+        if VTK_VERSION_MAJOR < 8:
+            raise RuntimeError("VTK version is too old, please upgrade")
+        filter.SetInputData(grid)
         cutter.Update()
         cutterMapper = vtk.vtkPolyDataMapper()
         cutterMapper.SetInputConnection(cutter.GetOutputPort())
@@ -974,10 +965,9 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         actors.InitTraversal()
         actor = actors.GetNextItem()
         while actor:
-            if VTK_VERSION_MAJOR < 6:
-                w.SetInput(actor.GetMapper().GetInput())
-            else:
-                w.SetInputData(actor.GetMapper().GetInput())
+            if VTK_VERSION_MAJOR < 8:
+                raise RuntimeError("VTK version is too old, please upgrade")
+            w.SetInputData(actor.GetMapper().GetInput())
             actor = actors.GetNextItem()
         w.Write()
 
@@ -1280,12 +1270,10 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
             self.CurrentRenderer = self._vtkren
             self.Outline = vtk.vtkStructuredGridOutlineFilter()
             self.OutlineMapper = vtk.vtkPolyDataMapper()
-            if VTK_VERSION_MAJOR < 6:
-                self.Outline.SetInput(actor2.GetMapper().GetInput())
-                self.OutlineMapper.SetInput(self.Outline.GetOutput())
-            else:
-                self.Outline.SetInputData(actor2.GetMapper().GetInput())
-                self.OutlineMapper.SetInputConnection(self.Outline.GetOutputPort())
+            if VTK_VERSION_MAJOR < 8:
+                raise RuntimeError("VTK version is too old, please upgrade")
+            self.Outline.SetInputData(actor2.GetMapper().GetInput())
+            self.OutlineMapper.SetInputConnection(self.Outline.GetOutputPort())
             if None not in [self.PickedRenderer, self.OutlineActor]:
                 self.PickedRenderer.RemoveActor(self.OutlineActor)
                 self.PickedRenderer = None
@@ -1333,10 +1321,9 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
             return
         (i, j, k) = index
         filter = vtk.vtkStructuredGridGeometryFilter()
-        if VTK_VERSION_MAJOR < 6:
-            filter.SetInput(grid)
-        else:
-            filter.SetInputData(grid)
+        if VTK_VERSION_MAJOR < 8:
+            raise RuntimeError("VTK version is too old, please upgrade")
+        filter.SetInputData(grid)
         filter.SetExtent(i - 1, i - 1, j - 1, j - 1, k - 1, k - 1)
         mapper = vtk.vtkPolyDataMapper()
         mapper.SetInputConnection(filter.GetOutputPort())
@@ -1389,20 +1376,17 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         selection = vtk.vtkSelection()
         selection.AddNode(selectionNode)
         extractSelection = vtk.vtkExtractSelection()
-        if VTK_VERSION_MAJOR < 6:
-            extractSelection.SetInput(0, grid)
-            extractSelection.SetInput(1, selection)
-        else:
-            extractSelection.SetInputData(0, grid)
-            extractSelection.SetInputData(1, selection)
+        if VTK_VERSION_MAJOR < 8:
+            raise RuntimeError("VTK version is too old, please upgrade")
+        extractSelection.SetInputData(0, grid)
+        extractSelection.SetInputData(1, selection)
         extractSelection.Update()
         selected = vtk.vtkUnstructuredGrid()
         selected.ShallowCopy(extractSelection.GetOutput())
         selectedMapper = vtk.vtkDataSetMapper()
-        if VTK_VERSION_MAJOR < 6:
-            selectedMapper.SetInput(selected)
-        else:
-            selectedMapper.SetInputData(selected)
+        if VTK_VERSION_MAJOR < 8:
+            raise RuntimeError("VTK version is too old, please upgrade")
+        selectedMapper.SetInputData(selected)
         self.actorpt = vtk.vtkActor()
         self.actorpt.SetMapper(selectedMapper)
         self.actorpt.GetProperty().SetColor(0, 1, 0)
@@ -1427,20 +1411,17 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         selection = vtk.vtkSelection()
         selection.AddNode(selectionNode)
         extractSelection = vtk.vtkExtractSelection()
-        if VTK_VERSION_MAJOR < 6:
-            extractSelection.SetInput(0, grid)
-            extractSelection.SetInput(1, selection)
-        else:
-            extractSelection.SetInputData(0, grid)
-            extractSelection.SetInputData(1, selection)
+        if VTK_VERSION_MAJOR < 8:
+            raise RuntimeError("VTK version is too old, please upgrade")
+        extractSelection.SetInputData(0, grid)
+        extractSelection.SetInputData(1, selection)
         extractSelection.Update()
         selected = vtk.vtkUnstructuredGrid()
         selected.ShallowCopy(extractSelection.GetOutput())
         selectedMapper = vtk.vtkDataSetMapper()
-        if VTK_VERSION_MAJOR < 6:
-            selectedMapper.SetInput(selected)
-        else:
-            selectedMapper.SetInputData(selected)
+        if VTK_VERSION_MAJOR < 8:
+            raise RuntimeError("VTK version is too old, please upgrade")
+        selectedMapper.SetInputData(selected)
         self.actorpt = vtk.vtkActor()
         self.actorpt.SetMapper(selectedMapper)
         self.actorpt.GetProperty().SetColor(0, 1, 0)

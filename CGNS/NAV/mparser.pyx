@@ -299,10 +299,12 @@ class Mesh(CGNSparser):
                          CGK.HEXA_20: (vtk.vtkHexahedron, (8, 20)),
                          CGK.HEXA_27: (vtk.vtkHexahedron, (8, 27))}
 
-        if VTK_VERSION_MINOR > 8:
-            self._vtkelts[CGK.PENTA_6] = (vtk.vtkPolyhedron, (6, 6))
-            self._vtkelts[CGK.PENTA_15] = (vtk.vtkPolyhedron, (6, 15))
-            self._vtkelts[CGK.PENTA_18] = (vtk.vtkPolyhedron, (6, 18))
+        if VTK_VERSION_MAJOR <  8:
+            raise RuntimeError("VTK version is too old, please upgrade.")
+
+        self._vtkelts[CGK.PENTA_6] = (vtk.vtkPolyhedron, (6, 6))
+        self._vtkelts[CGK.PENTA_15] = (vtk.vtkPolyhedron, (6, 15))
+        self._vtkelts[CGK.PENTA_18] = (vtk.vtkPolyhedron, (6, 18))
 
         try:
             self._status = self.parseZones(zlist)
@@ -430,10 +432,9 @@ class Mesh(CGNSparser):
         g.SetPoints(pts)
         g.SetExtent(0, idim - 1, 0, jdim - 1, 0, kdim - 1)
         d = vtk.vtkDataSetMapper()
-        if VTK_VERSION_MAJOR < 6:
-            d.SetInput(g)
-        else:
-            d.SetInputData(g)
+        if VTK_VERSION_MAJOR < 8:
+           raise RuntimeError("VTK version is too old, please upgrade.")
+        d.SetInputData(g)
         a = Q7vtkActor('Zone')
         a.SetMapper(d)
         a.GetProperty().SetRepresentationToWireframe()
@@ -499,10 +500,9 @@ class Mesh(CGNSparser):
         qp = vtk.vtkPoints()
         sg.SetPoints(qp)
         am = vtk.vtkDataSetMapper()
-        if VTK_VERSION_MAJOR < 6:
-            am.SetInput(sg)
-        else:
-            am.SetInputData(sg)
+        if VTK_VERSION_MAJOR < 8:
+            raise RuntimeError("VTK version is too old, please upgrade.")
+        am.SetInputData(sg)
         a = Q7vtkActor('Min/Max')
         a.SetMapper(am)
         a.GetProperty().SetRepresentationToWireframe()
@@ -539,10 +539,9 @@ class Mesh(CGNSparser):
                 n += 1
         sg.SetPoints(qp)
         am = vtk.vtkDataSetMapper()
-        if (VTK_VERSION_MAJOR < 6):
-            am.SetInput(sg)
-        else:
-            am.SetInputData(sg)
+        if VTK_VERSION_MAJOR < 8):
+            raise RuntimeError("VTK version is too old, please upgrade.")
+        am.SetInputData(sg)
         a = Q7vtkActor(tag)
         a.SetMapper(am)
         a.GetProperty().SetRepresentationToWireframe()
@@ -594,10 +593,9 @@ class Mesh(CGNSparser):
                     e += 1
                 sg.SetPoints(qp)
                 am = vtk.vtkDataSetMapper()
-                if (VTK_VERSION_MAJOR < 6):
-                    am.SetInput(sg)
-                else:
-                    am.SetInputData(sg)
+                if VTK_VERSION_MAJOR < 8:
+                    raise RuntimeError("VTK version is too old, please upgrade.")
+                am.SetInputData(sg)
                 a = Q7vtkActor()
                 a.SetMapper(am)
                 a.GetProperty().SetRepresentationToWireframe()
