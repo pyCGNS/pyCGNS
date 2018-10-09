@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from builtins import (str, bytes, range, dict)
 
+from CGNS.pyCGNSconfig import HAS_PY2
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import linecache
@@ -1404,6 +1405,13 @@ class Q7TreeModel(QAbstractItemModel):
         #     return None
         if disp in ICONMAPPING:
             disp = Q7TreeModel._icons[disp]
+        elif HAS_PY2:
+            # Convert newstr to unicode because of Qt python binding
+            if hasattr(disp, '__native__'):
+                native_type = type(disp.__native__())
+            else:
+                native_type = type(disp)
+            disp = native_type(disp)
         return disp
 
     def flags(self, index):
