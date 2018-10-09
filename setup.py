@@ -31,6 +31,12 @@ from setuputils import (MAJOR_VERSION, MINOR_VERSION,
 
 line('pyCGNS v{}.{} install'.format(MAJOR_VERSION, MINOR_VERSION))
 line()
+log('** IMPORTANT WARNING **')
+log('The *install* command runs the *build* as first step.')
+log('If you run first the *build* with specific options')
+log('you *SHOULD* add these options again in the *install*')
+log('command line unless you will have a *NEW* build.')
+line()
 if HAS_PY3:
     log('found Python 3 platform')
 else:
@@ -107,6 +113,8 @@ pr.add_argument("-U", "--update", action='store_true',
                 help='update version (dev only)')
 pr.add_argument("-g", "--generate", action='store_true',
                 help='force Qt/creator .pyx files to be regenerated')
+pr.add_argument("-A", "--alternate", action='store_true',
+                help='use full h5py CGNS/HDF5 interface (ongoing work)')
 
 modules = {"app": True, "map": True, "pat": True, "val": True, "nav": True}
 
@@ -154,8 +162,13 @@ if args.incs is not None:
 if args.libs is not None:
     libs = [os.path.expanduser(path) for path in args.libs.split(os.path.pathsep)]
 
+if args.alternate:
+    deps = ['Cython', 'h5py', 'numpy', 'vtk', 'qtpy']
+else:
+    deps = ['Cython', 'HDF5', 'numpy', 'vtk', 'qtpy']
+
 try:
-    (CONFIG, status) = search(incs, libs)
+    (CONFIG, status) = search(incs, libs, deps=deps)
 except ConfigException as e:
     log('***** Cannot build pyCGNS without: {}'.format(e))
     sys.exit(1)
@@ -166,6 +179,7 @@ new_args = []
 for arg in sys.argv:
     if (not ('-I=' in arg or '--includes=' in arg) and
             not ('-U' in arg or '--update' in arg) and
+            not ('-A' in arg or '--alternate' in arg) and
             not ('-g' in arg or '--generate' in arg) and
             not ('-L=' in arg or '--libraries=' in arg)):
         new_args += [arg]
@@ -175,11 +189,8 @@ if args.update:
     #os.system('hg parents --template="{rev}\n" > %s/revision.tmp' \
     #          % CONFIG.PRODUCTION_DIR)
     # Quick and dirty revision, should use git describe --always instead
-    os.system(r'git rev-list --reverse HEAD | awk "{ print NR }" | tail -n 1 > {}/revision.tmp' \
-              .format(CONFIG.PRODUCTION_DIR))
-    updateVersionInFile(fix_path('./lib/pyCGNSconfig_default.py'),
-                        CONFIG.PRODUCTION_DIR)
-
+    os.system(r'git rev-list --count HEAD> {}/revision.tmp'.format(CONFIG.PRODUCTION_DIR))
+    updateVersionInFile(fix_path('./lib/pyCGNSconfig_default.py'), CONFIG)
 
 def hasToGenerate(source, destination, force):
     return (force or not os.path.exists(destination) or
@@ -220,58 +231,59 @@ else:
 
 # -------------------------------------------------------------------------  
 if MAP:
-    # generate files
-    # CHLone_config.h.in -> CHLone_config.h
-    # pyCHLone.pyx.in -> pyCHLone.pyx
-    #
-    # --- config values
-    hdfplib = CONFIG.HDF5_PATH_LIBRARIES
-    hdflib = CONFIG.HDF5_LINK_LIBRARIES
-    hdfpinc = CONFIG.HDF5_PATH_INCLUDES
-    include_dirs = ['.'] + hdfpinc + CONFIG.INCLUDE_DIRS + OTHER_INCLUDES_PATHS
-    library_dirs = hdfplib
-    optional_libs = hdflib
-    extra_compile_args = CONFIG.HDF5_EXTRA_ARGS
-    extra_define_macro = EXTRA_DEFINE_MACROS
+    if not CONFIG.HAS_H5PY:
+        # generate files
+        # CHLone_config.h.in -> CHLone_config.h
+        # pyCHLone.pyx.in -> pyCHLone.pyx
+        #
+        # --- config values
+        hdfplib = CONFIG.HDF5_PATH_LIBRARIES
+        hdflib = CONFIG.HDF5_LINK_LIBRARIES
+        hdfpinc = CONFIG.HDF5_PATH_INCLUDES
+        include_dirs = ['.'] + hdfpinc + CONFIG.INCLUDE_DIRS + OTHER_INCLUDES_PATHS
+        library_dirs = hdfplib
+        optional_libs = hdflib
+        extra_compile_args = CONFIG.HDF5_EXTRA_ARGS
+        extra_define_macro = EXTRA_DEFINE_MACROS
 
-    conf = {'CHLONE_HAS_PTHREAD': 1,
-            'CHLONE_HAS_REGEXP': 1,
-            'CHLONE_PRINTF_TRACE': 0,
-            'CHLONE_ON_WINDOWS': HAS_MSW,
-            'CHLONE_H5CONF_STD': CONFIG.HDF5_HST,
-            'CHLONE_H5CONF_64': CONFIG.HDF5_H64,
-            'CHLONE_H5CONF_UP': CONFIG.HDF5_HUP,
-            'HDF5_VERSION': CONFIG.HDF5_VERSION,
-            'CHLONE_INSTALL_LIBRARIES': "",
-            'CHLONE_INSTALL_INCLUDES': "",
-            }
+        conf = {'CHLONE_HAS_PTHREAD': 1,
+                'CHLONE_HAS_REGEXP': 1,
+                'CHLONE_PRINTF_TRACE': 0,
+                'CHLONE_ON_WINDOWS': HAS_MSW,
+                'CHLONE_H5CONF_STD': CONFIG.HDF5_HST,
+                'CHLONE_H5CONF_64': CONFIG.HDF5_H64,
+                'CHLONE_H5CONF_UP': CONFIG.HDF5_HUP,
+                'HDF5_VERSION': CONFIG.HDF5_VERSION,
+                'CHLONE_INSTALL_LIBRARIES': "",
+                'CHLONE_INSTALL_INCLUDES': "",
+                }
 
-    depfiles = ['CGNS/MAP/CHLone_config.h', 'CGNS/MAP/EmbeddedCHLone.pyx']
+        depfiles = ['CGNS/MAP/CHLone_config.h', 'CGNS/MAP/EmbeddedCHLone.pyx']
 
-    EXTRA_MAP_COMPILE_ARGS = ''
+        EXTRA_MAP_COMPILE_ARGS = ''
 
-    resolveVars(fix_path(depfiles[0]), conf, True)
-    resolveVars(fix_path(depfiles[1]), conf, args.generate)
-    library_dirs = [l for l in library_dirs if l != '']
+        resolveVars(fix_path(depfiles[0]), conf, True)
+        resolveVars(fix_path(depfiles[1]), conf, args.generate)
+        library_dirs = [l for l in library_dirs if l != '']
 
-    # hack: actually shoudl read hdf5/cmake config to get true compiler...
-    if CONFIG.HDF5_PARALLEL:
-        os.environ['CC']=CYTHON_COMPILER_FOR_MAP
-        
-    ALL_EXTENSIONS += [Extension("CGNS.MAP.EmbeddedCHLone",
-                                 ["CGNS/MAP/EmbeddedCHLone.pyx",
-                                  "CGNS/MAP/SIDStoPython.c",
-                                  "CGNS/MAP/l3.c",
-                                  "CGNS/MAP/error.c",
-                                  "CGNS/MAP/linksearch.c",
-                                  "CGNS/MAP/sha256.c",
-                                  ],
-                                 include_dirs=include_dirs,
-                                 library_dirs=library_dirs,
-                                 libraries=optional_libs,
-                                 depends=depfiles,
-                                 define_macros=extra_define_macro,
-                                 extra_compile_args=extra_compile_args)]
+        # hack: actually shoudl read hdf5/cmake config to get true compiler...
+        if CONFIG.HDF5_PARALLEL:
+            os.environ['CC']=CYTHON_COMPILER_FOR_MAP
+            
+        ALL_EXTENSIONS += [Extension("CGNS.MAP.EmbeddedCHLone",
+                                    ["CGNS/MAP/EmbeddedCHLone.pyx",
+                                    "CGNS/MAP/SIDStoPython.c",
+                                    "CGNS/MAP/l3.c",
+                                    "CGNS/MAP/error.c",
+                                    "CGNS/MAP/linksearch.c",
+                                    "CGNS/MAP/sha256.c",
+                                    ],
+                                    include_dirs=include_dirs,
+                                    library_dirs=library_dirs,
+                                    libraries=optional_libs,
+                                    depends=depfiles,
+                                    define_macros=extra_define_macro,
+                                    extra_compile_args=extra_compile_args)]
 
     ALL_PACKAGES += ['CGNS.MAP', 'CGNS.MAP.test']
     module_logs.append("MAP   add  build")
@@ -441,7 +453,7 @@ Operating System :: Microsoft :: Windows
 # -------------------------------------------------------------------------  
 setup(
     name=CONFIG.NAME,
-    version=CONFIG.VERSION,
+    version='{}.{}.{}'.format(MAJOR_VERSION, MINOR_VERSION, CONFIG.REVISION),
     description=CONFIG.DESCRIPTION,
     long_description=CONFIG.DESCRIPTION,
     classifiers=[x for x in cls_txt.split("\n") if x],

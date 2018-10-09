@@ -24,7 +24,7 @@ INCLUDE_DIRS = ['%s/include' % mylocal]
 LIBRARY_DIRS = ['%s/lib' % mylocal]
 
 # Use integers instead of booleans, values are used in C files
-HAS_MLL = 0
+HAS_H5PY = 0
 HAS_HDF5 = 1
 
 try:
@@ -44,13 +44,6 @@ HDF5_PATH_INCLUDES = [hdf5path + '../include']
 HDF5_PATH_LIBRARIES = [hdf5path + '../lib']
 HDF5_LINK_LIBRARIES = ['hdf5']
 HDF5_EXTRA_ARGS = []
-
-mllpath = pathfromexec('cgnsconvert')
-MLL_PATH_LIBRARIES = [mllpath + '../lib']
-MLL_LINK_LIBRARIES = ['cgns']
-MLL_PATH_INCLUDES = [mllpath + '../include']
-MLL_VERSION = ''
-MLL_EXTRA_ARGS = []
 
 NUMPY_VERSION = ''
 NUMPY_VERSION_API = ''
@@ -75,13 +68,15 @@ LIBRARY_DIRS += LIBRARY_DIRS + HDF5_PATH_LIBRARIES \
 #
 PFX = '### pyCGNS:'
 #
-__version__ = 5  # @@UPDATEVERSION@@
-__release__ = 0  # @@UPDATERELEASE@@
-__revision__ = 565  # @@UPDATEREVISION@@
+__version__=5 # @@UPDATEVERSION@@
+__release__=0 # @@UPDATERELEASE@@
+__revision__=625 # @@UPDATEREVISION@@
 __vid__ = "%s.%s.%s" % (__version__, __release__, __revision__)
 __doc__ = """pyCGNS - %s - Python package for CFD General Notation System""" \
           % (__vid__)
 version = __vid__
+#
+REVISION = __revision__
 #
 file_pattern = """#  -------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System
@@ -95,7 +90,7 @@ PLATFORM='%(PLATFORM)s'
 PFX='%(PFX)s'
 
 HAS_HDF5=%(HAS_HDF5)s
-HAS_MLL=%(HAS_MLL)s
+HAS_H5PY=%(HAS_H5PY)s
 HAS_PY2=%(HAS_PY2)s
 HAS_PY3=%(HAS_PY3)s
 HAS_VTK=%(HAS_VTK)s
@@ -103,12 +98,6 @@ HAS_MSW=%(HAS_MSW)s
 
 INCLUDE_DIRS=%(INCLUDE_DIRS)s
 LIBRARY_DIRS=%(LIBRARY_DIRS)s
-
-MLL_VERSION='%(MLL_VERSION)s'
-MLL_PATH_LIBRARIES=%(MLL_PATH_LIBRARIES)s
-MLL_LINK_LIBRARIES=%(MLL_LINK_LIBRARIES)s
-MLL_PATH_INCLUDES=%(MLL_PATH_INCLUDES)s
-MLL_EXTRA_ARGS=%(MLL_EXTRA_ARGS)s
 
 HDF5_VERSION='%(HDF5_VERSION)s'
 HDF5_PATH_INCLUDES=%(HDF5_PATH_INCLUDES)s
@@ -130,7 +119,7 @@ VTK_VERSION='%(VTK_VERSION)s'
 
 __version__=5 # @@UPDATEVERSION@@
 __release__=0 # @@UPDATERELEASE@@
-__revision__=565 # @@UPDATEREVISION@@
+__revision__=625 # @@UPDATEREVISION@@
 __vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
 __doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
         %%(__vid__)

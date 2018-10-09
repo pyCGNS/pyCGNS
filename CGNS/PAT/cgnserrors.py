@@ -24,7 +24,7 @@ def perr(error_id, *tp):
     return ret
 
 
-class cgnsException(Exception):
+class CGNSException(Exception):
     def __init__(self, code, args=None):
         self.code = code
         self.value = args
@@ -36,7 +36,7 @@ class cgnsException(Exception):
             ret = perr(self.code)
         return ret
 
-
+cgnsException = CGNSException
 class cgnsNodeError(cgnsException):
     pass
 
@@ -198,13 +198,34 @@ errorTable = {
 
     710: "Numpy array should have a 'Fortran' order",
 
-    800: "adf.database_open No such open status [%s]",
-    801: "adf.database_open No such open format [%s]",
-    802: "adf.database_open Empty file name",
+    800: "Cannot find pyCGNS config ?",
+    801: "No information about numeric library in pyCGNS config",
+    802: "Bad information about numeric library in pyCGNS config [%s]",
 
-    900: "Cannot find pyCGNS config ?",
-    901: "No information about numeric library in pyCGNS config",
-    902: "Bad information about numeric library in pyCGNS config [%s]",
+    900: 'No such file [{}]',
+    901: 'File already exists [{}]',
+    902: 'File name should be a string',
+    903: 'Cannot propagate save to non-existant linked-to file [{}]',
+    904: 'Cannot propagate save to unreadable linked-to file [{}]',
+    905: 'Cannot propagate save to non-existant node in linked-to file [{}]',
+    906: 'Bad tree structure (root should be list of 4 items, refer to doc)',
+    907: 'Invalid combination of flags (refer to doc)',
+    908: 'Using a maxdata implies FNODATA flag',
+    909: 'Cannot have attributes {} at the same time',
+    910: 'Keyword argument [{}] unknown',
+    911: 'Bad [flag] argument (should be int)',
+    912: 'Bad [depth] argument (should be int)',
+    913: 'Bad [path] argument (should be str)',
+    914: 'Bad [lksearch] argument (should be list of str)',
+    915: 'Bad [maxdata] argument (should be int)',
+    916: 'Bad [skip] argument (should be list of str)',
+    917: 'Bad [links] argument (refer to doc)',
+    920: 'Cannot write in file [{}]',
+    930: 'Filter dict requires a path (str) as key',
+    931: 'Filter dict value should be a tuple with int as first arg',
+    932: 'SPARTIAL Filter requires a "list of 8 lists of integers" as value"',
+    933: 'SPARTIAL Filter bad parameters',
+    934: 'SCONTIGUOUS requires a tuple of index,rank (integers) as value',
 
     999: "Unknow error code",
 }
