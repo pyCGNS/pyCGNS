@@ -11,7 +11,8 @@ import os
 import sys
 import copy
 
-PY3 = sys.version_info[0] == 3
+from CGNS.PAT.cgnserrors import CGNSException as CHLoneException
+from CGNS.pyCGNSconfig import HAS_PY3
 
 # ---------------------------------------------------------------------------
 # THIS FILE IS PRE-PROCESSED
@@ -511,7 +512,7 @@ def load(filename, **kw):
             lk = t[1]
         t = (t[0], lk, t[2])
     except CHLoneExceptionInternal as v:
-        if PY3:
+        if HAS_PY3:
             raise CHLoneException(v) from None
         else:
             raise CHLoneException(v)
@@ -592,7 +593,7 @@ def save(filename, tree, **kw):
                       _links, _flags, _depth, _lkpath.encode('utf-8'), _obdict, _filter, _sklist,
                       _lkobdict, _lksklist, x)
     except CHLoneExceptionInternal as v:
-        if PY3:
+        if HAS_PY3:
             raise CHLoneException(v) from None
         else:
             raise CHLoneException(v)

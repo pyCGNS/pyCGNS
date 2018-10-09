@@ -56,35 +56,6 @@ flags.links.LOOP = 0x0020
 flags.links.IGNORED = 0x0040
 flags.links.UPDATED = 0x0080
 
-
-class MAPException(Exception):
-    mTable = {
-        900: 'No such file [{}]',
-        901: 'File already exists [{}]',
-        902: 'File name should be a string',
-        903: 'Cannot propagate save to non-existant linked-to file [{}]',
-        904: 'Cannot propagate save to unreadable linked-to file [{}]',
-        905: 'Cannot propagate save to non-existant node in linked-to file [{}]',
-        906: 'Bad tree structure (root should be list of 4 items, refer to doc)',
-        907: 'Invalid combination of flags (refer to doc)',
-        908: 'Using a maxdata implies FNODATA flag',
-        909: 'Cannot have attributes {} at the same time',
-        910: 'Keyword argument [{}] unknown',
-        911: 'Bad [flag] argument (should be int)',
-        912: 'Bad [depth] argument (should be int)',
-        913: 'Bad [path] argument (should be str)',
-        914: 'Bad [lksearch] argument (should be list of str)',
-        915: 'Bad [maxdata] argument (should be int)',
-        916: 'Bad [skip] argument (should be list of str)',
-        917: 'Bad [links] argument (refer to doc)',
-        920: 'Cannot write in file [{}]',
-        930: 'Filter dict requires a path (str) as key',
-        931: 'Filter dict value should be a tuple with int as first arg',
-        932: 'SPARTIAL Filter requires a "list of 8 lists of integers" as value"',
-        933: 'SPARTIAL Filter bad parameters',
-        934: 'SCONTIGUOUS requires a tuple of index,rank (integers) as value',
-    }
-
 def raiseException(code, *args):
     if args:
         raise MAPException((code, MAPException.mTable[code].format(args)))
@@ -97,7 +68,7 @@ def probe(filename, path=None):
         raiseException(900, tfile)
     return True
 
-def load(filename, nodata = False, maxdata = 65, subtree = '', follow_links = False):
+def load(filename, nodata = False, maxdata = 65, subtree = '', follow_links = False, **kwargs):
     """
     Load a CGNS/HDF5 CGNS tree as a CGNS/Python object::
 
@@ -190,7 +161,7 @@ def load(filename, nodata = False, maxdata = 65, subtree = '', follow_links = Fa
 
     return tree,links,paths
 
-def save(filename,tree, links = []):
+def save(filename,tree, links = [], **kwargs):
     
     def _cst_size_str(s,n):
             

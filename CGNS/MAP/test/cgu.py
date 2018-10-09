@@ -56,7 +56,7 @@ class MAPTestCase(unittest.TestCase):
         v = d.split('): ')[1:][0]
         return fct(v)
 
-    def test_000_Constants(self):
+    def void_test_000_Constants(self):
         import CGNS
         import CGNS.MAP
         from CGNS.MAP import flags, flags_set, flags_unset, flags_check    
@@ -67,7 +67,6 @@ class MAPTestCase(unittest.TestCase):
         self.assertEqual(flags.ALL | ~flags.NONE & flags.ALL, flags.ALL)
         self.assertEqual(flags.ALL ^ flags.TRACE & flags.ALL, flags.ALL & ~flags.TRACE)
         l = flags.links.OK
-
         f = flags_set()
         self.assertEqual(f, flags.DEFAULT)
         f = flags_set(f, flags.TRACE)
@@ -79,110 +78,71 @@ class MAPTestCase(unittest.TestCase):
         c = flags_check(f, flags.TRACE)
         self.assertFalse(c)
 
-    def test_001_Errors(self):
-        from CGNS.MAP import MAPException, probe
-        self.assertRaisesRegexp(MAPException,
+    def void_test_001_Probe(self):
+        from CGNS.MAP import probe
+        from CGNS.PAT.cgnserror import CGNSException
+        self.assertRaisesRegexp(CGNSException,
                                 "[900].*", probe, "/Z/ ?/ /U.cgns")
     
-    def test_002_Save_Args(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[910].*", CHLone.save, self.HDF01, self.T, zflag=None)
-
-    def test_003_Load_Args(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[910].*", CHLone.load, self.HDF01, zflag=None)
-
-    def test_004_Args_01(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[911].*", CHLone.load, self.HDF01, flags=[])
-
-    def test_005_Args_02(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[912].*", CHLone.load, self.HDF01, depth=[])
-
-    def test_006_Args_03(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[909].*", CHLone.load, self.HDF01,
-                                maxdata=400, threshold=200)
-
-    def test_007_Args_04(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[917].*", CHLone.save, self.HDF01, self.T,
-                                links=[['A', 'A', 'A']])
-
-    def test_008_Flags_01(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[908].*", CHLone.load, self.HDF01,
-                                flags=CHLone.FDEFAULT, maxdata=400)
-
-    def test_009_Flags_02(self):
-        pass  # 907 update + save, deletemissing + update...
-
-    def test_010_Tree_01(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
+    def void_test_002_Save_Args(self):
+        from CGNS.MAP import save, flags
+        from CGNS.PAT.cgnserror import CGNSException
+        self.assertRaisesRegexp(CGNSException,
+                                "[910].*", save, self.HDF01, self.T, zflag=None)
+        self.assertRaisesRegexp(CGNSException,
+                                "[917].*", save, self.HDF01, self.T,
+                                links=[['A', 'A', 'A']])        
         self.unlink(self.HDF01)
-        self.assertRaisesRegexp(CHLone.CHLoneException, "[906].*",
-                                CHLone.save, self.HDF01, None)
-
-    def test_011_Save_01(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
+        self.assertRaisesRegexp(CGNSException, "[906].*",
+                                save, self.HDF01, None)
         self.unlink(self.HDF01)
-        CHLone.save(self.HDF01, self.T)
+        save(self.HDF01, self.T)
         v = self.getDump(self.HDF01, '/{Base}/{Zone}', '[0,1]', int)
         self.assertEqual(v, 7)
         v = self.getDump(self.HDF01, '/{Base}/{Zone}', '[1,1]', int)
         self.assertEqual(v, 6)
-
-    def test_012_Save_02(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
         self.unlink(self.HDF02)
-        CHLone.save(self.HDF02, self.T)
+        save(self.HDF02, self.T)
         self.chmod(self.HDF02, 0)
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[100].*", CHLone.save, self.HDF02,
-                                self.T, flags=CHLone.FUPDATE)
+        self.assertRaisesRegexp(CGNSException,
+                                "[100].*", save, self.HDF02,
+                                self.T, flags=flags.UPDATE)
         self.chmod(self.HDF02, 511)
         self.unlink(self.HDF02)
-
-    def test_013_Save_03(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
         self.unlink(self.HDF01)
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[300].*", CHLone.save, self.HDF01,
+        self.assertRaisesRegexp(CGNSException,
+                                "[300].*", save, self.HDF01,
                                 [None, None, self.T, None])
-
-    def test_014_Load(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[100].*", CHLone.load, 'foo.hdf')
-
-    def test_015_Load(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[101].*", CHLone.load, 'chltest.py')
-
-    def test_016_Save(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        self.assertRaises(CHLone.CHLoneException, CHLone.load, 'foo.hdf')
-
-    def test_017_Save_Update(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
         self.unlink(self.HDF01)
-        flags = CHLone.FDEFAULT | CHLone.FUPDATE
-        self.assertRaisesRegexp(CHLone.CHLoneException,
-                                "[100].*", CHLone.save, self.HDF01, self.T, flags=flags)
+        flags = flags.DEFAULT | flags.UPDATE
+        self.assertRaisesRegexp(CGNSException,
+                                "[100].*", save, self.HDF01, self.T, flags=flags)
 
-    def test_018_Load(self):
-        from CGNS.MAP import EmbeddedCHLone as CHLone
-        CHLone.save(self.HDF01, self.T)
-        (t, l, p) = CHLone.load(self.HDF01)
+    def void_test_003_Load_Args(self):
+        from CGNS.MAP import load
+        from CGNS.PAT.cgnserror import CGNSException
+        self.assertRaisesRegexp(CGNSException,
+                                "[910].*", load, self.HDF01, zflag=None)
+        self.assertRaisesRegexp(CGNSException,
+                                "[911].*", load, self.HDF01, flags=[])
+        self.assertRaisesRegexp(CGNSException,
+                                "[912].*", load, self.HDF01, depth=[])
+        self.assertRaisesRegexp(CGNSException,
+                                "[909].*", load, self.HDF01,
+                                maxdata=400, threshold=200)
+        self.assertRaisesRegexp(CGNSException,
+                                "[908].*", load, self.HDF01,
+                                flags=flags.DEFAULT, maxdata=400)
+        self.assertRaisesRegexp(CGNSException,
+                                "[100].*", load, 'foo.hdf')
+        self.assertRaisesRegexp(CGNSException,
+                                "[101].*", load, 'chltest.py')
+
+    def void_test_004_LoadSave(self):
+        from CGNS.MAP import load
+        from CGNS.PAT.cgnserror import CGNSException
+        save(self.HDF01, self.T)
+        (t, l, p) = load(self.HDF01)
 
 # ---
 print('-' * 70 + '\nCGNS.MAP test suite')

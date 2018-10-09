@@ -22,12 +22,7 @@
 from CGNS.pyCGNSconfig import HAS_H5PY
 
 if HAS_H5PY:
-  from .cgio import load
-  from .cgio import save
-  from .cgio import probe
-  #
-  from .cgio import flags
-  from .cgio import MAPException
+  from .cgio import load, save, probe, flags
 
   NONE = flags.NONE
   ALL = flags.ALL
@@ -61,9 +56,7 @@ if HAS_H5PY:
   LKIGNORED = flags.links.IGNORED
   
 else:
-  from .EmbeddedCHLone import load
-  from .EmbeddedCHLone import save
-  from .EmbeddedCHLone import probe
+  from .EmbeddedCHLone import load, save, probe
   from .EmbeddedCHLone import CHLoneException as error
   #
   from . import EmbeddedCHLone as CHL
@@ -168,7 +161,6 @@ else:
   flags.links.LOOP = LKLOOP
   flags.links.IGNORED = LKIGNORED
 
-  MAPException = error
 
 def flags_set(source=flags.DEFAULT, flag=flags.NONE):
   return source | flag & flags.ALL
