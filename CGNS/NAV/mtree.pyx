@@ -767,7 +767,7 @@ class Q7TreeItem(object):
             name = str(name)
         except UnicodeEncodeError:
             return False
-        if self._checkable:
+        if self._checkable and self._itemnode[0] != name:
             if name == '':
                 return False
             if not CGU.checkName(name):
