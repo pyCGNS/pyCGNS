@@ -539,7 +539,7 @@ class Mesh(CGNSparser):
                 n += 1
         sg.SetPoints(qp)
         am = vtk.vtkDataSetMapper()
-        if VTK_VERSION_MAJOR < 8):
+        if VTK_VERSION_MAJOR < 8:
             raise RuntimeError("VTK version is too old, please upgrade.")
         am.SetInputData(sg)
         a = Q7vtkActor(tag)

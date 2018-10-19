@@ -1405,7 +1405,7 @@ class Q7TreeModel(QAbstractItemModel):
         #     return None
         if disp in ICONMAPPING:
             disp = Q7TreeModel._icons[disp]
-        elif HAS_PY2:
+        elif HAS_PY2 and disp is not None:
             # Convert newstr to unicode because of Qt python binding
             if hasattr(disp, '__native__'):
                 native_type = type(disp.__native__())
