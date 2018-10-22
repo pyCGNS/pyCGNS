@@ -1682,6 +1682,14 @@ class Q7TreeModel(QAbstractItemModel):
             return False
         if nodeitem.sidsIsLink() or nodeitem.sidsIsLinkChild():
             return
+        # Dirty patch
+        # Prevent copying inside subtree based on node name
+        if self._control.copyPasteBuffer[0] in nodeitem.sidsPath():
+           # TODO
+           # Would be nice to compare origin path of PasteBuffer
+           # either way we should check path of nodes with same name
+           # to ensure they are different !
+           return False
         nix = self.indexByPath(nodeitem.sidsPath())
         (ntree, npath, nrow) = nodeitem.sidsAddChild(self._control.copyPasteBuffer)
         self.parseAndUpdate(nodeitem, ntree, nix, nrow, nodeitem._tag)

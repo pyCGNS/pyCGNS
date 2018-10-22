@@ -389,7 +389,7 @@ if NAV and CONFIG.HAS_QTPY:
 
     for m in modgenlist:
         log('Generate from updated Qt templates  ({}): {}'.format(cui, m))
-        com = "{} -o CGNS/NAV/G/{}.pyx CGNS/NAV/T/{}.ui".format(cui, m, m)
+        com = "{} --from-imports -o CGNS/NAV/G/{}.pyx CGNS/NAV/T/{}.ui".format(cui, m, m)
         #print(fix_path(com))
         os.system(fix_path(com))
         com = "{} -a CGNS/NAV/G/{}.pyx".format(ccy, m)
