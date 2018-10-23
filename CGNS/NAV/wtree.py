@@ -12,6 +12,7 @@ import functools
 
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU
+import CGNS.PAT.SIDS         as CGS
 
 from qtpy.QtCore import *
 from qtpy.QtWidgets import *
@@ -108,11 +109,13 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         if (index.column() == NMT.COLUMN_DATATYPE):
             self._mode = CELLCOMBO
             editor = QComboBox(parent)
-            editor.transgeometry = (xs, ys, ws, hs)
+            editor.transgeometry = (xs, ys, ws*2, hs)
+            editor.setProperty("Q7SIDSDataTypeComboBox", "True")
             itemslist = self._parent.modelData(index).sidsDataType(all=True)
             editor.addItems(itemslist)
-            editor.setCurrentIndex(0)
             editor.installEventFilter(self)
+            sizePolicy = QSizePolicy(QSizePolicy.Minimum,QSizePolicy.Minimum)
+            editor.setSizePolicy(sizePolicy)
             self.setEditorData(editor, index)
             return editor
         return None
@@ -125,6 +128,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         elif (self._mode == CELLCOMBO):
             value = index.data()
             ix = editor.findText(value)
+            print('VALUE',value,ix)
             if (ix != -1): editor.setCurrentIndex(ix)
         else:
             pass
@@ -289,6 +293,7 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
                 a.setChecked(False)
             self._hmenu.addAction(a)
             self.treeview.setColumnHidden(idx, not self._column[idx])
+        self._recursiveAddNewNode = False
         self.updateTreeStatus()
 
     def headerMenu(self, pos):
@@ -506,14 +511,17 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
                 if (aparam is None):
                     self.popupmenu.addSeparator()
                 elif (len(aparam) == 1):
-                    tag = '_GM_%s' % node.sidsType()
+                    stp = node.sidsType()
+                    tag = '_GM_{}'.format(stp)
+                    subm = self.popupmenu.addMenu('{}...'.format(stp))
+                    a = QAction("About %s" % node.sidsType(), self,
+                                triggered=self.aboutSIDS)
+                    subm.addAction(a)
+                    patmenu = subm.addMenu('Insert pattern')
+                    self.patternMenu(patmenu, node.sidsNode())
+                    subm.addSeparator()
                     if (hasattr(self, tag)):
-                        subm = self.popupmenu.addMenu('%s special menu' % node.sidsType())
                         getattr(self, tag)(subm, node)
-                    else:
-                        a = QAction("About %s" % node.sidsType(), self,
-                                    triggered=self.aboutSIDS)
-                        self.popupmenu.addAction(a)
                 else:
                     if isinstance(aparam,list):
                         subm = self.popupmenu.addMenu(aparam[0])
@@ -539,6 +547,21 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
         self.model().updateSelected()
         self.treeview.refreshView()
 
+    def patternMenu(self, menu, node):
+        a = QAction("Recursive sub-pattern add", self, checkable=True)
+        menu.addAction(a)
+        a.setChecked(self._recursiveAddNewNode)
+        menu.addSeparator()
+        for t in [n[0] for n in CGU.getAuthChildren(node)]:
+            def genCopyPattern(arg):
+                def copyPattern():
+                    self.model().copyNodeRaw(CGS.profile[arg][0])
+                    if (self.getLastEntered() is not None):
+                        self.model().pasteAsChild(self.getLastEntered())
+                return copyPattern
+            a = QAction("{}".format(t), self, triggered=genCopyPattern(t))
+            menu.addAction(a)
+        
     def _gm_family_1(self, node):
         self._runAndSelect('013. FamilyName reference', "'%s'" % node.sidsName())
 
@@ -553,8 +576,6 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
         a.triggered.connect(functools.partial(self._gm_family_2, node))
         m.addAction(a)
         m.addSeparator()
-        p = QMenu('Insert pattern')
-        m.addMenu(p)
         return True
 
     def _GM_IndexRange_t(self, m, node):

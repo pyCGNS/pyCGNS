@@ -2411,8 +2411,8 @@ L3_openFile(char *filename, int mode, long flags)
 		break;
 	case L3E_OPEN_OLD:
 		L3M_TRACE(ctxt, ("newL3_Cursor_t open old\n"));
-		printf("ACC RDWR\n");
-		objlist_status("OPEN");
+		/* printf("ACC RDWR\n");
+                   objlist_status("OPEN"); */
 		ctxt->file_id = H5Fopen(filename, H5F_ACC_RDWR, fapl);
 		H5Eprint1(stdout);
 		if (ctxt->file_id < 0)
