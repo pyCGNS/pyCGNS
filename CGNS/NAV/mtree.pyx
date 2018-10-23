@@ -878,6 +878,7 @@ class Q7TreeItem(object):
 
     def sidsDataTypeSet(self, value):
         if value not in CGK.adftypes:
+            print('BAD')
             return False
         odt = self.sidsDataType()
         ndt = value
@@ -898,6 +899,7 @@ class Q7TreeItem(object):
                 oval = CGU.setStringAsArray(oval)
             nval = numpy.array(oval, dtype=adt)
         self._itemnode[1] = nval
+        self.set_sidsDataType()
         return True
 
     def sidsDataTypeSize(self):
@@ -1642,9 +1644,17 @@ class Q7TreeModel(QAbstractItemModel):
         self.newNodeChild(nix.parent().internalPointer())
         self.FG.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)
 
+    def copyNodeRaw(self, node):
+        if node is None:
+            return
+        # deep copy here
+        self._control.copyPasteBuffer = CGU.nodeCopy(node)
+        self._control.clearOtherSelections()
+
     def copyNode(self, nodeitem):
         if nodeitem is None:
             return
+        # deep copy here
         self._control.copyPasteBuffer = CGU.nodeCopy(nodeitem._itemnode)
         self._control.clearOtherSelections()
 

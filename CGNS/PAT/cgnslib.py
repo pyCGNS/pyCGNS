@@ -1000,11 +1000,19 @@ def newBCProperty(parent, wallfunction=CK.Null_s, area=CK.Null_s):
     node = CU.newNode(CK.BCProperty_s, None, [], CK.BCProperty_ts, parent)
     wf = CU.newNode(CK.WallFunction_s, None, [], CK.WallFunction_ts, node)
     CU.newNode(CK.WallFunctionType_s, CU.setStringAsArray(wallfunction), [], CK.WallFunctionType_ts, wf)
-    ar = CU.newNode(CK.Area_s, None, [], CK.Area_ts, node)
-    CU.newNode(CK.AreaType_s, CU.setStringAsArray(area), [], CK.AreaType_ts, ar)
+    ar = newArea(node)
     return node
 
-
+# -----------------------------------------------------------------------------
+def newArea(parent, areatype=CK.UserDefined_s, regionname='{RegionName}',
+            surfacearea=numpy.array([0.0])):
+    ar = CU.newNode(CK.Area_s, None, [], CK.Area_ts, parent)
+    CU.newNode(CK.AreaType_s, CU.setStringAsArray(areatype), [],
+               CK.AreaType_ts, ar)
+    CU.newNode(CK.RegionName_s, CU.setStringAsArray(regionname), [],
+               CK.DataArray_ts, ar)
+    newDataArray(ar, CK.SurfaceArea_s, surfacearea)
+    
 # -----------------------------------------------------------------------------
 def newAxisymmetry(parent,
                    refpoint=numpy.array([0.0, 0.0, 0.0]),
@@ -1650,7 +1658,13 @@ def newFamily(parent, name):
 
 def newFamilyName(parent, family=None):
     # code correction: Modify family string into NPY string array
-    return CU.newNode(CK.FamilyName_s, CU.setStringAsArray(family), [], CK.FamilyName_ts, parent)
+    return CU.newNode(CK.FamilyName_s, CU.setStringAsArray(family),
+                      [], CK.FamilyName_ts, parent)
+
+def newAdditionalFamilyName(parent, family=None):
+    # code correction: Modify family string into NPY string array
+    return CU.newNode(CK.FamilyName_s, CU.setStringAsArray(family),
+                      [], CK.AdditionalFamilyName_ts, parent)
 
 
 # -----------------------------------------------------------------------------

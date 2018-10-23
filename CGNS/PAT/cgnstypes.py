@@ -686,6 +686,13 @@ t = CGK.ArbitraryGridMotionType_ts
 cgt[t] = CGNStype(t, dtype=[CGK.C1],
                   names=[CGK.ArbitraryGridMotionType_s])
 cgt[t].shape = (0,)
+cgt[t].addChild(CGK.DataArray_ts, card=C_0N)
+cgt[t].addChild(CGK.GridLocation_ts, CGK.GridLocation_s)
+cgt[t].addChild(CGK.Rind_ts, CGK.Rind_s, card=C_01)
+cgt[t].addChild(CGK.DataClass_ts, CGK.DataClass_s, card=C_01)
+cgt[t].addChild(CGK.DimensionalUnits_ts, CGK.DimensionalUnits_s, card=C_01)
+cgt[t].addChild(CGK.Descriptor_ts, card=C_0N)
+cgt[t].addChild(CGK.UserDefinedData_ts, card=C_0N)
 
 # --------------------------------------------------------
 t = CGK.RigidGridMotionType_ts
@@ -714,9 +721,9 @@ t = CGK.Area_ts
 cgt[t] = CGNStype(t, names=[CGK.Area_s])
 cgt[t].addChild(CGK.Descriptor_ts)
 cgt[t].addChild(CGK.UserDefinedData_ts)
-cgt[t].addChild(CGK.AreaType_ts, CGK.AreaType_s)
-cgt[t].addChild(CGK.DataArray_ts, CGK.SurfaceArea_s)
-cgt[t].addChild(CGK.DataArray_ts, CGK.RegionName_s)
+cgt[t].addChild(CGK.AreaType_ts, CGK.AreaType_s, card=C_11)
+cgt[t].addChild(CGK.DataArray_ts, CGK.SurfaceArea_s, dtype=CGK.C1, card=C_11)
+cgt[t].addChild(CGK.DataArray_ts, CGK.RegionName_s, dtype=CGK.C1, card=C_11)
 
 # --------------------------------------------------------
 t = CGK.BaseIterativeData_ts

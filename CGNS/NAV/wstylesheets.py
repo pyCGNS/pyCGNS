@@ -103,6 +103,7 @@ Q7TREEVIEWSTYLESHEET = """
  QTreeView::branch:open:has-children:!has-siblings {
  border-image: url(:/images/icons/branch-end.png) 0;
  }
+
 """ % colordict
 
 # -----------------------------------------------------------------

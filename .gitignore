@@ -10,6 +10,7 @@ CGNS/VAL/grammars/*.c
 
 # temp files
 \#*
+*~
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

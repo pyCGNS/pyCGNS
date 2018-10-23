@@ -11,14 +11,7 @@ import CGNS.PAT.cgnserrors as E
 import numpy as N
 #
 #
-data = C.newArbitraryGridMotion(None, '{ArbitraryGridMotion}')
-C.newRind(data, N.array([0, 0, 0, 0, 1, 1]))
-C.newGridLocation(data)
-C.newDataArray(data, K.GridVelocityX_s)
-C.newDataArray(data, K.GridVelocityY_s)
-C.newDataArray(data, K.GridVelocityZ_s)
-C.newDataClass(data)
-C.newDimensionalUnits(data)
+data = C.newArea(None)
 C.newUserDefinedData(data, '{UserDefinedData}')
 C.newDescriptor(data, '{Descriptor}')
 #
