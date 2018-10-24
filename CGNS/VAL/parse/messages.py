@@ -144,7 +144,7 @@ class DiagnosticLog(dict):
     def getWorstDiag(self, path):
         s = set([e.level for e in self[path]])
         try:
-            r = s[0]
+            r = list(s)[0]
             for x in s:
                 r = getWorst(r, x)
         except:

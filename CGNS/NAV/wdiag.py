@@ -38,6 +38,7 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
         self.bPrevious.clicked.connect(self.previousfiltered)
         self.bNext.clicked.connect(self.nextfiltered)
         self.cWarnings.clicked.connect(self.warnings)
+        self.cDiagFirst.clicked.connect(self.diagfirst)
         self.bSave.clicked.connect(self.diagnosticssave)
         self.bWhich.clicked.connect(self.grammars)
         self.cFilter.currentIndexChanged[int].connect(self.filterChange)
@@ -87,6 +88,12 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
             return
         with open(str(filename[0]), 'w+') as f:
             f.write(n)
+
+    def diagfirst(self):
+        if not self.cDiagFirst.isChecked():
+            self.reset(False)
+        else:
+            self.reset(True)
 
     def warnings(self):
         if not self.cWarnings.isChecked():
@@ -143,11 +150,15 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
         self._filterItems = {}
         for path in plist:
             state = self._data.getWorstDiag(path)
-            if (state == CGM.CHECK_WARN) and not warnings:
+            if (state in [CGM.CHECK_NONE, CGM.CHECK_PASS]):
+                pass
+            elif (state == CGM.CHECK_WARN) and not warnings:
                 pass
             else:
                 it = QTreeWidgetItem(None, (path,))
-                it.setFont(0, OCTXT._Table_Font)
+                ft = QFont(OCTXT._Table_Font)
+                ft.setBold(True)
+                it.setFont(0, ft)
                 if state == CGM.CHECK_FAIL:
                     it.setIcon(0, self.IC(QW.I_C_SFL))
                 if state == CGM.CHECK_WARN:
