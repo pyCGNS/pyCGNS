@@ -37,8 +37,8 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
         self.bCollapseAll.clicked.connect(self.collapse)
         self.bPrevious.clicked.connect(self.previousfiltered)
         self.bNext.clicked.connect(self.nextfiltered)
-        self.cWarnings.clicked.connect(self.warnings)
-        self.cDiagFirst.clicked.connect(self.diagfirst)
+        self.cWarnings.clicked.connect(self.reset)
+        self.cDiagFirst.clicked.connect(self.reset)
         self.bSave.clicked.connect(self.diagnosticssave)
         self.bWhich.clicked.connect(self.grammars)
         self.cFilter.currentIndexChanged[int].connect(self.filterChange)
@@ -89,18 +89,6 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
         with open(str(filename[0]), 'w+') as f:
             f.write(n)
 
-    def diagfirst(self):
-        if not self.cDiagFirst.isChecked():
-            self.reset(False)
-        else:
-            self.reset(True)
-
-    def warnings(self):
-        if not self.cWarnings.isChecked():
-            self.reset(False)
-        else:
-            self.reset(True)
-
     def previousfiltered(self):
         iold = self._filterItems[self.cFilter.currentText()][self._currentItem]
         if self._currentItem != 0:
@@ -138,7 +126,7 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
         self.reset()
         super(Q7CheckList, self).show()
 
-    def reset(self, warnings=True):
+    def reset(self):
         v = self.diagTable
         v.clear()
         v.setHeaderHidden(True)
@@ -148,42 +136,71 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
         keyset = set()
         self.cFilter.clear()
         self._filterItems = {}
+        diagfirst = self.cDiagFirst.isChecked()
+        warnings = self.cWarnings.isChecked()        
+        diagstack = {}
         for path in plist:
+            path_item = None
             state = self._data.getWorstDiag(path)
             if (state in [CGM.CHECK_NONE, CGM.CHECK_PASS]):
                 pass
             elif (state == CGM.CHECK_WARN) and not warnings:
                 pass
             else:
-                it = QTreeWidgetItem(None, (path,))
-                ft = QFont(OCTXT._Table_Font)
-                ft.setBold(True)
-                it.setFont(0, ft)
-                if state == CGM.CHECK_FAIL:
-                    it.setIcon(0, self.IC(QW.I_C_SFL))
-                if state == CGM.CHECK_WARN:
-                    it.setIcon(0, self.IC(QW.I_C_SWR))
-                v.insertTopLevelItem(0, it)
                 for (diag, pth) in self._data.diagnosticsByPath(path):
                     if (diag.level == CGM.CHECK_WARN) and not warnings:
                         pass
+                    elif diagfirst:
+                        if diag.key not in keyset:
+                            keyset.add(diag.key)
+                            diag_item = self.addDiagEntry(None, diag, top=True)
+                            v.insertTopLevelItem(0, diag_item)
+                            diagstack[diag.key] = diag_item
+                        path_item = self.addPathEntry(diagstack[diag.key],
+                                                      path,
+                                                      state, top=False)
                     else:
-                        dit = QTreeWidgetItem(it, (self._data.message(diag),))
-                        dit.setFont(0, OCTXT._Edit_Font)
-                        keyset.add(diag.key)
-                        if diag.level == CGM.CHECK_FAIL:
-                            dit.setIcon(0, self.IC(QW.I_C_SFL))
-                        if diag.level == CGM.CHECK_WARN:
-                            dit.setIcon(0, self.IC(QW.I_C_SWR))
-                        if diag.key not in self._filterItems:
-                            self._filterItems[diag.key] = [dit]
-                        else:
-                            self._filterItems[diag.key].insert(0, dit)
-        keylist = list(keyset)
+                        if diag.key not in keyset:
+                            keyset.add(diag.key)
+                        if path_item is None:
+                            path_item = self.addPathEntry(None, path,
+                                                          state, top=True)
+                            v.insertTopLevelItem(0, path_item)
+                        diag_item = self.addDiagEntry(path_item, diag,
+                                                      top=False)
+                    keylist = list(keyset)
         keylist.sort()
         for k in keylist:
             self.cFilter.addItem(k)
 
+    def addPathEntry(self, parent, path, state, top=False):
+        it = QTreeWidgetItem(parent, (path,))
+        ft = QFont(OCTXT._Table_Font)
+        if top:
+            ft.setBold(True)
+        it.setFont(0, ft)
+        if state == CGM.CHECK_FAIL:
+            it.setIcon(0, self.IC(QW.I_C_SFL))
+        if state == CGM.CHECK_WARN:
+            it.setIcon(0, self.IC(QW.I_C_SWR))
+        return it
+
+    def addDiagEntry(self, parent, diag, top=False):
+        dit = QTreeWidgetItem(parent, (self._data.message(diag),))
+        ft = QFont(OCTXT._Table_Font)
+        if top:
+            ft.setBold(True)
+        dit.setFont(0, ft)
+        if diag.level == CGM.CHECK_FAIL:
+            dit.setIcon(0, self.IC(QW.I_C_SFL))
+        if diag.level == CGM.CHECK_WARN:
+            dit.setIcon(0, self.IC(QW.I_C_SWR))
+        if diag.key not in self._filterItems:
+            self._filterItems[diag.key] = [dit]
+        else:
+            self._filterItems[diag.key].insert(0, dit)
+        return dit
+        
     def reject(self):
         self.close()
 
