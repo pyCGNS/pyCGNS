@@ -14,31 +14,31 @@ import CGNS.VAL.parse.messages as CGM
 import inspect
 
 genericmessages = {
-    'g0000.0001': (CGM.CHECK_FAIL, 'CGNSLibraryVersion [%s] is too old wrt check level'),
-    'g0000.0002': (CGM.CHECK_FAIL, 'CGNSLibraryVersion is incorrect'),
-    'g0000.0003': (CGM.CHECK_FAIL, 'Name [%s] is not valid'),
-    'g0000.0004': (CGM.CHECK_FAIL, 'Name [%s] is a duplicated child name'),
-    'g0000.0005': (CGM.CHECK_FAIL, 'PANIC: Cannot find node with path [%s]'),
-    'g0000.0006': (CGM.CHECK_FAIL, 'PANIC: Node data is not numpy.ndarray or None'),
-    'g0000.0007': (CGM.CHECK_FAIL, 'PANIC: Node children is not a list'),
-    'g0000.0008': (CGM.CHECK_FAIL, 'PANIC: Node name is not a string'),
-    'g0000.0009': (CGM.CHECK_FAIL, 'PANIC: Node is not a list of 4 objects'),
-    'g0000.0010': (CGM.CHECK_FAIL, 'PANIC: Node is empty list or None'),
-    'g0000.0011': (CGM.CHECK_FAIL, 'PANIC: Node name is empty string'),
-    'g0000.0012': (CGM.CHECK_FAIL, 'PANIC: Node name has forbidden chars'),
-    'g0000.0013': (CGM.CHECK_FAIL, 'PANIC: Node name is . or ..'),
-    'g0000.0014': (CGM.CHECK_FAIL, 'PANIC: Node name is too long'),
-    'g0000.0015': (CGM.CHECK_FAIL, 'Bad node value data type'),
-    's0000.0001': (CGM.CHECK_FAIL, 'Unknown SIDS type [%s]'),
-    's0000.0002': (CGM.CHECK_FAIL, 'SIDS type [%s] not allowed as child of [%s]'),
-    's0000.0003': (CGM.CHECK_FAIL, 'SIDS type [%s] not allowed for this node'),
-    's0000.0004': (CGM.CHECK_FAIL, 'DataType [%s] not allowed for this node'),
-    's0000.0005': (CGM.CHECK_FAIL, 'Node [%s] of type [%s] not allowed as child'),
-    's0000.0006': (CGM.CHECK_FAIL, 'Node [%s] of type [%s] allowed only once as child'),
-    's0000.0007': (CGM.CHECK_FAIL, 'Node [%s] of type [%s] is mandatory'),
-    's0000.0008': (CGM.CHECK_FAIL, 'Child name [%s] reserved for a type in [%s]'),
-    's0000.0009': (CGM.CHECK_FAIL, 'Bad node shape [%s]'),
-    's0000.0010': (CGM.CHECK_FAIL, 'Bad node value'),
+    'G0001': (CGM.CHECK_FAIL, 'CGNSLibraryVersion [%s] is too old wrt check level'),
+    'G0002': (CGM.CHECK_FAIL, 'CGNSLibraryVersion is incorrect'),
+    'G0003': (CGM.CHECK_FAIL, 'Name [%s] is not valid'),
+    'G0004': (CGM.CHECK_FAIL, 'Name [%s] is a duplicated child name'),
+    'G0005': (CGM.CHECK_FAIL, 'PANIC: Cannot find node with path [%s]'),
+    'G0006': (CGM.CHECK_FAIL, 'PANIC: Node data is not numpy.ndarray or None'),
+    'G0007': (CGM.CHECK_FAIL, 'PANIC: Node children is not a list'),
+    'G0008': (CGM.CHECK_FAIL, 'PANIC: Node name is not a string'),
+    'G0009': (CGM.CHECK_FAIL, 'PANIC: Node is not a list of 4 objects'),
+    'G0010': (CGM.CHECK_FAIL, 'PANIC: Node is empty list or None'),
+    'G0011': (CGM.CHECK_FAIL, 'PANIC: Node name is empty string'),
+    'G0012': (CGM.CHECK_FAIL, 'PANIC: Node name has forbidden chars'),
+    'G0013': (CGM.CHECK_FAIL, 'PANIC: Node name is . or ..'),
+    'G0014': (CGM.CHECK_FAIL, 'PANIC: Node name is too long'),
+    'G0015': (CGM.CHECK_FAIL, 'Bad node value data type'),
+    'S0001': (CGM.CHECK_FAIL, 'Unknown SIDS type [%s]'),
+    'S0002': (CGM.CHECK_FAIL, 'SIDS type [%s] not allowed as child of [%s]'),
+    'S0003': (CGM.CHECK_FAIL, 'SIDS type [%s] not allowed for this node'),
+    'S0004': (CGM.CHECK_FAIL, 'DataType [%s] not allowed for this node'),
+    'S0005': (CGM.CHECK_FAIL, 'Node [%s] of type [%s] not allowed as child'),
+    'S0006': (CGM.CHECK_FAIL, 'Node [%s] of type [%s] allowed only once as child'),
+    'S0007': (CGM.CHECK_FAIL, 'Node [%s] of type [%s] is mandatory'),
+    'S0008': (CGM.CHECK_FAIL, 'Child name [%s] reserved for a type in [%s]'),
+    'S0009': (CGM.CHECK_FAIL, 'Bad node shape [%s]'),
+    'S0010': (CGM.CHECK_FAIL, 'Bad node value'),
 }
 
 
@@ -108,31 +108,31 @@ class GenericParser(object):
                 CGU.checkArray(node[1], dienow=True)
         except CGE.cgnsException as v:
             if (v.code == 1):
-                stt = self.log.push(path, 'g0000.0010')
+                stt = self.log.push(path, 'G0010')
             if (v.code == 2):
-                stt = self.log.push(path, 'g0000.0009')
+                stt = self.log.push(path, 'G0009')
             if (v.code == 3):
-                stt = self.log.push(path, 'g0000.0008')
+                stt = self.log.push(path, 'G0008')
             if (v.code == 4):
-                stt = self.log.push(path, 'g0000.0007')
+                stt = self.log.push(path, 'G0007')
             if (v.code == 5):
-                stt = self.log.push(path, 'g0000.0006')
+                stt = self.log.push(path, 'G0006')
             if (v.code == 22):
-                stt = self.log.push(path, 'g0000.0008')
+                stt = self.log.push(path, 'G0008')
             if (v.code == 23):
-                stt = self.log.push(path, 'g0000.0011')
+                stt = self.log.push(path, 'G0011')
             if (v.code == 24):
-                stt = self.log.push(path, 'g0000.0012')
+                stt = self.log.push(path, 'G0012')
             if (v.code == 25):
-                stt = self.log.push(path, 'g0000.0014')
+                stt = self.log.push(path, 'G0014')
             if (v.code == 29):
-                stt = self.log.push(path, 'g0000.0013')
+                stt = self.log.push(path, 'G0013')
             if (v.code == 31):
-                stt = self.log.push(path, 'g0000.0011')
+                stt = self.log.push(path, 'G0011')
             if (v.code == 32):
-                stt = self.log.push(path, 'g0000.0011')
+                stt = self.log.push(path, 'G0011')
             if (v.code == 111):
-                stt = self.log.push(path, 'g0000.0015')
+                stt = self.log.push(path, 'G0015')
             if (self._stop):
                 raise CGE.cgnsException(-1)
         return stt
@@ -157,26 +157,26 @@ class GenericParser(object):
     def checkSingleNode(self, T, path, node, parent):
         stt = CGM.CHECK_GOOD
         if (not CGU.checkNodeName(node)):
-            stt = self.log.push(path, 'g0000.0003', node[0])
+            stt = self.log.push(path, 'G0003', node[0])
         lchildren = CGU.childNames(parent)
         if (lchildren):
             if (node[0] in lchildren):
                 lchildren.remove(node[0])
             if (node[0] in lchildren):
-                stt = self.log.push(path, 'g0000.0004', node[0])
+                stt = self.log.push(path, 'G0004', node[0])
         tlist = CGU.getNodeAllowedChildrenTypes(parent, node)
         if ((CGU.getTypeAsGrammarToken(node[3]) not in tlist) and
                 (node[3] != CGK.CGNSTree_ts)):
             if (parent is not None):
-                stt = self.log.push(path, 'S002', node[3], parent[3])
+                stt = self.log.push(path, 'S0002', node[3], parent[3])
             else:
-                stt = self.log.push(path, 'S003', node[3])
+                stt = self.log.push(path, 'S0003', node[3])
         dlist = CGU.getNodeAllowedDataTypes(node)
         dt = CGU.getValueDataType(node)
         if (dt not in dlist):
-            stt = self.log.push(path, 'S004', dt)
+            stt = self.log.push(path, 'S0004', dt)
         if (node[3] not in CGT.types.keys()):
-            stt = self.log.push(path, 'S001', node[3])
+            stt = self.log.push(path, 'S0001', node[3])
         else:
             stt = self.checkCardinalityOfChildren(T, path, node, parent)
             stt = self.checkReservedChildrenNames(T, path, node, parent)
@@ -216,7 +216,7 @@ class GenericParser(object):
             node = CGU.getNodeByPath(T, path)
             status2 = CGM.CHECK_GOOD
             if (node is None):
-                status2 = self.log.push(path, 'g0000.0005', path)
+                status2 = self.log.push(path, 'G0005', path)
                 if (self._stop):
                     raise CGE.cgnsException(-1)
             if (status2 == CGM.CHECK_GOOD):
@@ -237,15 +237,15 @@ class GenericParser(object):
                     cpath = '/%s' % (child[0])
                 else:
                     cpath = '%s/%s' % (path, child[0])
-                stt = self.log.push(path, 'S005', cpath, child[3])
+                stt = self.log.push(path, 'S0005', cpath, child[3])
             if (card in [CGT.C_11, CGT.C_01]):
                 if ([c[3] for c in node[2]].count(child[3]) > 1):
-                    stt = self.log.push(path, 'S006', child[0], child[3])
+                    stt = self.log.push(path, 'S0006', child[0], child[3])
         for tchild in CGT.types[node[3]].children:
             card = CGT.types[node[3]].cardinality(tchild[0])
             if (card in [CGT.C_11, CGT.C_1N]):
                 if ([c[3] for c in node[2]].count(tchild[0]) < 1):
-                    stt = self.log.push(path, 'S007', tchild[1][0], tchild[0])
+                    stt = self.log.push(path, 'S0007', tchild[1][0], tchild[0])
         return stt
 
     # --------------------------------------------------
@@ -257,7 +257,7 @@ class GenericParser(object):
                 srt = ""
                 for s in rt:
                     srt = srt + "," + s
-                stt = self.log.push(path, 'S008', child[0], srt[1:])
+                stt = self.log.push(path, 'S0008', child[0], srt[1:])
         return stt
 
     # --------------------------------------------------------------------
@@ -266,11 +266,11 @@ class GenericParser(object):
         try:
             version = int(node[1][0] * 1000)
             if version < 2400:
-                stt = self.log.push(pth, 'g0000.0001', version)
-            if version > 3210:
-                stt = self.log.push(pth, 'g0000.0002')
+                stt = self.log.push(pth, 'G0001', version)
+            if version > 3400:
+                stt = self.log.push(pth, 'G0002')
         except Exception:
-            stt = self.log.push(pth, 'g0000.0002')
+            stt = self.log.push(pth, 'G0002')
         return stt
 
 # --- last line
