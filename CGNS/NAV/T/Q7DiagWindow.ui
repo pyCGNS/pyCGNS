@@ -315,7 +315,7 @@
      <item>
       <widget class="QCheckBox" name="cDiagFirst">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Diagnostics first</string>

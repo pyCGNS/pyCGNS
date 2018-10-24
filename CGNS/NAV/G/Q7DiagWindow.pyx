@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'CGNS\NAV\T\Q7DiagWindow.ui'
+# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7DiagWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
@@ -129,7 +129,7 @@ class Ui_Q7DiagWindow(object):
         self.cWarnings.setObjectName("cWarnings")
         self.horizontalLayout.addWidget(self.cWarnings)
         self.cDiagFirst = QtWidgets.QCheckBox(Q7DiagWindow)
-        self.cDiagFirst.setEnabled(False)
+        self.cDiagFirst.setEnabled(True)
         self.cDiagFirst.setObjectName("cDiagFirst")
         self.horizontalLayout.addWidget(self.cDiagFirst)
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -167,4 +167,4 @@ class Ui_Q7DiagWindow(object):
         self.cWarnings.setText(_translate("Q7DiagWindow", "Warnings"))
         self.cDiagFirst.setText(_translate("Q7DiagWindow", "Diagnostics first"))
 
-import Res_rc
+from . import Res_rc
