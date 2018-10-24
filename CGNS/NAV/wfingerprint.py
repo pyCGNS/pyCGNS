@@ -918,7 +918,9 @@ class Q7FingerPrint:
         sys.path = self._oldsys
 
     def nextGrammarTag(self):
-        for t in OCTXT.ValKeyList:
+        keyset = set(OCTXT.ValKeyList)
+        keyset.add('SIDS')
+        for t in keyset:
             yield t
 
 # -----------------------------------------------------------------
