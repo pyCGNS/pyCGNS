@@ -33,7 +33,7 @@ SAVEBUTTON = ['Save', 'Save to selected file']
 def checkFilePermission(path, write=False):
     if HAS_MSW:
         return True
-    if not os.path.isfile(path):
+    if not (os.path.isfile(path) or os.path.isdir(path)):
         return False
     r = False
     w = False
@@ -57,7 +57,6 @@ def checkFilePermission(path, write=False):
         return False
     return True
 
-
 # -----------------------------------------------------------------
 class Q7FileFilterProxy(QSortFilterProxyModel):
     def __init__(self, parent):
@@ -75,16 +74,23 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         p = self.model.filePath(idx)
         if isinstance(p, bytes):
             p = str(self.model.filePath(idx).decode('utf-8'))
+        elif HAS_PY2 and isinstance(p, unicode):
+            p = str(p)
         if not self.checkPermission(p):
+            print ('FILTER bad perm')
             return False
         if os.path.isdir(p):
+            print('CHECK', self.wparent.cShowDirs.checkState())
             if self.wparent.cShowDirs.checkState() != Qt.Checked:
                 if len(p) > len(self.wparent.selecteddir):
+                    print('FILTER bd len')
                     return False
             return True
         self.wparent.getBoxes()
         # if (self.wparent.cShowAll.checkState()==Qt.Checked): xlist=[]
-        return self.wparent.parent.matchFileExtensions(p)
+        r = self.wparent.parent.matchFileExtensions(p)
+        print('FILTER', r)
+        return r
 
     def checkPermission(self, path, write=False):
         return checkFilePermission(path, write)
@@ -155,24 +161,6 @@ class Q7File(QWidget, Ui_Q7FileWindow):
         self.proxy.setSourceModel(self.model)
         self.treeview.setModel(self.proxy)
         self.setAttribute(Qt.WA_DeleteOnClose)
-        siglist = [
-            (self.model, "directoryLoaded(QString)", self.expandCols),
-            (self.treeview, "expanded(QModelIndex)", self.expandCols),
-            (self.treeview, "clicked(QModelIndex)", self.clickedNode),
-            (self.treeview, "doubleClicked(QModelIndex)", self.clickedNodeAndLoad),
-            (self.direntries.lineEdit(), "returnPressed()", self.changeDirEdit),
-            (self.direntries, "currentIndexChanged(int)", self.changeDirIndex),
-            (self.fileentries, "currentIndexChanged(int)", self.changeFile),
-            (self.fileentries.lineEdit(), "editingFinished()", self.changeFile),
-            (self.tabs, "currentChanged(int)", self.currentTabChanged),
-            (self.cShowAll, "stateChanged(int)", self.updateView),
-            (self.cShowDirs, "stateChanged(int)", self.updateView),
-            (self.rClearSelectedDirs, "toggled(bool)", self.updateClearDirs),
-            (self.rClearSelectedFiles, "toggled(bool)", self.updateClearFiles),
-            (self.rClearAllDirs, "toggled(bool)", self.updateClearNone),
-            (self.rClearNoHDF, "toggled(bool)", self.updateClearNoHDF),
-            (self.rClearNotFound, "toggled(bool)", self.updateClearNotFound),
-        ]
         #
         if HAS_PY2:
             self.model.directoryLoaded[unicode].connect(self.expandCols)
@@ -194,9 +182,6 @@ class Q7File(QWidget, Ui_Q7FileWindow):
         self.rClearNoHDF.toggled[bool].connect(self.updateClearNoHDF)
         self.rClearNotFound.toggled[bool].connect(self.updateClearNotFound)
         #
-        # for (o,s,f) in siglist:
-        #    o.s.connect(f)
-        #    QObject.connect(o,SIGNAL(s),f)
         self.bClose.clicked.connect(self.closeUnlock)
         self.bCurrent.clicked.connect(self.currentDir)
         self.bBack.clicked.connect(self.backDir)
@@ -226,6 +211,7 @@ class Q7File(QWidget, Ui_Q7FileWindow):
     def updateView(self):
         p = self.direntries.currentText()
         self.setCurrentDir(p)
+        print('CURRENT', p)
         # self.proxy.reset()
         self.proxy.beginResetModel()
         self.proxy.endResetModel()
