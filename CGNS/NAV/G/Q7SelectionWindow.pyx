@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'CGNS\NAV\T\Q7SelectionWindow.ui'
+# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7SelectionWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
@@ -169,11 +169,27 @@ class Ui_Q7SelectionWindow(object):
         self.horizontalLayout_3.addWidget(self.cShowPath)
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem4)
+        self.cForce = QtWidgets.QCheckBox(Q7SelectionWindow)
+        self.cForce.setEnabled(True)
+        self.cForce.setCheckable(True)
+        self.cForce.setChecked(True)
+        self.cForce.setObjectName("cForce")
+        self.horizontalLayout_3.addWidget(self.cForce)
+        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem5)
+        self.bApply = QtWidgets.QPushButton(Q7SelectionWindow)
+        self.bApply.setMinimumSize(QtCore.QSize(25, 25))
+        self.bApply.setText("")
+        icon11 = QtGui.QIcon()
+        icon11.addPixmap(QtGui.QPixmap(":/images/icons/operate-execute.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bApply.setIcon(icon11)
+        self.bApply.setObjectName("bApply")
+        self.horizontalLayout_3.addWidget(self.bApply)
         self.cApplyToAll = QtWidgets.QCheckBox(Q7SelectionWindow)
         self.cApplyToAll.setEnabled(True)
-        icon11 = QtGui.QIcon()
-        icon11.addPixmap(QtGui.QPixmap(":/images/icons/user-G.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.cApplyToAll.setIcon(icon11)
+        icon12 = QtGui.QIcon()
+        icon12.addPixmap(QtGui.QPixmap(":/images/icons/user-G.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.cApplyToAll.setIcon(icon12)
         self.cApplyToAll.setObjectName("cApplyToAll")
         self.horizontalLayout_3.addWidget(self.cApplyToAll)
         self.gridLayout.addLayout(self.horizontalLayout_3, 5, 0, 1, 1)
@@ -195,6 +211,8 @@ class Ui_Q7SelectionWindow(object):
         self.label.setText(_translate("Q7SelectionWindow", "Show:"))
         self.cShowSIDS.setText(_translate("Q7SelectionWindow", "SIDS"))
         self.cShowPath.setText(_translate("Q7SelectionWindow", "Path"))
+        self.cForce.setText(_translate("Q7SelectionWindow", "Force value check"))
+        self.bApply.setToolTip(_translate("Q7SelectionWindow", "Apply changes"))
         self.cApplyToAll.setText(_translate("Q7SelectionWindow", "Apply to All Selected"))
 
-import Res_rc
+from . import Res_rc

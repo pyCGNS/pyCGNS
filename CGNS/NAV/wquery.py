@@ -57,17 +57,22 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
         ys = option.rect.y() - 2
         if index.column() == 2:
             self._lastCol = COLUMN_SIDS
-            self._mode = CELLCOMBO
-            editor = QComboBox(parent)
-            editor.transgeometry = (xs, ys, ws, hs)
-            itemslist = tnode.sidsTypeList()
-            editor.addItems(itemslist)
-            try:
+            if self._parent.cForce.checkState() != Qt.Checked:
+              self._mode = CELLTEXT
+              editor = QLineEdit(parent)
+              editor.transgeometry = (xs, ys, ws, hs)
+            else:
+              self._mode = CELLCOMBO
+              editor = QComboBox(parent)
+              editor.transgeometry = (xs, ys, ws, hs)
+              itemslist = tnode.sidsTypeList()
+              editor.addItems(itemslist)
+              try:
                 tix = itemslist.index(tnode.sidsType())
-            except ValueError:
+              except ValueError:
                 editor.insertItem(0, tnode.sidsType())
                 tix = 0
-            editor.setCurrentIndex(tix)
+              editor.setCurrentIndex(tix)
             editor.installEventFilter(self)
             self.setEditorData(editor, index)
             return editor
@@ -147,14 +152,21 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
                                      """)
             if reply == MSG.OK:
                 for rw in self._parent.selectedRows():
-                    nodelist.append((rw, self._model.nodeFromPath(dt[rw])))
+                    nd = self._model.nodeFromPath(dt[rw])
+                    nodelist.append((rw, nd))
             else:
                 return
         else:
             nodelist.append((index.row(),
                              self._model.nodeFromPath(dt[index.row()])))
+        if self._parent.cForce.checkState() != Qt.Checked:
+            noforce = True
+        else:
+            noforce = False
         for ndr in nodelist:
             nix = self._model.createIndex(ndr[0], col, ndr[1])
+            if noforce:
+                nix.internalPointer().setEditCheck(False)
             self._model.setData(nix, value, role=Qt.EditRole)
             self._parent.updateRowData(ndr[0], dt[ndr[0]])
 
@@ -285,12 +297,8 @@ class Q7SelectionList(Q7Window, Ui_Q7SelectionWindow):
             r = self._tb.rowCount() - 1
             self.updateRowData(r, path)
         self.colCheck()
-        for i in range(self._tb.rowCount()):
-            self._tb.resizeRowToContents(i)
-        for i in range(len(tlvcolsnames)):
-            self._tb.resizeColumnToContents(i)
-        self.resize(self._tb.horizontalHeader().length() + 70,
-                    self._tb.verticalHeader().length() + 180)
+        self._tb.resizeColumnsToContents()
+        self._tb.resizeRowsToContents()
         self._parent.treeview.refreshView()
 
     def updateRowData(self, r, path):
@@ -298,6 +306,7 @@ class Q7SelectionList(Q7Window, Ui_Q7SelectionWindow):
         it0.setFont(QFont("Courier"))
         self._tb.setItem(r, 0, it0)
         it1 = QTableWidgetItem('%s ' % path.split('/')[-1])
+        it1.parent = self
         ft = QFont("Courier")
         ft.setWeight(QFont.Bold)
         it1.setFont(ft)
@@ -305,7 +314,9 @@ class Q7SelectionList(Q7Window, Ui_Q7SelectionWindow):
         node = self._model.nodeFromPath(path)
         if node:
             it1 = QTableWidgetItem(node.data(COLUMN_SIDS))
+            it1.parent = self
             it2 = QTableWidgetItem(node.data(COLUMN_DATATYPE))
+            it2.parent = self
             val = node.data(COLUMN_VALUE)
             if val == HIDEVALUE:
                 val = QIcon(QPixmap(":/images/icons/data-array-large.png"))
@@ -313,6 +324,7 @@ class Q7SelectionList(Q7Window, Ui_Q7SelectionWindow):
             else:
                 it3 = QTableWidgetItem(val)
                 it3.setFont(QFont("Courier"))
+            it3.parent = self
             it1.setFont(QFont("Courier"))
             it2.setFont(QFont("Courier"))
             it3.setFont(QFont("Courier"))

@@ -32,7 +32,6 @@ import CGNS.VAL.parse.findgrammar
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-#from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
 from CGNS.NAV.wfingerprint import Q7FingerPrint
 
 def trace(f):
@@ -458,7 +457,9 @@ class Q7TreeView(QTreeView):
                         self.model().pasteAsBrotherAllSelectedNodes()
                         self.exclusiveSelectRow()
             # --- same keys different meta
-            if kval in USERKEYMAPPINGS:
+            if ((kval in USERKEYMAPPINGS) and not
+                (kmod & Qt.ControlModifier) and not
+                (kmod & Qt.ShiftModifier)):
                 last.setUserState(kval - 48)
                 self.exclusiveSelectRow(nix)
             elif ((kval == KEYMAPPING[EXPANDSUBTREE]) and
