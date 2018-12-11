@@ -1556,7 +1556,7 @@ hid_t L3_nodeUpdatePartial(L3_Cursor_t *ctxt,
 	hsize_t *dst_block,
 	L3_Node_t *node)
 {
-	;
+	return -1;
 }
 /* ------------------------------------------------------------------------- */
 hid_t L3_nodeLink(L3_Cursor_t *ctxt, hid_t node,

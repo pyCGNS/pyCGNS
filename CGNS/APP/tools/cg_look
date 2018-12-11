@@ -101,15 +101,12 @@ pr.add_argument('-C', '--hidecontrol', action='store_true',
 pr.add_argument('-v', '--verbose', action='store_true',
                 help='trace mode')
 pr.add_argument('files', nargs=argparse.REMAINDER)
-
 args = pr.parse_args()
-
 
 class Query(object):
     def __init__(self):
         self.userkeys = ['DEFAULT']
         self.idlist = []
-
 
 try:
     ppath = os.environ['CGNSPROFILEPATH']

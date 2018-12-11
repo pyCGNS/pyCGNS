@@ -19,10 +19,10 @@ if HAS_MSW:
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
-from qtpy.QtCore import *
+from qtpy.QtCore import Qt.WindowStaysOnTopHint
 from qtpy.QtWidgets import QApplication, QSplashScreen
 from qtpy.QtGui import QPixmap
-from qtpy.QtGui import *
+#from qtpy.QtGui import *
 from CGNS.NAV.wcontrol import Q7Main
 
 splash = None

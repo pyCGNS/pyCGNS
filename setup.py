@@ -269,21 +269,20 @@ if MAP:
         # hack: actually shoudl read hdf5/cmake config to get true compiler...
         if CONFIG.HDF5_PARALLEL:
             os.environ['CC']=CYTHON_COMPILER_FOR_MAP
-            
+
         ALL_EXTENSIONS += [Extension("CGNS.MAP.EmbeddedCHLone",
-                                    ["CGNS/MAP/EmbeddedCHLone.pyx",
-                                    "CGNS/MAP/SIDStoPython.c",
-                                    "CGNS/MAP/l3.c",
-                                    "CGNS/MAP/error.c",
-                                    "CGNS/MAP/linksearch.c",
-                                    "CGNS/MAP/sha256.c",
-                                    ],
-                                    include_dirs=include_dirs,
-                                    library_dirs=library_dirs,
-                                    libraries=optional_libs,
-                                    depends=depfiles,
-                                    define_macros=extra_define_macro,
-                                    extra_compile_args=extra_compile_args)]
+                                     ["CGNS/MAP/EmbeddedCHLone.pyx",
+                                      "CGNS/MAP/SIDStoPython.c",
+                                      "CGNS/MAP/l3.c",
+                                      "CGNS/MAP/error.c",
+                                      "CGNS/MAP/linksearch.c",
+                                     ],
+                                     include_dirs=include_dirs,
+                                     library_dirs=library_dirs,
+                                     libraries=optional_libs,
+                                     depends=depfiles,
+                                     define_macros=extra_define_macro,
+                                     extra_compile_args=extra_compile_args)]
 
     ALL_PACKAGES += ['CGNS.MAP', 'CGNS.MAP.test']
     module_logs.append("MAP   add  build")
