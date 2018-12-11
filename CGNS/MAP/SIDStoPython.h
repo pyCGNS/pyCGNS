@@ -12,7 +12,7 @@
 #include "bytesobject.h"
 
 #include "CGNS/MAP/CHLone_config.h"
-/* #include "CGNS/MAP/sha256.h" */
+#include "CGNS/MAP/sha256.h"
 #include "CGNS/MAP/l3.h"
 
 #ifdef _WINDOWS
@@ -157,7 +157,7 @@ typedef struct s2p_ctx_t
   int        pol_max;/* max allocated of parsed object list */
   int        pol_cur;/* current index of last used parsed object list */
   unsigned char checksum[32];/* on the fly checksum buffer */
-  /*sha256_t  *sha256;/* on the fly checksum private structure */
+  sha256_t  *sha256;/* on the fly checksum private structure */
   PyGILState_STATE gstate;
   long       flg;
   char      *lsp;

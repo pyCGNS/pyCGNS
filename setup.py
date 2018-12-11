@@ -196,21 +196,23 @@ def hasToGenerate(source, destination, force):
     return (force or not os.path.exists(destination) or
             os.path.getmtime(source) > os.path.getmtime(destination))
 
-
 def resolveVars(filename, confvalues, force):
     if hasToGenerate(filename + '.in', filename, force):
+        print(filename)
         with open('{}.in'.format(filename), 'r') as fg1:
             l1 = fg1.readlines()
-        l2 = [ll % confvalues for ll in l1]
+        l2 = [ll.format(**confvalues) for ll in l1]
         with open(filename, 'w') as fg2:
             fg2.writelines(l2)
 
-
 # -------------------------------------------------------------------------
 if APP:
-    slist = ['cg_grep', 'cg_list', 'cg_link', 'cg_iges', 'cg_diff', 'cg_checksum',
+    slist = ['cg_grep', 'cg_list', 'cg_link', 'cg_iges', 'cg_diff', 
+             'cg_checksum',
              'cg_gather', 'cg_scatter', 'cg_dump',
-             'cg_scan', 'cg_look']
+             'cg_scan']
+    if NAV:
+      slist += ['cg_look']
 
     ALL_SCRIPTS += ['CGNS/APP/tools/%s' % f for f in slist]
 
@@ -276,6 +278,7 @@ if MAP:
                                       "CGNS/MAP/l3.c",
                                       "CGNS/MAP/error.c",
                                       "CGNS/MAP/linksearch.c",
+                                      "CGNS/MAP/sha256.c",
                                      ],
                                      include_dirs=include_dirs,
                                      library_dirs=library_dirs,
