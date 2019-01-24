@@ -19,7 +19,7 @@ if HAS_MSW:
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
-from qtpy.QtCore import Qt.WindowStaysOnTopHint
+from qtpy import QtCore
 from qtpy.QtWidgets import QApplication, QSplashScreen
 from qtpy.QtGui import QPixmap
 #from qtpy.QtGui import *
@@ -53,11 +53,11 @@ def run(args=[], files=[], datasets=[],
         app = QApplication(args)
         if not flags[5]:
             pixmap = QPixmap(":/images/splash.png")
-            splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
+            splash = QSplashScreen(pixmap, QtCore.Qt.WindowStaysOnTopHint)
             splash.show()
             splash.showMessage("Release v%s" % OCTXT._ToolVersion,
-                               Qt.AlignHCenter | Qt.AlignBottom)
-            timer = QTimer.singleShot(3000,closeSplash)
+                               QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom)
+            timer = QtCore.QTimer.singleShot(3000,closeSplash)
         app.processEvents()
         Q7Main.verbose = flags[2]
         wcontrol = Q7Main()
