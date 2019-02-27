@@ -6,23 +6,20 @@
 from __future__ import unicode_literals
 from builtins import (str, bytes, range, dict)
 
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
-import sys
 import os
 
-from qtpy.QtCore import *
-from qtpy.QtGui import *
-from qtpy.QtWidgets import *
+from qtpy.QtCore import Qt
+from qtpy.QtGui import QFont
+from qtpy.QtWidgets import QTreeView, QFileDialog, QTreeWidgetItem, QWidget
 
-import CGNS.VAL.simplecheck as CGV
-import CGNS.VAL.parse.messages as CGM
-from CGNS.VAL.parse.findgrammar import locateGrammars
-
-from CGNS.NAV.Q7DiagWindow import Ui_Q7DiagWindow
-from CGNS.NAV.wfingerprint import Q7Window as QW
 
 import CGNS.NAV.wmessages as MSG
+import CGNS.VAL.parse.messages as CGM
+from CGNS.NAV.Q7DiagWindow import Ui_Q7DiagWindow
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from CGNS.NAV.wfingerprint import Q7Window as QW
+from CGNS.VAL.parse.findgrammar import locateGrammars
 
 
 # -----------------------------------------------------------------

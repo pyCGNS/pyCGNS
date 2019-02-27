@@ -11,8 +11,6 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import os
 import os.path
-import re
-import sys
 import time
 import stat
 import sys
@@ -21,9 +19,9 @@ import CGNS.MAP
 import CGNS.PAT.cgnsutils as CGU
 
 from qtpy.QtCore import QCoreApplication
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtCore import Qt, QThread, QMutex, Signal
+from qtpy.QtWidgets import QWidget
+from qtpy.QtGui import (QIcon, QPixmap, QFont, QCursor)
 
 from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
 from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET

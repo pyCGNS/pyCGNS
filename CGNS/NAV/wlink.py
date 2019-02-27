@@ -16,9 +16,9 @@ import CGNS.MAP as CGM
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-from qtpy.QtCore import *
+from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QFileDialog
-from qtpy.QtWidgets import *
+from qtpy.QtWidgets import (QTableWidgetItem, QStyledItemDelegate, QLineEdit, QHeaderView)
 
 from CGNS.NAV.Q7LinkWindow import Ui_Q7LinkWindow
 from CGNS.NAV.wfingerprint import Q7Window as QW

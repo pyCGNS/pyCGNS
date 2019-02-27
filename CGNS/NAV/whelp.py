@@ -6,7 +6,7 @@
 from __future__ import unicode_literals
 from builtins import (str, bytes, range, dict)
 
-from qtpy.QtWidgets import *
+from qtpy.QtWidgets import QWidget
 from qtpy.QtGui import QTextCursor
 
 from CGNS.NAV.Q7HelpWindow import Ui_Q7HelpWindow

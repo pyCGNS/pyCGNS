@@ -8,13 +8,11 @@ from builtins import (str, bytes, range, dict)
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
-import numpy
-
 import CGNS.PAT.cgnsutils as CGU
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtCore import Qt, QModelIndex, QPoint
+from qtpy.QtWidgets import QStyledItemDelegate, QMenu
+from qtpy.QtGui import QColor, QFont
 
 from CGNS.NAV.Q7DiffWindow import Ui_Q7DiffWindow
 from CGNS.NAV.wfingerprint import Q7Window, Q7FingerPrint

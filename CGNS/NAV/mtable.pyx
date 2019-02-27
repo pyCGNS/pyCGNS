@@ -6,18 +6,17 @@
 from __future__ import unicode_literals
 from builtins import (str, bytes, range, dict)
 
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import sys
-import re
-import numpy
+from builtins import (str, bytes, range, dict)
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
+from qtpy.QtCore import (Qt, QAbstractTableModel)
 from qtpy.QtGui import (QFont, QFontMetrics)
+from qtpy.QtWidgets import QTableView
 
-import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils as CGU
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 
 # -----------------------------------------------------------------
