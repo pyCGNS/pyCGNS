@@ -16,9 +16,9 @@ import sys
 
 from CGNS.pyCGNSconfig import HAS_PY2, HAS_MSW
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtCore import (Qt, QSortFilterProxyModel, QModelIndex, QFileInfo)
+from qtpy.QtWidgets import (QWidget, QFileIconProvider, QAbstractItemView, QFileSystemModel)
+from qtpy.QtGui import QIcon, QPixmap
 
 from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
 
@@ -57,6 +57,7 @@ def checkFilePermission(path, write=False):
         return False
     return True
 
+
 # -----------------------------------------------------------------
 class Q7FileFilterProxy(QSortFilterProxyModel):
     def __init__(self, parent):
@@ -77,7 +78,7 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         elif HAS_PY2 and isinstance(p, unicode):
             p = str(p)
         if not self.checkPermission(p):
-            print ('FILTER bad perm')
+            print('FILTER bad perm')
             return False
         if os.path.isdir(p):
             print('CHECK', self.wparent.cShowDirs.checkState())

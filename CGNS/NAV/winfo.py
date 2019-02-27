@@ -11,8 +11,8 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import sys
 import string
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
+from qtpy.QtCore import Qt
+#from qtpy.QtWidgets import QWidget
 
 from CGNS.NAV.Q7InfoWindow import Ui_Q7InfoWindow
 from CGNS.NAV.wfingerprint import Q7Window

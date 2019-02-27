@@ -14,9 +14,10 @@ import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU
 import CGNS.PAT.SIDS         as CGS
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtCore import Qt, QModelIndex
+from qtpy.QtWidgets import (QStyledItemDelegate, QLineEdit, QComboBox, QSizePolicy,
+                            QStyleOptionViewItem, QMenu, QAction)
+from qtpy.QtGui import (QFont, QPalette, QScreen)
 
 from CGNS.pyCGNSconfig import HAS_VTK
 

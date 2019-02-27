@@ -16,10 +16,9 @@ import os
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import QFileDialog
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtCore import Qt
+from qtpy.QtWidgets import (QFileDialog, QStyledItemDelegate, QLineEdit, QComboBox, QTableWidgetItem, QMessageBox)
+from qtpy.QtGui import (QFont, QIcon, QPixmap)
 
 from CGNS.NAV.Q7QueryWindow import Ui_Q7QueryWindow
 from CGNS.NAV.Q7SelectionWindow import Ui_Q7SelectionWindow

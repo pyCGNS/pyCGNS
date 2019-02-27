@@ -6,7 +6,7 @@
 from __future__ import unicode_literals
 from builtins import (str, bytes, range, dict)
 
-from qtpy.QtCore import *
+from qtpy.QtCore import (Qt, QObject, Signal)
 from qtpy.QtWidgets import (QAction, QStyledItemDelegate, QStyleOptionViewItem,
                             QMenu, QTableWidgetItem, QHeaderView)
 

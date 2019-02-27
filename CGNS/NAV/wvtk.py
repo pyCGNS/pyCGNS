@@ -19,9 +19,9 @@ import vtk
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils as CGU
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtCore import Qt, Slot
+from qtpy.QtWidgets import QColorDialog
+from qtpy.QtGui import (QColor, QIcon, QPixmap, QScreen)
 
 from CGNS.NAV.Q7VTKWindow import Ui_Q7VTKWindow
 from CGNS.NAV.wfingerprint import Q7Window, Q7FingerPrint

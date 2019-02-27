@@ -9,9 +9,8 @@ from builtins import (str, bytes, range, dict)
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtCore import Qt, QEvent
+from qtpy.QtWidgets import QComboBox, QListWidget
 
 # -----------------------------------------------------------------
 class Q7ComboBox(QComboBox):
@@ -28,7 +27,7 @@ class Q7ComboBox(QComboBox):
 
     def eventFilter(self, o, e):
         if e.type() == QEvent.KeyPress:
-            kmod = e.modifiers()
+            # kmod = e.modifiers()
             kval = e.key()
             if kval in [Qt.Key_Z]:
                 path = self.actorlist.currentItem().text()

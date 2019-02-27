@@ -3,36 +3,31 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from __future__ import unicode_literals
 from __future__ import print_function
+from __future__ import unicode_literals
+
+import sys
 from builtins import (str, bytes, range, dict)
 
-from CGNS.pyCGNSconfig import HAS_PY2
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
-
 import linecache
-import os
-import sys
-import os.path as op
-
-import gc
-import copy
-import string
-
 import numpy
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from qtpy.QtGui import (QIcon, QPixmap, QColor)
+import os
 
-import CGNS.VAL.simplecheck as CGV
+from qtpy.QtCore import (Qt, QModelIndex, QAbstractItemModel, QItemSelectionModel)
+from qtpy.QtGui import (QIcon, QPixmap, QColor)
+from qtpy.QtWidgets import QTreeView
+
+from CGNS.pyCGNSconfig import HAS_PY2
 import CGNS.NAV.wmessages as MSG
-import CGNS.VAL.parse.messages as CGM
+import CGNS.PAT.cgnskeywords as CGK
+import CGNS.PAT.cgnsutils as CGU
 import CGNS.VAL.grammars.CGNS_VAL_USER_DEFAULT as CGV
 import CGNS.VAL.parse.findgrammar
-import CGNS.PAT.cgnsutils as CGU
-import CGNS.PAT.cgnskeywords as CGK
-
+import CGNS.VAL.parse.messages as CGM
+import CGNS.VAL.simplecheck as CGV
+from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.wfingerprint import Q7FingerPrint
+
 
 def trace(f):
     def globaltrace(frame, why, arg):
@@ -49,7 +44,7 @@ def trace(f):
             bname = os.path.basename(filename)
             print("{}({}): {}".format(bname,
                                       lineno,
-                                      linecache.getline(filename, lineno)),)
+                                      linecache.getline(filename, lineno)), )
         return localtrace
 
     def _f(*args, **kwds):
@@ -226,7 +221,7 @@ ICONMAPPING = {
     STUSR_F: ":/images/icons/user-F.png",
 
     DT_LARGE: ":/images/icons/data-array-large.png",
-    DT_LAZY:  ":/images/icons/data-array-lazy.png",
+    DT_LAZY: ":/images/icons/data-array-lazy.png",
 }
 
 KEYMAPPING = {
@@ -251,7 +246,7 @@ KEYMAPPING = {
     COLLAPSESUBTREE: Qt.Key_Minus,
     EXPANDSUBTREESELECTED: Qt.Key_Plus,
     COLLAPSESUBTREESELECTED: Qt.Key_Minus,
-    
+
     LOADNODEDATA: Qt.Key_L,
     RELEASENODEDATA: Qt.Key_R,
     LOADNODEDATASELECTED: Qt.Key_L,
@@ -353,7 +348,7 @@ class Q7TreeView(QTreeView):
         self._control = None
         self._fgindex = -1
         self.setUniformRowHeights(True)
-        
+
     @property
     def FG(self):
         return Q7FingerPrint.getByIndex(self._fgindex)
@@ -458,8 +453,8 @@ class Q7TreeView(QTreeView):
                         self.exclusiveSelectRow()
             # --- same keys different meta
             if ((kval in USERKEYMAPPINGS) and not
-                (kmod & Qt.ControlModifier) and not
-                (kmod & Qt.ShiftModifier)):
+            (kmod & Qt.ControlModifier) and not
+            (kmod & Qt.ShiftModifier)):
                 last.setUserState(kval - 48)
                 self.exclusiveSelectRow(nix)
             elif ((kval == KEYMAPPING[EXPANDSUBTREE]) and
@@ -640,42 +635,43 @@ class Q7TreeView(QTreeView):
         self._model = None
 
     def expand_sb(self):
-        ix=self.modelCurrentIndex()
+        ix = self.modelCurrentIndex()
         self._expand_sb(ix)
         self.resizeAll()
-    
-    def _expand_sb(self,ix):
+
+    def _expand_sb(self, ix):
         self.expand(ix)
         for c in self.modelData(ix).children():
-            ix2=self.M().indexByPath(c.sidsPath())
+            ix2 = self.M().indexByPath(c.sidsPath())
             self._expand_sb(ix2)
-    
+
     def collapse_sb(self):
-        ix=self.modelCurrentIndex()
+        ix = self.modelCurrentIndex()
         self._collapse_sb(ix)
         self.resizeAll()
-    
-    def _collapse_sb(self,ix):
+
+    def _collapse_sb(self, ix):
         self.collapse(ix)
         for c in self.modelData(ix).children():
-            ix2=self.M().indexByPath(c.sidsPath())
+            ix2 = self.M().indexByPath(c.sidsPath())
             self._collapse_sb(ix2)
-    
+
     def sexpand_sb(self):
         for pth in self.M().selectedNodes:
-            ix=self.M().indexByPath(pth)
+            ix = self.M().indexByPath(pth)
             self._expand_sb(ix)
         self.resizeAll()
-    
+
     def scollapse_sb(self):
         for pth in self.M().selectedNodes:
-            ix=self.M().indexByPath(pth)
+            ix = self.M().indexByPath(pth)
             self._collapse_sb(ix)
         self.resizeAll()
 
     def resizeAll(self):
         for n in range(COLUMN_LAST + 1):
             self.resizeColumnToContents(n)
+
 
 # -----------------------------------------------------------------
 def __sortItems(i1, i2):
@@ -711,8 +707,8 @@ class Q7TreeItem(object):
             self._path = CGU.getPathNormalize(parent.sidsPath() + '/' + data[0])
             self._path_no_root = CGU.getPathNoRoot(self._path)
             if (model is not None):
-              self._model._extension[self._path] = self
-              self._nodes = len(self._model._extension)
+                self._model._extension[self._path] = self
+                self._nodes = len(self._model._extension)
         else:
             self._path = ''
             self._path_no_root = ''
@@ -721,7 +717,7 @@ class Q7TreeItem(object):
             self._lazy = True
         else:
             self._lazy = False
-        self.set_sidsIsLinkChild()        
+        self.set_sidsIsLinkChild()
         self.set_sidsLinkStatus()
         self.set_sidsDataType()
 
@@ -1081,7 +1077,7 @@ class Q7TreeItem(object):
                     vsize *= x
             except TypeError:
                 print('# CGNS.NAV unexpected (mtree.hasValueView)',
-                    self.sidsPath())
+                      self.sidsPath())
             if ((vsize > OCTXT.MaxDisplayDataSize) and
                     (OCTXT.MaxDisplayDataSize > 0)):
                 return False
@@ -1252,9 +1248,9 @@ class Q7TreeModel(QAbstractItemModel):
     @property
     def selectedNodes(self):
         return self._selected
-    
+
     def modelReset(self):
-        #self.reset()
+        # self.reset()
         self.beginResetModel()
         self.endResetModel()
         self._extension = {}
@@ -1696,11 +1692,11 @@ class Q7TreeModel(QAbstractItemModel):
         # Dirty patch
         # Prevent copying inside subtree based on node name
         if self._control.copyPasteBuffer[0] in nodeitem.sidsPath():
-           # TODO
-           # Would be nice to compare origin path of PasteBuffer
-           # either way we should check path of nodes with same name
-           # to ensure they are different !
-           return False
+            # TODO
+            # Would be nice to compare origin path of PasteBuffer
+            # either way we should check path of nodes with same name
+            # to ensure they are different !
+            return False
         nix = self.indexByPath(nodeitem.sidsPath())
         (ntree, npath, nrow) = nodeitem.sidsAddChild(self._control.copyPasteBuffer)
         self.parseAndUpdate(nodeitem, ntree, nix, nrow, nodeitem._tag)
@@ -1818,7 +1814,7 @@ class Q7TreeModel(QAbstractItemModel):
         self._selected = None
         self.extension = None
         Q7TreeItem._icons = {}
-        #self.reset()
+        # self.reset()
         self.beginResetModel()
         self.endResetModel()
 
