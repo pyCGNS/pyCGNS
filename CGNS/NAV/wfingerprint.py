@@ -538,7 +538,7 @@ class Q7FingerPrint:
         except (CGNS.MAP.error,) as chlex:
             txt = """The current save operation has been aborted (CHLone):"""
             control.readyCursor()
-            MSG.wError(control, 130, chlex[0], txt, chlex[1])
+            MSG.wError(control, 130, chlex[0][0], txt, chlex[0][1])
             return None
         except (Exception,) as e:
             txt = """The current save operation has been aborted: %s""" % e
