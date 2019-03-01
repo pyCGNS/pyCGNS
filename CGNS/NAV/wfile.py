@@ -75,22 +75,19 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         p = self.model.filePath(idx)
         if isinstance(p, bytes):
             p = str(self.model.filePath(idx).decode('utf-8'))
-        elif HAS_PY2 and isinstance(p, unicode):
-            p = str(p)
+        elif HAS_PY2:
+            if isinstance(p, unicode):
+                p = str(p)
         if not self.checkPermission(p):
-            print('FILTER bad perm')
             return False
         if os.path.isdir(p):
-            print('CHECK', self.wparent.cShowDirs.checkState())
             if self.wparent.cShowDirs.checkState() != Qt.Checked:
                 if len(p) > len(self.wparent.selecteddir):
-                    print('FILTER bd len')
                     return False
             return True
         self.wparent.getBoxes()
         # if (self.wparent.cShowAll.checkState()==Qt.Checked): xlist=[]
         r = self.wparent.parent.matchFileExtensions(p)
-        print('FILTER', r)
         return r
 
     def checkPermission(self, path, write=False):
