@@ -4,8 +4,6 @@
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
-
 
 import sys
 from builtins import (str, bytes, range, dict)
