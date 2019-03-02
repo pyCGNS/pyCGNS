@@ -110,7 +110,7 @@ class Q7TreeItemDelegate(QStyledItemDelegate):
         if (index.column() == NMT.COLUMN_DATATYPE):
             self._mode = CELLCOMBO
             editor = QComboBox(parent)
-            editor.transgeometry = (xs, ys, ws*2, hs)
+            editor.transgeometry = (xs, ys, ws, hs)
             editor.setProperty("Q7SIDSDataTypeComboBox", "True")
             itemslist = self._parent.modelData(index).sidsDataType(all=True)
             editor.addItems(itemslist)
