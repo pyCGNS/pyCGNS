@@ -16,9 +16,9 @@ import sys
 
 from CGNS.pyCGNSconfig import HAS_PY2, HAS_MSW
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtCore import (Qt, QSortFilterProxyModel, QModelIndex, QFileInfo)
+from qtpy.QtWidgets import (QWidget, QFileIconProvider, QAbstractItemView, QFileSystemModel)
+from qtpy.QtGui import QIcon, QPixmap
 
 from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
 
@@ -57,6 +57,7 @@ def checkFilePermission(path, write=False):
         return False
     return True
 
+
 # -----------------------------------------------------------------
 class Q7FileFilterProxy(QSortFilterProxyModel):
     def __init__(self, parent):
@@ -74,22 +75,19 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         p = self.model.filePath(idx)
         if isinstance(p, bytes):
             p = str(self.model.filePath(idx).decode('utf-8'))
-        elif HAS_PY2 and isinstance(p, unicode):
-            p = str(p)
+        elif HAS_PY2:
+            if isinstance(p, unicode):
+                p = str(p)
         if not self.checkPermission(p):
-            print ('FILTER bad perm')
             return False
         if os.path.isdir(p):
-            print('CHECK', self.wparent.cShowDirs.checkState())
             if self.wparent.cShowDirs.checkState() != Qt.Checked:
                 if len(p) > len(self.wparent.selecteddir):
-                    print('FILTER bd len')
                     return False
             return True
         self.wparent.getBoxes()
         # if (self.wparent.cShowAll.checkState()==Qt.Checked): xlist=[]
         r = self.wparent.parent.matchFileExtensions(p)
-        print('FILTER', r)
         return r
 
     def checkPermission(self, path, write=False):

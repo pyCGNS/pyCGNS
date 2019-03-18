@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'CGNS\NAV\T\Q7LinkWindow.ui'
+# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7LinkWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Q7LinkWindow(object):
     def setupUi(self, Q7LinkWindow):
@@ -273,4 +274,5 @@ class Ui_Q7LinkWindow(object):
         self.label.setText(_translate("Q7LinkWindow", "/"))
         self.bClose.setText(_translate("Q7LinkWindow", "Close"))
 
-import Res_rc
+
+from . import Res_rc

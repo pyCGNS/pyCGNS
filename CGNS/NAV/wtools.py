@@ -9,9 +9,9 @@ from builtins import (str, bytes, range, dict)
 
 from CGNS.pyCGNSconfig import HAS_PY2
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtCore import Qt
+from qtpy.QtWidgets import QButtonGroup
+from qtpy.QtGui import (QColor, QPalette)
 
 from CGNS.NAV.wfingerprint import Q7FingerPrint
 from CGNS.NAV.Q7ToolsWindow import Ui_Q7ToolsWindow

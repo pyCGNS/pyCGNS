@@ -31,22 +31,6 @@ from setuputils import (MAJOR_VERSION, MINOR_VERSION,
 
 line('pyCGNS v{}.{} install'.format(MAJOR_VERSION, MINOR_VERSION))
 line()
-log('** IMPORTANT WARNING **')
-log('The *install* command runs the *build* as first step.')
-log('If you run first the *build* with specific options')
-log('you *SHOULD* add these options again in the *install*')
-log('command line unless you will have a *NEW* build.')
-line()
-if HAS_PY3:
-    log('found Python 3 platform')
-else:
-    log('found Python 2 platform')
-log('using Python from {}'.format(sys.prefix))
-
-if HAS_MSW:
-    log('found Windows platform')
-else:
-    log('found Unix platform')
 
 doc1 = """
   pyCGNS installation setup 
@@ -67,6 +51,12 @@ doc1 = """
   CC=mpicc python setup.py build
 
   or edit the pyCGNS/stup.py file and change CYTHON_COMPILER_FOR_MAP
+
+  ** IMPORTANT WARNING **
+  The *install* command runs the *build* as first step.
+  If you run first the *build* with specific options
+  you *SHOULD* add these options again in the *install*
+  command line unless you will have a *NEW* build.
 
 """
 
@@ -111,8 +101,8 @@ pr.add_argument("-L", "--libraries", dest="libs",
                 help='list of paths for libraries search ( : separated), order is significant and is kept unchanged')
 pr.add_argument("-U", "--update", action='store_true',
                 help='update version (dev only)')
-pr.add_argument("-g", "--generate", action='store_true',
-                help='force Qt/creator .pyx files to be regenerated')
+pr.add_argument("-F", "--force", action='store_false',
+                help='skip all .pyx files to be regeneration')
 pr.add_argument("-A", "--alternate", action='store_true',
                 help='use full h5py CGNS/HDF5 interface (ongoing work)')
 
@@ -122,6 +112,11 @@ for name, val in modules.items():
     pr.add_argument("--" + name, type=str2bool, default=val,
                     help='enable/disable building of CGNS.' + name.upper())
 
+for hstr in ['--help', '-h', 'help']:
+  if hstr in sys.argv:
+      pr.print_help()
+      sys.exit(1)
+    
 # Remove modules from command-line arguments
 pr1 = argparse.ArgumentParser()
 for name, val in modules.items():
@@ -130,10 +125,25 @@ for name, val in modules.items():
 args1, unknown = pr1.parse_known_args()
 sys.argv = sys.argv[:1] + unknown
 
+if 'help' in unknown:
+    pr.print_help()
+    sys.exit(1)
+
 try:
     os.makedirs('./build/lib/CGNS')
 except OSError:
     pass
+
+if HAS_PY3:
+    log('found Python 3 platform')
+else:
+    log('found Python 2 platform')
+log('using Python from {}'.format(sys.prefix))
+
+if HAS_MSW:
+    log('found Windows platform')
+else:
+    log('found Unix platform')
 
 APP = args1.app
 MAP = args1.map
@@ -157,6 +167,9 @@ libs = []
 
 args, unknown = pr.parse_known_args()
 
+if 'install' in unknown:
+    args.force = False
+
 if args.incs is not None:
     incs = [os.path.expanduser(path) for path in args.incs.split(os.path.pathsep)]
 if args.libs is not None:
@@ -176,12 +189,13 @@ except ConfigException as e:
 line()
 
 new_args = []
+
 for arg in sys.argv:
     if (not ('-I=' in arg or '--includes=' in arg) and
-            not ('-U' in arg or '--update' in arg) and
-            not ('-A' in arg or '--alternate' in arg) and
-            not ('-g' in arg or '--generate' in arg) and
-            not ('-L=' in arg or '--libraries=' in arg)):
+        not ('-U' in arg or '--update' in arg) and
+        not ('-A' in arg or '--alternate' in arg) and
+        not ('-F' in arg or '--force' in arg) and
+        not ('-L=' in arg or '--libraries=' in arg)):
         new_args += [arg]
 sys.argv = new_args
 
@@ -198,13 +212,17 @@ def hasToGenerate(source, destination, force):
 
 def resolveVars(filename, confvalues, force):
     if hasToGenerate(filename + '.in', filename, force):
-        print(filename)
         with open('{}.in'.format(filename), 'r') as fg1:
             l1 = fg1.readlines()
         l2 = [ll.format(**confvalues) for ll in l1]
         with open(filename, 'w') as fg2:
             fg2.writelines(l2)
 
+if args.force:
+    print('FORCE')
+else:
+    print('NO FORCE')
+    
 # -------------------------------------------------------------------------
 if APP:
     slist = ['cg_grep', 'cg_list', 'cg_link', 'cg_iges', 'cg_diff', 
@@ -264,8 +282,8 @@ if MAP:
 
         EXTRA_MAP_COMPILE_ARGS = ''
 
-        resolveVars(fix_path(depfiles[0]), conf, True)
-        resolveVars(fix_path(depfiles[1]), conf, args.generate)
+        resolveVars(fix_path(depfiles[0]), conf, args.force)
+        resolveVars(fix_path(depfiles[1]), conf, args.force)
         library_dirs = [l for l in library_dirs if l != '']
 
         # hack: actually shoudl read hdf5/cmake config to get true compiler...
@@ -301,6 +319,11 @@ if VAL:
                      'CGNS.VAL.parse',
                      'CGNS.VAL.test']
     ALL_SCRIPTS += ['CGNS/VAL/CGNS.VAL']
+
+    if args.force:
+        touch("CGNS/VAL/grammars/CGNS_VAL_USER_SIDS_.pyx")
+        touch("CGNS/VAL/grammars/etablesids.pyx")
+        touch("CGNS/VAL/grammars/valutils.pyx")        
 
     ALL_EXTENSIONS += [Extension("CGNS.VAL.grammars.CGNS_VAL_USER_SIDS_",
                                  ["CGNS/VAL/grammars/CGNS_VAL_USER_SIDS_.pyx"],
@@ -339,7 +362,7 @@ if NAV and CONFIG.HAS_QTPY:
     ccy = CONFIG.COM_CYTHON
 
     fakefile = "./CGNS/NAV/fake.pxi"
-    if args.generate:
+    if args.force:
         touch(fakefile)
 
     modnamelist = [
@@ -372,6 +395,8 @@ if NAV and CONFIG.HAS_QTPY:
         mfile_list += ['mparser']
 
     for mfile in mfile_list:
+        if args.force:
+            touch("CGNS/NAV/%s.pyx" % mfile)
         modextlist += [Extension("CGNS.NAV.%s" % mfile,
                                  ["CGNS/NAV/%s.pyx" % mfile ],
                                  include_dirs=CONFIG.NUMPY_PATH_INCLUDES,
@@ -386,7 +411,8 @@ if NAV and CONFIG.HAS_QTPY:
                                  libraries=CONFIG.NUMPY_LINK_LIBRARIES,
                                  )]
         g = ("CGNS/NAV/T/{}.ui".format(m), "CGNS/NAV/G/{}.pyx".format(m))
-        if (('true' not in [cui, crc]) and hasToGenerate(g[0], g[1], args.generate)):
+        if (('true' not in [cui, crc]) and hasToGenerate(g[0], g[1],
+                                                         args.force)):
             modgenlist += [m]
 
     for m in modgenlist:
@@ -398,7 +424,7 @@ if NAV and CONFIG.HAS_QTPY:
         #print(fix_path(com))
         os.system(fix_path(com))
 
-    if (hasToGenerate('CGNS/NAV/R/Res.qrc', 'CGNS/NAV/Res_rc.py', args.generate)):
+    if (hasToGenerate('CGNS/NAV/R/Res.qrc', 'CGNS/NAV/Res_rc.py', args.force)):
         log('Generate from updated Qt Ressources ({}): Res_rc.py'.format(crc))
         com = "{} -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc".format(crc)
         os.system(fix_path(com))

@@ -2,11 +2,12 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7DiagWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Q7DiagWindow(object):
     def setupUi(self, Q7DiagWindow):
@@ -166,5 +167,6 @@ class Ui_Q7DiagWindow(object):
         self.bClose.setText(_translate("Q7DiagWindow", "Close"))
         self.cWarnings.setText(_translate("Q7DiagWindow", "Warnings"))
         self.cDiagFirst.setText(_translate("Q7DiagWindow", "Diagnostics first"))
+
 
 from . import Res_rc

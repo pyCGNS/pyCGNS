@@ -18,16 +18,12 @@ import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.SIDS
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import QFileDialog
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtCore import Qt
+from qtpy.QtWidgets import (QFileDialog, QTableWidgetItem, QStyledItemDelegate)
+from qtpy.QtGui import QFont
 
 from CGNS.NAV.Q7PatternWindow import Ui_Q7PatternWindow
 from CGNS.NAV.wfingerprint import Q7Window as QW
-
-import CGNS.NAV.wmessages as MSG
-
 
 # -----------------------------------------------------------------
 class Q7PatternList(QW, Ui_Q7PatternWindow):

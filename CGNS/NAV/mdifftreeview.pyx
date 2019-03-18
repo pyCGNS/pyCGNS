@@ -13,7 +13,7 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 import CGNS.NAV.mtree as NMT
 from CGNS.NAV.mtree import (Q7TreeItem, Q7TreeModel, Q7TreeView)
 
-from qtpy.QtCore import *
+from qtpy.QtCore import Qt
 from qtpy.QtGui import QColor
 
 (DIFF_NX, DIFF_NA, DIFF_ND, DIFF_CQ, DIFF_CT, DIFF_CS, DIFF_CV) = range(7)
@@ -42,7 +42,7 @@ class Q7DiffTreeModel(Q7TreeModel):
     def data(self, index, role):
         idx = index
         col = idx.column()
-        nnm = index.internalPointer().sidsName()
+        #nnm = index.internalPointer().sidsName()
         pth = CGU.getPathNoRoot(index.internalPointer().sidsPath())
         if ((role not in [Qt.BackgroundRole]) or
                 (self._diag is None) or

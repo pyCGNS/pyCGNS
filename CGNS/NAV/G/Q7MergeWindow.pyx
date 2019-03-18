@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'CGNS\NAV\T\Q7MergeWindow.ui'
+# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7MergeWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Q7MergeWindow(object):
     def setupUi(self, Q7MergeWindow):
@@ -186,5 +187,6 @@ class Ui_Q7MergeWindow(object):
         self.bNextMark.setText(_translate("Q7MergeWindow", "..."))
         self.bClose.setText(_translate("Q7MergeWindow", "Close"))
 
+
 from CGNS.NAV.mdifftreeview import Q7DiffTreeView
-import Res_rc
+from . import Res_rc

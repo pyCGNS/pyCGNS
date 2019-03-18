@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'CGNS\NAV\T\Q7ToolsWindow.ui'
+# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ToolsWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Q7ToolsWindow(object):
     def setupUi(self, Q7ToolsWindow):
@@ -509,4 +510,5 @@ class Ui_Q7ToolsWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.merge), _translate("Q7ToolsWindow", "Merge"))
         self.bClose.setText(_translate("Q7ToolsWindow", "Close"))
 
-import Res_rc
+
+from . import Res_rc

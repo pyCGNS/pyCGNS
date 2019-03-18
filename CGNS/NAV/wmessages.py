@@ -10,10 +10,11 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import sys
 import string
+import re
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtWidgets import QTextEdit, QDialog
+from qtpy.QtGui import QTextCursor, QSyntaxHighlighter, QTextCharFormat, QFont, QColor
+
 
 from CGNS.NAV.Q7MessageWindow import Ui_Q7MessageWindow
 from CGNS.NAV.Q7LogWindow import Ui_Q7LogWindow
@@ -147,7 +148,6 @@ class Q7MessageBox(QDialog, Ui_Q7MessageWindow):
         self.bCANCEL.clicked.connect(self.runCANCEL)
         self.bInfo.setDisabled(True)
         self._text = ''
-        self._result = None
         self._control = control
         self._code = 0
 
@@ -166,12 +166,12 @@ class Q7MessageBox(QDialog, Ui_Q7MessageWindow):
         self.setMode(cancel, again)
 
     def runOK(self, *arg):
-        self._result = True
+        self.setResult(QDialog.Accepted)
         self.addToSkip()
         self.close()
 
     def runCANCEL(self, *arg):
-        self._result = False
+        self.setResult(QDialog.Rejected)
         self.addToSkip()
         self.close()
 
@@ -181,7 +181,11 @@ class Q7MessageBox(QDialog, Ui_Q7MessageWindow):
                 OCTXT.IgnoredMessages += [self._code]
 
     def showAndWait(self):
-        self.exec_()
+        ret = self.exec_()
+        if ret == QDialog.Accepted:
+            return True
+        else:
+            return False
 
 
 def wError(control, code, info, error):
@@ -191,8 +195,7 @@ def wError(control, code, info, error):
     msg = Q7MessageBox(control, code)
     msg.setWindowTitle("%s: Error" % OCTXT._ToolName)
     msg.setLayout(txt, btype=ERROR, cancel=False, again=True, buttons=('Close',))
-    msg.showAndWait()
-    return msg._result
+    return msg.showAndWait()
 
 
 def wQuestion(control, code, title, question, again=True, buttons=('OK', 'Cancel')):
@@ -202,8 +205,7 @@ def wQuestion(control, code, title, question, again=True, buttons=('OK', 'Cancel
     msg = Q7MessageBox(control, code)
     msg.setWindowTitle("%s: Question" % OCTXT._ToolName)
     msg.setLayout(txt, btype=QUESTION, cancel=True, again=again, buttons=buttons)
-    msg.showAndWait()
-    return msg._result
+    return msg.showAndWait()
 
 
 def wInfo(control, code, title, info, again=True, buttons=('Close',)):
@@ -213,7 +215,6 @@ def wInfo(control, code, title, info, again=True, buttons=('Close',)):
     msg = Q7MessageBox(control, code)
     msg.setWindowTitle("%s: Info" % OCTXT._ToolName)
     msg.setLayout(txt, btype=INFO, cancel=False, again=again, buttons=buttons)
-    msg.showAndWait()
-    return msg._result
+    return msg.showAndWait()
 
 # --- last line

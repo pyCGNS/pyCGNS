@@ -1,8 +1,6 @@
 
 # generated files
-CGNS/MAP/CHLone_config.h
 CGNS/MAP/EmbeddedCHLone.c
-CGNS/MAP/EmbeddedCHLone.pyx
 CGNS/NAV/G/Q7*.c
 CGNS/NAV/G/Q7*.html
 CGNS/NAV/*.c

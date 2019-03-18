@@ -11,8 +11,6 @@ from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import os
 import os.path
-import re
-import sys
 import time
 import stat
 import sys
@@ -21,9 +19,9 @@ import CGNS.MAP
 import CGNS.PAT.cgnsutils as CGU
 
 from qtpy.QtCore import QCoreApplication
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtCore import Qt, QThread, QMutex, Signal
+from qtpy.QtWidgets import QWidget
+from qtpy.QtGui import (QIcon, QPixmap, QFont, QCursor)
 
 from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
 from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
@@ -540,7 +538,7 @@ class Q7FingerPrint:
         except (CGNS.MAP.error,) as chlex:
             txt = """The current save operation has been aborted (CHLone):"""
             control.readyCursor()
-            MSG.wError(control, 130, chlex[0], txt, chlex[1])
+            MSG.wError(control, 130, chlex[0][0], txt, chlex[0][1])
             return None
         except (Exception,) as e:
             txt = """The current save operation has been aborted: %s""" % e

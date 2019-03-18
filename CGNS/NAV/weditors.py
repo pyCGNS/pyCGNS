@@ -6,12 +6,12 @@
 from __future__ import unicode_literals
 from builtins import (str, bytes, range, dict)
 
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+#from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import re
 
-from qtpy.QtWidgets import *
-from qtpy.QtGui import *
+from qtpy.QtWidgets import QTextEdit
+from qtpy.QtGui import (QColor, QSyntaxHighlighter, QTextCursor, QFont, QTextCharFormat)
 
 
 # -----------------------------------------------------------------

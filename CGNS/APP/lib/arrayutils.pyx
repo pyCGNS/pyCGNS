@@ -393,7 +393,7 @@ cdef class SectionParse(object):
     fnpe=4
     f=0
     ez=len(ea.flat)
-    ec=ez/enpe
+    ec=ez//enpe
     re=NPY.zeros((ec*qnpe*fnpe),dtype=NPY.int32)
     h=self.facesH
     hsz=self.sizeH
@@ -421,7 +421,7 @@ cdef class SectionParse(object):
     fnpe=3
     f=0
     ez=len(ea.flat)
-    ec=ez/enpe
+    ec=ez//enpe
     re=NPY.zeros((ec*qnpe*fnpe),dtype=NPY.int32)
     h=self.facesH
     hsz=self.sizeH

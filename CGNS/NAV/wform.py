@@ -9,13 +9,11 @@ from builtins import (str, bytes, range, dict)
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
-import sys
-
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
+from qtpy.QtCore import Qt, QModelIndex
+from qtpy.QtWidgets import QStyledItemDelegate
 
 from CGNS.NAV.Q7FormWindow import Ui_Q7FormWindow
 from CGNS.NAV.mtable import Q7TableModel

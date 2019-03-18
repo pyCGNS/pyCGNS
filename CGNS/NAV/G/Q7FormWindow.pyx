@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'CGNS\NAV\T\Q7FormWindow.ui'
+# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Q7FormWindow(object):
     def setupUi(self, Q7FormWindow):
@@ -445,6 +446,7 @@ class Ui_Q7FormWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tPython), _translate("Q7FormWindow", "Python"))
         self.bClose.setText(_translate("Q7FormWindow", "Close"))
 
+
 from CGNS.NAV.mtable import Q7TableView
 from CGNS.NAV.weditors import Q7PythonEditor
-import Res_rc
+from . import Res_rc

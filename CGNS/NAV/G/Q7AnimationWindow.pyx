@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'CGNS\NAV\T\Q7AnimationWindow.ui'
+# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7AnimationWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Q7AnimationWindow(object):
     def setupUi(self, Q7AnimationWindow):
@@ -199,4 +200,5 @@ class Ui_Q7AnimationWindow(object):
         Q7AnimationWindow.setWindowTitle(_translate("Q7AnimationWindow", "Form"))
         self.bClose.setText(_translate("Q7AnimationWindow", "Close"))
 
-import Res_rc
+
+from . import Res_rc

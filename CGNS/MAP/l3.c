@@ -2366,7 +2366,11 @@ L3_openFile(char *filename, int mode, long flags)
 		return ctxt;
 	}
 	H5Pset_fclose_degree(fapl, H5F_CLOSE_WEAK);
-	H5Pset_libver_bounds(fapl, H5F_LIBVER_EARLIEST, H5F_LIBVER_LATEST);
+	#if H5_VERSION_GE(1,10,3)
+		H5Pset_libver_bounds(fapl, H5F_LIBVER_V18, H5F_LIBVER_V18);
+	#else
+		H5Pset_libver_bounds(fapl, H5F_LIBVER_LATEST, H5F_LIBVER_LATEST);
+	#endif
 
 	fcpl = H5Pcreate(H5P_FILE_CREATE);
 	if (fcpl < 0)
