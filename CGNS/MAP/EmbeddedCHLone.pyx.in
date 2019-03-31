@@ -135,9 +135,12 @@ def checkLinkList(links, linkfull=False):
     list_links = []
     for lk in links:
         if (not isinstance(lk, (list, tuple)) or
-                (len(lk) not in [4])):
+                (len(lk) != 4)):
             raiseException(917)
-        for p in lk:
+        if (lk[0] is not None and
+                not isinstance(lk[0], str)):
+            raiseException(917)
+        for p in lk[1:]:
             if not isinstance(p, str):
                 raiseException(917)
         list_links.append(list(lk))
