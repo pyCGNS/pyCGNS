@@ -2138,14 +2138,12 @@ def getPathsByTypeOrNameList(tree, typeornamelist):
         a node name that matches a type, the node is included in the result.
     """
     if (tree[0] != typeornamelist[0]) and (tree[3] != typeornamelist[0]):
-        return None
+        return []
     if tree[3] == CK.CGNSTree_ts:
         start = ""
     else:
         start = "%s" % tree[0]
     n = getAllNodesFromTypeOrNameList(typeornamelist[1:], tree[2], start, [])
-    if n == -1:
-        return None
     return n
 
 
@@ -2232,14 +2230,12 @@ def getPathsByTypeList(tree, typelist):
       - a list of strings, each string is the path to a matching node
     """
     if tree[3] != typelist[0]:
-        return None
+        return []
     if tree[3] == CK.CGNSTree_ts:
         start = ""
     else:
         start = "%s" % tree[0]
     n = getAllNodesFromTypeList(typelist[1:], tree[2], start, [])
-    if n == -1:
-        return None
     return n
 
 
