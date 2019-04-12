@@ -245,6 +245,8 @@ class PATTestCase(unittest.TestCase):
         for p in CGU.getPathsByTypeSet(self.T, [CGK.BC_ts]):
             node = CGU.getNodeByPath(self.T, p)
             self.assertEqual(p, CGU.getPathFromNode(self.T, node))
+        res = CGU.getPathsByTypeOrNameList(self.T, ['Zaza'])
+        self.assertEqual(res, [])
 
     def test_09NodeDelete(self):
         import CGNS.PAT.cgnsutils as CGU
