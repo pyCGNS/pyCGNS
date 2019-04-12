@@ -5,10 +5,16 @@
 #  -------------------------------------------------------------------------
 #
 from __future__ import print_function
-import sip
 
-sip.setapi('QVariant', 2)
-sip.setapi('QString', 2)
+try:
+    import sip
+    try:
+        sip.setapi('QVariant', 2)
+        sip.setapi('QString', 2)
+    except AttributeError:
+        pass
+except ImportError:
+    pass
 
 import sys
 import os
