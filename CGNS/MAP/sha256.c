@@ -231,7 +231,7 @@ void sha256_update( sha256_t *ctx, const uint8_t *input, uint32_t length )
   if( left && length >= fill )
     {
       memcpy( (void *) (ctx->buffer + left),
-	      (const void *) input, fill );
+              (const void *) input, fill );
       sha256_process( ctx, ctx->buffer );
       length -= fill;
       input  += fill;
@@ -248,7 +248,7 @@ void sha256_update( sha256_t *ctx, const uint8_t *input, uint32_t length )
   if( length )
     {
       memcpy( (void *) (ctx->buffer + left),
-	      (const void *) input, length );
+              (const void *) input, length );
     }
 }
 
