@@ -102,7 +102,7 @@ pr.add_argument("-L", "--libraries", dest="libs",
 pr.add_argument("-U", "--update", action='store_true',
                 help='update version (dev only)')
 pr.add_argument("-F", "--force", action='store_false',
-                help='skip all .pyx files to be regeneration')
+                help='skip all .pyx files regeneration')
 pr.add_argument("-A", "--alternate", action='store_true',
                 help='use full h5py CGNS/HDF5 interface (ongoing work)')
 
@@ -219,9 +219,9 @@ def resolveVars(filename, confvalues, force):
             fg2.writelines(l2)
 
 if args.force:
-    print('FORCE')
+    print('Generation of pyx not skipped')
 else:
-    print('NO FORCE')
+    print('Skipping pyx generation')
     
 # -------------------------------------------------------------------------
 if APP:
