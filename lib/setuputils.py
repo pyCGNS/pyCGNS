@@ -26,6 +26,8 @@ from distutils.core import setup
 from distutils.util import get_platform
 from distutils.command.clean import clean as _clean
 
+import pkgconfig
+
 rootfiles = ['__init__.py', 'errors.py', 'version.py', 'config.py', 'test.py']
 compfiles = []
 
@@ -253,8 +255,14 @@ def search(incs, libs, tag='pyCGNS',
             log('using HDF5 raw C API implementation for CGNS.MAP')
             hdf5_ci = os.environ.get('HDF5_DIR')
             if hdf5_ci is not None:
+               log('Using HDF5_DIR environment variable')
                incs = incs + [os.path.join(hdf5_ci, 'include'),]
                libs = libs + [os.path.join(hdf5_ci, 'lib'),]
+            if pkgconfig.exists('hdf5'):
+               log('Using pkgconfig for HDF5 detection')
+               pkgcfg = pkgconfig.parse("hdf5")
+               incs = incs + pkgcfg['include_dirs']
+               libs = libs + pkgcfg['library_dirs']
             incs = incs + C.HDF5_PATH_INCLUDES + C.INCLUDE_DIRS
             libs = libs + C.HDF5_PATH_LIBRARIES + C.LIBRARY_DIRS
             tp = find_HDF5(incs, libs, C.HDF5_LINK_LIBRARIES)
