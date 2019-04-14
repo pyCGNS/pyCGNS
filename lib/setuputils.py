@@ -251,6 +251,10 @@ def search(incs, libs, tag='pyCGNS',
         # -----------------------------------------------------------------------
         if ('HDF5' in deps):
             log('using HDF5 raw C API implementation for CGNS.MAP')
+            hdf5_ci = os.environ.get('HDF5_DIR')
+            if hdf5_ci is not None:
+               incs = incs + [os.path.join(hdf5_ci, 'include'),]
+               libs = libs + [os.path.join(hdf5_ci, 'lib'),]
             incs = incs + C.HDF5_PATH_INCLUDES + C.INCLUDE_DIRS
             libs = libs + C.HDF5_PATH_LIBRARIES + C.LIBRARY_DIRS
             tp = find_HDF5(incs, libs, C.HDF5_LINK_LIBRARIES)
