@@ -183,6 +183,10 @@ else:
 RUN_REQUIRES= ['numpy', 'future']
 SETUP_REQUIRES = RUN_REQUIRES + ['cython>=0.25', 'pkgconfig']
 
+# Remove crashing deps test
+if 'sdist' in sys.argv:
+   deps = ['Cython', 'numpy','vtk','qtpy']
+
 # Dirty patch
 # Get required EGG if needed
 import setuptools.dist
@@ -192,6 +196,15 @@ try:
 except ConfigException as e:
     log('***** Cannot build pyCGNS without: {}'.format(e))
     sys.exit(1)
+
+# Fake HDF5 Config
+if 'sdist' in sys.argv:
+    CONFIG.HDF5_HST = 1
+    CONFIG.HDF5_H64 = 1
+    CONFIG.HDF5_HUP = 1
+    CONFIG.HDF5_VERSION = "1.10.4"
+    CONFIG.HDF5_PARALLEL = 0
+
 
 line()
 
