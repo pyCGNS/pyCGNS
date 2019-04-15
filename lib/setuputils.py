@@ -26,7 +26,6 @@ from distutils.core import setup
 from distutils.util import get_platform
 from distutils.command.clean import clean as _clean
 
-import pkgconfig
 
 rootfiles = ['__init__.py', 'errors.py', 'version.py', 'config.py', 'test.py']
 compfiles = []
@@ -258,6 +257,13 @@ def search(incs, libs, tag='pyCGNS',
                log('Using HDF5_DIR environment variable')
                incs = incs + [os.path.join(hdf5_ci, 'include'),]
                libs = libs + [os.path.join(hdf5_ci, 'lib'),]
+            try:
+                import pkgconfig
+            except ImportError:
+                class pkgconfig(object):
+                    @classmethod
+                    def exists(cls, name):
+                        return False
             if pkgconfig.exists('hdf5'):
                log('Using pkgconfig for HDF5 detection')
                pkgcfg = pkgconfig.parse("hdf5")

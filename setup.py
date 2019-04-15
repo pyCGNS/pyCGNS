@@ -180,6 +180,16 @@ if args.alternate:
 else:
     deps = ['Cython', 'HDF5', 'numpy', 'vtk', 'qtpy']
 
+RUN_REQUIRES= ['numpy', 'future']
+SETUP_REQUIRES = RUN_REQUIRES + ['cython>=0.25', 'pkgconfig']
+
+# Dirty patch
+# Get required EGG if needed
+import distutils.core
+dist = distutils.core.Distribution(dict({'setup_requires': SETUP_REQUIRES}))
+dist.parse_config_files(ignore_option_errors=True)
+dist.fetch_build_eggs(dist.setup_requires)
+print(sys.path)
 try:
     (CONFIG, status) = search(incs, libs, deps=deps)
 except ConfigException as e:
@@ -493,8 +503,8 @@ setup(
     scripts=ALL_SCRIPTS,
     ext_modules=ALL_EXTENSIONS,
     cmdclass=cmd,
-    install_requires=['numpy', 'future'],
-    setup_requires=['numpy', 'future', 'Cython>=0.25', 'pkgconfig']
+    install_requires=RUN_REQUIRES,
+    setup_requires=SETUP_REQUIRES
 )
 # -------------------------------------------------------------------------  
 # --- last line
