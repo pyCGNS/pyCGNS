@@ -260,6 +260,7 @@ def search(incs, libs, tag='pyCGNS',
             try:
                 import pkgconfig
             except ImportError:
+                log('Failed to import pkgconfig')
                 class pkgconfig(object):
                     @classmethod
                     def exists(cls, name):
