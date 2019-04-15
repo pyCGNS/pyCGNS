@@ -185,11 +185,8 @@ SETUP_REQUIRES = RUN_REQUIRES + ['cython>=0.25', 'pkgconfig']
 
 # Dirty patch
 # Get required EGG if needed
-import distutils.core
-dist = distutils.core.Distribution(dict({'setup_requires': SETUP_REQUIRES}))
-dist.parse_config_files(ignore_option_errors=True)
-dist.fetch_build_eggs(dist.setup_requires)
-print(sys.path)
+import setuptools.dist
+dist = setuptools.dist.Distribution(dict({'setup_requires': SETUP_REQUIRES}))
 try:
     (CONFIG, status) = search(incs, libs, deps=deps)
 except ConfigException as e:

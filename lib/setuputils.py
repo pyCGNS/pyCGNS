@@ -252,11 +252,6 @@ def search(incs, libs, tag='pyCGNS',
         # -----------------------------------------------------------------------
         if ('HDF5' in deps):
             log('using HDF5 raw C API implementation for CGNS.MAP')
-            hdf5_ci = os.environ.get('HDF5_DIR')
-            if hdf5_ci is not None:
-               log('Using HDF5_DIR environment variable')
-               incs = incs + [os.path.join(hdf5_ci, 'include'),]
-               libs = libs + [os.path.join(hdf5_ci, 'lib'),]
             try:
                 import pkgconfig
             except ImportError:
@@ -265,11 +260,19 @@ def search(incs, libs, tag='pyCGNS',
                     @classmethod
                     def exists(cls, name):
                         return False
-            if pkgconfig.exists('hdf5'):
-               log('Using pkgconfig for HDF5 detection')
-               pkgcfg = pkgconfig.parse("hdf5")
-               incs = incs + pkgcfg['include_dirs']
-               libs = libs + pkgcfg['library_dirs']
+            try:
+               if pkgconfig.exists('hdf5'):
+                   log('Using pkgconfig for HDF5 detection')
+                   pkgcfg = pkgconfig.parse("hdf5")
+                   incs = incs + pkgcfg['include_dirs']
+                   libs = libs + pkgcfg['library_dirs']
+            except EnvironmentError:
+                pass
+            hdf5_ci = os.environ.get('HDF5_DIR')
+            if hdf5_ci is not None:
+               log('Using HDF5_DIR environment variable')
+               incs = incs + [os.path.join(hdf5_ci, 'include'),]
+               libs = libs + [os.path.join(hdf5_ci, 'lib'),]
             incs = incs + C.HDF5_PATH_INCLUDES + C.INCLUDE_DIRS
             libs = libs + C.HDF5_PATH_LIBRARIES + C.LIBRARY_DIRS
             tp = find_HDF5(incs, libs, C.HDF5_LINK_LIBRARIES)
