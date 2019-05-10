@@ -166,14 +166,14 @@ class Q7MessageBox(QDialog, Ui_Q7MessageWindow):
         self.setMode(cancel, again)
 
     def runOK(self, *arg):
-        self.setResult(QDialog.Accepted)
         self.addToSkip()
         self.close()
+        self.setResult(QDialog.Accepted)
 
     def runCANCEL(self, *arg):
-        self.setResult(QDialog.Rejected)
         self.addToSkip()
         self.close()
+        self.setResult(QDialog.Rejected)
 
     def addToSkip(self):
         if (self.cNotAgain.isChecked()):
