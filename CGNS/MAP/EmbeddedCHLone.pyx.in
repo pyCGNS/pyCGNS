@@ -514,9 +514,9 @@ def load(filename, **kw):
         t = (t[0], lk, t[2])
     except CHLoneExceptionInternal as v:
         if HAS_PY3:
-            raise CHLoneException(v) from None
+            raise CHLoneException(v.args) from None
         else:
-            raise CHLoneException(v)
+            raise CHLoneException(v.args)
     del x
     return t
 
@@ -595,9 +595,9 @@ def save(filename, tree, **kw):
                       _lkobdict, _lksklist, x)
     except CHLoneExceptionInternal as v:
         if HAS_PY3:
-            raise CHLoneException(v) from None
+            raise CHLoneException(v.args) from None
         else:
-            raise CHLoneException(v)
+            raise CHLoneException(v.args)
     return None
 
 # --- last line
