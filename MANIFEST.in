@@ -40,3 +40,5 @@ exclude ci .github
 recursive-exclude ci *
 recursive-exclude .github *
 exclude *.yml
+exclude .vscode
+recursive-exclude .vscode *
