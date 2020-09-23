@@ -107,7 +107,7 @@ def newBase(tree, name, ncell, nphys):
         parent = tree
     CU.checkDuplicatedName(["<root node>", None, parent], name)
     node = CU.newNode(name,
-                      numpy.array([ncell, nphys], dtype=numpy.int32, order='Fortran'),
+                      numpy.array([ncell, nphys], dtype=numpy.int32, order='F'),
                       [], CK.CGNSBase_ts)
     if parent is not None:
         parent.append(node)
@@ -143,7 +143,7 @@ def updateBase(tree, name=None, ncell=None, nphys=None):
     if name is not None:
         tree[0] = name
     if (ncell is not None) and (nphys is not None) and tree:
-        tree[1] = numpy.array([ncell, nphys], dtype=numpy.int32, order='Fortran')
+        tree[1] = numpy.array([ncell, nphys], dtype=numpy.int32, order='F')
     else:
         raise CE.cgnsException(12)
 
@@ -315,10 +315,10 @@ def newDataArray(parent, name, value=None):
     # code correction:  Add a specific array for string type
     # code correction:  Modify array check
     if isinstance(value, int):
-        vv = numpy.array([value], dtype=numpy.int64, order='Fortran')
+        vv = numpy.array([value], dtype=numpy.int64, order='F')
         CU.checkArray(vv)
     elif isinstance(value, float):
-        vv = numpy.array([value], dtype=numpy.float64, order='Fortran')
+        vv = numpy.array([value], dtype=numpy.float64, order='F')
         CU.checkArray(vv)
     elif isinstance(value, str):
         vv = CU.setStringAsArray(value)
@@ -534,7 +534,7 @@ def newDimensionalExponents(parent,
                                    LengthExponent,
                                    TimeExponent,
                                    TemperatureExponent,
-                                   AngleExponent], dtype=numpy.float64, order='Fortran'),
+                                   AngleExponent], dtype=numpy.float64, order='F'),
                       [], CK.DimensionalExponents_ts, parent)
     return node
 
@@ -570,7 +570,7 @@ def newDataConversion(parent, ConversionScale=1.0, ConversionOffset=1.0):
     CU.checkDuplicatedName(parent, CK.DataConversion_s)
     node = CU.newNode(CK.DataConversion_s,
                       numpy.array([ConversionScale, ConversionOffset],
-                                  dtype=numpy.float64, order='Fortran'),
+                                  dtype=numpy.float64, order='F'),
                       [], CK.DataConversion_ts, parent)
     return node
 
@@ -942,10 +942,10 @@ def newBoundary(parent, bname, brange,
         zbnode = CU.newNode(CK.ZoneBC_s, None, [], CK.ZoneBC_ts, parent)
     bnode = CU.newNode(bname, CU.setStringAsArray(btype), [], CK.BC_ts, zbnode)
     if pttype == CK.PointRange_s:
-        arange = numpy.array(brange, dtype=numpy.int32, order='Fortran')
+        arange = numpy.array(brange, dtype=numpy.int32, order='F')
         CU.newNode(CK.PointRange_s, arange, [], CK.IndexRange_ts, bnode)
     else:
-        arange = numpy.array(brange, dtype=numpy.int32, order='Fortran')
+        arange = numpy.array(brange, dtype=numpy.int32, order='F')
         CU.newNode(CK.PointList_s, arange, [], CK.IndexArray_ts, bnode)
     if family:
         CU.newNode(CK.FamilyName_s, CU.setStringAsArray(family), [],
@@ -1126,10 +1126,10 @@ def newGridConnectivity1to1(parent, name, dname, window, dwindow, trans):
     CU.newNode(CK.Transform_s, numpy.array(list(trans), dtype=numpy.int32), [],
                CK.Transform_ts2, zcnode)
     CU.newNode(CK.PointRange_s,
-               numpy.array(window, dtype=numpy.int32, order='Fortran'), [],
+               numpy.array(window, dtype=numpy.int32, order='F'), [],
                CK.IndexRange_ts, zcnode)
     CU.newNode(CK.PointRangeDonor_s,
-               numpy.array(dwindow, dtype=numpy.int32, order='Fortran'), [],
+               numpy.array(dwindow, dtype=numpy.int32, order='F'), [],
                CK.IndexRange_ts, zcnode)
     return zcnode
 
@@ -1265,7 +1265,7 @@ def newOversetHoles(parent, name, hrange):
     # newPointList(node,pname,value)
     if hrange is not None:
         # code correction: Modify PointRange shape and order
-        newPointRange(node, CK.PointRange_s, numpy.array(hrange, dtype=numpy.int32, order='Fortran'))
+        newPointRange(node, CK.PointRange_s, numpy.array(hrange, dtype=numpy.int32, order='F'))
         # newNode(CK.PointRange_s,NPY.array(list(hrange),NPY.int32),[],CK.IndexRange_ts,node)
     return node
 

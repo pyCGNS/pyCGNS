@@ -1029,17 +1029,17 @@ def setStringAsArray(a):
         if (a.shape != ()) and (a.dtype.kind == 'S'):
             return a
         else:
-            return numpy.array(tuple(a), dtype='|S', order='Fortran')
+            return numpy.array(tuple(a), dtype='|S', order='F')
     if isinstance(a, bytes):
         lst_bytes = [bytes([x]) for x in a]
         if not PY3:
             lst_bytes = [x.decode('ascii') for x in lst_bytes]
-        return numpy.array(lst_bytes, dtype='|S', order='Fortran')
+        return numpy.array(lst_bytes, dtype='|S', order='F')
     if isinstance(a, str) :
         lst_bytes = [x.encode('ascii') for x in a]
         if not PY3:
             lst_bytes = [x.decode('ascii') for x in lst_bytes]
-        return numpy.array(lst_bytes, dtype='|S', order='Fortran')
+        return numpy.array(lst_bytes, dtype='|S', order='F')
     return None
 
 # -----------------------------------------------------------------------------
@@ -3183,7 +3183,7 @@ def copyArray(a):
     if not isinstance(a, numpy.ndarray):
         return None  # None, []
     if numpy.isfortran(a):
-        b = numpy.array(a, order='Fortran', copy=True)
+        b = numpy.array(a, order='F', copy=True)
     else:
         b = numpy.array(a, copy=True)
     return b

@@ -71,7 +71,7 @@ n = CGL.newBoundary(z, 'BC', [range(cellsize + 1, cellsize + ntris + 1)], btype=
                     pttype=CGK.PointList_s)
 g = CGL.newGridLocation(n, value=CGK.FaceCenter_s)
 CGU.removeChildByName(n, CGK.PointList_s)
-CGU.newNode(CGK.PointRange_s, NPY.array([[cellsize + 1, cellsize + ntris]], dtype=NPY.int32, order='Fortran'), [],
+CGU.newNode(CGK.PointRange_s, NPY.array([[cellsize + 1, cellsize + ntris]], dtype=NPY.int32, order='F'), [],
             CGK.IndexRange_ts, parent=n)
 TESTS.append((tag, T, diag))
 
@@ -108,7 +108,7 @@ n = CGL.newBoundary(z, 'BC', [range(cellsize + 1, cellsize + ntris + 1)], btype=
                     pttype=CGK.PointList_s)
 g = CGL.newGridLocation(n, value=CGK.FaceCenter_s)
 CGU.removeChildByName(n, CGK.PointList_s)
-CGU.newNode(CGK.PointRange_s, NPY.array([[cellsize, cellsize + ntris]], dtype=NPY.int32, order='Fortran'), [],
+CGU.newNode(CGK.PointRange_s, NPY.array([[cellsize, cellsize + ntris]], dtype=NPY.int32, order='F'), [],
             CGK.IndexRange_ts, parent=n)
 TESTS.append((tag, T, diag))
 
@@ -125,6 +125,6 @@ n = CGL.newBoundary(z, 'BC', [range(cellsize, cellsize + ntris + 1)], btype=CGK.
                     pttype=CGK.PointList_s)
 g = CGL.newGridLocation(n, value=CGK.FaceCenter_s)
 CGU.removeChildByName(n, CGK.PointList_s)
-CGU.newNode(CGK.ElementRange_s, NPY.array([[cellsize + 1, cellsize + ntris + 1]], dtype=NPY.int32, order='Fortran'), [],
+CGU.newNode(CGK.ElementRange_s, NPY.array([[cellsize + 1, cellsize + ntris + 1]], dtype=NPY.int32, order='F'), [],
             CGK.IndexRange_ts, parent=n)
 TESTS.append((tag, T, diag))

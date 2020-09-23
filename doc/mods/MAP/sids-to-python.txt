@@ -155,7 +155,7 @@ with the CGNS/Python in textual mode, a simple ``PointRange`` node with
 two 3D indices::
  
  pr=['PointRange',
-     numpy.array([[1,25],[1,9],[1,1]],dtype=numpy.int32,order='Fortran'),
+     numpy.array([[1,25],[1,9],[1,1]],dtype=numpy.int32,order='F'),
      [],
      'IndexRange_t']
 
@@ -281,26 +281,26 @@ see the remark (5) about the strings used in `numpy` arrays.
     integer size in python the ``int64`` data type.
     To create an `I4` array, you can use:: 
 
-      numpy.array([1,2,3],'i',order='Fortran')
+      numpy.array([1,2,3],'i',order='F')
 
  (2) 
     The 64bits precision is the default integer in python.
     To create an `I8` array, you can use:: 
 
-      numpy.array([1,2,3],order='Fortran')
+      numpy.array([1,2,3],order='F')
 
  (3)  
     The 32bits precision has to be forced, the default 
     float size in python is ``float64``.
     To create an `R4` array, you can use:: 
 
-      numpy.array([1.4],'f',order='Fortran')
+      numpy.array([1.4],'f',order='F')
 
  (4)  
     The 64bits precision is the default float in python.
     To create an `R8` array, you can use:: 
 
-      numpy.array([1.4],order='Fortran')
+      numpy.array([1.4],order='F')
 
  (5)  
     The array has to be created as a char multi-dimensionnal 
@@ -514,7 +514,7 @@ In that case, the `shape` is correct but the user has no mean to know wether
 your convention is C or Fortran. You can set the fortran flag for this.
 The possible creation of the array above is then::
 
- >>> a=numpy.array([[1,4],[2,5],[3,6]],dtype=numpy.int32,order='Fortran')
+ >>> a=numpy.array([[1,4],[2,5],[3,6]],dtype=numpy.int32,order='F')
  >>> numpy.isfortran(a)
  True
  >>> a[0]
@@ -534,13 +534,13 @@ to add a point in a list in an easier way ::
 
 The possible creation of the array ``a`` above is then::
 
- >>> a=numpy.array([[1,4],[2,5],[3,6]],dtype=numpy.int32,order='Fortran')
+ >>> a=numpy.array([[1,4],[2,5],[3,6]],dtype=numpy.int32,order='F')
  >>> a
  array([[1, 4],
         [2, 5],
         [3, 6]], dtype=int32)
   
- >>> a=numpy.array(a.T.tolist()+[[7,8,9]],dtype=numpy.int32,order='Fortran').T
+ >>> a=numpy.array(a.T.tolist()+[[7,8,9]],dtype=numpy.int32,order='F').T
  >>> a
  array([[1, 2, 3],
         [4, 5, 6],
@@ -588,7 +588,7 @@ chars)::
                  tuple('%-32s'%'Second',)
                  tuple('%-32s'%'Kelvin'),
                  tuple('%-32s'%'Radian'),
-               ],'|S32',order='Fortran').T
+               ],'|S32',order='F').T
 
 The shape of the resulting array is ``(32,5)`` again note the ``T``
 at the end of the command which produces the transpose.
@@ -611,7 +611,7 @@ dimensions and creates a *numpy* array with them::
 
 The ``zonedims`` *numpy* array can b set as::
 
-  zonedims=numpy.array([[3,2,0],[5,4,0],[7,6,0]],dtype=numpy.int32,order='Fortran')
+  zonedims=numpy.array([[3,2,0],[5,4,0],[7,6,0]],dtype=numpy.int32,order='F')
 
 in the case of a 3D structured zone with ``(ni,nj,nk)=(3,5,7)``.
 If you want to create a solution array with these dimensions, you can
