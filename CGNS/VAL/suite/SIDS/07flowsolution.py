@@ -34,9 +34,9 @@ vertexsize = 20
 cellsize = 7
 (T, b, z) = makeUnstTree(vertexsize, cellsize)
 sol1 = CGL.newFlowSolution(z, name='sol1', gridlocation=CGK.Vertex_s)
-CGL.newDataArray(sol1, 'var', value=NPY.ones(vertexsize, dtype='float64', order='Fortran'))
+CGL.newDataArray(sol1, 'var', value=NPY.ones(vertexsize, dtype='float64', order='F'))
 sol2 = CGL.newFlowSolution(z, name='sol2', gridlocation=CGK.CellCenter_s)
-CGL.newDataArray(sol2, 'var', value=NPY.ones(cellsize, dtype='float64', order='Fortran'))
+CGL.newDataArray(sol2, 'var', value=NPY.ones(cellsize, dtype='float64', order='F'))
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
@@ -44,9 +44,9 @@ tag = 'flowsolution bad dataarray dim'
 diag = False
 (T, b, z) = makeUnstTree(vertexsize, cellsize)
 sol1 = CGL.newFlowSolution(z, name='sol1', gridlocation=CGK.Vertex_s)
-CGL.newDataArray(sol1, 'var', value=NPY.ones(vertexsize + 1, dtype='float64', order='Fortran'))
+CGL.newDataArray(sol1, 'var', value=NPY.ones(vertexsize + 1, dtype='float64', order='F'))
 sol2 = CGL.newFlowSolution(z, name='sol2', gridlocation=CGK.CellCenter_s)
-CGL.newDataArray(sol2, 'var', value=NPY.ones(cellsize + 1, dtype='float64', order='Fortran'))
+CGL.newDataArray(sol2, 'var', value=NPY.ones(cellsize + 1, dtype='float64', order='F'))
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
@@ -70,17 +70,17 @@ vertexsize = [5, 7, 9]
 cellsize = [i - 1 for i in vertexsize]
 (T, b, z) = makeStTree(vertexsize, cellsize)
 sol1 = CGL.newFlowSolution(z, name='sol1', gridlocation=CGK.Vertex_s)
-CGL.newDataArray(sol1, 'var', value=NPY.ones(tuple(vertexsize), dtype='float64', order='Fortran'))
+CGL.newDataArray(sol1, 'var', value=NPY.ones(tuple(vertexsize), dtype='float64', order='F'))
 sol2 = CGL.newFlowSolution(z, name='sol2', gridlocation=CGK.CellCenter_s)
-CGL.newDataArray(sol2, 'var', value=NPY.ones(tuple(cellsize), dtype='float64', order='Fortran'))
+CGL.newDataArray(sol2, 'var', value=NPY.ones(tuple(cellsize), dtype='float64', order='F'))
 sol3 = CGL.newFlowSolution(z, name='sol3', gridlocation=CGK.Vertex_s)
-CGL.newRind(sol3, NPY.ones(2 * 3, dtype='int32', order='Fortran'))
+CGL.newRind(sol3, NPY.ones(2 * 3, dtype='int32', order='F'))
 dsize = [i + 1 + 1 for i in vertexsize]
-CGL.newDataArray(sol3, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='Fortran'))
+CGL.newDataArray(sol3, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='F'))
 sol4 = CGL.newFlowSolution(z, name='sol4', gridlocation=CGK.CellCenter_s)
-CGL.newRind(sol4, NPY.ones(2 * 3, dtype='int32', order='Fortran'))
+CGL.newRind(sol4, NPY.ones(2 * 3, dtype='int32', order='F'))
 dsize = [i + 1 + 1 for i in cellsize]
-CGL.newDataArray(sol4, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='Fortran'))
+CGL.newDataArray(sol4, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='F'))
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
@@ -89,16 +89,16 @@ diag = False
 (T, b, z) = makeStTree(vertexsize, cellsize)
 sol1 = CGL.newFlowSolution(z, name='sol1', gridlocation=CGK.Vertex_s)
 dsize = [i + 1 for i in vertexsize]
-CGL.newDataArray(sol1, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='Fortran'))
+CGL.newDataArray(sol1, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='F'))
 sol2 = CGL.newFlowSolution(z, name='sol2', gridlocation=CGK.CellCenter_s)
 dsize = [i + 1 for i in cellsize]
-CGL.newDataArray(sol2, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='Fortran'))
+CGL.newDataArray(sol2, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='F'))
 sol3 = CGL.newFlowSolution(z, name='sol3', gridlocation=CGK.Vertex_s)
-CGL.newRind(sol3, NPY.ones(2 * 3, dtype='int32', order='Fortran'))
+CGL.newRind(sol3, NPY.ones(2 * 3, dtype='int32', order='F'))
 dsize = [i for i in vertexsize]
-CGL.newDataArray(sol3, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='Fortran'))
+CGL.newDataArray(sol3, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='F'))
 sol4 = CGL.newFlowSolution(z, name='sol4', gridlocation=CGK.CellCenter_s)
-CGL.newRind(sol4, NPY.ones(2 * 3, dtype='int32', order='Fortran'))
+CGL.newRind(sol4, NPY.ones(2 * 3, dtype='int32', order='F'))
 dsize = [i for i in cellsize]
-CGL.newDataArray(sol4, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='Fortran'))
+CGL.newDataArray(sol4, 'var', value=NPY.ones(tuple(dsize), dtype='float64', order='F'))
 TESTS.append((tag, T, diag))
