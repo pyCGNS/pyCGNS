@@ -1494,7 +1494,7 @@ static PyObject* s2p_parseAndReadHDF(L3_Node_t   *anode,
   int ndim = 0, tsize = 0, n = 0, child = 0, arraytype = -1, skip = 0, c = 0, p1 = 0, p2 = 0, soft = 0;
   int index = -1, rank = -1, count = -1, isinterlaced = 0;
   int trackpath = 0, ix = 0, skipnewarray = 0, linkstatus = 0, islinknode = 0;
-  int pathinlist = 0, memsize = 0, ispartial = 0, iscontiguous = 0;
+  int pathinlist = 0, memsize = 0, ispartial = 0, iscontiguous = 0, itemsize_ = 0;
   hid_t actualid = -1, id;
   PyObject *o_clist = NULL, *o_value = NULL, *o_child = NULL;
   PyObject *o_node = NULL, *u_value = NULL, *c_value = NULL;
@@ -1901,7 +1901,7 @@ static PyObject* s2p_parseAndReadHDF(L3_Node_t   *anode,
       break;
     case L3E_C1:
     case L3E_C1ptr:
-      arraytype = NPY_CHAR;
+      arraytype = NPY_STRING;
       memsize = sizeof(char)*tsize;
       break;
     case L3E_R8:
@@ -1938,8 +1938,9 @@ static PyObject* s2p_parseAndReadHDF(L3_Node_t   *anode,
       }
       data_ptr = rnode->data;
       rnode->data = NULL;
+      itemsize_ = arraytype == NPY_STRING ? 1 : 0;
       o_value = PyArray_New(&PyArray_Type, ndim, npy_dim_vals, arraytype,
-                            NULL, data_ptr, 0, npyflags, NULL);
+                            NULL, data_ptr, itemsize_, npyflags, NULL);
       /* force flags that may be reset by API calls */
       PyArray_CLEARFLAGS((PyArrayObject*)o_value, 0xFFFF);
       PyArray_ENABLEFLAGS((PyArrayObject*)o_value, npyflags);
@@ -2456,8 +2457,8 @@ PyObject* s2p_loadAsHDF(char     *dirname,
         strcat(buf4, buf3);
       }
       npy_dim_vals[0] = 64;
-      PyList_Append(tree, PyArray_New(&PyArray_Type, 1, npy_dim_vals, NPY_CHAR,
-        NULL, buf4, 0,
+      PyList_Append(tree, PyArray_New(&PyArray_Type, 1, npy_dim_vals, NPY_STRING,
+        NULL, buf4, 1,
         NPY_ARRAY_BEHAVED | NPY_ARRAY_OWNDATA,
         NULL));
     }
