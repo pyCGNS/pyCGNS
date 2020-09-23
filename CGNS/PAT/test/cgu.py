@@ -62,20 +62,20 @@ class PATTestCase(unittest.TestCase):
             self.assertTrue(CGU.checkName('_' + c))
         ex = CGE.cgnsNameError
         fn = CGU.checkName
-        self.assertRaisesRegexp(ex, self.eStr(2), CGU.checkNodeName, [], dienow=True)
-        self.assertRaisesRegexp(ex, self.eStr(22), fn, 3, dienow=True)
-        self.assertRaisesRegexp(ex, self.eStr(23), fn, '', dienow=True)
-        self.assertRaisesRegexp(ex, self.eStr(24), fn, '/', dienow=True)
-        self.assertRaisesRegexp(ex, self.eStr(25), fn, 'a' * 33, dienow=True)
-        self.assertRaisesRegexp(ex, self.eStr(29), fn, '.', dienow=True)
-        self.assertRaisesRegexp(ex, self.eStr(31), fn, ' ' * 5, dienow=True)
-        self.assertRaisesRegexp(ex, self.eStr(32), fn, ' a' * 5, dienow=True, strict=True)
-        self.assertRaisesRegexp(ex, self.eStr(33), fn, '"', dienow=True, strict=True)
-        self.assertRaisesRegexp(ex, self.eStr(34), fn, 'a  a', dienow=True, strict=True)
+        self.assertRaisesRegex(ex, self.eStr(2), CGU.checkNodeName, [], dienow=True)
+        self.assertRaisesRegex(ex, self.eStr(22), fn, 3, dienow=True)
+        self.assertRaisesRegex(ex, self.eStr(23), fn, '', dienow=True)
+        self.assertRaisesRegex(ex, self.eStr(24), fn, '/', dienow=True)
+        self.assertRaisesRegex(ex, self.eStr(25), fn, 'a' * 33, dienow=True)
+        self.assertRaisesRegex(ex, self.eStr(29), fn, '.', dienow=True)
+        self.assertRaisesRegex(ex, self.eStr(31), fn, ' ' * 5, dienow=True)
+        self.assertRaisesRegex(ex, self.eStr(32), fn, ' a' * 5, dienow=True, strict=True)
+        self.assertRaisesRegex(ex, self.eStr(33), fn, '"', dienow=True, strict=True)
+        self.assertRaisesRegex(ex, self.eStr(34), fn, 'a  a', dienow=True, strict=True)
         self.genTree()
         self.assertTrue(CGU.checkSameNode(self.T, self.T))
         self.assertFalse(CGU.checkSameNode(self.T, [None, None, [], None]))
-        self.assertRaisesRegexp(CGE.cgnsNodeError, self.eStr(30), CGU.checkSameNode, self.T, [None, None, [], None],
+        self.assertRaisesRegex(CGE.cgnsNodeError, self.eStr(30), CGU.checkSameNode, self.T, [None, None, [], None],
                                 dienow=True)
 
     def test_02Path(self):

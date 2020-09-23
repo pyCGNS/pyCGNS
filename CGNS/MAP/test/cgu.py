@@ -81,19 +81,19 @@ class MAPTestCase(unittest.TestCase):
     def void_test_001_Probe(self):
         from CGNS.MAP import probe
         from CGNS.PAT.cgnserror import CGNSException
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[900].*", probe, "/Z/ ?/ /U.cgns")
     
     def void_test_002_Save_Args(self):
         from CGNS.MAP import save, flags
         from CGNS.PAT.cgnserror import CGNSException
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[910].*", save, self.HDF01, self.T, zflag=None)
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[917].*", save, self.HDF01, self.T,
                                 links=[['A', 'A', 'A']])        
         self.unlink(self.HDF01)
-        self.assertRaisesRegexp(CGNSException, "[906].*",
+        self.assertRaisesRegex(CGNSException, "[906].*",
                                 save, self.HDF01, None)
         self.unlink(self.HDF01)
         save(self.HDF01, self.T)
@@ -104,38 +104,38 @@ class MAPTestCase(unittest.TestCase):
         self.unlink(self.HDF02)
         save(self.HDF02, self.T)
         self.chmod(self.HDF02, 0)
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[100].*", save, self.HDF02,
                                 self.T, flags=flags.UPDATE)
         self.chmod(self.HDF02, 511)
         self.unlink(self.HDF02)
         self.unlink(self.HDF01)
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[300].*", save, self.HDF01,
                                 [None, None, self.T, None])
         self.unlink(self.HDF01)
         flags = flags.DEFAULT | flags.UPDATE
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[100].*", save, self.HDF01, self.T, flags=flags)
 
     def void_test_003_Load_Args(self):
         from CGNS.MAP import load
         from CGNS.PAT.cgnserror import CGNSException
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[910].*", load, self.HDF01, zflag=None)
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[911].*", load, self.HDF01, flags=[])
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[912].*", load, self.HDF01, depth=[])
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[909].*", load, self.HDF01,
                                 maxdata=400, threshold=200)
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[908].*", load, self.HDF01,
                                 flags=flags.DEFAULT, maxdata=400)
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[100].*", load, 'foo.hdf')
-        self.assertRaisesRegexp(CGNSException,
+        self.assertRaisesRegex(CGNSException,
                                 "[101].*", load, 'chltest.py')
 
     def void_test_004_LoadSave(self):
