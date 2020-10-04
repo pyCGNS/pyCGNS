@@ -179,7 +179,7 @@ void objlist_status(char *tag)
       memset(oname, '\0', 256);
       sname = H5Iget_name(idlist[n], oname, 0);
       sname = H5Iget_name(idlist[n], oname, sname + 1);
-      printf("# L3 :HDF5 ID %d ALIVE (%s:%d) {%s}\n", \
+      printf("# L3 :HDF5 ID %ld ALIVE (%s:%d) {%s}\n", \
         idlist[n], oname, objinfo.rc, tag);
     }
   }
@@ -192,7 +192,7 @@ static herr_t find_name(hid_t id, const char *nm, const H5A_info_t* i, void *snm
   return 0;
 }
 /* ------------------------------------------------------------------------- */
-static herr_t gfind_name(hid_t id, const char *nm, void *snm)
+static herr_t gfind_by_name(hid_t id, const char *nm, const H5L_info_t* linfo, void *snm)
 {
   /*  printf("GFIND [%s][%s]\n",nm,snm);fflush(stdout); */
   if (!strcmp(nm, (char *)snm)) return 1;
@@ -209,10 +209,17 @@ int findExternalLink(hid_t g_id, const char * name,
   return 0;
 }
 /* ------------------------------------------------------------------------- */
-#define has_data(ID) \
-H5Giterate(ID,".",NULL,gfind_name,(void *)L3S_DATA)
-#define has_child(ID,NAME) \
-H5Giterate(ID,".",NULL,gfind_name,(void *)NAME)
+
+//#if H5_VERSION_GE(1,12,0)
+//#define has_child(ID,NAME) H5Literate_by_name2(ID, ".", H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)NAME, H5P_DEFAULT)
+//#define has_data(ID)       H5Literate_by_name2(ID, ".", H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)L3S_DATA, H5P_DEFAULT)
+//#else
+//#define has_child(ID,NAME) H5Literate_by_name(ID, ".", H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)NAME, H5P_DEFAULT)
+//#define has_data(ID)       H5Literate_by_name(ID, ".", H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)L3S_DATA, H5P_DEFAULT)
+//#endif
+
+#define has_child(ID,NAME) H5Lexists(ID, NAME, H5P_DEFAULT) 
+#define has_data(ID) H5Lexists(ID, L3S_DATA, H5P_DEFAULT)
 
 /* ------------------------------------------------------------------------- */
 static herr_t HDF_Print_Error(unsigned n, H5E_error2_t *desc, void *ctxt)
@@ -571,7 +578,7 @@ static int get_link_data(L3_Cursor_t *ctxt, hid_t id,
   return 0;
 }
 /* ------------------------------------------------------------------------- */
-static herr_t delete_children(hid_t id, const char *name, void *data)
+static herr_t delete_children(hid_t id, const char *name, const H5L_info_t* linfo, void *data)
 {
   /* do not change link id with actual here, stop deletion at link node */
   if (name && (name[0] == ' ')) /* leaf node */
@@ -580,8 +587,12 @@ static herr_t delete_children(hid_t id, const char *name, void *data)
   }
   else
   {
-    /* should use H5Literate */
-    H5Giterate(id, name, NULL, delete_children, data);
+    /* delete children loop */
+#if H5_VERSION_GE(1,12,0)
+    H5Literate_by_name2(id, name, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, data, H5P_DEFAULT);
+#else
+    H5Literate_by_name(id, name, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, data, H5P_DEFAULT);
+#endif
     H5Ldelete(id, name, H5P_DEFAULT);
   }
   return 0;
@@ -594,7 +605,7 @@ static herr_t print_children(hid_t id, const char *name, const H5L_info_t *info,
   return 0;
 }
 /* ------------------------------------------------------------------------- */
-static herr_t count_children(hid_t id, const char *name, void *count)
+static herr_t count_children(hid_t id, const char *name, const H5L_info_t* linfo, void *count)
 {
   if (name && (name[0] != ' '))
   {
@@ -653,7 +664,11 @@ hid_t *HDF_Get_Children(hid_t nodeid, int asciiorder)
 
   nchildren = 0;
   /* order not used here */
-  H5Giterate(nodeid, ".", NULL, count_children, (void *)&nchildren);
+#if H5_VERSION_GE(1,12,0)
+  H5Literate_by_name2(nodeid, ".", H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren, H5P_DEFAULT);
+#else
+  H5Literate_by_name(nodeid, ".", H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren, H5P_DEFAULT);
+#endif
   if (!nchildren)
   {
     return NULL;
@@ -713,20 +728,20 @@ void *HDF_Read_Array(L3_Cursor_t *ctxt, hid_t nid, hid_t did, hid_t yid,
     tsize *= int_dim_vals[n];
     if (L3M_HASFLAG(ctxt, L3F_DEBUG))
     {
-      sprintf(dims, "%s%c%d", dims, pad, int_dim_vals[n]);
+      sprintf(dims, "%s%c%lld", dims, pad, int_dim_vals[n]);
       pad = 'x';
     }
   }
   if (!L3M_HASFLAG(ctxt, L3F_NOALLOCATE))
   {
     data = (void*)malloc(H5Tget_size(yid)*tsize);
-    L3M_DBG(ctxt, ("HDF_Read_Array ALLOCATE %p from %d size %s)x%d=%d %s @@@\n",
+    L3M_DBG(ctxt, ("HDF_Read_Array ALLOCATE %p from %ld size %s)x%ld=%lld %s @@@\n",
       data, nid, dims, H5Tget_size(yid), H5Tget_size(yid)*tsize,
       (char*)name));
   }
   else
   {
-    L3M_DBG(ctxt, ("HDF_Read_Array NO ALLOCATE %p from %d @@@\n", data, nid));
+    L3M_DBG(ctxt, ("HDF_Read_Array NO ALLOCATE %p from %ld @@@\n", data, nid));
   }
   stat = H5Dread(did, yid, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 
@@ -859,21 +874,21 @@ void *HDF_Get_DataArrayPartial(L3_Cursor_t *ctxt, hid_t nid, int *dst_dims,
   {
     for (n = 0; src_dim_vals[n] != -1; n++)
     {
-      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial SRC  [%d]=%d\n", n, src_dim_vals[n]));
-      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial OFF S[%d]=%d\n", n, src_offset[n]));
-      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial STR S[%d]=%d\n", n, src_stride[n]));
-      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial CNT S[%d]=%d\n", n, src_count[n]));
-      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial BLK S[%d]=%d\n", n, src_block[n]));
+      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial SRC  [%d]=%lld\n", n, src_dim_vals[n]));
+      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial OFF S[%d]=%lld\n", n, src_offset[n]));
+      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial STR S[%d]=%lld\n", n, src_stride[n]));
+      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial CNT S[%d]=%lld\n", n, src_count[n]));
+      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial BLK S[%d]=%lld\n", n, src_block[n]));
     }
     for (n = 0; dst_dim_vals[n] != -1; n++)
     {
-      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial DST  [%d]=%d\n", n, dst_dim_vals[n]));
-      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial OFF D[%d]=%d\n", n, dst_offset[n]));
-      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial STR D[%d]=%d\n", n, dst_stride[n]));
-      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial CNT D[%d]=%d\n", n, dst_count[n]));
-      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial BLK D[%d]=%d\n", n, dst_block[n]));
+      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial DST  [%d]=%lld\n", n, dst_dim_vals[n]));
+      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial OFF D[%d]=%lld\n", n, dst_offset[n]));
+      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial STR D[%d]=%lld\n", n, dst_stride[n]));
+      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial CNT D[%d]=%lld\n", n, dst_count[n]));
+      L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial BLK D[%d]=%lld\n", n, dst_block[n]));
     }
-    L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial S NDIMS %d : D NDIMS %d : D SIZE %d\n"
+    L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial S NDIMS %d : D NDIMS %d : D SIZE %lld\n"
       , src_ndims, dst_ndims, dst_size));
   }
   mid = H5Screate_simple(dst_ndims, dst_dim_vals, NULL);
@@ -908,10 +923,10 @@ void *HDF_Get_DataArrayPartial(L3_Cursor_t *ctxt, hid_t nid, int *dst_dims,
   else
   {
     *data = (char*)(*base) + (blk_size*rank*eltsize);
-    L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial SIZE %dx%dx%d = %d\n", blk_size, rank, eltsize, blk_size*rank*eltsize));
+    L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial SIZE %lldx%dx%d = %lld\n", blk_size, rank, eltsize, blk_size*rank*eltsize));
   }
   stat = H5Dread(did, yid, mid, sid, H5P_DEFAULT, *base);/* hyperslab does shift */
-  L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial BASE=%x DATA=%x @@@\n", *base, *data));
+  L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial BASE=%p DATA=%p @@@\n", *base, *data));
 
   H5Tclose(yid);
   H5Tclose(tid);
@@ -955,7 +970,7 @@ void *HDF_Get_DataArray(L3_Cursor_t *ctxt, hid_t nid, int *dims, void *data)
   yid = H5Tget_native_type(tid, H5T_DIR_ASCEND);
 
   data = HDF_Read_Array(ctxt, nid, did, yid, data, int_dim_vals);
-  L3M_DBG(ctxt, ("HDF_Get_DataArray from %d/%d/%d/%d @@@\n",
+  L3M_DBG(ctxt, ("HDF_Get_DataArray from %ld/%ld/%ld/%ld @@@\n",
     yid, tid, did, nid));
 
   H5Tclose(yid);
@@ -1603,8 +1618,12 @@ hid_t L3_nodeLink(L3_Cursor_t *ctxt, hid_t node,
   }
   if (L3M_HASFLAG(ctxt, L3F_LINKOVERWRITE) && has_child(node, srcname))
   {
-    H5Giterate(node, srcname, NULL, delete_children, NULL);
-    H5Gunlink(node, srcname);
+#if H5_VERSION_GE(1,12,0)
+    H5Literate_by_name2(node, srcname, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, NULL, H5P_DEFAULT);
+#else
+    H5Literate_by_name(node, srcname, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, NULL, H5P_DEFAULT);
+#endif
+    H5Ldelete(node, srcname, H5P_DEFAULT);
   }
   nid = H5Gcreate2(node, srcname, H5P_DEFAULT, ctxt->g_proplist, H5P_DEFAULT);
   if (nid < 0)
@@ -1663,7 +1682,7 @@ hid_t L3_nodeMove(L3_Cursor_t *ctxt, hid_t pid, hid_t nid,
     CHL_setError(ctxt, 3040);
   }
   L3M_TRACE(ctxt, ("L3_nodeMove [%s][%s]->[%s][%s]\n", opn, oldname, npn, newname));
-  H5Gmove2(pid, oldname, nid, newname);
+  H5Lmove(pid, oldname, nid, newname, H5P_DEFAULT, H5P_DEFAULT);
   tid = H5Gopen2(nid, newname, H5P_DEFAULT);
   L3_T_ID("MV", tid);
   if (!HDF_Set_Attribute_As_String(ctxt, tid, L3S_NAME, newname))
@@ -1691,8 +1710,12 @@ L3_Cursor_t *L3_nodeDelete(L3_Cursor_t *ctxt, hid_t pid, char *nodename)
   if (has_child(pid, nodename))
   {
     /* do not change link id with actual here, stop deletion at link node */
-    H5Giterate(pid, nodename, NULL, delete_children, NULL);
-    H5Gunlink(pid, nodename);
+#if H5_VERSION_GE(1,12,0)
+    H5Literate_by_name2(pid, nodename, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, NULL, H5P_DEFAULT);
+#else
+    H5Literate_by_name(pid, nodename, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, NULL, H5P_DEFAULT);
+#endif
+    H5Ldelete(pid, nodename, H5P_DEFAULT);
   }
   L3M_MXUNLOCK(ctxt);
   return ctxt;
@@ -1905,7 +1928,7 @@ L3_Node_t *L3_nodeRetrieveContiguous(L3_Cursor_t *ctxt, hid_t oid,
   L3M_CHECK_CTXT_OR_DIE(ctxt, NULL);
   L3M_MXLOCK(ctxt);
   L3M_ECLEAR(ctxt);
-  L3M_TRACE(ctxt, ("L3_nodeRetrieveContiguous [%d] @@@\n", oid));
+  L3M_TRACE(ctxt, ("L3_nodeRetrieveContiguous [%ld] @@@\n", oid));
   L3M_CLEARDIMS(dims);
 
   if (node == NULL)
@@ -2069,7 +2092,7 @@ L3_Node_t *L3_nodeRetrievePartial(L3_Cursor_t *ctxt, hid_t oid,
   L3M_CHECK_CTXT_OR_DIE(ctxt, NULL);
   L3M_MXLOCK(ctxt);
   L3M_ECLEAR(ctxt);
-  L3M_TRACE(ctxt, ("L3_nodeRetrievePartial [%d] @@@\n", oid));
+  L3M_TRACE(ctxt, ("L3_nodeRetrievePartial [%ld] @@@\n", oid));
   L3M_CLEARDIMS(dims);
 
   if (node == NULL)
@@ -2550,7 +2573,7 @@ int L3_closeShutDown(L3_Cursor_t **ctxt_ptr)
       p = H5Fget_obj_ids(ctxt->file_id, H5F_OBJ_ALL, 1024, obj_id_list);
       for (n = 0; n < p; n++)
       {
-        printf("N %d > P %d\n", n, p);
+        printf("N %ld > P %ld\n", n, p);
         H5Oclose(obj_id_list[n]);
       }
 
