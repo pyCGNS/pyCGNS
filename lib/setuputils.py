@@ -159,6 +159,8 @@ def search(incs, libs, tag='pyCGNS',
             try:
                 if (which('cython') is not None):
                     C.COM_CYTHON = 'cython'
+                elif (which('cython3') is not None):
+                    C.COM_CYTHON = 'cython3'
                 else:
                     raise Exception
                 if (which('pyuic') is not None):  C.COM_UIC = 'pyuic'

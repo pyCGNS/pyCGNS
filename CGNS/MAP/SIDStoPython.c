@@ -207,7 +207,7 @@ extern void objlist_status(char *tag);
   {\
   H5Gclose(hid);\
   if (0 || S2P_HASFLAG(S2P_FDEBUG)){\
-    printf( "H5GCLOSE [%d]",hid);\
+    printf( "H5GCLOSE [%ld]",hid);\
     printf( msg );\
   }}
 
@@ -312,7 +312,7 @@ static void setError(int code, char* message, char* value, s2p_ctx_t *context)
     strncat(buff, message, MAXERRORMESSAGE);
   }
 
-  PyErr_SetObject(context->err->ob_type, Py_BuildValue("(is)", code, buff));
+  PyErr_SetObject(context->err, Py_BuildValue("(is)", code, buff));
 
 }
 /* ------------------------------------------------------------------------- */
@@ -388,7 +388,7 @@ static L3_Cursor_t *s2p_addoneHDF(char* dirname, char *filename,
         l3dbptr = nextdbs->l3db;
         if (!H5Iis_valid(l3dbptr->root_id))
         {
-          S2P_TRACE(("# CHL:BAD ROOT [%s] (broken ID %d)\n", \
+          S2P_TRACE(("# CHL:BAD ROOT [%s] (broken ID %ld)\n", \
             filename, l3dbptr->root_id));
         }
         newentry = 0;
@@ -435,7 +435,11 @@ static L3_Cursor_t *s2p_addoneHDF(char* dirname, char *filename,
         free(fullpath);
         return NULL;
       }
+#if H5_VERSION_GE(1,12,0)
+      ishdf = H5Fis_accessible(fullpath, H5P_DEFAULT);
+#else
       ishdf = H5Fis_hdf5(fullpath);
+#endif
       if (!ishdf)
       {
         if (excpt)
@@ -507,7 +511,7 @@ static L3_Cursor_t *s2p_addoneHDF(char* dirname, char *filename,
     strcpy(nextdbs->dirname, dirname);
     nextdbs->next = NULL;
     l3dbptr = nextdbs->l3db = l3dbptr;
-    S2P_TRACE(("# CHL:open '%s' [%d]\n", fullpath, l3dbptr->root_id));
+    S2P_TRACE(("# CHL:open '%s' [%ld]\n", fullpath, l3dbptr->root_id));
   }
   if (context->hdf_idx == S2P_MAX_LINK_STACK)
   {
@@ -784,7 +788,8 @@ static void s2p_createlinkoffparse(L3_Cursor_t *l3db,
 {
   hid_t lkid = -1, parentid = -1;
   char leafnodename[33], *parentnodename, *p;
-  int i, islocal, skiponerror;
+  int islocal, skiponerror;
+  size_t i;
   s2p_lnk_t *plink = NULL;
 
   parentnodename = (char*)malloc(strlen(link->src_nodename) + 1);
@@ -1341,7 +1346,7 @@ static void s2p_trackRefs(s2p_ctx_t *context, PyObject *tree)
     {
       ct = PyList_GetItem(tree, 1)->ob_refcnt;
     }
-    fprintf(stdout, "[%d,%d,%d,%d]\n",
+    fprintf(stdout, "[%ld,%ld,%ld,%ld]\n",
       st, ct,
       PyList_GetItem(tree, 2)->ob_refcnt, PyList_GetItem(tree, 3)->ob_refcnt);
     fflush(stdout);
@@ -1824,7 +1829,7 @@ static PyObject* s2p_parseAndReadHDF(L3_Node_t   *anode,
     }
   }
   /* step 7: create python node with retrieved infos ---------------------- */
-  S2P_TRACE(("# CHL:node %d (%s) [%s] ", rnode->id, curpath, rnode->label));
+  S2P_TRACE(("# CHL:node %ld (%s) [%s] ", rnode->id, curpath, rnode->label));
   if (!skipnewarray || (rnode->dtype != L3E_VOID))
   {
     ENTER_NOGIL_BLOCK(1);

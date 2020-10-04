@@ -1310,7 +1310,7 @@ ElementType_quad = [QUAD_4, QUAD_8, QUAD_9, QUAD_12, QUAD_16,
                     QUAD_P4_16, QUAD_25]
 ElementType_tetra = [TETRA_4, TETRA_10, TETRA_16, TETRA_20, TETRA_22, TETRA_34,
                      TETRA_35]
-ElementType_pyra = [PYRA_13, PYRA_21, PYRA_29, PYRA_30,
+ElementType_pyra = [PYRA_5, PYRA_13, PYRA_21, PYRA_29, PYRA_30,
                     PYRA_P4_29, PYRA_50, PYRA_55]
 ElementType_penta = [PENTA_6, PENTA_15, PENTA_18, PENTA_24, PENTA_38, PENTA_40,
                      PENTA_33, PENTA_66, PENTA_75]

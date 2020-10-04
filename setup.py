@@ -438,10 +438,11 @@ if NAV and CONFIG.HAS_QTPY:
     for m in modgenlist:
         log('Generate from updated Qt templates  ({}): {}'.format(cui, m))
         com = "{} --from-imports -o CGNS/NAV/G/{}.pyx CGNS/NAV/T/{}.ui".format(cui, m, m)
-        #print(fix_path(com))
         os.system(fix_path(com))
-        com = "{} -a CGNS/NAV/G/{}.pyx".format(ccy, m)
-        #print(fix_path(com))
+        if HAS_PY3:
+            com = "{} -X language_level=3 -a CGNS/NAV/G/{}.pyx".format(ccy, m)
+        else:
+            com = "{} -a CGNS/NAV/G/{}.pyx".format(ccy, m)
         os.system(fix_path(com))
 
     if (hasToGenerate('CGNS/NAV/R/Res.qrc', 'CGNS/NAV/Res_rc.py', args.force)):
@@ -461,6 +462,10 @@ else:
     module_logs.append("NAV   skip build *")
 
 installConfigFiles(CONFIG.PRODUCTION_DIR)
+
+if HAS_PY3:
+    for e in ALL_EXTENSIONS:
+        e.cython_directives = {'language_level': "3"}
 
 #  -------------------------------------------------------------------------
 if CONFIG.HAS_CYTHON:
