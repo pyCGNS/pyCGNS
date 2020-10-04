@@ -7,7 +7,7 @@
 */
 #define CHLONE_ON_WINDOWS 0
 #define CHLONE_H5CONF_STD 1
-#define CHLONE_H5CONF_64  0
+#define CHLONE_H5CONF_64  1
 #define CHLONE_H5CONF_UP  1
 
 #include <stdarg.h>

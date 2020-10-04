@@ -59,11 +59,15 @@
 #define L3E_I8    4  /*=* double integer */
 #define L3E_R4    5  /*=* simple float */
 #define L3E_R8    6  /*=* double float */
-#define L3E_I4ptr 7  /*=* pointer to simple integer */
-#define L3E_I8ptr 8  /*=* pointer to double integer */
-#define L3E_R4ptr 9  /*=* pointer to simple float */
-#define L3E_R8ptr 10 /*=* pointer to double integer */
-#define L3E_VOID  11 /*=* pointer to unknown */
+#define L3E_X4    7  /*=* simple float */
+#define L3E_X8    8  /*=* double float */
+#define L3E_I4ptr 9  /*=* pointer to simple integer */
+#define L3E_I8ptr 10  /*=* pointer to double integer */
+#define L3E_R4ptr 11  /*=* pointer to simple float */
+#define L3E_R8ptr 12 /*=* pointer to double integer */
+#define L3E_X4ptr 13  /*=* pointer to simple float */
+#define L3E_X8ptr 14 /*=* pointer to double integer */
+#define L3E_VOID  15 /*=* pointer to unknown */
 
 #define L3E_MT L3E_NULL
 

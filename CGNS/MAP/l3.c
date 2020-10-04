@@ -52,6 +52,8 @@ static char *L3T_U4_s = L3T_U4;
 static char *L3T_U8_s = L3T_U8;
 static char *L3T_R4_s = L3T_R4;
 static char *L3T_R8_s = L3T_R8;
+static char *L3T_X4_s = L3T_X4;
+static char *L3T_X8_s = L3T_X8;
 
 int __node_count = 0;
 
@@ -267,6 +269,24 @@ CHL_INLINE hid_t ADF_to_HDF_datatype(const char *tp)
   if (!strcmp(tp, L3T_B1))   return H5Tcopy(H5T_NATIVE_UCHAR);
   if (!strcmp(tp, L3T_U4))   return H5Tcopy(H5T_NATIVE_UINT32);
   if (!strcmp(tp, L3T_U8))   return H5Tcopy(H5T_NATIVE_UINT64);
+  if (!strcmp(tp, L3T_X4)) {
+    hid_t tid = H5Tcreate(H5T_COMPOUND, 8);
+    hid_t subid = H5Tcopy(H5T_NATIVE_FLOAT);
+    H5Tset_precision(subid, 32);
+    H5Tinsert(tid, CMPLX_REAL_NAME, 0, subid);
+    H5Tinsert(tid, CMPLX_IMAG_NAME, 4, subid);
+    H5Tclose(subid);
+    return tid;
+  }
+  if (!strcmp(tp, L3T_X8)) {
+    hid_t tid = H5Tcreate(H5T_COMPOUND, 16);
+    hid_t subid = H5Tcopy(H5T_NATIVE_DOUBLE);
+    H5Tset_precision(subid, 64);
+    H5Tinsert(tid, CMPLX_REAL_NAME, 0, subid);
+    H5Tinsert(tid, CMPLX_IMAG_NAME, 8, subid);
+    H5Tclose(subid);
+    return tid;
+  }
   return 0;
 }
 /* ------------------------------------------------------------------------- */
@@ -2727,6 +2747,28 @@ void  *L3_initData(int  *dims, void *data, int dtype, ...)
     }
     break;
   }
+  case L3E_X4:
+  {
+    data = (void*)malloc(2 * dsize * sizeof(float));
+    n = 0;
+    while (n < 2*dsize)
+    {
+      d_f = (float) va_arg(stack, double);
+      ((float*)data)[n++] = d_f;
+    }
+    break;
+  }
+  case L3E_X8:
+  {
+    data = (void*)malloc(2 * dsize * sizeof(double));
+    n = 0;
+    while (n < 2*dsize)
+    {
+      d_d = va_arg(stack, double);
+      ((double*)data)[n++] = d_d;
+    }
+    break;
+  }
   default: break;
   }
   va_end(stack);
@@ -2779,6 +2821,20 @@ void  *L3_fillData(int  *dims, void *data, int dtype, ...)
     data = (void*)malloc(dsize * sizeof(float));
     d_f = (float) va_arg(stack, double);
     n = 0; while (n < dsize) { ((float *)data)[n++] = d_f; }
+    break;
+  }
+  case L3E_X8:
+  {
+    data = (void*)malloc(dsize * sizeof(double));
+    d_d = va_arg(stack, double);
+    n = 0; while (n < 2*dsize) { ((double *)data)[n++] = d_d; }
+    break;
+  }
+  case L3E_X4:
+  {
+    data = (void*)malloc(dsize * sizeof(float));
+    d_f = (float) va_arg(stack, double);
+    n = 0; while (n < 2*dsize) { ((float *)data)[n++] = d_f; }
     break;
   }
   default: break;
@@ -2835,6 +2891,10 @@ char *L3_typeAsStr(int dtype)
   case L3E_R4ptr: return L3T_R4_s;
   case L3E_R8:
   case L3E_R8ptr: return L3T_R8_s;
+  case L3E_X4:
+  case L3E_X4ptr: return L3T_X4_s;
+  case L3E_X8:
+  case L3E_X8ptr: return L3T_X8_s;
   case L3E_VOID:
   default:        return L3T_MT_s;
   }
@@ -2847,6 +2907,8 @@ int L3_typeAsEnum(char *dtype)
   if (!strcmp(dtype, L3T_I8_s)) { return L3E_I8ptr; }
   if (!strcmp(dtype, L3T_R4_s)) { return L3E_R4ptr; }
   if (!strcmp(dtype, L3T_R8_s)) { return L3E_R8ptr; }
+  if (!strcmp(dtype, L3T_X4_s)) { return L3E_X4ptr; }
+  if (!strcmp(dtype, L3T_X8_s)) { return L3E_X8ptr; }
   return L3E_VOID;
 }
 /* ------------------------------------------------------------------------- */
