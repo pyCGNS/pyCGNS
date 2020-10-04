@@ -151,6 +151,8 @@ static char *DT_I4 = "I4";
 static char *DT_I8 = "I8";
 static char *DT_R4 = "R4";
 static char *DT_R8 = "R8";
+static char *DT_X4 = "X4";
+static char *DT_X8 = "X8";
 static char *DT_C1 = "C1";
 
 #define S2P_CHECKNODE( node, ctxt )                       \
@@ -1281,8 +1283,13 @@ static int s2p_getData(PyArrayObject *dobject,
   case NPY_STRING:
     *dtype = DT_C1;
     break;
+  case NPY_COMPLEX64:
+    *dtype = DT_X4;
+    break;
+  case NPY_COMPLEX128:
+    *dtype = DT_X8;
   default:
-    S2P_TRACE(("\n# CHL: ERROR - numpy array dtype not in [C1,I4,I8,R4,R8]\n"));
+    S2P_TRACE(("\n# CHL: ERROR - numpy array dtype not in [C1,I4,I8,R4,R8,X4,X8]\n"));
     return 0;
   }
   return 1;
@@ -1918,6 +1925,16 @@ static PyObject* s2p_parseAndReadHDF(L3_Node_t   *anode,
     case L3E_R4ptr:
       arraytype = NPY_FLOAT32;
       memsize = sizeof(float)*tsize;
+      break;
+    case L3E_X4:
+    case L3E_X4ptr:
+      arraytype = NPY_COMPLEX64;
+      memsize = 2*sizeof(float)*tsize;
+      break;
+    case L3E_X8:
+    case L3E_X8ptr:
+      arraytype = NPY_COMPLEX128;
+      memsize = 2*sizeof(double)*tsize;
       break;
     default:
       arraytype = -1;

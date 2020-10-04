@@ -72,7 +72,13 @@ if (     (ctxt == NULL)\
 #define L3T_U4 "U4"
 #define L3T_U8 "U8"
 #define L3T_R4 "R4"
-#define L3T_R8 "R8"       
+#define L3T_R8 "R8"
+#define L3T_X4 "X4"
+#define L3T_X8 "X8"
+
+/* HDF5 Compound names used for complex value */
+#define CMPLX_REAL_NAME "r"
+#define CMPLX_IMAG_NAME "i"
 
 /* string type cache */
 #define L3T_STR_NAME  2
