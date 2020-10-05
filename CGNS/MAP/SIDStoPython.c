@@ -2605,7 +2605,6 @@ PyObject* s2p_saveAsHDF(char     *dirname,
         }
         else
         {
-          L3_nodeFree(&rnode);
           S2P_TRACE(("# CHL:update path found '%s'\n", tdat));
           strcpy(parentnodename, tdat);
           pt = parentnodename;
@@ -2627,6 +2626,7 @@ PyObject* s2p_saveAsHDF(char     *dirname,
             PyDict_GetItemString(context->upd_pth, tdat),
             parentnodename, "", context, l3db);
         }
+        L3_nodeFree(&node);
         if (ascii_tdat != NULL) Py_DECREF(ascii_tdat);
       }
       s2p_closeallHDF(context);

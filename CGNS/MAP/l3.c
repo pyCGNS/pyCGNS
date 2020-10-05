@@ -2255,7 +2255,6 @@ int L3_nodeAndDataFree(L3_Node_t **nodeptr)
 int L3_nodeChildrenFree(L3_Node_t **nodeptr)
 {
   L3_Node_t *node;
-  /* H5O_info_t objinfo; */
   int n;
   char name[33];
 
@@ -2266,15 +2265,8 @@ int L3_nodeChildrenFree(L3_Node_t **nodeptr)
     n = 0;
     while (node->children[n] != -1)
     {
-      /*
-      H5Oget_info(node->children[n],&objinfo);
-      printf("ID %d/%d CLOSE (%d)\n",node->id,node->children[n]),objinfo.rc;
-      */
       if (H5Iis_valid(node->children[n]))
       {
-        /*
-      printf("### %d CLOSE %d\n",node->id,node->children[n]);
-        */
         HDF_Get_Name((L3_Cursor_t *)NULL, node->children[n], name);
         L3_H5_GCLOSE("NODE CHILDREN FREE \n", node->children[n]);
       }
@@ -2327,7 +2319,6 @@ int L3_nodeRelease(L3_Node_t **nodeptr, unsigned int flags)
 int L3_nodeFree(L3_Node_t **nodeptr)
 {
   L3_Node_t *node;
-  /* H5O_info_t objinfo; */
 
   if (nodeptr == NULL) { return 1; }
   node = *nodeptr;
@@ -2335,10 +2326,6 @@ int L3_nodeFree(L3_Node_t **nodeptr)
   L3_nodeChildrenFree(nodeptr);
   if (node->id > 0)
   {
-    /*
-    H5Oget_info(node->id,&objinfo);
-    printf("ID %d/ CLOSE (%d)\n",node->id),objinfo.rc;
-    */
     if (H5Iis_valid(node->id))
     {
       L3_H5_GCLOSE("NODE FREE\n", node->id);
@@ -2638,10 +2625,13 @@ void L3_decRef(L3_Cursor_t *ctxt, hid_t id)
 int L3_isLocalNode(L3_Cursor_t *ctxt, hid_t id)
 {
   H5O_info_t info1, info2;
-
+#if H5_VERSION_GE(1,12,0)
+  H5Oget_info3(ctxt->root_id, &info1, H5O_INFO_BASIC);
+  H5Oget_info3(id, &info2, H5O_INFO_BASIC);
+#else
   H5Oget_info(ctxt->root_id, &info1);
   H5Oget_info(id, &info2);
-
+#endif
   printf("CHECK %d %d\n", (int)(info1.fileno), (int)(info2.fileno));
   if (info1.fileno != info2.fileno) return 0;
 
@@ -2651,13 +2641,22 @@ int L3_isLocalNode(L3_Cursor_t *ctxt, hid_t id)
 int L3_isSameNode(L3_Cursor_t *ctxt, hid_t id1, hid_t id2)
 {
   H5O_info_t info1, info2;
+#if H5_VERSION_GE(1,12,0)
+  int token_cmp;
+  H5Oget_info3(id1, &info1, H5O_INFO_BASIC);
+  H5Oget_info3(id2, &info2, H5O_INFO_BASIC);
 
+  if (info1.fileno != info2.fileno) return 0;
+  token_cmp = 1;
+  H5Otoken_cmp(id1, &info1.token, &info2.token, &token_cmp);
+  if (token_cmp != 0) return 0;
+#else
   H5Oget_info(id1, &info1);
   H5Oget_info(id2, &info2);
 
   if (info1.fileno != info2.fileno) return 0;
   if (info1.addr != info2.addr)   return 0;
-
+#endif
   return 1;
 }
 /* ------------------------------------------------------------------------- */
