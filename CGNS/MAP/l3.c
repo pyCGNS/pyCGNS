@@ -1880,7 +1880,7 @@ L3_Node_t *L3_nodeRetrieve(L3_Cursor_t *ctxt, hid_t oid, L3_Node_t *node)
     L3_N_setFlags(node, flg);
   }
   node->id = nid;
-  if (strcmp(HDF_Get_Dtype(ctxt, nid, buff), L3T_MT))
+  if (dt != L3E_MT)
   {
     HDF_Get_DataDimensions(ctxt, nid, dims);
     L3_N_setDims(node, dims);
