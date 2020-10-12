@@ -1842,64 +1842,62 @@ L3_Node_t *L3_nodeRetrieve(L3_Cursor_t *ctxt, hid_t oid, L3_Node_t *node)
   if (node->children != NULL) { free(node->children); }
   node->children = NULL;
 
-  if (HDF_Check_Node(oid))
-  {
-    nid = oid;
-    islk = is_link(ctxt, oid);
-    if (islk && L3M_HASFLAG(ctxt, L3F_FOLLOWLINKS))
-    {
-      nid = get_link_actual_id(ctxt, oid);
-      if (!HDF_Check_Node(nid) && L3M_HASFLAG(ctxt, L3F_FAILSONLINK))
-      {
-        CHL_setError(ctxt, 3091);
-        L3M_MXUNLOCK(ctxt);
-        return NULL;
-      }
-      islk = 0;
-    }
-    else
-    {
-      islk = 0;
-    }
-    HDF_Get_Name(ctxt, nid, name);
-    HDF_Get_Label(ctxt, nid, label);
-    L3_N_setName(node, name);
-    L3_N_setLabel(node, label);
-    dt = L3_typeAsEnum(HDF_Get_Dtype(ctxt, nid, buff));
-    L3_N_setDtype(node, dt);
-    L3_N_getName(node, buff);
-    if (!islk && strcmp(buff, L3S_ROOTNODENAME))
-    {
-      flg = HDF_Get_Attribute_As_Integer(nid, L3S_FLAGS, &ibuff);
-      L3_N_setFlags(node, flg);
-    }
-    else
-    {
-      L3_N_setFlags(node, L3F_NONE);
-    }
-    node->id = nid;
-    if (!islk &&
-        strcmp(HDF_Get_Dtype(ctxt, nid, buff), L3T_MT))
-    {
-      HDF_Get_DataDimensions(ctxt, nid, dims);
-      L3_N_setDims(node, dims);
-      if ((dims[0] != -1) && (L3M_HASFLAG(ctxt, L3F_WITHDATA)))
-      {
-        data = HDF_Get_DataArray(ctxt, nid, dims, node->data);
-        L3_N_setData(node, data);
-      }
-    }
-    if (!islk && L3M_HASFLAG(ctxt, L3F_WITHCHILDREN))
-    {
-      node->children = HDF_Get_Children(nid, L3M_HASFLAG(ctxt, L3F_ASCIIORDER));
-    }
-  }
-  else
+  if (!HDF_Check_Node(oid))
   {
     CHL_setError(ctxt, 3090);
     L3M_MXUNLOCK(ctxt);
     return NULL;
   }
+   
+  nid = oid;
+  islk = is_link(ctxt, oid);
+  if (islk && L3M_HASFLAG(ctxt, L3F_FOLLOWLINKS))
+  {
+    nid = get_link_actual_id(ctxt, oid);
+    if (!HDF_Check_Node(nid) && L3M_HASFLAG(ctxt, L3F_FAILSONLINK))
+    {
+      CHL_setError(ctxt, 3091);
+      L3M_MXUNLOCK(ctxt);
+      return NULL;
+    }
+    islk = 0;
+  }
+  else
+  {
+    islk = 0;
+  }
+  HDF_Get_Name(ctxt, nid, name);
+  HDF_Get_Label(ctxt, nid, label);
+  L3_N_setName(node, name);
+  L3_N_setLabel(node, label);
+  dt = L3_typeAsEnum(HDF_Get_Dtype(ctxt, nid, buff));
+  L3_N_setDtype(node, dt);
+  L3_N_getName(node, buff);
+  if (strcmp(buff, L3S_ROOTNODENAME))
+  {
+    flg = HDF_Get_Attribute_As_Integer(nid, L3S_FLAGS, &ibuff);
+    L3_N_setFlags(node, flg);
+  }
+  else
+  {
+    L3_N_setFlags(node, L3F_NONE);
+  }
+  node->id = nid;
+  if (strcmp(HDF_Get_Dtype(ctxt, nid, buff), L3T_MT))
+  {
+    HDF_Get_DataDimensions(ctxt, nid, dims);
+    L3_N_setDims(node, dims);
+    if ((dims[0] != -1) && (L3M_HASFLAG(ctxt, L3F_WITHDATA)))
+    {
+      data = HDF_Get_DataArray(ctxt, nid, dims, node->data);
+      L3_N_setData(node, data);
+    }
+  }
+  if (L3M_HASFLAG(ctxt, L3F_WITHCHILDREN))
+  {
+      node->children = HDF_Get_Children(nid, L3M_HASFLAG(ctxt, L3F_ASCIIORDER));
+  }
+
   L3M_MXUNLOCK(ctxt);
   return node;
 }
@@ -1967,7 +1965,7 @@ L3_Node_t *L3_nodeRetrieveContiguous(L3_Cursor_t *ctxt, hid_t oid,
     dt = L3_typeAsEnum(HDF_Get_Dtype(ctxt, nid, buff));
     L3_N_setDtype(node, dt);
     L3_N_getName(node, buff);
-    if (!islk && strcmp(buff, L3S_ROOTNODENAME))
+    if (strcmp(buff, L3S_ROOTNODENAME))
     {
       flg = HDF_Get_Attribute_As_Integer(nid, L3S_FLAGS, &ibuff);
       L3_N_setFlags(node, flg);
@@ -1977,8 +1975,7 @@ L3_Node_t *L3_nodeRetrieveContiguous(L3_Cursor_t *ctxt, hid_t oid,
       L3_N_setFlags(node, L3F_NONE);
     }
     node->id = nid;
-    if (!islk &&
-        strcmp(HDF_Get_Dtype(ctxt, nid, buff), L3T_MT))
+    if (strcmp(HDF_Get_Dtype(ctxt, nid, buff), L3T_MT))
     {
       HDF_Get_DataDimensions(ctxt, nid, dims);
       tsize = 1;
@@ -2054,7 +2051,7 @@ L3_Node_t *L3_nodeRetrieveContiguous(L3_Cursor_t *ctxt, hid_t oid,
         }
       }
     }
-    if (!islk && L3M_HASFLAG(ctxt, L3F_WITHCHILDREN))
+    if (L3M_HASFLAG(ctxt, L3F_WITHCHILDREN))
     {
       node->children = HDF_Get_Children(nid, L3M_HASFLAG(ctxt, L3F_ASCIIORDER));
     }
@@ -2131,7 +2128,7 @@ L3_Node_t *L3_nodeRetrievePartial(L3_Cursor_t *ctxt, hid_t oid,
     dt = L3_typeAsEnum(HDF_Get_Dtype(ctxt, nid, buff));
     L3_N_setDtype(node, dt);
     L3_N_getName(node, buff);
-    if (!islk && strcmp(buff, L3S_ROOTNODENAME))
+    if (strcmp(buff, L3S_ROOTNODENAME))
     {
       flg = HDF_Get_Attribute_As_Integer(nid, L3S_FLAGS, &ibuff);
       L3_N_setFlags(node, flg);
@@ -2141,8 +2138,7 @@ L3_Node_t *L3_nodeRetrievePartial(L3_Cursor_t *ctxt, hid_t oid,
       L3_N_setFlags(node, L3F_NONE);
     }
     node->id = nid;
-    if (!islk &&
-      strcmp(HDF_Get_Dtype(ctxt, nid, buff), L3T_MT))
+    if (strcmp(HDF_Get_Dtype(ctxt, nid, buff), L3T_MT))
     {
       HDF_Get_DataDimensionsPartial(ctxt, nid, dims,
         dst_offset, dst_stride, dst_count, dst_block);
@@ -2165,7 +2161,7 @@ L3_Node_t *L3_nodeRetrievePartial(L3_Cursor_t *ctxt, hid_t oid,
         node->data = data;
       }
     }
-    if (!islk && L3M_HASFLAG(ctxt, L3F_WITHCHILDREN))
+    if (L3M_HASFLAG(ctxt, L3F_WITHCHILDREN))
     {
       node->children = HDF_Get_Children(nid, L3M_HASFLAG(ctxt, L3F_ASCIIORDER));
     }
