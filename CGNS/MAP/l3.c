@@ -1868,19 +1868,16 @@ L3_Node_t *L3_nodeRetrieve(L3_Cursor_t *ctxt, hid_t oid, L3_Node_t *node)
   }
   HDF_Get_Name(ctxt, nid, name);
   HDF_Get_Label(ctxt, nid, label);
-  L3_N_setName(node, name);
-  L3_N_setLabel(node, label);
   dt = L3_typeAsEnum(HDF_Get_Dtype(ctxt, nid, buff));
+  L3_N_setName(node, name);
+  L3_N_setLabel(node, label);  
   L3_N_setDtype(node, dt);
+  L3_N_setFlags(node, L3F_NONE);
   L3_N_getName(node, buff);
   if (strcmp(buff, L3S_ROOTNODENAME))
   {
     flg = HDF_Get_Attribute_As_Integer(nid, L3S_FLAGS, &ibuff);
     L3_N_setFlags(node, flg);
-  }
-  else
-  {
-    L3_N_setFlags(node, L3F_NONE);
   }
   node->id = nid;
   if (strcmp(HDF_Get_Dtype(ctxt, nid, buff), L3T_MT))
@@ -1895,7 +1892,7 @@ L3_Node_t *L3_nodeRetrieve(L3_Cursor_t *ctxt, hid_t oid, L3_Node_t *node)
   }
   if (L3M_HASFLAG(ctxt, L3F_WITHCHILDREN))
   {
-      node->children = HDF_Get_Children(nid, L3M_HASFLAG(ctxt, L3F_ASCIIORDER));
+    node->children = HDF_Get_Children(nid, L3M_HASFLAG(ctxt, L3F_ASCIIORDER));
   }
 
   L3M_MXUNLOCK(ctxt);
