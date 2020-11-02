@@ -18,12 +18,9 @@ import sys
 import shutil
 import re
 import time
-import subprocess
 import distutils.util
 
 from distutils.dir_util import remove_tree
-from distutils.core import setup
-from distutils.util import get_platform
 from distutils.command.clean import clean as _clean
 
 
