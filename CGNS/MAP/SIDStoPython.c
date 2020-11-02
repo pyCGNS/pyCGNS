@@ -136,7 +136,7 @@ ctxt->mxs=-1;\
 ctxt->pol_max=0;\
 ctxt->pol_cur=0;\
 ctxt->pol_oid=NULL;\
- ctxt->platform=S2P_PLATFORM_CURRENT;\
+ctxt->platform=S2P_PLATFORM_CURRENT;\
 ctxt->err=NULL;
 
 #define S2P_HASFLAG( flag ) ((context->flg & flag) == flag)
@@ -462,7 +462,7 @@ static L3_Cursor_t *s2p_addoneHDF(char* dirname, char *filename,
       {
         if (excpt)
         {
-          setError(S2P_EFAILNEWOPEN, "Cannot read file [%s]",
+          setError(S2P_EFAILOLDOPEN, "Cannot read file [%s]",
             fullpath, context);
         }
         free(fullpath);
@@ -480,7 +480,7 @@ static L3_Cursor_t *s2p_addoneHDF(char* dirname, char *filename,
       {
         if (excpt)
         {
-          setError(S2P_EFAILNEWOPEN, "Cannot modify existing file [%s]",
+          setError(S2P_EFAILOLDOPEN, "Cannot modify existing file [%s]",
             fullpath, context);
         }
         free(fullpath);

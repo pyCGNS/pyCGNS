@@ -93,8 +93,8 @@ extern rusage_snapshot(char *tag);
 
 /* windows stat/access */
 #if (CHLONE_ON_WINDOWS == 1)
-#define CHL_STAT(a,b) _stat(a,b)
-#define CHL_ACCESS_READ(a) _access(a, 2) || _access(a, 6)
+#define CHL_STAT(a,b) _stat64(a,b)
+#define CHL_ACCESS_READ(a) _access(a, 4) || _access(a, 6)
 #else
 #define CHL_STAT(a,b) stat(a,b)
 #define CHL_ACCESS_READ(a) access(a, R_OK)
