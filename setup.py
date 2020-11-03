@@ -257,7 +257,7 @@ if APP:
     ALL_EXTENSIONS += [Extension("CGNS.APP.lib.arrayutils",
                                  ["CGNS/APP/lib/arrayutils.pyx",
                                   "CGNS/APP/lib/hashutils.c"],
-                                 include_dirs=CONFIG.INCLUDE_DIRS + OTHER_INCLUDES_PATHS,
+                                 include_dirs=CONFIG.INCLUDE_DIRS + OTHER_INCLUDES_PATHS + ["CGNS/APP/lib",],
                                  extra_compile_args=[])]
     ALL_PACKAGES += ['CGNS.APP',
                      'CGNS.APP.lib',
