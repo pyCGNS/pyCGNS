@@ -967,19 +967,18 @@ def getValueType(v):
     The return value is a string in:
     Character, RealSingle, RealDouble, Integer, LongInteger
     """
-    if v is None:
+    if not isinstance(v, numpy.ndarray):
         return None
-    if isinstance(v, numpy.ndarray):
-        if v.dtype.kind in ['S', 'a']:
-            return CK.Character_s
-        if v.dtype.name in ['float32']:
-            return CK.RealSingle_s
-        if v.dtype.name in ['float64']:
-            return CK.RealDouble_s
-        if v.dtype.name in ['int32']:
-            return CK.Integer_s
-        if v.dtype.name in ['int64']:
-            return CK.LongInteger_s
+    if v.dtype.kind in ['S', 'a']:
+        return CK.Character_s
+    if v.dtype.name in ['float32']:
+        return CK.RealSingle_s
+    if v.dtype.name in ['float64']:
+        return CK.RealDouble_s
+    if v.dtype.name in ['int32']:
+        return CK.Integer_s
+    if v.dtype.name in ['int64']:
+        return CK.LongInteger_s
     return None
 
 
@@ -991,11 +990,10 @@ def setValue(node, value):
     data type."""
     if node is None:
         return None
-    t = getValueType(value)
-    if t is None:
-        node[1] = None
-    elif (t in [CK.Integer_s, CK.LongInteger_s, CK.RealDouble_s,
-                CK.RealSingle_s, CK.Character_s]):
+    if not isinstance(value, numpy.ndarray):
+        return None
+    if (value.dtype.kind in ['S', 'a'] or
+        value.dtype.name in ['float32', 'float64', 'int32', 'int64']):
         node[1] = value
     else:
         return None
@@ -1222,18 +1220,13 @@ def getValueAsStringEval(value):
 def getValue(node):
     """Returns node value, could be `None` or a `numpy.ndarray`."""
     v = node[1]
-    t = getValueType(v)
-    if t is None:
+    if not isinstance(v, numpy.ndarray):
         return None
-    if t == CK.Integer_s:
+    if (v.dtype.kind in ['S', 'a'] or
+        v.dtype.name in ['float32', 'float64', 'int32', 'int64']):
         return v
-    if t == CK.LongInteger_s:
-        return v
-    if t == CK.RealDouble_s:
-        return v
-    if t == CK.Character_s:
-        return v
-    return v
+    else:
+        return None
 
 
 # --------------------------------------------------
