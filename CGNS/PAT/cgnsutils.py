@@ -991,8 +991,8 @@ def setValue(node, value):
     if node is None:
         return None
     if not isinstance(value, numpy.ndarray):
-        return None
-    if (value.dtype.kind in ['S', 'a'] or
+        node[1] = None
+    elif (value.dtype.kind in ['S', 'a'] or
         value.dtype.name in ['float32', 'float64', 'int32', 'int64']):
         node[1] = value
     else:
