@@ -16,25 +16,25 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/pypa/manylinux2010_x86_64
     steps:
-    - name: Install dependencies
+    - name: Install dev dependencies
       run: |
         yum -y install gcc
         export HDF5_VERSION=1.8.20
         curl -fsSLO "https://www.hdfgroup.org/ftp/HDF5/releases/hdf5-${HDF5_VERSION%.*}/hdf5-$HDF5_VERSION/src/hdf5-$HDF5_VERSION.tar.gz"
         gunzip < hdf5-$HDF5_VERSION.tar.gz | tar xf -
         cd hdf5-$HDF5_VERSION
-        ./configure --prefix=/usr/local/hdf5
+        ./configure --prefix=/usr/local
         make
         make check -i               # run test suite.
         make install
         make check-install        # verify installation.
-#        python -m pip install --upgrade pip
-#        pip install setuptools wheel twine
+        /opt/python/cp38-cp38/bin/pip install twine auditwheel 
     - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        echo "test"
-#        python setup.py sdist bdist_wheel
-#        twine upload dist/*
+        /opt/_internal/cpython-3.8.7/bin/python3.8 setup.py build
+        /opt/_internal/cpython-3.8.7/bin/python3.8 setup.py sdist -d wheelhouse/
+        .github/workflows/build-wheels.sh
+        twine upload wheelhouse/*
