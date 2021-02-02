@@ -37,6 +37,6 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         bash .github/workflows/build-wheels.sh
-        /opt/_internal/cpython-3.8.7/bin/python3.8 setup.py build
-        /opt/_internal/cpython-3.8.7/bin/python3.8 setup.py sdist -d wheelhouse/
-        twine upload wheelhouse/*
+        /opt/python/cp38-cp38/bin/python setup.py build
+        /opt/python/cp38-cp38/bin/python setup.py sdist -d wheelhouse/
+        /opt/python/cp38-cp38/bin/python -m twine upload wheelhouse/*
