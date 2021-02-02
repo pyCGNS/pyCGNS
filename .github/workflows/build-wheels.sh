@@ -15,8 +15,8 @@ function repair_wheel {
 
 # Compile wheels
 for PYBIN in cp37-cp37m cp38-cp38; do
-    "/opt/python/${PYBIN}/pip" install numpy cython
-    "/opt/python/${PYBIN}/pip" wheel . --no-deps -w dist/
+    "/opt/python/${PYBIN}/bin/pip" install numpy cython
+    "/opt/python/${PYBIN}/bin/pip" wheel . --no-deps -w dist/
 done
 
 # Bundle external shared libraries into the wheels
