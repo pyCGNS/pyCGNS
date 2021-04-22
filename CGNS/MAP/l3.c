@@ -175,7 +175,11 @@ void objlist_status(char *tag)
   {
     if (H5Iis_valid(idlist[n]))
     {
+#if H5_VERSION_GE(1, 12, 0)
+      H5Oget_info3(idlist[n], &objinfo, H5O_INFO_BASIC);
+#else
       H5Oget_info(idlist[n], &objinfo);
+#endif
       memset(oname, '\0', 256);
       sname = H5Iget_name(idlist[n], oname, 0);
       sname = H5Iget_name(idlist[n], oname, sname + 1);
@@ -2932,6 +2936,7 @@ int L3_typeAsEnum(char *dtype)
   if (!strcmp(dtype, L3T_R8_s)) { return L3E_R8ptr; }
   if (!strcmp(dtype, L3T_X4_s)) { return L3E_X4ptr; }
   if (!strcmp(dtype, L3T_X8_s)) { return L3E_X8ptr; }
+  if (!strcmp(dtype, L3T_MT_s)) { return L3E_MT; }
   return L3E_VOID;
 }
 /* ------------------------------------------------------------------------- */

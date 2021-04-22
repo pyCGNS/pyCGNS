@@ -9,7 +9,7 @@ from __future__ import print_function
 # --------------------------------------------------------------------
 MAJOR_VERSION = 5
 MINOR_VERSION = 2
-REVISION = 0
+REVISION = 1
 # --------------------------------------------------------------------
 
 import os

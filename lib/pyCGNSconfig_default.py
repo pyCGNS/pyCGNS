@@ -69,8 +69,8 @@ LIBRARY_DIRS += LIBRARY_DIRS + HDF5_PATH_LIBRARIES \
 PFX = '### pyCGNS:'
 #
 __version__=5 # @@UPDATEVERSION@@
-__release__=0 # @@UPDATERELEASE@@
-__revision__=625 # @@UPDATEREVISION@@
+__release__=2 # @@UPDATERELEASE@@
+__revision__=1 # @@UPDATEREVISION@@
 __vid__ = "%s.%s.%s" % (__version__, __release__, __revision__)
 __doc__ = """pyCGNS - %s - Python package for CFD General Notation System""" \
           % (__vid__)
