@@ -497,7 +497,7 @@ def load(filename, **kw):
     _sklist = checkPathList(skip)
     if (_maxdata != -1) and (not _flags & FNODATA):
         raiseException(908)
-    x = CHLoneExceptionInternal()
+    x = CHLoneExceptionInternal
     try:
         t = s2p_loadAsHDF(tdir.encode('utf-8'), tfile.encode('utf-8'), _flags, _depth, _maxdata,
                           _obpath.encode('utf-8'), _lkpath.encode('utf-8'),
@@ -517,7 +517,6 @@ def load(filename, **kw):
             raise CHLoneException(v.args) from None
         else:
             raise CHLoneException(v.args)
-    del x
     return t
 
 
@@ -588,7 +587,7 @@ def save(filename, tree, **kw):
         _lkobdict = propagateUpdatePaths(_links, _obdict)
         _lksklist = propagateSkipPaths(_links, _sklist)
     checkFast(tree)
-    x = CHLoneExceptionInternal()
+    x = CHLoneExceptionInternal
     try:
         s2p_saveAsHDF(tdir.encode('utf-8'), tfile.encode('utf-8'), tree,
                       _links, _flags, _depth, _lkpath.encode('utf-8'), _obdict, _filter, _sklist,

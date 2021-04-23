@@ -587,7 +587,7 @@ def save(filename, tree, **kw):
         _lkobdict = propagateUpdatePaths(_links, _obdict)
         _lksklist = propagateSkipPaths(_links, _sklist)
     checkFast(tree)
-    x = CHLoneExceptionInternal()
+    x = CHLoneExceptionInternal
     try:
         s2p_saveAsHDF(tdir.encode('utf-8'), tfile.encode('utf-8'), tree,
                       _links, _flags, _depth, _lkpath.encode('utf-8'), _obdict, _filter, _sklist,
