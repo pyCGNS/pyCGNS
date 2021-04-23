@@ -1470,7 +1470,8 @@ hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node)
   }
   else
   {
-    if (node->dtype != L3E_VOID)
+    if (node->dtype != L3E_MT &&
+        node->dtype != L3E_VOID)
     {
       CHL_setError(ctxt, 3035);
     }
@@ -1884,7 +1885,7 @@ L3_Node_t *L3_nodeRetrieve(L3_Cursor_t *ctxt, hid_t oid, L3_Node_t *node)
     L3_N_setFlags(node, flg);
   }
   node->id = nid;
-  if (dt != L3E_MT)
+  if (dt != L3E_VOID)
   {
     HDF_Get_DataDimensions(ctxt, nid, dims);
     L3_N_setDims(node, dims);
@@ -2936,7 +2937,6 @@ int L3_typeAsEnum(char *dtype)
   if (!strcmp(dtype, L3T_R8_s)) { return L3E_R8ptr; }
   if (!strcmp(dtype, L3T_X4_s)) { return L3E_X4ptr; }
   if (!strcmp(dtype, L3T_X8_s)) { return L3E_X8ptr; }
-  if (!strcmp(dtype, L3T_MT_s)) { return L3E_MT; }
   return L3E_VOID;
 }
 /* ------------------------------------------------------------------------- */
