@@ -1427,7 +1427,7 @@ hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node)
 
   if (has_child(pid, node->name))
   {
-    nid = H5Gopen(pid, node->name, H5P_DEFAULT);
+    nid = H5Gopen2(pid, node->name, H5P_DEFAULT);
     node->id = nid;
     L3M_MXUNLOCK(ctxt);
     L3_nodeUpdate(ctxt, node);
@@ -2930,6 +2930,7 @@ char *L3_typeAsStr(int dtype)
 /* ------------------------------------------------------------------------- */
 int L3_typeAsEnum(char *dtype)
 {
+//  if (!strcmp(dtype, L3T_MT_s)) { return L3E_MT; }
   if (!strcmp(dtype, L3T_C1_s)) { return L3E_C1ptr; }
   if (!strcmp(dtype, L3T_I4_s)) { return L3E_I4ptr; }
   if (!strcmp(dtype, L3T_I8_s)) { return L3E_I8ptr; }
