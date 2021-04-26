@@ -85,6 +85,14 @@ if (     (ctxt == NULL)\
 #define L3T_STR_LABEL 1
 #define L3T_STR_DTYPE 0
 
+
+/* HDF5 Compact storage */
+#define L3_CONTIGUOUS_STORE 0
+#define L3_COMPACT_STORE 1
+/* HDF5 compact storage limit */
+#define CGNS_64KB (64 * 1024)
+
+
 /* ------------------------------------------------------------------------- */
 char *get_link_search_path(L3_Cursor_t* ctxt,int index);
 int del_link_search_path(L3_Cursor_t* ctxt,char *path);
