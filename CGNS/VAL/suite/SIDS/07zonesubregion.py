@@ -25,10 +25,10 @@ def makeCorrectTree(vertexsize, cellsize, ntris):
     d = CGL.newDataArray(g, CGK.CoordinateX_s, NPY.ones((vertexsize), dtype='float64', order='F'))
     d = CGL.newDataArray(g, CGK.CoordinateY_s, NPY.ones((vertexsize), dtype='float64', order='F'))
     d = CGL.newDataArray(g, CGK.CoordinateZ_s, NPY.ones((vertexsize), dtype='float64', order='F'))
-    tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
-                             NPY.array([[1, cellsize]], 'i', order='F'))
-    tris = CGL.newElements(z, 'TRIS', CGK.TRI_3_s, NPY.ones((ntris * 3), dtype='int32'),
-                           NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'))
+    tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.array([[1, cellsize]], 'i', order='F'),
+                             NPY.ones((cellsize * 4), dtype='int32'))
+    tris = CGL.newElements(z, 'TRIS', CGK.TRI_3_s, NPY.array([[cellsize + 1, cellsize + ntris]],'i',order='F')
+                           NPY.ones((ntris * 3), dtype='int32'))
     zbc = CGL.newZoneBC(z)
     n = CGL.newBoundary(zbc, 'BC', [range(cellsize + 1, cellsize + ntris + 1)], btype=CGK.Null_s, family=None,
                         pttype=CGK.PointList_s)
