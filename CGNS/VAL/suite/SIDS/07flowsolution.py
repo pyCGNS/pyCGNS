@@ -25,8 +25,8 @@ def makeUnstTree(vertexsize, cellsize):
     d = CGL.newDataArray(g, CGK.CoordinateX_s, NPY.ones((vertexsize), dtype='float64', order='F'))
     d = CGL.newDataArray(g, CGK.CoordinateY_s, NPY.ones((vertexsize), dtype='float64', order='F'))
     d = CGL.newDataArray(g, CGK.CoordinateZ_s, NPY.ones((vertexsize), dtype='float64', order='F'))
-    tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
-                             NPY.array([[1, cellsize]], 'i', order='F'))
+    tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.array([[1, cellsize]], 'i', order='F'),
+                             NPY.ones((cellsize * 4), dtype='int32'))
     return (T, b, z)
 
 

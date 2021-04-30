@@ -858,21 +858,23 @@ def newIntegralData(parent, name):
 # -----------------------------------------------------------------------------
 def newElements(parent, name,
                 etype=CK.UserDefined_s,
-                econnectivity=None,
                 erange=None,
+                econnectivity=None,
+                estartoffset=None,
                 eboundary=0
                 ):
     """
     *Elements_t* node creation, indexing unstructured meshes::
 
-     quads=newElements(None,'QUADS',CGK.QUAD_4,quad_array,NPY.array([start,end]))'
+     quads=newElements(None,'QUADS',CGK.QUAD_4,NPY.array([start,end]),quad_array)'
 
     - Args:
      * `parent`: the parent node (`<node>` or `None`)
      * `name`: element node name (`string`)
      * `etype`: the type of element (`string` or 'int')
-     * `econnectivity`: actual array of point connectivities (`numpy.ndarray`)
      * `erange`: the first and last index of the connectivity (`numpy.ndarray`)
+     * `econnectivity`: actual array of point connectivities (`numpy.ndarray`)
+     * `estartoffset`: actual array of offsets for NGON/NFACES/MIXED connectivities (`numpy.ndarray`)
      * `eboundary`: number of boundary elements (`int`)
 
     - Return:
@@ -902,8 +904,11 @@ def newElements(parent, name,
         raise CE.cgnsException(250, etype)
     v = numpy.array([etp, eboundary], dtype=numpy.int32)
     enode = CU.newNode(name, v, [], CK.Elements_ts, parent)
-    newDataArray(enode, CK.ElementConnectivity_s, econnectivity)
     newPointRange(enode, CK.ElementRange_s, erange)
+    newDataArray(enode, CK.ElementConnectivity_s, econnectivity)
+    if etp in (CK.ElementType[CK.MIXED_s], CK.ElementType[CK.NGON_n_s],
+            CK.ElementType[CK.NFACE_n_s]):
+        newDataArray(enode, CK.ElementStartOffset_s, estartoffset)
     return enode
 
 # -----------------------------------------------------------------------------
