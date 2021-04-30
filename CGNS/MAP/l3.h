@@ -40,6 +40,12 @@
 #define L3C_MAX_PATH        4096   
 
 /*
+@@ Enumerate: HDF5 storage strategy for small data
+*/
+#define L3_CONTIGUOUS_STORE 0
+#define L3_COMPACT_STORE 1
+
+/*
 @@ Enumerate: Open Modes
 */
 #define L3E_OPEN_NEW 0 /*=* create a new file that should not already exist */
@@ -258,25 +264,30 @@ nodeptr->flags=L3F_NONE;\
 @@ Arg:       ctxt:L3_Cursor_t*:Context to use
 @@ Arg:       pid:hid_t:Parent node
 @@ Arg:       node:L3_Node_t*:Node attributes to use
+@@ Arg:       HDFstorage:int:Node hdf5 storage strategy
 @@ Return:    A successful creation returns the new node hid_t, -1 if failure
 @@ Remarks:   
 @@ All node arguments are immediatly used and copied, it is then possible
 @@ to release L3_Node_t as the function returns
+@@ The storage strategy is either L3_COMPACT_STORAGE or L3_CONTIGUOUS_STORAGE
+@@ Normal storage is CONTIGUOUS but COMPACT_STORAGE can be useful to store small data in header
 */
-/*#*/hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node);
+/*#*/hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node, const int HDFstorage);
 
 /* ------------------------------------------------------------------------- */
 /*
 @@ Function:  L3_nodeUpdate
 @@ Arg:       ctxt:L3_Cursor_t*:Context to use
 @@ Arg:       node:L3_Node_t*:Node attributes to use
+@@ Arg:       HDFstorage:int:Node hdf5 storage strategy 
 @@ Return:    The parameter context is returned
 @@ Remarks:   
 @@ The target node hid_t is in the L3_Node_t* 
 @@ If a value is NULL, or L3F_NULL for flags or L3E_NULL for data type,
 @@ then previous node value is unchanged for this attribute
+@@ The storage strategy is either L3_COMPACT_STORAGE or L3_CONTIGUOUS_STORAGE
 */
-/*#*/hid_t L3_nodeUpdate(L3_Cursor_t *ctxt,L3_Node_t *node);
+/*#*/hid_t L3_nodeUpdate(L3_Cursor_t *ctxt,L3_Node_t *node, const int HDFstorage);
 
 /* ------------------------------------------------------------------------- */
 /*

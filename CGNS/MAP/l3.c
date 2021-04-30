@@ -1007,7 +1007,7 @@ int HDF_Add_DataArray(L3_Cursor_t *ctxt, hid_t nid, int *dims, void *data, const
     else { chunkdims[rank] = (hsize_t)(dims[n]); }
     if (dims[n] == -1) { break; }
     int_dim_vals[n] = (hsize_t)(dims[n]);
-    totalsize *= dims[n];
+    totalsize += dims[n];
     rank++;
   }
   if (rank == 1)
@@ -1437,11 +1437,10 @@ int HDF_Create_Root(L3_Cursor_t *ctxt)
   return 1;
 }
 /* ------------------------------------------------------------------------- */
-hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node)
+hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node, const int HDFstorage)
 {
   hid_t nid = -1;
   int n = 0, s = 0;
-  int storage = L3_COMPACT_STORE;
 
   L3M_CHECK_CTXT_OR_DIE(ctxt, -1);
   L3M_MXLOCK(ctxt);
@@ -1463,7 +1462,7 @@ hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node)
     nid = H5Gopen2(pid, node->name, H5P_DEFAULT);
     node->id = nid;
     L3M_MXUNLOCK(ctxt);
-    L3_nodeUpdate(ctxt, node);
+    L3_nodeUpdate(ctxt, node, HDFstorage);
     return nid;
   }
   else
@@ -1496,8 +1495,7 @@ hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node)
   /* return nid at this point, allow function embedding */
   if (node->data != NULL)
   {
-    storage = (strcmp(node->label, "DataArray_t") == 0) ? L3_CONTIGUOUS_STORE : L3_COMPACT_STORE;
-    if (!HDF_Add_DataArray(ctxt, nid, node->dims, node->data, storage))
+    if (!HDF_Add_DataArray(ctxt, nid, node->dims, node->data, HDFstorage))
     {
       CHL_setError(ctxt, 3034);
     }
@@ -1514,7 +1512,7 @@ hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node)
   return nid;
 }
 /* ------------------------------------------------------------------------- */
-hid_t L3_nodeUpdate(L3_Cursor_t *ctxt, L3_Node_t *node)
+hid_t L3_nodeUpdate(L3_Cursor_t *ctxt, L3_Node_t *node, const int HDFstorage)
 {
   hid_t nid, pid;
   char oldname[L3C_MAX_ATTRIB_SIZE + 1], oldlabel[L3C_MAX_ATTRIB_SIZE + 1];
@@ -1616,9 +1614,8 @@ hid_t L3_nodeUpdate(L3_Cursor_t *ctxt, L3_Node_t *node)
 
   if (L3M_HASFLAG(ctxt, L3F_WITHDATA) && (node->data != NULL))
   {
-    int storage = (strcmp(node->label, "DataArray_t") == 0) ? L3_CONTIGUOUS_STORE : L3_COMPACT_STORE;
     L3M_TRACE(ctxt, ("L3_nodeUpdate update data\n"));
-    if (!HDF_Set_DataArray(ctxt, nid, node->dims, node->data, storage))
+    if (!HDF_Set_DataArray(ctxt, nid, node->dims, node->data, HDFstorage))
     {
       CHL_setError(ctxt, 3055, oldname);
     }
