@@ -49,7 +49,7 @@ d = CGL.newDataArray(g, CGK.CoordinateY_s, NPY.ones(5, dtype='float64', order='F
 d = CGL.newDataArray(g, CGK.CoordinateZ_s, NPY.ones(5, dtype='float64', order='F'))
 zt = CGU.hasChildName(z, CGK.ZoneType_s)
 zt[1] = CGU.setStringAsArray(CGK.Unstructured_s)
-tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((4 * 4), dtype='int32'), NPY.array([[1, 4]], 'i', order='F'))
+tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.array([[1, 4]], 'i', order='F'), NPY.ones((4 * 4), dtype='int32'))
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
@@ -64,7 +64,7 @@ d = CGL.newDataArray(g, CGK.CoordinateY_s, NPY.ones(4, dtype='float64', order='F
 d = CGL.newDataArray(g, CGK.CoordinateZ_s, NPY.ones(4, dtype='float64', order='F'))
 zt = CGU.hasChildName(z, CGK.ZoneType_s)
 zt[1] = CGU.setStringAsArray(CGK.Unstructured_s)
-tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((5 * 4), dtype='int32'), NPY.array([[1, 5]], 'i', order='F'))
+tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.array([[1, 5]], 'i', order='F'), NPY.ones((5 * 4), dtype='int32'))
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
@@ -117,46 +117,58 @@ TESTS.append((tag, T, diag))
 tag = 'zone unstructured correct ElementRange combination'
 diag = True
 (T, b, z) = makeUnstTree(vertexsize, cellsize)
-tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((3 * 4), dtype='int32'), NPY.array([[1, 3]], 'i', order='F'))
-hexas = CGL.newElements(z, 'HEXAS', CGK.HEXA_8_s, NPY.ones((4 * 8), dtype='int32'),
-                        NPY.array([[4, cellsize]], 'i', order='F'))
+tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s,
+                         NPY.array([[1, 3]], 'i', order='F'),
+                         NPY.ones((3 * 4), dtype='int32'))
+hexas = CGL.newElements(z, 'HEXAS', CGK.HEXA_8_s,
+                        NPY.array([[4, cellsize]], 'i', order='F'),
+                        NPY.ones((4 * 8), dtype='int32'))
 element = CGL.newElements(z, 'NGON', CGK.NGON_n_s,
-                          NPY.array([4, 9, 9, 9, 9,
-                                     5, 9, 9, 9, 9, 9,
-                                     3, 9, 9, 9,
-                                     5, 9, 9, 9, 9, 9,
-                                     3, 9, 9, 9,
-                                     4, 9, 9, 9, 9], dtype='int32', order='F'),
-                          NPY.array([[cellsize + 1, cellsize + 6]], 'i', order='F'))
-hexas2 = CGL.newElements(z, 'HEXAS2', CGK.HEXA_8_s, NPY.ones((2 * 8), dtype='int32'),
-                         NPY.array([[cellsize + 7, cellsize + 8]], 'i', order='F'))
+                          NPY.array([[cellsize + 1, cellsize + 6]], 'i', order='F'),
+                          NPY.array([9, 9, 9, 9,
+                                     9, 9, 9, 9, 9,
+                                     9, 9, 9,
+                                     9, 9, 9, 9, 9,
+                                     9, 9, 9,
+                                     9, 9, 9, 9], dtype='int32', order='F'),
+                          NPY.array([0, 4, 9, 12, 17, 20, 24], dtype='int32', order='F')
+                          )
+hexas2 = CGL.newElements(z, 'HEXAS2', CGK.HEXA_8_s,
+                         NPY.array([[cellsize + 7, cellsize + 8]], 'i', order='F'),
+                         NPY.ones((2 * 8), dtype='int32'))
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
 tag = 'zone unstructured bad ElementRange combination #1'
 diag = False
 (T, b, z) = makeUnstTree(vertexsize, cellsize)
-tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((3 * 4), dtype='int32'), NPY.array([[1, 3]], 'i', order='F'))
-hexas = CGL.newElements(z, 'HEXAS', CGK.HEXA_8_s, NPY.ones((5 * 8), dtype='int32'),
-                        NPY.array([[3, 7]], 'i', order='F'))  # Bad combination of ElementRange
+tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s,
+                         NPY.array([[1, 3]], 'i', order='F'),
+                         NPY.ones((3 * 4), dtype='int32'))
+hexas = CGL.newElements(z, 'HEXAS', CGK.HEXA_8_s,
+                        NPY.array([[3, 7]], 'i', order='F'),
+                        NPY.ones((5 * 8), dtype='int32'))  # Bad combination of ElementRange
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
 tag = 'zone unstructured bad ElementRange combination #2'
 diag = False
 (T, b, z) = makeUnstTree(vertexsize, cellsize)
-tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
-                         NPY.array([[1, cellsize]], 'i', order='F'))
+tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s,
+                         NPY.array([[1, cellsize]], 'i', order='F'),
+                         NPY.ones((cellsize * 4), dtype='int32'))
 element = CGL.newElements(z, 'NGON', CGK.NGON_n_s,
-                          NPY.array([4, 9, 9, 9, 9,
-                                     5, 9, 9, 9, 9, 9,
-                                     3, 9, 9, 9,
-                                     5, 9, 9, 9, 9, 9,
-                                     3, 9, 9, 9,
-                                     5, 9, 9, 9, 9, 9,
-                                     4, 9, 9, 9, 9], dtype='int32', order='F'),
                           NPY.array([[cellsize + 1 + 1, cellsize + 7 + 1]], 'i',
-                                    order='F'))  # should be cellsize+1,cellsize+7
+                                    order='F'),
+                          NPY.array([9, 9, 9, 9,
+                                     9, 9, 9, 9, 9,
+                                     9, 9, 9,
+                                     9, 9, 9, 9, 9,
+                                     9, 9, 9,
+                                     9, 9, 9, 9, 9,
+                                     9, 9, 9, 9], dtype='int32', order='F'),
+                          NPY.array([0, 4, 9, 12, 17, 20, 25, 29], dtype='int32', order='F')
+                          )  # should be cellsize+1,cellsize+7
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
@@ -166,29 +178,33 @@ diag = False
 tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
                          NPY.array([[1, cellsize]], 'i', order='F'))
 element = CGL.newElements(z, 'NGON', CGK.NGON_n_s,
-                          NPY.array([4, 9, 9, 9, 9,
-                                     5, 9, 9, 9, 9, 9,
-                                     3, 9, 9, 9,
-                                     5, 9, 9, 9, 9, 9,
-                                     3, 9, 9, 9,
-                                     5, 9, 9, 9, 9, 9,
-                                     4, 9, 9, 9, 9], dtype='int32', order='F'),
-                          NPY.array([[cellsize, cellsize + 7 - 1]], 'i', order='F'))  # should be cellsize+1,cellsize+7
+                          NPY.array([[cellsize, cellsize + 7 - 1]], 'i', order='F'),
+                          NPY.array([9, 9, 9, 9,
+                                     9, 9, 9, 9, 9,
+                                     9, 9, 9,
+                                     9, 9, 9, 9, 9,
+                                     9, 9, 9,
+                                     9, 9, 9, 9, 9,
+                                     9, 9, 9, 9], dtype='int32', order='F'),
+                          NPY.array([0, 4, 9, 12, 17, 20, 25, 29], dtype='int32', order='F')
+                          )  # should be cellsize+1,cellsize+7
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
 tag = 'zone unstructured NFACE without NGON'
 diag = False
 (T, b, z) = makeUnstTree(vertexsize, cellsize)
-tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
-                         NPY.array([[1, cellsize]], 'i', order='F'))
+tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s,
+                         NPY.array([[1, cellsize]], 'i', order='F'),
+                         NPY.ones((cellsize * 4), dtype='int32'))
 element = CGL.newElements(z, 'NFACE', CGK.NFACE_n_s,
-                          NPY.array([4, 9, 9, 9, 9,
-                                     5, 9, 9, 9, 9, 9,
-                                     3, 9, 9, 9,
-                                     5, 9, 9, 9, 9, 9,
-                                     4, 9, 9, 9, 9], dtype='int32', order='F'),
-                          NPY.array([[cellsize + 1, cellsize + 5]], 'i', order='F'))
+                          NPY.array([[cellsize + 1, cellsize + 5]], 'i', order='F'),
+                          NPY.array([9, 9, 9, 9,
+                                     9, 9, 9, 9, 9,
+                                     9, 9, 9,
+                                     9, 9, 9, 9, 9,
+                                     9, 9, 9, 9], dtype='int32', order='F'),
+                          NPY.array([0, 4, 9, 12, 17, 21], dtype='int32', order='F'))
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------

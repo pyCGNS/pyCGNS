@@ -34,8 +34,9 @@ def makeCorrectTree(vertexsize, cellsize):
 vertexsize = 20
 cellsize = 7
 (T, b, z) = makeCorrectTree(vertexsize, cellsize)
-tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
-                         NPY.array([[1, cellsize]], 'i', order='F'))
+tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s,
+                         NPY.array([[1, cellsize]], 'i', order='F'),
+                         NPY.ones((cellsize * 4), dtype='int32'))
 TESTS.append((tag, T, diag))
 
 #  -------------------------------------------------------------------------
@@ -43,8 +44,8 @@ tag = 'indexrange index bad ordered'  # this raises a warning, not an error
 diag = True
 (T, b, z) = makeCorrectTree(vertexsize, cellsize)
 tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s,
-                         NPY.ones((cellsize * 4), dtype='int32'),
-                         NPY.array([[cellsize, 1]], 'i', order='F'))
+                         NPY.array([[cellsize, 1]], 'i', order='F'),
+                         NPY.ones((cellsize * 4), dtype='int32'))
 # element range not ordered
 TESTS.append((tag, T, diag))
 
@@ -53,8 +54,8 @@ tag = 'indexrange bad node shape'
 diag = False
 (T, b, z) = makeCorrectTree(vertexsize, cellsize)
 tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s,
-                         NPY.ones((cellsize * 4), dtype='int32'),
-                         NPY.array([1, cellsize], 'i', order='F'))
+                         NPY.array([1, cellsize], 'i', order='F'),
+                         NPY.ones((cellsize * 4), dtype='int32'))
 # ElementRange bad node shape
 TESTS.append((tag, T, diag))
 
@@ -62,11 +63,13 @@ TESTS.append((tag, T, diag))
 tag = 'indexrange on BC_t'
 diag = True
 (T, b, z) = makeCorrectTree(vertexsize, cellsize)
-tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
-                         NPY.array([[1, cellsize]], 'i', order='F'))
+tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s,
+                         NPY.array([[1, cellsize]], 'i', order='F'),
+                         NPY.ones((cellsize * 4), dtype='int32'))
 ntris = 11
-tris = CGL.newElements(z, 'TRIS', CGK.TRI_3_s, NPY.ones((ntris * 3), dtype='int32'),
-                       NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'))
+tris = CGL.newElements(z, 'TRIS', CGK.TRI_3_s,
+                       NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'),
+                       NPY.ones((ntris * 3), dtype='int32'))
 n = CGL.newBoundary(z, 'BC', [range(cellsize + 1, cellsize + ntris + 1)], btype=CGK.Null_s, family=None,
                     pttype=CGK.PointList_s)
 g = CGL.newGridLocation(n, value=CGK.FaceCenter_s)
@@ -80,12 +83,12 @@ tag = 'indexrange on BC_t PointRange index out of range #1'
 diag = False
 (T, b, z) = makeCorrectTree(vertexsize, cellsize)
 tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s,
-                         NPY.ones((cellsize * 4), dtype='int32'),
-                         NPY.array([[1, cellsize]], 'i', order='F'))
+                         NPY.array([[1, cellsize]], 'i', order='F'),
+                         NPY.ones((cellsize * 4), dtype='int32'))
 ntris = 11
 tris = CGL.newElements(z, 'TRIS', CGK.TRI_3_s,
-                       NPY.ones((ntris * 3), dtype='int32'),
-                       NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'))
+                       NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'),
+                       NPY.ones((ntris * 3), dtype='int32'))
 n = CGL.newBoundary(z, 'BC', [range(cellsize + 1, cellsize + ntris + 1)],
                     btype=CGK.Null_s, family=None, pttype=CGK.PointList_s)
 g = CGL.newGridLocation(n, value=CGK.FaceCenter_s)
@@ -99,11 +102,13 @@ TESTS.append((tag, T, diag))
 tag = 'indexrange on BC_t PointRange index out of range #2'
 diag = False
 (T, b, z) = makeCorrectTree(vertexsize, cellsize)
-tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
-                         NPY.array([[1, cellsize]], 'i', order='F'))
+tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s,
+                         NPY.array([[1, cellsize]], 'i', order='F'),
+                         NPY.ones((cellsize * 4), dtype='int32'))
 ntris = 11
-tris = CGL.newElements(z, 'TRIS', CGK.TRI_3_s, NPY.ones((ntris * 3), dtype='int32'),
-                       NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'))
+tris = CGL.newElements(z, 'TRIS', CGK.TRI_3_s,
+                       NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'),
+                       NPY.ones((ntris * 3), dtype='int32'))
 n = CGL.newBoundary(z, 'BC', [range(cellsize + 1, cellsize + ntris + 1)], btype=CGK.Null_s, family=None,
                     pttype=CGK.PointList_s)
 g = CGL.newGridLocation(n, value=CGK.FaceCenter_s)
@@ -116,11 +121,13 @@ TESTS.append((tag, T, diag))
 tag = 'indexrange on BC_t ElementRange index out of range'
 diag = False
 (T, b, z) = makeCorrectTree(vertexsize, cellsize)
-tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
-                         NPY.array([[1, cellsize]], 'i', order='F'))
+tetras = CGL.newElements(z, 'TETRAS', CGK.TETRA_4_s,
+                         NPY.array([[1, cellsize]], 'i', order='F'),
+                         NPY.ones((cellsize * 4), dtype='int32'))
 ntris = 11
-tris = CGL.newElements(z, 'TRIS', CGK.TRI_3_s, NPY.ones((ntris * 3), dtype='int32'),
-                       NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'))
+tris = CGL.newElements(z, 'TRIS', CGK.TRI_3_s,
+                       NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'),
+                       NPY.ones((ntris * 3), dtype='int32'))
 n = CGL.newBoundary(z, 'BC', [range(cellsize, cellsize + ntris + 1)], btype=CGK.Null_s, family=None,
                     pttype=CGK.PointList_s)
 g = CGL.newGridLocation(n, value=CGK.FaceCenter_s)

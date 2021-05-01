@@ -33,10 +33,12 @@ def makeCorrectTree():
     d = CGL.newDataArray(g, CGK.CoordinateX_s, NPY.ones((vertexsize), dtype='float64', order='F'))
     d = CGL.newDataArray(g, CGK.CoordinateY_s, NPY.ones((vertexsize), dtype='float64', order='F'))
     d = CGL.newDataArray(g, CGK.CoordinateZ_s, NPY.ones((vertexsize), dtype='float64', order='F'))
-    tetras = CGL.newElements(z2, 'TETRAS', CGK.TETRA_4_s, NPY.ones((cellsize * 4), dtype='int32'),
-                             NPY.array([[1, cellsize]], 'i', order='F'))
-    tris = CGL.newElements(z2, 'TRIS', CGK.TRI_3_s, NPY.ones((ntris * 3), dtype='int32'),
-                           NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'))
+    tetras = CGL.newElements(z2, 'TETRAS', CGK.TETRA_4_s,
+                             NPY.array([[1, cellsize]], 'i', order='F'),
+                             NPY.ones((cellsize * 4), dtype='int32'))
+    tris = CGL.newElements(z2, 'TRIS', CGK.TRI_3_s,
+                           NPY.array([[cellsize + 1, cellsize + ntris]], 'i', order='F'),
+                           NPY.ones((ntris * 3), dtype='int32'))
     z3 = CGU.copyNode(z1, 'Zone3')
     b[2].append(z3)
     z4 = CGU.copyNode(z2, 'Zone4')
