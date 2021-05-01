@@ -148,6 +148,7 @@ messagetable=(
 ('S0607',CGM.CHECK_FAIL,'ElementRange child node absent'),
 ('S0608',CGM.CHECK_FAIL,'Structured zone should not have Elements'),
 ('S0609',CGM.CHECK_WARN,'ElementRange is reserved for Elements of unstructured zones'),
+('S0610',CGM.CHECK_FAIL,'ElementStartOffset child node absent'),
 
 ('S0620',CGM.CHECK_FAIL,'GridConnectivity1to1 only applies to structured zones interfacing with structured donors'),
 ('S0621',CGM.CHECK_FAIL,'Opposite GridConnectivity1to1 not found in zone [%s]'),

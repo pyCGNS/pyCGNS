@@ -1076,12 +1076,13 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
   def Elements_t(self,pth,node,parent,tree,log):
     
     # --------------------------------------------------------------------
-    def getElementDataSize(etype,erange,econnect,pth,log,rs):
+    def getElementDataSize(etype,erange,econnect,estartoffset,pth,log,rs):
       # calculate number of data in econnectivity, function of element type and range; return
       # list of element1,element2, depending on type of Elements
-      cdef int i,er_start,er_end,ndata,elementdatasize,elementsize,index,ecsize,j,l
-      cdef NCY.ndarray econnectarray,etypearray,element1,element2
+      cdef int i,er_start,er_end,ndata,elementdatasize,elementsize,index,ecsize,eosize,j,l
+      cdef NCY.ndarray econnectarray,eoffsetarray,etypearray,element1,element2
       cdef int *ecdata
+      cdef int *eoffsetdata
       cdef int *etdata
       cdef int *el1data
       cdef int *el2data
@@ -1103,6 +1104,11 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
       el1data         = <int*>element1.data
       el2data         = <int*>element2.data
       
+      if etype in [CGK.NGON_n,CGK.NFACE_n]:
+         eoffsetarray = estartoffset[1]
+         eoffsetdata  = <int*>eoffsetarray.data
+         eosize      = estartoffset[1].size
+
       if (not CGU.checkArrayInteger(econnectarray)): # check all data in ElementConnectivity are integers (note: even for MIXED, data are integers since ElementType are described through integers)
         rs=log.push(pth+'/'+CGK.ElementConnectivity_s,'S0004')
         return rs,-1,[],[]
@@ -1132,22 +1138,24 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
           index           += 1+ndata           
       elif (etype in [CGK.NGON_n,CGK.NFACE_n]): # in case of NGON or NFACE elements
         index = 0
+        if (elementsize+1>eosize):
+            rs=log.push(pth+'/'+CGK.ElementStartOffset_s,'S0191')
+            return rs,-1,[],[]
         for i in range(er_start,er_end+1):
-          if (index<=ecsize-1): # check ElementConnectivity data long enough to reach index
-            ndata = ecdata[index] # number of data for the current element
-          else:
+          ndata = eoffsetdata[i+1-er_start]-eoffsetdata[i-er_start]
+          if not (index<=ecsize-1): # check ElementConnectivity data not long enough
             rs=log.push(pth+'/'+CGK.ElementConnectivity_s,'S0191')
             return rs,-1,[],[]
-          elementdatasize += 1+ndata
-          el1data[i-er_start]=ecdata[index] # List of ElementType
-          if (index-(i-er_start)+ndata>restofsize):
+          elementdatasize += ndata
+          el1data[i-er_start]= ndata # List of ElementType
+          if (index+ndata>ecsize):
             rs=log.push(pth+'/'+CGK.ElementConnectivity_s,'S0191')
-            return rs,-1,[],[]    
+            return rs,-1,[],[]
           else:
-            for j in range(index+1,index+ndata+1):
-              el2data[j-(i-er_start)-1]=ecdata[j] # List of node (NGON) or face (NFACE) indexes               
+            for j in range(index,index+ndata):
+              el2data[j-(i-er_start)]=ecdata[j] # List of node (NGON) or face (NFACE) indexes
 #          element2=NPY.concatenate((element2,econnect[1][index+1:index+ndata+1])) # List of node (NGON) or face (NFACE) indexes
-          index           += 1+ndata
+          index           += ndata
       else :
         elementdatasize = elementsize*CGK.ElementTypeNPE_l[etype]
         element1        = econnect[1]
@@ -1264,6 +1272,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
       elif (eb<0): bad_eb=True
       er = CGU.hasChildName(node,CGK.ElementRange_s)    
       ec = CGU.hasChildName(node,CGK.ElementConnectivity_s)
+      eo = CGU.hasChildName(node,CGK.ElementStartOffset_s)
       if (er is None) : 
         rs=log.push(pth,'S0607') # checking if ElementRange node is present;
         bad_er = True
@@ -1280,6 +1289,9 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
       elif ((not bad_eb) and (not bad_er) and (eb != 0)):
         rs=checkAllBndFacesOnBCOrGridConnect(range(eb),CGK.ElementSizeBoundary_s,tree,pth,log,rs)
       if (ec is None) : rs=log.push(pth,'S0606') # checking if ElementConnectivity node is present
+      if ((eo is None) and (et in [CGK.NGON_n,CGK.NFACE_n])):
+         rs=log.push(pth, 'S0610')# checking if ElementStartOffset node is present
+         ec=None # Force ec to None since connectivity can not be valid without offset
       if ((ec is not None) and (not bad_et) and (not bad_er)):
         (rs,elementdatasize,element1,element2)=getElementDataSize(et,er,ec,pth,log,rs) # calculating ElementConnectivity data length
         rs=val_u.checkChildValue(ec,(elementdatasize,),[CGK.I4,CGK.I8],pth,log,rs) # checking ElementConnectivity node shape and type (note: even for MIXED, data are integers since ElementType are described through integers)
