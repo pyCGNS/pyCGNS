@@ -24,7 +24,7 @@ jobs:
         curl -fsSLO "https://www.hdfgroup.org/ftp/HDF5/releases/hdf5-${HDF5_VERSION%.*}/hdf5-$HDF5_VERSION/src/hdf5-$HDF5_VERSION.tar.gz"
         gunzip < hdf5-$HDF5_VERSION.tar.gz | tar xf -
         cd hdf5-$HDF5_VERSION
-        ./configure --prefix=/usr/local
+        ./configure --prefix=/usr/local --enable-static --disable-shared --enable-largefile --disable-fortran --disable-hl --without-szlib --without-zlib
         make
         make check -i               # run test suite.
         make install
