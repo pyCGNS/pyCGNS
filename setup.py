@@ -489,7 +489,7 @@ Development Status :: 3 - Alpha
 Intended Audience :: Developers
 Intended Audience :: Information Technology
 Intended Audience :: Science/Research
-License :: OSI Approved :: GNU LGPL
+License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)
 Programming Language :: Cython
 Programming Language :: Python
 Programming Language :: Python :: 2.7
