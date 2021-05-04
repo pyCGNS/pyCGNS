@@ -204,6 +204,7 @@ if 'sdist' in sys.argv:
     CONFIG.HDF5_HUP = 1
     CONFIG.HDF5_VERSION = "1.10.4"
     CONFIG.HDF5_PARALLEL = 0
+    CONFIG.USE_COMPACT_STORAGE = 1
 
 
 line()
@@ -293,6 +294,7 @@ if MAP:
                 'CHLONE_H5CONF_STD': CONFIG.HDF5_HST,
                 'CHLONE_H5CONF_64': CONFIG.HDF5_H64,
                 'CHLONE_H5CONF_UP': CONFIG.HDF5_HUP,
+                'CHLONE_USE_COMPACT_STORAGE': CONFIG.USE_COMPACT_STORAGE,
                 'HDF5_VERSION': CONFIG.HDF5_VERSION,
                 'CHLONE_INSTALL_LIBRARIES': "",
                 'CHLONE_INSTALL_INCLUDES': "",

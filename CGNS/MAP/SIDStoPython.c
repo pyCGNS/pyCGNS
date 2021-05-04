@@ -2106,6 +2106,7 @@ static int s2p_parseAndWriteHDF(hid_t        id,
 {
   char *name = NULL, *label = NULL, *tdat = NULL, *altlabel;
   int tsize = 1, transpose = 0, reverse = 0, toupdate = 0, toskip = 0;
+  int storage = L3_CONTIGUOUS_STORE;
   Py_ssize_t sz = 0, n = 0;
   int ndat = 0, ret = 1, child = 0, ispartial = 0;
   char *vdat = NULL;
@@ -2298,13 +2299,16 @@ static int s2p_parseAndWriteHDF(hid_t        id,
       ispartial = s2p_filterDataPartial(context, curpath,
         s_offset, s_stride, s_count, s_block,
         d_offset, d_stride, d_count, d_block);
+#if (CHLONE_USE_COMPACT_STORAGE == 1)
+      storage = (strcmp(altlabel, "DataArray_t") == 0) ? L3_CONTIGUOUS_STORE : L3_COMPACT_STORE;
+#endif
       if (toupdate)
       {
         if (lke == NULL)
         {
           S2P_TRACE(("# CHL:node update existing\n"));
           L3M_SETFLAG(l3db, L3F_WITHDATA);
-          L3_nodeUpdate(l3db, node);
+          L3_nodeUpdate(l3db, node, storage);
         }
         else if (lke != NULL)
         {
@@ -2318,7 +2322,7 @@ static int s2p_parseAndWriteHDF(hid_t        id,
         {
           L3M_SETFLAG(l3db, L3F_WITHDATA);
         }
-        L3_nodeCreate(l3db, id, node);
+        L3_nodeCreate(l3db, id, node, storage);
         if (!hadWithData) { L3M_UNSETFLAG(l3db, L3F_WITHDATA); }
       }
       else
@@ -2709,11 +2713,19 @@ PyObject* s2p_saveAsHDF(char     *dirname,
               dims, L3E_R4, vdat, L3F_NONE);
             if (toupdate)
             {
-              L3_nodeUpdate(l3db, node);
+#if (CHLONE_USE_COMPACT_STORAGE == 1)
+              L3_nodeUpdate(l3db, node, L3_COMPACT_STORE);
+#else
+              L3_nodeUpdate(l3db, node, L3_CONTIGUOUS_STORE);
+#endif
             }
             else
             {
-              L3_nodeCreate(l3db, l3db->root_id, node);
+#if (CHLONE_USE_COMPACT_STORAGE == 1)
+            L3_nodeCreate(l3db, l3db->root_id, node, L3_COMPACT_STORE);
+#else
+            L3_nodeCreate(l3db, l3db->root_id, node, L3_CONTIGUOUS_STORE);
+#endif
             }
           }
           else

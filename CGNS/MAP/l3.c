@@ -984,7 +984,7 @@ void *HDF_Get_DataArray(L3_Cursor_t *ctxt, hid_t nid, int *dims, void *data)
   return data;
 }
 /* ------------------------------------------------------------------------- */
-int HDF_Add_DataArray(L3_Cursor_t *ctxt, hid_t nid, int *dims, void *data)
+int HDF_Add_DataArray(L3_Cursor_t *ctxt, hid_t nid, int *dims, void *data, const int HDFstorage)
 {
   hid_t tid, sid, did, yid, pid;
   char buff[L3C_MAX_ATTRIB_SIZE + 1];
@@ -1069,7 +1069,22 @@ int HDF_Add_DataArray(L3_Cursor_t *ctxt, hid_t nid, int *dims, void *data)
   }
   else
   {
-    did = H5Dcreate2(nid, L3S_DATA, tid, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    hssize_t dset_size = H5Sget_select_npoints(sid);
+    size_t dtype_size = H5Tget_size(tid);
+
+    /* Compact storage has a dataset size limit of 64 KiB */
+    if (HDFstorage == L3_COMPACT_STORE &&
+        dset_size*(hssize_t)dtype_size  < (hssize_t)CGNS_64KB)
+    {
+      H5Pset_layout(pid, H5D_COMPACT);
+    }
+    else
+    {
+      H5Pset_layout(pid, H5D_CONTIGUOUS);
+      H5Pset_alloc_time(pid, H5D_ALLOC_TIME_EARLY);
+      H5Pset_fill_time(pid, H5D_FILL_TIME_NEVER);
+    }
+    did = H5Dcreate2(nid, L3S_DATA, tid, sid, H5P_DEFAULT, pid, H5P_DEFAULT);
   }
   if (did < 0)
   {
@@ -1092,7 +1107,7 @@ int HDF_Add_DataArray(L3_Cursor_t *ctxt, hid_t nid, int *dims, void *data)
   return 1;
 }
 /* ------------------------------------------------------------------------- */
-int HDF_Set_DataArray(L3_Cursor_t *ctxt, hid_t nid, int *dims, void *data)
+int HDF_Set_DataArray(L3_Cursor_t *ctxt, hid_t nid, int *dims, void *data, const int HDFstorage)
 {
   hid_t tid, did, yid, sid;
   char  buff[L3C_MAX_ATTRIB_SIZE + 1];
@@ -1150,7 +1165,7 @@ int HDF_Set_DataArray(L3_Cursor_t *ctxt, hid_t nid, int *dims, void *data)
   {
     L3M_DBG(ctxt, ("HDF_Set_DataArray change dims\n"));
     H5Ldelete(nid, L3S_DATA, H5P_DEFAULT);
-    HDF_Add_DataArray(ctxt, nid, dims, data);
+    HDF_Add_DataArray(ctxt, nid, dims, data, HDFstorage);
     H5Fflush(nid, H5F_SCOPE_LOCAL);
   }
 
@@ -1325,6 +1340,7 @@ static int HDF_Add_Attribute_As_Data(L3_Cursor_t *ctxt,
   hid_t sid, did;
   hsize_t dim;
   herr_t status;
+  hid_t dcpl_id=H5P_DEFAULT;
 
   L3M_DBG(ctxt, ("HDF_Add_Attribute_As_Data [%s][%s]\n", name, value));
   dim = (hsize_t)(size + 1);
@@ -1334,17 +1350,33 @@ static int HDF_Add_Attribute_As_Data(L3_Cursor_t *ctxt,
     L3M_DBG(ctxt, ("HDF_Add_Attribute_As_Data [%s] bad sid\n", name));
     return 0;
   }
+
+  /* compact storage */  
+  dcpl_id = H5Pcreate(H5P_DATASET_CREATE);
+  if (size+1 < CGNS_64KB)
+  {
+    H5Pset_layout(dcpl_id, H5D_COMPACT);
+  }
+  else
+  {
+    H5Pset_layout(dcpl_id, H5D_CONTIGUOUS);
+    H5Pset_alloc_time(dcpl_id, H5D_ALLOC_TIME_EARLY);
+    H5Pset_fill_time(dcpl_id, H5D_FILL_TIME_NEVER);
+  }
+
   did = H5Dcreate2(id, name, H5T_NATIVE_CHAR, sid,
-    H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    H5P_DEFAULT, dcpl_id, H5P_DEFAULT);
   if (did < 0)
   {
     L3M_DBG(ctxt, ("HDF_Add_Attribute_As_Data [%s] create data failed\n", name));
     H5Sclose(sid);
+    H5Pclose(dcpl_id);
     return 0;
   }
   status = H5Dwrite(did, H5T_NATIVE_CHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, value);
   H5Dclose(did);
   H5Sclose(sid);
+  H5Pclose(dcpl_id);
 
   if (status < 0)
   {
@@ -1405,7 +1437,7 @@ int HDF_Create_Root(L3_Cursor_t *ctxt)
   return 1;
 }
 /* ------------------------------------------------------------------------- */
-hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node)
+hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node, const int HDFstorage)
 {
   hid_t nid = -1;
   int n = 0, s = 0;
@@ -1430,7 +1462,7 @@ hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node)
     nid = H5Gopen2(pid, node->name, H5P_DEFAULT);
     node->id = nid;
     L3M_MXUNLOCK(ctxt);
-    L3_nodeUpdate(ctxt, node);
+    L3_nodeUpdate(ctxt, node, HDFstorage);
     return nid;
   }
   else
@@ -1463,7 +1495,7 @@ hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node)
   /* return nid at this point, allow function embedding */
   if (node->data != NULL)
   {
-    if (!HDF_Add_DataArray(ctxt, nid, node->dims, node->data))
+    if (!HDF_Add_DataArray(ctxt, nid, node->dims, node->data, HDFstorage))
     {
       CHL_setError(ctxt, 3034);
     }
@@ -1480,7 +1512,7 @@ hid_t L3_nodeCreate(L3_Cursor_t *ctxt, hid_t pid, L3_Node_t *node)
   return nid;
 }
 /* ------------------------------------------------------------------------- */
-hid_t L3_nodeUpdate(L3_Cursor_t *ctxt, L3_Node_t *node)
+hid_t L3_nodeUpdate(L3_Cursor_t *ctxt, L3_Node_t *node, const int HDFstorage)
 {
   hid_t nid, pid;
   char oldname[L3C_MAX_ATTRIB_SIZE + 1], oldlabel[L3C_MAX_ATTRIB_SIZE + 1];
@@ -1583,7 +1615,7 @@ hid_t L3_nodeUpdate(L3_Cursor_t *ctxt, L3_Node_t *node)
   if (L3M_HASFLAG(ctxt, L3F_WITHDATA) && (node->data != NULL))
   {
     L3M_TRACE(ctxt, ("L3_nodeUpdate update data\n"));
-    if (!HDF_Set_DataArray(ctxt, nid, node->dims, node->data))
+    if (!HDF_Set_DataArray(ctxt, nid, node->dims, node->data, HDFstorage))
     {
       CHL_setError(ctxt, 3055, oldname);
     }
