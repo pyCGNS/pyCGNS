@@ -507,7 +507,7 @@ Operating System :: Microsoft :: Windows
 
 # -------------------------------------------------------------------------  
 setup(
-    name="pyCGNS-test2",
+    name=CONFIG.NAME,
     version='{}.{}.{}'.format(MAJOR_VERSION, MINOR_VERSION, CONFIG.REVISION),
     description=CONFIG.DESCRIPTION,
     long_description=CONFIG.DESCRIPTION,
