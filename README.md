@@ -1,4 +1,4 @@
-![alt pyCGNS](https://github.com/pyCGNS/pyCGNS/blob/master/doc/images/intro-logo-small.png)
+![alt pyCGNS](doc/images/intro-logo-small.png)
 
 pyCGNS is a set of Python modules about the
 [CFD General Notation System standard](https://cgns.github.io),
