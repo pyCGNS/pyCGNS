@@ -510,7 +510,7 @@ setup(
     name=CONFIG.NAME,
     version='{}.{}.{}'.format(MAJOR_VERSION, MINOR_VERSION, CONFIG.REVISION),
     description=CONFIG.DESCRIPTION,
-    long_description=CONFIG.DESCRIPTION,
+    long_description=open("README.md").read(),
     classifiers=[x for x in cls_txt.split("\n") if x],
     author=CONFIG.AUTHOR,
     author_email=CONFIG.EMAIL,
