@@ -8,8 +8,8 @@ from __future__ import print_function
 
 # --------------------------------------------------------------------
 MAJOR_VERSION = 5
-MINOR_VERSION = 2
-REVISION = 3
+MINOR_VERSION = 3
+REVISION = 0
 # --------------------------------------------------------------------
 
 import os
