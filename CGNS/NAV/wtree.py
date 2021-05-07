@@ -17,7 +17,7 @@ import CGNS.PAT.SIDS         as CGS
 from qtpy.QtCore import Qt, QModelIndex
 from qtpy.QtWidgets import (QStyledItemDelegate, QLineEdit, QComboBox, QSizePolicy,
                             QStyleOptionViewItem, QMenu, QAction)
-from qtpy.QtGui import (QFont, QPalette, QScreen)
+from qtpy.QtGui import (QFont, QPalette, QScreen, QKeySequence)
 
 from CGNS.pyCGNSconfig import HAS_VTK
 
@@ -438,6 +438,12 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
             self.clearLastEntered()
             self.clearOtherSelections()
 
+    def mdel(self):
+        if (self.getLastEntered() is not None):
+            self.model().deleteNode(self.getLastEntered())
+            self.clearLastEntered()
+            self.clearOtherSelections()
+
     def mpasteasbrotherselected(self):
         self.model().pasteAsBrotherAllSelectedNodes()
 
@@ -490,6 +496,7 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
                 ("Cut current", self.mcut, 'Ctrl+X', False),
                 ("Paste as brother", self.mpasteasbrother, 'Ctrl+V', False),
                 ("Paste as child", self.mpasteaschild, 'Ctrl+Y', False),
+                ("Delete current", self.mdel, QKeySequence(Qt.Key_Delete), False),
                 None,
                 ['On selected nodes...',[
                 ("Expand sub-tree from all selected nodes", self.sexpand_sb, 'Ctrl+Shift++', False),
@@ -556,7 +563,12 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
         for t in [n[0] for n in CGU.getAuthChildren(node)]:
             def genCopyPattern(arg):
                 def copyPattern():
-                    self.model().copyNodeRaw(CGS.profile[arg][0])
+                    pattern = CGS.profile.get(arg, None)
+                    if pattern is None:
+                       str_msg ="Pattern for {} was not found in current profile".format(arg)
+                       MSG.wError(self, 404, 'Cannot create recursive sub-pattern', str_msg)
+                       return
+                    self.model().copyNodeRaw(pattern[0])
                     if (self.getLastEntered() is not None):
                         self.model().pasteAsChild(self.getLastEntered())
                 return copyPattern
