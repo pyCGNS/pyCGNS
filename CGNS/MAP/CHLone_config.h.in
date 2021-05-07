@@ -47,7 +47,11 @@
 #endif
 
 #ifdef H5_HAVE_THREADSAFE
+#ifdef H5_HAVE_PTHREAD
 #define CHLONE_HAS_PTHREAD {CHLONE_HAS_PTHREAD}
+#else
+#define CHLONE_HAS_PTHREAD 0
+#endif
 #else
 #define CHLONE_HAS_PTHREAD 0
 #endif
