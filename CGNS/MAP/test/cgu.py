@@ -80,13 +80,13 @@ class MAPTestCase(unittest.TestCase):
 
     def void_test_001_Probe(self):
         from CGNS.MAP import probe
-        from CGNS.PAT.cgnserror import CGNSException
+        from CGNS.PAT.cgnserrors import CGNSException
         self.assertRaisesRegex(CGNSException,
                                 "[900].*", probe, "/Z/ ?/ /U.cgns")
     
     def void_test_002_Save_Args(self):
         from CGNS.MAP import save, flags
-        from CGNS.PAT.cgnserror import CGNSException
+        from CGNS.PAT.cgnserrors import CGNSException
         self.assertRaisesRegex(CGNSException,
                                 "[910].*", save, self.HDF01, self.T, zflag=None)
         self.assertRaisesRegex(CGNSException,
@@ -120,7 +120,7 @@ class MAPTestCase(unittest.TestCase):
 
     def void_test_003_Load_Args(self):
         from CGNS.MAP import load
-        from CGNS.PAT.cgnserror import CGNSException
+        from CGNS.PAT.cgnserrors import CGNSException
         self.assertRaisesRegex(CGNSException,
                                 "[910].*", load, self.HDF01, zflag=None)
         self.assertRaisesRegex(CGNSException,
@@ -140,7 +140,7 @@ class MAPTestCase(unittest.TestCase):
 
     def void_test_004_LoadSave(self):
         from CGNS.MAP import load
-        from CGNS.PAT.cgnserror import CGNSException
+        from CGNS.PAT.cgnserrors import CGNSException
         save(self.HDF01, self.T)
         (t, l, p) = load(self.HDF01)
 
