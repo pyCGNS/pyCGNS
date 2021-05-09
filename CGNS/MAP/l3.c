@@ -215,11 +215,11 @@ int findExternalLink(hid_t g_id, const char * name,
 /* ------------------------------------------------------------------------- */
 
 //#if H5_VERSION_GE(1,12,0)
-//#define has_child(ID,NAME) H5Literate_by_name2(ID, ".", H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)NAME, H5P_DEFAULT)
-//#define has_data(ID)       H5Literate_by_name2(ID, ".", H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)L3S_DATA, H5P_DEFAULT)
+//#define has_child(ID,NAME) H5Literate2(ID, H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)NAME)
+//#define has_data(ID)       H5Literate2(ID, H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)L3S_DATA)
 //#else
-//#define has_child(ID,NAME) H5Literate_by_name(ID, ".", H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)NAME, H5P_DEFAULT)
-//#define has_data(ID)       H5Literate_by_name(ID, ".", H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)L3S_DATA, H5P_DEFAULT)
+//#define has_child(ID,NAME) H5Literate(ID, H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)NAME)
+//#define has_data(ID)       H5Literate(ID, H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)L3S_DATA)
 //#endif
 
 #define has_child(ID,NAME) H5Lexists(ID, NAME, H5P_DEFAULT) 
@@ -308,7 +308,6 @@ CHL_INLINE int HDF_Get_Attribute_As_Integer(hid_t nodeid,
   hid_t aid;
   herr_t status;
 
-  //aid = H5Aopen_name(nodeid, name);
   aid = H5Aopen_by_name(nodeid, ".", name, H5P_DEFAULT, H5P_DEFAULT);
   if (aid < 0)
   {
@@ -333,7 +332,6 @@ CHL_INLINE char *HDF_Get_Attribute_As_String(L3_Cursor_t *ctxt,
   hid_t aid, tid;
 
   value[0] = '\0';
-  //aid = H5Aopen_name(nodeid, name);
   aid = H5Aopen_by_name(nodeid, ".", name, H5P_DEFAULT, H5P_DEFAULT);
   if (aid < 0)
   {
@@ -385,7 +383,7 @@ CHL_INLINE char *HDF_Get_Name(L3_Cursor_t *ctxt,
 {
   hid_t aid, tid;
   value[0] = '\0';
-  //aid = H5Aopen_name(nodeid, L3S_NAME);
+
   aid = H5Aopen_by_name(nodeid, ".", L3S_NAME, H5P_DEFAULT, H5P_DEFAULT);
   if (aid < 0)
   {
@@ -413,7 +411,6 @@ CHL_INLINE char *HDF_Get_Label(L3_Cursor_t *ctxt,
   hid_t aid, tid;
 
   value[0] = '\0';
-  //aid = H5Aopen_name(nodeid, L3S_LABEL);
   aid = H5Aopen_by_name(nodeid, ".", L3S_LABEL, H5P_DEFAULT, H5P_DEFAULT);
   if (aid < 0)
   {
@@ -453,7 +450,7 @@ CHL_INLINE int is_link(L3_Cursor_t *ctxt, hid_t nodeid)
   char ntype[L3C_MAX_DTYPE + 1];
 
   HDF_Get_Dtype(ctxt, nodeid, ntype);
-  return ((ntype[0] != L3T_LK[0]) && (ntype[1] != L3T_LK[1])) ? 0 : 1;
+  return ((ntype[0] != L3T_LK[0]) || (ntype[1] != L3T_LK[1])) ? 0 : 1;
 }
 /* ----------------------------------------------------------------- */
 static hid_t get_link_actual_id(L3_Cursor_t *ctxt, hid_t id)
@@ -669,9 +666,9 @@ hid_t *HDF_Get_Children(hid_t nodeid, int asciiorder)
   nchildren = 0;
   /* order not used here */
 #if H5_VERSION_GE(1,12,0)
-  H5Literate_by_name2(nodeid, ".", H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren, H5P_DEFAULT);
+  H5Literate2(nodeid, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren, H5P_DEFAULT);
 #else
-  H5Literate_by_name(nodeid, ".", H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren, H5P_DEFAULT);
+  H5Literate(nodeid, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren, H5P_DEFAULT);
 #endif
   if (!nchildren)
   {
@@ -689,13 +686,23 @@ hid_t *HDF_Get_Children(hid_t nodeid, int asciiorder)
   }
   if (!asciiorder && ((order & H5_INDEX_CRT_ORDER) == H5_INDEX_CRT_ORDER))
   {
+#if H5_VERSION_GE(1,12,0)
+    H5Literate2(nodeid, H5_INDEX_CRT_ORDER, H5_ITER_INC,
+        NULL, feed_children_ids_list, (void*)idlist);
+#else
     H5Literate(nodeid, H5_INDEX_CRT_ORDER, H5_ITER_INC,
-      NULL, feed_children_ids_list, (void *)idlist);
+      NULL, feed_children_ids_list, (void*)idlist);
+#endif
   }
   if ((nchildren > 0) && (idlist[0] == -1))
   {
+#if H5_VERSION_GE(1,12,0)
+    H5Literate2(nodeid, H5_INDEX_NAME, H5_ITER_INC,
+          NULL, feed_children_ids_list, (void*)idlist);
+#else
     H5Literate(nodeid, H5_INDEX_NAME, H5_ITER_INC,
       NULL, feed_children_ids_list, (void *)idlist);
+#endif
   }
   if (H5Iis_valid(gpl))
   {
@@ -1188,7 +1195,7 @@ int HDF_Add_Attribute_As_Integer(L3_Cursor_t *ctxt,
     return 0;
   }
 
-  aid = H5Acreate(nodeid, name, H5T_NATIVE_INT, sid, H5P_DEFAULT, H5P_DEFAULT);
+  aid = H5Acreate2(nodeid, name, H5T_NATIVE_INT, sid, H5P_DEFAULT, H5P_DEFAULT);
   if (aid < 0)
   {
     L3M_DBG(ctxt, ("HDF_Add_Attribute_As_Integer [%s] create attribute failed\n", name));
@@ -1251,7 +1258,7 @@ int HDF_Add_Attribute_As_String(L3_Cursor_t *ctxt,
     H5Sclose(sid);
     return 0;
   }
-  aid = H5Acreate(nodeid, name, tid, sid, H5P_DEFAULT, H5P_DEFAULT);
+  aid = H5Acreate2(nodeid, name, tid, sid, H5P_DEFAULT, H5P_DEFAULT);
   if (aid < 0)
   {
     L3M_DBG(ctxt, ("HDF_Add_Attribute_As_String [%s] create failed\n", name));
@@ -1285,7 +1292,6 @@ static int HDF_Set_Attribute_As_Integer(L3_Cursor_t *ctxt,
   herr_t status;
 
   L3M_DBG(ctxt, ("HDF_Set_Attribute_As_Integer: [%s]=[%d]\n", name, value));
-  //aid = H5Aopen_name(nodeid, name);
   aid = H5Aopen_by_name(nodeid, ".", name, H5P_DEFAULT, H5P_DEFAULT);
   if (aid < 0)
   {
@@ -1309,7 +1315,6 @@ static int HDF_Set_Attribute_As_String(L3_Cursor_t *ctxt,
   char buff[L3C_MAX_ATTRIB_SIZE + 1];
 
   L3M_DBG(ctxt, ("HDF_Set_Attribute_As_String: [%s]=[%s]\n", name, value));
-  //aid = H5Aopen_name(nodeid, name);
   aid = H5Aopen_by_name(nodeid, ".", name, H5P_DEFAULT, H5P_DEFAULT);
   if (aid < 0)
   {
@@ -1679,6 +1684,11 @@ hid_t L3_nodeLink(L3_Cursor_t *ctxt, hid_t node,
   {
     CHL_setError(ctxt, 3064, srcname);
   }
+  /* Theoretically useless but L3_nodeRetrieve needs it */
+  if (!HDF_Add_Attribute_As_Integer(ctxt, nid, L3S_FLAGS, L3F_NONE))
+  {
+      CHL_setError(ctxt, 3036);
+  }
   HDF_Add_Attribute_As_Data(ctxt, nid, L3S_PATH, destname, strlen(destname));
 
   if (strcmp(destfile, ""))
@@ -1885,7 +1895,6 @@ L3_Node_t *L3_nodeRetrieve(L3_Cursor_t *ctxt, hid_t oid, L3_Node_t *node)
     L3M_MXUNLOCK(ctxt);
     return NULL;
   }
-   
   nid = oid;
   islk = is_link(ctxt, oid);
   if (islk && L3M_HASFLAG(ctxt, L3F_FOLLOWLINKS))
@@ -1896,6 +1905,10 @@ L3_Node_t *L3_nodeRetrieve(L3_Cursor_t *ctxt, hid_t oid, L3_Node_t *node)
       CHL_setError(ctxt, 3091);
       L3M_MXUNLOCK(ctxt);
       return NULL;
+    }
+    /* prevent hdf5 1.1x error */
+    if (!HDF_Check_Node(nid)) {
+      nid = oid;
     }
     islk = 0;
   }
@@ -1985,6 +1998,10 @@ L3_Node_t *L3_nodeRetrieveContiguous(L3_Cursor_t *ctxt, hid_t oid,
         CHL_setError(ctxt, 3091);
         L3M_MXUNLOCK(ctxt);
         return NULL;
+      }
+      /* prevent hdf5 1.1x error */
+      if (!HDF_Check_Node(nid)) {
+          nid = oid;
       }
       islk = 0;
     }
@@ -2148,6 +2165,10 @@ L3_Node_t *L3_nodeRetrievePartial(L3_Cursor_t *ctxt, hid_t oid,
         CHL_setError(ctxt, 3091);
         L3M_MXUNLOCK(ctxt);
         return NULL;
+      }
+      /* prevent hdf5 1.1x error */
+      if (!HDF_Check_Node(nid)) {
+          nid = oid;
       }
       islk = 0;
     }
@@ -2434,7 +2455,12 @@ L3_openFile(char *filename, int mode, long flags)
     CHL_setError(ctxt, 3011);
     return ctxt;
   }
+
+#if defined(L3_H5F_STRONG_CLOSE)
+  H5Pset_fclose_degree(fapl, H5F_CLOSE_STRONG);
+#else
   H5Pset_fclose_degree(fapl, H5F_CLOSE_WEAK);
+#endif
 
   if (mode == L3E_OPEN_RDO)
   {
@@ -2541,7 +2567,9 @@ int L3_close(L3_Cursor_t **ctxt_ptr)
     }
     if (H5Iis_valid(ctxt->file_id))
     {
+#if !defined(L3_H5F_STRONG_CLOSE)
       H5Fflush(ctxt->file_id, H5F_SCOPE_LOCAL);
+#endif
       err = H5Fclose(ctxt->file_id);
       H5garbage_collect();
     }
@@ -2601,8 +2629,9 @@ int L3_closeShutDown(L3_Cursor_t **ctxt_ptr)
         printf("N %ld > P %ld\n", n, p);
         H5Oclose(obj_id_list[n]);
       }
-
+#if !defined(L3_H5F_STRONG_CLOSE)
       H5Fflush(ctxt->file_id, H5F_SCOPE_LOCAL);
+#endif
       err = H5Fclose(ctxt->file_id);
       H5garbage_collect();
     }
