@@ -326,7 +326,7 @@ static int s2p_popHDF(s2p_ctx_t *context)
   S2P_TRACE(("# CHL:pop context [%d]\n", context->hdf_idx));
   if (context->hdf_idx > 0)
   {
-    L3_incRef(context->hdf_stk[context->hdf_idx]->l3db,
+    L3_decRef(context->hdf_stk[context->hdf_idx]->l3db,
       context->hdf_stk[context->hdf_idx]->l3db->root_id);
     context->hdf_idx--;
   }
@@ -1453,6 +1453,16 @@ static void s2p_removeMissingChildren(hid_t        id,
     child = 0;
     ctree = PyList_GetItem(tree, 2);
     sz = PyList_Size(ctree);
+    PyObject** ascii_strings = NULL;
+    if (sz > 0)
+    {
+       ascii_strings = (PyObject **)malloc(sz*sizeof(PyObject*));
+       for (n = 0; n < sz; n++)
+       {
+           ascii_strings[n] = NULL;
+           ascii_strings[n] = PyUnicode_AsASCIIString(PyList_GetItem(PyList_GetItem(ctree, n), 0));
+       }
+    }
     L3M_NEWNODE(cnode);
     __node_count++;
     L3M_UNSETFLAG(l3db, L3F_WITHDATA);
@@ -1466,21 +1476,20 @@ static void s2p_removeMissingChildren(hid_t        id,
       L3M_UNSETFLAG(l3db, L3F_WITHCHILDREN);
       cnode = L3_nodeRetrieve(l3db, node->children[child], cnode);
       toremove = 1;
+      /* Not efficient for large sz */
       for (n = 0; n < sz; n++)
       {
-        PyObject * ascii_string = NULL;
-        ascii_string = PyUnicode_AsASCIIString(PyList_GetItem(PyList_GetItem(ctree, n), 0));
-        tnodename = PyBytes_AsString(ascii_string);
-
+        if (ascii_strings[n] == NULL) continue;
+        tnodename = PyBytes_AsString(ascii_strings[n]);
 
         if (!strcmp(tnodename, cnode->name))
         {
           S2P_TRACE(("# CHL:found in tree and file [%s]\n", tnodename));
+          Py_DECREF(ascii_strings[n]);
+          ascii_strings[n] = NULL;
           toremove = 0;
-          if (ascii_string != NULL) { Py_DECREF(ascii_string); }
           break;
         }
-        if (ascii_string != NULL) { Py_DECREF(ascii_string); }
       }
       if (toremove)
       {
@@ -1490,6 +1499,16 @@ static void s2p_removeMissingChildren(hid_t        id,
       child++;
     }
     L3_nodeFree(&cnode);
+    if (sz >0)
+    {
+      for (n = 0; n < sz; n++)
+      {
+        if (ascii_strings[n] != NULL)
+            Py_DECREF(ascii_strings[n]);
+        ascii_strings[n] = NULL;
+      }
+      free(ascii_strings);
+    }
   }
   L3_nodeRelease(&node, L3F_R_MEM_CHILDREN | L3F_R_HID_CHILDREN | L3F_R_MEM_DATA);
 }

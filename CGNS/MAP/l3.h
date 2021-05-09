@@ -884,5 +884,7 @@ int L3_closeShutDown(L3_Cursor_t **ctxt_ptr);
 
 #endif
 
+/* #define L3_H5F_STRONG_CLOSE */
+
 #endif
 /* --- last line ----------------------------------------------------------- */

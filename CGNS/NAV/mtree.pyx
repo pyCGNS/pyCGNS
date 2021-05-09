@@ -142,6 +142,7 @@ DOWNNODE = '@@NODEDOWN@@'
 UPNODE = '@@NODEUP@@'
 COPY = '@@NODECOPY@@'
 CUT = '@@NODECUT@@'
+DELETENODE = '@@NODEDELETE@@'
 PASTEBROTHER = '@@NODEPASTEB@@'
 PASTECHILD = '@@NODEPASTEC@@'
 CUTSELECTED = '@@NODECUTS@@'
@@ -236,6 +237,7 @@ KEYMAPPING = {
     EDITNODE: Qt.Key_Insert,
     COPY: Qt.Key_C,
     CUT: Qt.Key_X,
+    DELETENODE: Qt.Key_Delete,
     PASTECHILD: Qt.Key_Y,
     PASTEBROTHER: Qt.Key_V,
     CUTSELECTED: Qt.Key_X,
@@ -305,6 +307,7 @@ EDITKEYMAPPINGS = [
     KEYMAPPING[NEWBROTHERNODE],
     KEYMAPPING[COPY],
     KEYMAPPING[CUT],
+    KEYMAPPING[DELETENODE],
     KEYMAPPING[PASTECHILD],
     KEYMAPPING[PASTEBROTHER],
     KEYMAPPING[CUTSELECTED],
@@ -451,6 +454,11 @@ class Q7TreeView(QTreeView):
                     if kval == KEYMAPPING[PASTEBROTHERSELECTED]:
                         self.model().pasteAsBrotherAllSelectedNodes()
                         self.exclusiveSelectRow()
+                if kval == KEYMAPPING[DELETENODE]:
+                    if self.model().deleteNode(last):
+                        self.exclusiveSelectRow(pix)
+                    else:
+                        self.exclusiveSelectRow(nix)
             # --- same keys different meta
             if ((kval in USERKEYMAPPINGS) and not
             (kmod & Qt.ControlModifier) and not
@@ -1672,6 +1680,22 @@ class Q7TreeModel(QAbstractItemModel):
         self.removeItemTree(nodeitem)
         pix = self.indexByPath(path)
         parentitem.sidsRemoveChild(self._control.copyPasteBuffer)
+        self.refreshModel(pix)
+        self.FG.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)
+        self._control.clearOtherSelections()
+        return True
+
+    def deleteNode(self, nodeitem):
+        if nodeitem is None:
+            return False
+        if nodeitem.sidsIsLink() or nodeitem.sidsIsLinkChild():
+            return False
+        _tmpCopy = CGU.nodeCopy(nodeitem._itemnode)
+        parentitem = nodeitem.parentItem()
+        path = CGU.getPathAncestor(nodeitem.sidsPath())
+        self.removeItemTree(nodeitem)
+        pix = self.indexByPath(path)
+        parentitem.sidsRemoveChild(_tmpCopy)
         self.refreshModel(pix)
         self.FG.addTreeStatus(Q7FingerPrint.STATUS_MODIFIED)
         self._control.clearOtherSelections()

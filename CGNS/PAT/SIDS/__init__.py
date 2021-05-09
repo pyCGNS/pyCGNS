@@ -61,6 +61,7 @@ from . import Family_t
 from . import FamilyName_t
 from . import FamilyBC_t
 from . import GeometryReference_t
+from . import ZoneSubRegion_t
 
 profile = {
     'CGNSBase_t': CGNSBase_t.pattern,
@@ -119,5 +120,6 @@ profile = {
     'FamilyName_t': FamilyName_t.pattern,
     'FamilyBC_t': FamilyBC_t.pattern,
     'GeometryReference_t': GeometryReference_t.pattern,
+    'ZoneSubRegion_t': ZoneSubRegion_t.pattern,
 }
 #
