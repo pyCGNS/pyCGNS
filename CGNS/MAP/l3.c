@@ -666,9 +666,9 @@ hid_t *HDF_Get_Children(hid_t nodeid, int asciiorder)
   nchildren = 0;
   /* order not used here */
 #if H5_VERSION_GE(1,12,0)
-  H5Literate2(nodeid, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren, H5P_DEFAULT);
+  H5Literate2(nodeid, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren);
 #else
-  H5Literate(nodeid, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren, H5P_DEFAULT);
+  H5Literate(nodeid, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren);
 #endif
   if (!nchildren)
   {
