@@ -1,10 +1,10 @@
 #  ---------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  ---------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 import CGNS
 import CGNS.PAT.cgnskeywords as CK
@@ -74,8 +74,9 @@ class CGNSPython(object):
         for c in self.__node[2]:
             take = False
             if sidstype is not None:
-                if ((isinstance(sidstype, list) and (c[3] in sidstype)) or
-                        (isinstance(sidstype, str) and (c[3] == sidstype))):
+                if (isinstance(sidstype, list) and (c[3] in sidstype)) or (
+                    isinstance(sidstype, str) and (c[3] == sidstype)
+                ):
                     take = True
             else:
                 take = True
@@ -104,5 +105,6 @@ class CGNSPython(object):
 
     def __len__(self):
         return len(self.__node[2])
+
 
 # ---

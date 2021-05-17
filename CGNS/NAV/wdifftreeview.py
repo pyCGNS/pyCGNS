@@ -1,10 +1,10 @@
 #  -------------------------------------------------------------------------
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
-#  See license.txt file in the root directory of this Python module source  
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -164,12 +164,12 @@ class Q7Diff(Q7Window, Ui_Q7DiffWindow):
         fgb = Q7FingerPrint.getByIndex(self._fgidxB)
         model_a = fga.model
         model_b = fgb.model
-        self.treeviewA.setItemDelegate(Q7DiffItemDelegate(self.treeviewA,
-                                                          model_a,
-                                                          ldiag))
-        self.treeviewB.setItemDelegate(Q7DiffItemDelegate(self.treeviewB,
-                                                          model_b,
-                                                          ldiag))
+        self.treeviewA.setItemDelegate(
+            Q7DiffItemDelegate(self.treeviewA, model_a, ldiag)
+        )
+        self.treeviewB.setItemDelegate(
+            Q7DiffItemDelegate(self.treeviewB, model_b, ldiag)
+        )
         self.treeviewA.setControlWindow(self, model_a)
         self.treeviewB.setControlWindow(self, model_b)
         self.treeviewA.hideColumn(NMT.COLUMN_FLAG_LINK)
@@ -193,17 +193,17 @@ class Q7Diff(Q7Window, Ui_Q7DiffWindow):
         for k in diag:
             ldiag[k] = DIFF_NX
             for d in diag[k]:
-                if d[0] == 'NA':
+                if d[0] == "NA":
                     ldiag[d[1]] = DIFF_NA
-                if d[0] == 'ND':
+                if d[0] == "ND":
                     ldiag[d[1]] = DIFF_ND
-                if d[0] in ['CT']:
+                if d[0] in ["CT"]:
                     ldiag[k] = DIFF_CT
-                if d[0] in ['C3', 'C1', 'C2']:
+                if d[0] in ["C3", "C1", "C2"]:
                     ldiag[k] = DIFF_CQ
-                if d[0] in ['C6', 'C7']:
+                if d[0] in ["C6", "C7"]:
                     ldiag[k] = DIFF_CV
-                if d[0] in ['C4', 'C5']:
+                if d[0] in ["C4", "C5"]:
                     ldiag[k] = DIFF_CS
         return ldiag
 
@@ -253,7 +253,7 @@ class Q7Diff(Q7Window, Ui_Q7DiffWindow):
         return self.modelIndex(idx).internalPointer()
 
     def infoTreeView(self):
-        self._control.helpWindow('Tree')
+        self._control.helpWindow("Tree")
 
     def savediff(self):
         pass
@@ -299,7 +299,7 @@ class Q7Diff(Q7Window, Ui_Q7DiffWindow):
             return False
         if nodeidx.internalPointer() is None:
             return False
-        if nodeidx.internalPointer().sidsPath() == '/CGNSTree':
+        if nodeidx.internalPointer().sidsPath() == "/CGNSTree":
             return False
         self.setLastEntered(nodeidxs)
         if nodeidx != -1:
@@ -309,34 +309,50 @@ class Q7Diff(Q7Window, Ui_Q7DiffWindow):
             actlist = (
                 ("About %s" % node.sidsType(), self.aboutSIDS, None, False),
                 None,
-                ("Mark/unmark node", self.marknode, 'Space', False),
-                ("Add new child node", self.newnodechild, 'Ctrl+A', False),
-                ("Add new brother node", self.newnodebrother, 'Ctrl+Z', False),
+                ("Mark/unmark node", self.marknode, "Space", False),
+                ("Add new child node", self.newnodechild, "Ctrl+A", False),
+                ("Add new brother node", self.newnodebrother, "Ctrl+Z", False),
                 None,
-                ("Open form", self.popform, 'Ctrl+F', False),
-                ("Open view", self.openSubTree, 'Ctrl+W', False),
-                ("Open view on linked-to file", self.openLkTree, 'Ctrl+O', lknode),
+                ("Open form", self.popform, "Ctrl+F", False),
+                ("Open view", self.openSubTree, "Ctrl+W", False),
+                ("Open view on linked-to file", self.openLkTree, "Ctrl+O", lknode),
                 None,
-                ("Load node data in memory", self.dataLoad, 'Ctrl+L', not lznode),
-                ("Release memory node data", self.dataRelease, 'Ctrl+R', lznode),
+                ("Load node data in memory", self.dataLoad, "Ctrl+L", not lznode),
+                ("Release memory node data", self.dataRelease, "Ctrl+R", lznode),
                 None,
-                ("Copy", self.mcopy, 'Ctrl+C', False),
-                ("Cut", self.mcut, 'Ctrl+X', False),
-                ("Paste as brother", self.mpasteasbrother, 'Ctrl+V', False),
-                ("Paste as child", self.mpasteaschild, 'Ctrl+Y', False),
+                ("Copy", self.mcopy, "Ctrl+C", False),
+                ("Cut", self.mcut, "Ctrl+X", False),
+                ("Paste as brother", self.mpasteasbrother, "Ctrl+V", False),
+                ("Paste as child", self.mpasteaschild, "Ctrl+Y", False),
                 None,
-                ("Cut all selected", self.mcutselected, 'Ctrl+Shift+X', False),
-                ("Paste as brother for each selected",
-                 self.mpasteasbrotherselected, 'Ctrl+Shift+V', False),
-                ("Paste as child for each selected",
-                 self.mpasteaschildselected, 'Ctrl+Shift+Y', False),
-                ("Load nodes data in memory for each selected",
-                 self.dataLoadSelected, 'Ctrl+Shift+L', False),
-                ("Release memory node data for each selected",
-                 self.dataReleaseSelected, 'Ctrl+Shift+R', False),
+                ("Cut all selected", self.mcutselected, "Ctrl+Shift+X", False),
+                (
+                    "Paste as brother for each selected",
+                    self.mpasteasbrotherselected,
+                    "Ctrl+Shift+V",
+                    False,
+                ),
+                (
+                    "Paste as child for each selected",
+                    self.mpasteaschildselected,
+                    "Ctrl+Shift+Y",
+                    False,
+                ),
+                (
+                    "Load nodes data in memory for each selected",
+                    self.dataLoadSelected,
+                    "Ctrl+Shift+L",
+                    False,
+                ),
+                (
+                    "Release memory node data for each selected",
+                    self.dataReleaseSelected,
+                    "Ctrl+Shift+R",
+                    False,
+                ),
             )
             self.popupmenu.clear()
-            self.popupmenu.setTitle('Node menu')
+            self.popupmenu.setTitle("Node menu")
             for aparam in actlist:
                 if aparam is None:
                     self.popupmenu.addSeparator()
@@ -385,5 +401,6 @@ class Q7Diff(Q7Window, Ui_Q7DiffWindow):
 
     def doRelease(self):
         pass
+
 
 # -----------------------------------------------------------------

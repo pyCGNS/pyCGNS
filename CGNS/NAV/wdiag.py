@@ -1,10 +1,10 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 
 import os
@@ -56,9 +56,13 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
         for g in locateGrammars():
             gl += "%s : %s<br>" % (g[0], os.path.split(g[1])[0])
         self.FG.popGrammarPaths()
-        MSG.wInfo(self, 400, "Diag view:",
-                  """Checks performed using the following grammars:<br>%s""" % gl,
-                  again=False)
+        MSG.wInfo(
+            self,
+            400,
+            "Diag view:",
+            """Checks performed using the following grammars:<br>%s""" % gl,
+            again=False,
+        )
 
     def diagTableKeyPressEvent(self, event):
         kmod = event.modifiers()
@@ -67,23 +71,22 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
             itlist = self.diagTable.selectedItems()
             it = itlist[0]
             itxt = it.text(0)
-            if itxt[0] != '/':
+            if itxt[0] != "/":
                 itxt = it.parent().text(0)
             self._parent.treeview.selectByPath(itxt)
         else:
             QTreeView.keyPressEvent(self.diagTable, event)
 
     def infoDiagView(self):
-        self._control.helpWindow('Diagnosis')
+        self._control.helpWindow("Diagnosis")
 
     def diagnosticssave(self):
-        n = 'data=%s\n' % self._data
+        n = "data=%s\n" % self._data
 
-        filename = QFileDialog.getSaveFileName(self,
-                                               "Save diagnosis", ".", "*.py")
+        filename = QFileDialog.getSaveFileName(self, "Save diagnosis", ".", "*.py")
         if filename[0] == "":
             return
-        with open(str(filename[0]), 'w+') as f:
+        with open(str(filename[0]), "w+") as f:
             f.write(n)
 
     def previousfiltered(self):
@@ -134,12 +137,12 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
         self.cFilter.clear()
         self._filterItems = {}
         diagfirst = self.cDiagFirst.isChecked()
-        warnings = self.cWarnings.isChecked()        
+        warnings = self.cWarnings.isChecked()
         diagstack = {}
         for path in plist:
             path_item = None
             state = self._data.getWorstDiag(path)
-            if (state in [CGM.CHECK_NONE, CGM.CHECK_PASS]):
+            if state in [CGM.CHECK_NONE, CGM.CHECK_PASS]:
                 pass
             elif (state == CGM.CHECK_WARN) and not warnings:
                 pass
@@ -153,18 +156,16 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
                             diag_item = self.addDiagEntry(None, diag, top=True)
                             v.insertTopLevelItem(0, diag_item)
                             diagstack[diag.key] = diag_item
-                        path_item = self.addPathEntry(diagstack[diag.key],
-                                                      path,
-                                                      state, top=False)
+                        path_item = self.addPathEntry(
+                            diagstack[diag.key], path, state, top=False
+                        )
                     else:
                         if diag.key not in keyset:
                             keyset.add(diag.key)
                         if path_item is None:
-                            path_item = self.addPathEntry(None, path,
-                                                          state, top=True)
+                            path_item = self.addPathEntry(None, path, state, top=True)
                             v.insertTopLevelItem(0, path_item)
-                        diag_item = self.addDiagEntry(path_item, diag,
-                                                      top=False)
+                        diag_item = self.addDiagEntry(path_item, diag, top=False)
                     keylist = list(keyset)
         keylist.sort()
         for k in keylist:
@@ -197,12 +198,13 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
         else:
             self._filterItems[diag.key].insert(0, dit)
         return dit
-        
+
     def reject(self):
         self.close()
 
     def close(self):
         self._parent.diagview = None
         QWidget.close(self)
+
 
 # -----------------------------------------------------------------

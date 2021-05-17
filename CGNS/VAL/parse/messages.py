@@ -1,6 +1,6 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
@@ -21,20 +21,25 @@ CHECK_USER = 4
 
 
 def getWorst(st1, st2):
-    if (CHECK_FAIL in [st1, st2]):
+    if CHECK_FAIL in [st1, st2]:
         return CHECK_FAIL
-    if (CHECK_USER in [st1, st2]):
+    if CHECK_USER in [st1, st2]:
         return CHECK_USER
-    if (CHECK_WARN in [st1, st2]):
+    if CHECK_WARN in [st1, st2]:
         return CHECK_WARN
-    if (CHECK_GOOD in [st1, st2]):
+    if CHECK_GOOD in [st1, st2]:
         return CHECK_GOOD
     return CHECK_NONE
 
 
 class DiagnosticMessagePattern(object):
-    __levelstr = {CHECK_FAIL: 'E', CHECK_USER: 'U',
-                  CHECK_WARN: 'W', CHECK_GOOD: ' ', CHECK_NONE: '?'}
+    __levelstr = {
+        CHECK_FAIL: "E",
+        CHECK_USER: "U",
+        CHECK_WARN: "W",
+        CHECK_GOOD: " ",
+        CHECK_NONE: "?",
+    }
 
     def __init__(self, mkey, mlevel, mstring):
         self._key = mkey
@@ -57,10 +62,10 @@ class DiagnosticMessagePattern(object):
         return self.__levelstr[self._lvl]
 
     def __str__(self):
-        return '[%s:%s] %s' % (self._key, self.levelAsStr(), self._str)
+        return "[%s:%s] %s" % (self._key, self.levelAsStr(), self._str)
 
     def notSubst(self):
-        return '%' in self._str
+        return "%" in self._str
 
     def forceLevel(self, l):
         self._lvl = l
@@ -68,12 +73,15 @@ class DiagnosticMessagePattern(object):
 
 class DiagnosticMessageInstance(DiagnosticMessagePattern):
     def __init__(self, pattern):
-        super(DiagnosticMessageInstance, self).__init__(pattern.key, pattern.level, pattern.message)
+        super(DiagnosticMessageInstance, self).__init__(
+            pattern.key, pattern.level, pattern.message
+        )
 
     def substitute(self, *tp):
         msg = self._str
         try:
-            if (tp): msg = msg % tp
+            if tp:
+                msg = msg % tp
         except TypeError:
             pass
         self._str = msg
@@ -96,7 +104,8 @@ class DiagnosticLog(dict):
         return self.__messages
 
     def noContextMessage(self, m):
-        if (DiagnosticLog.__messages[m].notSubst()): return None
+        if DiagnosticLog.__messages[m].notSubst():
+            return None
         return DiagnosticLog.__messages[m].message
 
     def addMessage(self, k, m):
@@ -107,9 +116,12 @@ class DiagnosticLog(dict):
             DiagnosticLog.__messages[e] = DiagnosticMessagePattern(e, d[e][0], d[e][1])
 
     def push(self, path, messagekey, *tp):
-        if (path is None): return
-        if (path not in self): self[path] = []
-        if (messagekey not in DiagnosticLog.__messages): return
+        if path is None:
+            return
+        if path not in self:
+            self[path] = []
+        if messagekey not in DiagnosticLog.__messages:
+            return
         entry = DiagnosticMessageInstance(DiagnosticLog.__messages[messagekey])
         self[path].append(entry.substitute(*tp))
         return DiagnosticLog.__messages[messagekey].level
@@ -117,8 +129,8 @@ class DiagnosticLog(dict):
     def __len__(self):
         return len(self.keys())
 
-    def shift(self, path, shiftstring=' '):
-        n = path.split('/')
+    def shift(self, path, shiftstring=" "):
+        n = path.split("/")
         return len(n) * shiftstring
 
     def getWorst(self, st1, st2):
@@ -136,9 +148,10 @@ class DiagnosticLog(dict):
         return entry.key
 
     def message(self, entry, path=None):
-        shft = ''
-        if (path is not None): shft = self.shift(path)
-        s = '%s[%s:%s] %s' % (shft, entry.key, entry.levelAsStr(), entry.message)
+        shft = ""
+        if path is not None:
+            shft = self.shift(path)
+        s = "%s[%s:%s] %s" % (shft, entry.key, entry.levelAsStr(), entry.message)
         return s
 
     def getWorstDiag(self, path):
@@ -152,7 +165,8 @@ class DiagnosticLog(dict):
         return r
 
     def diagForPath(self, path):
-        if (path in self): return self[path]
+        if path in self:
+            return self[path]
         return None
 
     def allMessageKeys(self):
@@ -168,7 +182,7 @@ class DiagnosticLog(dict):
         return list(self)
 
     def diagnosticsByPath(self, path):
-        if (self.diagForPath(path) is not None):
+        if self.diagForPath(path) is not None:
             dlist = self[path]
             dlist.sort(key=lambda x: x.key)
             for diag in dlist:
@@ -179,7 +193,8 @@ class DiagnosticLog(dict):
         plist.sort()
         for path in plist:
             for diag in self[path]:
-                if (diag.key == msg): yield (diag, path)
+                if diag.key == msg:
+                    yield (diag, path)
 
     def __str__(self):
         s = "{\n"
@@ -191,11 +206,12 @@ class DiagnosticLog(dict):
         return s
 
     def forceAsWarning(self, key):
-        if (key in DiagnosticLog.__messages):
+        if key in DiagnosticLog.__messages:
             DiagnosticLog.__messages[key].forceLevel(CHECK_WARN)
 
     def forceAsFailure(self, key):
-        if (key in DiagnosticLog.__messages):
+        if key in DiagnosticLog.__messages:
             DiagnosticLog.__messages[key].forceLevel(CHECK_FAIL)
+
 
 # --- last line

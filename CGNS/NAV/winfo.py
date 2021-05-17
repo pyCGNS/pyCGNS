@@ -1,10 +1,10 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -12,7 +12,8 @@ import sys
 import string
 
 from qtpy.QtCore import Qt
-#from qtpy.QtWidgets import QWidget
+
+# from qtpy.QtWidgets import QWidget
 
 from CGNS.NAV.Q7InfoWindow import Ui_Q7InfoWindow
 from CGNS.NAV.wfingerprint import Q7Window
@@ -28,7 +29,7 @@ class Q7Info(Q7Window, Ui_Q7InfoWindow):
         self._data = data
 
     def infoInfoView(self):
-        self._control.helpWindow('Info')
+        self._control.helpWindow("Info")
 
     def show(self):
         self.reset()
@@ -54,5 +55,6 @@ class Q7Info(Q7Window, Ui_Q7InfoWindow):
 
     def reject(self):
         self.close()
+
 
 # -----------------------------------------------------------------

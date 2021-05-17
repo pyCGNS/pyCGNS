@@ -1,6 +1,6 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 # Get a link list and a search path list and check it, return diag list
@@ -84,9 +84,9 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 import CGNS.MAP
-import CGNS.PAT.cgnsutils      as CGU
-import CGNS.PAT.cgnstypes      as CGT
-import CGNS.PAT.cgnskeywords   as CGK
+import CGNS.PAT.cgnsutils as CGU
+import CGNS.PAT.cgnstypes as CGT
+import CGNS.PAT.cgnskeywords as CGK
 import math
 import os
 
@@ -104,12 +104,12 @@ class CGNSGraph(object):
     index = []
 
     def __init__(self, filename=None):
-        if (filename is not None):
+        if filename is not None:
             self.parseOneFile(filename)
 
     def addCanonicalFilename(self, filename):
         fn = canonicalName(filename)
-        if (fn not in self.fileindex):
+        if fn not in self.fileindex:
             self.fileindex += [fn]
             return True
         return False
@@ -119,20 +119,21 @@ class CGNSGraph(object):
         return self.fileindex.index(fn) + 1
 
     def parseOneFile(self, filename):
-        if (not self.addCanonicalFilename(filename)): return
+        if not self.addCanonicalFilename(filename):
+            return
         flags = CGNS.MAP.S2P_NODATA | CGNS.MAP.S2P_FOLLOWLINKS
-        (t, l, p) = CGNS.MAP.load(filename, flags, lksearch=['.'])
+        (t, l, p) = CGNS.MAP.load(filename, flags, lksearch=["."])
         idx = self.filenameIndex(filename)
         self.index += CGU.getAllNodesAsWidthFirstIndex(t, idx)
         self.fillLinksList(idx, l)
         for el in l:
-            self.parseOneFile(el[0] + '/' + el[1])
+            self.parseOneFile(el[0] + "/" + el[1])
         self.solveLinks()
 
     def fillLinksList(self, idx, l):
         for lk in l:
             fn = canonicalName(lk[0] + os.sep + lk[1])
-            print('FILE', fn)
+            print("FILE", fn)
         print(len(self.fileindex))
         for i in self.fileindex:
             print(i)
@@ -141,7 +142,7 @@ class CGNSGraph(object):
         pass
 
     def showIndex(self, sort=False):
-        if (sort):
+        if sort:
             self.index.sort()
         sz = int(math.log10(max([i[1] for i in self.index])) + 1)
         fmt = "%%.2d %%.%dd %%s" % sz
@@ -150,5 +151,5 @@ class CGNSGraph(object):
 
 
 for i in range(12):
-    g = CGNSGraph('/tmp/CHLone-test-008-%.2d.hdf' % i)
+    g = CGNSGraph("/tmp/CHLone-test-008-%.2d.hdf" % i)
     g.showIndex()

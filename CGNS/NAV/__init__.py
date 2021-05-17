@@ -1,8 +1,8 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
-# 
+#
 """
  implementation info:
 
@@ -18,6 +18,7 @@
    separate classes.
 """
 from __future__ import unicode_literals
+
 
 def show(T, *args):
     from CGNS.NAV.moption import Q7OptionContext as OCTXT
@@ -55,20 +56,31 @@ def show(T, *args):
     app.wOption.reset()
     app.processEvents()
 
-    fgprint = Q7FingerPrint(app, '.', '<run-time>', T, [], [])
+    fgprint = Q7FingerPrint(app, ".", "<run-time>", T, [], [])
     Q7TreeModel(fgprint.index)
-    child = Q7Tree(app, '/', fgprint.index)
+    child = Q7Tree(app, "/", fgprint.index)
 
-    for wg in [child.bSave, child.bQueryView, child.bSaveAs, child.bInfo,
-               child.bCheck, child.bCheckList, child.bClearChecks,
-               child.bPatternView, child.bToolsView, child.bFormView,
-               child.bSelectLinkSrc, child.bSelectLinkDst,
-               child.bBackControl]:
+    for wg in [
+        child.bSave,
+        child.bQueryView,
+        child.bSaveAs,
+        child.bInfo,
+        child.bCheck,
+        child.bCheckList,
+        child.bClearChecks,
+        child.bPatternView,
+        child.bToolsView,
+        child.bFormView,
+        child.bSelectLinkSrc,
+        child.bSelectLinkDst,
+        child.bBackControl,
+    ]:
         wg.setEnabled(False)
 
     fgprint._status = [Q7FingerPrint.STATUS_MODIFIED]
     child.show()
 
     app.exec_()
+
 
 # --- last line

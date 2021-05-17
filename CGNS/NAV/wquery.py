@@ -1,11 +1,11 @@
 #  -------------------------------------------------------------------------
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
-#  See license.txt file in the root directory of this Python module source  
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
 from __future__ import print_function
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -17,16 +17,27 @@ import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnskeywords as CGK
 
 from qtpy.QtCore import Qt
-from qtpy.QtWidgets import (QFileDialog, QStyledItemDelegate, QLineEdit, QComboBox, QTableWidgetItem, QMessageBox)
-from qtpy.QtGui import (QFont, QIcon, QPixmap)
+from qtpy.QtWidgets import (
+    QFileDialog,
+    QStyledItemDelegate,
+    QLineEdit,
+    QComboBox,
+    QTableWidgetItem,
+    QMessageBox,
+)
+from qtpy.QtGui import QFont, QIcon, QPixmap
 
 from CGNS.NAV.Q7QueryWindow import Ui_Q7QueryWindow
 from CGNS.NAV.Q7SelectionWindow import Ui_Q7SelectionWindow
 from CGNS.NAV.wfingerprint import Q7Window
 from CGNS.NAV.mquery import Q7QueryEntry
-from CGNS.NAV.mtree import (COLUMN_VALUE, COLUMN_DATATYPE,
-                            COLUMN_SIDS, COLUMN_NAME,
-                            HIDEVALUE)
+from CGNS.NAV.mtree import (
+    COLUMN_VALUE,
+    COLUMN_DATATYPE,
+    COLUMN_SIDS,
+    COLUMN_NAME,
+    HIDEVALUE,
+)
 import CGNS.NAV.wmessages as MSG
 
 (CELLCOMBO, CELLTEXT) = range(2)
@@ -57,21 +68,21 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
         if index.column() == 2:
             self._lastCol = COLUMN_SIDS
             if self._parent.cForce.checkState() != Qt.Checked:
-              self._mode = CELLTEXT
-              editor = QLineEdit(parent)
-              editor.transgeometry = (xs, ys, ws, hs)
+                self._mode = CELLTEXT
+                editor = QLineEdit(parent)
+                editor.transgeometry = (xs, ys, ws, hs)
             else:
-              self._mode = CELLCOMBO
-              editor = QComboBox(parent)
-              editor.transgeometry = (xs, ys, ws, hs)
-              itemslist = tnode.sidsTypeList()
-              editor.addItems(itemslist)
-              try:
-                tix = itemslist.index(tnode.sidsType())
-              except ValueError:
-                editor.insertItem(0, tnode.sidsType())
-                tix = 0
-              editor.setCurrentIndex(tix)
+                self._mode = CELLCOMBO
+                editor = QComboBox(parent)
+                editor.transgeometry = (xs, ys, ws, hs)
+                itemslist = tnode.sidsTypeList()
+                editor.addItems(itemslist)
+                try:
+                    tix = itemslist.index(tnode.sidsType())
+                except ValueError:
+                    editor.insertItem(0, tnode.sidsType())
+                    tix = 0
+                editor.setCurrentIndex(tix)
             editor.installEventFilter(self)
             self.setEditorData(editor, index)
             return editor
@@ -89,7 +100,7 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
         if index.column() == 4:
             self._lastCol = COLUMN_VALUE
             if tnode.hasValueView():
-                pt = tnode.sidsPath().split('/')[1:]
+                pt = tnode.sidsPath().split("/")[1:]
                 lt = tnode.sidsTypePath()
                 fc = self._parent._control.userFunctionFromPath(pt, lt)
                 if fc is not None:
@@ -106,9 +117,11 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
                     editor.transgeometry = (xs, ys, ws, hs)
                     editor.addItems(en)
                     try:
-                        tix = en.index(tnode.sidsValue().tostring().decode('ascii'))
+                        tix = en.index(tnode.sidsValue().tostring().decode("ascii"))
                     except ValueError:
-                        editor.insertItem(0, tnode.sidsValue().tostring().decode('ascii'))
+                        editor.insertItem(
+                            0, tnode.sidsValue().tostring().decode("ascii")
+                        )
                         tix = 0
                     editor.setCurrentIndex(tix)
                 editor.installEventFilter(self)
@@ -141,14 +154,18 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
         if self._mode == CELLTEXT:
             value = editor.text()
         if self._parent.setToAll():
-            reply = MSG.wQuestion(self._parent, 371, 'Apply changes to all...',
-                                  """The same value is going to be set to all selected nodes,<br>
+            reply = MSG.wQuestion(
+                self._parent,
+                371,
+                "Apply changes to all...",
+                """The same value is going to be set to all selected nodes,<br>
                                      Do we continue and perform the modification on all selected?<br>
                                      This may fail on some nodes if the data type is not the same
                                      as the original node for example. In that case some of the
                                      nodes would be modified but not the others, you would not
                                      have any status on the actual result of the modification.<br>
-                                     """)
+                                     """,
+            )
             if reply == MSG.OK:
                 for rw in self._parent.selectedRows():
                     nd = self._model.nodeFromPath(dt[rw])
@@ -156,8 +173,7 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
             else:
                 return
         else:
-            nodelist.append((index.row(),
-                             self._model.nodeFromPath(dt[index.row()])))
+            nodelist.append((index.row(), self._model.nodeFromPath(dt[index.row()])))
         if self._parent.cForce.checkState() != Qt.Checked:
             noforce = True
         else:
@@ -176,8 +192,7 @@ class Q7SelectionItemDelegate(QStyledItemDelegate):
 # -----------------------------------------------------------------
 class Q7SelectionList(Q7Window, Ui_Q7SelectionWindow):
     def __init__(self, parent, model, fgindex):
-        Q7Window.__init__(self, Q7Window.VIEW_SELECT,
-                          parent._control, None, fgindex)
+        Q7Window.__init__(self, Q7Window.VIEW_SELECT, parent._control, None, fgindex)
         self.bClose.clicked.connect(self.reject)
         self._parent = parent
         self._model = model
@@ -248,7 +263,7 @@ class Q7SelectionList(Q7Window, Ui_Q7SelectionWindow):
         self._tb.clearSelection()
 
     def infoSelectView(self):
-        self._control.helpWindow('Selection')
+        self._control.helpWindow("Selection")
 
     def show(self):
         self.reset()
@@ -256,33 +271,32 @@ class Q7SelectionList(Q7Window, Ui_Q7SelectionWindow):
         self.raise_()
 
     def selectionsave(self):
-        n = 'data=[\n'
+        n = "data=[\n"
         for path in self._data:
             node = self._model.nodeFromPath(path)
             t = node.data(COLUMN_SIDS)
             d = node.data(COLUMN_DATATYPE)
             v = node.sidsValue()
             if isinstance(v, numpy.ndarray):
-                if v.dtype.char in ['S', 'c']:
-                    s = '"' + v.tostring().decode('ascii') + '"'
+                if v.dtype.char in ["S", "c"]:
+                    s = '"' + v.tostring().decode("ascii") + '"'
                 else:
                     s = str(v.tolist())
             else:
                 s = str(v)
             n += '("%s","%s","%s",%s),\n' % (path, t, d, s)
-        n += ']\n'
-        filename = QFileDialog.getSaveFileName(self,
-                                               "Save selection list", ".", "*.py")
+        n += "]\n"
+        filename = QFileDialog.getSaveFileName(self, "Save selection list", ".", "*.py")
         if filename[0] == "":
             return
-        with open(str(filename[0]), 'w+') as f:
+        with open(str(filename[0]), "w+") as f:
             f.write(n)
 
     def deletelocal(self):
         pass
 
     def reset(self):
-        tlvcolsnames = ['Path', 'Name', 'SIDS type', 'DT', 'Value']
+        tlvcolsnames = ["Path", "Name", "SIDS type", "DT", "Value"]
         self._tb.clear()
         self._tb.setColumnCount(len(tlvcolsnames))
         self._tb.setRowCount(0)
@@ -301,10 +315,10 @@ class Q7SelectionList(Q7Window, Ui_Q7SelectionWindow):
         self._parent.treeview.refreshView()
 
     def updateRowData(self, r, path):
-        it0 = QTableWidgetItem('%s ' % '/'.join(path.split('/')[:-1]))
+        it0 = QTableWidgetItem("%s " % "/".join(path.split("/")[:-1]))
         it0.setFont(QFont("Courier"))
         self._tb.setItem(r, 0, it0)
-        it1 = QTableWidgetItem('%s ' % path.split('/')[-1])
+        it1 = QTableWidgetItem("%s " % path.split("/")[-1])
         it1.parent = self
         ft = QFont("Courier")
         ft.setWeight(QFont.Bold)
@@ -319,7 +333,7 @@ class Q7SelectionList(Q7Window, Ui_Q7SelectionWindow):
             val = node.data(COLUMN_VALUE)
             if val == HIDEVALUE:
                 val = QIcon(QPixmap(":/images/icons/data-array-large.png"))
-                it3 = QTableWidgetItem(val, '')
+                it3 = QTableWidgetItem(val, "")
             else:
                 it3 = QTableWidgetItem(val)
                 it3.setFont(QFont("Courier"))
@@ -340,7 +354,7 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
     _allQueries = {}
 
     def __init__(self, control, fgindex, treeview):
-        Q7Window.__init__(self, Q7Window.VIEW_QUERY, control, '/', fgindex)
+        Q7Window.__init__(self, Q7Window.VIEW_QUERY, control, "/", fgindex)
         self.bClose.clicked.connect(self.reject)
         self.bRun.clicked.connect(self.runCurrent)
         self.bAdd.clicked.connect(self.queryAdd)
@@ -388,10 +402,10 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
         pass
 
     def infoQueryView(self):
-        self._control.helpWindow('Query')
+        self._control.helpWindow("Query")
 
     def updateTreeStatus(self):
-        print('query up')
+        print("query up")
 
     def queriesSave(self):
         self.queryCommit()
@@ -405,11 +419,10 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
         v = self.eUserVariable.text()
         f = "%s/%s" % (self.FG.filedir, self.FG.filename)
         s = q.getFullScript(f, c, v)
-        filename = QFileDialog.getSaveFileName(self,
-                                               "Save query script", ".", "*.py")
+        filename = QFileDialog.getSaveFileName(self, "Save query script", ".", "*.py")
         if filename[0] == "":
             return
-        with open(str(filename[0]), 'w+') as f:
+        with open(str(filename[0]), "w+") as f:
             f.write(s)
         os.chmod(filename[0], 0o0750)
         self._modified = False
@@ -418,9 +431,11 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
         self._modified = True
         q = self.cQueryName.currentText()
         i = self.cQueryName.currentIndex()
-        reply = MSG.message('Delete query',
-                            """Do you really want to delete query [%s]?""" % q,
-                            MSG.YESNO)
+        reply = MSG.message(
+            "Delete query",
+            """Do you really want to delete query [%s]?""" % q,
+            MSG.YESNO,
+        )
         if reply == QMessageBox.Yes:
             del Q7Query._allQueries[q]
             self.cQueryName.removeItem(i)
@@ -463,9 +478,14 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
     def reject(self):
         reply = True
         if self._modified:
-            reply = MSG.wQuestion(self._control, 370, 'Leave query panel',
-                                  """There are unsaved modified queries,
-  leave this panel without save?""", again=False)
+            reply = MSG.wQuestion(
+                self._control,
+                370,
+                "Leave query panel",
+                """There are unsaved modified queries,
+  leave this panel without save?""",
+                again=False,
+            )
         if not reply:
             return
         else:
@@ -479,7 +499,7 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
         for qn in self.queriesNamesList():
             self.cQueryName.addItem(qn)
             gq.add(Q7Query._allQueries[qn].group)
-        self.cQueryGroup.addItem('*')
+        self.cQueryGroup.addItem("*")
         for gqn in gq:
             self.cQueryGroup.addItem(gqn)
 
@@ -508,11 +528,12 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
     def runCurrent(self):
         com = self.eText.toPlainText()
         v = self.eUserVariable.text()
-        q = Q7QueryEntry('__tmp__query__')
+        q = Q7QueryEntry("__tmp__query__")
         q.setScript(com)
         skp = list(self.FG.lazy)
-        r = q.run(self.FG.tree, self.FG.links, skp, False, v,
-                  self.FG.model.getSelected())
+        r = q.run(
+            self.FG.tree, self.FG.links, skp, False, v, self.FG.model.getSelected()
+        )
         self.eResult.initText(str(r))
         self.FG.model.markExtendToList(r)
         self.FG.model.updateSelected()
@@ -527,8 +548,9 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
         Q7Query._defaultQueriesNames = [n[0] for n in OCTXT._UsualQueries]
         for qe in allqueriestext:
             try:
-                q = Q7QueryEntry(qe[0], qe[1], qe[2], qe[3],
-                                 hasargs=qe[5], update=qe[4])
+                q = Q7QueryEntry(
+                    qe[0], qe[1], qe[2], qe[3], hasargs=qe[5], update=qe[4]
+                )
                 Q7Query._allQueries[qe[0]] = q
             except IndexError:
                 pass
@@ -573,7 +595,7 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
         for q in Q7Query._allQueries:
             g = Q7Query._allQueries[q].group
             gl.add(g)
-        return ['*'] + list(gl)
+        return ["*"] + list(gl)
 
     def getCurrentQuery(self):
         return self._currentQuery
@@ -583,7 +605,7 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
         self.cQueryName.clear()
         for qn in self.queriesNamesList():
             gp = Q7Query._allQueries[qn].group
-            if (group == '*') or (gp == group):
+            if (group == "*") or (gp == group):
                 self.cQueryName.addItem(qn)
         self.showQuery()
 
@@ -608,5 +630,6 @@ class Q7Query(Q7Window, Ui_Q7QueryWindow):
     @classmethod
     def queries(cls):
         return Q7Query.queriesNamesList()
+
 
 # -----------------------------------------------------------------

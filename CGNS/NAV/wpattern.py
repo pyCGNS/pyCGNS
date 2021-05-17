@@ -1,10 +1,10 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -19,7 +19,7 @@ import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.SIDS
 
 from qtpy.QtCore import Qt
-from qtpy.QtWidgets import (QFileDialog, QTableWidgetItem, QStyledItemDelegate)
+from qtpy.QtWidgets import QFileDialog, QTableWidgetItem, QStyledItemDelegate
 from qtpy.QtGui import QFont
 
 from CGNS.NAV.Q7PatternWindow import Ui_Q7PatternWindow
@@ -38,7 +38,7 @@ class Q7PatternList(QW, Ui_Q7PatternWindow):
         self.bDelete.setDisabled(True)
         self.bAdd.setDisabled(True)
         self._profiles = {}
-        self._profiles['SIDS'] = CGNS.PAT.SIDS.profile
+        self._profiles["SIDS"] = CGNS.PAT.SIDS.profile
         self.loadUserProfiles()
         self._modified = False
         self._initialized = False
@@ -47,13 +47,13 @@ class Q7PatternList(QW, Ui_Q7PatternWindow):
         self.patternTable._panel = self
 
     def infoPatternView(self):
-        self._control.helpWindow('Pattern')
+        self._control.helpWindow("Pattern")
 
     def clearSelection(self):
         if self._selected is not None:
             rold = self.findRow(*self._selected)
             if rold != -1:
-                it1 = QTableWidgetItem(self.IC(QW.I_EMPTY), '')
+                it1 = QTableWidgetItem(self.IC(QW.I_EMPTY), "")
                 self.patternTable.setItem(rold, 0, it1)
 
     def findRow(self, pit, nit):
@@ -79,7 +79,7 @@ class Q7PatternList(QW, Ui_Q7PatternWindow):
         self.clearSelection()
         self._selected = (pit, nit)
         self._control.copyPasteBuffer = self._profiles[pit][nit][0]
-        it1 = QTableWidgetItem(self.IC(QW.I_MARK), '')
+        it1 = QTableWidgetItem(self.IC(QW.I_MARK), "")
         self.patternTable.setItem(row, 0, it1)
 
     def show(self):
@@ -89,8 +89,7 @@ class Q7PatternList(QW, Ui_Q7PatternWindow):
         self.raise_()
 
     def patternsave(self):
-        filename = QFileDialog.getSaveFileName(self,
-                                               "Save pattern", ".", "*.py")
+        filename = QFileDialog.getSaveFileName(self, "Save pattern", ".", "*.py")
         if filename[0] == "":
             return
         # f=open(str(filename[0]),'w+')
@@ -102,7 +101,7 @@ class Q7PatternList(QW, Ui_Q7PatternWindow):
 
     def reset(self):
         tlvcols = 4
-        tlvcolsnames = ['S', 'Pattern', 'P', 'Comment']
+        tlvcolsnames = ["S", "Pattern", "P", "Comment"]
         v = self.patternTable
         v.setColumnCount(tlvcols)
         lh = v.horizontalHeader()
@@ -118,7 +117,7 @@ class Q7PatternList(QW, Ui_Q7PatternWindow):
                 pentry = prof[k]
                 v.setRowCount(v.rowCount() + 1)
                 r = v.rowCount() - 1
-                it1 = QTableWidgetItem(self.IC(QW.I_EMPTY), '')
+                it1 = QTableWidgetItem(self.IC(QW.I_EMPTY), "")
                 it2 = QTableWidgetItem(k)
                 it2.setFont(QFont("Courier"))
                 it3 = QTableWidgetItem(profkey)
@@ -153,8 +152,10 @@ class Q7PatternList(QW, Ui_Q7PatternWindow):
             return
         for pth in pthlistok:
             sys.path.append(pth)
-            modlist = [os.path.splitext(os.path.basename(mod))[0]
-                       for mod in glob.glob('%s/*' % pth)]
+            modlist = [
+                os.path.splitext(os.path.basename(mod))[0]
+                for mod in glob.glob("%s/*" % pth)
+            ]
             for m in modlist:
                 pym = importlib.import_module(m)
                 self._profiles[m] = pym.profile
@@ -166,5 +167,6 @@ class Q7PatternTableItemDelegate(QStyledItemDelegate):
         t = index.data(Qt.DisplayRole)
         r = option.rect.adjusted(2, 2, -2, -2)
         painter.drawText(r, Qt.AlignVCenter | Qt.AlignLeft, t, r)
+
 
 # -----------------------------------------------------------------

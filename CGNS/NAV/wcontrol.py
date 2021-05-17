@@ -1,14 +1,20 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
-from qtpy.QtCore import (Qt, QObject, Signal)
-from qtpy.QtWidgets import (QAction, QStyledItemDelegate, QStyleOptionViewItem,
-                            QMenu, QTableWidgetItem, QHeaderView)
+from qtpy.QtCore import Qt, QObject, Signal
+from qtpy.QtWidgets import (
+    QAction,
+    QStyledItemDelegate,
+    QStyleOptionViewItem,
+    QMenu,
+    QTableWidgetItem,
+    QHeaderView,
+)
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -31,10 +37,10 @@ from CGNS.NAV.wfingerprint import Q7Window as QW
 
 # -----------------------------------------------------------------
 class Q7SignalPool(QObject):
-    loadFile = Signal(name='loadFile')
-    saveFile = Signal(name='saveFile')
-    cancel = Signal(name='cancel')
-    loadCompleted = Signal(name='loadCompleted')
+    loadFile = Signal(name="loadFile")
+    saveFile = Signal(name="saveFile")
+    cancel = Signal(name="cancel")
+    loadCompleted = Signal(name="loadCompleted")
     buffer = None
     fgprint = None
     saveAs = False
@@ -59,18 +65,20 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.w = None
         self.fdialog = None
         import platform
+
         QW.control_log = MSG.Q7Log()
         QW.__init__(self, QW.VIEW_CONTROL, self, None, None)
-        self.versions = {'pycgnsversion': 'pyCGNS v%s' % config.version,
-                         #                       'chloneversion':'CHLone %s'%config.CHLONE_VERSION,
-                         'vtkversion': 'VTK v%s' % config.VTK_VERSION,
-                         'cythonversion': 'Cython v%s' % config.CYTHON_VERSION,
-                         'hdf5version': 'HDF5 v%s' % config.HDF5_VERSION,
-                         'numpyversion': 'numpy v%s' % config.NUMPY_VERSION,
-                         'pythonversion': 'python v%s' % platform.python_version(),
-                         'pyqtversion': 'PyQt v%s' % config.PYQT_VERSION,
-                         'qtversion': 'Qt v%s' % config.QT_VERSION,
-                         }
+        self.versions = {
+            "pycgnsversion": "pyCGNS v%s" % config.version,
+            #                       'chloneversion':'CHLone %s'%config.CHLONE_VERSION,
+            "vtkversion": "VTK v%s" % config.VTK_VERSION,
+            "cythonversion": "Cython v%s" % config.CYTHON_VERSION,
+            "hdf5version": "HDF5 v%s" % config.HDF5_VERSION,
+            "numpyversion": "numpy v%s" % config.NUMPY_VERSION,
+            "pythonversion": "python v%s" % platform.python_version(),
+            "pyqtversion": "PyQt v%s" % config.PYQT_VERSION,
+            "qtversion": "Qt v%s" % config.QT_VERSION,
+        }
         self.getHistory()
         self.bAbout.clicked.connect(self.about)
         self.bOptionView.clicked.connect(self.option)
@@ -136,7 +144,7 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.control_log.show()
 
     def infoControl(self):
-        self.helpWindow('Control')
+        self.helpWindow("Control")
 
     def helpWindowDoc(self, doc):
         if self.help is not None:
@@ -164,16 +172,24 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         if self.lastView is None:
             return
         (f, v, d) = Q7FingerPrint.infoView(self.lastView)
-        reply = MSG.wQuestion(self, 101, 'Double check...',
-                              """Do you want to close the tree and all its views,<br>
-                              and <b>forget unsaved</b> modifications?""")
+        reply = MSG.wQuestion(
+            self,
+            101,
+            "Double check...",
+            """Do you want to close the tree and all its views,<br>
+                              and <b>forget unsaved</b> modifications?""",
+        )
         if reply:
             f.closeAllViews()
 
     def closeAllTrees(self):
-        reply = MSG.wQuestion(self, 101, 'Double check...',
-                              """Do you want to close all the views,<br>
-                              and <b>forget unsaved</b> modifications?""")
+        reply = MSG.wQuestion(
+            self,
+            101,
+            "Double check...",
+            """Do you want to close all the views,<br>
+                              and <b>forget unsaved</b> modifications?""",
+        )
         if reply:
             Q7FingerPrint.closeAllTrees()
 
@@ -190,14 +206,16 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         lv = self.getIdxFromLine(idx.row())
         if lv is not None:
             self.lastView = lv
-            actlist = (("View information (Enter)", self.info),
-                       ("Raise selected view (Space)", self.raiseView),
-                       None,
-                       ("Close all trees", self.closeAllTrees),
-                       ("Close selected tree", self.closeTree),
-                       ("Close selected view (Del)", self.closeView))
+            actlist = (
+                ("View information (Enter)", self.info),
+                ("Raise selected view (Space)", self.raiseView),
+                None,
+                ("Close all trees", self.closeAllTrees),
+                ("Close selected tree", self.closeTree),
+                ("Close selected view (Del)", self.closeView),
+            )
             self.popupmenu.clear()
-            self.popupmenu.setTitle('Control view menu')
+            self.popupmenu.setTitle("Control view menu")
             for aparam in actlist:
                 if aparam is None:
                     self.popupmenu.addSeparator()
@@ -217,14 +235,23 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.wOption.show()
 
     def about(self):
-        MSG.wInfo(self, 100, "pyCGNS v%s" % OCTXT._ToolVersion,
-                  OCTXT._CopyrightNotice % self.versions, again=False)
+        MSG.wInfo(
+            self,
+            100,
+            "pyCGNS v%s" % OCTXT._ToolVersion,
+            OCTXT._CopyrightNotice % self.versions,
+            again=False,
+        )
 
     def closeApplication(self):
-        reply = MSG.wQuestion(self, 101, 'Double check...',
-                              """Do you want to quit %s,<b>close all views</b>
+        reply = MSG.wQuestion(
+            self,
+            101,
+            "Double check...",
+            """Do you want to quit %s,<b>close all views</b>
                               and forget unsaved modifications?"""
-                              % OCTXT._ToolName)
+            % OCTXT._ToolName,
+        )
         if reply == MSG.OK:
             Q7FingerPrint.closeAllTrees()
             if self.help is not None:
@@ -256,7 +283,7 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         ctw.control = self
         cth = ctw.horizontalHeader()
         ctw.verticalHeader().hide()
-        h = ['S', 'T', 'View', 'Dir', 'File', 'Node']
+        h = ["S", "T", "View", "Dir", "File", "Node"]
         for i in range(len(h)):
             hi = QTableWidgetItem(h[i])
             hi.setFont(OCTXT._Label_Font)
@@ -276,22 +303,26 @@ class Q7Main(QW, Ui_Q7ControlWindow):
                 pass
 
     def modifiedLine(self, n, stat, fg):
-        if ((Q7FingerPrint.STATUS_MODIFIED in stat) and
-                (Q7FingerPrint.STATUS_SAVEABLE in stat)):
-            stitem = QTableWidgetItem(self.IC(QW.I_MOD_SAV), '')
-            stitem.setToolTip('Tree modified and saveable')
-        if ((Q7FingerPrint.STATUS_MODIFIED in stat) and
-                (Q7FingerPrint.STATUS_SAVEABLE not in stat)):
-            stitem = QTableWidgetItem(self.IC(QW.I_MOD_USAV), '')
-            stitem.setToolTip('Tree modified but NOT saveable')
-        if ((Q7FingerPrint.STATUS_MODIFIED not in stat) and
-                (Q7FingerPrint.STATUS_SAVEABLE not in stat)):
-            stitem = QTableWidgetItem(self.IC(QW.I_UMOD_USAV), '')
-            stitem.setToolTip('Tree unmodified and NOT saveable')
-        if ((Q7FingerPrint.STATUS_MODIFIED not in stat) and
-                (Q7FingerPrint.STATUS_SAVEABLE in stat)):
-            stitem = QTableWidgetItem(self.IC(QW.I_UMOD_SAV), '')
-            stitem.setToolTip('Tree unmodified and saveable')
+        if (Q7FingerPrint.STATUS_MODIFIED in stat) and (
+            Q7FingerPrint.STATUS_SAVEABLE in stat
+        ):
+            stitem = QTableWidgetItem(self.IC(QW.I_MOD_SAV), "")
+            stitem.setToolTip("Tree modified and saveable")
+        if (Q7FingerPrint.STATUS_MODIFIED in stat) and (
+            Q7FingerPrint.STATUS_SAVEABLE not in stat
+        ):
+            stitem = QTableWidgetItem(self.IC(QW.I_MOD_USAV), "")
+            stitem.setToolTip("Tree modified but NOT saveable")
+        if (Q7FingerPrint.STATUS_MODIFIED not in stat) and (
+            Q7FingerPrint.STATUS_SAVEABLE not in stat
+        ):
+            stitem = QTableWidgetItem(self.IC(QW.I_UMOD_USAV), "")
+            stitem.setToolTip("Tree unmodified and NOT saveable")
+        if (Q7FingerPrint.STATUS_MODIFIED not in stat) and (
+            Q7FingerPrint.STATUS_SAVEABLE in stat
+        ):
+            stitem = QTableWidgetItem(self.IC(QW.I_UMOD_SAV), "")
+            stitem.setToolTip("Tree unmodified and saveable")
         stitem.setTextAlignment(Qt.AlignCenter)
         self.controlTable.setItem(n, 0, stitem)
         self.controlTable.item(n, 3).setText(str(fg.filedir))
@@ -302,28 +333,28 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         ctw.setRowCount(ctw.rowCount() + 1)
         r = ctw.rowCount() - 1
         if l[1] == QW.VIEW_TREE:
-            tpitem = QTableWidgetItem(self.IC(QW.I_TREE), '')
+            tpitem = QTableWidgetItem(self.IC(QW.I_TREE), "")
         if l[1] == QW.VIEW_FORM:
-            tpitem = QTableWidgetItem(self.IC(QW.I_FORM), '')
+            tpitem = QTableWidgetItem(self.IC(QW.I_FORM), "")
         if l[1] == QW.VIEW_VTK:
-            tpitem = QTableWidgetItem(self.IC(QW.I_VTK), '')
+            tpitem = QTableWidgetItem(self.IC(QW.I_VTK), "")
         if l[1] == QW.VIEW_QUERY:
-            tpitem = QTableWidgetItem(self.IC(QW.I_QUERY), '')
+            tpitem = QTableWidgetItem(self.IC(QW.I_QUERY), "")
         if l[1] == QW.VIEW_SELECT:
-            tpitem = QTableWidgetItem(self.IC(QW.I_SELECT), '')
+            tpitem = QTableWidgetItem(self.IC(QW.I_SELECT), "")
         if l[1] == QW.VIEW_DIAG:
-            tpitem = QTableWidgetItem(self.IC(QW.I_DIAG), '')
+            tpitem = QTableWidgetItem(self.IC(QW.I_DIAG), "")
         if l[1] == QW.VIEW_TOOLS:
-            tpitem = QTableWidgetItem(self.IC(QW.I_TOOLS), '')
+            tpitem = QTableWidgetItem(self.IC(QW.I_TOOLS), "")
             l = l[0:2] + [None, None, None]
         if l[1] == QW.VIEW_LINK:
-            tpitem = QTableWidgetItem(self.IC(QW.I_LINK), '')
+            tpitem = QTableWidgetItem(self.IC(QW.I_LINK), "")
         if l[1] == QW.VIEW_DIFF:
-            tpitem = QTableWidgetItem(self.IC(QW.I_DIFF), '')
+            tpitem = QTableWidgetItem(self.IC(QW.I_DIFF), "")
         tpitem.setTextAlignment(Qt.AlignCenter)
         ctw.setItem(r, 1, tpitem)
         for i in range(len(l) - 2):
-            it = QTableWidgetItem('%s ' % (l[i + 2]))
+            it = QTableWidgetItem("%s " % (l[i + 2]))
             if i in [0]:
                 it.setTextAlignment(Qt.AlignCenter)
             else:
@@ -373,35 +404,37 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.lockView(False)
 
     def loadStart(self, *args):
-        self._T('loading: [%s]' % self.signals.buffer)
+        self._T("loading: [%s]" % self.signals.buffer)
         self.busyCursor()
         Q7FingerPrint.treeLoad(self, self.signals.buffer)
         Q7FingerPrint.refreshScreen()
 
     def setDefaults(self):
         self.loadOptions()
-        self._application.setStyleSheet(self.wOption._options['UserCSS'])
+        self._application.setStyleSheet(self.wOption._options["UserCSS"])
 
     def loadCompleted(self, *args, **kwargs):
         self.lockView(False)
-        if 'dataset_name' in kwargs:
-            filedir = kwargs['dataset_base']
-            filename = kwargs['dataset_name']
-            tree = kwargs['dataset_tree']
-            links = kwargs['dataset_references']
-            paths = kwargs['dataset_paths']
-            fgprint = Q7FingerPrint(self, filedir, filename,
-                                    tree, links, paths, **kwargs)
+        if "dataset_name" in kwargs:
+            filedir = kwargs["dataset_base"]
+            filename = kwargs["dataset_name"]
+            tree = kwargs["dataset_tree"]
+            links = kwargs["dataset_references"]
+            paths = kwargs["dataset_paths"]
+            fgprint = Q7FingerPrint(
+                self, filedir, filename, tree, links, paths, **kwargs
+            )
         else:
             fgprint = self.signals.fgprint
         if len(fgprint) > 1:
             code = fgprint[1][0]
-            msg0 = fgprint[1][1]            
+            msg0 = fgprint[1][1]
             msg1 = fgprint[1][2]
             MSG.wError(self, code, msg0, msg1)
         elif fgprint.tree is None:
-            MSG.wError(self, 201, 'Load error',
-                       'Fatal error while loading file, empty tree')
+            MSG.wError(
+                self, 201, "Load error", "Fatal error while loading file, empty tree"
+            )
         else:
             child = self.loadQ7Tree(fgprint)
             child.show()
@@ -413,12 +446,12 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         self.readyCursor()
 
     def saving(self, *args):
-        self._T('saving as: [%s]' % self.signals.buffer)
+        self._T("saving as: [%s]" % self.signals.buffer)
         self.busyCursor()
-        Q7FingerPrint.treeSave(self, self.signals.fgprint, self.signals.buffer,
-                               self.signals.saveAs)
-        self.setHistory(self.signals.fgprint.filedir,
-                        self.signals.fgprint.filename)
+        Q7FingerPrint.treeSave(
+            self, self.signals.fgprint, self.signals.buffer, self.signals.saveAs
+        )
+        self.setHistory(self.signals.fgprint.filedir, self.signals.fgprint.filename)
         self.updateViews()
         self.signals.fgprint.getInfo(force=True)
         self.readyCursor()
@@ -432,7 +465,7 @@ class Q7Main(QW, Ui_Q7ControlWindow):
     def loadlast(self):
         if self.getLastFile() is None:
             return
-        self.signals.buffer = self.getLastFile()[0] + '/' + self.getLastFile()[1]
+        self.signals.buffer = self.getLastFile()[0] + "/" + self.getLastFile()[1]
         if self.signals.buffer is None:
             self.load()
         else:
@@ -452,15 +485,15 @@ class Q7Main(QW, Ui_Q7ControlWindow):
     def savedirect(self, fgprint):
         self.signals.fgprint = fgprint
         self.signals.saveAs = False
-        self.signals.buffer = fgprint.filedir + '/' + fgprint.filename
+        self.signals.buffer = fgprint.filedir + "/" + fgprint.filename
         self.signals.saveFile.emit()
 
     def edit(self):
-        self._T('edit new')
+        self._T("edit new")
         tree = CGL.newCGNSTree()
         tc = self.newtreecount
         self.busyCursor()
-        fgprint = Q7FingerPrint(self, '.', 'new#%.3d.hdf' % tc, tree, [], [])
+        fgprint = Q7FingerPrint(self, ".", "new#%.3d.hdf" % tc, tree, [], [])
         child = self.loadQ7Tree(fgprint)
         fgprint._status = [Q7FingerPrint.STATUS_MODIFIED]
         self.readyCursor()
@@ -473,7 +506,9 @@ class Q7Main(QW, Ui_Q7ControlWindow):
     def loadQ7Tree(self, fgprint):
         from CGNS.NAV.wtree import Q7Tree
         from CGNS.NAV.mtree import Q7TreeModel
+
         Q7TreeModel(fgprint.index)
-        return Q7Tree(self, '/', fgprint.index)
+        return Q7Tree(self, "/", fgprint.index)
+
 
 # -----------------------------------------------------------------
