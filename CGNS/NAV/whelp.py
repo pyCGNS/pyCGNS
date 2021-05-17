@@ -1,10 +1,10 @@
 #  -------------------------------------------------------------------------
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
-#  See license.txt file in the root directory of this Python module source  
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from qtpy.QtWidgets import QWidget
 from qtpy.QtGui import QTextCursor
@@ -41,8 +41,9 @@ class Q7Help(QWidget, Ui_Q7HelpWindow):
 
 HELPDOCS = {
     # --------------------------------------------------------------------------
-    'Control': ('Control panel',
-                """
+    "Control": (
+        "Control panel",
+        """
                 <h2>Control panel</h2>
                 The main panel of CGNS.NAV is a summary of views. The list gives you
                 short information about the file/tree being viewed and allows you some
@@ -140,10 +141,12 @@ HELPDOCS = {
                 <td> close CGNS.NAV and all its views</td></tr>
                 </table>
                 
-                """),
+                """,
+    ),
     # --------------------------------------------------------------------------
-    'Tree': ('Tree view',
-             """
+    "Tree": (
+        "Tree view",
+        """
              <h2>Tree view</h2>
              
              The main window you would use for browsing/editing a CGNS/Python tree is
@@ -298,10 +301,12 @@ HELPDOCS = {
              See user options for directory and file used for this snapshot.</td></tr>
              </table>
              
-             """),
+             """,
+    ),
     # --------------------------------------------------------------------------
-    'VTK': ('VTK view',
-            """
+    "VTK": (
+        "VTK view",
+        """
             <h2>VTK view</h2>
             
             <h3>Selection list</h3>
@@ -383,10 +388,12 @@ HELPDOCS = {
             
             To unselect all and clear the list of selected actors, just move the mouse on
             the graphic window background and press [space].
-            """),
+            """,
+    ),
     # --------------------------------------------------------------------------
-    'Link': ('Link view',
-             """
+    "Link": (
+        "Link view",
+        """
              <h2>Link view</h2>
              
              <b>When you copy a node path you SHOULD NOT add the CGNSTree root</b>
@@ -394,10 +401,12 @@ HELPDOCS = {
              <h3>Buttons</h3>
              <p>
              
-             """),
+             """,
+    ),
     # --------------------------------------------------------------------------
-    'Form': ('Form view',
-             """
+    "Form": (
+        "Form view",
+        """
              <h2>Form view</h2>
              
              This view shows all information it can find about a node. The <i>Form view</i>
@@ -428,10 +437,12 @@ HELPDOCS = {
              text tool than a spreadsheet-like tool. The <i>Text</i> tab is available only
              for text data.
              
-             """),
+             """,
+    ),
     # --------------------------------------------------------------------------
-    'Query': ('Query view',
-              """
+    "Query": (
+        "Query view",
+        """
               <h3><font color=red>WARNING</font></h3>
               The queries can modify your CGNS/Python tree in such a way that it could
               become non-compliant, inconsistant in CGNS/Python or even <font color=red>
@@ -488,10 +499,12 @@ HELPDOCS = {
               <td>Save all queries</td></tr>
               </table>
               
-              """),
+              """,
+    ),
     # --------------------------------------------------------------------------
-    'Option': ('Option panel',
-               """
+    "Option": (
+        "Option panel",
+        """
                <h2>Option panel</h2>
                <font color=red>Oups! the Option panel is a MODAL window, which means
                it blocks all other windows until you answer to it. So if you want to
@@ -524,10 +537,12 @@ HELPDOCS = {
                
                <p>
                <img source=":/images/icons/unselected.png">
-               """),
+               """,
+    ),
     # --------------------------------------------------------------------------
-    'File': ('File panel',
-             """
+    "File": (
+        "File panel",
+        """
              <h2>File panel</h2>
              <font color=red>Oups! the File panel is a MODAL window, which means
              it blocks all other windows until you answer to it. So if you want to
@@ -583,10 +598,12 @@ HELPDOCS = {
              <h3>Buttons</h3>
              <p>
              <img source=":/images/icons/unselected.png">
-             """),
+             """,
+    ),
     # --------------------------------------------------------------------------
-    'Selection': ('Selection view',
-                  """
+    "Selection": (
+        "Selection view",
+        """
                   <h2>Selection view</h2>
                   
                   The <i>Selection view</i> lists the selected nodes resulting from a query or
@@ -653,10 +670,12 @@ HELPDOCS = {
                   
                   # --- last line
                   </pre>
-                  """),
+                  """,
+    ),
     # --------------------------------------------------------------------------
-    'Diagnosis': ('Diagnosis view',
-                  """
+    "Diagnosis": (
+        "Diagnosis view",
+        """
                   <h2>Diagnosis view</h2>
                   
                   A <i>Diagnosis view</i> is associated to one <i>Tree view</i> once a check
@@ -704,10 +723,12 @@ HELPDOCS = {
                   }
                   </pre>
                   
-                  """),
+                  """,
+    ),
     # --------------------------------------------------------------------------
-    'Info': ('Info panel',
-             """
+    "Info": (
+        "Info panel",
+        """
              <h2>Info panel</h2>
              
              Gives all details on the top file you use to load/save the target CGNS/Tree.
@@ -724,16 +745,20 @@ HELPDOCS = {
              
              A translated file is stored into a temporary directory, the <i>Info panel</i>
              shows you which is the actual original file name and the temporary filename.
-             """),
+             """,
+    ),
     # --------------------------------------------------------------------------
-    'Pattern': ('Pattern panel',
-                """
+    "Pattern": (
+        "Pattern panel",
+        """
                 <h2>Pattern panel</h2>
                 
-                """),
+                """,
+    ),
     # --------------------------------------------------------------------------
-    'Tools': ('Tools panel',
-              """
+    "Tools": (
+        "Tools panel",
+        """
               <h2>Tools panel</h2>
               
               <h1>Search</h1>
@@ -746,17 +771,20 @@ HELPDOCS = {
               is True if at least one child has this name. With the NOT clause, the check
               is True if NO child has the name 'FamilyName'.
               
-              """),
+              """,
+    ),
     # --------------------------------------------------------------------------
-    'Message': ('Message window',
-                """
+    "Message": (
+        "Message window",
+        """
                 <h2>About Messages</h2>
                 
                 Some info messages have the <i>don't show again</b> check box.
                 If you set this once, you would never see the message again, unless you
                 re-activate it in the <b>Option Panel</b>
                 
-                """),
+                """,
+    ),
     # --------------------------------------------------------------------------
 }
 

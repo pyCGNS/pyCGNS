@@ -1,10 +1,10 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -45,8 +45,8 @@ class Q7PythonEditor(QTextEdit):
         QTextEdit.__init__(self, parent)
         self.highlighter = Q7PythonEditorHighlighter(self.document())
         fsz = 12
-        ffm = 'Courier'
-        self.setStyleSheet("font: %dpt \"%s\";" % (fsz, ffm))
+        ffm = "Courier"
+        self.setStyleSheet('font: %dpt "%s";' % (fsz, ffm))
 
     def initText(self, text):
         self.clear()
@@ -68,27 +68,27 @@ class Q7PythonEditorHighlighter(QSyntaxHighlighter):
         autovars = r"\bNODE\b|\bNAME\b|\bVALUE\b|\bSIDSTYPE\b|\bCHILDREN\b"
         autovars += r"|\bTREE\b|\bPATH\b|\bRESULT\b|\bARGS\b|\bPARENT\b"
         autovars += r"|\bLINKS\b|\bSKIPS\b"
-        numbers = r'[-+]?\d+' + '|[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
-        comment = r'\#.*$'
+        numbers = r"[-+]?\d+" + "|[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?"
+        comment = r"\#.*$"
         textstring = r'"[^"]*?"|\'[^\']*?\''
         self.f_keywords = QTextCharFormat()
         self.f_keywords.setFontWeight(QFont.Bold)
-        self.f_keywords.setForeground(QColor('Blue'))
+        self.f_keywords.setForeground(QColor("Blue"))
         self.f_comment = QTextCharFormat()
         self.f_comment.setFontWeight(QFont.Light)
-        self.f_comment.setForeground(QColor('Red'))
+        self.f_comment.setForeground(QColor("Red"))
         self.f_constants = QTextCharFormat()
         self.f_constants.setFontWeight(QFont.Light)
-        self.f_constants.setForeground(QColor('Navy'))
+        self.f_constants.setForeground(QColor("Navy"))
         self.f_autovars = QTextCharFormat()
         self.f_autovars.setFontWeight(QFont.Bold)
-        self.f_autovars.setForeground(QColor('Green'))
+        self.f_autovars.setForeground(QColor("Green"))
         self.f_textstring = QTextCharFormat()
         self.f_textstring.setFontWeight(QFont.Bold)
-        self.f_textstring.setForeground(QColor('Coral'))
+        self.f_textstring.setForeground(QColor("Coral"))
         self.f_numbers = QTextCharFormat()
         self.f_numbers.setFontWeight(QFont.Light)
-        self.f_numbers.setForeground(QColor('Gray'))
+        self.f_numbers.setForeground(QColor("Gray"))
         self.r_keywords = re.compile(keywords)
         self.r_numbers = re.compile(numbers)
         self.r_comment = re.compile(comment)
@@ -127,7 +127,7 @@ class Q7Log(QDialog, Ui_Q7LogWindow):
         self.setWindowTitle("%s: Log" % OCTXT._ToolName)
         self.eLog.setReadOnly(True)
         self.eLog.setAcceptRichText(False)
-        self.eLog.setStyleSheet("font: 12pt \"Courier\";")
+        self.eLog.setStyleSheet('font: 12pt "Courier";')
 
     def write(self, msg):
         self.eLog.insertPlainText(msg)
@@ -147,16 +147,19 @@ class Q7MessageBox(QDialog, Ui_Q7MessageWindow):
         self.bOK.clicked.connect(self.runOK)
         self.bCANCEL.clicked.connect(self.runCANCEL)
         self.bInfo.setDisabled(True)
-        self._text = ''
+        self._text = ""
         self._control = control
         self._code = 0
 
     def setMode(self, cancel=False, again=False):
-        if (not again): self.cNotAgain.hide()
-        if (not cancel): self.bCANCEL.hide()
+        if not again:
+            self.cNotAgain.hide()
+        if not cancel:
+            self.bCANCEL.hide()
 
-    def setLayout(self, text, btype=INFO,
-                  cancel=False, again=False, buttons=('OK', 'Cancel')):
+    def setLayout(
+        self, text, btype=INFO, cancel=False, again=False, buttons=("OK", "Cancel")
+    ):
         self.bOK.setText(buttons[0])
         if len(buttons) > 1:
             self.bCANCEL.setText(buttons[1])
@@ -176,8 +179,8 @@ class Q7MessageBox(QDialog, Ui_Q7MessageWindow):
         self.setResult(QDialog.Rejected)
 
     def addToSkip(self):
-        if (self.cNotAgain.isChecked()):
-            if (self._code and self._code not in OCTXT.IgnoredMessages):
+        if self.cNotAgain.isChecked():
+            if self._code and self._code not in OCTXT.IgnoredMessages:
                 OCTXT.IgnoredMessages += [self._code]
 
     def showAndWait(self):
@@ -190,31 +193,45 @@ class Q7MessageBox(QDialog, Ui_Q7MessageWindow):
 
 def wError(control, code, info, error):
     txt = """<img source=":/images/icons/user-G.png">  <big>ERROR #%d</big><hr>
-         %s<br>%s""" % (code, error, info)
-    if (code in OCTXT.IgnoredMessages): return True
+         %s<br>%s""" % (
+        code,
+        error,
+        info,
+    )
+    if code in OCTXT.IgnoredMessages:
+        return True
     msg = Q7MessageBox(control, code)
     msg.setWindowTitle("%s: Error" % OCTXT._ToolName)
-    msg.setLayout(txt, btype=ERROR, cancel=False, again=True, buttons=('Close',))
+    msg.setLayout(txt, btype=ERROR, cancel=False, again=True, buttons=("Close",))
     return msg.showAndWait()
 
 
-def wQuestion(control, code, title, question, again=True, buttons=('OK', 'Cancel')):
+def wQuestion(control, code, title, question, again=True, buttons=("OK", "Cancel")):
     txt = """<img source=":/images/icons/user-M.png">
-         <b> <big>%s</big></b><hr>%s""" % (title, question)
-    if (code in OCTXT.IgnoredMessages): return True
+         <b> <big>%s</big></b><hr>%s""" % (
+        title,
+        question,
+    )
+    if code in OCTXT.IgnoredMessages:
+        return True
     msg = Q7MessageBox(control, code)
     msg.setWindowTitle("%s: Question" % OCTXT._ToolName)
     msg.setLayout(txt, btype=QUESTION, cancel=True, again=again, buttons=buttons)
     return msg.showAndWait()
 
 
-def wInfo(control, code, title, info, again=True, buttons=('Close',)):
+def wInfo(control, code, title, info, again=True, buttons=("Close",)):
     txt = """<img source=":/images/icons/user-S.png">
-         <b> <big>%s</big></b><hr>%s""" % (title, info)
-    if (code in OCTXT.IgnoredMessages): return True
+         <b> <big>%s</big></b><hr>%s""" % (
+        title,
+        info,
+    )
+    if code in OCTXT.IgnoredMessages:
+        return True
     msg = Q7MessageBox(control, code)
     msg.setWindowTitle("%s: Info" % OCTXT._ToolName)
     msg.setLayout(txt, btype=INFO, cancel=False, again=again, buttons=buttons)
     return msg.showAndWait()
+
 
 # --- last line

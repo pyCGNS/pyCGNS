@@ -1,11 +1,11 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
 from __future__ import division
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -46,10 +46,11 @@ class Q7TableItemDelegate(QStyledItemDelegate):
 # -----------------------------------------------------------------
 class Q7Form(Q7Window, Ui_Q7FormWindow):
     def __init__(self, control, node, fgprintindex):
-        Q7Window.__init__(self, Q7Window.VIEW_FORM, control,
-                          node.sidsPath(), fgprintindex)
+        Q7Window.__init__(
+            self, Q7Window.VIEW_FORM, control, node.sidsPath(), fgprintindex
+        )
         self._node = node
-        self._operatorlist = ['']
+        self._operatorlist = [""]
         for t in self._node.sidsTypeList():
             self.eType.addItem(t)
         self.bClose.clicked.connect(self.reject)
@@ -60,7 +61,7 @@ class Q7Form(Q7Window, Ui_Q7FormWindow):
             self.cDataType.addItem(dt)
 
     def infoFormView(self):
-        self._control.helpWindow('Form')
+        self._control.helpWindow("Form")
 
     def updateTreeStatus(self):
         pass
@@ -98,7 +99,7 @@ class Q7Form(Q7Window, Ui_Q7FormWindow):
             self.ls = 1
             for x in dims[1:]:
                 self.ls *= x
-        self.showparams = {'cs': self.cs, 'ls': self.ls, 'mode': 'IJ'}
+        self.showparams = {"cs": self.cs, "ls": self.ls, "mode": "IJ"}
         for dp in divpairs(self.cs * self.ls):
             self.cRowColSize.addItem("%d x %d" % dp)
         ix = self.cRowColSize.findText("%d x %d" % (self.cs, self.ls))
@@ -134,19 +135,19 @@ class Q7Form(Q7Window, Ui_Q7FormWindow):
         self.tPython.setDisabled(True)
         if self._node.sidsDataType() == CGK.C1:
             if self._node.sidsValue().ndim > 1:
-                txt = self._node.sidsValue().T.tostring().decode('ascii')
+                txt = self._node.sidsValue().T.tostring().decode("ascii")
                 self.cFortranOrderOff.setChecked(True)
                 self.cFortranOrderOff.setDisabled(True)
             else:
-                txt = self._node.sidsValue().tostring().decode('ascii')
+                txt = self._node.sidsValue().tostring().decode("ascii")
             self.eText.initText(txt)
 
     def resizeTable(self):
         s = self.cRowColSize.currentText()
-        (r, c) = s.split('x')
+        (r, c) = s.split("x")
         self.cs = int(r)
         self.ls = int(c)
-        self.showparams = {'cs': self.cs, 'ls': self.ls, 'mode': 'IJ'}
+        self.showparams = {"cs": self.cs, "ls": self.ls, "mode": "IJ"}
         self.model = Q7TableModel(self._node, self.showparams)
         self.tableView.setModel(self.model)
         self.tableView.setStyleSheet(self._stylesheet)
@@ -181,5 +182,6 @@ class Q7Form(Q7Window, Ui_Q7FormWindow):
 
     def doRelease(self):
         pass
+
 
 # -----------------------------------------------------------------

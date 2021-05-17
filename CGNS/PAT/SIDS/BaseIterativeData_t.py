@@ -1,6 +1,6 @@
 #  ---------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System -
-#  See license.txt file in the root directory of this Python module source  
+#  See license.txt file in the root directory of this Python module source
 #  ---------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
@@ -15,13 +15,13 @@ C.newDataArray(data, K.NumberOfZones_s)
 C.newDataArray(data, K.NumberOfFamilies_s)
 C.newDataArray(data, K.ZonePointers_s)
 C.newDataArray(data, K.FamilyPointers_s)
-C.newDataArray(data, '{DataArray}')
+C.newDataArray(data, "{DataArray}")
 C.newDataClass(data)
 C.newDimensionalUnits(data)
-C.newUserDefinedData(data, '{UserDefinedData}')
-C.newDescriptor(data, '{Descriptor}')
+C.newUserDefinedData(data, "{UserDefinedData}")
+C.newDescriptor(data, "{Descriptor}")
 #
-status = '11.1.1'
-comment = 'Full SIDS with all optionals'
+status = "11.1.1"
+comment = "Full SIDS with all optionals"
 pattern = [data, status, comment]
 #

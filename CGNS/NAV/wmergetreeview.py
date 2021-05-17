@@ -1,18 +1,18 @@
 #  -------------------------------------------------------------------------
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
-#  See license.txt file in the root directory of this Python module source  
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import CGNS.PAT.cgnsutils as CGU
 
-from qtpy.QtCore import (Qt, QModelIndex, QPoint)
-from qtpy.QtWidgets import (QStyledItemDelegate, QMenu)
-from qtpy.QtGui import (QColor, QFont, QIcon, QPixmap)
+from qtpy.QtCore import Qt, QModelIndex, QPoint
+from qtpy.QtWidgets import QStyledItemDelegate, QMenu
+from qtpy.QtGui import QColor, QFont, QIcon, QPixmap
 
 from CGNS.NAV.Q7MergeWindow import Ui_Q7MergeWindow
 from CGNS.NAV.wfingerprint import Q7Window
@@ -43,9 +43,9 @@ class Q7MergeItemDelegate(QStyledItemDelegate):
         pth = CGU.getPathNoRoot(self._parent.modelData(index).sidsPath())
         if (self._merge is not None) and (pth in self._merge):
             if self._merge[pth] == MERGE_NA:
-                self._parent.modelData(index).setUserStatePrivate('A')
+                self._parent.modelData(index).setUserStatePrivate("A")
             if self._merge[pth] == MERGE_NB:
-                self._parent.modelData(index).setUserStatePrivate('B')
+                self._parent.modelData(index).setUserStatePrivate("B")
         if col == NMT.COLUMN_NAME:
             if nnm not in OCTXT._ReservedNames:
                 option.font.setWeight(QFont.Bold)
@@ -144,9 +144,9 @@ class Q7Merge(Q7Window, Ui_Q7MergeWindow):
         self.popupmenu = QMenu()
         self.proxyA = self._fgprint.model
         self.treeview.setModel(self.proxyA)
-        self.treeview.setItemDelegate(Q7MergeItemDelegate(self.treeview,
-                                                          self._fgprint.model,
-                                                          ldiag, lmerge))
+        self.treeview.setItemDelegate(
+            Q7MergeItemDelegate(self.treeview, self._fgprint.model, ldiag, lmerge)
+        )
         self.treeview.setControlWindow(self, self._fgprint.model)
         self.treeview.hideColumn(NMT.COLUMN_FLAG_LINK)
         self.treeview.hideColumn(NMT.COLUMN_FLAG_CHECK)
@@ -181,22 +181,22 @@ class Q7Merge(Q7Window, Ui_Q7MergeWindow):
         for k in diag:
             ldiag[k] = DIFF_NX
             for d in diag[k]:
-                if d[0] == 'NA':
+                if d[0] == "NA":
                     ldiag[d[1]] = DIFF_NA
                     lmerge[d[1]] = MERGE_NB
-                if d[0] == 'ND':
+                if d[0] == "ND":
                     ldiag[d[1]] = DIFF_ND
                     lmerge[d[1]] = MERGE_NA
-                if d[0] in ['CT']:
+                if d[0] in ["CT"]:
                     ldiag[k] = DIFF_CT
                     lmerge[k] = MERGE_NA
-                if d[0] in ['C3', 'C1', 'C2']:
+                if d[0] in ["C3", "C1", "C2"]:
                     ldiag[k] = DIFF_CQ
                     lmerge[k] = MERGE_NA
-                if d[0] in ['C6', 'C7']:
+                if d[0] in ["C6", "C7"]:
                     ldiag[k] = DIFF_CV
                     lmerge[k] = MERGE_NA
-                if d[0] in ['C4', 'C5']:
+                if d[0] in ["C4", "C5"]:
                     ldiag[k] = DIFF_CS
                     lmerge[k] = MERGE_NA
         return (ldiag, lmerge)
@@ -218,7 +218,7 @@ class Q7Merge(Q7Window, Ui_Q7MergeWindow):
         return self.modelIndex(idx).internalPointer()
 
     def infoTreeView(self):
-        self._control.helpWindow('Tree')
+        self._control.helpWindow("Tree")
 
     def savediff(self):
         pass
@@ -259,7 +259,7 @@ class Q7Merge(Q7Window, Ui_Q7MergeWindow):
             return False
         if nodeidx.internalPointer() is None:
             return False
-        if nodeidx.internalPointer().sidsPath() == '/CGNSTree':
+        if nodeidx.internalPointer().sidsPath() == "/CGNSTree":
             return False
         self.setLastEntered(nodeidxs)
         if nodeidx != -1:
@@ -269,34 +269,50 @@ class Q7Merge(Q7Window, Ui_Q7MergeWindow):
             actlist = (
                 ("About %s" % node.sidsType(), self.aboutSIDS, None, False),
                 None,
-                ("Mark/unmark node", self.marknode, 'Space', False),
-                ("Add new child node", self.newnodechild, 'Ctrl+A', False),
-                ("Add new brother node", self.newnodebrother, 'Ctrl+Z', False),
+                ("Mark/unmark node", self.marknode, "Space", False),
+                ("Add new child node", self.newnodechild, "Ctrl+A", False),
+                ("Add new brother node", self.newnodebrother, "Ctrl+Z", False),
                 None,
-                ("Open form", self.popform, 'Ctrl+F', False),
-                ("Open view", self.openSubTree, 'Ctrl+W', False),
-                ("Open view on linked-to file", self.openLkTree, 'Ctrl+O', lknode),
+                ("Open form", self.popform, "Ctrl+F", False),
+                ("Open view", self.openSubTree, "Ctrl+W", False),
+                ("Open view on linked-to file", self.openLkTree, "Ctrl+O", lknode),
                 None,
-                ("Load node data in memory", self.dataLoad, 'Ctrl+L', not lznode),
-                ("Release memory node data", self.dataRelease, 'Ctrl+R', lznode),
+                ("Load node data in memory", self.dataLoad, "Ctrl+L", not lznode),
+                ("Release memory node data", self.dataRelease, "Ctrl+R", lznode),
                 None,
-                ("Copy", self.mcopy, 'Ctrl+C', False),
-                ("Cut", self.mcut, 'Ctrl+X', False),
-                ("Paste as brother", self.mpasteasbrother, 'Ctrl+V', False),
-                ("Paste as child", self.mpasteaschild, 'Ctrl+Y', False),
+                ("Copy", self.mcopy, "Ctrl+C", False),
+                ("Cut", self.mcut, "Ctrl+X", False),
+                ("Paste as brother", self.mpasteasbrother, "Ctrl+V", False),
+                ("Paste as child", self.mpasteaschild, "Ctrl+Y", False),
                 None,
-                ("Cut all selected", self.mcutselected, 'Ctrl+Shift+X', False),
-                ("Paste as brother for each selected",
-                 self.mpasteasbrotherselected, 'Ctrl+Shift+V', False),
-                ("Paste as child for each selected",
-                 self.mpasteaschildselected, 'Ctrl+Shift+Y', False),
-                ("Load nodes data in memory for each selected",
-                 self.dataLoadSelected, 'Ctrl+Shift+L', False),
-                ("Release memory node data for each selected",
-                 self.dataReleaseSelected, 'Ctrl+Shift+R', False),
+                ("Cut all selected", self.mcutselected, "Ctrl+Shift+X", False),
+                (
+                    "Paste as brother for each selected",
+                    self.mpasteasbrotherselected,
+                    "Ctrl+Shift+V",
+                    False,
+                ),
+                (
+                    "Paste as child for each selected",
+                    self.mpasteaschildselected,
+                    "Ctrl+Shift+Y",
+                    False,
+                ),
+                (
+                    "Load nodes data in memory for each selected",
+                    self.dataLoadSelected,
+                    "Ctrl+Shift+L",
+                    False,
+                ),
+                (
+                    "Release memory node data for each selected",
+                    self.dataReleaseSelected,
+                    "Ctrl+Shift+R",
+                    False,
+                ),
             )
             self.popupmenu.clear()
-            self.popupmenu.setTitle('Node menu')
+            self.popupmenu.setTitle("Node menu")
             for aparam in actlist:
                 if aparam is None:
                     self.popupmenu.addSeparator()
@@ -341,5 +357,6 @@ class Q7Merge(Q7Window, Ui_Q7MergeWindow):
 
     def leave(self):
         self.close()
+
 
 # -----------------------------------------------------------------

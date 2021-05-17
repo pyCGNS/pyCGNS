@@ -1,6 +1,6 @@
 #  -------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System
-#  See license.txt file in the root directory of this Python module source  
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 # Change these values to fit your installation
 #
@@ -14,10 +14,10 @@
 #
 
 if False:
-    NUMPY_VERSION = ''
+    NUMPY_VERSION = ""
     NUMPY_PATH_INCLUDES = []
-    NUMPY_PATH_LIBRARIES = ['']
-    NUMPY_LINK_LIBRARIES = ['']
+    NUMPY_PATH_LIBRARIES = [""]
+    NUMPY_LINK_LIBRARIES = [""]
     NUMPY_EXTRA_ARGS = []
 #
 # --- stuff to add for HDF5 (used by MAP)
@@ -25,10 +25,14 @@ if False:
 #     installation. Thus non-standard installs would require to set these vars
 #
 if True:
-    HDF5_VERSION = ''
-    HDF5_PATH_INCLUDES = ['',]
-    HDF5_PATH_LIBRARIES = ['',]
-    HDF5_LINK_LIBRARIES = ['hdf5']
-    HDF5_EXTRA_ARGS = ['-Wno-return-type']
+    HDF5_VERSION = ""
+    HDF5_PATH_INCLUDES = [
+        "",
+    ]
+    HDF5_PATH_LIBRARIES = [
+        "",
+    ]
+    HDF5_LINK_LIBRARIES = ["hdf5"]
+    HDF5_EXTRA_ARGS = ["-Wno-return-type"]
 
 # -------------------------------------------------------------------------

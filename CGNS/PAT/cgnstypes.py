@@ -1,10 +1,10 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 import CGNS.PAT.cgnskeywords as CGK
 
@@ -17,14 +17,14 @@ tlistA = [
 
 allDT = [CGK.C1, CGK.MT, CGK.I4, CGK.I8, CGK.R4, CGK.R8]  # LK is default
 
-C_00 = 'Zero/Zero'
-C_01 = 'Zero/One'
-C_11 = 'One/One'
-C_0N = 'Zero/N'
-C_1N = 'One/N'
-C_NN = 'N/N'
+C_00 = "Zero/Zero"
+C_01 = "Zero/One"
+C_11 = "One/One"
+C_0N = "Zero/N"
+C_1N = "One/N"
+C_NN = "N/N"
 
-UD = '{UserDefined}'
+UD = "{UserDefined}"
 
 allCARD = [C_01, C_11, C_0N, C_1N, C_NN]
 
@@ -199,8 +199,13 @@ cgt[t].names = [CGK.PointRange_s, CGK.PointRangeDonor_s, CGK.ElementRange_s, UD]
 t = CGK.IndexArray_ts
 cgt[t] = CGNStype(t, dtype=[CGK.I4, CGK.I8, CGK.R4, CGK.R8])
 cgt[t].shape = (0, 0)
-cgt[t].names = [CGK.PointList_s, CGK.PointListDonor_s, CGK.CellListDonor_s,
-                CGK.InwardNormalList_s, UD]
+cgt[t].names = [
+    CGK.PointList_s,
+    CGK.PointListDonor_s,
+    CGK.CellListDonor_s,
+    CGK.InwardNormalList_s,
+    UD,
+]
 
 # --------------------------------------------------------
 t = CGK.ReferenceState_ts
@@ -214,8 +219,11 @@ cgt[t].addChild(CGK.UserDefinedData_ts)
 
 # --------------------------------------------------------
 t = CGK.ConvergenceHistory_ts
-cgt[t] = CGNStype(t, names=[CGK.GlobalConvergenceHistory_s,
-                            CGK.ZoneConvergenceHistory_s], dtype=[CGK.I4])
+cgt[t] = CGNStype(
+    t,
+    names=[CGK.GlobalConvergenceHistory_s, CGK.ZoneConvergenceHistory_s],
+    dtype=[CGK.I4],
+)
 cgt[t].shape = (1,)
 cgt[t].addChild(CGK.Descriptor_ts)
 cgt[t].addChild(CGK.Descriptor_ts, CGK.NormDefinitions_s)
@@ -556,7 +564,9 @@ cgt[t].addChild(CGK.DataArray_ts, card=C_0N)
 cgt[t].addChild(CGK.Rind_ts, CGK.Rind_s, card=C_01)
 cgt[t].addChild(CGK.DataClass_ts, CGK.DataClass_s, card=C_01)
 cgt[t].addChild(CGK.DimensionalUnits_ts, CGK.DimensionalUnits_s, card=C_01)
-cgt[t].addChild(CGK.Descriptor_ts, [CGK.BCRegionName_s, CGK.GridConnectivityRegionName_s], card=C_0N)
+cgt[t].addChild(
+    CGK.Descriptor_ts, [CGK.BCRegionName_s, CGK.GridConnectivityRegionName_s], card=C_0N
+)
 cgt[t].addChild(CGK.UserDefinedData_ts, card=C_0N)
 
 # --------------------------------------------------------
@@ -685,8 +695,7 @@ cgt[t].addChild(CGK.BCProperty_ts, CGK.BCProperty_s)
 
 # --------------------------------------------------------
 t = CGK.ArbitraryGridMotionType_ts
-cgt[t] = CGNStype(t, dtype=[CGK.C1],
-                  names=[CGK.ArbitraryGridMotionType_s])
+cgt[t] = CGNStype(t, dtype=[CGK.C1], names=[CGK.ArbitraryGridMotionType_s])
 cgt[t].shape = (0,)
 cgt[t].addChild(CGK.DataArray_ts, card=C_0N)
 cgt[t].addChild(CGK.GridLocation_ts, CGK.GridLocation_s)
@@ -744,11 +753,16 @@ cgt[t].addChild(CGK.DataClass_ts, [CGK.DataClass_s], card=C_01)
 cgt[t].addChild(CGK.DimensionalUnits_ts, [CGK.DimensionalUnits_s], card=C_01)
 cgt[t].addChild(CGK.Descriptor_ts)
 cgt[t].addChild(CGK.UserDefinedData_ts)
-cgt[t].addChild(CGK.DataArray_ts, [CGK.RigidGridMotionPointers_s,
-                                   CGK.ArbitraryGridMotionPointers_s,
-                                   CGK.FlowSolutionPointers_s,
-                                   CGK.ZoneGridConnectivityPointers_s,
-                                   CGK.ZoneSubRegionPointers_s])
+cgt[t].addChild(
+    CGK.DataArray_ts,
+    [
+        CGK.RigidGridMotionPointers_s,
+        CGK.ArbitraryGridMotionPointers_s,
+        CGK.FlowSolutionPointers_s,
+        CGK.ZoneGridConnectivityPointers_s,
+        CGK.ZoneSubRegionPointers_s,
+    ],
+)
 
 # --------------------------------------------------------
 t = CGK.RigidGridMotion_ts
@@ -759,10 +773,15 @@ cgt[t].addChild(CGK.DataClass_ts, [CGK.DataClass_s], card=C_01)
 cgt[t].addChild(CGK.DimensionalUnits_ts, [CGK.DimensionalUnits_s], card=C_01)
 cgt[t].addChild(CGK.Descriptor_ts)
 cgt[t].addChild(CGK.UserDefinedData_ts)
-cgt[t].addChild(CGK.DataArray_ts, [CGK.OriginLocation_s,
-                                   CGK.RigidRotationAngle_s,
-                                   CGK.RigidRotationRate_s,
-                                   CGK.RigidVelocity_s])
+cgt[t].addChild(
+    CGK.DataArray_ts,
+    [
+        CGK.OriginLocation_s,
+        CGK.RigidRotationAngle_s,
+        CGK.RigidRotationRate_s,
+        CGK.RigidVelocity_s,
+    ],
+)
 
 # --------------------------------------------------------
 t = CGK.ArbitraryGridMotion_ts

@@ -1,17 +1,17 @@
 #  -------------------------------------------------------------------------
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
-#  See license.txt file in the root directory of this Python module source  
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
-#from CGNS.NAV.moption import Q7OptionContext as OCTXT
+# from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
 import re
 
 from qtpy.QtWidgets import QTextEdit
-from qtpy.QtGui import (QColor, QSyntaxHighlighter, QTextCursor, QFont, QTextCharFormat)
+from qtpy.QtGui import QColor, QSyntaxHighlighter, QTextCursor, QFont, QTextCharFormat
 
 
 # -----------------------------------------------------------------
@@ -32,8 +32,8 @@ class Q7PythonEditor(QTextEdit):
         QTextEdit.__init__(self, parent)
         self.highlighter = Q7PythonEditorHighlighter(self.document())
         fsz = 12
-        ffm = 'Courier'
-        self.setStyleSheet("font: %dpt \"%s\";" % (fsz, ffm))
+        ffm = "Courier"
+        self.setStyleSheet('font: %dpt "%s";' % (fsz, ffm))
 
     def initText(self, text):
         self.clear()
@@ -55,27 +55,27 @@ class Q7PythonEditorHighlighter(QSyntaxHighlighter):
         autovars = r"\bNODE\b|\bNAME\b|\bVALUE\b|\bSIDSTYPE\b|\bCHILDREN\b"
         autovars += r"|\bTREE\b|\bPATH\b|\bRESULT\b|\bARGS\b|\bPARENT\b"
         autovars += r"|\bLINKS\b|\bSKIPS\b|\bSELECTED\b"
-        numbers = r'[-+]?\d+' + '|[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
-        comment = r'\#.*$'
+        numbers = r"[-+]?\d+" + "|[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?"
+        comment = r"\#.*$"
         textstring = r'"[^"]*?"|\'[^\']*?\''
         self.f_keywords = QTextCharFormat()
         self.f_keywords.setFontWeight(QFont.Bold)
-        self.f_keywords.setForeground(QColor('Blue'))
+        self.f_keywords.setForeground(QColor("Blue"))
         self.f_comment = QTextCharFormat()
         self.f_comment.setFontWeight(QFont.Light)
-        self.f_comment.setForeground(QColor('Red'))
+        self.f_comment.setForeground(QColor("Red"))
         self.f_constants = QTextCharFormat()
         self.f_constants.setFontWeight(QFont.Light)
-        self.f_constants.setForeground(QColor('Navy'))
+        self.f_constants.setForeground(QColor("Navy"))
         self.f_autovars = QTextCharFormat()
         self.f_autovars.setFontWeight(QFont.Bold)
-        self.f_autovars.setForeground(QColor('Green'))
+        self.f_autovars.setForeground(QColor("Green"))
         self.f_textstring = QTextCharFormat()
         self.f_textstring.setFontWeight(QFont.Bold)
-        self.f_textstring.setForeground(QColor('Coral'))
+        self.f_textstring.setForeground(QColor("Coral"))
         self.f_numbers = QTextCharFormat()
         self.f_numbers.setFontWeight(QFont.Light)
-        self.f_numbers.setForeground(QColor('Gray'))
+        self.f_numbers.setForeground(QColor("Gray"))
         self.r_keywords = re.compile(keywords)
         self.r_numbers = re.compile(numbers)
         self.r_comment = re.compile(comment)
@@ -102,5 +102,6 @@ class Q7PythonEditorHighlighter(QSyntaxHighlighter):
             for m in mit:
                 self.setFormat(m.span()[0], m.span()[1], fmt)
                 self.setFormat(m.span()[1], fmax, fdef)
+
 
 # --- last line

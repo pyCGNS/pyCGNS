@@ -1,8 +1,8 @@
 #  ---------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  ---------------------------------------------------------------------------
-#  
+#
 """
  TYPES, ENUMERATES, CONSTANTS, NAMES from CGNS/MLL
 
@@ -35,9 +35,10 @@
  
 """
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 # ----------------------------------------------------------------------------
+
 
 def stringAsKeyDict(l):
     return dict(zip(l, range(len(l))))
@@ -51,7 +52,7 @@ def enumAsKeyDict(l):
 # --- ADF-level Datatypes
 #
 # MT: No data; LK: Link
-adftypes = ('C1', 'I4', 'I8', 'R4', 'R8', 'MT', 'LK')
+adftypes = ("C1", "I4", "I8", "R4", "R8", "MT", "LK")
 (C1, I4, I8, R4, R8, MT, LK) = adftypes
 
 # --------------------------------------------------
@@ -79,21 +80,21 @@ CGNSLIBRARYVERSION = 4.0
 # -------------------------------------------------- (NOT SIDS)
 # --- CGNS/Python mapping extensions
 #
-CGNSTree_ts = 'CGNSTree_t'
-CGNSTree_s = 'CGNSTree'
+CGNSTree_ts = "CGNSTree_t"
+CGNSTree_s = "CGNSTree"
 
 # --- Type with weird (coming from outer space) names
 #
-Transform_ts = 'Transform_t'
-DiffusionModel_ts = 'DiffusionModel_t'
-EquationDimension_ts = 'EquationDimension_t'
-InwardNormalIndex_ts = 'InwardNormalIndex_t'
-IntIndexDimension_ts = 'IntIndexDimension_t'
+Transform_ts = "Transform_t"
+DiffusionModel_ts = "DiffusionModel_t"
+EquationDimension_ts = "EquationDimension_t"
+InwardNormalIndex_ts = "InwardNormalIndex_t"
+IntIndexDimension_ts = "IntIndexDimension_t"
 
 # --- Add legacy strings for translation tools
 #
 Transform_ts2 = '"int[IndexDimension]"'
-Transform_ts3 = 'int[IndexDimension]'
+Transform_ts3 = "int[IndexDimension]"
 DiffusionModel_ts2 = '"int[1+...+IndexDimension]"'
 EquationDimension_ts2 = '"int"'
 InwardNormalIndex_ts2 = '"int[IndexDimension]"'
@@ -124,13 +125,13 @@ Kilogram_s = "Kilogram"
 Gram_s = "Gram"
 Slug_s = "Slug"
 PoundMass_s = "PoundMass"
-MassUnits_l = [Null_s, UserDefined_s,
-               Kilogram_s, Gram_s, Slug_s, PoundMass_s]
+MassUnits_l = [Null_s, UserDefined_s, Kilogram_s, Gram_s, Slug_s, PoundMass_s]
 
 MassUnits = stringAsKeyDict(MassUnits_l)
 MassUnits_ = enumAsKeyDict(MassUnits_l)
-(MassUnitsNull, MassUnitsUserDefined,
- Kilogram, Gram, Slug, PoundMass) = list(MassUnits_)
+(MassUnitsNull, MassUnitsUserDefined, Kilogram, Gram, Slug, PoundMass) = list(
+    MassUnits_
+)
 
 # --------------------------------------------------
 Meter_s = "Meter"
@@ -138,13 +139,27 @@ Centimeter_s = "Centimeter"
 Millimeter_s = "Millimeter"
 Foot_s = "Foot"
 Inch_s = "Inch"
-LengthUnits_l = [Null_s, UserDefined_s,
-                 Meter_s, Centimeter_s, Millimeter_s, Foot_s, Inch_s]
+LengthUnits_l = [
+    Null_s,
+    UserDefined_s,
+    Meter_s,
+    Centimeter_s,
+    Millimeter_s,
+    Foot_s,
+    Inch_s,
+]
 
 LengthUnits = stringAsKeyDict(LengthUnits_l)
 LengthUnits_ = enumAsKeyDict(LengthUnits_l)
-(LengthUnitsNull, LengthUnitsUserDefined,
- Meter, Centimeter, Millimeter, Foot, Inch) = list(LengthUnits_)
+(
+    LengthUnitsNull,
+    LengthUnitsUserDefined,
+    Meter,
+    Centimeter,
+    Millimeter,
+    Foot,
+    Inch,
+) = list(LengthUnits_)
 
 # --------------------------------------------------
 Second_s = "Second"
@@ -159,13 +174,25 @@ Kelvin_s = "Kelvin"
 Celcius_s = "Celcius"
 Rankine_s = "Rankine"
 Fahrenheit_s = "Fahrenheit"
-TemperatureUnits_l = [Null_s, UserDefined_s,
-                      Kelvin_s, Celcius_s, Rankine_s, Fahrenheit_s]
+TemperatureUnits_l = [
+    Null_s,
+    UserDefined_s,
+    Kelvin_s,
+    Celcius_s,
+    Rankine_s,
+    Fahrenheit_s,
+]
 
 TemperatureUnits = stringAsKeyDict(TemperatureUnits_l)
 TemperatureUnits_ = enumAsKeyDict(TemperatureUnits_l)
-(TemperatureUnitsNull, TemperatureUnitsUserDefined,
- Kelvin, Celcius, Rankine, Fahrenheit) = list(TemperatureUnits_)
+(
+    TemperatureUnitsNull,
+    TemperatureUnitsUserDefined,
+    Kelvin,
+    Celcius,
+    Rankine,
+    Fahrenheit,
+) = list(TemperatureUnits_)
 
 # --------------------------------------------------
 Degree_s = "Degree"
@@ -182,30 +209,52 @@ Abampere_s = "Abampere"
 Statampere_s = "Statampere"
 Edison_s = "Edison"
 auCurrent_s = "auCurrent"
-ElectricCurrentUnits_l = [Null_s, UserDefined_s,
-                          Ampere_s, Abampere_s, Statampere_s,
-                          Edison_s, auCurrent_s]
+ElectricCurrentUnits_l = [
+    Null_s,
+    UserDefined_s,
+    Ampere_s,
+    Abampere_s,
+    Statampere_s,
+    Edison_s,
+    auCurrent_s,
+]
 
 ElectricCurrentUnits = stringAsKeyDict(ElectricCurrentUnits_l)
 ElectricCurrentUnits_ = enumAsKeyDict(ElectricCurrentUnits_l)
-(ElectricCurrentUnitsNull, ElectricCurrentUnitsUserDefined,
- Ampere, Abampere, Statampere,
- Edison, auCurrent) = list(ElectricCurrentUnits_)
+(
+    ElectricCurrentUnitsNull,
+    ElectricCurrentUnitsUserDefined,
+    Ampere,
+    Abampere,
+    Statampere,
+    Edison,
+    auCurrent,
+) = list(ElectricCurrentUnits_)
 
 # --------------------------------------------------
 Mole_s = "Mole"
 Entities_s = "Entities"
 StandardCubicFoot_s = "StandardCubicFoot"
 StandardCubicMeter_s = "StandardCubicMeter"
-SubstanceAmountUnits_l = [Null_s, UserDefined_s,
-                          Mole_s, Entities_s,
-                          StandardCubicFoot_s, StandardCubicMeter_s]
+SubstanceAmountUnits_l = [
+    Null_s,
+    UserDefined_s,
+    Mole_s,
+    Entities_s,
+    StandardCubicFoot_s,
+    StandardCubicMeter_s,
+]
 
 SubstanceAmountUnits = stringAsKeyDict(SubstanceAmountUnits_l)
 SubstanceAmountUnits_ = enumAsKeyDict(SubstanceAmountUnits_l)
-(SubstanceAmountUnitsNull, SubstanceAmountUnitsUserDefined,
- Mole, Entities,
- StandardCubicFoot, StandardCubicMeter) = list(SubstanceAmountUnits_)
+(
+    SubstanceAmountUnitsNull,
+    SubstanceAmountUnitsUserDefined,
+    Mole,
+    Entities,
+    StandardCubicFoot,
+    StandardCubicMeter,
+) = list(SubstanceAmountUnits_)
 
 # --------------------------------------------------
 Candela_s = "Candela"
@@ -213,23 +262,39 @@ Candle_s = "Candle"
 Carcel_s = "Carcel"
 Hefner_s = "Hefner"
 Violle_s = "Violle"
-LuminousIntensityUnits_l = [Null_s, UserDefined_s,
-                            Candela_s, Candle_s, Carcel_s, Hefner_s, Violle_s]
+LuminousIntensityUnits_l = [
+    Null_s,
+    UserDefined_s,
+    Candela_s,
+    Candle_s,
+    Carcel_s,
+    Hefner_s,
+    Violle_s,
+]
 
 LuminousIntensityUnits = stringAsKeyDict(LuminousIntensityUnits_l)
 LuminousIntensityUnits_ = enumAsKeyDict(LuminousIntensityUnits_l)
-(LuminousIntensityUnitsNull, LuminousIntensityUnitsUserDefined,
- Candela, Candle, Carcel, Hefner, Violle) = list(LuminousIntensityUnits_)
+(
+    LuminousIntensityUnitsNull,
+    LuminousIntensityUnitsUserDefined,
+    Candela,
+    Candle,
+    Carcel,
+    Hefner,
+    Violle,
+) = list(LuminousIntensityUnits_)
 
 # --------------------------------------------------
 DimensionalUnits_s = "DimensionalUnits"
 AdditionalUnits_s = "AdditionalUnits"
 AdditionalExponents_s = "AdditionalExponents"
 
-AllDimensionalUnits_l = TimeUnits_l + MassUnits_l + LengthUnits_l \
-                        + TemperatureUnits_l + AngleUnits_l
-AllAdditionalUnits_l = LuminousIntensityUnits_l + SubstanceAmountUnits_l \
-                       + ElectricCurrentUnits_l
+AllDimensionalUnits_l = (
+    TimeUnits_l + MassUnits_l + LengthUnits_l + TemperatureUnits_l + AngleUnits_l
+)
+AllAdditionalUnits_l = (
+    LuminousIntensityUnits_l + SubstanceAmountUnits_l + ElectricCurrentUnits_l
+)
 AllUnits_l = AllDimensionalUnits_l + AllAdditionalUnits_l
 
 # --------------------------------------------------
@@ -242,14 +307,26 @@ NormalizedByUnknownDimensional_s = "NormalizedByUnknownDimensional"
 NondimensionalParameter_s = "NondimensionalParameter"
 DimensionlessConstant_s = "DimensionlessConstant"
 
-DataClass_l = [Null_s, UserDefined_s, Dimensional_s, NormalizedByDimensional_s,
-               NormalizedByUnknownDimensional_s, NondimensionalParameter_s,
-               DimensionlessConstant_s]
+DataClass_l = [
+    Null_s,
+    UserDefined_s,
+    Dimensional_s,
+    NormalizedByDimensional_s,
+    NormalizedByUnknownDimensional_s,
+    NondimensionalParameter_s,
+    DimensionlessConstant_s,
+]
 DataClass = stringAsKeyDict(DataClass_l)
 DataClass_ = enumAsKeyDict(DataClass_l)
-(Null, UserDefined, Dimensional, NormalizedByDimensional,
- NormalizedByUnknownDimensional, NondimensionalParameter,
- DimensionlessConstant) = list(DataClass_)
+(
+    Null,
+    UserDefined,
+    Dimensional,
+    NormalizedByDimensional,
+    NormalizedByUnknownDimensional,
+    NondimensionalParameter,
+    DimensionlessConstant,
+) = list(DataClass_)
 
 # ------------------------------------------------------------
 GridLocation_ts = "GridLocation_t"
@@ -266,13 +343,30 @@ JFaceCenter_s = "JFaceCenter"
 KFaceCenter_s = "KFaceCenter"
 EdgeCenter_s = "EdgeCenter"
 
-GridLocation_l = [Null_s, UserDefined_s, Vertex_s, CellCenter_s, FaceCenter_s,
-                  IFaceCenter_s, JFaceCenter_s, KFaceCenter_s,
-                  EdgeCenter_s]
+GridLocation_l = [
+    Null_s,
+    UserDefined_s,
+    Vertex_s,
+    CellCenter_s,
+    FaceCenter_s,
+    IFaceCenter_s,
+    JFaceCenter_s,
+    KFaceCenter_s,
+    EdgeCenter_s,
+]
 GridLocation = stringAsKeyDict(GridLocation_l)
 GridLocation_ = enumAsKeyDict(GridLocation_l)
-(Null, UserDefined, Vertex, CellCenter, FaceCenter,
- IFaceCenter, JFaceCenter, KFaceCenter, EdgeCenter) = list(GridLocation_)
+(
+    Null,
+    UserDefined,
+    Vertex,
+    CellCenter,
+    FaceCenter,
+    IFaceCenter,
+    JFaceCenter,
+    KFaceCenter,
+    EdgeCenter,
+) = list(GridLocation_)
 
 VertexSize_s = "VertexSize"
 CellSize_s = "CellSize"
@@ -290,13 +384,30 @@ ElementRange_s = "ElementRange"
 ElementList_s = "ElementList"
 CellListDonor_s = "CellListDonor"
 
-PointSetType_l = [Null_s, UserDefined_s,
-                  PointList_s, PointListDonor_s, PointRange_s, PointRangeDonor_s,
-                  ElementRange_s, ElementList_s, CellListDonor_s]
+PointSetType_l = [
+    Null_s,
+    UserDefined_s,
+    PointList_s,
+    PointListDonor_s,
+    PointRange_s,
+    PointRangeDonor_s,
+    ElementRange_s,
+    ElementList_s,
+    CellListDonor_s,
+]
 PointSetType = stringAsKeyDict(PointSetType_l)
 PointSetType_ = enumAsKeyDict(PointSetType_l)
-(Null, UserDefined, PointList, PointListDonor, PointRange, PointRangeDonor,
- ElementRange, ElementList, CellListDonor) = list(PointSetType_)
+(
+    Null,
+    UserDefined,
+    PointList,
+    PointListDonor,
+    PointRange,
+    PointRangeDonor,
+    ElementRange,
+    ElementList,
+    CellListDonor,
+) = list(PointSetType_)
 
 ZoneDonorName_s = "ZoneDonorName"
 
@@ -370,13 +481,27 @@ RealSingle_s = "RealSingle"
 RealDouble_s = "RealDouble"
 Character_s = "Character"
 
-DataType_l = [Null_s, UserDefined_s,
-              Integer_s, RealSingle_s, RealDouble_s, Character_s, LongInteger_s]
+DataType_l = [
+    Null_s,
+    UserDefined_s,
+    Integer_s,
+    RealSingle_s,
+    RealDouble_s,
+    Character_s,
+    LongInteger_s,
+]
 DataType = stringAsKeyDict(DataType_l)
 DataType_ = enumAsKeyDict(DataType_l)
 
-(DataTypeNull, DataTypeUserDefined,
- Integer, RealSingle, RealDouble, Character, LongInteger) = list(DataType_)
+(
+    DataTypeNull,
+    DataTypeUserDefined,
+    Integer,
+    RealSingle,
+    RealDouble,
+    Character,
+    LongInteger,
+) = list(DataType_)
 
 # --------------------------------------------------
 GridConnectivityType_ts = "GridConnectivityType_t"
@@ -389,13 +514,11 @@ Overset_s = "Overset"
 Abutting_s = "Abutting"
 Abutting1to1_s = "Abutting1to1"
 
-GridConnectivityType_l = [Null_s, UserDefined_s,
-                          Overset_s, Abutting_s, Abutting1to1_s]
+GridConnectivityType_l = [Null_s, UserDefined_s, Overset_s, Abutting_s, Abutting1to1_s]
 GridConnectivityType = stringAsKeyDict(GridConnectivityType_l)
 GridConnectivityType_ = enumAsKeyDict(GridConnectivityType_l)
 
-(Null, UserDefined,
- Overset, Abutting, Abutting1to1) = list(GridConnectivityType_)
+(Null, UserDefined, Overset, Abutting, Abutting1to1) = list(GridConnectivityType_)
 
 # --------------------------------------------------
 ZoneType_ts = "ZoneType_t"
@@ -449,8 +572,7 @@ DeformingGrid_s = "DeformingGrid"
 
 ArbitraryGridMotion_ts = "ArbitraryGridMotion_t"
 ArbitraryGridMotion_s = "ArbitraryGridMotion"
-ArbitraryGridMotionType_l = [Null_s, UserDefined_s,
-                             NonDeformingGrid_s, DeformingGrid_s]
+ArbitraryGridMotionType_l = [Null_s, UserDefined_s, NonDeformingGrid_s, DeformingGrid_s]
 ArbitraryGridMotion = stringAsKeyDict(ArbitraryGridMotionType_l)
 ArbitraryGridMotion_ = enumAsKeyDict(ArbitraryGridMotionType_l)
 
@@ -734,10 +856,16 @@ GridCoordinatesPointers_s = "GridCoordinatesPointers"
 FlowSolutionPointers_s = "FlowSolutionPointers"
 ZoneGridConnectivityPointers_s = "ZoneGridConnectivityPointers"
 ZoneSubRegionPointers_s = "ZoneSubRegionPointers"
-PointerNames_l = [ZonePointers_s, FamilyPointers_s, RigidGridMotionPointers_s,
-                  ArbitraryGridMotionPointers_s, GridCoordinatesPointers_s,
-                  FlowSolutionPointers_s,
-                  ZoneGridConnectivityPointers_s, ZoneSubRegionPointers_s]
+PointerNames_l = [
+    ZonePointers_s,
+    FamilyPointers_s,
+    RigidGridMotionPointers_s,
+    ArbitraryGridMotionPointers_s,
+    GridCoordinatesPointers_s,
+    FlowSolutionPointers_s,
+    ZoneGridConnectivityPointers_s,
+    ZoneSubRegionPointers_s,
+]
 
 OriginLocation_s = "OriginLocation"
 RigidRotationAngle_s = "RigidRotationAngle"
@@ -782,8 +910,7 @@ ConvergenceHistory_ts = "ConvergenceHistory_t"
 ZoneConvergenceHistory_s = "ZoneConvergenceHistory"
 GlobalConvergenceHistory_s = "GlobalConvergenceHistory"
 
-ConvergenceHistory_l = [ZoneConvergenceHistory_s,
-                        GlobalConvergenceHistory_s]
+ConvergenceHistory_l = [ZoneConvergenceHistory_s, GlobalConvergenceHistory_s]
 
 NormDefinitions_s = "NormDefinitions"
 
@@ -831,8 +958,15 @@ ICEMCFD_s = "ICEM-CFD"
 SDRC_s = "SDRC"
 Unigraphics_s = "Unigraphics"
 ProEngineer_s = "ProEngineer"
-GeometryFormat_l = [Null_s, NASAIGES_s, SDRC_s, Unigraphics_s,
-                    ProEngineer_s, ICEMCFD_s, UserDefined_s]
+GeometryFormat_l = [
+    Null_s,
+    NASAIGES_s,
+    SDRC_s,
+    Unigraphics_s,
+    ProEngineer_s,
+    ICEMCFD_s,
+    UserDefined_s,
+]
 GeometryReference_ts = "GeometryReference_t"
 GeometryReference_s = "GeometryReference"
 
@@ -877,18 +1011,30 @@ RotationCenter_s = "RotationCenter"
 GoverningEquations_s = "GoverningEquations"
 GoverningEquations_ts = "GoverningEquations_t"
 
-GoverningEquationsType_l = [Null_s, UserDefined_s,
-                            FullPotential_s, Euler_s, NSLaminar_s,
-                            NSTurbulent_s, NSLaminarIncompressible_s,
-                            NSTurbulentIncompressible_s]
+GoverningEquationsType_l = [
+    Null_s,
+    UserDefined_s,
+    FullPotential_s,
+    Euler_s,
+    NSLaminar_s,
+    NSTurbulent_s,
+    NSLaminarIncompressible_s,
+    NSTurbulentIncompressible_s,
+]
 GoverningEquationsType_s = "GoverningEquationsType"
 GoverningEquationsType_ts = "GoverningEquationsType_t"
 GoverningEquationsType = stringAsKeyDict(GoverningEquationsType_l)
 GoverningEquationsType_ = enumAsKeyDict(GoverningEquationsType_l)
-(GoverningEquationsNull, GoverningEquationUserDefined,
- FullPotential, Euler, NSLaminar,
- NSTurbulent, NSLaminarIncompressible,
- NSTurbulentIncompressible) = list(GoverningEquationsType_)
+(
+    GoverningEquationsNull,
+    GoverningEquationUserDefined,
+    FullPotential,
+    Euler,
+    NSLaminar,
+    NSTurbulent,
+    NSLaminarIncompressible,
+    NSTurbulentIncompressible,
+) = list(GoverningEquationsType_)
 
 # --------------------------------------------------
 BCType_s = "BCType"
@@ -922,28 +1068,64 @@ BCWallViscous_s = "BCWallViscous"
 BCWallViscousHeatFlux_s = "BCWallViscousHeatFlux"
 BCWallViscousIsothermal_s = "BCWallViscousIsothermal"
 
-BCType_l = [Null_s, UserDefined_s,
-            BCAxisymmetricWedge_s, BCDegenerateLine_s, BCDegeneratePoint_s,
-            BCDirichlet_s, BCExtrapolate_s, BCFarfield_s,
-            BCGeneral_s, BCInflow_s, BCInflowSubsonic_s, BCInflowSupersonic_s,
-            BCNeumann_s, BCOutflow_s, BCOutflowSubsonic_s, BCOutflowSupersonic_s,
-            BCSymmetryPlane_s, BCSymmetryPolar_s,
-            BCTunnelInflow_s, BCTunnelOutflow_s,
-            BCWall_s, BCWallInviscid_s, BCWallViscous_s,
-            BCWallViscousHeatFlux_s, BCWallViscousIsothermal_s,
-            FamilySpecified_s]
+BCType_l = [
+    Null_s,
+    UserDefined_s,
+    BCAxisymmetricWedge_s,
+    BCDegenerateLine_s,
+    BCDegeneratePoint_s,
+    BCDirichlet_s,
+    BCExtrapolate_s,
+    BCFarfield_s,
+    BCGeneral_s,
+    BCInflow_s,
+    BCInflowSubsonic_s,
+    BCInflowSupersonic_s,
+    BCNeumann_s,
+    BCOutflow_s,
+    BCOutflowSubsonic_s,
+    BCOutflowSupersonic_s,
+    BCSymmetryPlane_s,
+    BCSymmetryPolar_s,
+    BCTunnelInflow_s,
+    BCTunnelOutflow_s,
+    BCWall_s,
+    BCWallInviscid_s,
+    BCWallViscous_s,
+    BCWallViscousHeatFlux_s,
+    BCWallViscousIsothermal_s,
+    FamilySpecified_s,
+]
 BCType = stringAsKeyDict(BCType_l)
 BCType_ = enumAsKeyDict(BCType_l)
-(Null, UserDefined,
- BCAxisymmetricWedge, BCDegenerateLine, BCDegeneratePoint,
- BCDirichlet, BCExtrapolate, BCFarfield,
- BCGeneral, BCInflow, BCInflowSubsonic, BCInflowSupersonic,
- BCNeumann, BCOutflow, BCOutflowSubsonic, BCOutflowSupersonic,
- BCSymmetryPlane, BCSymmetryPolar,
- BCTunnelInflow, BCTunnelOutflow,
- BCWall, BCWallInviscid, BCWallViscous,
- BCWallViscousHeatFlux, BCWallViscousIsothermal,
- FamilySpecified) = list(BCType_)
+(
+    Null,
+    UserDefined,
+    BCAxisymmetricWedge,
+    BCDegenerateLine,
+    BCDegeneratePoint,
+    BCDirichlet,
+    BCExtrapolate,
+    BCFarfield,
+    BCGeneral,
+    BCInflow,
+    BCInflowSubsonic,
+    BCInflowSupersonic,
+    BCNeumann,
+    BCOutflow,
+    BCOutflowSubsonic,
+    BCOutflowSupersonic,
+    BCSymmetryPlane,
+    BCSymmetryPolar,
+    BCTunnelInflow,
+    BCTunnelOutflow,
+    BCWall,
+    BCWallInviscid,
+    BCWallViscous,
+    BCWallViscousHeatFlux,
+    BCWallViscousIsothermal,
+    FamilySpecified,
+) = list(BCType_)
 
 BC_l = BCType_l
 BC = BCType
@@ -955,15 +1137,32 @@ FamilyBC_ = BCType_
 
 # CAUTION, index of values in the lists below cannot be used as enumerate,
 # the lists are subset of the global list and some index are missing.
-BCTypeSimple_l = [Null_s, UserDefined_s, BCGeneral_s, BCDirichlet_s, BCNeumann_s,
-                  BCExtrapolate_s, BCWallInviscid_s, BCWallViscousHeatFlux_s,
-                  BCWallViscousIsothermal_s, BCWallViscous_s, BCWall_s,
-                  BCInflowSubsonic_s, BCInflowSupersonic_s, BCOutflowSubsonic_s,
-                  BCOutflowSupersonic_s, BCTunnelInflow_s, BCTunnelOutflow_s,
-                  BCDegenerateLine_s, BCDegeneratePoint_s, BCSymmetryPlane_s,
-                  BCSymmetryPolar_s, BCAxisymmetricWedge_s, FamilySpecified_s]
-BCTypeCompound_l = [Null_s, UserDefined_s,
-                    BCInflow_s, BCOutflow_s, BCFarfield_s]
+BCTypeSimple_l = [
+    Null_s,
+    UserDefined_s,
+    BCGeneral_s,
+    BCDirichlet_s,
+    BCNeumann_s,
+    BCExtrapolate_s,
+    BCWallInviscid_s,
+    BCWallViscousHeatFlux_s,
+    BCWallViscousIsothermal_s,
+    BCWallViscous_s,
+    BCWall_s,
+    BCInflowSubsonic_s,
+    BCInflowSupersonic_s,
+    BCOutflowSubsonic_s,
+    BCOutflowSupersonic_s,
+    BCTunnelInflow_s,
+    BCTunnelOutflow_s,
+    BCDegenerateLine_s,
+    BCDegeneratePoint_s,
+    BCSymmetryPlane_s,
+    BCSymmetryPolar_s,
+    BCAxisymmetricWedge_s,
+    FamilySpecified_s,
+]
+BCTypeCompound_l = [Null_s, UserDefined_s, BCInflow_s, BCOutflow_s, BCFarfield_s]
 
 # --------------------------------------------------
 # WARNING -
@@ -971,155 +1170,277 @@ BCTypeCompound_l = [Null_s, UserDefined_s,
 #   because the new values are add at the end of a global list (ModelType)
 #   then the ONLY enumerate to use is the ModelType one which has its own list
 #
-GasModelType_l = [Null_s, UserDefined_s,
-                  Ideal_s, VanderWaals_s, CaloricallyPerfect_s,
-                  ThermallyPerfect_s, ConstantDensity_s, RedlichKwong_s]
+GasModelType_l = [
+    Null_s,
+    UserDefined_s,
+    Ideal_s,
+    VanderWaals_s,
+    CaloricallyPerfect_s,
+    ThermallyPerfect_s,
+    ConstantDensity_s,
+    RedlichKwong_s,
+]
 GasModelType_s = "GasModelType"
 GasModelType_ts = "GasModelType_t"
-GasModelIdentifier_l = [IdealGasConstant_s, SpecificHeatRatio_s,
-                        SpecificHeatVolume_s, SpecificHeatPressure_s]
+GasModelIdentifier_l = [
+    IdealGasConstant_s,
+    SpecificHeatRatio_s,
+    SpecificHeatVolume_s,
+    SpecificHeatPressure_s,
+]
 
 ViscosityModel_ts = "ViscosityModel_t"
 ViscosityModel_s = "ViscosityModel"
-ViscosityModelType_l = [Null_s, UserDefined_s,
-                        Constant_s, PowerLaw_s, SutherlandLaw_s]
+ViscosityModelType_l = [Null_s, UserDefined_s, Constant_s, PowerLaw_s, SutherlandLaw_s]
 ViscosityModelType_s = "ViscosityModelType"
 ViscosityModelType_ts = "ViscosityModelType_t"
-ViscosityModelIdentifier_l = [PowerLawExponent_s, SutherlandLawConstant_s,
-                              TemperatureReference_s,
-                              ViscosityMolecularReference_s]
+ViscosityModelIdentifier_l = [
+    PowerLawExponent_s,
+    SutherlandLawConstant_s,
+    TemperatureReference_s,
+    ViscosityMolecularReference_s,
+]
 
 ThermalConductivityModel_ts = "ThermalConductivityModel_t"
 ThermalConductivityModel_s = "ThermalConductivityModel"
-ThermalConductivityModelType_l = [Null_s, UserDefined_s,
-                                  ConstantPrandtl_s, PowerLaw_s,
-                                  SutherlandLaw_s]
+ThermalConductivityModelType_l = [
+    Null_s,
+    UserDefined_s,
+    ConstantPrandtl_s,
+    PowerLaw_s,
+    SutherlandLaw_s,
+]
 ThermalConductivityModelType_s = "ThermalConductivityModelType"
 ThermalConductivityModelType_ts = "ThermalConductivityModelType_t"
-ThermalConductivityModelIdentifier_l = [Prandtl_s, PowerLawExponent_s,
-                                        SutherlandLawConstant_s,
-                                        TemperatureReference_s,
-                                        ThermalConductivityReference_s]
+ThermalConductivityModelIdentifier_l = [
+    Prandtl_s,
+    PowerLawExponent_s,
+    SutherlandLawConstant_s,
+    TemperatureReference_s,
+    ThermalConductivityReference_s,
+]
 
 TurbulenceModel_ts = "TurbulenceModel_t"
 TurbulenceModel_s = "TurbulenceModel"
-TurbulenceModelType_l = [Null_s, UserDefined_s,
-                         Algebraic_BaldwinLomax_s,
-                         Algebraic_CebeciSmith_s,
-                         HalfEquation_JohnsonKing_s,
-                         OneEquation_BaldwinBarth_s,
-                         OneEquation_SpalartAllmaras_s,
-                         TwoEquation_JonesLaunder_s,
-                         TwoEquation_MenterSST_s, TwoEquation_Wilcox_s]
+TurbulenceModelType_l = [
+    Null_s,
+    UserDefined_s,
+    Algebraic_BaldwinLomax_s,
+    Algebraic_CebeciSmith_s,
+    HalfEquation_JohnsonKing_s,
+    OneEquation_BaldwinBarth_s,
+    OneEquation_SpalartAllmaras_s,
+    TwoEquation_JonesLaunder_s,
+    TwoEquation_MenterSST_s,
+    TwoEquation_Wilcox_s,
+]
 TurbulenceModelType_s = "TurbulenceModelType"
 TurbulenceModelType_ts = "TurbulenceModelType_t"
 
 TurbulenceClosure_ts = "TurbulenceClosure_t"
 TurbulenceClosure_s = "TurbulenceClosure"
-TurbulenceClosureType_l = [Null_s, UserDefined_s,
-                           EddyViscosity_s, ReynoldsStress_s,
-                           ReynoldsStressAlgebraic_s]
+TurbulenceClosureType_l = [
+    Null_s,
+    UserDefined_s,
+    EddyViscosity_s,
+    ReynoldsStress_s,
+    ReynoldsStressAlgebraic_s,
+]
 TurbulenceClosureType_s = "TurbulenceClosureType"
 TurbulenceClosureType_ts = "TurbulenceClosureType_t"
 TurbulenceClosureIdentifier_l = [PrandtlTurbulent_s]
 
 ThermalRelaxationModel_ts = "ThermalRelaxationModel_t"
 ThermalRelaxationModel_s = "ThermalRelaxationModel"
-ThermalRelaxationModelType_l = [Null_s, UserDefined_s,
-                                Frozen_s, ThermalEquilib_s,
-                                ThermalNonequilib_s]
+ThermalRelaxationModelType_l = [
+    Null_s,
+    UserDefined_s,
+    Frozen_s,
+    ThermalEquilib_s,
+    ThermalNonequilib_s,
+]
 ThermalRelaxationModelType_s = "ThermalRelaxationModelType"
 ThermalRelaxationModelType_ts = "ThermalRelaxationModelType_t"
 
 ChemicalKineticsModel_ts = "ChemicalKineticsModel_t"
 ChemicalKineticsModel_s = "ChemicalKineticsModel"
-ChemicalKineticsModelType_l = [Null_s, UserDefined_s,
-                               Frozen_s, ChemicalEquilibCurveFit_s,
-                               ChemicalEquilibMinimization_s,
-                               ChemicalNonequilib_s]
+ChemicalKineticsModelType_l = [
+    Null_s,
+    UserDefined_s,
+    Frozen_s,
+    ChemicalEquilibCurveFit_s,
+    ChemicalEquilibMinimization_s,
+    ChemicalNonequilib_s,
+]
 ChemicalKineticsModelType_s = "ChemicalKineticsModelType"
 ChemicalKineticsModelType_ts = "ChemicalKineticsModelType_t"
 ChemicalKineticsModelIdentifier_l = [FuelAirRatio_s, ReferenceTemperatureHOF_s]
 
 EMElectricFieldModel_s = "EMElectricFieldModel"
 EMElectricFieldModel_ts = "EMElectricFieldModel_t"
-EMElectricFieldModelType_l = [Null_s, UserDefined_s,
-                              Constant_s, Frozen_s,
-                              Interpolated_s, Voltage_s]
+EMElectricFieldModelType_l = [
+    Null_s,
+    UserDefined_s,
+    Constant_s,
+    Frozen_s,
+    Interpolated_s,
+    Voltage_s,
+]
 EMElectricFieldModelType_s = "EMElectricFieldModelType"
 EMElectricFieldModelType_ts = "EMElectricFieldModelType_t"
 
 EMMagneticFieldModel_s = "EMMagneticFieldModel"
 EMMagneticFieldModel_ts = "EMMagneticFieldModel_t"
-EMMagneticFieldModelType_l = [Null_s, UserDefined_s,
-                              Constant_s, Frozen_s, Interpolated_s]
+EMMagneticFieldModelType_l = [
+    Null_s,
+    UserDefined_s,
+    Constant_s,
+    Frozen_s,
+    Interpolated_s,
+]
 EMMagneticFieldModelType_s = "EMMagneticFieldModelType"
 EMMagneticFieldModelType_ts = "EMMagneticFieldModelType_t"
 
 EMConductivityModel_s = "EMConductivityModel"
 EMConductivityModel_ts = "EMConductivityModel_t"
-EMConductivityModelType_l = [Null_s, UserDefined_s,
-                             Constant_s, Frozen_s,
-                             Equilibrium_LinRessler_s,
-                             Chemistry_LinRessler_s]
+EMConductivityModelType_l = [
+    Null_s,
+    UserDefined_s,
+    Constant_s,
+    Frozen_s,
+    Equilibrium_LinRessler_s,
+    Chemistry_LinRessler_s,
+]
 EMConductivityModelType_s = "EMConductivityModelType"
 EMConductivityModelType_ts = "EMConductivityModelType_t"
-EMConductivityModelIdentifier_l = [Null_s, UserDefined_s,
-                                   ElectricFieldX_s, ElectricFieldY_s,
-                                   ElectricFieldZ_s, MagneticFieldX_s,
-                                   MagneticFieldY_s, MagneticFieldZ_s,
-                                   CurrentDensityX_s, CurrentDensityY_s,
-                                   CurrentDensityZ_s, ElectricConductivity_s,
-                                   LorentzForceX_s, LorentzForceY_s,
-                                   LorentzForceZ_s, JouleHeating_s]
+EMConductivityModelIdentifier_l = [
+    Null_s,
+    UserDefined_s,
+    ElectricFieldX_s,
+    ElectricFieldY_s,
+    ElectricFieldZ_s,
+    MagneticFieldX_s,
+    MagneticFieldY_s,
+    MagneticFieldZ_s,
+    CurrentDensityX_s,
+    CurrentDensityY_s,
+    CurrentDensityZ_s,
+    ElectricConductivity_s,
+    LorentzForceX_s,
+    LorentzForceY_s,
+    LorentzForceZ_s,
+    JouleHeating_s,
+]
 
-ModelType_l = [Null_s, UserDefined_s,
-               Ideal_s, VanderWaals_s, Constant_s, PowerLaw_s, SutherlandLaw_s,
-               ConstantPrandtl_s, EddyViscosity_s, ReynoldsStress_s,
-               ReynoldsStressAlgebraic_s, Algebraic_BaldwinLomax_s,
-               Algebraic_CebeciSmith_s, HalfEquation_JohnsonKing_s,
-               OneEquation_BaldwinBarth_s, OneEquation_SpalartAllmaras_s,
-               TwoEquation_JonesLaunder_s, TwoEquation_MenterSST_s,
-               TwoEquation_Wilcox_s, CaloricallyPerfect_s, ThermallyPerfect_s,
-               ConstantDensity_s, RedlichKwong_s, Frozen_s, ThermalEquilib_s,
-               ThermalNonequilib_s, ChemicalEquilibCurveFit_s,
-               ChemicalEquilibMinimization_s, ChemicalNonequilib_s,
-               EMElectricField_s, EMMagneticField_s, EMConductivity_s,
-               Voltage_s, Interpolated_s, Equilibrium_LinRessler_s,
-               Chemistry_LinRessler_s]
+ModelType_l = [
+    Null_s,
+    UserDefined_s,
+    Ideal_s,
+    VanderWaals_s,
+    Constant_s,
+    PowerLaw_s,
+    SutherlandLaw_s,
+    ConstantPrandtl_s,
+    EddyViscosity_s,
+    ReynoldsStress_s,
+    ReynoldsStressAlgebraic_s,
+    Algebraic_BaldwinLomax_s,
+    Algebraic_CebeciSmith_s,
+    HalfEquation_JohnsonKing_s,
+    OneEquation_BaldwinBarth_s,
+    OneEquation_SpalartAllmaras_s,
+    TwoEquation_JonesLaunder_s,
+    TwoEquation_MenterSST_s,
+    TwoEquation_Wilcox_s,
+    CaloricallyPerfect_s,
+    ThermallyPerfect_s,
+    ConstantDensity_s,
+    RedlichKwong_s,
+    Frozen_s,
+    ThermalEquilib_s,
+    ThermalNonequilib_s,
+    ChemicalEquilibCurveFit_s,
+    ChemicalEquilibMinimization_s,
+    ChemicalNonequilib_s,
+    EMElectricField_s,
+    EMMagneticField_s,
+    EMConductivity_s,
+    Voltage_s,
+    Interpolated_s,
+    Equilibrium_LinRessler_s,
+    Chemistry_LinRessler_s,
+]
 ModelType = stringAsKeyDict(ModelType_l)
 ModelType_ = enumAsKeyDict(ModelType_l)
-(Null, UserDefined,
- Ideal, VanderWaals, Constant, PowerLaw, SutherlandLaw,
- ConstantPrandtl, EddyViscosity, ReynoldsStress,
- ReynoldsStressAlgebraic, Algebraic_BaldwinLomax,
- Algebraic_CebeciSmith, HalfEquation_JohnsonKing,
- OneEquation_BaldwinBarth, OneEquationpalartAllmaras,
- TwoEquation_JonesLaunder, TwoEquation_MenterSST,
- TwoEquation_Wilcox, CaloricallyPerfect, ThermallyPerfect,
- ConstantDensity, RedlichKwong, Frozen, ThermalEquilib,
- ThermalNonequilib, ChemicalEquilibCurveFit,
- ChemicalEquilibMinimization, ChemicalNonequilib,
- EMElectricField, EMMagneticField, EMConductivity,
- Voltage, Interpolated, Equilibrium_LinRessler,
- Chemistry_LinRessler) = list(ModelType_)
+(
+    Null,
+    UserDefined,
+    Ideal,
+    VanderWaals,
+    Constant,
+    PowerLaw,
+    SutherlandLaw,
+    ConstantPrandtl,
+    EddyViscosity,
+    ReynoldsStress,
+    ReynoldsStressAlgebraic,
+    Algebraic_BaldwinLomax,
+    Algebraic_CebeciSmith,
+    HalfEquation_JohnsonKing,
+    OneEquation_BaldwinBarth,
+    OneEquationpalartAllmaras,
+    TwoEquation_JonesLaunder,
+    TwoEquation_MenterSST,
+    TwoEquation_Wilcox,
+    CaloricallyPerfect,
+    ThermallyPerfect,
+    ConstantDensity,
+    RedlichKwong,
+    Frozen,
+    ThermalEquilib,
+    ThermalNonequilib,
+    ChemicalEquilibCurveFit,
+    ChemicalEquilibMinimization,
+    ChemicalNonequilib,
+    EMElectricField,
+    EMMagneticField,
+    EMConductivity,
+    Voltage,
+    Interpolated,
+    Equilibrium_LinRessler,
+    Chemistry_LinRessler,
+) = list(ModelType_)
 
-DiffusionModel_s = 'DiffusionModel'
-EquationDimension_s = 'EquationDimension'
+DiffusionModel_s = "DiffusionModel"
+EquationDimension_s = "EquationDimension"
 
 # --------------------------------------------------
 
 AverageInterfaceType_s = "AverageInterfaceType"
 AverageInterfaceType_ts = "AverageInterfaceType_t"
-AverageInterfaceType_l = [Null_s, UserDefined_s,
-                          AverageAll_s, AverageCircumferential_s,
-                          AverageRadial_s, AverageI_s, AverageJ_s, AverageK_s]
+AverageInterfaceType_l = [
+    Null_s,
+    UserDefined_s,
+    AverageAll_s,
+    AverageCircumferential_s,
+    AverageRadial_s,
+    AverageI_s,
+    AverageJ_s,
+    AverageK_s,
+]
 
 AverageInterfaceType = stringAsKeyDict(AverageInterfaceType_l)
 AverageInterfaceType_ = enumAsKeyDict(AverageInterfaceType_l)
-(Null, UserDefined,
- AverageAll, AverageCircumferential,
- AverageRadial, AverageI, AverageJ, AverageK) = list(AverageInterfaceType_)
+(
+    Null,
+    UserDefined,
+    AverageAll,
+    AverageCircumferential,
+    AverageRadial,
+    AverageI,
+    AverageJ,
+    AverageK,
+) = list(AverageInterfaceType_)
 
 AverageInterface_s = "AverageInterface"
 AverageInterface_ts = "AverageInterface_t"
@@ -1244,78 +1565,284 @@ Elements_ts = "Elements_t"
 ElementType_ts = "ElementType_t"
 ElementType_s = "ElementType"
 Elements_s = "Elements"
-ElementType_l = [Null_s, UserDefined_s, NODE_s, BAR_2_s, BAR_3_s,
-                 TRI_3_s, TRI_6_s, QUAD_4_s, QUAD_8_s, QUAD_9_s,
-                 TETRA_4_s, TETRA_10_s, PYRA_5_s, PYRA_14_s,
-                 PENTA_6_s, PENTA_15_s, PENTA_18_s,
-                 HEXA_8_s, HEXA_20_s, HEXA_27_s, MIXED_s, PYRA_13_s,
-                 NGON_n_s, NFACE_n_s, BAR_4_s, TRI_9_s, TRI_10_s, QUAD_12_s,
-                 QUAD_16_s, TETRA_16_s, TETRA_20_s, PYRA_21_s, PYRA_29_s,
-                 PYRA_30_s, PENTA_24_s, PENTA_38_s, PENTA_40_s, HEXA_32_s,
-                 HEXA_56_s, HEXA_64_s, BAR_5_s, TRI_12_s, TRI_15_s,
-                 QUAD_P4_16_s, QUAD_25_s, TETRA_22_s, TETRA_34_s,
-                 TETRA_35_s, PYRA_P4_29_s, PYRA_50_s, PYRA_55_s, PENTA_33_s,
-                 PENTA_66_s, PENTA_75_s, HEXA_44_s, HEXA_98_s, HEXA_125_s]
-ElementTypeNPE_l = [Null_npe, UserDefined_npe, NODE_npe, BAR_2_npe, BAR_3_npe,
-                    TRI_3_npe, TRI_6_npe, QUAD_4_npe, QUAD_8_npe, QUAD_9_npe,
-                    TETRA_4_npe, TETRA_10_npe, PYRA_5_npe, PYRA_14_npe,
-                    PENTA_6_npe, PENTA_15_npe, PENTA_18_npe,
-                    HEXA_8_npe, HEXA_20_npe, HEXA_27_npe, MIXED_npe,
-                    PYRA_13_npe, NGON_n_npe, NFACE_n_npe, BAR_4_npe, TRI_9_npe,
-                    TRI_10_npe, QUAD_12_npe, QUAD_16_npe, TETRA_16_npe,
-                    TETRA_20_npe, PYRA_21_npe, PYRA_29_npe,
-                    PYRA_30_npe, PENTA_24_npe, PENTA_38_npe, PENTA_40_npe,
-                    HEXA_32_npe, HEXA_56_npe, HEXA_64_npe,
-                    BAR_5_npe, TRI_12_npe, TRI_15_npe,
-                    QUAD_P4_16_npe, QUAD_25_npe, TETRA_22_npe, TETRA_34_npe,
-                    TETRA_35_npe, PYRA_P4_29_npe, PYRA_50_npe, PYRA_55_npe,
-                    PENTA_33_npe,
-                    PENTA_66_npe, PENTA_75_npe,
-                    HEXA_44_npe, HEXA_98_npe, HEXA_125_npe]
+ElementType_l = [
+    Null_s,
+    UserDefined_s,
+    NODE_s,
+    BAR_2_s,
+    BAR_3_s,
+    TRI_3_s,
+    TRI_6_s,
+    QUAD_4_s,
+    QUAD_8_s,
+    QUAD_9_s,
+    TETRA_4_s,
+    TETRA_10_s,
+    PYRA_5_s,
+    PYRA_14_s,
+    PENTA_6_s,
+    PENTA_15_s,
+    PENTA_18_s,
+    HEXA_8_s,
+    HEXA_20_s,
+    HEXA_27_s,
+    MIXED_s,
+    PYRA_13_s,
+    NGON_n_s,
+    NFACE_n_s,
+    BAR_4_s,
+    TRI_9_s,
+    TRI_10_s,
+    QUAD_12_s,
+    QUAD_16_s,
+    TETRA_16_s,
+    TETRA_20_s,
+    PYRA_21_s,
+    PYRA_29_s,
+    PYRA_30_s,
+    PENTA_24_s,
+    PENTA_38_s,
+    PENTA_40_s,
+    HEXA_32_s,
+    HEXA_56_s,
+    HEXA_64_s,
+    BAR_5_s,
+    TRI_12_s,
+    TRI_15_s,
+    QUAD_P4_16_s,
+    QUAD_25_s,
+    TETRA_22_s,
+    TETRA_34_s,
+    TETRA_35_s,
+    PYRA_P4_29_s,
+    PYRA_50_s,
+    PYRA_55_s,
+    PENTA_33_s,
+    PENTA_66_s,
+    PENTA_75_s,
+    HEXA_44_s,
+    HEXA_98_s,
+    HEXA_125_s,
+]
+ElementTypeNPE_l = [
+    Null_npe,
+    UserDefined_npe,
+    NODE_npe,
+    BAR_2_npe,
+    BAR_3_npe,
+    TRI_3_npe,
+    TRI_6_npe,
+    QUAD_4_npe,
+    QUAD_8_npe,
+    QUAD_9_npe,
+    TETRA_4_npe,
+    TETRA_10_npe,
+    PYRA_5_npe,
+    PYRA_14_npe,
+    PENTA_6_npe,
+    PENTA_15_npe,
+    PENTA_18_npe,
+    HEXA_8_npe,
+    HEXA_20_npe,
+    HEXA_27_npe,
+    MIXED_npe,
+    PYRA_13_npe,
+    NGON_n_npe,
+    NFACE_n_npe,
+    BAR_4_npe,
+    TRI_9_npe,
+    TRI_10_npe,
+    QUAD_12_npe,
+    QUAD_16_npe,
+    TETRA_16_npe,
+    TETRA_20_npe,
+    PYRA_21_npe,
+    PYRA_29_npe,
+    PYRA_30_npe,
+    PENTA_24_npe,
+    PENTA_38_npe,
+    PENTA_40_npe,
+    HEXA_32_npe,
+    HEXA_56_npe,
+    HEXA_64_npe,
+    BAR_5_npe,
+    TRI_12_npe,
+    TRI_15_npe,
+    QUAD_P4_16_npe,
+    QUAD_25_npe,
+    TETRA_22_npe,
+    TETRA_34_npe,
+    TETRA_35_npe,
+    PYRA_P4_29_npe,
+    PYRA_50_npe,
+    PYRA_55_npe,
+    PENTA_33_npe,
+    PENTA_66_npe,
+    PENTA_75_npe,
+    HEXA_44_npe,
+    HEXA_98_npe,
+    HEXA_125_npe,
+]
 ElementType = stringAsKeyDict(ElementType_l)
 ElementType_ = enumAsKeyDict(ElementType_l)
 ElementTypeNPE = dict(zip(ElementType_l, ElementTypeNPE_l))
-(Null, UserDefined, NODE, BAR_2, BAR_3,
- TRI_3, TRI_6, QUAD_4, QUAD_8, QUAD_9,
- TETRA_4, TETRA_10, PYRA_5, PYRA_14,
- PENTA_6, PENTA_15, PENTA_18,
- HEXA_8, HEXA_20, HEXA_27, MIXED, PYRA_13,
- NGON_n, NFACE_n,
- BAR_4, TRI_9, TRI_10, QUAD_12,
- QUAD_16, TETRA_16, TETRA_20, PYRA_21, PYRA_29,
- PYRA_30, PENTA_24, PENTA_38, PENTA_40, HEXA_32,
- HEXA_56, HEXA_64, BAR_5, TRI_12, TRI_15,
- QUAD_P4_16, QUAD_25, TETRA_22, TETRA_34,
- TETRA_35, PYRA_P4_29, PYRA_50, PYRA_55,
- PENTA_33,
- PENTA_66, PENTA_75,
- HEXA_44, HEXA_98, HEXA_125) = list(ElementType_)
+(
+    Null,
+    UserDefined,
+    NODE,
+    BAR_2,
+    BAR_3,
+    TRI_3,
+    TRI_6,
+    QUAD_4,
+    QUAD_8,
+    QUAD_9,
+    TETRA_4,
+    TETRA_10,
+    PYRA_5,
+    PYRA_14,
+    PENTA_6,
+    PENTA_15,
+    PENTA_18,
+    HEXA_8,
+    HEXA_20,
+    HEXA_27,
+    MIXED,
+    PYRA_13,
+    NGON_n,
+    NFACE_n,
+    BAR_4,
+    TRI_9,
+    TRI_10,
+    QUAD_12,
+    QUAD_16,
+    TETRA_16,
+    TETRA_20,
+    PYRA_21,
+    PYRA_29,
+    PYRA_30,
+    PENTA_24,
+    PENTA_38,
+    PENTA_40,
+    HEXA_32,
+    HEXA_56,
+    HEXA_64,
+    BAR_5,
+    TRI_12,
+    TRI_15,
+    QUAD_P4_16,
+    QUAD_25,
+    TETRA_22,
+    TETRA_34,
+    TETRA_35,
+    PYRA_P4_29,
+    PYRA_50,
+    PYRA_55,
+    PENTA_33,
+    PENTA_66,
+    PENTA_75,
+    HEXA_44,
+    HEXA_98,
+    HEXA_125,
+) = list(ElementType_)
 
-ElementType3D = [TETRA_4, TETRA_10, PYRA_5, PYRA_14,
-                 PENTA_6, PENTA_15, PENTA_18,
-                 HEXA_8, HEXA_20, HEXA_27, MIXED, PYRA_13,
-                 TETRA_16, TETRA_20, PYRA_21, PYRA_29,
-                 PYRA_30, PENTA_24, PENTA_38, PENTA_40, HEXA_32,
-                 HEXA_56, HEXA_64, TETRA_22, TETRA_34,
-                 TETRA_35, PYRA_P4_29, PYRA_50, PYRA_55,
-                 PENTA_33, PENTA_66, PENTA_75,
-                 HEXA_44, HEXA_98, HEXA_125]
-ElementType2D = [TRI_3, TRI_6, QUAD_4, QUAD_8, QUAD_9,
-                 TRI_9, TRI_10, QUAD_12, QUAD_16, TRI_12, TRI_15,
-                 QUAD_P4_16, QUAD_25]
+ElementType3D = [
+    TETRA_4,
+    TETRA_10,
+    PYRA_5,
+    PYRA_14,
+    PENTA_6,
+    PENTA_15,
+    PENTA_18,
+    HEXA_8,
+    HEXA_20,
+    HEXA_27,
+    MIXED,
+    PYRA_13,
+    TETRA_16,
+    TETRA_20,
+    PYRA_21,
+    PYRA_29,
+    PYRA_30,
+    PENTA_24,
+    PENTA_38,
+    PENTA_40,
+    HEXA_32,
+    HEXA_56,
+    HEXA_64,
+    TETRA_22,
+    TETRA_34,
+    TETRA_35,
+    PYRA_P4_29,
+    PYRA_50,
+    PYRA_55,
+    PENTA_33,
+    PENTA_66,
+    PENTA_75,
+    HEXA_44,
+    HEXA_98,
+    HEXA_125,
+]
+ElementType2D = [
+    TRI_3,
+    TRI_6,
+    QUAD_4,
+    QUAD_8,
+    QUAD_9,
+    TRI_9,
+    TRI_10,
+    QUAD_12,
+    QUAD_16,
+    TRI_12,
+    TRI_15,
+    QUAD_P4_16,
+    QUAD_25,
+]
 ElementType1D = [BAR_2, BAR_3, BAR_4, BAR_5]
 ElementType0D = [NODE]
 ElementType_tri = [TRI_3, TRI_6, TRI_9, TRI_10, TRI_12, TRI_15]
-ElementType_quad = [QUAD_4, QUAD_8, QUAD_9, QUAD_12, QUAD_16,
-                    QUAD_P4_16, QUAD_25]
-ElementType_tetra = [TETRA_4, TETRA_10, TETRA_16, TETRA_20, TETRA_22, TETRA_34,
-                     TETRA_35]
-ElementType_pyra = [PYRA_5, PYRA_13, PYRA_21, PYRA_29, PYRA_30,
-                    PYRA_P4_29, PYRA_50, PYRA_55]
-ElementType_penta = [PENTA_6, PENTA_15, PENTA_18, PENTA_24, PENTA_38, PENTA_40,
-                     PENTA_33, PENTA_66, PENTA_75]
-ElementType_hexa = [HEXA_8, HEXA_20, HEXA_27, HEXA_32, HEXA_56, HEXA_64,
-                    HEXA_44, HEXA_98, HEXA_125]
+ElementType_quad = [QUAD_4, QUAD_8, QUAD_9, QUAD_12, QUAD_16, QUAD_P4_16, QUAD_25]
+ElementType_tetra = [
+    TETRA_4,
+    TETRA_10,
+    TETRA_16,
+    TETRA_20,
+    TETRA_22,
+    TETRA_34,
+    TETRA_35,
+]
+ElementType_pyra = [
+    PYRA_5,
+    PYRA_13,
+    PYRA_21,
+    PYRA_29,
+    PYRA_30,
+    PYRA_P4_29,
+    PYRA_50,
+    PYRA_55,
+]
+ElementType_penta = [
+    PENTA_6,
+    PENTA_15,
+    PENTA_18,
+    PENTA_24,
+    PENTA_38,
+    PENTA_40,
+    PENTA_33,
+    PENTA_66,
+    PENTA_75,
+]
+ElementType_hexa = [
+    HEXA_8,
+    HEXA_20,
+    HEXA_27,
+    HEXA_32,
+    HEXA_56,
+    HEXA_64,
+    HEXA_44,
+    HEXA_98,
+    HEXA_125,
+]
 ElementType_trionly = ElementType_tetra
 ElementType_quadonly = ElementType_hexa
 ElementType_triquad = ElementType_pyra + ElementType_penta
@@ -1324,8 +1851,8 @@ ElementRangeList_s = "ElementRangeList"
 #
 
 # ---
-cgnsnames = [globals()[k] for k in dir() if (k[-2:] == '_s')]
-cgnstypes = [globals()[k] for k in dir() if (k[-3:] == '_ts')] + list(weirdSIDStypes)
+cgnsnames = [globals()[k] for k in dir() if (k[-2:] == "_s")]
+cgnstypes = [globals()[k] for k in dir() if (k[-3:] == "_ts")] + list(weirdSIDStypes)
 cgnsenums = {
     GoverningEquations_ts: GoverningEquationsType_l,
     GasModel_ts: GasModelType_l,
@@ -1344,8 +1871,8 @@ cgnsenums = {
     EMConductivityModelType_ts: EMConductivityModelIdentifier_l,
 }
 for k in dir():
-    if (k[-2:] == '_l'):
-        cgnsenums[k[:-1] + 't'] = locals()[k]
+    if k[-2:] == "_l":
+        cgnsenums[k[:-1] + "t"] = locals()[k]
 #
 cgnsnames.sort()
 cgnstypes.sort()
