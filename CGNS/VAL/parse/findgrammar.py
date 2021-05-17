@@ -1,6 +1,6 @@
 #  -------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System -
-#  See license.txt file in the root directory of this Python module source  
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
@@ -12,22 +12,22 @@ import fnmatch
 import imp
 import CGNS.VAL.grammars.etablesids as STB
 
-PROFILENAME = 'grammars'
+PROFILENAME = "grammars"
 
 
 #  -------------------------------------------------------------------------
 def readProfile():
     try:
-        hdir = os.environ['HOME']
+        hdir = os.environ["HOME"]
     except:
         return {}
-    pdir = '%s%s.CGNS.NAV' % (hdir, os.path.sep)
+    pdir = "%s%s.CGNS.NAV" % (hdir, os.path.sep)
     if not os.path.exists(pdir):
         return {}
     sys.path.append(pdir)
-    fp, pth, des = imp.find_module('grammars')
+    fp, pth, des = imp.find_module("grammars")
     try:
-        mod = imp.load_module('grammars', fp, pth, des)
+        mod = imp.load_module("grammars", fp, pth, des)
     finally:
         if fp:
             fp.close()
@@ -37,29 +37,32 @@ def readProfile():
 #  -------------------------------------------------------------------------
 def findAllUserGrammars(verbose=False):
     kdict = {}
-    for pth in [p for p in sys.path if p != '']:
+    for pth in [p for p in sys.path if p != ""]:
         if verbose:
-            print('### scanning', pth)
+            print("### scanning", pth)
         try:
             for pthroot, dirs, files in os.walk(pth):
                 for fn in files:
-                    if (fnmatch.fnmatch(fn, 'CGNS_VAL_USER_*.py') or
-                            fnmatch.fnmatch(fn, 'CGNS_VAL_USER_*.so')):
+                    if fnmatch.fnmatch(fn, "CGNS_VAL_USER_*.py") or fnmatch.fnmatch(
+                        fn, "CGNS_VAL_USER_*.so"
+                    ):
                         gkey = fn[14:-3]
-                        if (gkey in kdict):
-                            if (verbose):
-                                print('### * found grammar:', )
-                                print(gkey, 'already found, ignore this one')
+                        if gkey in kdict:
+                            if verbose:
+                                print(
+                                    "### * found grammar:",
+                                )
+                                print(gkey, "already found, ignore this one")
                         else:
-                            if (verbose):
-                                print('### * found grammar:', gkey)
+                            if verbose:
+                                print("### * found grammar:", gkey)
                             kdict[fn[14:-3]] = pthroot
-                        if (verbose):
-                            print('### * found in :', pthroot)
-                            if (pthroot not in sys.path):
-                                print('### * previous path is NOT in PYTHONPATH')
+                        if verbose:
+                            print("### * found in :", pthroot)
+                            if pthroot not in sys.path:
+                                print("### * previous path is NOT in PYTHONPATH")
                             else:
-                                print('### * previous path already is in PYTHONPATH')
+                                print("### * previous path already is in PYTHONPATH")
 
         except OSError:
             pass
@@ -72,11 +75,11 @@ def findOneUserGrammar(tag, verbose=False):
     found = False
     for pth in sys.path:
         if verbose:
-            print('### scanning', pth)
+            print("### scanning", pth)
         try:
             for pthroot, dirs, files in os.walk(pth):
                 for fn in files:
-                    if fnmatch.fnmatch(fn, 'CGNS_VAL_USER_%s.py' % tag):
+                    if fnmatch.fnmatch(fn, "CGNS_VAL_USER_%s.py" % tag):
                         kdict[fn[14:-3]] = pthroot
                         found = True
                         break
@@ -92,23 +95,23 @@ def findOneUserGrammar(tag, verbose=False):
 #  -------------------------------------------------------------------------
 def importUserGrammars(key, recurse=False, verbose=False):
     mod = None
-    modname = 'CGNS_VAL_USER_%s' % key
+    modname = "CGNS_VAL_USER_%s" % key
     ipath = os.path.split(STB.__file__)[0]
     sys.path.append(ipath)
 
-    if (verbose):
-        print('### Looking for grammar [%s]' % key)
+    if verbose:
+        print("### Looking for grammar [%s]" % key)
     try:
         tp = imp.find_module(modname)
     except ImportError:
-        if (verbose):
-            print('### Error: grammar [%s] not found' % key)
-        if (recurse):
+        if verbose:
+            print("### Error: grammar [%s] not found" % key)
+        if recurse:
             dk = findOneUserGrammar(key)
-            if (key in dk):
+            if key in dk:
                 sys.path.append(dk[key])
-                if (verbose):
-                    print('### Warning: not in search path [%s]' % dk[key])
+                if verbose:
+                    print("### Warning: not in search path [%s]" % dk[key])
                 try:
                     tp = imp.find_module(modname)
                 except ImportError:
@@ -119,7 +122,7 @@ def importUserGrammars(key, recurse=False, verbose=False):
             return None
     try:
         fp = tp[0]
-        if (tp[2][2] != imp.C_EXTENSION):
+        if tp[2][2] != imp.C_EXTENSION:
             mod = imp.load_module(modname, *tp)
         else:
             # print '### CGNS.VAL [info]: Module info',tp
@@ -135,10 +138,11 @@ def importUserGrammars(key, recurse=False, verbose=False):
 #  -------------------------------------------------------------------------
 def locateGrammars():
     glist = []
-    for k in ['SIDS', 'elsA']:
+    for k in ["SIDS", "elsA"]:
         mod = importUserGrammars(k)
         if mod is not None:
             glist.append((k, mod.__file__))
     return glist
+
 
 # ---

@@ -1,10 +1,10 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -16,16 +16,21 @@ import sys
 
 from CGNS.pyCGNSconfig import HAS_PY2, HAS_MSW
 
-from qtpy.QtCore import (Qt, QSortFilterProxyModel, QModelIndex, QFileInfo)
-from qtpy.QtWidgets import (QWidget, QFileIconProvider, QAbstractItemView, QFileSystemModel)
+from qtpy.QtCore import Qt, QSortFilterProxyModel, QModelIndex, QFileInfo
+from qtpy.QtWidgets import (
+    QWidget,
+    QFileIconProvider,
+    QAbstractItemView,
+    QFileSystemModel,
+)
 from qtpy.QtGui import QIcon, QPixmap
 
 from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
 
 import CGNS.NAV.wmessages as MSG
 
-LOADBUTTON = ['Load', 'Load from selected file']
-SAVEBUTTON = ['Save', 'Save to selected file']
+LOADBUTTON = ["Load", "Load from selected file"]
+SAVEBUTTON = ["Save", "Save to selected file"]
 (LOADMODE, SAVEMODE) = (0, 1)
 
 
@@ -68,13 +73,14 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         self.wparent = parent
         self.setDynamicSortFilter(True)
         import locale
-        locale.setlocale(locale.LC_ALL, 'C')
+
+        locale.setlocale(locale.LC_ALL, "C")
 
     def filterAcceptsRow(self, row, parentindex):
         idx = self.model.index(row, 1, parentindex)
         p = self.model.filePath(idx)
         if isinstance(p, bytes):
-            p = str(self.model.filePath(idx).decode('utf-8'))
+            p = str(self.model.filePath(idx).decode("utf-8"))
         elif HAS_PY2:
             if isinstance(p, unicode):
                 p = str(p)
@@ -113,21 +119,21 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
             bf = time.strftime(fmtw, bd)
             return af < bf
         if c == 1:
-            wg = {'MB': 1e3, 'GB': 1e6, 'KB': 1}
+            wg = {"MB": 1e3, "GB": 1e6, "KB": 1}
             try:
                 (av, au) = a.split()
                 (bv, bu) = b.split()
             except ValueError:
                 return a < b
-            av = float(av.replace(',', '.')) * wg[au]
-            bv = float(bv.replace(',', '.')) * wg[bu]
+            av = float(av.replace(",", ".")) * wg[au]
+            bv = float(bv.replace(",", ".")) * wg[bu]
             return av < bv
         return 1
 
 
 # -----------------------------------------------------------------
 class Q7FileIconProvider(QFileIconProvider):
-    slist = ['hdf', 'HDF', 'cgns', 'CGNS', 'adf', 'ADF']
+    slist = ["hdf", "HDF", "cgns", "CGNS", "adf", "ADF"]
 
     def __init__(self):
         super(Q7FileIconProvider, self).__init__()
@@ -204,12 +210,12 @@ class Q7File(QWidget, Ui_Q7FileWindow):
         self.closeUnlock()
 
     def infoFileView(self):
-        self.parent.helpWindow('File')
+        self.parent.helpWindow("File")
 
     def updateView(self):
         p = self.direntries.currentText()
         self.setCurrentDir(p)
-        print('CURRENT', p)
+        print("CURRENT", p)
         # self.proxy.reset()
         self.proxy.beginResetModel()
         self.proxy.endResetModel()
@@ -221,32 +227,31 @@ class Q7File(QWidget, Ui_Q7FileWindow):
         self.setBoxes()
 
     def getOpt(self, name):
-        return getattr(self, '_Ui_Q7FileWindow__O_' + name.lower())
+        return getattr(self, "_Ui_Q7FileWindow__O_" + name.lower())
 
     def setBoxes(self):
-        ckh = self.getOpt('FilterHDFFiles')
-        ckg = self.getOpt('FilterCGNSFiles')
-        if self.parent.getOptionValue('FilterHDFFiles'):
+        ckh = self.getOpt("FilterHDFFiles")
+        ckg = self.getOpt("FilterCGNSFiles")
+        if self.parent.getOptionValue("FilterHDFFiles"):
             ckh.setCheckState(Qt.Checked)
         else:
             ckh.setCheckState(Qt.Unchecked)
-        if self.parent.getOptionValue('FilterCGNSFiles'):
+        if self.parent.getOptionValue("FilterCGNSFiles"):
             ckg.setCheckState(Qt.Checked)
         else:
             ckg.setCheckState(Qt.Unchecked)
-        if ((ckh.checkState() == Qt.Unchecked) and
-                (ckg.checkState() == Qt.Unchecked)):
+        if (ckh.checkState() == Qt.Unchecked) and (ckg.checkState() == Qt.Unchecked):
             self.cShowAll.setCheckState(Qt.Checked)
 
     def getBoxes(self):
-        if self.getOpt('FilterHDFFiles').checkState() == Qt.Unchecked:
-            self.parent.setOptionValue('FilterHDFFiles', False)
+        if self.getOpt("FilterHDFFiles").checkState() == Qt.Unchecked:
+            self.parent.setOptionValue("FilterHDFFiles", False)
         else:
-            self.parent.setOptionValue('FilterHDFFiles', True)
-        if self.getOpt('FilterCGNSFiles').checkState() == Qt.Unchecked:
-            self.parent.setOptionValue('FilterCGNSFiles', False)
+            self.parent.setOptionValue("FilterHDFFiles", True)
+        if self.getOpt("FilterCGNSFiles").checkState() == Qt.Unchecked:
+            self.parent.setOptionValue("FilterCGNSFiles", False)
         else:
-            self.parent.setOptionValue('FilterCGNSFiles', True)
+            self.parent.setOptionValue("FilterCGNSFiles", True)
 
     def expandCols(self, *args):
         self.getBoxes()
@@ -278,9 +283,14 @@ class Q7File(QWidget, Ui_Q7FileWindow):
         if os.path.isdir(p):
             self.updateView()
         else:
-            reply = MSG.wQuestion(self.parent, 110, 'Directory not found...',
-                                  """The path below doesn't exist, do you want to remove<br>
-                                     it from the history?<br>%s""" % p)
+            reply = MSG.wQuestion(
+                self.parent,
+                110,
+                "Directory not found...",
+                """The path below doesn't exist, do you want to remove<br>
+                                     it from the history?<br>%s"""
+                % p,
+            )
             if reply == MSG.OK:
                 ix = self.direntries.currentIndex()
                 self.direntries.removeItem(ix)
@@ -385,27 +395,39 @@ class Q7File(QWidget, Ui_Q7FileWindow):
 
     def doClearHistory(self):
         if self.rClearNoHDF.isChecked():
-            reply = MSG.wQuestion(self.parent, 120, 'Clear history',
-                                  """You really want to remove directory entries from history<br>
-                                     where no file with defined extensions has been found?<br>""")
+            reply = MSG.wQuestion(
+                self.parent,
+                120,
+                "Clear history",
+                """You really want to remove directory entries from history<br>
+                                     where no file with defined extensions has been found?<br>""",
+            )
             if reply == MSG.OK:
                 for d in self.parent.getDirNoHDFFromHistory():
                     self.parent.removeDirFromHistory(d)
                     self.updateHistory()
                     self.lClear.clear()
         if self.rClearNotFound.isChecked():
-            reply = MSG.wQuestion(self.parent, 121, 'Clear history',
-                                  """You really want to remove <b>NOT FOUND</b> entries from<br>
-                                     the history of used directories?<br>""")
+            reply = MSG.wQuestion(
+                self.parent,
+                121,
+                "Clear history",
+                """You really want to remove <b>NOT FOUND</b> entries from<br>
+                                     the history of used directories?<br>""",
+            )
             if reply == MSG.OK:
                 for d in self.parent.getDirNotFoundFromHistory():
                     self.parent.removeDirFromHistory(d)
                     self.updateHistory()
                     self.lClear.clear()
         if self.rClearAllDirs.isChecked():
-            reply = MSG.wQuestion(self.parent, 122, 'Clear history',
-                                  """You really want to remove <b>ALL</b> entries from the<br>
-                                     the history of used files and directories?<br>""")
+            reply = MSG.wQuestion(
+                self.parent,
+                122,
+                "Clear history",
+                """You really want to remove <b>ALL</b> entries from the<br>
+                                     the history of used files and directories?<br>""",
+            )
             if reply == MSG.OK:
                 self.parent.destroyHistory()
                 self.updateHistory()
@@ -457,8 +479,7 @@ class Q7File(QWidget, Ui_Q7FileWindow):
             self.parent.signals.loadFile.emit()
             self.close()
         else:
-            MSG.message("Load file: %s" % self.selectedPath(),
-                        diag, MSG.INFO)
+            MSG.message("Load file: %s" % self.selectedPath(), diag, MSG.INFO)
 
     def save(self):
         diag = self.checkTarget(self.selectedPath(), write=True)
@@ -468,8 +489,7 @@ class Q7File(QWidget, Ui_Q7FileWindow):
             self.parent.signals.saveFile.emit()
             self.close()
         else:
-            MSG.message("Save file: %s" % self.selectedPath(),
-                        diag, MSG.INFO)
+            MSG.message("Save file: %s" % self.selectedPath(), diag, MSG.INFO)
 
     def checkTarget(self, filename, write=False):
         if os.path.isfile(filename) and not write:
@@ -483,19 +503,25 @@ class Q7File(QWidget, Ui_Q7FileWindow):
             if self.cDeleteMissing.isChecked():
                 sc += "The nodes <b>NOT</b> found in the current tree are removed from the updated file"
             else:
-                sc += "The nodes <b>NOT</b> found in the current tree are kept unchanged"
-        reply = MSG.wQuestion(self, 132, 'Saving on an already existing file',
-                              """You are going to save into an existing file,
+                sc += (
+                    "The nodes <b>NOT</b> found in the current tree are kept unchanged"
+                )
+        reply = MSG.wQuestion(
+            self,
+            132,
+            "Saving on an already existing file",
+            """You are going to save into an existing file,
                               based on the current options you have and the target tree you want to save,
                               the result would be the following:<p>%s<p>
                               If this not the way you want the save to operate, please <i>abort</b> this
                               file selection and check the <i>Load/Save option</i> tab.
-                              You still want to write on this file?""" % sc,
-                              buttons=('Continue to save on existing file',
-                                       'Abort save'))
+                              You still want to write on this file?"""
+            % sc,
+            buttons=("Continue to save on existing file", "Abort save"),
+        )
         if reply:
             return None
-        return 'User Abort'
+        return "User Abort"
 
     def path(self, index=None):
         if index is None:
@@ -516,7 +542,7 @@ class Q7File(QWidget, Ui_Q7FileWindow):
         self.treeview.resizeColumnToContents(0)
         p = self.path(index)
         if os.path.isdir(p):
-            f = ''
+            f = ""
             d = p
             self.setCurrentDir(d)
         else:
@@ -536,5 +562,6 @@ class Q7File(QWidget, Ui_Q7FileWindow):
             self.fileentries.setCurrentIndex(self.fileentries.findText(f))
         self.selecteddir = self.direntries.lineEdit().text()
         self.selectedfile = self.fileentries.lineEdit().text()
+
 
 # --- last line

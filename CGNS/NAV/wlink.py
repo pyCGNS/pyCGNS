@@ -1,10 +1,10 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -18,7 +18,7 @@ import CGNS.PAT.cgnskeywords as CGK
 
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QFileDialog
-from qtpy.QtWidgets import (QTableWidgetItem, QStyledItemDelegate, QLineEdit, QHeaderView)
+from qtpy.QtWidgets import QTableWidgetItem, QStyledItemDelegate, QLineEdit, QHeaderView
 
 from CGNS.NAV.Q7LinkWindow import Ui_Q7LinkWindow
 from CGNS.NAV.wfingerprint import Q7Window as QW
@@ -33,8 +33,8 @@ class Q7LinkItemDelegate(QStyledItemDelegate):
         QStyledItemDelegate.__init__(self, self._table)
         self._parent = owner
         self._model = model
-        self._filename = ''
-        self._dirname = ''
+        self._filename = ""
+        self._dirname = ""
 
     def createEditor(self, parent, option, index):
         ws = option.rect.width()
@@ -43,9 +43,9 @@ class Q7LinkItemDelegate(QStyledItemDelegate):
         ys = option.rect.y() - 2
         if index.column() in [2]:
             filt = "CGNS Files (*.hdf *.cgns)"
-            filename = str(QFileDialog.getOpenFileName(self._table,
-                                                       "Select file",
-                                                       filter=filt)[0])
+            filename = str(
+                QFileDialog.getOpenFileName(self._table, "Select file", filter=filt)[0]
+            )
             (dname, fname) = os.path.split(filename)
             if not dname or not fname:
                 return None
@@ -92,8 +92,7 @@ class Q7LinkList(QW, Ui_Q7LinkWindow):
         self._col2lk = [4, 3, 1, 2, 0]
         self._master = master
         self._links = self.FG.links
-        self.linkTable.setItemDelegate(Q7LinkItemDelegate(self,
-                                                          self.FG.model))
+        self.linkTable.setItemDelegate(Q7LinkItemDelegate(self, self.FG.model))
         self.setLabel(self.eDirSource, self.FG.filedir)
         self.setLabel(self.eFileSource, self.FG.filename)
         self.bInfo.clicked.connect(self.infoLinkView)
@@ -121,7 +120,7 @@ class Q7LinkList(QW, Ui_Q7LinkWindow):
         self.readyCursor()
 
     def infoLinkView(self):
-        self._control.helpWindow('Link')
+        self._control.helpWindow("Link")
 
     def duplicateLink(self):
         if self._links:
@@ -139,10 +138,14 @@ class Q7LinkList(QW, Ui_Q7LinkWindow):
         i = self.linkTable.currentItem()
         if i is None:
             return
-        reply = MSG.wQuestion(self, 311, 'Remove link entry',
-                              """Do you want to remove the selected link entry?
+        reply = MSG.wQuestion(
+            self,
+            311,
+            "Remove link entry",
+            """Do you want to remove the selected link entry?
                                  Existing sub-tree would be <b>merged</b> in the
-                                 top file during the next save.""")
+                                 top file during the next save.""",
+        )
         if reply:
             r = i.row()
             self._links.pop(r)
@@ -152,7 +155,7 @@ class Q7LinkList(QW, Ui_Q7LinkWindow):
         pass
 
     def newLink(self):
-        self._links.append(['', '', '', '', CGM.S2P_LKIGNORED])
+        self._links.append(["", "", "", "", CGM.S2P_LKIGNORED])
         self.reset()
 
     def show(self):
@@ -161,27 +164,27 @@ class Q7LinkList(QW, Ui_Q7LinkWindow):
 
     def statusIcon(self, status):
         if status == CGM.S2P_LKOK:
-            it = QTableWidgetItem(self.IC(QW.I_L_OKL), '')
-            it.setToolTip('Link ok')
+            it = QTableWidgetItem(self.IC(QW.I_L_OKL), "")
+            it.setToolTip("Link ok")
             return it
         if status & CGM.S2P_LKNOFILE:
-            it = QTableWidgetItem(self.IC(QW.I_L_NFL), '')
-            it.setToolTip('File not found in search path')
+            it = QTableWidgetItem(self.IC(QW.I_L_NFL), "")
+            it.setToolTip("File not found in search path")
             return it
         if status & CGM.S2P_LKIGNORED:
-            it = QTableWidgetItem(self.IC(QW.I_L_IGN), '')
-            it.setToolTip('Link was ignored during load')
+            it = QTableWidgetItem(self.IC(QW.I_L_IGN), "")
+            it.setToolTip("Link was ignored during load")
             return it
         if status & CGM.S2P_LKFILENOREAD:
-            it = QTableWidgetItem(self.IC(QW.I_L_NRL), '')
-            it.setToolTip('File found, not readable')
+            it = QTableWidgetItem(self.IC(QW.I_L_NRL), "")
+            it.setToolTip("File found, not readable")
             return it
         if status & CGM.S2P_LKNONODE:
-            it = QTableWidgetItem(self.IC(QW.I_L_NNL), '')
-            it.setToolTip('File ok, node path not found')
+            it = QTableWidgetItem(self.IC(QW.I_L_NNL), "")
+            it.setToolTip("File ok, node path not found")
             return it
-        it = QTableWidgetItem(self.IC(QW.I_L_ERL), '')
-        it.setToolTip('Unknown error')
+        it = QTableWidgetItem(self.IC(QW.I_L_ERL), "")
+        it.setToolTip("Unknown error")
         return it
 
     def reset(self):
@@ -190,7 +193,7 @@ class Q7LinkList(QW, Ui_Q7LinkWindow):
         v.setRowCount(0)
         lh = v.horizontalHeader()
         lv = v.verticalHeader()
-        h = ['S', 'Source Node', 'Linked-to file', 'Linked-to Node', 'Found in dir']
+        h = ["S", "Source Node", "Linked-to file", "Linked-to Node", "Found in dir"]
         for i, hstr in enumerate(h):
             hi = QTableWidgetItem(hstr)
             hi.setFont(OCTXT._Label_Font)
@@ -225,5 +228,6 @@ class Q7LinkList(QW, Ui_Q7LinkWindow):
         if self._master._linkwindow is not None:
             self._master._linkwindow = None
         self.close()
+
 
 # -----------------------------------------------------------------

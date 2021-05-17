@@ -1,17 +1,17 @@
 #  -------------------------------------------------------------------------
 #  pyCGNS.NAV - Python package for CFD General Notation System - NAVigater
-#  See license.txt file in the root directory of this Python module source  
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
 from __future__ import print_function
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from CGNS.pyCGNSconfig import HAS_PY2
 
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QButtonGroup
-from qtpy.QtGui import (QColor, QPalette)
+from qtpy.QtGui import QColor, QPalette
 
 from CGNS.NAV.wfingerprint import Q7FingerPrint
 from CGNS.NAV.Q7ToolsWindow import Ui_Q7ToolsWindow
@@ -20,7 +20,7 @@ from CGNS.NAV.wquery import Q7Query, Q7SelectionList
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 from CGNS.NAV.diff import diffAB
 from CGNS.NAV.merge import mergeAB
-from CGNS.NAV.mmergetreeview import (Q7TreeMergeModel, TAG_FRONT, TAG_BACK)
+from CGNS.NAV.mmergetreeview import Q7TreeMergeModel, TAG_FRONT, TAG_BACK
 from CGNS.NAV.wtree import Q7Tree
 from CGNS.NAV.wdifftreeview import Q7Diff
 from CGNS.NAV.wmergetreeview import Q7Merge
@@ -33,10 +33,10 @@ import CGNS.PAT.cgnskeywords as CGK
 # -----------------------------------------------------------------
 class Q7Criteria(object):
     def __init__(self):
-        self.name = ''
-        self.sidstype = ''
-        self.value = ''
-        self.shape = ''
+        self.name = ""
+        self.sidstype = ""
+        self.value = ""
+        self.shape = ""
         self.rgx_name = False
         self.not_name = False
         self.rgx_sids = False
@@ -77,14 +77,13 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         # if (ix!=-1): self.cQuery.setCurrentIndex(ix)
         self.bApply.clicked.connect(self.applyquery)
         pal = self.bApplyBox.palette()
-        pal.setColor(QPalette.WindowText, QColor('red'))
+        pal.setColor(QPalette.WindowText, QColor("red"))
         self.bApplyBox.setPalette(pal)
         self.lockable(self.bApply)
         self.bOperateDoc.clicked.connect(self.querydoc)
         self.bRunSearch.clicked.connect(self.runsearch)
         if self._control.query is not None:
-            ix = self.cQuery.findText(self._control.query,
-                                      flags=Qt.MatchStartsWith)
+            ix = self.cQuery.findText(self._control.query, flags=Qt.MatchStartsWith)
             if ix != -1:
                 self.cQuery.setCurrentIndex(ix)
             self.applyquery()
@@ -103,20 +102,20 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         self.criteria = []
         for l in range(3):
             self.criteria.append(Q7Criteria())
-            self.criteria[-1].name = ''
-            self.criteria[-1].sidstype = ''
-            self.criteria[-1].value = ''
-            self.criteria[-1].shape = ''
+            self.criteria[-1].name = ""
+            self.criteria[-1].sidstype = ""
+            self.criteria[-1].value = ""
+            self.criteria[-1].shape = ""
             self.criteria[-1].rgx_name = False
             self.criteria[-1].not_name = False
             self.criteria[-1].rgx_sids = False
             self.criteria[-1].not_sids = False
-        self.criteria[0].title = 'Ancestor criteria'
-        self.criteria[1].title = 'Current node criteria'
-        self.criteria[2].title = 'Children criteria'
+        self.criteria[0].title = "Ancestor criteria"
+        self.criteria[1].title = "Current node criteria"
+        self.criteria[2].title = "Children criteria"
         self.previousLevel = 1
-        self.cSIDStype.addItems([''] + CGK.cgnstypes)
-        self.cDataType.addItems([''] + list(CGK.adftypes))
+        self.cSIDStype.addItems([""] + CGK.cgnstypes)
+        self.cDataType.addItems([""] + list(CGK.adftypes))
         self.updateCriteria()
 
     def updateSIDStypeEntry(self):
@@ -146,8 +145,7 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
 
     def checkquery(self):
         q = self.cQuery.currentText()
-        if (Q7Query.getQuery(q) is not None and
-                Q7Query.getQuery(q).hasArgs):
+        if Q7Query.getQuery(q) is not None and Q7Query.getQuery(q).hasArgs:
             self.eUserVariable.setEnabled(True)
         else:
             self.eUserVariable.setEnabled(False)
@@ -156,7 +154,7 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         g = self.cGroup.currentText()
         self.cQuery.clear()
         for qn in Q7Query.queriesNamesList():
-            if (g == '*') or (Q7Query.getQuery(qn).group == g):
+            if (g == "*") or (Q7Query.getQuery(qn).group == g):
                 self.cQuery.addItem(qn)
 
     def querydoc(self):
@@ -171,8 +169,7 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         s += "t1=True\nt2=True\nt3=True\n"
         if self.criteria[0].name:
             if self.criteria[0].rgx_name:
-                s += "n1=(CGU.stringNameMatches(PARENT,'%s'))\n" % \
-                     self.criteria[0].name
+                s += "n1=(CGU.stringNameMatches(PARENT,'%s'))\n" % self.criteria[0].name
             else:
                 s += "n1=(PARENT[0]=='%s')\n" % self.criteria[0].name
             if self.criteria[0].not_name:
@@ -186,38 +183,56 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
                 s += "n2=not n2\n"
         if self.criteria[2].name:
             if self.criteria[1].rgx_name:
-                s += "for cn in CGU.childrenNames(NODE):\n  n3=n3 or ('%s'==cn[0])\n" % self.criteria[2].name
+                s += (
+                    "for cn in CGU.childrenNames(NODE):\n  n3=n3 or ('%s'==cn[0])\n"
+                    % self.criteria[2].name
+                )
             else:
                 s += "n3=('%s' in CGU.childrenNames(NODE))\n" % self.criteria[2].name
         s += "rn=n1 and n2 and n3\n"
         if self.criteria[0].sidstype:
             if self.criteria[0].rgx_sids:
-                s += "t1=(CGU.stringTypeMatches(PARENT,'%s'))\n" % \
-                     self.criteria[0].sidstype
+                s += (
+                    "t1=(CGU.stringTypeMatches(PARENT,'%s'))\n"
+                    % self.criteria[0].sidstype
+                )
             else:
                 s += "t1=(PARENT[3]=='%s')\n" % self.criteria[0].sidstype
             if self.criteria[0].not_sids:
                 s += "t1=not t1\n"
         if self.criteria[1].sidstype:
             if self.criteria[1].rgx_sids:
-                s += "t2=(CGU.stringTypeMatches(NAME,'%s'))\n" % \
-                     self.criteria[1].sidstype
+                s += (
+                    "t2=(CGU.stringTypeMatches(NAME,'%s'))\n"
+                    % self.criteria[1].sidstype
+                )
             else:
                 s += "t2=(SIDSTYPE=='%s')\n" % self.criteria[1].sidstype
             if self.criteria[1].not_sids:
                 s += "t2=not t2\n"
         if self.criteria[2].sidstype:
             if self.criteria[1].rgx_sids:
-                s += "t3=False\nfor cn in CHILDREN:\n  t3=t3 or (CGU.stringTypeMatches('%s,cn))\n" % self.criteria[
-                    2].sidstype
+                s += (
+                    "t3=False\nfor cn in CHILDREN:\n  t3=t3 or (CGU.stringTypeMatches('%s,cn))\n"
+                    % self.criteria[2].sidstype
+                )
             else:
-                s += "t3=False\nfor cn in CHILDREN:\n  t3=t3 or ('%s'==cn[3])\n" % self.criteria[2].sidstype
+                s += (
+                    "t3=False\nfor cn in CHILDREN:\n  t3=t3 or ('%s'==cn[3])\n"
+                    % self.criteria[2].sidstype
+                )
         s += "rt=t1 and t2 and t3\n"
         s += "RESULT=rn and rt\n"
-        q = Q7QueryEntry('TMP', script=s)
+        q = Q7QueryEntry("TMP", script=s)
         skp = list(self._fgprint.lazy)
-        sl = q.run(self._fgprint.tree, self._fgprint.links, skp, False, '',
-                   self._model.getSelected())
+        sl = q.run(
+            self._fgprint.tree,
+            self._fgprint.links,
+            skp,
+            False,
+            "",
+            self._model.getSelected(),
+        )
         self._model.markExtendToList(sl)
         self._model.updateSelected()
         self._treeview.refreshView()
@@ -225,14 +240,19 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
     def applyquery(self):
         q = self.cQuery.currentText()
         v = self.eUserVariable.text()
-        if q in ['', ' ']:
+        if q in ["", " "]:
             self.unmarkall()
             return
         qry = Q7Query
         if q in qry.queriesNamesList():
-            sl = qry.getQuery(q).run(self._fgprint.tree, self._fgprint.links,
-                                     list(self._fgprint.lazy),
-                                     False, v, self.model().getSelected())
+            sl = qry.getQuery(q).run(
+                self._fgprint.tree,
+                self._fgprint.links,
+                list(self._fgprint.lazy),
+                False,
+                v,
+                self.model().getSelected(),
+            )
             self.model().markExtendToList(sl)
             self.model().updateSelected()
             if qry.getQuery(q).requireTreeUpdate():
@@ -244,12 +264,12 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         self.cVersionA.clear()
         r = self._fgprint.getUniqueTreeViewIdList()
         for i in r:
-            self.cAncestor.addItem('%.3d' % i)
-            self.cVersionA.addItem('%.3d' % i)
+            self.cAncestor.addItem("%.3d" % i)
+            self.cVersionA.addItem("%.3d" % i)
         for i in r:
-            self.cTreeA.addItem('%.3d' % i)
-            self.cTreeB.addItem('%.3d' % i)
-            self.cTreeAncestor.addItem('%.3d' % i)
+            self.cTreeA.addItem("%.3d" % i)
+            self.cTreeB.addItem("%.3d" % i)
+            self.cTreeAncestor.addItem("%.3d" % i)
         self.gForce = QButtonGroup()
         self.gForce.addButton(self.rForceA)
         self.gForce.addButton(self.rForceB)
@@ -260,11 +280,11 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         self.gAncestor.addButton(self.rAncestorB)
         self.gAncestor.addButton(self.rAncestor)
         self.rAncestor.setChecked(True)
-        self.ePrefixA.setText('%sA%s' % (TAG_FRONT, TAG_BACK))
-        self.ePrefixB.setText('%sB%s' % (TAG_FRONT, TAG_BACK))
+        self.ePrefixA.setText("%sA%s" % (TAG_FRONT, TAG_BACK))
+        self.ePrefixB.setText("%sB%s" % (TAG_FRONT, TAG_BACK))
 
     def infoToolsView(self):
-        self._control.helpWindow('Tools')
+        self._control.helpWindow("Tools")
 
     def show(self):
         self.reset()
@@ -276,7 +296,7 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         fpa = self._fgprint.getFingerPrint(idx_a)
         fpb = self._fgprint.getFingerPrint(idx_b)
         diag = {}
-        diffAB(fpa.tree, fpb.tree, '', 'A', diag, False)
+        diffAB(fpa.tree, fpb.tree, "", "A", diag, False)
         dw = Q7Diff(self._control, fpa.index, fpb.index, diag)
         dw.show()
 
@@ -289,14 +309,14 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
         pfx_b = self.ePrefixB.text()
         tree = CGL.newCGNSTree()
         tc = fpa.control.newtreecount
-        fpc = Q7FingerPrint(fpa.control, '.', 'new#%.3d.hdf' % tc, tree, [], [])
+        fpc = Q7FingerPrint(fpa.control, ".", "new#%.3d.hdf" % tc, tree, [], [])
         Q7TreeMergeModel(fpc)
-        self.merge = Q7Tree(fpa.control, '/', fpc)
+        self.merge = Q7Tree(fpa.control, "/", fpc)
         fpc._status = [Q7FingerPrint.STATUS_MODIFIED]
         fpa.control.newtreecount += 1
         diag = {}
-        diffAB(fpa.tree, fpb.tree, '', 'A', diag, False)
-        fpc.tree = mergeAB(fpa.tree, fpb.tree, fpc.tree, 'C', diag, pfx_a, pfx_b)
+        diffAB(fpa.tree, fpb.tree, "", "A", diag, False)
+        fpc.tree = mergeAB(fpa.tree, fpb.tree, fpc.tree, "C", diag, pfx_a, pfx_b)
         fpc.model.modelReset()
         dw = Q7Merge(self._control, fpc, diag)
         dw.show()
@@ -312,5 +332,6 @@ class Q7ToolsView(Q7Window, Ui_Q7ToolsWindow):
     def closeEvent(self, event):
         self.reject()
         event.accept()
+
 
 # -----------------------------------------------------------------

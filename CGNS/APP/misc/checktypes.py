@@ -1,10 +1,10 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 import CGNS.PAT.cgnskeywords as CK
-import CGNS.PAT.cgnstypes    as CT
+import CGNS.PAT.cgnstypes as CT
 
 stringsphinx0 = """
 
@@ -48,7 +48,7 @@ def showBoxes():
     for t in lt:
         st = "-" * len(t)
         s += stringsphinx0 % (t, t, st, CT.types[t].names[0])
-        if (len(CT.types[t].names) > 1):
+        if len(CT.types[t].names) > 1:
             for n in CT.types[t].names[1:]:
                 s += stringsphinx4 % n
         datatype = ""
@@ -56,19 +56,22 @@ def showBoxes():
             datatype += "%s " % d
         cardinality = CT.types[t].cardinality
         s += stringsphinx1 % (datatype, cardinality)
-        if (CT.types[t].children):
-            s += stringsphinx2 % (CT.types[t].children[0][0],
-                                  CT.types[t].children[0][0],
-                                  CT.types[t].children[0][1])
-        if (CT.types[t].children > 1):
+        if CT.types[t].children:
+            s += stringsphinx2 % (
+                CT.types[t].children[0][0],
+                CT.types[t].children[0][0],
+                CT.types[t].children[0][1],
+            )
+        if CT.types[t].children > 1:
             for c in CT.types[t].children[1:]:
                 s += stringsphinx3 % (c[0], c[0], c[1])
     return s
 
 
 def generateSphinx(file):
-    f = open(file, 'w+')
+    f = open(file, "w+")
     f.write(showBoxes())
     f.close()
+
 
 # --- last line

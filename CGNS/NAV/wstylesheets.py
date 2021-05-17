@@ -1,14 +1,15 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
-colordict = {'high': '#7ebaff', 'low': '#78b5e9', 'high2': '#bad5f4', 'low2': '#bad5ff'}
+colordict = {"high": "#7ebaff", "low": "#78b5e9", "high2": "#bad5f4", "low2": "#bad5ff"}
 
-Q7CONTROLVIEWSTYLESHEET = """
+Q7CONTROLVIEWSTYLESHEET = (
+    """
  QTableView {
  show-decoration-selected: 1;
  }
@@ -24,9 +25,12 @@ Q7CONTROLVIEWSTYLESHEET = """
  border: 0px;
  padding: 0px;
  }
-""" % colordict
+"""
+    % colordict
+)
 
-Q7TABLEVIEWSTYLESHEET = """
+Q7TABLEVIEWSTYLESHEET = (
+    """
  Q7TableView {
  show-decoration-selected: 1;
  }
@@ -43,9 +47,12 @@ Q7TABLEVIEWSTYLESHEET = """
   padding: 0px;
   font: fixed 8;
  }
-""" % colordict
+"""
+    % colordict
+)
 
-Q7TREEVIEWSTYLESHEET = """
+Q7TREEVIEWSTYLESHEET = (
+    """
  QTreeView {
  show-decoration-selected: 1;
  }
@@ -104,6 +111,8 @@ Q7TREEVIEWSTYLESHEET = """
  border-image: url(:/images/icons/branch-end.png) 0;
  }
 
-""" % colordict
+"""
+    % colordict
+)
 
 # -----------------------------------------------------------------

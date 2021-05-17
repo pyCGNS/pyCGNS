@@ -17,19 +17,30 @@ from setuptools import setup, Extension
 # in the case the default python/distutils compiler fails with mpi, set
 # this variable. You should check this compiler is the one used for HDF5 prod
 # in the share/cmake config of your HDF5 installation.
-CYTHON_COMPILER_FOR_MAP = 'mpicc'
+CYTHON_COMPILER_FOR_MAP = "mpicc"
 
 # --- get overall configuration
-sys.path = ['{}/lib'.format(os.getcwd())] + sys.path
-from setuputils import (MAJOR_VERSION, MINOR_VERSION,
-                        HAS_MSW, HAS_PY2, HAS_PY3,
-                        log, line, is_windows, fix_path,
-                        search, clean, touch,
-                        ConfigException,
-                        updateVersionInFile, installConfigFiles)
+sys.path = ["{}/lib".format(os.getcwd())] + sys.path
+from setuputils import (
+    MAJOR_VERSION,
+    MINOR_VERSION,
+    HAS_MSW,
+    HAS_PY2,
+    HAS_PY3,
+    log,
+    line,
+    is_windows,
+    fix_path,
+    search,
+    clean,
+    touch,
+    ConfigException,
+    updateVersionInFile,
+    installConfigFiles,
+)
 
 
-line('pyCGNS v{}.{} install'.format(MAJOR_VERSION, MINOR_VERSION))
+line("pyCGNS v{}.{} install".format(MAJOR_VERSION, MINOR_VERSION))
 line()
 
 doc1 = """
@@ -83,40 +94,61 @@ doc2 = """
 
 """
 
+
 def str2bool(value):
-    if value.lower() in ('yes', 'true', 't', 'y', '1'):
+    if value.lower() in ("yes", "true", "t", "y", "1"):
         return True
-    elif value.lower() in ('no', 'false', 'f', 'n', '0'):
+    elif value.lower() in ("no", "false", "f", "n", "0"):
         return False
     else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
+        raise argparse.ArgumentTypeError("Boolean value expected.")
 
-pr = argparse.ArgumentParser(description=doc1, epilog=doc2,
-                             formatter_class=argparse.RawDescriptionHelpFormatter,
-                             usage='python %(prog)s [options] file1 file2 ...')
 
-pr.add_argument("-I", "--includes", dest="incs",
-                help='list of paths for include search ( : separated), order is significant and is kept unchanged')
-pr.add_argument("-L", "--libraries", dest="libs",
-                help='list of paths for libraries search ( : separated), order is significant and is kept unchanged')
-pr.add_argument("-U", "--update", action='store_true',
-                help='update version (dev only)')
-pr.add_argument("-F", "--force", action='store_false',
-                help='skip all .pyx files regeneration')
-pr.add_argument("-A", "--alternate", action='store_true',
-                help='use full h5py CGNS/HDF5 interface (ongoing work)')
+pr = argparse.ArgumentParser(
+    description=doc1,
+    epilog=doc2,
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    usage="python %(prog)s [options] file1 file2 ...",
+)
+
+pr.add_argument(
+    "-I",
+    "--includes",
+    dest="incs",
+    help="list of paths for include search ( : separated), order is significant and is kept unchanged",
+)
+pr.add_argument(
+    "-L",
+    "--libraries",
+    dest="libs",
+    help="list of paths for libraries search ( : separated), order is significant and is kept unchanged",
+)
+pr.add_argument("-U", "--update", action="store_true", help="update version (dev only)")
+pr.add_argument(
+    "-F", "--force", action="store_false", help="skip all .pyx files regeneration"
+)
+pr.add_argument(
+    "-A",
+    "--alternate",
+    action="store_true",
+    help="use full h5py CGNS/HDF5 interface (ongoing work)",
+)
 
 modules = {"app": True, "map": True, "pat": True, "val": True, "nav": True}
 
 for name, val in modules.items():
-    pr.add_argument("--" + name, type=str2bool, default=val,
-                    help='enable/disable building of CGNS.' + name.upper())
+    pr.add_argument(
+        "--" + name,
+        type=str2bool,
+        default=val,
+        help="enable/disable building of CGNS." + name.upper(),
+    )
 
-for hstr in ['--help', '-h', 'help']:
-  if hstr in sys.argv:
-      pr.print_help()
-      sys.exit(1)
-    
+for hstr in ["--help", "-h", "help"]:
+    if hstr in sys.argv:
+        pr.print_help()
+        sys.exit(1)
+
 # Remove modules from command-line arguments
 pr1 = argparse.ArgumentParser()
 for name, val in modules.items():
@@ -125,25 +157,25 @@ for name, val in modules.items():
 args1, unknown = pr1.parse_known_args()
 sys.argv = sys.argv[:1] + unknown
 
-if 'help' in unknown:
+if "help" in unknown:
     pr.print_help()
     sys.exit(1)
 
 try:
-    os.makedirs('./build/lib/CGNS')
+    os.makedirs("./build/lib/CGNS")
 except OSError:
     pass
 
 if HAS_PY3:
-    log('found Python 3 platform')
+    log("found Python 3 platform")
 else:
-    log('found Python 2 platform')
-log('using Python from {}'.format(sys.prefix))
+    log("found Python 2 platform")
+log("using Python from {}".format(sys.prefix))
 
 if HAS_MSW:
-    log('found Windows platform')
+    log("found Windows platform")
 else:
-    log('found Unix platform')
+    log("found Unix platform")
 
 APP = args1.app
 MAP = args1.map
@@ -159,7 +191,7 @@ OTHER_LIBRARIES_PATHS = []
 EXTRA_DEFINE_MACROS = []
 
 if HAS_MSW:
-    EXTRA_DEFINE_MACROS = [('_HDF5USEDLL_', None), ('H5_BUILT_AS_DYNAMIC_LIB', None)]
+    EXTRA_DEFINE_MACROS = [("_HDF5USEDLL_", None), ("H5_BUILT_AS_DYNAMIC_LIB", None)]
 
 module_logs = []
 incs = []
@@ -167,7 +199,7 @@ libs = []
 
 args, unknown = pr.parse_known_args()
 
-if 'install' in unknown:
+if "install" in unknown:
     args.force = False
 
 if args.incs is not None:
@@ -176,29 +208,30 @@ if args.libs is not None:
     libs = [os.path.expanduser(path) for path in args.libs.split(os.path.pathsep)]
 
 if args.alternate:
-    deps = ['Cython', 'h5py', 'numpy', 'vtk', 'qtpy']
+    deps = ["Cython", "h5py", "numpy", "vtk", "qtpy"]
 else:
-    deps = ['Cython', 'HDF5', 'numpy', 'vtk', 'qtpy']
+    deps = ["Cython", "HDF5", "numpy", "vtk", "qtpy"]
 
-RUN_REQUIRES= ['numpy', 'future']
-SETUP_REQUIRES = RUN_REQUIRES + ['cython>=0.25', 'pkgconfig']
+RUN_REQUIRES = ["numpy", "future"]
+SETUP_REQUIRES = RUN_REQUIRES + ["cython>=0.25", "pkgconfig"]
 
 # Remove crashing deps test
-if 'sdist' in sys.argv:
-   deps = ['Cython', 'numpy','vtk','qtpy']
+if "sdist" in sys.argv:
+    deps = ["Cython", "numpy", "vtk", "qtpy"]
 
 # Dirty patch
 # Get required EGG if needed
 import setuptools.dist
-dist = setuptools.dist.Distribution(dict({'setup_requires': SETUP_REQUIRES}))
+
+dist = setuptools.dist.Distribution(dict({"setup_requires": SETUP_REQUIRES}))
 try:
     (CONFIG, status) = search(incs, libs, deps=deps)
 except ConfigException as e:
-    log('***** Cannot build pyCGNS without: {}'.format(e))
+    log("***** Cannot build pyCGNS without: {}".format(e))
     sys.exit(1)
 
 # Fake HDF5 Config
-if 'sdist' in sys.argv:
+if "sdist" in sys.argv:
     CONFIG.HDF5_HST = 1
     CONFIG.HDF5_H64 = 1
     CONFIG.HDF5_HUP = 1
@@ -212,65 +245,92 @@ line()
 new_args = []
 
 for arg in sys.argv:
-    if (not ('-I=' in arg or '--includes=' in arg) and
-        not ('-U' in arg or '--update' in arg) and
-        not ('-A' in arg or '--alternate' in arg) and
-        not ('-F' in arg or '--force' in arg) and
-        not ('-L=' in arg or '--libraries=' in arg)):
+    if (
+        not ("-I=" in arg or "--includes=" in arg)
+        and not ("-U" in arg or "--update" in arg)
+        and not ("-A" in arg or "--alternate" in arg)
+        and not ("-F" in arg or "--force" in arg)
+        and not ("-L=" in arg or "--libraries=" in arg)
+    ):
         new_args += [arg]
 sys.argv = new_args
 
 if args.update:
-    #os.system('hg parents --template="{rev}\n" > %s/revision.tmp' \
+    # os.system('hg parents --template="{rev}\n" > %s/revision.tmp' \
     #          % CONFIG.PRODUCTION_DIR)
     # Quick and dirty revision, should use git describe --always instead
-    os.system(r'git rev-list --count HEAD> {}/revision.tmp'.format(CONFIG.PRODUCTION_DIR))
-    updateVersionInFile(fix_path('./lib/pyCGNSconfig_default.py'), CONFIG)
+    os.system(
+        r"git rev-list --count HEAD> {}/revision.tmp".format(CONFIG.PRODUCTION_DIR)
+    )
+    updateVersionInFile(fix_path("./lib/pyCGNSconfig_default.py"), CONFIG)
+
 
 def hasToGenerate(source, destination, force):
-    return (force or not os.path.exists(destination) or
-            os.path.getmtime(source) > os.path.getmtime(destination))
+    return (
+        force
+        or not os.path.exists(destination)
+        or os.path.getmtime(source) > os.path.getmtime(destination)
+    )
+
 
 def resolveVars(filename, confvalues, force):
-    if hasToGenerate(filename + '.in', filename, force):
-        with open('{}.in'.format(filename), 'r') as fg1:
+    if hasToGenerate(filename + ".in", filename, force):
+        with open("{}.in".format(filename), "r") as fg1:
             l1 = fg1.readlines()
         l2 = [ll.format(**confvalues) for ll in l1]
-        with open(filename, 'w') as fg2:
+        with open(filename, "w") as fg2:
             fg2.writelines(l2)
 
+
 if args.force:
-    print('Generation of pyx not skipped')
+    print("Generation of pyx not skipped")
 else:
-    print('Skipping pyx generation')
-    
+    print("Skipping pyx generation")
+
 # -------------------------------------------------------------------------
 if APP:
-    slist = ['cg_grep', 'cg_list', 'cg_link', 'cg_iges', 'cg_diff', 
-             'cg_checksum',
-             'cg_gather', 'cg_scatter', 'cg_dump',
-             'cg_scan']
+    slist = [
+        "cg_grep",
+        "cg_list",
+        "cg_link",
+        "cg_iges",
+        "cg_diff",
+        "cg_checksum",
+        "cg_gather",
+        "cg_scatter",
+        "cg_dump",
+        "cg_scan",
+    ]
     if NAV:
-      slist += ['cg_look']
+        slist += ["cg_look"]
 
-    ALL_SCRIPTS += ['CGNS/APP/tools/%s' % f for f in slist]
+    ALL_SCRIPTS += ["CGNS/APP/tools/%s" % f for f in slist]
 
-    ALL_EXTENSIONS += [Extension("CGNS.APP.lib.arrayutils",
-                                 ["CGNS/APP/lib/arrayutils.pyx",
-                                  "CGNS/APP/lib/hashutils.c"],
-                                 include_dirs=CONFIG.INCLUDE_DIRS + OTHER_INCLUDES_PATHS + ["CGNS/APP/lib",],
-                                 extra_compile_args=[])]
-    ALL_PACKAGES += ['CGNS.APP',
-                     'CGNS.APP.lib',
-                     'CGNS.APP.tools',
-                     'CGNS.APP.examples',
-                     'CGNS.APP.misc',
-                     'CGNS.APP.test']
+    ALL_EXTENSIONS += [
+        Extension(
+            "CGNS.APP.lib.arrayutils",
+            ["CGNS/APP/lib/arrayutils.pyx", "CGNS/APP/lib/hashutils.c"],
+            include_dirs=CONFIG.INCLUDE_DIRS
+            + OTHER_INCLUDES_PATHS
+            + [
+                "CGNS/APP/lib",
+            ],
+            extra_compile_args=[],
+        )
+    ]
+    ALL_PACKAGES += [
+        "CGNS.APP",
+        "CGNS.APP.lib",
+        "CGNS.APP.tools",
+        "CGNS.APP.examples",
+        "CGNS.APP.misc",
+        "CGNS.APP.test",
+    ]
     module_logs.append("APP   add  build")
 else:
     module_logs.append("APP   skip build *")
 
-# -------------------------------------------------------------------------  
+# -------------------------------------------------------------------------
 if MAP:
     if not CONFIG.HAS_H5PY:
         # generate files
@@ -281,103 +341,121 @@ if MAP:
         hdfplib = CONFIG.HDF5_PATH_LIBRARIES
         hdflib = CONFIG.HDF5_LINK_LIBRARIES
         hdfpinc = CONFIG.HDF5_PATH_INCLUDES
-        include_dirs = ['.'] + hdfpinc + CONFIG.INCLUDE_DIRS + OTHER_INCLUDES_PATHS
+        include_dirs = ["."] + hdfpinc + CONFIG.INCLUDE_DIRS + OTHER_INCLUDES_PATHS
         library_dirs = hdfplib
         optional_libs = hdflib
         extra_compile_args = CONFIG.HDF5_EXTRA_ARGS
         extra_define_macro = EXTRA_DEFINE_MACROS
 
-        conf = {'CHLONE_HAS_PTHREAD': 1,
-                'CHLONE_HAS_REGEXP': 1,
-                'CHLONE_PRINTF_TRACE': 0,
-                'CHLONE_ON_WINDOWS': HAS_MSW,
-                'CHLONE_H5CONF_STD': CONFIG.HDF5_HST,
-                'CHLONE_H5CONF_64': CONFIG.HDF5_H64,
-                'CHLONE_H5CONF_UP': CONFIG.HDF5_HUP,
-                'CHLONE_USE_COMPACT_STORAGE': CONFIG.USE_COMPACT_STORAGE,
-                'HDF5_VERSION': CONFIG.HDF5_VERSION,
-                'CHLONE_INSTALL_LIBRARIES': "",
-                'CHLONE_INSTALL_INCLUDES': "",
-                }
+        conf = {
+            "CHLONE_HAS_PTHREAD": 1,
+            "CHLONE_HAS_REGEXP": 1,
+            "CHLONE_PRINTF_TRACE": 0,
+            "CHLONE_ON_WINDOWS": HAS_MSW,
+            "CHLONE_H5CONF_STD": CONFIG.HDF5_HST,
+            "CHLONE_H5CONF_64": CONFIG.HDF5_H64,
+            "CHLONE_H5CONF_UP": CONFIG.HDF5_HUP,
+            "CHLONE_USE_COMPACT_STORAGE": CONFIG.USE_COMPACT_STORAGE,
+            "HDF5_VERSION": CONFIG.HDF5_VERSION,
+            "CHLONE_INSTALL_LIBRARIES": "",
+            "CHLONE_INSTALL_INCLUDES": "",
+        }
 
-        depfiles = ['CGNS/MAP/CHLone_config.h', 'CGNS/MAP/EmbeddedCHLone.pyx']
+        depfiles = ["CGNS/MAP/CHLone_config.h", "CGNS/MAP/EmbeddedCHLone.pyx"]
 
-        EXTRA_MAP_COMPILE_ARGS = ''
+        EXTRA_MAP_COMPILE_ARGS = ""
 
         resolveVars(fix_path(depfiles[0]), conf, args.force)
         resolveVars(fix_path(depfiles[1]), conf, args.force)
-        library_dirs = [l for l in library_dirs if l != '']
+        library_dirs = [l for l in library_dirs if l != ""]
 
         # hack: actually shoudl read hdf5/cmake config to get true compiler...
         if CONFIG.HDF5_PARALLEL:
-            os.environ['CC']=CYTHON_COMPILER_FOR_MAP
+            os.environ["CC"] = CYTHON_COMPILER_FOR_MAP
 
-        ALL_EXTENSIONS += [Extension("CGNS.MAP.EmbeddedCHLone",
-                                     ["CGNS/MAP/EmbeddedCHLone.pyx",
-                                      "CGNS/MAP/SIDStoPython.c",
-                                      "CGNS/MAP/l3.c",
-                                      "CGNS/MAP/error.c",
-                                      "CGNS/MAP/linksearch.c",
-                                      "CGNS/MAP/sha256.c",
-                                     ],
-                                     include_dirs=include_dirs,
-                                     library_dirs=library_dirs,
-                                     libraries=optional_libs,
-                                     depends=depfiles,
-                                     define_macros=extra_define_macro,
-                                     extra_compile_args=extra_compile_args)]
+        ALL_EXTENSIONS += [
+            Extension(
+                "CGNS.MAP.EmbeddedCHLone",
+                [
+                    "CGNS/MAP/EmbeddedCHLone.pyx",
+                    "CGNS/MAP/SIDStoPython.c",
+                    "CGNS/MAP/l3.c",
+                    "CGNS/MAP/error.c",
+                    "CGNS/MAP/linksearch.c",
+                    "CGNS/MAP/sha256.c",
+                ],
+                include_dirs=include_dirs,
+                library_dirs=library_dirs,
+                libraries=optional_libs,
+                depends=depfiles,
+                define_macros=extra_define_macro,
+                extra_compile_args=extra_compile_args,
+            )
+        ]
 
-    ALL_PACKAGES += ['CGNS.MAP', 'CGNS.MAP.test']
+    ALL_PACKAGES += ["CGNS.MAP", "CGNS.MAP.test"]
     module_logs.append("MAP   add  build")
 else:
     module_logs.append("MAP   skip build *")
 
-# -------------------------------------------------------------------------  
+# -------------------------------------------------------------------------
 if VAL:
-    ALL_PACKAGES += ['CGNS.VAL',
-                     'CGNS.VAL.grammars',
-                     'CGNS.VAL.suite',
-                     'CGNS.VAL.suite.SIDS',
-                     'CGNS.VAL.parse',
-                     'CGNS.VAL.test']
-    ALL_SCRIPTS += ['CGNS/VAL/CGNS.VAL']
+    ALL_PACKAGES += [
+        "CGNS.VAL",
+        "CGNS.VAL.grammars",
+        "CGNS.VAL.suite",
+        "CGNS.VAL.suite.SIDS",
+        "CGNS.VAL.parse",
+        "CGNS.VAL.test",
+    ]
+    ALL_SCRIPTS += ["CGNS/VAL/CGNS.VAL"]
 
     if args.force:
         touch("CGNS/VAL/grammars/CGNS_VAL_USER_SIDS_.pyx")
         touch("CGNS/VAL/grammars/etablesids.pyx")
-        touch("CGNS/VAL/grammars/valutils.pyx")        
+        touch("CGNS/VAL/grammars/valutils.pyx")
 
-    ALL_EXTENSIONS += [Extension("CGNS.VAL.grammars.CGNS_VAL_USER_SIDS_",
-                                 ["CGNS/VAL/grammars/CGNS_VAL_USER_SIDS_.pyx"],
-                                 include_dirs=CONFIG.INCLUDE_DIRS,
-                                 extra_compile_args=[])]
-    ALL_EXTENSIONS += [Extension("CGNS.VAL.grammars.etablesids",
-                                 ["CGNS/VAL/grammars/etablesids.pyx"],
-                                 include_dirs=CONFIG.INCLUDE_DIRS,
-                                 extra_compile_args=[])]
-    ALL_EXTENSIONS += [Extension("CGNS.VAL.grammars.valutils",
-                                 ["CGNS/VAL/grammars/valutils.pyx"],
-                                 include_dirs=CONFIG.INCLUDE_DIRS,
-                                 extra_compile_args=[])]
+    ALL_EXTENSIONS += [
+        Extension(
+            "CGNS.VAL.grammars.CGNS_VAL_USER_SIDS_",
+            ["CGNS/VAL/grammars/CGNS_VAL_USER_SIDS_.pyx"],
+            include_dirs=CONFIG.INCLUDE_DIRS,
+            extra_compile_args=[],
+        )
+    ]
+    ALL_EXTENSIONS += [
+        Extension(
+            "CGNS.VAL.grammars.etablesids",
+            ["CGNS/VAL/grammars/etablesids.pyx"],
+            include_dirs=CONFIG.INCLUDE_DIRS,
+            extra_compile_args=[],
+        )
+    ]
+    ALL_EXTENSIONS += [
+        Extension(
+            "CGNS.VAL.grammars.valutils",
+            ["CGNS/VAL/grammars/valutils.pyx"],
+            include_dirs=CONFIG.INCLUDE_DIRS,
+            extra_compile_args=[],
+        )
+    ]
 
     module_logs.append("VAL   add  build")
 else:
     module_logs.append("VAL   skip build *")
 
-# -------------------------------------------------------------------------  
+# -------------------------------------------------------------------------
 if PAT:
     # if CONFIG.HAS_CYTHON:
     #  ALL_EXTENSIONS+=[ Extension('CGNS.PAT.cgnsutils',
     #                              ['CGNS/PAT/cgnsutils.pyx'],
     #                              include_dirs = CONFIG.INCLUDE_DIRS) ]
-    ALL_PACKAGES += ['CGNS.PAT',
-                     'CGNS.PAT.SIDS',
-                     'CGNS.PAT.test']
+    ALL_PACKAGES += ["CGNS.PAT", "CGNS.PAT.SIDS", "CGNS.PAT.test"]
     module_logs.append("PAT   add  build")
 else:
     module_logs.append("PAT   skip build *")
 
-# -------------------------------------------------------------------------  
+# -------------------------------------------------------------------------
 if NAV and CONFIG.HAS_QTPY:
     cui = CONFIG.COM_UIC
     crc = CONFIG.COM_RCC
@@ -388,58 +466,74 @@ if NAV and CONFIG.HAS_QTPY:
         touch(fakefile)
 
     modnamelist = [
-        'Q7TreeWindow',
-        'Q7DiffWindow',
-        'Q7MergeWindow',
-        'Q7ControlWindow',
-        'Q7OptionsWindow',
-        'Q7FormWindow',
-        'Q7FileWindow',
-        'Q7QueryWindow',
-        'Q7SelectionWindow',
-        'Q7InfoWindow',
-        'Q7DiagWindow',
-        'Q7LinkWindow',
-        'Q7HelpWindow',
-        'Q7ToolsWindow',
-        'Q7PatternWindow',
-        'Q7AnimationWindow',
-        'Q7MessageWindow',
-        'Q7LogWindow',
+        "Q7TreeWindow",
+        "Q7DiffWindow",
+        "Q7MergeWindow",
+        "Q7ControlWindow",
+        "Q7OptionsWindow",
+        "Q7FormWindow",
+        "Q7FileWindow",
+        "Q7QueryWindow",
+        "Q7SelectionWindow",
+        "Q7InfoWindow",
+        "Q7DiagWindow",
+        "Q7LinkWindow",
+        "Q7HelpWindow",
+        "Q7ToolsWindow",
+        "Q7PatternWindow",
+        "Q7AnimationWindow",
+        "Q7MessageWindow",
+        "Q7LogWindow",
     ]
     if CONFIG.HAS_VTK:
-        modnamelist += ['Q7VTKWindow']
+        modnamelist += ["Q7VTKWindow"]
     modgenlist = []
     modextlist = []
-    mfile_list = ['mtree', 'mquery', 'mcontrol', 'mtable', 'mpattern',
-                  'diff', 'mdifftreeview', 'merge', 'mmergetreeview']
+    mfile_list = [
+        "mtree",
+        "mquery",
+        "mcontrol",
+        "mtable",
+        "mpattern",
+        "diff",
+        "mdifftreeview",
+        "merge",
+        "mmergetreeview",
+    ]
     if CONFIG.HAS_VTK:
-        mfile_list += ['mparser']
+        mfile_list += ["mparser"]
 
     for mfile in mfile_list:
         if args.force:
             touch("CGNS/NAV/%s.pyx" % mfile)
-        modextlist += [Extension("CGNS.NAV.%s" % mfile,
-                                 ["CGNS/NAV/%s.pyx" % mfile ],
-                                 include_dirs=CONFIG.NUMPY_PATH_INCLUDES,
-                                 library_dirs=CONFIG.NUMPY_PATH_LIBRARIES,
-                                 libraries=CONFIG.NUMPY_LINK_LIBRARIES,
-                                 )]
+        modextlist += [
+            Extension(
+                "CGNS.NAV.%s" % mfile,
+                ["CGNS/NAV/%s.pyx" % mfile],
+                include_dirs=CONFIG.NUMPY_PATH_INCLUDES,
+                library_dirs=CONFIG.NUMPY_PATH_LIBRARIES,
+                libraries=CONFIG.NUMPY_LINK_LIBRARIES,
+            )
+        ]
     for m in modnamelist:
-        modextlist += [Extension("CGNS.NAV.%s" % m,
-                                 ["CGNS/NAV/G/%s.pyx" % m ],
-                                 include_dirs=CONFIG.NUMPY_PATH_INCLUDES,
-                                 library_dirs=CONFIG.NUMPY_PATH_LIBRARIES,
-                                 libraries=CONFIG.NUMPY_LINK_LIBRARIES,
-                                 )]
+        modextlist += [
+            Extension(
+                "CGNS.NAV.%s" % m,
+                ["CGNS/NAV/G/%s.pyx" % m],
+                include_dirs=CONFIG.NUMPY_PATH_INCLUDES,
+                library_dirs=CONFIG.NUMPY_PATH_LIBRARIES,
+                libraries=CONFIG.NUMPY_LINK_LIBRARIES,
+            )
+        ]
         g = ("CGNS/NAV/T/{}.ui".format(m), "CGNS/NAV/G/{}.pyx".format(m))
-        if (('true' not in [cui, crc]) and hasToGenerate(g[0], g[1],
-                                                         args.force)):
+        if ("true" not in [cui, crc]) and hasToGenerate(g[0], g[1], args.force):
             modgenlist += [m]
 
     for m in modgenlist:
-        log('Generate from updated Qt templates  ({}): {}'.format(cui, m))
-        com = "{} --from-imports -o CGNS/NAV/G/{}.pyx CGNS/NAV/T/{}.ui".format(cui, m, m)
+        log("Generate from updated Qt templates  ({}): {}".format(cui, m))
+        com = "{} --from-imports -o CGNS/NAV/G/{}.pyx CGNS/NAV/T/{}.ui".format(
+            cui, m, m
+        )
         os.system(fix_path(com))
         if HAS_PY3:
             com = "{} -X language_level=3 -a CGNS/NAV/G/{}.pyx".format(ccy, m)
@@ -447,12 +541,12 @@ if NAV and CONFIG.HAS_QTPY:
             com = "{} -a CGNS/NAV/G/{}.pyx".format(ccy, m)
         os.system(fix_path(com))
 
-    if (hasToGenerate('CGNS/NAV/R/Res.qrc', 'CGNS/NAV/Res_rc.py', args.force)):
-        log('Generate from updated Qt Ressources ({}): Res_rc.py'.format(crc))
+    if hasToGenerate("CGNS/NAV/R/Res.qrc", "CGNS/NAV/Res_rc.py", args.force):
+        log("Generate from updated Qt Ressources ({}): Res_rc.py".format(crc))
         com = "{} -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc".format(crc)
         os.system(fix_path(com))
 
-    ALL_PACKAGES += ['CGNS.NAV', 'CGNS.NAV.test']
+    ALL_PACKAGES += ["CGNS.NAV", "CGNS.NAV.test"]
     ALL_EXTENSIONS += modextlist
 
     if CONFIG.HAS_VTK:
@@ -467,15 +561,15 @@ installConfigFiles(CONFIG.PRODUCTION_DIR)
 
 if HAS_PY3:
     for e in ALL_EXTENSIONS:
-        e.cython_directives = {'language_level': "3"}
+        e.cython_directives = {"language_level": "3"}
 
 #  -------------------------------------------------------------------------
 if CONFIG.HAS_CYTHON:
     from Cython.Distutils import build_ext
 
-    cmd = {'clean': clean, 'build_ext': build_ext}
+    cmd = {"clean": clean, "build_ext": build_ext}
 else:
-    cmd = {'clean': clean}
+    cmd = {"clean": clean}
 
 for module_log in module_logs:
     log(module_log)
@@ -483,8 +577,7 @@ line()
 
 # --- Distutils metadata --------------------------------------------
 
-cls_txt = \
-"""
+cls_txt = """
 Development Status :: 3 - Alpha
 Intended Audience :: Developers
 Intended Audience :: Information Technology
@@ -505,10 +598,10 @@ Operating System :: MacOS :: MacOS X
 Operating System :: Microsoft :: Windows
 """
 
-# -------------------------------------------------------------------------  
+# -------------------------------------------------------------------------
 setup(
     name=CONFIG.NAME,
-    version='{}.{}.{}'.format(MAJOR_VERSION, MINOR_VERSION, CONFIG.REVISION),
+    version="{}.{}.{}".format(MAJOR_VERSION, MINOR_VERSION, CONFIG.REVISION),
     description=CONFIG.DESCRIPTION,
     long_description=open("README.md").read(),
     classifiers=[x for x in cls_txt.split("\n") if x],
@@ -521,7 +614,7 @@ setup(
     ext_modules=ALL_EXTENSIONS,
     cmdclass=cmd,
     install_requires=RUN_REQUIRES,
-    setup_requires=SETUP_REQUIRES
+    setup_requires=SETUP_REQUIRES,
 )
-# -------------------------------------------------------------------------  
+# -------------------------------------------------------------------------
 # --- last line

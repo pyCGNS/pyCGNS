@@ -1,12 +1,12 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -21,7 +21,7 @@ import CGNS.PAT.cgnsutils as CGU
 
 from qtpy.QtCore import Qt, Slot
 from qtpy.QtWidgets import QColorDialog
-from qtpy.QtGui import (QColor, QIcon, QPixmap, QScreen)
+from qtpy.QtGui import QColor, QIcon, QPixmap, QScreen
 
 from CGNS.NAV.Q7VTKWindow import Ui_Q7VTKWindow
 from CGNS.NAV.wfingerprint import Q7Window, Q7FingerPrint
@@ -42,8 +42,8 @@ class wVTKContext(object):
         (self.vx, self.vy, self.vz) = cm.GetViewUp()
         (self.cx, self.cy, self.cz) = cm.GetFocalPoint()
         (self.px, self.py, self.pz) = cm.GetPosition()
-        (self.sx, self.sy, self.sz) = (0., 0., 0.)
-        (self.ox, self.oy, self.oz) = (0., 0., 0.)
+        (self.sx, self.sy, self.sz) = (0.0, 0.0, 0.0)
+        (self.ox, self.oy, self.oz) = (0.0, 0.0, 0.0)
 
     def setViewUp(self, vx, vy, vz):
         (self.vx, self.vy, self.vz) = (vx, vy, vz)
@@ -65,16 +65,17 @@ class wVTKContext(object):
             (self.cx, self.cy, self.cz),
             (self.px, self.py, self.pz),
             (self.sx, self.sy, self.sz),
-            (self.ox, self.oy, self.oz))
+            (self.ox, self.oy, self.oz),
+        )
 
 
 # -----------------------------------------------------------------
 class Q7VTK(Q7Window, Ui_Q7VTKWindow):
     def __init__(self, control, parent, node, fgprintindex, tmodel, zlist):
         if not zlist:
-            pth = '/'
+            pth = "/"
         else:
-            pth = '<partial>'
+            pth = "<partial>"
         self._vtkstatus = False
         self._control = control
         self._fgindex = fgprintindex
@@ -84,8 +85,12 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         self._vtk = None
         self._lastSelectedType = None
         if VTK_VERSION_MAJOR < 8:
-            MSG.wError(self._control,
-                       501, "Your VTK version is lower than v8.0, you should consider upgrading", "Oups...")
+            MSG.wError(
+                self._control,
+                501,
+                "Your VTK version is lower than v8.0, you should consider upgrading",
+                "Oups...",
+            )
             raise RuntimeError("VTK version is too old, please upgrade")
         # FIXME: options are required for parse, then wCGNSTreeParse should
         # be called AFTER the init (that reads options)
@@ -94,7 +99,9 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         if not self.wCGNSTreeParse(self._tree, zlist):
             return
         self._vtkstatus = True
-        self._xmin = self._ymin = self._zmin = self._xmax = self._ymax = self._zmax = 0.0
+        self._xmin = (
+            self._ymin
+        ) = self._zmin = self._xmax = self._ymax = self._zmax = 0.0
         self._epix = QIcon(QPixmap(":/images/icons/empty.png"))
         self._spix = QIcon(QPixmap(":/images/icons/selected.png"))
         self._npix = QIcon(QPixmap(":/images/icons/unselected.png"))
@@ -206,9 +213,9 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         self.actorval = None
         self.planeActor = None
 
-    @Slot(str, name='printMessage')
+    @Slot(str, name="printMessage")
     def printMessage(self, text):
-        sys.stdout.write(text + '\n')
+        sys.stdout.write(text + "\n")
         sys.stdout.flush()
 
     def doRelease(self):
@@ -216,24 +223,24 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         self.reject()
 
     def parseDone(self):
-        print('PARSE DONE')
+        print("PARSE DONE")
 
     def updateSelectedFromVTK(self):
         s = []
         paths = set()
-        if self._lastSelectedType == 'Zone':
+        if self._lastSelectedType == "Zone":
             for a in self._selected:
-                paths.add(CGU.stackPathItem('/', *CGU.getPathToList(a[0], True)[:2]))
-        elif self._lastSelectedType == 'Family':
+                paths.add(CGU.stackPathItem("/", *CGU.getPathToList(a[0], True)[:2]))
+        elif self._lastSelectedType == "Family":
             for a in self._selected:
-                paths.add(CGU.stackPathItem('/', self._lastSelectedTag))
+                paths.add(CGU.stackPathItem("/", self._lastSelectedTag))
         else:
             for a in self._selected:
                 paths.add(a[0])
         for p in list(paths):
             if (len(p) > SIZE_PATTERN) and (p[-SIZE_PATTERN:] in LIST_PATTERN):
                 p = p[:-SIZE_PATTERN]
-            s += ['/' + CGK.CGNSTree_s + p]
+            s += ["/" + CGK.CGNSTree_s + p]
         print(s)
         self._tmodel.markExtendToList(s)
         self._tmodel.updateSelected()
@@ -242,7 +249,9 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
     def setCutPlane(self):
         if self._currentactor is None:
             return
-        if not vtk.vtkStructuredGrid().SafeDownCast(self._currentactor[1].GetMapper().GetInput()):
+        if not vtk.vtkStructuredGrid().SafeDownCast(
+            self._currentactor[1].GetMapper().GetInput()
+        ):
             return
         bounds = self._currentactor[1].GetBounds()
         bds = [0, 0, 0]
@@ -309,7 +318,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         self._iren.Render()
 
     def infoVtkView(self):
-        self._control.helpWindow('VTK')
+        self._control.helpWindow("VTK")
 
     def mouseReleaseEvent(self, ev):
         self._ActiveButton = ev.button()
@@ -318,8 +327,9 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         except AttributeError:
             return
         shift = self._iren.GetShiftKey()
-        self._iren.SetEventInformationFlipY(ev.x(), ev.y(),
-                                            ctrl, shift, chr(0), 0, None)
+        self._iren.SetEventInformationFlipY(
+            ev.x(), ev.y(), ctrl, shift, chr(0), 0, None
+        )
         if ev.button() == Qt.LeftButton:
             self._iren.LeftButtonReleaseEvent()
             self.Rotating = 0
@@ -352,7 +362,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
             self._vtkren.ResetCamera()
         else:
             v = self.OutlineActor.GetBounds()
-            print('BOUNDS ', v)
+            print("BOUNDS ", v)
             self._vtkren.ResetCamera(v)
         self._iren.Render()
 
@@ -368,14 +378,18 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
 
     def showValues(self, *args):
         if self._currentactor is not None:
-            if not vtk.vtkStructuredGrid().SafeDownCast(self._currentactor[1].GetMapper().GetInput()):
+            if not vtk.vtkStructuredGrid().SafeDownCast(
+                self._currentactor[1].GetMapper().GetInput()
+            ):
                 self.cShowValue.setChecked(0)
                 return
         if (self.cVariables.currentIndex() == 0) or self.OutlineActor is None:
             self.cShowValue.setChecked(0)
             return
         if self.cShowValue.isChecked():
-            self.observer = self._iren.AddObserver("MouseMoveEvent", self.displayScalars)
+            self.observer = self._iren.AddObserver(
+                "MouseMoveEvent", self.displayScalars
+            )
         elif self.observer is not None:
             self._iren.RemoveObserver(self.observer)
 
@@ -483,14 +497,26 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
                     if self.lut is not None:
                         s.GetMapper().SetLookupTable(self.lut)
                         self.lut.RemoveAllPoints()
-                        self.lut.AddRGBPoint(min(minrange), self.mincolor[0], self.mincolor[1], self.mincolor[2])
-                        self.lut.AddRGBPoint(max(maxrange), self.maxcolor[0], self.maxcolor[1], self.maxcolor[2])
+                        self.lut.AddRGBPoint(
+                            min(minrange),
+                            self.mincolor[0],
+                            self.mincolor[1],
+                            self.mincolor[2],
+                        )
+                        self.lut.AddRGBPoint(
+                            max(maxrange),
+                            self.maxcolor[0],
+                            self.maxcolor[1],
+                            self.maxcolor[2],
+                        )
                 if tgrid == 1:
                     s.VisibilityOff()
                 s = a.GetNextItem()
             if self.scalarbarwidget.GetEnabled() == 0:
                 sz = self._iren.GetRenderWindow().GetSize()
-                self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.07 * 781 / sz[0], 0.6 * 554 / sz[1])
+                self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(
+                    0.07 * 781 / sz[0], 0.6 * 554 / sz[1]
+                )
                 self.scalarbarwidget.On()
         if self.OutlineActor is not None:
             self.OutlineActor.VisibilityOn()
@@ -525,8 +551,11 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         index = self.cColorSpace.currentIndex()
         if index == 0:
             return
-        colorspaces = {1: self.lut.SetColorSpaceToRGB, 2: self.lut.SetColorSpaceToHSV,
-                       3: self.lut.SetColorSpaceToDiverging}
+        colorspaces = {
+            1: self.lut.SetColorSpaceToRGB,
+            2: self.lut.SetColorSpaceToHSV,
+            3: self.lut.SetColorSpaceToDiverging,
+        }
         colorspaces[index]()
         self._iren.Render()
 
@@ -546,14 +575,16 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         self.scalarbarwidget = vtk.vtkScalarBarWidget()
         self.scalarbarwidget.ResizableOff()
         self.scalarbarwidget.RepositionableOff()
-        self.scalarbarwidget.GetScalarBarRepresentation().SetScalarBarActor(self.scalarbar)
+        self.scalarbarwidget.GetScalarBarRepresentation().SetScalarBarActor(
+            self.scalarbar
+        )
         self.scalarbarwidget.GetScalarBarRepresentation().PickableOff()
         self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(0.9, 0.4)
         self.scalarbarwidget.GetScalarBarRepresentation().SetOrientation(1)
 
     def screenshot(self):
         sshot = QScreen.grabWindow(self.display.winId())
-        sshot.save('/tmp/cg_look-vtkview.png', 'png')
+        sshot.save("/tmp/cg_look-vtkview.png", "png")
 
     def findObjectPath(self, selected):
         return self._parser.getPathFromObject(selected)
@@ -689,17 +720,17 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
             pickAct = self.picker.GetActors()
             pickAct.InitTraversal()
             a = pickAct.GetNextItem()
-            t = ''
+            t = ""
             s = None
             while a:
                 x = a.GetMapper().GetInput()
                 s = self.findObjectPath(x)
-                t += s + '\n'
+                t += s + "\n"
                 self._selected += [[s, a]]
                 a = pickAct.GetNextItem()
             self.txtMapper.SetInput(t)
             sz = self._iren.GetRenderWindow().GetSize()[1]
-            y = sz - self.txtMapper.GetHeight(self._vtkren) - 10.
+            y = sz - self.txtMapper.GetHeight(self._vtkren) - 10.0
             h = y / sz
             self.textActor.VisibilityOn()
             self.textActor.SetInput(t)
@@ -713,10 +744,14 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
 
     def wCGNSTreeParse(self, tree, zlist):
         self._parser = Mesh(tree, zlist)
-        self._T('Parse data for VTK display')
+        self._T("Parse data for VTK display")
         if not self._parser._status:
-            MSG.wError(self._control, 500, 'Cannot create VTK view',
-                       'No data or bad data for a VTK display')
+            MSG.wError(
+                self._control,
+                500,
+                "Cannot create VTK view",
+                "No data or bad data for a VTK display",
+            )
             return False
         return True
 
@@ -769,8 +804,8 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         (self.vx, self.vy, self.vz) = self._vtkren.GetActiveCamera().GetViewUp()
         (self.cx, self.cy, self.cz) = self._vtkren.GetActiveCamera().GetFocalPoint()
         (self.px, self.py, self.pz) = self._vtkren.GetActiveCamera().GetPosition()
-        (self.sx, self.sy, self.sz) = (0., 0., 0.)
-        (self.ox, self.oy, self.oz) = (0., 0., 0.)
+        (self.sx, self.sy, self.sz) = (0.0, 0.0, 0.0)
+        (self.ox, self.oy, self.oz) = (0.0, 0.0, 0.0)
 
         self._ctxt = wVTKContext(self._vtkren.GetActiveCamera())
         self._ctxt.setViewUp(self.vx, self.vy, self.vz)
@@ -796,20 +831,22 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         self._p_wire = True
         self.setColors(True)
 
-        self._bindings = {'s': self.b_surf,
-                          'S': self.b_surf,
-                          'q': self.b_surfwire,
-                          'Q': self.b_surfwire,
-                          'a': self.wireActor,
-                          'A': self.wireActor,
-                          'w': self.b_wire,
-                          'W': self.b_wire,
-                          'r': self.resetCam,
-                          'R': self.resetCam,
-                          'u': self.b_reset,
-                          'U': self.b_reset,
-                          'd': self.hideActor,
-                          'D': self.hideActor}
+        self._bindings = {
+            "s": self.b_surf,
+            "S": self.b_surf,
+            "q": self.b_surfwire,
+            "Q": self.b_surfwire,
+            "a": self.wireActor,
+            "A": self.wireActor,
+            "w": self.b_wire,
+            "W": self.b_wire,
+            "r": self.resetCam,
+            "R": self.resetCam,
+            "u": self.b_reset,
+            "U": self.b_reset,
+            "d": self.hideActor,
+            "D": self.hideActor,
+        }
 
         return self._vtk.GetRenderWindow()
 
@@ -864,10 +901,14 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
             if pth in self._parent.model().getSelected(True):
                 self._selected.append([pth, self.findPathObject(pth)])
         if len(self._selected) > 1:
-            MSG.wInfo(self, 503, "VTK view selections",
-                      """Only the first marked object in tree view would be
+            MSG.wInfo(
+                self,
+                503,
+                "VTK view selections",
+                """Only the first marked object in tree view would be
                       selected in the VTK view. That could be one of the
-                      Family_t, Zone_t or BC_t SIDS type node.""")
+                      Family_t, Zone_t or BC_t SIDS type node.""",
+            )
         for s in self._selected:
             self.changeCurrentActor(s)
             break  # todo: allow multiple selections
@@ -945,14 +986,15 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         name = str(self.cViews.currentText())
         if (name == "") or (name in self._camera):
             return
-        self._camera[name] = (camera.GetViewUp(),
-                              camera.GetClippingRange(),
-                              camera.GetPosition(),
-                              camera.GetFocalPoint(),
-                              camera.GetViewAngle(),
-                              camera.GetParallelScale(),
-                              camera.GetParallelProjection()
-                              )
+        self._camera[name] = (
+            camera.GetViewUp(),
+            camera.GetClippingRange(),
+            camera.GetPosition(),
+            camera.GetFocalPoint(),
+            camera.GetViewAngle(),
+            camera.GetParallelScale(),
+            camera.GetParallelProjection(),
+        )
         self.updateViewList()
 
     def b_refresh(self, pos):
@@ -960,7 +1002,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
 
     def b_saveVTK(self, *args):
         w = vtk.vtkGenericDataObjectWriter()
-        w.SetFileName('/tmp/Foo.vtk')
+        w.SetFileName("/tmp/Foo.vtk")
         actors = self._vtkren.GetActors()
         actors.InitTraversal()
         actor = actors.GetNextItem()
@@ -996,7 +1038,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         self.cFamilies.clear()
         #      sel=[n[0] for n in self._fselected]
         #      hid=[n[0] for n in self._fhidden]
-        self.cFamilies.addItem(self._epix, '')
+        self.cFamilies.addItem(self._epix, "")
         for i in self._parser.getFamilyList():
             pix = self._npix
             #          if (i in sel): pix=self._spix
@@ -1010,7 +1052,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
 
     def changeCurrentPath(self, *args):
         path = self.cCurrentPath.currentText()
-        if path == '':
+        if path == "":
             return
         if self.PropPicked == 1:
             self.PropPicked = 0
@@ -1027,16 +1069,16 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         self.cCurrentPath.clear()
         sel = [n[0] for n in self._selected]
         hid = [n[0] for n in self._hidden]
-        self.cCurrentPath.addItem(self._epix, '')
+        self.cCurrentPath.addItem(self._epix, "")
         pthlist = []
         if self.cShowZone.isChecked():
-            pthlist += ['Zone']
+            pthlist += ["Zone"]
         if self.cShowCT.isChecked():
-            pthlist += ['CT']
+            pthlist += ["CT"]
         if self.cShowBC.isChecked():
-            pthlist += ['BC']
+            pthlist += ["BC"]
         if self.cShowFamily.isChecked():
-            pthlist += ['Family']
+            pthlist += ["Family"]
         for i in self._parser.getPathList(pthlist):
             pix = self._npix
             if i in sel:
@@ -1069,26 +1111,28 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         camera = self._vtkren.GetActiveCamera()
         fp = camera.GetFocalPoint()
         pos = camera.GetPosition()
-        distance = NPY.sqrt((fp[0] - pos[0]) * (fp[0] - pos[0])
-                            + (fp[1] - pos[1]) * (fp[1] - pos[1])
-                            + (fp[2] - pos[2]) * (fp[2] - pos[2]))
+        distance = NPY.sqrt(
+            (fp[0] - pos[0]) * (fp[0] - pos[0])
+            + (fp[1] - pos[1]) * (fp[1] - pos[1])
+            + (fp[2] - pos[2]) * (fp[2] - pos[2])
+        )
         if iaxis == 1:
-            (vx, vy, vz) = (0., 0., 1.)
+            (vx, vy, vz) = (0.0, 0.0, 1.0)
             (px, py, pz) = (fp[0] + distance, fp[1], fp[2])
         elif iaxis == 2:
-            (vx, vy, vz) = (0., 0., 1.)
+            (vx, vy, vz) = (0.0, 0.0, 1.0)
             (px, py, pz) = (fp[0], fp[1] + distance, fp[2])
         elif iaxis == 3:
-            (vx, vy, vz) = (0., 1., 0.)
+            (vx, vy, vz) = (0.0, 1.0, 0.0)
             (px, py, pz) = (fp[0], fp[1], fp[2] + distance)
         elif iaxis == -1:
-            (vx, vy, vz) = (0., 0., 1.)
+            (vx, vy, vz) = (0.0, 0.0, 1.0)
             (px, py, pz) = (fp[0] - distance, fp[1], fp[2])
         elif iaxis == -2:
-            (vx, vy, vz) = (0., 0., 1.)
+            (vx, vy, vz) = (0.0, 0.0, 1.0)
             (px, py, pz) = (fp[0], fp[1] - distance, fp[2])
         elif iaxis == -3:
-            (vx, vy, vz) = (0., 1., 0.)
+            (vx, vy, vz) = (0.0, 1.0, 0.0)
             (px, py, pz) = (fp[0], fp[1], fp[2] - distance)
         camera.SetViewUp(vx, vy, vz)
         camera.SetPosition(px, py, pz)
@@ -1122,9 +1166,13 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
     def posScalarBar(self, sz):
         if self.scalarbarwidget.GetEnabled() == 1:
             if self.scalarbarwidget.GetScalarBarActor().GetOrientation() == 1:
-                self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.07 * 781 / sz[0], 0.6 * 554 / sz[1])
+                self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(
+                    0.07 * 781 / sz[0], 0.6 * 554 / sz[1]
+                )
             else:
-                self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(0.6 * 781 / sz[0], 0.07 * 554 / sz[1])
+                self.scalarbarwidget.GetScalarBarRepresentation().SetPosition2(
+                    0.6 * 781 / sz[0], 0.07 * 554 / sz[1]
+                )
             pos2 = self.scalarbarwidget.GetScalarBarRepresentation().GetPosition2()
             pos = self.scalarbarwidget.GetScalarBarRepresentation().GetPosition()
             pos = list(pos)
@@ -1134,10 +1182,14 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
                 pos[1] = 0
             if (pos2[1] + pos[1]) >= 1:
                 pos[1] = 1 - pos2[1]
-                self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(pos[0], 1.2 - pos2[1])
+                self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(
+                    pos[0], 1.2 - pos2[1]
+                )
             if (pos2[0] + pos[0]) >= 1.01:
                 pos[0] = 1.01 - pos2[0]
-            self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(pos[0], pos[1])
+            self.scalarbarwidget.GetScalarBarRepresentation().SetPosition(
+                pos[0], pos[1]
+            )
 
     def b_surfwire(self, pos):
         if not self._p_wire:
@@ -1208,7 +1260,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
     def changeCurrentActor(self, act, combo=True):
         self._selected = []
         self._lastSelectedType = None
-        self._lastSelectedTag = ''
+        self._lastSelectedTag = ""
         if act[1] is not None and not act[1].alone():
             self._lastSelectedType = act[1].topo()
             self._lastSelectedTag = act[1].tag()
@@ -1237,9 +1289,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
                 lact = [(self._currentactor[3], self._currentactor[2])]
             else:
                 lact = self._currentactor
-            if ((lact is not None) and
-                    (type(lact) == list) and
-                    (lact[0] is not None)):
+            if (lact is not None) and (type(lact) == list) and (lact[0] is not None):
                 for (col, act) in lact[2]:
                     self._vtkren.RemoveActor(act)
                     act.GetProperty().SetColor(col)
@@ -1515,15 +1565,15 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
     def keycode(self, *args):
         keycode = self._iren.GetKeyCode()
         control = self._iren.GetControlKey()
-        vtkkeys = ['f', 'F', 'r', 'R']
-        keys = ['d', 'D', 's', 'S', 'w', 'W', 'q', 'Q', 'a', 'A', 'u', 'U']
+        vtkkeys = ["f", "F", "r", "R"]
+        keys = ["d", "D", "s", "S", "w", "W", "q", "Q", "a", "A", "u", "U"]
         if keycode in vtkkeys:
             self.OnChar()
         if keycode in keys:
             self.CharCallback()
-        if keycode in ['z', 'Z', ' ']:
+        if keycode in ["z", "Z", " "]:
             self.setPick()
-        if keycode == 'p' or keycode == 'P':
+        if keycode == "p" or keycode == "P":
             self.pickElement()
         if control == 1:
             self.controlKey = 1
@@ -1613,19 +1663,19 @@ class Q7InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
     def keycode(self, *args):
         keycode = self._parent._iren.GetKeyCode()
         control = self._parent._iren.GetControlKey()
-        vtkkeys = ['f', 'F', 'r', 'R']
-        keys = ['d', 'D', 's', 'S', 'w', 'W', 'q', 'Q', 'a', 'A', 'u', 'U']
+        vtkkeys = ["f", "F", "r", "R"]
+        keys = ["d", "D", "s", "S", "w", "W", "q", "Q", "a", "A", "u", "U"]
         if keycode in vtkkeys:
             self.OnChar()
         if keycode in keys:
             self._parent.CharCallback()
-        if keycode in ['z', 'Z', ' ']:
+        if keycode in ["z", "Z", " "]:
             self._parent.setPick()
-        if keycode == 'p' or keycode == 'P':
+        if keycode == "p" or keycode == "P":
             self._parent.pickElement()
-        if keycode == 'o' or keycode == 'O':
+        if keycode == "o" or keycode == "O":
             self._parent.setCutPlane()
-        if keycode == 't' or keycode == 'T':
+        if keycode == "t" or keycode == "T":
             self._parent.cutting()
         if control == 1:
             self._parent.controlKey = 1
@@ -1654,15 +1704,15 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
     def keycode(self, *args):
         keycode = self._parent._iren.GetKeyCode()
         control = self._parent._iren.GetControlKey()
-        vtkkeys = ['f', 'F', 'r', 'R']
-        keys = ['d', 'D', 's', 'S', 'w', 'W', 'q', 'Q', 'a', 'A', 'u', 'U']
+        vtkkeys = ["f", "F", "r", "R"]
+        keys = ["d", "D", "s", "S", "w", "W", "q", "Q", "a", "A", "u", "U"]
         if keycode in vtkkeys:
             self.OnChar()
         if keycode in keys:
             self._parent.CharCallback()
-        if keycode in ['z', 'Z', ' ']:
+        if keycode in ["z", "Z", " "]:
             self._parent.setPick()
-        if keycode == 'p' or keycode == 'P':
+        if keycode == "p" or keycode == "P":
             self._parent.pickElement()
         if control == 1:
             self._parent.controlKey = 1
@@ -1697,8 +1747,14 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
 
     def ComputeDisplayCenter(self):
         if self._parent.OutlineActor is None:
-            bounds = (self._parent._xmin, self._parent._xmax, self._parent._ymin,
-                      self._parent._ymax, self._parent._zmin, self._parent._zmax)
+            bounds = (
+                self._parent._xmin,
+                self._parent._xmax,
+                self._parent._ymin,
+                self._parent._ymax,
+                self._parent._zmin,
+                self._parent._zmax,
+            )
         else:
             bounds = self._parent._currentactor[1].GetBounds()
         center = [0, 0, 0]
@@ -1716,8 +1772,14 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
         transform.Identity()
         (pt, center) = self.ComputeDisplayCenter()
         transform.Translate(center[0], center[1], center[2])
-        dx = self._parent._iren.GetLastEventPosition()[0] - self._parent._iren.GetEventPosition()[0]
-        dy = self._parent._iren.GetLastEventPosition()[1] - self._parent._iren.GetEventPosition()[1]
+        dx = (
+            self._parent._iren.GetLastEventPosition()[0]
+            - self._parent._iren.GetEventPosition()[0]
+        )
+        dy = (
+            self._parent._iren.GetLastEventPosition()[1]
+            - self._parent._iren.GetEventPosition()[1]
+        )
         camera.OrthogonalizeViewUp()
         size = self._parent._vtkren.GetSize()
         transform.RotateWXYZ(360.0 * dx / size[0], axis[0], axis[1], axis[2])
@@ -1734,8 +1796,14 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
         transform.Identity()
         (pt, center) = self.ComputeDisplayCenter()
         transform.Translate(center[0], center[1], center[2])
-        dx = self._parent._iren.GetLastEventPosition()[0] - self._parent._iren.GetEventPosition()[0]
-        dy = self._parent._iren.GetLastEventPosition()[1] - self._parent._iren.GetEventPosition()[1]
+        dx = (
+            self._parent._iren.GetLastEventPosition()[0]
+            - self._parent._iren.GetEventPosition()[0]
+        )
+        dy = (
+            self._parent._iren.GetLastEventPosition()[1]
+            - self._parent._iren.GetEventPosition()[1]
+        )
         camera.OrthogonalizeViewUp()
         viewUp = camera.GetViewUp()
         size = self._parent._vtkren.GetSize()
@@ -1752,7 +1820,10 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
     def Dolly(self, *args):
         camera = self._parent._vtkren.GetActiveCamera()
         center = self._parent._vtkren.GetCenter()
-        dy = self._parent._iren.GetEventPosition()[1] - self._parent._iren.GetLastEventPosition()[1]
+        dy = (
+            self._parent._iren.GetEventPosition()[1]
+            - self._parent._iren.GetLastEventPosition()[1]
+        )
         dyf = 10 * dy / center[1]
         dollyFactor = pow(1.1, dyf)
         self.Zoom(dollyFactor)
@@ -1773,12 +1844,18 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
         self._parent._vtkren.WorldToDisplay()
         dp = self._parent._vtkren.GetDisplayPoint()
         focalDepth = dp[2]
-        self._parent._vtkren.SetDisplayPoint(self._parent._iren.GetEventPosition()[0],
-                                             self._parent._iren.GetEventPosition()[1], focalDepth)
+        self._parent._vtkren.SetDisplayPoint(
+            self._parent._iren.GetEventPosition()[0],
+            self._parent._iren.GetEventPosition()[1],
+            focalDepth,
+        )
         self._parent._vtkren.DisplayToWorld()
         newPickPoint = self._parent._vtkren.GetWorldPoint()
-        self._parent._vtkren.SetDisplayPoint(self._parent._iren.GetLastEventPosition()[0],
-                                             self._parent._iren.GetLastEventPosition()[1], focalDepth)
+        self._parent._vtkren.SetDisplayPoint(
+            self._parent._iren.GetLastEventPosition()[0],
+            self._parent._iren.GetLastEventPosition()[1],
+            focalDepth,
+        )
         self._parent._vtkren.DisplayToWorld()
         oldPickPoint = self._parent._vtkren.GetWorldPoint()
         motionVector[0] = oldPickPoint[0] - newPickPoint[0]
@@ -1787,13 +1864,17 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
 
         viewFocus = list(camera.GetFocalPoint())
         viewPoint = list(camera.GetPosition())
-        camera.SetFocalPoint(motionVector[0] + viewFocus[0],
-                             motionVector[1] + viewFocus[1],
-                             motionVector[2] + viewFocus[2])
+        camera.SetFocalPoint(
+            motionVector[0] + viewFocus[0],
+            motionVector[1] + viewFocus[1],
+            motionVector[2] + viewFocus[2],
+        )
 
-        camera.SetPosition(motionVector[0] + viewPoint[0],
-                           motionVector[1] + viewPoint[1],
-                           motionVector[2] + viewPoint[2])
+        camera.SetPosition(
+            motionVector[0] + viewPoint[0],
+            motionVector[1] + viewPoint[1],
+            motionVector[2] + viewPoint[2],
+        )
         if self._parent._iren.GetLightFollowCamera():
             self._parent._vtkren.UpdateLightsGeometryToFollowCamera()
         self._parent._iren.Render()
@@ -1811,8 +1892,13 @@ class Q7InteractorStyleTrackballObject(vtk.vtkInteractorStyle):
         y2 = self._parent._iren.GetEventPosition()[1] - int(DisplayCenter[1])
         zCross = x1 * y2 - y1 * x2
         zCross = float(zCross)
-        angle = vtk.vtkMath().DegreesFromRadians(zCross / (math.sqrt(float(x1 * x1 + y1 * y1)) *
-                                                           math.sqrt(float(x2 * x2 + y2 * y2))))
+        angle = vtk.vtkMath().DegreesFromRadians(
+            zCross
+            / (
+                math.sqrt(float(x1 * x1 + y1 * y1))
+                * math.sqrt(float(x2 * x2 + y2 * y2))
+            )
+        )
         transform.Identity()
         transform.Translate(Center[0], Center[1], Center[2])
         transform.RotateWXYZ(angle, axis[0], axis[1], axis[2])
@@ -1847,15 +1933,15 @@ class Q7InteractorStyleRubberBandZoom(vtk.vtkInteractorStyleRubberBandZoom):
     def keycode(self, *args):
         keycode = self._parent._iren.GetKeyCode()
         control = self._parent._iren.GetControlKey()
-        vtkkeys = ['f', 'F', 'r', 'R']
-        keys = ['d', 'D', 's', 'S', 'w', 'W', 'q', 'Q', 'a', 'A', 'u', 'U']
+        vtkkeys = ["f", "F", "r", "R"]
+        keys = ["d", "D", "s", "S", "w", "W", "q", "Q", "a", "A", "u", "U"]
         if keycode in vtkkeys:
             self.OnChar()
         if keycode in keys:
             self._parent.CharCallback()
-        if keycode in ['z', 'Z', ' ']:
+        if keycode in ["z", "Z", " "]:
             self._parent.setPick()
-        if keycode == 'p' or keycode == 'P':
+        if keycode == "p" or keycode == "P":
             self._parent.pickElement()
         if control == 1:
             self._parent.controlKey = 1
@@ -1885,8 +1971,14 @@ class Q7InteractorStyleRubberBandZoom(vtk.vtkInteractorStyleRubberBandZoom):
 
     def ComputeDisplayCenter(self):
         if self._parent.OutlineActor is None:
-            bounds = (self._parent._xmin, self._parent._xmax, self._parent._ymin,
-                      self._parent._ymax, self._parent._zmin, self._parent._zmax)
+            bounds = (
+                self._parent._xmin,
+                self._parent._xmax,
+                self._parent._ymin,
+                self._parent._ymax,
+                self._parent._zmin,
+                self._parent._zmax,
+            )
         else:
             bounds = self._parent._currentactor[1].GetBounds()
         center = [0, 0, 0]
@@ -1901,7 +1993,10 @@ class Q7InteractorStyleRubberBandZoom(vtk.vtkInteractorStyleRubberBandZoom):
     def Dolly(self, *args):
         camera = self._parent._vtkren.GetActiveCamera()
         center = self._parent._vtkren.GetCenter()
-        dy = self._parent._iren.GetEventPosition()[1] - self._parent._iren.GetLastEventPosition()[1]
+        dy = (
+            self._parent._iren.GetEventPosition()[1]
+            - self._parent._iren.GetLastEventPosition()[1]
+        )
         dyf = 10 * dy / center[1]
         dollyFactor = pow(1.1, dyf)
         self.Zoom(dollyFactor)
@@ -1922,12 +2017,18 @@ class Q7InteractorStyleRubberBandZoom(vtk.vtkInteractorStyleRubberBandZoom):
         self._parent._vtkren.WorldToDisplay()
         dp = self._parent._vtkren.GetDisplayPoint()
         focalDepth = dp[2]
-        self._parent._vtkren.SetDisplayPoint(self._parent._iren.GetEventPosition()[0],
-                                             self._parent._iren.GetEventPosition()[1], focalDepth)
+        self._parent._vtkren.SetDisplayPoint(
+            self._parent._iren.GetEventPosition()[0],
+            self._parent._iren.GetEventPosition()[1],
+            focalDepth,
+        )
         self._parent._vtkren.DisplayToWorld()
         newPickPoint = self._parent._vtkren.GetWorldPoint()
-        self._parent._vtkren.SetDisplayPoint(self._parent._iren.GetLastEventPosition()[0],
-                                             self._parent._iren.GetLastEventPosition()[1], focalDepth)
+        self._parent._vtkren.SetDisplayPoint(
+            self._parent._iren.GetLastEventPosition()[0],
+            self._parent._iren.GetLastEventPosition()[1],
+            focalDepth,
+        )
         self._parent._vtkren.DisplayToWorld()
         oldPickPoint = self._parent._vtkren.GetWorldPoint()
         motionVector[0] = oldPickPoint[0] - newPickPoint[0]
@@ -1936,13 +2037,17 @@ class Q7InteractorStyleRubberBandZoom(vtk.vtkInteractorStyleRubberBandZoom):
 
         viewFocus = list(camera.GetFocalPoint())
         viewPoint = list(camera.GetPosition())
-        camera.SetFocalPoint(motionVector[0] + viewFocus[0],
-                             motionVector[1] + viewFocus[1],
-                             motionVector[2] + viewFocus[2])
+        camera.SetFocalPoint(
+            motionVector[0] + viewFocus[0],
+            motionVector[1] + viewFocus[1],
+            motionVector[2] + viewFocus[2],
+        )
 
-        camera.SetPosition(motionVector[0] + viewPoint[0],
-                           motionVector[1] + viewPoint[1],
-                           motionVector[2] + viewPoint[2])
+        camera.SetPosition(
+            motionVector[0] + viewPoint[0],
+            motionVector[1] + viewPoint[1],
+            motionVector[2] + viewPoint[2],
+        )
         if self._parent._iren.GetLightFollowCamera():
             self._parent._vtkren.UpdateLightsGeometryToFollowCamera()
         self._parent._iren.Render()
@@ -1960,8 +2065,13 @@ class Q7InteractorStyleRubberBandZoom(vtk.vtkInteractorStyleRubberBandZoom):
         y2 = self._parent._iren.GetEventPosition()[1] - int(DisplayCenter[1])
         zCross = x1 * y2 - y1 * x2
         zCross = float(zCross)
-        angle = vtk.vtkMath().DegreesFromRadians(zCross / (math.sqrt(float(x1 * x1 + y1 * y1)) *
-                                                           math.sqrt(float(x2 * x2 + y2 * y2))))
+        angle = vtk.vtkMath().DegreesFromRadians(
+            zCross
+            / (
+                math.sqrt(float(x1 * x1 + y1 * y1))
+                * math.sqrt(float(x2 * x2 + y2 * y2))
+            )
+        )
         transform.Identity()
         transform.Translate(Center[0], Center[1], Center[2])
         transform.RotateWXYZ(angle, axis[0], axis[1], axis[2])

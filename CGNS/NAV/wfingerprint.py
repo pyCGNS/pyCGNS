@@ -1,11 +1,11 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
 from __future__ import print_function
-from builtins import (str, bytes, range, dict, type)
+from builtins import str, bytes, range, dict, type
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -21,7 +21,7 @@ import CGNS.PAT.cgnsutils as CGU
 from qtpy.QtCore import QCoreApplication
 from qtpy.QtCore import Qt, QThread, QMutex, Signal
 from qtpy.QtWidgets import QWidget
-from qtpy.QtGui import (QIcon, QPixmap, QFont, QCursor)
+from qtpy.QtGui import QIcon, QPixmap, QFont, QCursor
 
 from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
 from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
@@ -32,11 +32,15 @@ import CGNS.NAV.wmessages as MSG
 try:
     from pwd import getpwuid
 except ImportError:
+
     def getpwuid(a):
         return (0,)
+
+
 try:
     from grp import getgrgid
 except ImportError:
+
     def getgrgid(a):
         return (0,)
 
@@ -56,7 +60,7 @@ class Q7CHLoneProxy(object):
     def load(self, control, selectedfile):
         self._control = control
         self._thread = Q7CHLoneThread(control, selectedfile)
-        self._thread.datacompleted.connect(self.proxyCompleted,Qt.QueuedConnection)
+        self._thread.datacompleted.connect(self.proxyCompleted, Qt.QueuedConnection)
         self._data = None
         if self._hasthreads:
             self._thread.start()
@@ -68,7 +72,7 @@ class Q7CHLoneProxy(object):
         return self._data
 
     # not useful anymore ?
-    #@Slot(tuple, name='proxyCompleted')
+    # @Slot(tuple, name='proxyCompleted')
     def proxyCompleted(self, data):
         if data[0] is None:
             self._data = data
@@ -80,7 +84,7 @@ class Q7CHLoneProxy(object):
 
 # -----------------------------------------------------------------
 class Q7CHLoneThread(QThread):
-    datacompleted = Signal(tuple, name='datacompleted')
+    datacompleted = Signal(tuple, name="datacompleted")
 
     def __init__(self, control, selectedfile):
         super(Q7CHLoneThread, self).__init__(None)
@@ -93,8 +97,10 @@ class Q7CHLoneThread(QThread):
         selectedfile = str(self._selectedfile)
         Q7FingerPrint.Lock()
         kw = {}
-        (filedir, filename) = (os.path.abspath(os.path.dirname(selectedfile)),
-                               os.path.basename(selectedfile))
+        (filedir, filename) = (
+            os.path.abspath(os.path.dirname(selectedfile)),
+            os.path.basename(selectedfile),
+        )
         if "%s/%s" % (filedir, filename) in Q7FingerPrint.getExpandedFilenameList():
             Q7FingerPrint.Unlock()
             txt = """The current file is already open:"""
@@ -117,22 +123,25 @@ class Q7CHLoneThread(QThread):
             flags |= CGNS.MAP.S2P_FOLLOWLINKS
         try:
             if not CGNS.MAP.probe(loadfilename):
-                if ((os.path.splitext(filename)[1] in OCTXT.CGNSFileExtension) and
-                        OCTXT._ConvertADFFiles):
-                    loadfilename = Q7FingerPrint.fileconversion(filedir,
-                                                                filename, control)
-                    kw['converted'] = True
-                    kw['convertedAs'] = loadfilename
+                if (
+                    os.path.splitext(filename)[1] in OCTXT.CGNSFileExtension
+                ) and OCTXT._ConvertADFFiles:
+                    loadfilename = Q7FingerPrint.fileconversion(
+                        filedir, filename, control
+                    )
+                    kw["converted"] = True
+                    kw["convertedAs"] = loadfilename
             if maxdataload:
-                (tree, links, paths) = CGNS.MAP.load(loadfilename, flags=flags,
-                                                     lksearch=slp,
-                                                     maxdata=maxdataload)
+                (tree, links, paths) = CGNS.MAP.load(
+                    loadfilename, flags=flags, lksearch=slp, maxdata=maxdataload
+                )
             else:
-                (tree, links, paths) = CGNS.MAP.load(loadfilename, flags=flags,
-                                                     lksearch=slp)
+                (tree, links, paths) = CGNS.MAP.load(
+                    loadfilename, flags=flags, lksearch=slp
+                )
         except CGNS.MAP.error as chlex:
             Q7FingerPrint.Unlock()
-            txt = """Load aborted by CGNS.MAP (file:%s)"""%loadfilename
+            txt = """Load aborted by CGNS.MAP (file:%s)""" % loadfilename
             code = chlex.args[0][0]
             msg = chlex.args[0][1]
             self._data = (None, (code, msg, txt))
@@ -142,38 +151,63 @@ class Q7CHLoneThread(QThread):
         except Exception as e:
             Q7FingerPrint.Unlock()
             txt = """Aborted: %s""" % e
-            self._data = (None, (0, txt, ''))
+            self._data = (None, (0, txt, ""))
             self.datacompleted.emit(self._data)
             control.readyCursor()
             return
-        kw['isfile'] = True
+        kw["isfile"] = True
         Q7FingerPrint.Unlock()
-        self._data = (Q7FingerPrint(control, filedir, filename,
-                                    tree, links, paths, **kw),)
+        self._data = (
+            Q7FingerPrint(control, filedir, filename, tree, links, paths, **kw),
+        )
         self.datacompleted.emit(self._data)
 
 
 # -----------------------------------------------------------------
 class Q7Window(QWidget, object):
-    VIEW_CONTROL = 'C'
-    VIEW_DIAG = 'D'
-    VIEW_TOOLS = 'X'
-    VIEW_TREE = 'T'
-    VIEW_OPTION = 'O'
-    VIEW_VTK = 'G'
-    VIEW_FORM = 'F'
-    VIEW_QUERY = 'Q'
-    VIEW_SELECT = 'S'
-    VIEW_PATTERN = 'P'
-    VIEW_INFO = 'I'
-    VIEW_LINK = 'L'
-    VIEW_DIFF = 'Z'
-    VIEW_MESSAGE = 'M'
-    HISTORYLASTKEY = '///LAST///'
-    (I_MOD_SAV, I_UMOD_SAV, I_MOD_USAV, I_UMOD_USAV, I_TREE, I_VTK, I_QUERY, I_DIFF,
-     I_FORM, I_SELECT, I_PATTERN, I_DIAG, I_TOOLS, I_LINK, I_D_INF, I_D_ERR, I_L_OKL,
-     I_L_NFL, I_L_NRL, I_L_NNL, I_L_IGN, I_L_ERL, I_C_SFL, I_C_SWR, I_EMPTY,
-     I_MARK) = range(26)
+    VIEW_CONTROL = "C"
+    VIEW_DIAG = "D"
+    VIEW_TOOLS = "X"
+    VIEW_TREE = "T"
+    VIEW_OPTION = "O"
+    VIEW_VTK = "G"
+    VIEW_FORM = "F"
+    VIEW_QUERY = "Q"
+    VIEW_SELECT = "S"
+    VIEW_PATTERN = "P"
+    VIEW_INFO = "I"
+    VIEW_LINK = "L"
+    VIEW_DIFF = "Z"
+    VIEW_MESSAGE = "M"
+    HISTORYLASTKEY = "///LAST///"
+    (
+        I_MOD_SAV,
+        I_UMOD_SAV,
+        I_MOD_USAV,
+        I_UMOD_USAV,
+        I_TREE,
+        I_VTK,
+        I_QUERY,
+        I_DIFF,
+        I_FORM,
+        I_SELECT,
+        I_PATTERN,
+        I_DIAG,
+        I_TOOLS,
+        I_LINK,
+        I_D_INF,
+        I_D_ERR,
+        I_L_OKL,
+        I_L_NFL,
+        I_L_NRL,
+        I_L_NNL,
+        I_L_IGN,
+        I_L_ERL,
+        I_C_SFL,
+        I_C_SWR,
+        I_EMPTY,
+        I_MARK,
+    ) = range(26)
     ICONMAPPING = {
         I_MOD_SAV: ":/images/icons/save-S-M.png",
         I_UMOD_SAV: ":/images/icons/save-S-UM.png",
@@ -210,9 +244,9 @@ class Q7Window(QWidget, object):
     def initClassConstants(cls):
         for ik in cls.ICONMAPPING:
             cls._icons[ik] = QIcon(QPixmap(cls.ICONMAPPING[ik]))
-        cls._title[cls.VIEW_CONTROL] = 'Control'
-        cls._title[cls.VIEW_OPTION] = 'Options'
-        cls._title[cls.VIEW_TOOLS] = 'Tools'
+        cls._title[cls.VIEW_CONTROL] = "Control"
+        cls._title[cls.VIEW_OPTION] = "Options"
+        cls._title[cls.VIEW_TOOLS] = "Tools"
         cls._busyx = QCursor(QPixmap(":/images/icons/cgSpy.png"))
 
     @classmethod
@@ -244,7 +278,7 @@ class Q7Window(QWidget, object):
         self._index = self.addChildWindow()
         self._lockableWidgets = []
         self._lockedWidgets = []
-        fn = ''
+        fn = ""
         if self._fgindex != -1:
             fn = Q7FingerPrint.getByIndex(self._fgindex).filename
         if self._index != 0:
@@ -303,7 +337,7 @@ class Q7Window(QWidget, object):
     def matchFileExtensions(self, filename):
         xl = self.getFileExtensions()
         (name, ext) = os.path.splitext(os.path.basename(filename))
-        return ((xl == []) or (ext in xl))
+        return (xl == []) or (ext in xl)
 
     def getFileExtensions(self):
         xlist = []
@@ -359,17 +393,18 @@ class Q7Window(QWidget, object):
     def removeDirFromHistory(self, filedir):
         if filedir in self._history:
             del self._history[filedir]
-        if ((self.getLastFile() is not None) and
-                (self._history[Q7Window.HISTORYLASTKEY][0] == filedir)):
+        if (self.getLastFile() is not None) and (
+            self._history[Q7Window.HISTORYLASTKEY][0] == filedir
+        ):
             del self._history[Q7Window.HISTORYLASTKEY]
         OCTXT._writeHistory(self)
 
     def removeFileFromHistory(self, filedir, filename):
-        if (filedir in self._history and
-                (filename in self._history[filedir])):
+        if filedir in self._history and (filename in self._history[filedir]):
             self._history[filedir].remove(filename)
-        if ((self.getLastFile() is not None) and
-                (self._history[Q7Window.HISTORYLASTKEY][1] == filename)):
+        if (self.getLastFile() is not None) and (
+            self._history[Q7Window.HISTORYLASTKEY][1] == filename
+        ):
             del self._history[Q7Window.HISTORYLASTKEY]
         OCTXT._writeHistory(self)
 
@@ -397,8 +432,7 @@ class Q7Window(QWidget, object):
         return self._queries
 
     def getLastFile(self):
-        if ((self._history == {}) or
-                    Q7Window.HISTORYLASTKEY not in self._history):
+        if (self._history == {}) or Q7Window.HISTORYLASTKEY not in self._history:
             return None
         return self._history[Q7Window.HISTORYLASTKEY]
 
@@ -406,13 +440,13 @@ class Q7Window(QWidget, object):
         if self.FG is None:
             return 0
         self._index = self.FG.addChild(self._vtype, self)
-        l = [self.FG._status, self._vtype, '%.3d' % self._index]
+        l = [self.FG._status, self._vtype, "%.3d" % self._index]
         l += [self.FG.filedir, self.FG.filename, self._path]
         self._control.addLine(l, self.FG)
         return self._index
 
     def closeEvent(self, event):
-        self._control.delLine('%.3d' % self._index)
+        self._control.delLine("%.3d" % self._index)
         if self.FG is not None:
             self.FG.closeView(self._index)
         event.accept()
@@ -420,7 +454,7 @@ class Q7Window(QWidget, object):
     def backcontrol(self):
         if self.FG is not None:
             self.FG.raiseControlView()
-        self._control.selectLine('%.3d' % self._index)
+        self._control.selectLine("%.3d" % self._index)
 
     def busyCursor(self):
         self._control.lockView(True)
@@ -459,18 +493,17 @@ class Q7Window(QWidget, object):
         it.setReadOnly(True)
 
     def _T(self, msg):
-        if self.getOptionValue('NAVTrace'):
-            print('### cg_look:', msg)
+        if self.getOptionValue("NAVTrace"):
+            print("### cg_look:", msg)
 
 
 # -----------------------------------------------------------------
 class Q7FingerPrint:
-    STATUS_UNCHANGED = 'U'
-    STATUS_MODIFIED = 'M'
-    STATUS_SAVEABLE = 'S'
-    STATUS_CONVERTED = 'C'
-    STATUS_LIST = (STATUS_UNCHANGED, STATUS_MODIFIED, STATUS_CONVERTED,
-                   STATUS_SAVEABLE)
+    STATUS_UNCHANGED = "U"
+    STATUS_MODIFIED = "M"
+    STATUS_SAVEABLE = "S"
+    STATUS_CONVERTED = "C"
+    STATUS_LIST = (STATUS_UNCHANGED, STATUS_MODIFIED, STATUS_CONVERTED, STATUS_SAVEABLE)
     __mutex = QMutex()
     __chloneproxy = None
     __viewscounter = 0
@@ -504,14 +537,17 @@ class Q7FingerPrint:
 
     @classmethod
     def fileconversion(cls, fdir, filein, control):
-        fileout = OCTXT.TemporaryDirectory + '/' + filein + '.hdf'
+        fileout = OCTXT.TemporaryDirectory + "/" + filein + ".hdf"
         count = 1
         while os.path.exists(fileout):
-            fileout = OCTXT.TemporaryDirectory + '/' + filein + '.%.3d.hdf' % count
+            fileout = OCTXT.TemporaryDirectory + "/" + filein + ".%.3d.hdf" % count
             count += 1
-        com = '(cd %s; %s -f -h %s %s)' % (fdir,
-                                           OCTXT.ADFConversionCom,
-                                           filein, fileout)
+        com = "(cd %s; %s -f -h %s %s)" % (
+            fdir,
+            OCTXT.ADFConversionCom,
+            filein,
+            fileout,
+        )
         os.system(com)
         return fileout
 
@@ -543,7 +579,7 @@ class Q7FingerPrint:
         except (Exception,) as e:
             txt = """The current save operation has been aborted: %s""" % e
             control.readyCursor()
-            MSG.wError(control, 131, txt, '')
+            MSG.wError(control, 131, txt, "")
             return None
         fgprint.updateFileStats(f, saveas=True)
 
@@ -672,26 +708,27 @@ class Q7FingerPrint:
         self.converted = False
         self.isfile = False
         self.infoData = {}
-        self.tmpfile = ''
+        self.tmpfile = ""
         self._kw = kw
         self._status = []
         self._locked = False
-        if 'isfile' in kw:
+        if "isfile" in kw:
             self.isfile = True
-        if 'converted' in kw:
-            self.converted = kw['converted']
-            self.tmpfile = kw['convertedAs']
+        if "converted" in kw:
+            self.converted = kw["converted"]
+            self.tmpfile = kw["convertedAs"]
             if self.converted:
                 self._status = []
         self.lazy = {}
         for p in paths:
-            self.lazy['/CGNSTree' + p[0]] = p[1]
-        if ((self.lazy == {}) and
-            (checkFilePermission(filedir + '/' + filename, write=True))):
+            self.lazy["/CGNSTree" + p[0]] = p[1]
+        if (self.lazy == {}) and (
+            checkFilePermission(filedir + "/" + filename, write=True)
+        ):
             self._status = [Q7FingerPrint.STATUS_SAVEABLE]
         Q7FingerPrint.__extension.append(self)
         Q7FingerPrint.__fingerprintcounter += 1
-        self.updateFileStats(filedir + '/' + filename)
+        self.updateFileStats(filedir + "/" + filename)
 
     def __len__(self):
         return 0
@@ -709,13 +746,16 @@ class Q7FingerPrint:
             flags |= CGNS.MAP.S2P_TRACE
         if OCTXT.FollowLinksAtLoad:
             flags |= CGNS.MAP.S2P_FOLLOWLINKS
-        (t, l, p) = CGNS.MAP.load(tfile, flags=flags, path=minpath, lksearch=slp,
-                                  update=pathdict)
+        (t, l, p) = CGNS.MAP.load(
+            tfile, flags=flags, path=minpath, lksearch=slp, update=pathdict
+        )
         return (t, l, p)
 
     def updateFileStats(self, fname, saveas=False):
-        (filedir, filename) = (os.path.normpath(os.path.dirname(fname)),
-                               os.path.basename(fname))
+        (filedir, filename) = (
+            os.path.normpath(os.path.dirname(fname)),
+            os.path.basename(fname),
+        )
         self.filename = filename
         self.filedir = filedir
         self.version = CGU.getVersion(self.tree)
@@ -724,7 +764,7 @@ class Q7FingerPrint:
         if saveas:
             self.converted = False
             self.isfile = True
-            self.tmpfile = ''
+            self.tmpfile = ""
             self.removeTreeStatus(Q7FingerPrint.STATUS_CONVERTED)
             self.addTreeStatus(Q7FingerPrint.STATUS_SAVEABLE)
 
@@ -748,31 +788,31 @@ class Q7FingerPrint:
         return False
 
     def readInfoFromOS(self, d):
-        f = '%s/%s' % (self.filedir, self.filename)
-        d['eFilename'] = f
-        d['eDirSource'] = self.filedir
-        d['eFileSource'] = self.filename
-        d['eTmpFile'] = self.tmpfile
-        d['eDepth'] = self.depth
-        d['eNodes'] = self.nodes
-        d['eVersion'] = str(self.version)
-        d['eVersionHDF5'] = '???'
+        f = "%s/%s" % (self.filedir, self.filename)
+        d["eFilename"] = f
+        d["eDirSource"] = self.filedir
+        d["eFileSource"] = self.filename
+        d["eTmpFile"] = self.tmpfile
+        d["eDepth"] = self.depth
+        d["eNodes"] = self.nodes
+        d["eVersion"] = str(self.version)
+        d["eVersionHDF5"] = "???"
         try:
             st = os.stat(f)
-            d['eFileSize'] = "%.3f Mb" % (1.0 * st[6] / (1024 * 1024))
-            d['eMergeSize'] = "%.3f Mb" % (1.0 * st[6] / (1024 * 1024))
+            d["eFileSize"] = "%.3f Mb" % (1.0 * st[6] / (1024 * 1024))
+            d["eMergeSize"] = "%.3f Mb" % (1.0 * st[6] / (1024 * 1024))
             dfmt = "%Y-%m-%d %H:%M"
-            d['eLastDate'] = time.strftime(dfmt, time.localtime(int(st[7])))
-            d['eModifDate'] = time.strftime(dfmt, time.localtime(int(st[8])))
+            d["eLastDate"] = time.strftime(dfmt, time.localtime(int(st[7])))
+            d["eModifDate"] = time.strftime(dfmt, time.localtime(int(st[8])))
             e = getpwuid(st[4])
             g = getgrgid(st[5])
-            d['eOwner'] = e[0]
-            d['eGroup'] = g[0]
-            d['cNoFollow'] = False
-            d['cHasLinks'] = (len(self.links) != 0)
-            d['cSameFS'] = False
-            d['cBadLinks'] = False
-            d['cModeProp'] = False
+            d["eOwner"] = e[0]
+            d["eGroup"] = g[0]
+            d["cNoFollow"] = False
+            d["cHasLinks"] = len(self.links) != 0
+            d["cSameFS"] = False
+            d["cBadLinks"] = False
+            d["cModeProp"] = False
             m = ""
             if st[0] & stat.S_IRUSR:
                 m += "r"
@@ -810,16 +850,16 @@ class Q7FingerPrint:
                 m += "x"
             else:
                 m += "-"
-            d['eRights'] = m
+            d["eRights"] = m
         except OSError:
             pass
-        d['cConverted'] = self.converted
-        d['cADF'] = self.converted
-        d['cHDF5'] = not self.converted
-        d['cREAD'] = not self.isSaveable()
-        d['cMODIFY'] = self.isSaveable()
-        d['cNODATA'] = False
-        d['cHasInt64'] = False
+        d["cConverted"] = self.converted
+        d["cADF"] = self.converted
+        d["cHDF5"] = not self.converted
+        d["cREAD"] = not self.isSaveable()
+        d["cMODIFY"] = self.isSaveable()
+        d["cNODATA"] = False
+        d["cHasInt64"] = False
         return d
 
     def getInfo(self, force=False):
@@ -827,7 +867,7 @@ class Q7FingerPrint:
             if self.isFile:
                 self.readInfoFromOS(self.infoData)
             else:
-                print('MEMORY TREE')
+                print("MEMORY TREE")
         return self.infoData
 
     def raiseControlView(self):
@@ -877,10 +917,10 @@ class Q7FingerPrint:
                 self.closeView(i)
 
     def isModified(self):
-        return (Q7FingerPrint.STATUS_MODIFIED in self._status)
+        return Q7FingerPrint.STATUS_MODIFIED in self._status
 
     def isSaveable(self):
-        return (Q7FingerPrint.STATUS_SAVEABLE in self._status)
+        return Q7FingerPrint.STATUS_SAVEABLE in self._status
 
     def removeTreeStatus(self, status):
         if status not in Q7FingerPrint.STATUS_LIST:
@@ -917,8 +957,9 @@ class Q7FingerPrint:
 
     def nextGrammarTag(self):
         keyset = set(OCTXT.ValKeyList)
-        keyset.add('SIDS')
+        keyset.add("SIDS")
         for t in keyset:
             yield t
+
 
 # -----------------------------------------------------------------

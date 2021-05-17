@@ -1,15 +1,15 @@
 #  ---------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System -
-#  See license.txt file in the root directory of this Python module source  
+#  See license.txt file in the root directory of this Python module source
 #  ---------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-import CGNS.PAT.cgnslib      as C
-import CGNS.PAT.cgnserrors   as E
+import CGNS.PAT.cgnslib as C
+import CGNS.PAT.cgnserrors as E
 import CGNS.PAT.cgnskeywords as K
-import numpy             as N
+import numpy as N
 
-data = C.newZone(None, '{Zone}', N.array([[5, 4, 0], [7, 7, 0], [9, 8, 0]], order='F'))
+data = C.newZone(None, "{Zone}", N.array([[5, 4, 0], [7, 7, 0], [9, 8, 0]], order="F"))
 
 g1 = C.newGridCoordinates(data, "GridCoordinates")
 C.newRigidGridMotion(data, "{RigidGridMotion}")
@@ -26,10 +26,10 @@ C.newDataClass(data)
 C.newDimensionalUnits(data)
 C.newFlowEquationSet(data)
 C.newConvergenceHistory(data, K.ZoneConvergenceHistory_s)
-C.newUserDefinedData(data, '{UserDefinedData}')
-C.newDescriptor(data, '{Descriptor}')
+C.newUserDefinedData(data, "{UserDefinedData}")
+C.newDescriptor(data, "{Descriptor}")
 C.newOrdinal(data)
 
-status = '6.3'
-comment = 'Full SIDS with all optionals'
+status = "6.3"
+comment = "Full SIDS with all optionals"
 pattern = [data, status, comment]

@@ -1,10 +1,11 @@
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 from __future__ import unicode_literals
-from builtins import (str, bytes, range, dict)
+from builtins import str, bytes, range, dict
+
 
 def asQuery(f):
     def prepostquery(node, parent, tree, links, skips, path, args, selected):
@@ -66,9 +67,10 @@ def asQuery(f):
 
 
 # -----------------------------------------------------------------
-def parseAndSelect(tree, node, parent, links, skips, path, query, args, selected,
-                   result):
-    path = path + '/' + node[0]
+def parseAndSelect(
+    tree, node, parent, links, skips, path, query, args, selected, result
+):
+    path = path + "/" + node[0]
     Q = query(node, parent, tree, links, skips, path, args, selected)
     R = []
     if Q:
@@ -77,8 +79,9 @@ def parseAndSelect(tree, node, parent, links, skips, path, query, args, selected
         else:
             R = [path]
     for C in node[2]:
-        R += parseAndSelect(tree, C, node, links, skips, path, query, args, selected,
-                            result)
+        R += parseAndSelect(
+            tree, C, node, links, skips, path, query, args, selected, result
+        )
     return R
 
 
@@ -95,7 +98,7 @@ def runQuery(tree, links, paths, query, args, selected=None, mode=True):
     selected: the RETURNED list of values
     mode: True (defaut) a boolean list is returned for every node in the tree,
     False a list of the (True) paths is returned
-    
+
     The match between results and paths can be performed with help of the
     breadth-first paths order function in CGNS.PAT
     """
@@ -114,6 +117,16 @@ def runQuery(tree, links, paths, query, args, selected=None, mode=True):
     _args = v
     if isinstance(query, (str, bytes)):
         query = eval(query)
-    result = parseAndSelect(tree, tree, [None, None, [], None], links, paths, '',
-                            query, _args, selected, mode)
+    result = parseAndSelect(
+        tree,
+        tree,
+        [None, None, [], None],
+        links,
+        paths,
+        "",
+        query,
+        _args,
+        selected,
+        mode,
+    )
     return result
