@@ -6,6 +6,7 @@
 from __future__ import print_function
 
 import os
+import pathlib
 import sys
 import string
 import argparse
@@ -30,7 +31,6 @@ from setuputils import (
     log,
     line,
     is_windows,
-    fix_path,
     search,
     clean,
     touch,
@@ -262,7 +262,7 @@ if args.update:
     os.system(
         r"git rev-list --count HEAD> {}/revision.tmp".format(CONFIG.PRODUCTION_DIR)
     )
-    updateVersionInFile(fix_path("./lib/pyCGNSconfig_default.py"), CONFIG)
+    updateVersionInFile(pathlib.Path("./lib/pyCGNSconfig_default.py").as_posix(), CONFIG)
 
 
 def hasToGenerate(source, destination, force):
@@ -365,8 +365,8 @@ if MAP:
 
         EXTRA_MAP_COMPILE_ARGS = ""
 
-        resolveVars(fix_path(depfiles[0]), conf, args.force)
-        resolveVars(fix_path(depfiles[1]), conf, args.force)
+        resolveVars(pathlib.Path(depfiles[0]).as_posix(), conf, args.force)
+        resolveVars(pathlib.Path(depfiles[1]).as_posix(), conf, args.force)
         library_dirs = [l for l in library_dirs if l != ""]
 
         # hack: actually shoudl read hdf5/cmake config to get true compiler...
@@ -534,17 +534,17 @@ if NAV and CONFIG.HAS_QTPY:
         com = "{} --from-imports -o CGNS/NAV/G/{}.pyx CGNS/NAV/T/{}.ui".format(
             cui, m, m
         )
-        os.system(fix_path(com))
+        os.system(pathlib.Path(com).as_posix())
         if HAS_PY3:
             com = "{} -X language_level=3 -a CGNS/NAV/G/{}.pyx".format(ccy, m)
         else:
             com = "{} -a CGNS/NAV/G/{}.pyx".format(ccy, m)
-        os.system(fix_path(com))
+        os.system(pathlib.Path(com).as_posix())
 
     if hasToGenerate("CGNS/NAV/R/Res.qrc", "CGNS/NAV/Res_rc.py", args.force):
         log("Generate from updated Qt Ressources ({}): Res_rc.py".format(crc))
         com = "{} -o CGNS/NAV/Res_rc.py CGNS/NAV/R/Res.qrc".format(crc)
-        os.system(fix_path(com))
+        os.system(pathlib.Path(com).as_posix())
 
     ALL_PACKAGES += ["CGNS.NAV", "CGNS.NAV.test"]
     ALL_EXTENSIONS += modextlist

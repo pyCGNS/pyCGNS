@@ -63,12 +63,6 @@ if HAS_PY3:
 else:
     HAS_PY2 = 1
 
-def fix_path(path):
-    """All paths should be POSIX paths. Translation is required only for windows."""
-    if is_windows():
-        return path.replace('/','\\') # os.sep useless here
-    else:
-        return path
         
 # --------------------------------------------------------------------
 def prodtag():
