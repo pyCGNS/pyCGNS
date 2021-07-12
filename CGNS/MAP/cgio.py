@@ -168,7 +168,7 @@ def load(filename, nodata=False, maxdata=65, subtree="", follow_links=False, **k
 
 def save(filename, tree, links=[], **kwargs):
     def _cst_size_str(s, n):
-        return np.bytes_(bytes(s, 'ascii').ljust(n, b"\x00"))
+        return np.bytes_(bytes(s, "ascii").ljust(n, b"\x00"))
 
     def _save(grp, node):
 
