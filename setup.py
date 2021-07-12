@@ -604,6 +604,7 @@ setup(
     version="{}.{}.{}".format(MAJOR_VERSION, MINOR_VERSION, CONFIG.REVISION),
     description=CONFIG.DESCRIPTION,
     long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
     classifiers=[x for x in cls_txt.split("\n") if x],
     author=CONFIG.AUTHOR,
     author_email=CONFIG.EMAIL,
