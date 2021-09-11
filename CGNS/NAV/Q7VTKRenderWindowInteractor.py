@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 A simple VTK widget for PyQt or PySide.
 See http://www.trolltech.com for Qt documentation,
@@ -38,31 +39,33 @@ Changes by Alex Tsui, Apr. 2015
 
 Changes by Fabian Wenzel, Jan. 2016
  Support for Python3
-"""
-from __future__ import unicode_literals
 
-try:
-    from builtins import str, bytes, range, dict
-except ImportError:
-    from __builtin__ import str, bytes, range, dict
+Changes by Tobias Hänel, Sep. 2018
+ Support for PySide2
+
+Changes by Ruben de Bruin, Aug. 2019
+ Fixes to the keyPressEvent function
+"""
 # Check whether a specific PyQt implementation was chosen
 try:
-    import vtk.qt
+    import vtkmodules.qt
 
-    PyQtImpl = vtk.qt.PyQtImpl
+    PyQtImpl = vtkmodules.qt.PyQtImpl
 except ImportError:
-    PyQtImpl = None
     pass
 
 # Check whether a specific QVTKRenderWindowInteractor base
 # class was chosen, can be set to "QGLWidget"
 QVTKRWIBase = "QWidget"
 try:
-    import vtk.qt
+    import vtkmodules.qt
 
-    QVTKRWIBase = vtk.qt.QVTKRWIBase
+    QVTKRWIBase = vtkmodules.qt.QVTKRWIBase
 except ImportError:
     pass
+
+from vtkmodules.vtkRenderingCore import vtkRenderWindow
+from vtkmodules.vtkRenderingUI import vtkGenericRenderWindowInteractor
 
 if PyQtImpl is None:
     # Autodetect the PyQt implementation to use
@@ -72,16 +75,21 @@ if PyQtImpl is None:
         PyQtImpl = "PyQt5"
     except ImportError:
         try:
-            import PyQt4
+            import PySide2
 
-            PyQtImpl = "PyQt4"
+            PyQtImpl = "PySide2"
         except ImportError:
             try:
-                import PySide
+                import PyQt4
 
-                PyQtImpl = "PySide"
+                PyQtImpl = "PyQt4"
             except ImportError:
-                raise ImportError("Cannot load either PyQt or PySide")
+                try:
+                    import PySide
+
+                    PyQtImpl = "PySide"
+                except ImportError:
+                    raise ImportError("Cannot load either PyQt or PySide")
 
 if PyQtImpl == "PyQt5":
     if QVTKRWIBase == "QGLWidget":
@@ -89,17 +97,33 @@ if PyQtImpl == "PyQt5":
     from PyQt5.QtWidgets import QWidget
     from PyQt5.QtWidgets import QSizePolicy
     from PyQt5.QtWidgets import QApplication
+    from PyQt5.QtWidgets import QMainWindow
+    from PyQt5.QtGui import QCursor
     from PyQt5.QtCore import Qt
     from PyQt5.QtCore import QTimer
     from PyQt5.QtCore import QObject
     from PyQt5.QtCore import QSize
     from PyQt5.QtCore import QEvent
+elif PyQtImpl == "PySide2":
+    if QVTKRWIBase == "QGLWidget":
+        from PySide2.QtOpenGL import QGLWidget
+    from PySide2.QtWidgets import QWidget
+    from PySide2.QtWidgets import QSizePolicy
+    from PySide2.QtWidgets import QApplication
+    from PySide2.QtWidgets import QMainWindow
+    from PySide2.QtGui import QCursor
+    from PySide2.QtCore import Qt
+    from PySide2.QtCore import QTimer
+    from PySide2.QtCore import QObject
+    from PySide2.QtCore import QSize
+    from PySide2.QtCore import QEvent
 elif PyQtImpl == "PyQt4":
     if QVTKRWIBase == "QGLWidget":
         from PyQt4.QtOpenGL import QGLWidget
     from PyQt4.QtGui import QWidget
     from PyQt4.QtGui import QSizePolicy
     from PyQt4.QtGui import QApplication
+    from PyQt4.QtGui import QMainWindow
     from PyQt4.QtCore import Qt
     from PyQt4.QtCore import QTimer
     from PyQt4.QtCore import QObject
@@ -111,6 +135,7 @@ elif PyQtImpl == "PySide":
     from PySide.QtGui import QWidget
     from PySide.QtGui import QSizePolicy
     from PySide.QtGui import QApplication
+    from PySide.QtGui import QMainWindow
     from PySide.QtCore import Qt
     from PySide.QtCore import QTimer
     from PySide.QtCore import QObject
@@ -126,13 +151,11 @@ elif QVTKRWIBase == "QGLWidget":
     QVTKRWIBaseClass = QGLWidget
 else:
     raise ImportError(
-        "Unknown base class for Q7VTKRenderWindowInteractor " + QVTKRWIBase
+        "Unknown base class for QVTKRenderWindowInteractor " + QVTKRWIBase
     )
 
-import vtk
 
-
-class Q7VTKRenderWindowInteractor(QVTKRWIBaseClass):
+class QVTKRenderWindowInteractor(QVTKRWIBaseClass):
 
     """A QVTKRenderWindowInteractor for Python and Qt.  Uses a
     vtkGenericRenderWindowInteractor to handle the interactions.  Use
@@ -253,7 +276,7 @@ class Q7VTKRenderWindowInteractor(QVTKRWIBaseClass):
         if rw:  # user-supplied render window
             self._RenderWindow = rw
         else:
-            self._RenderWindow = vtk.vtkRenderWindow()
+            self._RenderWindow = vtkRenderWindow()
 
         WId = self.winId()
 
@@ -289,7 +312,7 @@ class Q7VTKRenderWindowInteractor(QVTKRWIBaseClass):
         try:
             self._Iren = kw["iren"]
         except KeyError:
-            self._Iren = vtk.vtkGenericRenderWindowInteractor()
+            self._Iren = vtkGenericRenderWindowInteractor()
             self._Iren.SetRenderWindow(self._RenderWindow)
 
         # do all the necessary qt setup
@@ -308,12 +331,11 @@ class Q7VTKRenderWindowInteractor(QVTKRWIBaseClass):
             "CursorChangedEvent", self.CursorChangedEvent
         )
 
-        # Create a hidden child widget and connect its destroyed signal to its
-        # parent ``Finalize`` slot. The hidden children will be destroyed before
-        # its parent thus allowing cleanup of VTK elements.
-        self._hidden = QWidget(self)
-        self._hidden.hide()
-        self._hidden.destroyed.connect(self.Finalize)
+        # If we've a parent, it does not close the child when closed.
+        # Connect the parent's destroyed signal to this widget's close
+        # slot for proper cleanup of VTK objects.
+        if self.parent():
+            self.parent().destroyed.connect(self.close, Qt.DirectConnection)
 
     def __getattr__(self, attr):
         """Makes the object behave like a vtkGenericRenderWindowInteractor"""
@@ -372,12 +394,41 @@ class Q7VTKRenderWindowInteractor(QVTKRWIBaseClass):
         self._Iren.Render()
 
     def resizeEvent(self, ev):
-        w = self.width()
-        h = self.height() - 25
-        vtk.vtkRenderWindow.SetSize(self._RenderWindow, w, h)
+        scale = self._getPixelRatio()
+        w = int(round(scale * self.width()))
+        h = int(round(scale * self.height()))
+        self._RenderWindow.SetDPI(int(round(72 * scale)))
+        vtkRenderWindow.SetSize(self._RenderWindow, w, h)
         self._Iren.SetSize(w, h)
         self._Iren.ConfigureEvent()
         self.update()
+
+    def _GetKeyCharAndKeySym(self, ev):
+        """Convert a Qt key into a char and a vtk keysym.
+
+        This is essentially copied from the c++ implementation in
+        GUISupport/Qt/QVTKInteractorAdapter.cxx.
+        """
+        # if there is a char, convert its ASCII code to a VTK keysym
+        try:
+            keyChar = ev.text()[0]
+            keySym = _keysyms_for_ascii[ord(keyChar)]
+        except IndexError:
+            keyChar = "\0"
+            keySym = None
+
+        # next, try converting Qt key code to a VTK keysym
+        if keySym is None:
+            try:
+                keySym = _keysyms[ev.key()]
+            except KeyError:
+                keySym = None
+
+        # use "None" as a fallback
+        if keySym is None:
+            keySym = "None"
+
+        return keyChar, keySym
 
     def _GetCtrlShift(self, ev):
         ctrl = shift = False
@@ -395,16 +446,44 @@ class Q7VTKRenderWindowInteractor(QVTKRWIBaseClass):
 
         return ctrl, shift
 
+    @staticmethod
+    def _getPixelRatio():
+        if PyQtImpl in ["PyQt5", "PySide2"]:
+            # Source: https://stackoverflow.com/a/40053864/3388962
+            pos = QCursor.pos()
+            for screen in QApplication.screens():
+                rect = screen.geometry()
+                if rect.contains(pos):
+                    return screen.devicePixelRatio()
+            # Should never happen, but try to find a good fallback.
+            return QApplication.instance().devicePixelRatio()
+        else:
+            # Qt4 seems not to provide any cross-platform means to get the
+            # pixel ratio.
+            return 1.0
+
+    def _setEventInformation(self, x, y, ctrl, shift, key, repeat=0, keysum=None):
+        scale = self._getPixelRatio()
+        self._Iren.SetEventInformation(
+            int(round(x * scale)),
+            int(round((self.height() - y - 1) * scale)),
+            ctrl,
+            shift,
+            key,
+            repeat,
+            keysum,
+        )
+
     def enterEvent(self, ev):
         ctrl, shift = self._GetCtrlShift(ev)
-        self._Iren.SetEventInformationFlipY(
+        self._setEventInformation(
             self.__saveX, self.__saveY, ctrl, shift, chr(0), 0, None
         )
         self._Iren.EnterEvent()
 
     def leaveEvent(self, ev):
         ctrl, shift = self._GetCtrlShift(ev)
-        self._Iren.SetEventInformationFlipY(
+        self._setEventInformation(
             self.__saveX, self.__saveY, ctrl, shift, chr(0), 0, None
         )
         self._Iren.LeaveEvent()
@@ -414,9 +493,7 @@ class Q7VTKRenderWindowInteractor(QVTKRWIBaseClass):
         repeat = 0
         if ev.type() == QEvent.MouseButtonDblClick:
             repeat = 1
-        self._Iren.SetEventInformationFlipY(
-            ev.x(), ev.y(), ctrl, shift, chr(0), repeat, None
-        )
+        self._setEventInformation(ev.x(), ev.y(), ctrl, shift, chr(0), repeat, None)
 
         self._ActiveButton = ev.button()
 
@@ -427,17 +504,16 @@ class Q7VTKRenderWindowInteractor(QVTKRWIBaseClass):
         elif self._ActiveButton == Qt.MidButton:
             self._Iren.MiddleButtonPressEvent()
 
-    # def mouseReleaseEvent(self, ev):
-    #    ctrl, shift = self._GetCtrlShift(ev)
-    #    self._Iren.SetEventInformationFlipY(ev.x(), ev.y(),
-    #                                       ctrl, shift, chr(0), 0, None)
+    def mouseReleaseEvent(self, ev):
+        ctrl, shift = self._GetCtrlShift(ev)
+        self._setEventInformation(ev.x(), ev.y(), ctrl, shift, chr(0), 0, None)
 
-    #    if self._ActiveButton == Qt.LeftButton:
-    #        self._Iren.LeftButtonReleaseEvent()
-    #    elif self._ActiveButton == Qt.RightButton:
-    #        self._Iren.RightButtonReleaseEvent()
-    #    elif self._ActiveButton == Qt.MidButton:
-    #        self._Iren.MiddleButtonReleaseEvent()
+        if self._ActiveButton == Qt.LeftButton:
+            self._Iren.LeftButtonReleaseEvent()
+        elif self._ActiveButton == Qt.RightButton:
+            self._Iren.RightButtonReleaseEvent()
+        elif self._ActiveButton == Qt.MidButton:
+            self._Iren.MiddleButtonReleaseEvent()
 
     def mouseMoveEvent(self, ev):
         self.__saveModifiers = ev.modifiers()
@@ -446,37 +522,23 @@ class Q7VTKRenderWindowInteractor(QVTKRWIBaseClass):
         self.__saveY = ev.y()
 
         ctrl, shift = self._GetCtrlShift(ev)
-        self._Iren.SetEventInformationFlipY(
-            ev.x(), ev.y(), ctrl, shift, chr(0), 0, None
-        )
+        self._setEventInformation(ev.x(), ev.y(), ctrl, shift, chr(0), 0, None)
         self._Iren.MouseMoveEvent()
 
     def keyPressEvent(self, ev):
+        key, keySym = self._GetKeyCharAndKeySym(ev)
         ctrl, shift = self._GetCtrlShift(ev)
-        if ev.key() < 256:
-            key = str(ev.text())
-        else:
-            key = chr(0)
-
-        keySym = _qt_key_to_key_sym(ev.key())
-        if shift and len(keySym) == 1 and keySym.isalpha():
-            keySym = keySym.upper()
-
-        self._Iren.SetEventInformationFlipY(
+        self._setEventInformation(
             self.__saveX, self.__saveY, ctrl, shift, key, 0, keySym
         )
         self._Iren.KeyPressEvent()
         self._Iren.CharEvent()
 
     def keyReleaseEvent(self, ev):
+        key, keySym = self._GetKeyCharAndKeySym(ev)
         ctrl, shift = self._GetCtrlShift(ev)
-        if ev.key() < 256:
-            key = chr(ev.key())
-        else:
-            key = chr(0)
-
-        self._Iren.SetEventInformationFlipY(
-            self.__saveX, self.__saveY, ctrl, shift, key, 0, None
+        self._setEventInformation(
+            self.__saveX, self.__saveY, ctrl, shift, key, 0, keySym
         )
         self._Iren.KeyReleaseEvent()
 
@@ -503,35 +565,178 @@ class Q7VTKRenderWindowInteractor(QVTKRWIBaseClass):
 def QVTKRenderWidgetConeExample():
     """A simple example that uses the QVTKRenderWindowInteractor class."""
 
+    from vtkmodules.vtkFiltersSources import vtkConeSource
+    from vtkmodules.vtkRenderingCore import vtkActor, vtkPolyDataMapper, vtkRenderer
+
+    # load implementations for rendering and interaction factory classes
+    import vtkmodules.vtkRenderingOpenGL2
+    import vtkmodules.vtkInteractionStyle
+
     # every QT app needs an app
     app = QApplication(["QVTKRenderWindowInteractor"])
 
+    window = QMainWindow()
+
     # create the widget
-    widget = QVTKRenderWindowInteractor()
-    widget.Initialize()
-    widget.Start()
+    widget = QVTKRenderWindowInteractor(window)
+    window.setCentralWidget(widget)
     # if you don't want the 'q' key to exit comment this.
     widget.AddObserver("ExitEvent", lambda o, e, a=app: a.quit())
 
-    ren = vtk.vtkRenderer()
+    ren = vtkRenderer()
     widget.GetRenderWindow().AddRenderer(ren)
 
-    cone = vtk.vtkConeSource()
+    cone = vtkConeSource()
     cone.SetResolution(8)
 
-    coneMapper = vtk.vtkPolyDataMapper()
+    coneMapper = vtkPolyDataMapper()
     coneMapper.SetInputConnection(cone.GetOutputPort())
 
-    coneActor = vtk.vtkActor()
+    coneActor = vtkActor()
     coneActor.SetMapper(coneMapper)
 
     ren.AddActor(coneActor)
 
     # show the widget
-    widget.show()
+    window.show()
+
+    widget.Initialize()
+    widget.Start()
+
     # start event processing
     app.exec_()
 
+
+_keysyms_for_ascii = (
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    "Tab",
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    "space",
+    "exclam",
+    "quotedbl",
+    "numbersign",
+    "dollar",
+    "percent",
+    "ampersand",
+    "quoteright",
+    "parenleft",
+    "parenright",
+    "asterisk",
+    "plus",
+    "comma",
+    "minus",
+    "period",
+    "slash",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "colon",
+    "semicolon",
+    "less",
+    "equal",
+    "greater",
+    "question",
+    "at",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "bracketleft",
+    "backslash",
+    "bracketright",
+    "asciicircum",
+    "underscore",
+    "quoteleft",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    "braceleft",
+    "bar",
+    "braceright",
+    "asciitilde",
+    "Delete",
+)
 
 _keysyms = {
     Qt.Key_Backspace: "BackSpace",
@@ -629,18 +834,9 @@ _keysyms = {
 }
 
 
-def _qt_key_to_key_sym(key):
-    """Convert a Qt key into a vtk keysym.
-
-    This is essentially copied from the c++ implementation in
-    GUISupport/Qt/QVTKInteractorAdapter.cxx.
-    """
-
-    if key not in _keysyms:
-        return None
-
-    return _keysyms[key]
-
+if __name__ == "__main__":
+    print(PyQtImpl)
+    QVTKRenderWidgetConeExample()
 
 if __name__ == "__main__":
     print(PyQtImpl)

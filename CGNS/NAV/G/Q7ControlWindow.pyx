@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ControlWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -152,7 +153,5 @@ class Ui_Q7ControlWindow(object):
         self.bAbout.setText(_translate("Q7ControlWindow", "..."))
         self.bClose.setToolTip(_translate("Q7ControlWindow", "Close all CGNS.NAV windows"))
         self.controlTable.setSortingEnabled(True)
-
-
 from CGNS.NAV.mcontrol import Q7ControlTableWidget
 from . import Res_rc

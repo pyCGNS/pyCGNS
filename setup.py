@@ -3,8 +3,6 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from __future__ import print_function
-
 import os
 import sys
 import string
@@ -13,6 +11,7 @@ import glob
 import re
 
 from setuptools import setup, Extension
+from pathlib import Path
 
 # in the case the default python/distutils compiler fails with mpi, set
 # this variable. You should check this compiler is the one used for HDF5 prod
@@ -25,8 +24,6 @@ from setuputils import (
     MAJOR_VERSION,
     MINOR_VERSION,
     HAS_MSW,
-    HAS_PY2,
-    HAS_PY3,
     log,
     line,
     is_windows,
@@ -166,10 +163,6 @@ try:
 except OSError:
     pass
 
-if HAS_PY3:
-    log("found Python 3 platform")
-else:
-    log("found Python 2 platform")
 log("using Python from {}".format(sys.prefix))
 
 if HAS_MSW:
@@ -535,10 +528,7 @@ if NAV and CONFIG.HAS_QTPY:
             cui, m, m
         )
         os.system(fix_path(com))
-        if HAS_PY3:
-            com = "{} -X language_level=3 -a CGNS/NAV/G/{}.pyx".format(ccy, m)
-        else:
-            com = "{} -a CGNS/NAV/G/{}.pyx".format(ccy, m)
+        com = "{} -X language_level=3 -a CGNS/NAV/G/{}.pyx".format(ccy, m)
         os.system(fix_path(com))
 
     if hasToGenerate("CGNS/NAV/R/Res.qrc", "CGNS/NAV/Res_rc.py", args.force):
@@ -559,9 +549,9 @@ else:
 
 installConfigFiles(CONFIG.PRODUCTION_DIR)
 
-if HAS_PY3:
-    for e in ALL_EXTENSIONS:
-        e.cython_directives = {"language_level": "3"}
+
+for e in ALL_EXTENSIONS:
+    e.cython_directives = {"language_level": "3"}
 
 #  -------------------------------------------------------------------------
 if CONFIG.HAS_CYTHON:
@@ -585,9 +575,9 @@ Intended Audience :: Science/Research
 License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)
 Programming Language :: Cython
 Programming Language :: Python
-Programming Language :: Python :: 2.7
 Programming Language :: Python :: 3
 Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3.8
 Programming Language :: Python :: Implementation :: CPython
 Topic :: Scientific/Engineering
 Topic :: Database
@@ -599,11 +589,14 @@ Operating System :: Microsoft :: Windows
 """
 
 # -------------------------------------------------------------------------
+long_description = (Path(__file__).parent / "README.md").read_text()
+
+# -------------------------------------------------------------------------
 setup(
     name=CONFIG.NAME,
     version="{}.{}.{}".format(MAJOR_VERSION, MINOR_VERSION, CONFIG.REVISION),
     description=CONFIG.DESCRIPTION,
-    long_description=open("README.md").read(),
+    long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[x for x in cls_txt.split("\n") if x],
     author=CONFIG.AUTHOR,

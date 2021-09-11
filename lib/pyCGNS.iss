@@ -13,7 +13,7 @@ DefaultDirName={src}\pyCGNS
 DefaultGroupName=pyCGNS
 UninstallDisplayIcon={app}\cg_look.exe
 OutputDir="..\build"
-OutputBaseFilename="pyCGNS-v4.6-win64-py2.7"
+OutputBaseFilename="pyCGNS-v6.0-win64-py3.8"
 SetupIconFile="pyCGNS-small.ico"
 PrivilegesRequired=none
 Compression=lzma2
@@ -24,11 +24,11 @@ WizardSmallImageFile=pyCGNS-wizard-small.bmp
 LicenseFile=..\license.txt
 
 [Files]
-Source: "..\build\exe.win-amd64-2.7\demo\*"; Excludes: "..\build\exe.win-amd64-2.7\demo\DPW5"; DestDir: "{app}\demo"; Components: Demo/Basic
-Source: "..\build\exe.win-amd64-2.7\demo\DPW5\*"; DestDir: "{app}\demo\DPW5"; Components: Demo/Large
-Source: "..\build\exe.win-amd64-2.7\demo\124Disk-PASS\*"; DestDir: "{app}\demo\124Disk-PASS"; Components: Demo/Basic
-Source: "..\build\exe.win-amd64-2.7\demo\124Disk-FAIL\*"; DestDir: "{app}\demo\124Disk-FAIL"; Components: Demo/Basic
-Source: "..\build\exe.win-amd64-2.7\*"; Excludes: "..\build\exe.win-amd64-2.7\demo\*"; DestDir: "{app}"; Components: Core
+Source: "..\build\exe.win-amd64-3.8\demo\*"; Excludes: "..\build\exe.win-amd64-3.8\demo\DPW5"; DestDir: "{app}\demo"; Components: Demo/Basic
+Source: "..\build\exe.win-amd64-3.8\demo\DPW5\*"; DestDir: "{app}\demo\DPW5"; Components: Demo/Large
+Source: "..\build\exe.win-amd64-3.8\demo\124Disk-PASS\*"; DestDir: "{app}\demo\124Disk-PASS"; Components: Demo/Basic
+Source: "..\build\exe.win-amd64-3.8\demo\124Disk-FAIL\*"; DestDir: "{app}\demo\124Disk-FAIL"; Components: Demo/Basic
+Source: "..\build\exe.win-amd64-3.8\*"; Excludes: "..\build\exe.win-amd64-3.8\demo\*"; DestDir: "{app}"; Components: Core
 Source: "pyCGNS.ico"; DestDir: "{app}"
 
 [Components]

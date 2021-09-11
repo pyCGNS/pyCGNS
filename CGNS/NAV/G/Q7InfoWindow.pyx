@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7InfoWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -288,6 +289,4 @@ class Ui_Q7InfoWindow(object):
         self.bHasBeenModified.setText(_translate("Q7InfoWindow", "WARNING: File has changed on disk"))
         self.label.setText(_translate("Q7InfoWindow", "File: "))
         self.label_13.setText(_translate("Q7InfoWindow", "TMP:"))
-
-
 from . import Res_rc

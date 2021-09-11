@@ -8,8 +8,8 @@
 # all installs in USER/AppData/Local
 #
 # install hdf5 win64 msvc
-# install Anaconda win64 py2.7
-# install Anaconda extra packages: scons, vtk, cython
+# install Anaconda win64 py3.8
+# install Anaconda extra packages: vtk, cython
 #   conda.exe install --force --offline ...
 # overwrite numpy with Gohlke numpy+mkl (Anaconda fails as stand alone)
 #   install in Anaconda site-packages

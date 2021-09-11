@@ -7,6 +7,15 @@ The [user documentation](http://pycgns.github.io) is available online, it
 contains the releases, the installation requirements and process, the usage docs
 and the reference docs.
 
+## CGNS Modules
+
+- `CGNS.MAP` implements CGNS/Python physical representation of CGNS/SIDS
+- `CGNS.PAT` has a large set of fonctions for CGNS/Python tree handling
+- `CGNS.NAV` is a CGNS/Python tree browser
+- `CGNS.VAL` checks CGNS/SIDS compliance of CGNS/Python trees
+- `CGNS.APP` is a set of all-purpose utilities
+- `CGNS.DAT` is not maintained today
+
 ## Bugs/Feature and issue tracking
 
 Please use the [issue-tracker](https://github.com/pycgns/pycgns/issues) at github

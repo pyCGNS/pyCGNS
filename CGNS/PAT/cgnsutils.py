@@ -3,10 +3,17 @@
 #  See license.txt file in the root directory of this Python module source
 #  ---------------------------------------------------------------------------
 #
-from __future__ import unicode_literals
-from __future__ import print_function
 from functools import cmp_to_key
-from builtins import str, bytes, range, dict
+from typing import (
+    List,
+    Optional,
+    NoReturn,
+    Union,
+    Tuple,
+    Iterator,
+    Dict,
+    Any,
+)
 
 import hashlib
 import os.path as op
@@ -20,10 +27,14 @@ import CGNS.PAT.cgnserrors as CE
 import CGNS.PAT.cgnskeywords as CK
 import CGNS.PAT.cgnstypes as CT
 
-import sys
 
-PY3 = sys.version_info[0] == 3
-# from os import sep as SEPARATOR
+# Node Type definition
+TreeNode = List[Union[str, Optional[numpy.ndarray], List["TreeNode"]]]
+# Keys to access TreeNode values
+__NAME__ = 0
+__VALUE__ = 1
+__CHILDREN__ = 2
+__LABEL__ = 3
 
 __I4 = numpy.dtype(numpy.int32)
 __I8 = numpy.dtype(numpy.int64)
@@ -36,7 +47,14 @@ __R8 = numpy.dtype(numpy.float64)
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-def nodeCreate(name, value, children, ntype, parent=None, dienow=False):
+def nodeCreate(
+    name: str,
+    value: Optional[numpy.ndarray],
+    children: List[TreeNode],
+    ntype,
+    parent: Optional[TreeNode] = None,
+    dienow: bool = False,
+) -> TreeNode:
     """
     Create a new node with and bind it to its parent::
 
@@ -67,13 +85,20 @@ def nodeCreate(name, value, children, ntype, parent=None, dienow=False):
     return newNode(name, value, children, ntype, parent=parent, dienow=dienow)
 
 
-def newNode(name, value, children, ntype, parent=None, dienow=False):
+def newNode(
+    name: str,
+    value: Optional[numpy.ndarray],
+    children: List[TreeNode],
+    ntype,
+    parent: Optional[TreeNode] = None,
+    dienow: bool = False,
+) -> TreeNode:
     node = [name, value, [], ntype]
     if isinstance(children, list) and children is not []:
         if checkNodeCompliant(children):
-            setAsChild(node, children)
+            node[__CHILDREN__].append(children)
         else:
-            node[2] = children
+            node[__CHILDREN__] = children
     if dienow:
         checkNodeCompliant(node, parent, dienow)
     if parent:
@@ -82,7 +107,9 @@ def newNode(name, value, children, ntype, parent=None, dienow=False):
 
 
 # --------------------------------------------------
-def nodeCopy(node, newname=None, share=False):
+def nodeCopy(
+    node: TreeNode, newname: Optional[str] = None, share: bool = False
+) -> TreeNode:
     """
     Creates a new node sub-tree as a copy of the argument node sub-tree.
     A deep copy is performed on the node, including the values, which can
@@ -106,20 +133,30 @@ def nodeCopy(node, newname=None, share=False):
       - Default is to deep copy including numpy.ndarray
     """
     if newname is None:
-        newname = node[0]
+        newname = node[__NAME__]
     return copyNode(node, newname, share)
 
 
-def copyNode(n, newname, share=False):
+def copyNode(n: TreeNode, newname: str, share: bool = False):
     if not share:
-        newn = [newname, copyArray(n[1]), deepcopyNodeList(n[2], share=share), n[3]]
+        newn = [
+            newname,
+            copyArray(n[__VALUE__]),
+            deepcopyNodeList(n[__CHILDREN__], share=share),
+            n[__LABEL__],
+        ]
     else:
-        newn = [newname, n[1], deepcopyNodeList(n[2], share=share), n[3]]
+        newn = [
+            newname,
+            n[__VALUE__],
+            deepcopyNodeList(n[__CHILDREN__], share=share),
+            n[__LABEL__],
+        ]
     return newn
 
 
 # --------------------------------------------------
-def nodeDelete(tree, node, legacy=False):
+def nodeDelete(tree: TreeNode, node: TreeNode, legacy: bool = False) -> TreeNode:
     """
     Deletes a node from a tree::
 
@@ -164,19 +201,19 @@ def nodeDelete(tree, node, legacy=False):
 
 
 # --------------------------------------------------
-def deepcopyNodeList(la, share=False):
+def deepcopyNodeList(la: List[TreeNode], share: bool = False) -> List[TreeNode]:
     if not la:
         return la
     ra = []
     for a in la:
-        ra.append(copyNode(a, a[0], share))
+        ra.append(copyNode(a, a[__NAME__], share))
     return ra
 
 
 # -----------------------------------------------------------------------------
 # support functions
 # -----------------------------------------------------------------------------
-def checkNodeName(node, dienow=False):
+def checkNodeName(node: TreeNode, dienow: bool = False) -> bool:
     """
     Checks if the name is CGNS/Python compliant node name::
 
@@ -194,10 +231,10 @@ def checkNodeName(node, dienow=False):
         if dienow:
             raise CE.cgnsNameError(2)
         return False
-    return checkName(node[0], dienow)
+    return checkName(node[__NAME__], dienow)
 
 
-def checkName(name, dienow=False, strict=False):
+def checkName(name: str, dienow: bool = False, strict: bool = False) -> bool:
     """
     Checks if the name is CGNS/Python compliant node name. The name should be a
     Python string of type ``str`` or ``unicode``, but ``str`` is strongly
@@ -281,7 +318,7 @@ def checkName(name, dienow=False, strict=False):
     return True
 
 
-def checkNameOrGenerate(name, pattern="%32s"):
+def checkNameOrGenerate(name: str, pattern: str = "%32s") -> str:
     """
     Checks if a name is CGNS/SIDS compliant, if not generate a new
     name using a hash fonction with arg name as input.
@@ -293,7 +330,7 @@ def checkNameOrGenerate(name, pattern="%32s"):
     if checkName(name, strict=True):
         return name
     h = hashlib.md5()
-    h.update(name)
+    h.update(name.encode())
     nname = h.hexdigest()
     name = "%32s" % (pattern % nname)[:32]
     if checkName(name, strict=True):
@@ -302,11 +339,11 @@ def checkNameOrGenerate(name, pattern="%32s"):
 
 
 # --------------------------------------------------
-def addChild(parent, node):
+def addChild(parent: TreeNode, node: TreeNode) -> TreeNode:
     return setChild(parent, node)
 
 
-def setAsChild(parent, node):
+def setAsChild(parent: TreeNode, node: TreeNode) -> TreeNode:
     """
     Adds a child node to the parent node children list::
 
@@ -325,7 +362,7 @@ def setAsChild(parent, node):
     return setChild(parent, node)
 
 
-def setAsUniqueChild(parent, node, check=False):
+def setAsUniqueChild(parent: TreeNode, node: TreeNode, check: bool = False) -> TreeNode:
     """
     Adds a child node to the parent node children list
     Existing child node with the same name is replaced::
@@ -346,29 +383,29 @@ def setAsUniqueChild(parent, node, check=False):
     if check:
         valid = (
             checkNode(node)
-            and checkName(node[0])
-            and checkArray(node[1])
+            and checkName(node[__NAME__])
+            and checkArray(node[__VALUE__])
             and checkNodeType(node)
         )
         if not valid:
             return parent
-    for idx, child in enumerate(parent[2]):
-        if child[0] == node[0]:
-            parent[2][idx] = node
+    for idx, child in enumerate(parent[__CHILDREN__]):
+        if child[__NAME__] == node[__NAME__]:
+            parent[__CHILDREN__][idx] = node
             break
     else:
-        parent[2].append(node)
+        parent[__CHILDREN__].append(node)
     return parent
 
 
-def setChild(parent, node):
+def setChild(parent: TreeNode, node: TreeNode) -> TreeNode:
     checkNodeCompliant(node, parent)
-    parent[2].append(node)
+    parent[__CHILDREN__].append(node)
     return parent
 
 
 # -----------------------------------------------------------------------------
-def checkDuplicatedName(parent, name, dienow=False):
+def checkDuplicatedName(parent: TreeNode, name: str, dienow: bool = False) -> bool:
     """
     Checks if the name is not already in the children list of the parent::
 
@@ -386,23 +423,25 @@ def checkDuplicatedName(parent, name, dienow=False):
     """
     if not parent:
         return True
-    if parent[2] is None:
+    if parent[__CHILDREN__] is None:
         return True
-    for nc in parent[2]:
-        if nc[0] == name:
-            if dienow:
-                raise CE.cgnsNameError(102, (name, parent[0]))
-            return False
-    return True
+    for nc in parent[__CHILDREN__]:
+        if nc[__NAME__] == name:
+            break
+    else:
+        return True
+    if dienow:
+        raise CE.cgnsNameError(102, (name, parent[__NAME__]))
+    return False
 
 
 # -----------------------------------------------------------------------------
-def checkHasChildName(parent, name, dienow=False):
+def checkHasChildName(parent: TreeNode, name: str, dienow: bool = False) -> bool:
     return checkChildName(parent, name, dienow)
 
 
 # -----------------------------------------------------------------------------
-def checkChildName(parent, name, dienow=False):
+def checkChildName(parent: TreeNode, name: str, dienow: bool = False) -> bool:
     """
     Checks if the name is in the children list of the parent::
 
@@ -421,11 +460,22 @@ def checkChildName(parent, name, dienow=False):
 
     :raise: :ref:`cgnsnameerror` code 102 if `dienow` is True
     """
-    return not checkDuplicatedName(parent, name, dienow)
+    if not parent:
+        return False
+    if parent[__CHILDREN__] is None:
+        return False
+    for nc in parent[__CHILDREN__]:
+        if nc[__NAME__] == name:
+            break
+    else:
+        return False
+    if dienow:
+        raise CE.cgnsNameError(102, (name, parent[__NAME__]))
+    return True
 
 
 # -----------------------------------------------------------------------------
-def checkUniqueChildName(parent, name, dienow=False):
+def checkUniqueChildName(parent: TreeNode, name: str, dienow: bool = False):
     """
     Checks if the name is unique in the children list of the parent::
 
@@ -439,9 +489,9 @@ def checkUniqueChildName(parent, name, dienow=False):
     """
     if not parent:
         return True
-    if parent[2] is None:
+    if parent[__NAME__] is None:
         return True
-    count = sum(1 for child in parent[2] if child[0] == name)
+    count = sum(1 for child in parent[__CHILDREN__] if child[__NAME__] == name)
     status = count < 2
     if dienow and not status:
         raise CE.cgnsNameError(102, (name, parent[0]))
@@ -449,7 +499,7 @@ def checkUniqueChildName(parent, name, dienow=False):
 
 
 # -----------------------------------------------------------------------------
-def getChildName(parent, name, dienow=False):
+def getChildName(parent: TreeNode, name: str, dienow: bool = False) -> str:
     """
     Checks if the name is in the children list of the parent, if the name
     already exists, a new name is returned. If the name doesn't exist the
@@ -466,13 +516,16 @@ def getChildName(parent, name, dienow=False):
     if checkDuplicatedName(parent, name, dienow):
         return name
     count = 1
-    while checkChildName(parent, "%s#%.d" % (name, count)):
+    names = set(childrenNames(parent))
+    while "%s#%.d" % (name, count) in names:
         count += 1
     return "%s#%.d" % (name, count)
 
 
 # -----------------------------------------------------------------------------
-def checkNodeType(node, cgnstype=None, dienow=False):
+def checkNodeType(
+    node: TreeNode, cgnstype: Union[str, List[str], None] = None, dienow: bool = False
+) -> bool:
     """
      Check the CGNS type of a node. The type can be a single value or
      a list of values. Each type to check is a string such as
@@ -504,25 +557,30 @@ def checkNodeType(node, cgnstype=None, dienow=False):
     return checkType(node, cgnstype, "", dienow)
 
 
-def checkType(parent, ltype, name, dienow=False):
+def checkType(
+    parent: Optional[TreeNode],
+    ltype: Union[str, List[str]],
+    name: str,
+    dienow: bool = False,
+) -> bool:
     """same as :py:func:`checkNodeType <CGNS.PAT.cgnsutils.checkNodeType>`"""
     if parent is None:
-        return None
-    if (ltype == []) and (parent[3] in CK.cgnstypes):
+        return False
+    if (ltype == []) and (parent[__LABEL__] in CK.cgnstypes):
         return True
     if isinstance(ltype, list) and (parent[3] in ltype):
         return True
-    if parent[3] == ltype:
+    if parent[__LABEL__] == ltype:
         return True
-    if (ltype == []) and (parent[3] not in CK.cgnstypes):
+    if (ltype == []) and (parent[__LABEL__] not in CK.cgnstypes):
         if dienow:
             raise CE.cgnsTypeError(40, (parent, parent[3]))
         return False
-    if parent[3] != ltype:
+    if parent[__LABEL__] != ltype:
         if dienow:
             raise CE.cgnsTypeError(103, (parent, ltype))
         return False
-    if isinstance(ltype, list) and (parent[3] not in ltype):
+    if isinstance(ltype, list) and (parent[__LABEL__] not in ltype):
         if dienow:
             raise CE.cgnsTypeError(104, (parent, ltype))
         return False
@@ -530,34 +588,34 @@ def checkType(parent, ltype, name, dienow=False):
 
 
 # -----------------------------------------------------------------------------
-def checkParentType(parent, stype):
+def checkParentType(parent: Optional[TreeNode], stype: str) -> bool:
     """same as :py:func:`checkType <CGNS.PAT.cgnsutils.checkType>` but
     checks the parent type instead of the current node"""
     if parent is None:
         return False
-    if parent[3] != stype:
+    if parent[__LABEL__] != stype:
         return False
     return True
 
 
 # -----------------------------------------------------------------------------
-def checkTypeList(parent, ltype, name):
+def checkTypeList(parent: Optional[TreeNode], ltype: List[str], name: str) -> NoReturn:
     if parent is None:
         return None
-    if parent[3] not in ltype:
+    if parent[__LABEL__] not in ltype:
         raise CE.cgnsException(104, (name, ltype))
     return None
 
 
 # -----------------------------------------------------------------------------
-def checkParent(node, dienow=False):
+def checkParent(node: Optional[TreeNode], dienow: bool = False) -> bool:
     if node is None:
         return False
     return checkNode(node, dienow)
 
 
 # -----------------------------------------------------------------------------
-def checkNode(node, dienow=False):
+def checkNode(node: Optional[TreeNode], dienow: bool = False) -> bool:
     """
     Checks if a node is a compliant CGNS/Python node structure of list.
     The syntax for a compliant node structure is:
@@ -593,23 +651,25 @@ def checkNode(node, dienow=False):
         if dienow:
             raise CE.cgnsException(2)
         return False
-    if not isinstance(node[0], str):
+    if not isinstance(node[__NAME__], str):
         if dienow:
             raise CE.cgnsException(3)
         return False
-    if not isinstance(node[2], list):
+    if not isinstance(node[__CHILDREN__], list):
         if dienow:
-            raise CE.cgnsException(4, node[0])
+            raise CE.cgnsException(4, node[__NAME__])
         return False
-    if (node[1] is not None) and (not isinstance(node[1], numpy.ndarray)):
+    if (node[__VALUE__] is not None) and (
+        not isinstance(node[__VALUE__], numpy.ndarray)
+    ):
         if dienow:
-            raise CE.cgnsException(5, node[0])
+            raise CE.cgnsException(5, node[__NAME__])
         return False
     return True
 
 
 # -----------------------------------------------------------------------------
-def checkRootNode(node, legacy=False, dienow=False):
+def checkRootNode(node: TreeNode, legacy: bool = False, dienow: bool = False) -> bool:
     """
     Checks if a node is the CGNS/Python tree root node.
     If `legacy` is True, then `[None, None, [children], None]` is
@@ -637,7 +697,12 @@ def checkRootNode(node, legacy=False, dienow=False):
     return isRootNode(node, legacy, dienow)
 
 
-def isRootNode(node, legacy=False, version=False, dienow=False):
+def isRootNode(
+    node: Optional[TreeNode],
+    legacy: bool = False,
+    version: bool = False,
+    dienow: bool = False,
+) -> Union[bool, float]:
     if not node:
         if dienow:
             raise CE.cgnsNodeError(90)
@@ -645,27 +710,26 @@ def isRootNode(node, legacy=False, version=False, dienow=False):
 
     if not checkNode(node, dienow):
         return False
-    if legacy:
+    if node[__LABEL__] == CK.CGNSTree_ts or legacy:
         start = node
     else:
-        if node[3] == CK.CGNSTree_ts:
-            start = node
-        else:
-            return False
+        return False
     versionfound = 0
     cgnsversion = 0.0
-    for n in start[2]:
-        if not checkNode(n, dienow):
+    for child in start[__CHILDREN__]:
+        if not checkNode(child, dienow):
             return False
-        if (n[0] == CK.CGNSLibraryVersion_s) and (n[3] == CK.CGNSLibraryVersion_ts):
+        if (child[__NAME__] == CK.CGNSLibraryVersion_s) and (
+            child[__LABEL__] == CK.CGNSLibraryVersion_ts
+        ):
             if versionfound and dienow:
                 raise CE.cgnsNodeError(99)
             if versionfound != 0:
                 return False
             versionfound = 1
-            if version and n[1] is not None:
-                cgnsversion = n[1][0]
-        elif n[3] != CK.CGNSBase_ts:
+            if version and child[__VALUE__] is not None:
+                cgnsversion = child[__VALUE__][0]
+        elif child[__LABEL__] != CK.CGNSBase_ts:
             if dienow:
                 raise CE.cgnsNodeError(91)
             return False
@@ -677,7 +741,7 @@ def isRootNode(node, legacy=False, version=False, dienow=False):
         return True
 
 
-def getVersion(tree):
+def getVersion(tree: Optional[TreeNode]) -> float:
     v = isRootNode(tree, version=True)
     if v:
         return v
@@ -686,7 +750,7 @@ def getVersion(tree):
 
 # -----------------------------------------------------------------------------
 # Arbitrary and incomplete node comparison (lazy evaluation)
-def checkSameTree(treeA, treeB, dienow=False):
+def checkSameTree(treeA: TreeNode, treeB: TreeNode, dienow: bool = False) -> bool:
     """
     Checks if two trees are the same, recursive use of CheckSameNode
     Does not says where it may differ, only True or False is returned
@@ -702,7 +766,7 @@ def checkSameTree(treeA, treeB, dienow=False):
 
 # -----------------------------------------------------------------------------
 # Arbitrary and incomplete node comparison (lazy evaluation)
-def checkSameNode(nodeA, nodeB, dienow=False):
+def checkSameNode(nodeA: TreeNode, nodeB: TreeNode, dienow: bool = False) -> bool:
     """
     Checks if two nodes have the same contents: same name, same CGNS/SIDS type,
     same number of children, same value type (None of numpy).
@@ -722,27 +786,27 @@ def checkSameNode(nodeA, nodeB, dienow=False):
     return sameNode(nodeA, nodeB, dienow)
 
 
-def sameNode(nodeA, nodeB, dienow=False):
+def sameNode(nodeA: TreeNode, nodeB: TreeNode, dienow: bool = False) -> bool:
     same = True
     if not (checkNode(nodeA) and checkNode(nodeB)):
         same = False
-    elif nodeA[0] != nodeB[0]:
+    elif nodeA[__NAME__] != nodeB[__NAME__]:
         same = False
-    elif nodeA[3] != nodeB[3]:
+    elif nodeA[__LABEL__] != nodeB[__LABEL__]:
         same = False
-    elif not isinstance(nodeA[1], type(nodeB[1])):
+    elif not isinstance(nodeA[__VALUE__], type(nodeB[__VALUE__])):
         same = False
     elif not checkSameValue(nodeA, nodeB):
         same = False
-    elif len(nodeA[2]) != len(nodeB[2]):
+    elif len(nodeA[__CHILDREN__]) != len(nodeB[__CHILDREN__]):
         same = False
     if not same and dienow:
-        raise CE.cgnsNodeError(30, (nodeA[0], nodeB[0]))
+        raise CE.cgnsNodeError(30, (nodeA[__NAME__], nodeB[__NAME__]))
     return same
 
 
 # -----------------------------------------------------------------------------
-def checkSameValue(nodeA, nodeB, dienow=False):
+def checkSameValue(nodeA: TreeNode, nodeB: TreeNode, dienow: bool = False) -> bool:
     """
     Checks if two nodes have the same value. There is no tolerance on actual
     array values when these are compared one to one. This could lead to time
@@ -756,8 +820,8 @@ def checkSameValue(nodeA, nodeB, dienow=False):
     :return: True if the nodes have same value
     :raise: :ref:`cgnsnodeerror` code 30 if `dienow` is True
     """
-    v_a = nodeA[1]
-    v_b = nodeB[1]
+    v_a = nodeA[__VALUE__]
+    v_b = nodeB[__VALUE__]
     if (v_a is None) and (v_b is None):
         return True
     if (v_a is None) or (v_b is None):
@@ -774,30 +838,32 @@ def checkSameValue(nodeA, nodeB, dienow=False):
 
 
 # -----------------------------------------------------------------------------
-def checkArray(a, dienow=False, orNone=True):
+def checkArray(
+    array: Optional[numpy.ndarray], dienow: bool = False, orNone: bool = True
+) -> bool:
     """
     Check if the array value of a node is a numpy array::
 
        if not checkArray(node[1]):
            raise Exception('Bad array (for a CGNS/Python node)')
 
-    :arg numpy.ndarray a: value to check
+    :arg numpy.ndarray array: value to check
     :arg bool dienow: If `True` raises an exception on error (default:`False`)
     :arg bool orNone: If `True' return True when `a' is None
     :return: True if the arg array is suitable as CGNS/Python value
     :raise: error codes 109,170 if `dienow` is True
     """
-    if orNone and (a is None):
+    if orNone and (array is None):
         return True
-    if not isinstance(a, numpy.ndarray):
+    if not isinstance(array, numpy.ndarray):
         if dienow:
             raise CE.cgnsException(109)
         return False
-    if getValueType(a) is None:
+    if getValueType(array) is None:
         if dienow:
             raise CE.cgnsException(111)
         return False
-    if len(a.shape) > 1 and not a.flags.f_contiguous:
+    if len(array.shape) > 1 and not array.flags.f_contiguous:
         if dienow:
             raise CE.cgnsException(710)
         return False
@@ -805,11 +871,11 @@ def checkArray(a, dienow=False, orNone=True):
 
 
 # -----------------------------------------------------------------------------
-def checkArrayChar(a, dienow=False):
+def checkArrayChar(array: Optional[numpy.ndarray], dienow: bool = False) -> bool:
     """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type C1"""
-    if not checkArray(a, dienow):
+    if not checkArray(array, dienow):
         return False
-    if a.dtype.kind not in ["S", "a"]:
+    if array.dtype.kind not in ["S", "a"]:
         if dienow:
             raise CE.cgnsException(105)
         return False
@@ -817,82 +883,84 @@ def checkArrayChar(a, dienow=False):
 
 
 # -----------------------------------------------------------------------------
-def checkArrayI4(a, dienow=False):
+def checkArrayI4(array: Optional[numpy.ndarray], dienow: bool = False) -> bool:
     """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type I4"""
-    if not checkArray(a):
+    if not checkArray(array):
         return False
-    if a.dtype != __I4:
+    if array.dtype != __I4:
         return False
     return True
 
 
 # -----------------------------------------------------------------------------
-def checkArrayI8(a, dienow=False):
+def checkArrayI8(array: Optional[numpy.ndarray], dienow: bool = False) -> bool:
     """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type I8"""
-    if not checkArray(a):
+    if not checkArray(array):
         return False
-    if a.dtype != __I8:
+    if array.dtype != __I8:
         return False
     return True
 
 
 # -----------------------------------------------------------------------------
-def checkArrayR4(a, dienow=False):
+def checkArrayR4(array: Optional[numpy.ndarray], dienow: bool = False) -> bool:
     """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type R4"""
-    if not checkArray(a):
+    if not checkArray(array):
         return False
-    if a.dtype != __R4:
+    if array.dtype != __R4:
         return False
     return True
 
 
 # -----------------------------------------------------------------------------
-def checkArrayR8(a, dienow=False):
+def checkArrayR8(array: Optional[numpy.ndarray], dienow: bool = False) -> bool:
     """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type R8"""
-    if not checkArray(a):
+    if not checkArray(array):
         return False
-    if a.dtype != __R8:
+    if array.dtype != __R8:
         return False
     return True
 
 
 # -----------------------------------------------------------------------------
-def checkArrayReal(a, dienow=False):
+def checkArrayReal(array: Optional[numpy.ndarray], dienow: bool = False) -> bool:
     """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type R4 or R8"""
-    if not checkArray(a):
+    if not checkArray(array):
         return False
-    if a.dtype not in [__R4, __R8]:
+    if array.dtype not in [__R4, __R8]:
         return False
     return True
 
 
 # -----------------------------------------------------------------------------
-def checkArrayInteger(a, dienow=False):
+def checkArrayInteger(array: Optional[numpy.ndarray], dienow: bool = False) -> bool:
     """same as :py:func:`checkArray <CGNS.PAT.cgnsutils.checkArray>` for an array of type I4,I8"""
-    if not checkArray(a):
+    if not checkArray(array):
         return False
-    if a.dtype not in [__I4, __I8]:
+    if array.dtype not in [__I4, __I8]:
         return False
     return True
 
 
 # -----------------------------------------------------------------------------
-def checkSingleValue(a):
+def checkSingleValue(array: Optional[numpy.ndarray]) -> bool:
     """checks if a value is a single value, that is a single integer,
     a single float or a single string"""
-    if checkArrayReal(a) or checkArrayInteger(a):
-        if a.shape == (1,):
+    if checkArrayReal(array) or checkArrayInteger(array):
+        if array.shape == (1,):
             return True
         return False
-    elif checkArrayChar(a):
-        if len(a.shape) == 1:
+    elif checkArrayChar(array):
+        if len(array.shape) == 1:
             return True
         return False
     return False
 
 
 # -----------------------------------------------------------------------------
-def checkNodeCompliant(node, parent=None, dienow=False):
+def checkNodeCompliant(
+    node: TreeNode, parent: Optional[TreeNode] = None, dienow: bool = False
+) -> bool:
     """
     Performs all possible checks on a node. Can raise any of the exceptions
     related to node checks (:py:func:`checkNodeName`, :py:func:`checkNodeType`,
@@ -909,30 +977,34 @@ def checkNodeCompliant(node, parent=None, dienow=False):
         :py:func:`checkArray`, :py:func:`checkNodeType`
 
     """
-    r = (
+    result = (
         checkNode(node, dienow=dienow)
         and checkNodeName(node, dienow=dienow)
-        and checkArray(node[1], dienow=dienow)
+        and checkArray(node[__VALUE__], dienow=dienow)
         and checkNodeType(node, dienow=dienow)
     )
-    return r
+    return result
 
 
 # -----------------------------------------------------------------------------
-def concatenateForArrayChar(nlist):
+def concatenateForArrayChar(nlist: List[Union[str, numpy.ndarray]]) -> numpy.ndarray:
     nl = []
-    for n in nlist:
-        if isinstance(n, str):
-            nl += [setStringAsArray(("%-32s" % n)[:32])]
+    for item in nlist:
+        if isinstance(item, str):
+            nl += [setStringAsArray(("%-32s" % item)[:32])]
         else:
-            checkArrayChar(n)
-            nl += [setStringAsArray(("%-32s" % n.tostring())[:32])]
-    r = numpy.array(numpy.array(nl, order="F").T, order="F")
-    return r
+            checkArrayChar(item)
+            nl += [
+                setStringAsArray(
+                    ("%-32s" % item.tobytes().decode("ascii", "strict"))[:32]
+                )
+            ]
+    res = numpy.array(numpy.array(nl, order="F").T, order="F")
+    return res
 
 
 # -----------------------------------------------------------------------------
-def concatenateForArrayChar2D(nlist):
+def concatenateForArrayChar2D(nlist: List[Union[str, numpy.ndarray]]) -> numpy.ndarray:
     """Creates a numpy.ndarray of chars from a list of python strings::
 
        udims=['Kilogram','Meter','Second','Kelvin','Gradian']
@@ -947,47 +1019,55 @@ def concatenateForArrayChar2D(nlist):
 
 
 # -----------------------------------------------------------------------------
-def concatenateForArrayChar3D(nlist):
+def concatenateForArrayChar3D(
+    nlist: List[List[Union[str, numpy.ndarray]]]
+) -> numpy.ndarray:
     """Creates a numpy.ndarray of chars from a list of list of python strings"""
     rr = []
-    for p in nlist:
+    for sublist in nlist:
         nl = []
-        for n in p:
-            if isinstance(n, str):
-                nl += [setStringAsArray(("%-32s" % n)[:32])]
+        for item in sublist:
+            if isinstance(item, str):
+                nl += [setStringAsArray(("%-32s" % item)[:32])]
             else:
-                checkArrayChar(n)
-                nl += [setStringAsArray(("%-32s" % n.tostring())[:32])]
+                checkArrayChar(item)
+                nl += [
+                    setStringAsArray(
+                        ("%-32s" % item.tobytes().decode("ascii", "strict"))[:32]
+                    )
+                ]
         rr.append(numpy.array(numpy.array(nl, order="F"), order="F"))
-    r = numpy.array(rr, order="F").T
-    return r
+    res = numpy.array(rr, order="F").T
+    return res
 
 
 # -----------------------------------------------------------------------------
 # old MLL returns - should not be used anymore
-def getValueType(v):
+def getValueType(value: Optional[numpy.ndarray]) -> Optional[str]:
     """
     Returns the node's value type as CGNS/MLL type.
     The return value is a string in:
     Character, RealSingle, RealDouble, Integer, LongInteger
     """
-    if not isinstance(v, numpy.ndarray):
+    if not isinstance(value, numpy.ndarray):
         return None
-    if v.dtype.kind in ["S", "a"]:
+    if value.dtype.kind in ["S", "a"]:
         return CK.Character_s
-    if v.dtype.name in ["float32"]:
+    if value.dtype.name in ["float32"]:
         return CK.RealSingle_s
-    if v.dtype.name in ["float64"]:
+    if value.dtype.name in ["float64"]:
         return CK.RealDouble_s
-    if v.dtype.name in ["int32"]:
+    if value.dtype.name in ["int32"]:
         return CK.Integer_s
-    if v.dtype.name in ["int64"]:
+    if value.dtype.name in ["int64"]:
         return CK.LongInteger_s
     return None
 
 
 # -----------------------------------------------------------------------------
-def setValue(node, value):
+def setValue(
+    node: Optional[TreeNode], value: Optional[numpy.ndarray]
+) -> Optional[TreeNode]:
     """
     Sets an arbitrary value in the node, replacing the existing one.
     The value is refered-to, no copy, data type is deduced from numpy array
@@ -995,21 +1075,21 @@ def setValue(node, value):
     if node is None:
         return None
     if not isinstance(value, numpy.ndarray):
-        node[1] = None
+        node[__VALUE__] = None
     elif value.dtype.kind in ["S", "a"] or value.dtype.name in [
         "float32",
         "float64",
         "int32",
         "int64",
     ]:
-        node[1] = value
+        node[__VALUE__] = value
     else:
         return None
     return node
 
 
 # -----------------------------------------------------------------------------
-def setStringByPath(tree, path, s):
+def setStringByPath(tree: TreeNode, path: str, svalue: str) -> TreeNode:
     """
     Creates a 1D numpy.ndarray from one string, set to node by path::
 
@@ -1019,14 +1099,16 @@ def setStringByPath(tree, path, s):
     Remark: target node should already exist
     """
     node = getNodeByPath(tree, path)
-    v = setStringAsArray(s)
-    if v is not None:
-        setValue(node, v)
+    value = setStringAsArray(svalue)
+    if value is not None:
+        setValue(node, value)
     return node
 
 
 # -----------------------------------------------------------------------------
-def setStringAsArray(a):
+def setStringAsArray(
+    a: Union[str, bytes, numpy.ndarray, None]
+) -> Optional[numpy.ndarray]:
     """Creates a numpy.ndarray from a string::
 
     setStringAsArray('UserDefined')
@@ -1039,19 +1121,15 @@ def setStringAsArray(a):
             return numpy.array(tuple(a), dtype="|S", order="F")
     if isinstance(a, bytes):
         lst_bytes = [bytes([x]) for x in a]
-        if not PY3:
-            lst_bytes = [x.decode("ascii") for x in lst_bytes]
         return numpy.array(lst_bytes, dtype="|S", order="F")
     if isinstance(a, str):
         lst_bytes = [x.encode("ascii") for x in a]
-        if not PY3:
-            lst_bytes = [x.decode("ascii") for x in lst_bytes]
         return numpy.array(lst_bytes, dtype="|S", order="F")
     return None
 
 
 # -----------------------------------------------------------------------------
-def setIntegerByPath(tree, path, *i):
+def setIntegerByPath(tree: TreeNode, path: str, *i) -> TreeNode:
     """Creates a 1D numpy.ndarray from one or more integers,
     set to node by path. Same as :py:func:`setLongByPath` but with a
     numpy.int32 data type.
@@ -1066,7 +1144,7 @@ def setIntegerByPath(tree, path, *i):
 
 
 # -----------------------------------------------------------------------------
-def setIntegerAsArray(*i):
+def setIntegerAsArray(*i) -> numpy.ndarray:
     """Creates a 1D numpy.ndarray from one or more integers.
     Same as :py:func:`setLongAsArray` but with a
     numpy.int32 data type.
@@ -1078,7 +1156,7 @@ def setIntegerAsArray(*i):
 
 
 # -----------------------------------------------------------------------------
-def setLongByPath(tree, path, *l):
+def setLongByPath(tree: TreeNode, path: str, *l) -> TreeNode:
     """Creates a 1D numpy.ndarray from one or more longs,
     set to node by path::
 
@@ -1101,7 +1179,7 @@ def setLongByPath(tree, path, *l):
 
 
 # -----------------------------------------------------------------------------
-def setLongAsArray(*l):
+def setLongAsArray(*l) -> numpy.ndarray:
     """Creates a 1D numpy.ndarray from one or more longs::
 
       setLongAsArray(2)
@@ -1116,7 +1194,7 @@ def setLongAsArray(*l):
 
 
 # -----------------------------------------------------------------------------
-def setFloatByPath(tree, path, *f):
+def setFloatByPath(tree: TreeNode, path: str, *f) -> TreeNode:
     """Creates a 1D numpy.ndarray from one or more floats,
     set to node by path::
 
@@ -1138,7 +1216,7 @@ def setFloatByPath(tree, path, *f):
 
 
 # -----------------------------------------------------------------------------
-def setFloatAsArray(*f):
+def setFloatAsArray(*f) -> numpy.ndarray:
     """Creates a 1D numpy.ndarray from one or more floats::
 
       setFloatAsArray(2837.153)
@@ -1153,7 +1231,7 @@ def setFloatAsArray(*f):
 
 
 # -----------------------------------------------------------------------------
-def setDoubleByPath(tree, path, *d):
+def setDoubleByPath(tree: TreeNode, path: str, *d) -> TreeNode:
     """Creates a 1D numpy.ndarray from one or more doubles,
     set to node by path. Same as :py:func:`setFloatByPath` but with a
     numpy.float64 data type.
@@ -1168,7 +1246,7 @@ def setDoubleByPath(tree, path, *d):
 
 
 # -----------------------------------------------------------------------------
-def setDoubleAsArray(*d):
+def setDoubleAsArray(*d) -> numpy.ndarray:
     """Creates a 1D numpy.ndarray from one or more doubles.
     Same as :py:func:`setFloatAsArray` but with a
     numpy.float64 data type.
@@ -1180,13 +1258,13 @@ def setDoubleAsArray(*d):
 
 
 # -----------------------------------------------------------------------------
-def getValueAsString(node):
+def getValueAsString(node: TreeNode) -> str:
     """Returns node value as a Python string"""
-    return node[1].tostring().decode("ascii", "strict")
+    return node[__VALUE__].tobytes().decode("ascii", "strict")
 
 
 # -----------------------------------------------------------------------------
-def getValueAsStringEval(value):
+def getValueAsStringEval(value: Any) -> Optional[numpy.ndarray]:
     """Tries to build the best value one can deduce from given string, the
     returned value is a numpy array or None (if everything else fail).
     Evaluation is performed on string with the following order:
@@ -1232,9 +1310,9 @@ def getValueAsStringEval(value):
 
 
 # -----------------------------------------------------------------------------
-def getValue(node):
+def getValue(node: TreeNode) -> Optional[numpy.ndarray]:
     """Returns node value, could be `None` or a `numpy.ndarray`."""
-    v = node[1]
+    v = node[__VALUE__]
     if not isinstance(v, numpy.ndarray):
         return None
     if v.dtype.kind in ["S", "a"] or v.dtype.name in [
@@ -1249,23 +1327,23 @@ def getValue(node):
 
 
 # --------------------------------------------------
-def hasFortranFlag(node):
+def hasFortranFlag(node: TreeNode) -> bool:
     """Returns node value fortran flag."""
-    if node[1] is None:
+    if node[__VALUE__] is None:
         return True
-    if node[1] == []:
+    if not node[__VALUE__]:
         return True
-    if isinstance(node[1], str):
+    if isinstance(node[__VALUE__], str):
         return True  # link
-    if not node[1].shape:
+    if not node[__VALUE__].shape:
         return True
-    if len(node[1].shape) == 1:
+    if len(node[__VALUE__].shape) == 1:
         return True
-    return numpy.isfortran(node[1])
+    return numpy.isfortran(node[__VALUE__])
 
 
 # --------------------------------------------------
-def getValueShape(node):
+def getValueShape(node: TreeNode) -> str:
     """
     Returns the value data shape for a CGNS/Python node for **display purpose**.
     If the shape cannot be determined a `-` is returned::
@@ -1279,39 +1357,39 @@ def getValueShape(node):
     return getNodeShape(node)
 
 
-def getNodeShape(node):
-    if node[1] is None:
+def getNodeShape(node: TreeNode) -> str:
+    if node[__VALUE__] is None:
         r = "-"
-    elif node[1] == []:
+    elif not node[__VALUE__]:
         r = "-"
-    elif node[3] == "":
+    elif node[__LABEL__] == "":
         r = "-"
-    elif node[1].shape in ["", (0,), ()]:
+    elif node[__VALUE__].shape in ["", (0,), ()]:
         r = "[0]"
     else:
-        r = str(list(node[1].shape))
+        r = str(list(node[__VALUE__].shape))
     return r
 
 
-def getShape(node):
-    if not isinstance(node[1], numpy.ndarray):
+def getShape(node: TreeNode) -> Tuple:
+    if not isinstance(node[__VALUE__], numpy.ndarray):
         r = (0,)  # None, []
-    elif node[3] == "":
+    elif node[__LABEL__] == "":
         r = (0,)
-    elif node[1].shape in ["", (0,), ()]:
+    elif node[__VALUE__].shape in ["", (0,), ()]:
         r = (0,)
     else:
-        r = node[1].shape
+        r = node[__VALUE__].shape
     return r
 
 
 # --------------------------------------------------
-def getNodeAllowedChildrenNames(node):
+def getNodeAllowedChildrenNames(node: TreeNode) -> List[str]:
     return getAuthNames(node)
 
 
 # --------------------------------------------------
-def getAuthNames(node):
+def getAuthNames(node: TreeNode) -> List[str]:
     """
     Returns the authorized names for a CGNS/Python node.
     If the names cannot be determined an empty list is returned::
@@ -1323,17 +1401,17 @@ def getAuthNames(node):
     :arg CGNS/Python node: the target node
     :return: A list of authorized names (empty list if not found)
     """
-    if not node[3]:
+    if not node[__LABEL__]:
         r = []  # ''
-    elif CT.types[node[3]].names in ["", None, CT.UD]:
+    elif CT.types[node[__LABEL__]].names in ["", None, CT.UD]:
         r = []
     else:
-        r = CT.types[node[3]].names
+        r = CT.types[node[__LABEL__]].names
     return r
 
 
 # --------------------------------------------------
-def getAuthDataTypes(node):
+def getAuthDataTypes(node: TreeNode) -> List[str]:
     """
     Returns the authorized types for a CGNS/Python node.
     If the types cannot be determined a None is returned::
@@ -1345,21 +1423,21 @@ def getAuthDataTypes(node):
     :return: A list of authorized data types (empty if not found)
 
     """
-    if node[1] is None:
+    if node[__VALUE__] is None:
         r = []
-    elif node[1] == []:
+    elif not node[__VALUE__]:
         r = []
-    elif not node[3]:
+    elif not node[__LABEL__]:
         r = []  # ''
-    elif CT.types[node[3]].datatype in ["", None, [CK.LK]]:
+    elif CT.types[node[__LABEL__]].datatype in ["", None, [CK.LK]]:
         r = []
     else:
-        r = CT.types[node[3]].datatype
+        r = CT.types[node[__LABEL__]].datatype
     return r
 
 
 # --------------------------------------------------
-def getAuthParentTypes(node):
+def getAuthParentTypes(node: TreeNode) -> List[str]:
     """
     Returns the authorized parent types for a CGNS/Python node.
     If the parent types cannot be determined a None is returned::
@@ -1373,21 +1451,21 @@ def getAuthParentTypes(node):
     :return: A list of authorized parent types (empty list is none)
 
     """
-    if node[1] is None:
+    if node[__VALUE__] is None:
         r = []
-    elif node[1] == []:
+    elif not node[__VALUE__]:
         r = []
-    elif not node[3]:
+    elif not node[__LABEL__]:
         r = []
-    elif CT.types[node[3]].parents in ["", None]:
+    elif CT.types[node[__LABEL__]].parents in ["", None]:
         r = []
     else:
-        r = CT.types[node[3]].parents
+        r = CT.types[node[__LABEL__]].parents
     return r
 
 
 # --------------------------------------------------
-def getAuthShapes(node):
+def getAuthShapes(node: TreeNode) -> Union[List, Tuple]:
     """Returns the authorized shapes for a CGNS/Python node.
     If the shapes cannot be determined a None is returned::
 
@@ -1399,21 +1477,21 @@ def getAuthShapes(node):
     :return: A list of authorized shapes
 
     """
-    if node[1] is None:
+    if node[__VALUE__] is None:
         r = []
-    elif node[1] == []:
+    elif not node[__VALUE__]:
         r = []
-    elif not node[3]:
+    elif not node[__LABEL__]:
         r = []
-    elif CT.types[node[3]].shape in [""]:
+    elif CT.types[node[__LABEL__]].shape in [""]:
         r = []
     else:
-        r = CT.types[node[3]].shape
+        r = CT.types[node[__LABEL__]].shape
     return r
 
 
 # --------------------------------------------------
-def getAuthChildren(node):
+def getAuthChildren(node: TreeNode) -> List[str]:
     """
     Returns the authorized children for a CGNS/Python node.
     If the children types cannot be determined a None is returned::
@@ -1426,17 +1504,17 @@ def getAuthChildren(node):
     :return: list of str, authorized CGNS/SIDS types for children
 
     """
-    if not node[3]:
+    if not node[__LABEL__]:
         r = []  # None, [], ''
-    elif CT.types[node[3]].children in ["", None, []]:
+    elif CT.types[node[__LABEL__]].children in ["", None, []]:
         r = []
     else:
-        r = CT.types[node[3]].children
+        r = CT.types[node[__LABEL__]].children
     return r
 
 
 # --------------------------------------------------
-def getValueDataType(node):
+def getValueDataType(node: TreeNode) -> str:
     """
     Returns the value data type for a CGNS/Python node for **display purpose**::
 
@@ -1454,9 +1532,9 @@ def getValueDataType(node):
 
 
 # --------------------------------------------------
-def getNodeType(node):
-    data = node[1]
-    if node[0] == "CGNSLibraryVersion_t":
+def getNodeType(node: TreeNode) -> str:
+    data = node[__VALUE__]
+    if node[__NAME__] == "CGNSLibraryVersion_t":
         return CK.R4  # ONLY ONE R4 IN ALL SIDS !
     if isinstance(data, numpy.ndarray):
         if data.dtype.kind in ["S", "a"]:
@@ -1482,7 +1560,7 @@ def getNodeType(node):
 
 
 # --------------------------------------------------
-def hasFirstPathItem(path, item=CK.CGNSTree_s):
+def hasFirstPathItem(path: str, item: str = CK.CGNSTree_s) -> bool:
     """
     True if the arg string is the item of the path::
 
@@ -1507,7 +1585,7 @@ def hasFirstPathItem(path, item=CK.CGNSTree_s):
 
 
 # --------------------------------------------------
-def removeFirstPathItem(path):
+def removeFirstPathItem(path: str) -> str:
     """
     Return the path without the first item::
 
@@ -1530,7 +1608,7 @@ def removeFirstPathItem(path):
 
 
 # --------------------------------------------------
-def getNodeByPath(tree, path):
+def getNodeByPath(tree: TreeNode, path: str) -> Optional[TreeNode]:
     """
     Returns the CGNS/Python node with the argument path::
 
@@ -1580,12 +1658,12 @@ def getNodeByPath(tree, path):
         _tree = [CK.CGNSTree_s, None, [tree], CK.CGNSTree_ts]
     else:
         _tree = tree
-    n = getNodeFromPath(lpath, _tree)
-    return n
+    node = getNodeFromPath(lpath, _tree)
+    return node
 
 
 # --------------------------------------------------
-def getValueByPath(tree, path):
+def getValueByPath(tree: TreeNode, path: str) -> Optional[numpy.ndarray]:
     """
     Returns the value of a CGNS/Python node with the argument path::
 
@@ -1606,11 +1684,11 @@ def getValueByPath(tree, path):
     n = getNodeByPath(tree, path)
     if n is None:
         return None
-    return n[1]
+    return n[__VALUE__]
 
 
 # --------------------------------------------------
-def getChildrenByPath(tree, path):
+def getChildrenByPath(tree: TreeNode, path: str) -> Optional[TreeNode]:
     """
     Returns the children list of a CGNS/Python node with the argument path::
 
@@ -1629,14 +1707,18 @@ def getChildrenByPath(tree, path):
       - No wildcards allowed (see :py:func:`getPathsByNameFilter`
         and :py:func:`getPathsByNameFilter` )
     """
-    n = getNodeByPath(tree, path)
-    if n is None:
+    node = getNodeByPath(tree, path)
+    if node is None:
         return None
-    return n[2]
+    return node[__CHILDREN__]
 
 
 # --------------------------------------------------
-def getNextChildSortByType(node, parent=None, criteria=None):
+def getNextChildSortByType(
+    node: TreeNode,
+    parent: Optional[TreeNode] = None,
+    criteria: Union[List, Dict, None] = None,
+) -> Iterator[TreeNode]:
     """
     **Iterator** returns the children list of the argument CGNS/Python
     sorted using the CGNS type then the name. The `sortlist` gives
@@ -1683,18 +1765,22 @@ def getNextChildSortByType(node, parent=None, criteria=None):
     __criteria = []
     if isinstance(criteria, list):
         __criteria = criteria
-    if isinstance(criteria, dict) and (parent is not None) and (parent[3] in criteria):
-        __criteria = criteria[parent[3]]
+    if (
+        isinstance(criteria, dict)
+        and (parent is not None)
+        and (parent[__LABEL__] in criteria)
+    ):
+        __criteria = criteria[parent[__LABEL__]]
     r = []
-    for i, c in enumerate(node[2]):
-        r += [(c[3], c[0], __criteria, i)]
+    for i, c in enumerate(node[__CHILDREN__]):
+        r += [(c[__LABEL__], c[__NAME__], __criteria, i)]
     r.sort(key=cmp_to_key(sortbytypesasincriteria))
     for i in r:
-        yield node[2][i[3]]
+        yield node[__CHILDREN__][i[3]]
 
 
 # --------------------------------------------------
-def getTypeByPath(tree, path):
+def getTypeByPath(tree: TreeNode, path: str) -> Optional[str]:
     """
     Returns the CGNS type of a CGNS/Python node with the argument path::
 
@@ -1715,17 +1801,17 @@ def getTypeByPath(tree, path):
     """
     n = getNodeByPath(tree, path)
     if n is not None:
-        return n[3]
+        return n[__LABEL__]
     return None
 
 
 # --------------------------------------------------
-def getPathByNameFilter(tree, filter):
+def getPathByNameFilter(tree: TreeNode, filter: str) -> List[str]:
     return getPathsByNameFilter(tree, filter)
 
 
 # --------------------------------------------------
-def getPathsByTokenFilter(tree, filter):
+def getPathsByTokenFilter(tree: TreeNode, filter: str) -> List[str]:
     """
     Returns a list of paths from T matching the filter. The filter is a
     `regular expression <http://docs.python.org/library/re.html>`_
@@ -1757,7 +1843,7 @@ def getPathsByTokenFilter(tree, filter):
 
 
 # --------------------------------------------------
-def getPathsByNameFilter(tree, filter):
+def getPathsByNameFilter(tree: TreeNode, filter: str) -> List[str]:
     """
     Returns a list of paths from T matching the filter. The filter is a
     `regular expression <http://docs.python.org/library/re.html>`_
@@ -1799,7 +1885,12 @@ def getPathsByNameFilter(tree, filter):
 
 
 # --------------------------------------------------
-def getPathAsTemplate(sidslist, namelist, required=None, enclosed=False):
+def getPathAsTemplate(
+    sidslist: List[str],
+    namelist: List[str],
+    required: Optional[List[bool]] = None,
+    enclosed: bool = False,
+) -> List[str]:
     """
     Return a list of CGNS/SIDS type or name (strings) by replacing in a path
     all the user defined names by their CGNS/SIDS type. If the name is a
@@ -1846,12 +1937,12 @@ def getPathAsTemplate(sidslist, namelist, required=None, enclosed=False):
 
 
 # --------------------------------------------------
-def getPathByTypeFilter(tree, filter):
+def getPathByTypeFilter(tree: TreeNode, filter: str) -> List[str]:
     return getPathsByTypeFilter(tree, filter)
 
 
 # --------------------------------------------------
-def getPathsByTypeFilter(tree, filter):
+def getPathsByTypeFilter(tree: TreeNode, filter: str) -> List[str]:
     """
     Returns a list of paths from T matching the filter. The filter is a
     `regular expression <http://docs.python.org/library/re.html>`_
@@ -1891,7 +1982,7 @@ def getPathsByTypeFilter(tree, filter):
 
 
 # --------------------------------------------------
-def nodeByPath(path, tree):
+def nodeByPath(path: str, tree: TreeNode) -> Optional[TreeNode]:
     if not checkPath(path):
         return None
     if path[0] == "/":
@@ -1904,7 +1995,7 @@ def nodeByPath(path, tree):
 
 
 # --------------------------------------------------
-def removeChildByName(parent, name):
+def removeChildByName(parent: TreeNode, name: str) -> NoReturn:
     """Remove the child from the parent node.
 
     :arg CGNS/Python node parent: node where to find the child name
@@ -1916,31 +2007,31 @@ def removeChildByName(parent, name):
     """
     if not checkNode(parent):
         return None
-    for n, node in enumerate(parent[2]):
-        if node[0] == name:
-            del parent[2][n]
+    for n, node in enumerate(parent[__CHILDREN__]):
+        if node[__NAME__] == name:
+            del parent[__CHILDREN__][n]
             return None
     return None
 
 
 # --------------------------------------------------
-def removeNodeFromPath(path, node):
+def removeNodeFromPath(path: List[str], node: TreeNode) -> NoReturn:
     target = getNodeFromPath(path, node)
     if len(path) > 1:
         father = getNodeFromPath(path[:-1], node)
-        father[2].remove(target)
+        father[__CHILDREN__].remove(target)
     else:
         # Root node child
-        for c in node[2]:
-            if c[0] == path[0]:
-                node[2].remove(target)
+        for c in node[__CHILDREN__]:
+            if c[__NAME__] == path[0]:
+                node[__CHILDREN__].remove(target)
 
 
 # --------------------------------------------------
-def getNodeFromPath(path, node):
+def getNodeFromPath(path: List[str], node: TreeNode) -> Optional[TreeNode]:
     # Beware: this parse starts with children, not current node...
-    for c in node[2]:
-        if c[0] == path[0]:
+    for c in node[__CHILDREN__]:
+        if c[__NAME__] == path[0]:
             if len(path) == 1:
                 return c
             return getNodeFromPath(path[1:], c)
@@ -1948,7 +2039,7 @@ def getNodeFromPath(path, node):
 
 
 # --------------------------------------------------
-def getParentFromNode(tree, node):
+def getParentFromNode(tree: TreeNode, node: TreeNode) -> Optional[TreeNode]:
     """
     Returns the parent node of a node. If the node is root node, itself is
     returned::
@@ -1968,7 +2059,7 @@ def getParentFromNode(tree, node):
 
 
 # --------------------------------------------------
-def getAncestorByType(tree, node, ptype):
+def getAncestorByType(tree: TreeNode, node: TreeNode, ptype: str) -> Optional[TreeNode]:
     """
     Returns the parent node of a node which has the CGNS/SIDS type. If the node is root node, itself is
     returned::
@@ -1999,7 +2090,7 @@ def getAncestorByType(tree, node, ptype):
 
 
 # --------------------------------------------------
-def getPathFromRoot(tree, node):
+def getPathFromRoot(tree: TreeNode, node: TreeNode) -> str:
     """
     Same as :py:func:`getPathFromNode` but takes into account the root
     node name::
@@ -2022,7 +2113,7 @@ def getPathFromRoot(tree, node):
 
 
 # --------------------------------------------------
-def getPathFromNode(tree, node, path=""):
+def getPathFromNode(tree: TreeNode, node: TreeNode, path: str = "") -> Optional[str]:
     """
     Returns the path from a node in a tree. The argument tree is parsed and
     a path is built-up until the node is found. Then the **start node** name
@@ -2075,7 +2166,7 @@ def getPathFromNode(tree, node, path=""):
 
 
 # --------------------------------------------------
-def zipTypeOrNameList(tlist, nlist):
+def zipTypeOrNameList(tlist: List, nlist: List) -> List[List]:
     """
     Mixes two lists for pattern search: the CGNS/SIDS type list and the
     name list.
@@ -2118,12 +2209,12 @@ def zipTypeOrNameList(tlist, nlist):
 
 
 # --------------------------------------------------
-def getAllNodesByTypeOrNameList(tree, typeornamelist):
+def getAllNodesByTypeOrNameList(tree: TreeNode, typeornamelist: List[str]) -> List[str]:
     return getPathsByTypeOrNameList(tree, typeornamelist)
 
 
 # --------------------------------------------------
-def getPathsByTypeOrNameList(tree, typeornamelist):
+def getPathsByTypeOrNameList(tree: TreeNode, typeornamelist: List[str]) -> List[str]:
     """
     Returns a list of paths from the argument tree with nodes matching
     the list of types or names. The list you give is the list you would
@@ -2147,18 +2238,18 @@ def getPathsByTypeOrNameList(tree, typeornamelist):
       - the first comparison is performed on name, then on type. If you have
         a node name that matches a type, the node is included in the result.
     """
-    if (tree[0] != typeornamelist[0]) and (tree[3] != typeornamelist[0]):
+    if (tree[__NAME__] != typeornamelist[0]) and (tree[__LABEL__] != typeornamelist[0]):
         return []
-    if tree[3] == CK.CGNSTree_ts:
+    if tree[__LABEL__] == CK.CGNSTree_ts:
         start = ""
     else:
-        start = "%s" % tree[0]
-    n = getAllNodesFromTypeOrNameList(typeornamelist[1:], tree[2], start, [])
+        start = "%s" % tree[__NAME__]
+    n = getAllNodesFromTypeOrNameList(typeornamelist[1:], tree[__CHILDREN__], start, [])
     return n
 
 
 # --------------------------------------------------
-def getAllParentTypePathsAux(ntype, path, plist):
+def getAllParentTypePathsAux(ntype: str, path: str, plist: List[str]) -> NoReturn:
     tlist = CT.types[ntype].parents
     for pt in tlist:
         plist.append(path + "/" + pt)
@@ -2166,12 +2257,12 @@ def getAllParentTypePathsAux(ntype, path, plist):
 
 
 # --------------------------------------------------
-def getAllParentTypePaths(nodetype):
+def getAllParentTypePaths(nodetype: str) -> List[List[str]]:
     return getAuthParentTypePaths(nodetype)
 
 
 # --------------------------------------------------
-def getAuthParentTypePaths(nodetype):
+def getAuthParentTypePaths(nodetype: str) -> List[List[str]]:
     """
     Return all type paths allowed by CGNS/SIDS for the node type.
     For example, to check all possible places where you can set a
@@ -2200,27 +2291,29 @@ def getAuthParentTypePaths(nodetype):
 
 
 # --------------------------------------------------
-def getAllNodesFromTypeOrNameList(tnlist, node, path, result):
+def getAllNodesFromTypeOrNameList(
+    tnlist: List[str], node: List[TreeNode], path: str, result: List[str]
+) -> List[str]:
     if not tnlist:
         return result
     for c in node:
-        if (c[0] == tnlist[0]) or (c[3] == tnlist[0]):
+        if (c[__NAME__] == tnlist[0]) or (c[__LABEL__] == tnlist[0]):
             if len(tnlist) == 1:
-                result.append("%s/%s" % (path, c[0]))
+                result.append("%s/%s" % (path, c[__NAME__]))
             else:
                 getAllNodesFromTypeOrNameList(
-                    tnlist[1:], c[2], "%s/%s" % (path, c[0]), result
+                    tnlist[1:], c[__CHILDREN__], "%s/%s" % (path, c[__NAME__]), result
                 )
     return result
 
 
 # --------------------------------------------------
-def getAllNodesByTypeList(tree, typelist):
+def getAllNodesByTypeList(tree: TreeNode, typelist: List[str]) -> List[str]:
     return getPathsByTypeList(tree, typelist)
 
 
 # --------------------------------------------------
-def getPathsByTypeList(tree, typelist):
+def getPathsByTypeList(tree: TreeNode, typelist: List[str]) -> List[str]:
     """
     Returns a list of paths from the argument tree with nodes matching
     the list of types. The list you give is the list you would have if you
@@ -2240,36 +2333,38 @@ def getPathsByTypeList(tree, typelist):
     :return:
       - a list of strings, each string is the path to a matching node
     """
-    if tree[3] != typelist[0]:
+    if tree[__LABEL__] != typelist[0]:
         return []
-    if tree[3] == CK.CGNSTree_ts:
+    if tree[__LABEL__] == CK.CGNSTree_ts:
         start = ""
     else:
-        start = "%s" % tree[0]
-    n = getAllNodesFromTypeList(typelist[1:], tree[2], start, [])
+        start = "%s" % tree[__NAME__]
+    n = getAllNodesFromTypeList(typelist[1:], tree[__CHILDREN__], start, [])
     return n
 
 
 # --------------------------------------------------
-def getAllNodesFromTypeList(typelist, node, path, result):
+def getAllNodesFromTypeList(
+    typelist: List[str], node: List[TreeNode], path: str, result: List[str]
+) -> List[str]:
     for c in node:
-        if c[3] == typelist[0]:
+        if c[__LABEL__] == typelist[0]:
             if len(typelist) == 1:
-                result.append("%s/%s" % (path, c[0]))
+                result.append("%s/%s" % (path, c[__NAME__]))
             else:
                 getAllNodesFromTypeList(
-                    typelist[1:], c[2], "%s/%s" % (path, c[0]), result
+                    typelist[1:], c[__CHILDREN__], "%s/%s" % (path, c[__NAME__]), result
                 )
     return result
 
 
 # --------------------------------------------------
-def stackPath(path, *items):
+def stackPath(path: str, *items: str) -> str:
     return stackPathItem(path, *items)
 
 
 # --------------------------------------------------
-def stackPathItem(path, *items):
+def stackPathItem(path: str, *items: str) -> str:
     """
     Add the items to the path::
 
@@ -2288,15 +2383,15 @@ def stackPathItem(path, *items):
 
 
 # --------------------------------------------------
-def getPaths(tree, path, plist):
-    for c in tree[2]:
-        if (len(c) > 1) and isinstance(c[0], str):
-            plist.append(path + "/" + c[0])
-            getPaths(c, path + "/" + c[0], plist)
+def getPaths(tree: TreeNode, path: str, plist: List[str]) -> NoReturn:
+    for c in tree[__CHILDREN__]:
+        if (len(c) > 1) and isinstance(c[__NAME__], str):
+            plist.append(path + "/" + c[__NAME__])
+            getPaths(c, path + "/" + c[__NAME__], plist)
 
 
 # --------------------------------------------------
-def getAllPaths(tree):
+def getAllPaths(tree: TreeNode) -> List[str]:
     plist = []
     path = ""
     getPaths(tree, path, plist)
@@ -2317,12 +2412,14 @@ def getAllPaths(tree):
 
 
 # --------------------------------------------------
-def getPathFullTree(tree, width=False):
+def getPathFullTree(tree: TreeNode, width: bool = False) -> List[str]:
     return getPathsFullTree(tree, width)
 
 
 # --------------------------------------------------
-def getPathsFullTree(tree, width=False, raw=False):
+def getPathsFullTree(
+    tree: TreeNode, width: bool = False, raw: bool = False
+) -> List[str]:
     """
     Returns the list of all possible node paths of a CGNS/Python tree::
 
@@ -2349,7 +2446,7 @@ def getPathsFullTree(tree, width=False, raw=False):
 
 
 # --------------------------------------------------
-def checkPath(path, dienow=False):
+def checkPath(path: str, dienow: bool = False) -> bool:
     """
     Checks the compliance of a path, which is basically a UNIX-like
     path with constraints on each node name::
@@ -2371,7 +2468,7 @@ def checkPath(path, dienow=False):
 
 
 # --------------------------------------------------
-def hasSameRootPath(pathroot, pathtocompare):
+def hasSameRootPath(pathroot: str, pathtocompare: str) -> bool:
     """
     Compares two paths::
 
@@ -2400,7 +2497,7 @@ def hasSameRootPath(pathroot, pathtocompare):
 
 
 # --------------------------------------------------
-def getPathListCommonAncestor(pathlist):
+def getPathListCommonAncestor(pathlist: List[str]) -> str:
     """
     Finds the common ancestor for all paths in list::
 
@@ -2440,7 +2537,7 @@ def getPathListCommonAncestor(pathlist):
 
 
 # --------------------------------------------------
-def getPathToList(path, nofirst=False, noroot=True):
+def getPathToList(path: str, nofirst: bool = False, noroot: bool = True) -> List[str]:
     """
     Return the path as a list of node names::
 
@@ -2475,7 +2572,7 @@ def getPathToList(path, nofirst=False, noroot=True):
 
 
 # --------------------------------------------------
-def getPathAncestor(path, level=1, noroot=True):
+def getPathAncestor(path: str, level: int = 1, noroot: bool = True) -> Optional[str]:
     """
     Return the path of the node parent of the argument node path::
 
@@ -2505,12 +2602,12 @@ def getPathAncestor(path, level=1, noroot=True):
 
 
 # --------------------------------------------------
-def getDepth(path):
+def getDepth(path: str) -> int:
     return len(getPathToList(path, True))
 
 
 # --------------------------------------------------
-def getPathLeaf(path):
+def getPathLeaf(path: str) -> str:
     """
     Return the leaf node name of the path::
 
@@ -2531,7 +2628,7 @@ def getPathLeaf(path):
 
 
 # --------------------------------------------------
-def getPathNoRoot(path):
+def getPathNoRoot(path: str) -> str:
     """
     Return an absolute path without the implementation nodes 'HDF5 Mother node'
     or 'CGNSTree' if detected as first element::
@@ -2568,7 +2665,7 @@ def getPathNoRoot(path):
 
 
 # --------------------------------------------------
-def getPathAsTypes(tree, path, legacy=True):
+def getPathAsTypes(tree: TreeNode, path: str, legacy: bool = True) -> List[str]:
     """Return the list of types corresponding to the argument path in the tree::
 
       getPathAsTypes(T,'/Base/Zone/ZoneBC')
@@ -2598,7 +2695,7 @@ def getPathAsTypes(tree, path, legacy=True):
 
 
 # --------------------------------------------------
-def getPathNormalize(path):
+def getPathNormalize(path: str) -> str:
     """Return the same path as minimal string, removes `////` and `/./` and
     other simplifiable UNIX-like path elements::
 
@@ -2640,11 +2737,11 @@ def getPathNormalize(path):
 
 
 # --------------------------------------------------
-def childNames(node):
+def childNames(node: TreeNode) -> List[str]:
     return childrenNames(node)
 
 
-def childrenNames(node):
+def childrenNames(node: TreeNode) -> List[str]:
     """Gets the children names as a list of strings::
 
       for c in childrenNames(node):
@@ -2656,28 +2753,28 @@ def childrenNames(node):
     r = []
     if node is None:
         return r
-    for c in node[2]:
-        r.append(c[0])
+    for c in node[__CHILDREN__]:
+        r.append(c[__NAME__])
     return r
 
 
 # --------------------------------------------------
-def getAllNodesByTypeSet2(typelist, tree):
-    if tree[3] == CK.CGNSTree_ts:
-        start = "/%s" % tree[0]
+def getAllNodesByTypeSet2(typelist: List[str], tree: TreeNode) -> List[str]:
+    if tree[__LABEL__] == CK.CGNSTree_ts:
+        start = "/%s" % tree[__NAME__]
     else:
-        start = "%s" % tree[0]
-    n = getAllNodesFromTypeSet(typelist, tree[2], start, [])
+        start = "%s" % tree[__NAME__]
+    n = getAllNodesFromTypeSet(typelist, tree[__CHILDREN__], start, [])
     return n
 
 
 # --------------------------------------------------
-def getAllNodesByTypeSet(tree, typeset):
+def getAllNodesByTypeSet(tree: TreeNode, typeset: List[str]) -> List[str]:
     return getPathsByTypeSet(tree, typeset)
 
 
 # --------------------------------------------------
-def getPathsByNameSet(tree, nameset):
+def getPathsByNameSet(tree: TreeNode, nameset: List[str]) -> List[str]:
     """
     Returns a list of paths from the argument tree with nodes matching
     one of the names in the list::
@@ -2695,16 +2792,16 @@ def getPathsByNameSet(tree, nameset):
     :Remarks: See also :py:func:`getPathsByTypeSet`
 
     """
-    if tree[3] == CK.CGNSTree_ts:
+    if tree[__LABEL__] == CK.CGNSTree_ts:
         start = ""
     else:
-        start = "%s" % tree[0]
-    n = getAllNodesFromNameSet(nameset, tree[2], start, [])
+        start = "%s" % tree[__NAME__]
+    n = getAllNodesFromNameSet(nameset, tree[__CHILDREN__], start, [])
     return n
 
 
 # --------------------------------------------------
-def getPathsByTypeSet(tree, typeset):
+def getPathsByTypeSet(tree: TreeNode, typeset: List[str]) -> List[str]:
     """
     Returns a list of paths from the argument tree with nodes matching
     one of the types in the list::
@@ -2722,16 +2819,16 @@ def getPathsByTypeSet(tree, typeset):
     :Remarks: See also :py:func:`getPathsByTypeList`
 
     """
-    if tree[3] == CK.CGNSTree_ts:
+    if tree[__LABEL__] == CK.CGNSTree_ts:
         start = ""
     else:
-        start = "%s" % tree[0]
-    n = getAllNodesFromTypeSet(typeset, tree[2], start, [])
+        start = "%s" % tree[__NAME__]
+    n = getAllNodesFromTypeSet(typeset, tree[__CHILDREN__], start, [])
     return n
 
 
 # --------------------------------------------------
-def getPathListAsWidthFirstIndex(paths, fileindex=1):
+def getPathListAsWidthFirstIndex(paths: List[str], fileindex: int = 1) -> List[List]:
     """
     The order of the paths for a given depth is the alphabetical order of
     the full path to the node. The width parse goes through all the children
@@ -2774,31 +2871,37 @@ def getPathListAsWidthFirstIndex(paths, fileindex=1):
 
 
 # --------------------------------------------------
-def getAllNodesAsWidthFirstIndex(tree, fileindex=1):
+def getAllNodesAsWidthFirstIndex(tree: TreeNode, fileindex: int = 1) -> List[List]:
     lpth = getAllPaths(tree)
-    return getPathListAsWidthFirstIndex(lpth)
+    return getPathListAsWidthFirstIndex(lpth, fileindex)
 
 
 # --------------------------------------------------
-def getAllNodesFromNameSet(namelist, node, path, result):
+def getAllNodesFromNameSet(
+    namelist: List[str], node: List[TreeNode], path: str, result: List[str]
+) -> List[str]:
     for c in node:
-        if c[0] in namelist:
+        if c[__NAME__] in namelist:
             result.append("%s/%s" % (path, c[0]))
         getAllNodesFromNameSet(namelist, c[2], "%s/%s" % (path, c[0]), result)
     return result
 
 
 # --------------------------------------------------
-def getAllNodesFromTypeSet(typelist, node, path, result):
+def getAllNodesFromTypeSet(
+    typelist: List[str], node: List[TreeNode], path: str, result: List[str]
+) -> List[str]:
     for c in node:
-        if c[3] in typelist:
-            result.append("%s/%s" % (path, c[0]))
-        getAllNodesFromTypeSet(typelist, c[2], "%s/%s" % (path, c[0]), result)
+        if c[__LABEL__] in typelist:
+            result.append("%s/%s" % (path, c[__NAME__]))
+        getAllNodesFromTypeSet(
+            typelist, c[__CHILDREN__], "%s/%s" % (path, c[__NAME__]), result
+        )
     return result
 
 
 # --------------------------------------------------
-def getNodeAllowedChildrenTypes(pnode, node):
+def getNodeAllowedChildrenTypes(pnode: TreeNode, node: TreeNode) -> List[str]:
     """
     Returns all allowed CGNS-types for the node. The parent is mandatory::
        if (node[2] not in getNodeAllowedChildrenTypes(parent,node)):
@@ -2812,23 +2915,23 @@ def getNodeAllowedChildrenTypes(pnode, node):
         father node.
     """
     tlist = []
-    if node[3] == CK.CGNSTree_ts:
+    if node[__LABEL__] == CK.CGNSTree_ts:
         return tlist
     try:
-        if (node[3] is None) or (pnode is None):
+        if (node[__LABEL__] is None) or (pnode is None):
             ctl = CT.types[CK.CGNSTree_ts]
         else:
-            ctl = CT.types[pnode[3]]
+            ctl = CT.types[pnode[__LABEL__]]
         for cn in ctl.children:
             if cn[0] not in tlist:
                 tlist += [cn[0]]
-    except:
+    except KeyError:
         pass
     return tlist
 
 
 # --------------------------------------------------
-def getNodeAllowedDataTypes(node):
+def getNodeAllowedDataTypes(node: TreeNode) -> List[str]:
     """Returns a list of string with all allowed CGNS data types for the node::
          node=['ReferenceState',numpy.array((1,2,3)),[],'ReferenceState_t']
          if (getValueDataType(node) not in getNodeAllowedDataTypes(node)):
@@ -2840,14 +2943,14 @@ def getNodeAllowedDataTypes(node):
     """
     tlist = []
     try:
-        tlist = CT.types[node[3]].datatype
-    except:
+        tlist = CT.types[node[__LABEL__]].datatype
+    except KeyError:
         pass
     return tlist
 
 
 # --------------------------------------------------
-def getAllFamilies(tree):
+def getAllFamilies(tree: TreeNode) -> List[str]:
     """Return all the Family_t of the tree (all CGNSBases)"""
     fpth = [CK.CGNSTree_ts, CK.CGNSBase_ts, CK.Family_ts]
     famlist = getAllNodesByTypeOrNameList(tree, fpth)
@@ -2855,7 +2958,9 @@ def getAllFamilies(tree):
 
 
 # --------------------------------------------------
-def getZoneFromFamily(tree, families, additional=True):
+def getZoneFromFamily(
+    tree: TreeNode, families: List[str], additional: bool = True
+) -> List[str]:
     """Return the Zone paths for all Zones having the target families as
     FamilyName_t or AdditionalFamilyName_t.
 
@@ -2871,13 +2976,15 @@ def getZoneFromFamily(tree, families, additional=True):
         zlist += getAllNodesByTypeOrNameList(tree, fpth2)
     r = []
     for pth in zlist:
-        if getValueByPath(tree, pth).toString() in families:
+        if getValueByPath(tree, pth).tobytes().decode("ascii", "strict") in families:
             r += [getPathAncestor(pth)]
     return r
 
 
 # --------------------------------------------------
-def getBCFromFamily(tree, families, additional=True):
+def getBCFromFamily(
+    tree: TreeNode, families: List[str], additional: bool = True
+) -> List[str]:
     """Return the BC paths for all BCs having the target families as
     FamilyName_t or AdditionalFamilyName_t.
 
@@ -2892,15 +2999,17 @@ def getBCFromFamily(tree, families, additional=True):
     zlist = getAllNodesByTypeOrNameList(tree, fpth1)
     if additional:
         zlist += getAllNodesByTypeOrNameList(tree, fpth2)
-    r = []
+    res = []
     for pth in zlist:
-        if getValueByPath(tree, pth).tostring().decode("ascii") in families:
-            r += [getPathAncestor(pth)]
-    return r
+        if getValueByPath(tree, pth).tobytes().decode("ascii", "strict") in families:
+            res += [getPathAncestor(pth)]
+    return res
 
 
 # --------------------------------------------------
-def getZoneSubRegionFromFamily(tree, families, additional=True):
+def getZoneSubRegionFromFamily(
+    tree: TreeNode, families: List[str], additional: bool = True
+) -> List[str]:
     """Return the ZoneSubRegion paths for all having the target families as
     FamilyName_t or AdditionalFamilyName_t.
 
@@ -2923,13 +3032,13 @@ def getZoneSubRegionFromFamily(tree, families, additional=True):
         zlist += getAllNodesByTypeOrNameList(tree, fpth2)
     r = []
     for pth in zlist:
-        if getValueByPath(tree, pth).tostring().decode("ascii") in families:
+        if getValueByPath(tree, pth).tobytes().decode("ascii") in families:
             r += [getPathAncestor(pth)]
     return r
 
 
 # --------------------------------------------------
-def getFamiliesFromZone(tree, zonepath):
+def getFamiliesFromZone(tree: TreeNode, zonepath: str) -> List[str]:
     """Return all the Zone's FamilyName_t or AdditionalFamilyName_t.
 
     :arg CGNS/Python tree: target tree to parse
@@ -2940,7 +3049,7 @@ def getFamiliesFromZone(tree, zonepath):
 
 
 # --------------------------------------------------
-def getFamiliesFromBC(tree, path):
+def getFamiliesFromBC(tree: TreeNode, path: str) -> List[str]:
     """Return all the BC's FamilyName_t or AdditionalFamilyName_t.
 
     :arg CGNS/Python tree: target tree to parse
@@ -2956,12 +3065,12 @@ def getFamiliesFromBC(tree, path):
         l2 = []
     r = []
     for nd in l1 + l2:
-        r.append(nd[1].tostring().decode("ascii"))
+        r.append(nd[__VALUE__].tobytes().decode("ascii"))
     return r
 
 
 # --------------------------------------------------
-def getFamiliesFromZoneSubRegion(tree, zonepath):
+def getFamiliesFromZoneSubRegion(tree: TreeNode, zonepath: str) -> List[str]:
     """Return all the ZoneSubRegion's FamilyName_t or AdditionalFamilyName_t.
 
     :arg CGNS/Python tree: target tree to parse
@@ -2972,7 +3081,7 @@ def getFamiliesFromZoneSubRegion(tree, zonepath):
 
 
 # -----------------------------------------------------------------------------
-def hasChildType(parent, ntype):
+def hasChildType(parent: TreeNode, ntype: str) -> List[TreeNode]:
     """Checks if the parent node has a child with given type::
 
        node=getNodeByPath(T,'/Base/Zone/BC')
@@ -2988,8 +3097,8 @@ def hasChildType(parent, ntype):
     if not parent:
         return []
     r = []
-    for n in parent[2]:
-        if n[3] == ntype:
+    for n in parent[__CHILDREN__]:
+        if n[__LABEL__] == ntype:
             r.append(n)
     if r:
         return r
@@ -2997,7 +3106,7 @@ def hasChildType(parent, ntype):
 
 
 # -----------------------------------------------------------------------------
-def getEnumAsString(node):
+def getEnumAsString(node: TreeNode) -> str:
     """
     Return the node value as corresponding SIDS enumerate string::
         if (hasEnumValue(node)):
@@ -3013,18 +3122,18 @@ def getEnumAsString(node):
       - See also :py:func:`hasEnumValue`
     """
     try:
-        stp = node[3]
+        stp = node[__LABEL__]
         if stp == CK.Elements_ts:
             stp = CK.ElementType_ts
         e = CK.cgnsenums[stp]
-        v = e[node[1].flat[0]]
+        v = e[node[__VALUE__].flat[0]]
         return v
-    except:
+    except KeyError:
         return ""
 
 
 # -----------------------------------------------------------------------------
-def hasEnumValue(node):
+def hasEnumValue(node: TreeNode) -> bool:
     """
     Checks if the node type allows a SIDS enum value::
         if (hasEnumValue(node)):
@@ -3034,7 +3143,7 @@ def hasEnumValue(node):
     :Remarks:
       - See also :py:func:`getEnumAsString`
     """
-    stp = node[3]
+    stp = node[__LABEL__]
     if stp == CK.Elements_ts:
         stp = CK.ElementType_ts
     if stp in CK.cgnsenums:
@@ -3043,7 +3152,7 @@ def hasEnumValue(node):
 
 
 # -----------------------------------------------------------------------------
-def hasChildName(parent, name, dienow=False):
+def hasChildName(parent: TreeNode, name: str, dienow: bool = False):
     """
     Finds a child with a target name. Returns the node.
     """
@@ -3051,7 +3160,9 @@ def hasChildName(parent, name, dienow=False):
 
 
 # -----------------------------------------------------------------------------
-def setChildName(parent, oldname, newname, dienow=False):
+def setChildName(
+    parent: TreeNode, oldname: str, newname: str, dienow: bool = False
+) -> TreeNode:
     """
     Changes the name of an existing node::
 
@@ -3071,12 +3182,14 @@ def setChildName(parent, oldname, newname, dienow=False):
     n1 = hasChildName(parent, oldname)
     n2 = hasChildName(parent, newname)
     if n1 and not n2:
-        n1[0] = newname
+        n1[__NAME__] = newname
     return parent
 
 
 # -----------------------------------------------------------------------------
-def hasChildNode(parent, name, dienow=False):
+def hasChildNode(
+    parent: TreeNode, name: str, dienow: bool = False
+) -> Optional[TreeNode]:
     """
     Returns a child node if it exists::
 
@@ -3093,35 +3206,35 @@ def hasChildNode(parent, name, dienow=False):
     """
     if not parent:
         return None
-    if parent[2] is None:
+    if parent[__CHILDREN__] is None:
         return None
-    for nc in parent[2]:
-        if nc[0] == name:
+    for nc in parent[__CHILDREN__]:
+        if nc[__NAME__] == name:
             if dienow:
-                raise CE.cgnsNameError(102, (name, parent[0]))
+                raise CE.cgnsNameError(102, (name, parent[__NAME__]))
             return nc
     return None
 
 
 # --------------------------------------------------
-def getTypeAsGrammarToken(ntype):
+def getTypeAsGrammarToken(ntype: str) -> str:
     if ntype in CK.weirdSIDStypes:
         return CK.weirdSIDStypes[ntype]
     return ntype
 
 
 # --------------------------------------------------
-def hasChildNodeOfType(node, ntype):
+def hasChildNodeOfType(node: TreeNode, ntype: str):
     if node is None:
         return 0
-    for cn in node[2]:
-        if cn[3] == ntype:
+    for cn in node[__CHILDREN__]:
+        if cn[__LABEL__] == ntype:
             return 1
     return 0
 
 
 # --------------------------------------------------
-def stringMatches(string, reval):
+def stringMatches(string: str, reval: str):
     """Returns re.group if the pattern matches the string, None otherwise"""
     return re.match(reval, string)
 
@@ -3135,22 +3248,24 @@ def stringNameMatches(node, reval):
 # --------------------------------------------------
 def stringTypeMatches(node, reval):
     """Returns re.group if the pattern matches the node type, None otherwise"""
-    return stringMatches(node[3], reval)
+    return stringMatches(node[__LABEL__], reval)
 
 
 # --------------------------------------------------
-def stringValueMatches(node, reval):
+def stringValueMatches(node: Optional[TreeNode], reval) -> bool:
     """True if the string matches the node value"""
     if node is None:
         return False
-    if node[1] is None:
+    if node[__VALUE__] is None:
         return False
     if getNodeType(node) != CK.C1:
         return False
-    if isinstance(node[1], str):
-        vn = node[1]
-    elif isinstance(node[1], numpy.ndarray) and (node[1].dtype.kind in ["S", "a"]):
-        vn = node[1].tostring().decode("ascii", "strict")
+    if isinstance(node[__VALUE__], str):
+        vn = node[__VALUE__]
+    elif isinstance(node[__VALUE__], numpy.ndarray) and (
+        node[__VALUE__].dtype.kind in ["S", "a"]
+    ):
+        vn = node[__VALUE__].tobytes().decode("ascii", "strict")
     else:
         return False
     if stringMatches(vn, reval) is not None:
@@ -3159,32 +3274,34 @@ def stringValueMatches(node, reval):
 
 
 # --------------------------------------------------
-def stringValueInList(node, listval):
+def stringValueInList(node: Optional[TreeNode], listval: List[str]) -> bool:
     """True if the value list contains the node value"""
     if node is None:
         return False
-    if node[1] is None:
+    if node[__VALUE__] is None:
         return False
     if getNodeType(node) != CK.C1:
         return False
 
-    if isinstance(node[1], str):
-        vn = node[1]
-    elif isinstance(node[1], numpy.ndarray) and (node[1].dtype.kind in ["S", "s"]):
-        vn = node[1].tostring().decode("ascii", "strict")
+    if isinstance(node[__VALUE__], str):
+        vn = node[__VALUE__]
+    elif isinstance(node[__VALUE__], numpy.ndarray) and (
+        node[__VALUE__].dtype.kind in ["S", "s"]
+    ):
+        vn = node[__VALUE__].tobytes().decode("ascii", "strict")
     else:
         return False
     return vn in listval
 
 
 # --------------------------------------------------
-def isLinkNode(tree, links, node):
+def isLinkNode(tree: TreeNode, links, node: TreeNode) -> bool:
     # """Returns True if the node is a linked node"""
     pass
 
 
 # --------------------------------------------------
-def checkLinkFile(lkfile, lksearch=None):
+def checkLinkFile(lkfile: str, lksearch: Optional[List[str]] = None) -> Tuple[str, str]:
     """Checks if the file exists"""
     found = (None, None)
     if not lksearch:
@@ -3198,7 +3315,7 @@ def checkLinkFile(lkfile, lksearch=None):
 
 
 # --------------------------------------------------
-def copyArray(a):
+def copyArray(a: numpy.ndarray) -> Optional[numpy.ndarray]:
     """Copy a numpy.ndarray with flags"""
     if not isinstance(a, numpy.ndarray):
         return None  # None, []
@@ -3210,20 +3327,20 @@ def copyArray(a):
 
 
 # --------------------------------------------------
-def getChildren(t):
-    s = set([c[0] for c in t[2]])
+def getChildren(t: TreeNode):
+    s = set([c[__NAME__] for c in t[__CHILDREN__]])
     cl = {}
-    for c in t[2]:
-        cl[c[0]] = c
+    for c in t[__CHILDREN__]:
+        cl[c[__NAME__]] = c
     return s, cl
 
 
 # --------------------------------------------------
 # should merge with checkSameValue that returns True/False
 #
-def compareValues(na, nb):
-    va = na[1]
-    vb = nb[1]
+def compareValues(na: TreeNode, nb: TreeNode):
+    va = na[__VALUE__]
+    vb = nb[__VALUE__]
     eps = 1e-12
     if va is None and vb is not None:
         return 1
@@ -3243,17 +3360,24 @@ def compareValues(na, nb):
         vd = numpy.array(numpy.abs(va - vb))
         if numpy.any(vd > eps):
             return 6
-    elif va.ravel().tostring() != vb.ravel().tostring():
+    elif va.ravel().tobytes() != vb.ravel().tobytes():
         return 7
     return 0
 
 
 # --------------------------------------------------
-def diff(ta, tb, path="", tag="A", diag=None, trace=False):
+def diff(
+    ta: TreeNode,
+    tb: TreeNode,
+    path: str = "",
+    tag: str = "A",
+    diag: Optional[Dict] = None,
+    trace: bool = False,
+) -> Dict:
     if diag is None:
         diag = {}
     diag[path] = []
-    if ta[3] != tb[3]:
+    if ta[__LABEL__] != tb[__LABEL__]:
         diag[path].append(("CT",))
         if trace:
             print("CT %s %s" % (tag, path))
@@ -3292,7 +3416,7 @@ def diff(ta, tb, path="", tag="A", diag=None, trace=False):
 
 
 # --------------------------------------------------
-def diffAnalysis(diag):
+def diffAnalysis(diag: Dict) -> str:
     s = "## ++ A node not in B\n"
     s += "## -- B node not in A\n"
     s += "## >t A and B node SIDS type differ\n"
@@ -3333,7 +3457,7 @@ def diffAnalysis(diag):
 
 
 # --------------------------------------------------
-def toStringValue(v):
+def toStringValue(v: Optional[numpy.ndarray]) -> Optional[str]:
     """ASCII pretty print of one node value."""
     if v is None:
         return None
@@ -3346,7 +3470,13 @@ def toStringValue(v):
 
 
 # --------------------------------------------------
-def toStringChildren(l, readable=False, shift=0, keywords=False, pycgns=False):
+def toStringChildren(
+    l: List[TreeNode],
+    readable: bool = False,
+    shift: int = 0,
+    keywords: bool = False,
+    pycgns: bool = False,
+) -> str:
     """ASCII pretty print of one children node list."""
     s = "["
     for c in l:
@@ -3362,7 +3492,7 @@ def toStringChildren(l, readable=False, shift=0, keywords=False, pycgns=False):
 
 
 # --------------------------------------------------
-def prettyPrint(tree, path="", depth=0, sort=False, links=None, paths=None):
+def prettyPrint(tree, path="", depth=0, sort=False, links=None, paths=None) -> NoReturn:
     """ASCII pretty print of the whole tree."""
     if links is None:
         links = []
@@ -3383,7 +3513,7 @@ def prettyPrint(tree, path="", depth=0, sort=False, links=None, paths=None):
     n = ("%s(%s) %s:%s" % (tree[0], tree[3], nt, ns),)
     print("%-32s" % n)
     if not sort:
-        for c in tree[2]:
+        for c in tree[__CHILDREN__]:
             prettyPrint(c, path, depth=depth + 2, links=links, paths=paths)
     else:
         for c in getNextChildSortByType(tree, criteria=CK.sortedtypelist):
@@ -3391,7 +3521,13 @@ def prettyPrint(tree, path="", depth=0, sort=False, links=None, paths=None):
 
 
 # --------------------------------------------------
-def toString(tree, readable=False, shift=0, keywords=False, pycgns=False):
+def toString(
+    tree: TreeNode,
+    readable: bool = False,
+    shift: int = 0,
+    keywords: bool = False,
+    pycgns: bool = False,
+) -> str:
     """
     Returns the full sub-tree as a single line string::
 
@@ -3420,26 +3556,26 @@ tree=\\\n"""
         prefix = "\n" + shift * " "
     if n is None:
         return "None"
-    name = n[0]
+    name = n[__NAME__]
     if keywords and name in CK.cgnsnames:
-        name = "CGK.%s_s" % n[0]
+        name = "CGK.%s_s" % n[__NAME__]
     else:
-        name = "'%s'" % n[0]
+        name = "'%s'" % n[__NAME__]
     s = "%s[%s,%s,%s" % (
         prefix,
         name,
         toStringValue(n[1]),
-        toStringChildren(n[2], readable, shift + 2, keywords, pycgns),
+        toStringChildren(n[__CHILDREN__], readable, shift + 2, keywords, pycgns),
     )
     if keywords:
-        s += "CGK.%ss ]" % n[3]
+        s += "CGK.%ss ]" % n[__LABEL__]
     else:
-        s += "'%s' ]" % n[3]
+        s += "'%s' ]" % n[__LABEL__]
     return s
 
 
 # --------------------------------------------------
-def toFile(tree, filename):
+def toFile(tree: TreeNode, filename: str) -> NoReturn:
     """
     Writes the CGNS/Python tree as an ``import``-able string in a file::
 
@@ -3464,7 +3600,9 @@ def toFile(tree, filename):
 
 
 # --------------------------------------------------
-def getNodesFromTypeSet(tree, typeset):
+def getNodesFromTypeSet(
+    tree: TreeNode, typeset: List[str]
+) -> Iterator[Tuple[str, TreeNode]]:
     """**Iterator** returns the children nodes of the argument CGNS/Python
     matching one of the type in the list. It allows an alternate traversal
     of the CGNS/Python tree::
@@ -3484,19 +3622,19 @@ def getNodesFromTypeSet(tree, typeset):
 
     def genNodesFromTypeSet(typelist, cnode, cpath):
         for c in cnode:
-            if c[3] in typelist:
-                yield ("%s/%s" % (cpath, c[0]), c)
+            if c[__LABEL__] in typelist:
+                yield "%s/%s" % (cpath, c[__NAME__]), c
             for curpath, curnode in genNodesFromTypeSet(
-                typelist, c[2], "%s/%s" % (cpath, c[0])
+                typelist, c[__CHILDREN__], "%s/%s" % (cpath, c[__NAME__])
             ):
-                yield (curpath, curnode)
+                yield curpath, curnode
 
-    if tree[3] == CK.CGNSTree_ts:
+    if tree[__LABEL__] == CK.CGNSTree_ts:
         start = ""
     else:
-        start = "%s" % tree[0]
-    for path, node in genNodesFromTypeSet(typeset, tree[2], start):
-        yield (path, node)
+        start = "%s" % tree[__NAME__]
+    for path, node in genNodesFromTypeSet(typeset, tree[__CHILDREN__], start):
+        yield path, node
 
 
 # ----

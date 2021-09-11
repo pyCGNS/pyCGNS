@@ -34,8 +34,6 @@
  int cg_array_read_as(int A, DataType_t type, void *Data)
  
 """
-from __future__ import unicode_literals
-from builtins import str, bytes, range, dict
 
 # ----------------------------------------------------------------------------
 

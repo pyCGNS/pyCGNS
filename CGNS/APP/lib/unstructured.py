@@ -1,4 +1,3 @@
-from __future__ import print_function
 import CGNS.MAP              as CGM
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils    as CGU

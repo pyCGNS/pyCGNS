@@ -3,9 +3,6 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from __future__ import unicode_literals
-from builtins import str, bytes, range, dict
-
 import CGNS.PAT.cgnskeywords as CGK
 
 tlistA = [
@@ -51,7 +48,7 @@ class CGNStype:
         return False
 
     def addChild(self, ctype, cname=UD, dtype=CGK.MT, card=C_0N):
-        if type(cname) != list:
+        if not isinstance(cname, list):
             lname = [cname]
         else:
             lname = cname

@@ -3,8 +3,6 @@
 #  See license.txt file in the root directory of this Python module source
 #  ---------------------------------------------------------------------------
 #
-from __future__ import unicode_literals
-from __future__ import absolute_import
 from . import CGNSBase_t
 from . import Zone_t
 from . import ZoneBC_t

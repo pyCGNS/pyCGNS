@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7QueryWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -259,7 +260,5 @@ class Ui_Q7QueryWindow(object):
         self.bRun.setToolTip(_translate("Q7QueryWindow", "Run query with args"))
         self.label_3.setText(_translate("Q7QueryWindow", "Args:"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Q7QueryWindow", "Result"))
-
-
 from CGNS.NAV.weditors import Q7DocEditor, Q7PythonEditor
 from . import Res_rc

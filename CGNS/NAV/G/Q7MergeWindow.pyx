@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7MergeWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -186,7 +187,5 @@ class Ui_Q7MergeWindow(object):
         self.bNextMark.setToolTip(_translate("Q7MergeWindow", "Select next marked node"))
         self.bNextMark.setText(_translate("Q7MergeWindow", "..."))
         self.bClose.setText(_translate("Q7MergeWindow", "Close"))
-
-
 from CGNS.NAV.mdifftreeview import Q7DiffTreeView
 from . import Res_rc

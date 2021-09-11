@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7MessageWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -75,6 +76,4 @@ class Ui_Q7MessageWindow(object):
         self.cNotAgain.setText(_translate("Q7MessageWindow", "Don\'t show this message again"))
         self.bCANCEL.setText(_translate("Q7MessageWindow", "Cancel"))
         self.bOK.setText(_translate("Q7MessageWindow", "OK"))
-
-
 from . import Res_rc

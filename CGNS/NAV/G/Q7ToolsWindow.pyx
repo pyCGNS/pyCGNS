@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7ToolsWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -509,6 +510,4 @@ class Ui_Q7ToolsWindow(object):
         self.cAutoMerge.setText(_translate("Q7ToolsWindow", "Auto"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.merge), _translate("Q7ToolsWindow", "Merge"))
         self.bClose.setText(_translate("Q7ToolsWindow", "Close"))
-
-
 from . import Res_rc

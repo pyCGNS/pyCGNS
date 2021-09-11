@@ -3,11 +3,7 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import sys
-from builtins import (str, bytes, range, dict)
 
 import linecache
 import numpy
@@ -17,7 +13,6 @@ from qtpy.QtCore import (Qt, QModelIndex, QAbstractItemModel, QItemSelectionMode
 from qtpy.QtGui import (QIcon, QPixmap, QColor)
 from qtpy.QtWidgets import QTreeView
 
-from CGNS.pyCGNSconfig import HAS_PY2
 import CGNS.NAV.wmessages as MSG
 import CGNS.PAT.cgnskeywords as CGK
 import CGNS.PAT.cgnsutils as CGU
@@ -1412,13 +1407,6 @@ class Q7TreeModel(QAbstractItemModel):
         #     return None
         if disp in ICONMAPPING:
             disp = Q7TreeModel._icons[disp]
-        elif HAS_PY2 and disp is not None:
-            # Convert newstr to unicode because of Qt python binding
-            if hasattr(disp, '__native__'):
-                native_type = type(disp.__native__())
-            else:
-                native_type = type(disp)
-            disp = native_type(disp)
         return disp
 
     def flags(self, index):

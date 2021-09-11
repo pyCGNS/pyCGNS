@@ -8,8 +8,6 @@
 #   python lib/gendoc.py > doc/mods/PAT/cgnstypes.txt
 #
 #
-from __future__ import unicode_literals
-from __future__ import print_function
 import CGNS.PAT.cgnstypes
 
 nzero = [CGNS.PAT.cgnstypes.C_11, CGNS.PAT.cgnstypes.C_1N, CGNS.PAT.cgnstypes.C_NN]
