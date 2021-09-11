@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7PatternWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -108,7 +109,5 @@ class Ui_Q7PatternWindow(object):
         Q7PatternWindow.setWindowTitle(_translate("Q7PatternWindow", "Form"))
         self.bClose.setText(_translate("Q7PatternWindow", "Close"))
         self.patternTable.setSortingEnabled(True)
-
-
 from CGNS.NAV.mpattern import Q7PatternTableWidget
 from . import Res_rc

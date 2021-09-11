@@ -6,10 +6,6 @@
 # TESTING RAW HDF5/C API and H5PY IMPLEMENTATIONS ***
 # - test save first
 # - test load
-
-from __future__ import unicode_literals
-from __future__ import print_function
-from builtins import bytes, str, range, dict
 import os
 import subprocess
 import unittest

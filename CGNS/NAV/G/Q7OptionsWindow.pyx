@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7OptionsWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -592,6 +593,4 @@ class Ui_Q7OptionsWindow(object):
         self.bReset.setText(_translate("Q7OptionsWindow", "Reset"))
         self.bApply.setText(_translate("Q7OptionsWindow", "Apply"))
         self.bClose.setText(_translate("Q7OptionsWindow", "Close"))
-
-
 from . import Res_rc

@@ -3,11 +3,6 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from builtins import (str, bytes, range, dict)
-
 import CGNS.PAT.cgnskeywords   as CGK
 import CGNS.PAT.cgnsutils      as CGU
 import CGNS.APP.lib.arrayutils as CGA
@@ -399,38 +394,40 @@ class Mesh(CGNSparser):
         data = vtk.vtkIntArray()
         data.SetNumberOfComponents(3)
         data.SetName("index volume")
-        cdef int p, i, j, k, idim, jdim, kdim
+        cdef int p, i, j, k
+        cdef int ijkDim[3]
         cdef float xf, yf, zf
         cdef double xd, yd, zd
-        idim = dx.shape[0]
-        jdim = dx.shape[1]
-        kdim = dx.shape[2]
+        ijkDim[0] = 1
+        ijkDim[1] = 1
+        ijkDim[2] = 1
+        for idx in range(dx.ndim):
+           ijkDim[idx] = dx.shape[idx]
         pts = vtk.vtkPoints()
-        pts.SetNumberOfPoints(idim * jdim * kdim)
-        # pts.setData
+        pts.SetNumberOfPoints(ijkDim[0] * ijkDim[1] * ijkDim[2])
         if (dx.dtype == NPY.float32):
-            for k in xrange(kdim):
-                for j in xrange(jdim):
-                    for i in xrange(idim):
+            for k in range(ijkDim[2]):
+                for j in range(ijkDim[1]):
+                    for i in range(ijkDim[0]):
                         data.InsertNextTuple3(i + 1, j + 1, k + 1)
-                        p = i + j * idim + k * idim * jdim
+                        p = i + j * ijkDim[0] + k * ijkDim[0] * ijkDim[1]
                         xf = ( < float * > CNPY.PyArray_GETPTR1(dx, p))[0]
                         yf = ( < float * > CNPY.PyArray_GETPTR1(dy, p))[0]
                         zf = ( < float * > CNPY.PyArray_GETPTR1(dz, p))[0]
                         pts.InsertPoint(p, xf, yf, zf)
         else:
-            for k in xrange(kdim):
-                for j in xrange(jdim):
-                    for i in xrange(idim):
+            for k in range(ijkDim[2]):
+                for j in range(ijkDim[1]):
+                    for i in range(ijkDim[0]):
                         data.InsertNextTuple3(i + 1, j + 1, k + 1)
-                        p = i + j * idim + k * idim * jdim
+                        p = i + j * ijkDim[0] + k * ijkDim[0] * ijkDim[1]
                         xd = (( < double * > dx.data) + p)[0]
                         yd = (( < double * > dy.data) + p)[0]
                         zd = (( < double * > dz.data) + p)[0]
                         pts.InsertPoint(p, xd, yd, zd)
         g = vtk.vtkStructuredGrid()
         g.SetPoints(pts)
-        g.SetExtent(0, idim - 1, 0, jdim - 1, 0, kdim - 1)
+        g.SetExtent(0, ijkDim[0] - 1, 0, ijkDim[1] - 1, 0, ijkDim[2] - 1)
         d = vtk.vtkDataSetMapper()
         if VTK_VERSION_MAJOR < 8:
            raise RuntimeError("VTK version is too old, please upgrade.")
@@ -440,15 +437,15 @@ class Mesh(CGNSparser):
         a.GetProperty().SetRepresentationToWireframe()
         g.GetPointData().AddArray(data)
         for s in solution:
-            if ((s[1] is not None) and (s[1].shape == (idim - 1, jdim - 1, kdim - 1))):
+            if ((s[1] is not None) and (s[1].shape == (ijkDim[0] - 1, ijkDim[1] - 1, ijkDim[2]- 1))):
                 array = vtk.vtkFloatArray()
                 array.SetName(s[0])
-                for k in xrange(kdim - 1):
-                    for j in xrange(jdim - 1):
-                        for i in xrange(idim - 1):
+                for k in range(ijkDim[2] - 1):
+                    for j in range(ijkDim[1] - 1):
+                        for i in range(ijkDim[0] - 1):
                             array.InsertNextTuple1(s[1][i][j][k])
                 g.GetCellData().AddArray(array)
-        return (a, a.GetBounds(), g, path, (0, (idim, jdim, kdim)))
+        return (a, a.GetBounds(), g, path, (0, (ijkDim[0], ijkDim[1], ijkDim[2])))
 
     #  @cython.boundscheck(False)
     def do_surface_double_3d(self, path, surf):
@@ -472,8 +469,8 @@ class Mesh(CGNSparser):
         sg.Allocate(1, 1)
         n = 0
         qp = vtk.vtkPoints()  # TODO: add family label as attribute
-        for j in xrange(jmax - 1):
-            for i in xrange(imax - 1):
+        for j in range(jmax - 1):
+            for i in range(imax - 1):
                 p1 = j + i * jmax + 0
                 p2 = j + i * jmax + 1
                 p3 = j + jmax + i * jmax + 1

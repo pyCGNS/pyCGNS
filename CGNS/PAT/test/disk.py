@@ -1,5 +1,4 @@
 # cannot be used for CFD
-from __future__ import unicode_literals
 import numpy
 
 

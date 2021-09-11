@@ -3,8 +3,6 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from __future__ import unicode_literals
-from __future__ import print_function
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.PAT.cgnstypes as CGT
 import CGNS.PAT.cgnskeywords as CGK

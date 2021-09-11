@@ -22,8 +22,6 @@
 #
 #Choose 4bpp. However, I have seen with some images that 8bpp needs to be used.
 #9) upload to your website and enjoy!
-from __future__ import unicode_literals
-from __future__ import print_function
 import sys
 import glob
 

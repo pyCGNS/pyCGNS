@@ -1,65 +1,61 @@
 # ======================================================================
 # CHLone - CGNS HDF5 LIBRARY only node edition
 # See license.txt in the root directory of this source release
-# ====================================================================== 
+# ======================================================================
 #
-from __future__ import unicode_literals
-from __future__ import print_function
-from builtins import (str, bytes, range, dict)
-
+# ---------------------------------------------------------------------------
+# THIS FILE IS PRE-PROCESSED
+# ALWAYS USE DOUBLE {{}} INSTEAD OF A SINGLE ONE
+# ---------------------------------------------------------------------------
 import os
 import sys
 import copy
 
 from CGNS.PAT.cgnserrors import CGNSException as CHLoneException
-from CGNS.pyCGNSconfig import HAS_PY3
 
-# ---------------------------------------------------------------------------
-# THIS FILE IS PRE-PROCESSED
-# ALWAYS USE DOUBLE {{}} INSTEAD OF A SINGLE ONE
-# ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 class CHLoneExceptionInternal(Exception):
     def __str__(self):
-        s = 'CHLone.CHLoneException' + Exception.__str__(self)
+        s = "CHLone.CHLoneException" + Exception.__str__(self)
         return s
 
 
 class CHLoneException(Exception):
     mTable = {{
-        900: 'No such file [{{}}]',
-        901: 'File already exists [{{}}]',
-        902: 'File name should be a string',
-        903: 'Cannot propagate save to non-existant linked-to file [{{}}]',
-        904: 'Cannot propagate save to unreadable linked-to file [{{}}]',
-        905: 'Cannot propagate save to non-existant node in linked-to file [{{}}]',
-        906: 'Bad tree structure (root should be list of 4 items, refer to doc)',
-        907: 'Invalid combination of flags (refer to doc)',
-        908: 'Using a maxdata implies FNODATA flag',
-        909: 'Cannot have attributes {{}} at the same time',
-        910: 'Keyword argument [{{}}] unknown',
-        911: 'Bad [flag] argument (should be int)',
-        912: 'Bad [depth] argument (should be int)',
-        913: 'Bad [path] argument (should be str)',
-        914: 'Bad [lksearch] argument (should be list of str)',
-        915: 'Bad [maxdata] argument (should be int)',
-        916: 'Bad [skip] argument (should be list of str)',
-        917: 'Bad [links] argument (refer to doc)',
-        920: 'Cannot write in file [{{}}]',
-        930: 'Filter dict requires a path (str) as key',
-        931: 'Filter dict value should be a tuple with int as first arg',
+        900: "No such file [{{}}]",
+        901: "File already exists [{{}}]",
+        902: "File name should be a string",
+        903: "Cannot propagate save to non-existant linked-to file [{{}}]",
+        904: "Cannot propagate save to unreadable linked-to file [{{}}]",
+        905: "Cannot propagate save to non-existant node in linked-to file [{{}}]",
+        906: "Bad tree structure (root should be list of 4 items, refer to doc)",
+        907: "Invalid combination of flags (refer to doc)",
+        908: "Using a maxdata implies FNODATA flag",
+        909: "Cannot have attributes {{}} at the same time",
+        910: "Keyword argument [{{}}] unknown",
+        911: "Bad [flag] argument (should be int)",
+        912: "Bad [depth] argument (should be int)",
+        913: "Bad [path] argument (should be str)",
+        914: "Bad [lksearch] argument (should be list of str)",
+        915: "Bad [maxdata] argument (should be int)",
+        916: "Bad [skip] argument (should be list of str)",
+        917: "Bad [links] argument (refer to doc)",
+        920: "Cannot write in file [{{}}]",
+        930: "Filter dict requires a path (str) as key",
+        931: "Filter dict value should be a tuple with int as first arg",
         932: 'SPARTIAL Filter requires a "list of 8 lists of integers" as value"',
-        933: 'SPARTIAL Filter bad parameters',
-        934: 'SCONTIGUOUS requires a tuple of index,rank (integers) as value',
+        933: "SPARTIAL Filter bad parameters",
+        934: "SCONTIGUOUS requires a tuple of index,rank (integers) as value",
     }}
 
 
 def raiseException(code, *args):
     if args:
-      raise CHLoneException((code, CHLoneException.mTable[code].format(*args)))
+        raise CHLoneException((code, CHLoneException.mTable[code].format(*args)))
     else:
-      raise CHLoneException((code, CHLoneException.mTable[code]))
+        raise CHLoneException((code, CHLoneException.mTable[code]))
+
 
 def checkUpdate(update):
     if not isinstance(update, dict):
@@ -95,7 +91,7 @@ def checkThreshold(maxdata):
 
 def checkObjectPath(path):
     if path is None:
-        path = ''
+        path = ""
     if not isinstance(path, str):
         raiseException(913)
     return path
@@ -127,18 +123,16 @@ def checkLinkList(links, linkfull=False):
     if not isinstance(links[0], (list, tuple)):
         raiseException(917)
     if len(links[0]) == 5:
-        links = [l[:-1] for l in links]
+        links = [ln[:-1] for ln in links]
     if len(links[0]) in [6, 7]:
-        links = [[l[3], l[4], l[5], l[2]] for l in links]
+        links = [[ln[3], ln[4], ln[5], ln[2]] for ln in links]
     elif linkfull:
         raiseException(917)
     list_links = []
     for lk in links:
-        if (not isinstance(lk, (list, tuple)) or
-                (len(lk) != 4)):
+        if not isinstance(lk, (list, tuple)) or (len(lk) != 4):
             raiseException(917)
-        if (lk[0] is not None and
-                not isinstance(lk[0], str)):
+        if lk[0] is not None and not isinstance(lk[0], str):
             raiseException(917)
         for p in lk[1:]:
             if not isinstance(p, str):
@@ -205,17 +199,17 @@ def checkFilter(adict):
 def checkLinkPath(lksearch):
     r = []
     if not lksearch:
-        return ''
+        return ""
     if not isinstance(lksearch, (list, tuple)):
         raiseException(914)
     for p in lksearch:
         if not isinstance(p, str):
             raiseException(914)
         r.append(str(p))
-    if sys.platform in ['win32']:
-        return ';'.join(r)
+    if sys.platform in ["win32"]:
+        return ";".join(r)
     else:
-        return ':'.join(r)
+        return ":".join(r)
 
 
 def checkFast(tree):
@@ -235,9 +229,8 @@ def propagateUpdatePaths(links, obdict):
             if lk[3] in upath:
                 if lk[3] == upath:
                     continue
+    # fpaths[(lk[0],lk[1])].append(=obdict[lk[3]]
 
-
-# fpaths[(lk[0],lk[1])].append(=obdict[lk[3]]
 
 def propagateSkipPaths(links, sklist):
     pass
@@ -246,9 +239,9 @@ def propagateSkipPaths(links, sklist):
 def checkLinkedToFiles(links, propagate=True):
     for lk in links:
         if lk[0] is None:
-            fname = './{{}}'.format(lk[1])
+            fname = "./{{}}".format(lk[1])
         else:
-            fname = '{{}}/{{}}'.format(lk[0], lk[1])
+            fname = "{{}}/{{}}".format(lk[0], lk[1])
         fname = os.path.normpath(fname)
         if propagate:
             if not os.path.exists(fname):
@@ -393,9 +386,24 @@ class Config:
 # config.h5version='{{}}(HDF5_VERSION)s'
 # -------------------------------------------------------------------
 
-load_keys = ['updatedict', 'subtree', 'linkpaths', 'filter', 'contiguous',
-             'flags', 'depth', 'path', 'lksearch', 'update', 'maxdata', 
-             'threshold', 'linkfull', 'skip', 'skiplist']
+load_keys = [
+    "updatedict",
+    "subtree",
+    "linkpaths",
+    "filter",
+    "contiguous",
+    "flags",
+    "depth",
+    "path",
+    "lksearch",
+    "update",
+    "maxdata",
+    "threshold",
+    "linkfull",
+    "skip",
+    "skiplist",
+]
+
 
 # ---------------------------------------------------------------------------
 def garbage(tree):
@@ -408,26 +416,31 @@ def probe(filename, path=None):
     if not os.path.isfile(tfile):
         raiseException(900, tfile)
     if path is None:
-        r = s2p_probe(tfile.encode('utf-8'), ''.encode('utf-8'))
+        r = s2p_probe(tfile.encode("utf-8"), "".encode("utf-8"))
     else:
-        r = s2p_probe(tfile.encode('utf-8'), path.encode('utf-8'))
+        r = s2p_probe(tfile.encode("utf-8"), path.encode("utf-8"))
     return r
 
 
-def showrefs(t, path=''):
+def showrefs(t, path=""):
     vc = sys.getrefcount(t[1]) - 1
     if t[1] is None:
         vc = 1
         fg = True
     else:
-        fg = t[1].flags['OWNDATA']
-    print("{{}} {{}} {{}} {{}} ({{}}) {{}}".format(sys.getrefcount(t[0]) - 1,
-                                         vc,
-                                         sys.getrefcount(t[2]) - 1,
-                                         sys.getrefcount(t[3]) - 1, path,
-                                         fg))
+        fg = t[1].flags["OWNDATA"]
+    print(
+        "{{}} {{}} {{}} {{}} ({{}}) {{}}".format(
+            sys.getrefcount(t[0]) - 1,
+            vc,
+            sys.getrefcount(t[2]) - 1,
+            sys.getrefcount(t[3]) - 1,
+            path,
+            fg,
+        )
+    )
     for c in t[2]:
-        showrefs(c, path + '/' + c[0])
+        showrefs(c, path + "/" + c[0])
 
 
 # ---------------------------------------------------------------------------
@@ -435,21 +448,21 @@ def load(filename, **kw):
     for k in kw:
         if k not in load_keys:
             raiseException(910, k)
-    if ('linkpaths' in kw) and ('lksearch' in kw):
-        raiseException(909, ['linkpaths', 'lksearch'])
-    if ('subtree' in kw) and ('path' in kw):
-        raiseException(909, ['subtree', 'path'])
-    if ('maxdata' in kw) and ('threshold' in kw):
-        raiseException(909, ['maxdata', 'threshold'])
-    if ('updatedict' in kw) and ('update' in kw):
-        raiseException(909, ['updatedict', 'update'])
+    if ("linkpaths" in kw) and ("lksearch" in kw):
+        raiseException(909, ["linkpaths", "lksearch"])
+    if ("subtree" in kw) and ("path" in kw):
+        raiseException(909, ["subtree", "path"])
+    if ("maxdata" in kw) and ("threshold" in kw):
+        raiseException(909, ["maxdata", "threshold"])
+    if ("updatedict" in kw) and ("update" in kw):
+        raiseException(909, ["updatedict", "update"])
     flags = S2P_FDEFAULT
     depth = 0
-    path = ''
+    path = ""
     lksearch = []
     update = {{}}
     maxdata = -1
-    filter = {{}}
+    array_filter = {{}}
     skip = []
     linkfull = False
     tpath = os.path.normpath(os.path.expanduser(filename))
@@ -457,72 +470,90 @@ def load(filename, **kw):
     tfile = os.path.split(tpath)[1]
     if not os.path.isfile(tpath):
         raiseException(900, tpath)
-    if 'subtree' in kw:
-        path = kw['subtree']
-    if 'path' in kw:
-        path = kw['path']
-    if 'linkpaths' in kw:
-        lksearch = kw['linkpaths']
-    if 'lksearch' in kw:
-        lksearch = kw['lksearch']
-    if 'updatedict' in kw:
-        update = kw['updatedict']
-    if 'update' in kw:
-        update = kw['update']
-    if 'contiguous' in kw:
-        filter = kw['contiguous']
-    if 'filter' in kw:
-        filter = kw['filter']
-    if 'flags' in kw:
-        flags = kw['flags']
-    if 'depth' in kw:
-        depth = kw['depth']
-    if 'maxdata' in kw:
-        maxdata = kw['maxdata']
-    if 'threshold' in kw:
-        maxdata = kw['threshold']
-    if 'linkfull' in kw:
-        linkfull = kw['linkfull']
-    if 'skip' in kw:
-        skip = kw['skip']
-    if 'skiplist' in kw:
-        skip = kw['skiplist']
+    if "subtree" in kw:
+        path = kw["subtree"]
+    if "path" in kw:
+        path = kw["path"]
+    if "linkpaths" in kw:
+        lksearch = kw["linkpaths"]
+    if "lksearch" in kw:
+        lksearch = kw["lksearch"]
+    if "updatedict" in kw:
+        update = kw["updatedict"]
+    if "update" in kw:
+        update = kw["update"]
+    if "contiguous" in kw:
+        array_filter = kw["contiguous"]
+    if "filter" in kw:
+        array_filter = kw["filter"]
+    if "flags" in kw:
+        flags = kw["flags"]
+    if "depth" in kw:
+        depth = kw["depth"]
+    if "maxdata" in kw:
+        maxdata = kw["maxdata"]
+    if "threshold" in kw:
+        maxdata = kw["threshold"]
+    if "linkfull" in kw:
+        linkfull = kw["linkfull"]
+    if "skip" in kw:
+        skip = kw["skip"]
+    if "skiplist" in kw:
+        skip = kw["skiplist"]
     _flags = checkFlags(flags)
     _depth = checkDepth(depth)
     _maxdata = checkThreshold(maxdata)
     _lkpath = checkLinkPath(lksearch)
     _obpath = checkObjectPath(path)
     _update = checkUpdate(update)
-    _filter = checkFilter(filter)
+    _filter = checkFilter(array_filter)
     _sklist = checkPathList(skip)
     if (_maxdata != -1) and (not _flags & FNODATA):
         raiseException(908)
     x = CHLoneExceptionInternal
     try:
-        t = s2p_loadAsHDF(tdir.encode('utf-8'), tfile.encode('utf-8'), _flags, _depth, _maxdata,
-                          _obpath.encode('utf-8'), _lkpath.encode('utf-8'),
-                          _update, _filter, _sklist, x)
+        t = s2p_loadAsHDF(
+            tdir.encode("utf-8"),
+            tfile.encode("utf-8"),
+            _flags,
+            _depth,
+            _maxdata,
+            _obpath.encode("utf-8"),
+            _lkpath.encode("utf-8"),
+            _update,
+            _filter,
+            _sklist,
+            x,
+        )
         if t[0][2] is not None:
             t[0][2] = t[0][2][2]
         # handle old/new link table format, linkfull=True means new
         # old: destdir destfile destnode srcnode status
         # new: srcdir srcfile srcnode destdir destfile destnode status
         if not linkfull and t[1]:
-            lk = [[l[3], l[4], l[5], l[2], l[6]] for l in t[1]]
+            lk = [[ln[3], ln[4], ln[5], ln[2], ln[6]] for ln in t[1]]
         else:
             lk = t[1]
         t = (t[0], lk, t[2])
     except CHLoneExceptionInternal as v:
-        if HAS_PY3:
-            raise CHLoneException(v.args) from None
-        else:
-            raise CHLoneException(v.args)
+        raise CHLoneException(v.args) from None
     return t
 
 
-save_keys = ['links', 'skip', 'flags', 'depth', 'lksearch', 'filter', 'update',
-             'updatepaths', 'updatedict', 'linkpaths', 'skiplist',
-             'linkfull']
+save_keys = [
+    "links",
+    "skip",
+    "flags",
+    "depth",
+    "lksearch",
+    "filter",
+    "update",
+    "updatepaths",
+    "updatedict",
+    "linkpaths",
+    "skiplist",
+    "linkfull",
+]
 
 
 # ---------------------------------------------------------------------------
@@ -532,14 +563,14 @@ def save(filename, tree, **kw):
     for k in kw:
         if k not in save_keys:
             raiseException(910, k)
-    if ('updatedict' in kw) and ('update' in kw):
-        raiseException(909, ['updatedict', 'update'])
+    if ("updatedict" in kw) and ("update" in kw):
+        raiseException(909, ["updatedict", "update"])
     links = []
     flags = S2P_FDEFAULT
     depth = 0
     lksearch = []
     update = {{}}
-    filter = {{}}
+    array_filter = {{}}
     skip = []
     linkfull = False
     _lkobdict = None
@@ -551,36 +582,36 @@ def save(filename, tree, **kw):
         raiseException(901, filename)
     if (flags & S2P_FUPDATE) and (not os.access(tfile, os.W_OK)):
         raiseException(920, filename)
-    if 'updatedict' in kw:
-        update = kw['updatedict']
-    if 'update' in kw:
-        update = kw['update']
-    if 'updatepaths' in kw:
-        update = kw['update']
-    if 'flags' in kw:
-        flags = kw['flags']
-    if 'depth' in kw:
-        depth = kw['depth']
-    if 'linkpaths' in kw:
-        lksearch = kw['linkpaths']
-    if 'lksearch' in kw:
-        lksearch = kw['lksearch']
-    if 'filter' in kw:
-        filter = kw['filter']
-    if 'skip' in kw:
-        skip = kw['skip']
-    if 'skiplist' in kw:
-        skip = kw['skiplist']
-    if 'links' in kw:
-        links = kw['links']
-    if 'linkfull' in kw:
-        linkfull = kw['linkfull']
+    if "updatedict" in kw:
+        update = kw["updatedict"]
+    if "update" in kw:
+        update = kw["update"]
+    if "updatepaths" in kw:
+        update = kw["update"]
+    if "flags" in kw:
+        flags = kw["flags"]
+    if "depth" in kw:
+        depth = kw["depth"]
+    if "linkpaths" in kw:
+        lksearch = kw["linkpaths"]
+    if "lksearch" in kw:
+        lksearch = kw["lksearch"]
+    if "filter" in kw:
+        array_filter = kw["filter"]
+    if "skip" in kw:
+        skip = kw["skip"]
+    if "skiplist" in kw:
+        skip = kw["skiplist"]
+    if "links" in kw:
+        links = kw["links"]
+    if "linkfull" in kw:
+        linkfull = kw["linkfull"]
     _links = checkLinkList(links, linkfull)
     _flags = checkFlags(flags, save=True)
     _depth = checkDepth(depth)
     _lkpath = checkLinkPath(lksearch)
     _obdict = checkObjectDict(update)
-    _filter = checkFilter(filter)
+    _filter = checkFilter(array_filter)
     _sklist = checkPathList(skip)
     if flags & S2P_FPROPAGATE:
         checkLinkedToFiles(_links)
@@ -589,14 +620,24 @@ def save(filename, tree, **kw):
     checkFast(tree)
     x = CHLoneExceptionInternal
     try:
-        s2p_saveAsHDF(tdir.encode('utf-8'), tfile.encode('utf-8'), tree,
-                      _links, _flags, _depth, _lkpath.encode('utf-8'), _obdict, _filter, _sklist,
-                      _lkobdict, _lksklist, x)
+        s2p_saveAsHDF(
+            tdir.encode("utf-8"),
+            tfile.encode("utf-8"),
+            tree,
+            _links,
+            _flags,
+            _depth,
+            _lkpath.encode("utf-8"),
+            _obdict,
+            _filter,
+            _sklist,
+            _lkobdict,
+            _lksklist,
+            x,
+        )
     except CHLoneExceptionInternal as v:
-        if HAS_PY3:
-            raise CHLoneException(v.args) from None
-        else:
-            raise CHLoneException(v.args)
+        raise CHLoneException(v.args) from None
     return None
+
 
 # --- last line

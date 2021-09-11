@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7FormWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -445,8 +446,6 @@ class Ui_Q7FormWindow(object):
         self.pushButton.setText(_translate("Q7FormWindow", "Run on NODE variable"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tPython), _translate("Q7FormWindow", "Python"))
         self.bClose.setText(_translate("Q7FormWindow", "Close"))
-
-
 from CGNS.NAV.mtable import Q7TableView
 from CGNS.NAV.weditors import Q7PythonEditor
 from . import Res_rc

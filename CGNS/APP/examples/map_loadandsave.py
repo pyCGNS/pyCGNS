@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import print_function
 import CGNS.MAP
 import CGNS.PAT.cgnsutils as PU
 import numpy

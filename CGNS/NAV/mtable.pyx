@@ -3,10 +3,8 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from __future__ import unicode_literals
 
 import sys
-from builtins import (str, bytes, range, dict)
 
 from qtpy.QtCore import (Qt, QAbstractTableModel)
 from qtpy.QtGui import (QFont, QFontMetrics)

@@ -5,7 +5,6 @@
 # 
 # Default values, would be overwritten during install
 #
-from __future__ import unicode_literals
 import sys
 
 # --------------------------------------------------------------------
@@ -20,8 +19,8 @@ def pathfromexec(execname):
 mylocal = sys.prefix
 
 # --------------------------------------------------------------------
-INCLUDE_DIRS = ['%s/include' % mylocal]
-LIBRARY_DIRS = ['%s/lib' % mylocal]
+INCLUDE_DIRS = ["%s/include" % mylocal]
+LIBRARY_DIRS = ["%s/lib" % mylocal]
 
 # Use integers instead of booleans, values are used in C files
 HAS_H5PY = 0
@@ -34,29 +33,27 @@ try:
 except ImportError:
     HAS_VTK = 0
 
-HAS_PY3 = 1
-HAS_PY2 = 0
 HAS_MSW = 0
 USE_COMPACT_STORAGE = 1
 
-hdf5path = pathfromexec('h5dump')
-HDF5_VERSION = '1.8'
-HDF5_PATH_INCLUDES = [hdf5path + '../include']
-HDF5_PATH_LIBRARIES = [hdf5path + '../lib']
-HDF5_LINK_LIBRARIES = ['hdf5']
+hdf5path = pathfromexec("h5dump")
+HDF5_VERSION = "1.8"
+HDF5_PATH_INCLUDES = [hdf5path + "../include"]
+HDF5_PATH_LIBRARIES = [hdf5path + "../lib"]
+HDF5_LINK_LIBRARIES = ["hdf5"]
 HDF5_EXTRA_ARGS = []
 
-NUMPY_VERSION = ''
-NUMPY_VERSION_API = ''
+NUMPY_VERSION = ""
+NUMPY_VERSION_API = ""
 NUMPY_PATH_INCLUDES = []
 NUMPY_PATH_LIBRARIES = []
 NUMPY_LINK_LIBRARIES = []
 NUMPY_EXTRA_ARGS = []
 
-PYQT_VERSION = ''
-QT_VERSION = ''
-CYTHON_VERSION = ''
-VTK_VERSION = ''
+PYQT_VERSION = ""
+QT_VERSION = ""
+CYTHON_VERSION = ""
+VTK_VERSION = ""
 
 # cannot manage include orders here...
 INCLUDE_DIRS = INCLUDE_DIRS + HDF5_PATH_INCLUDES \
@@ -86,14 +83,12 @@ file_pattern = """#  -----------------------------------------------------------
 # This file has been generated on [%(DATE)s]
 # Using platform [%(PLATFORM)s]
 
-DATE='%(DATE)s'
-PLATFORM='%(PLATFORM)s'
-PFX='%(PFX)s'
+DATE="%(DATE)s"
+PLATFORM="%(PLATFORM)s"
+PFX="%(PFX)s"
 
 HAS_HDF5=%(HAS_HDF5)s
 HAS_H5PY=%(HAS_H5PY)s
-HAS_PY2=%(HAS_PY2)s
-HAS_PY3=%(HAS_PY3)s
 HAS_VTK=%(HAS_VTK)s
 HAS_MSW=%(HAS_MSW)s
 USE_COMPACT_STORAGE=%(USE_COMPACT_STORAGE)s
@@ -101,36 +96,36 @@ USE_COMPACT_STORAGE=%(USE_COMPACT_STORAGE)s
 INCLUDE_DIRS=%(INCLUDE_DIRS)s
 LIBRARY_DIRS=%(LIBRARY_DIRS)s
 
-HDF5_VERSION='%(HDF5_VERSION)s'
+HDF5_VERSION="%(HDF5_VERSION)s"
 HDF5_PATH_INCLUDES=%(HDF5_PATH_INCLUDES)s
 HDF5_PATH_LIBRARIES=%(HDF5_PATH_LIBRARIES)s
 HDF5_LINK_LIBRARIES=%(HDF5_LINK_LIBRARIES)s
 HDF5_EXTRA_ARGS=%(HDF5_EXTRA_ARGS)s
 
-NUMPY_VERSION='%(NUMPY_VERSION)s'
-NUMPY_VERSION_API='%(NUMPY_VERSION_API)s'
+NUMPY_VERSION="%(NUMPY_VERSION)s"
+NUMPY_VERSION_API="%(NUMPY_VERSION_API)s"
 NUMPY_PATH_INCLUDES=%(NUMPY_PATH_INCLUDES)s
 NUMPY_PATH_LIBRARIES=%(NUMPY_PATH_LIBRARIES)s
 NUMPY_LINK_LIBRARIES=%(NUMPY_LINK_LIBRARIES)s
 NUMPY_EXTRA_ARGS=%(NUMPY_EXTRA_ARGS)s
 
-PYQT_VERSION='%(PYQT_VERSION)s'
-QT_VERSION='%(QT_VERSION)s'
-CYTHON_VERSION='%(CYTHON_VERSION)s'
-VTK_VERSION='%(VTK_VERSION)s'
+PYQT_VERSION="%(PYQT_VERSION)s"
+QT_VERSION="%(QT_VERSION)s"
+CYTHON_VERSION="%(CYTHON_VERSION)s"
+VTK_VERSION="%(VTK_VERSION)s"
 
-__version__=5 # @@UPDATEVERSION@@
-__release__=3 # @@UPDATERELEASE@@
-__revision__=1 # @@UPDATEREVISION@@
+__version__=6 # @@UPDATEVERSION@@
+__release__=0 # @@UPDATERELEASE@@
+__revision__=0 # @@UPDATEREVISION@@
 __vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
-__doc__='pyCGNS - %%s - Python package for CFD General Notation System'\
+__doc__="pyCGNS - %%s - Python package for CFD General Notation System"\
         %%(__vid__)
 version=__vid__
 
-NAME='%(NAME)s'
+NAME="%(NAME)s"
 VERSION=__vid__
 DESCRIPTION=__doc__
-AUTHOR='%(AUTHOR)s'
+AUTHOR="%(AUTHOR)s"
 EMAIL="%(EMAIL)s"
 LICENSE="%(LICENSE)s"
 

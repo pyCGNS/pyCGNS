@@ -3,13 +3,10 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from __future__ import unicode_literals
-from __future__ import print_function
-
 # --------------------------------------------------------------------
-MAJOR_VERSION = 5
-MINOR_VERSION = 3
-REVISION = 1
+MAJOR_VERSION = 6
+MINOR_VERSION = 0
+REVISION = 0
 # --------------------------------------------------------------------
 
 import os
@@ -18,11 +15,11 @@ import sys
 import shutil
 import re
 import time
+import pathlib
 import distutils.util
 
 from distutils.dir_util import remove_tree
 from distutils.command.clean import clean as _clean
-
 
 rootfiles = ['__init__.py', 'errors.py', 'version.py', 'config.py', 'test.py']
 compfiles = []
@@ -57,18 +54,10 @@ def is_python3():
 
 # Please leave integers here, these will be used in the SIDS-to-Python C code
 HAS_MSW = is_windows()
-HAS_PY3 = is_python3()
-if HAS_PY3:
-    HAS_PY2 = 0
-else:
-    HAS_PY2 = 1
 
 def fix_path(path):
     """All paths should be POSIX paths. Translation is required only for windows."""
-    if is_windows():
-        return path.replace('/','\\') # os.sep useless here
-    else:
-        return path
+    return pathlib.Path(path).as_posix()
         
 # --------------------------------------------------------------------
 def prodtag():
@@ -138,8 +127,6 @@ def search(incs, libs, tag='pyCGNS',
     cfgdict['PFX'] = pfx
     cfgdict['DATE'] = pg[0]
     cfgdict['PLATFORM'] = "%s %s %s" % (pg[1][0], pg[1][1], pg[1][-1])
-    cfgdict['HAS_PY2'] = HAS_PY2
-    cfgdict['HAS_PY3'] = HAS_PY3
     cfgdict['HAS_MSW'] = HAS_MSW
     updateConfig('..', bptarget, cfgdict)
     sys.path = [bptarget] + sys.path

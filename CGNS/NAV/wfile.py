@@ -3,8 +3,6 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from __future__ import unicode_literals
-from builtins import str, bytes, range, dict
 
 from CGNS.NAV.moption import Q7OptionContext as OCTXT
 
@@ -14,7 +12,7 @@ import string
 import time
 import sys
 
-from CGNS.pyCGNSconfig import HAS_PY2, HAS_MSW
+from CGNS.pyCGNSconfig import HAS_MSW
 
 from qtpy.QtCore import Qt, QSortFilterProxyModel, QModelIndex, QFileInfo
 from qtpy.QtWidgets import (
@@ -81,9 +79,6 @@ class Q7FileFilterProxy(QSortFilterProxyModel):
         p = self.model.filePath(idx)
         if isinstance(p, bytes):
             p = str(self.model.filePath(idx).decode("utf-8"))
-        elif HAS_PY2:
-            if isinstance(p, unicode):
-                p = str(p)
         if not self.checkPermission(p):
             return False
         if os.path.isdir(p):
@@ -166,10 +161,7 @@ class Q7File(QWidget, Ui_Q7FileWindow):
         self.treeview.setModel(self.proxy)
         self.setAttribute(Qt.WA_DeleteOnClose)
         #
-        if HAS_PY2:
-            self.model.directoryLoaded[unicode].connect(self.expandCols)
-        else:
-            self.model.directoryLoaded[str].connect(self.expandCols)
+        self.model.directoryLoaded[str].connect(self.expandCols)
         self.treeview.expanded[QModelIndex].connect(self.expandCols)
         self.treeview.clicked[QModelIndex].connect(self.clickedNode)
         self.treeview.doubleClicked[QModelIndex].connect(self.clickedNodeAndLoad)

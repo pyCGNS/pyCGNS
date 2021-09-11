@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7HelpWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -53,6 +54,4 @@ class Ui_Q7HelpWindow(object):
     def retranslateUi(self, Q7HelpWindow):
         _translate = QtCore.QCoreApplication.translate
         Q7HelpWindow.setWindowTitle(_translate("Q7HelpWindow", "Form"))
-
-
 from . import Res_rc

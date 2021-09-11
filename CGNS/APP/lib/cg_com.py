@@ -3,7 +3,6 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from __future__ import print_function
 import os
 import sys
 import subprocess

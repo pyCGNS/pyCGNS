@@ -4,7 +4,6 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from __future__ import print_function
 import CGNS.PAT.cgnsutils as CGU
 import CGNS.MAP as CGM
 import CGNS.VAL.simplecheck as CGV

@@ -3,9 +3,6 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from __future__ import unicode_literals
-from builtins import str, bytes, range, dict
-
 colordict = {"high": "#7ebaff", "low": "#78b5e9", "high2": "#bad5f4", "low2": "#bad5ff"}
 
 Q7CONTROLVIEWSTYLESHEET = (

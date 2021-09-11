@@ -4,7 +4,6 @@
 #  -------------------------------------------------------------------------
 #
 #
-from __future__ import unicode_literals
 import CGNS.VAL.simplecheck as CGV
 import CGNS.MAP
 import importlib

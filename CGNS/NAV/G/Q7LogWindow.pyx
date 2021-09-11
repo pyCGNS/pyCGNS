@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7LogWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -52,7 +53,5 @@ class Ui_Q7LogWindow(object):
         Q7LogWindow.setWindowTitle(_translate("Q7LogWindow", "Dialog"))
         self.bClear.setText(_translate("Q7LogWindow", "Clear"))
         self.bClose.setText(_translate("Q7LogWindow", "Hide"))
-
-
 from CGNS.NAV.weditors import Q7PythonEditor
 from . import Res_rc

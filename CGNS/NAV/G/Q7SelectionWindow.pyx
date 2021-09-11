@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'CGNS/NAV/T/Q7SelectionWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -215,6 +216,4 @@ class Ui_Q7SelectionWindow(object):
         self.cForce.setText(_translate("Q7SelectionWindow", "Force value check"))
         self.bApply.setToolTip(_translate("Q7SelectionWindow", "Apply changes"))
         self.cApplyToAll.setText(_translate("Q7SelectionWindow", "Apply to All Selected"))
-
-
 from . import Res_rc
