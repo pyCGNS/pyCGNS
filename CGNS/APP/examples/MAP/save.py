@@ -48,6 +48,6 @@ tree = [
     CGNSTree_ts,
 ]
 
-CGNS.MAP.save(filename, tree, [], CGNS.MAP.S2P_DEFAULT)
+CGNS.MAP.save(filename, tree, links=[], flags=CGNS.MAP.S2P_DEFAULT)
 
 # --- last line
