@@ -24,7 +24,7 @@ class CGNSPythonChildren(list):
 
 
 # -----------------------------------------------------------------------------
-class CGNSPython(object):
+class CGNSPython:
     """
     A CGNS/Python object
     """
