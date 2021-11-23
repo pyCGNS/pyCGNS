@@ -7,7 +7,9 @@ The [user documentation](http://pycgns.github.io) is available online, it
 contains the releases, the installation requirements and process, the usage docs
 and the reference docs.
 
-MS-Windows versions can be found on https://anaconda.org/conda-forge/pycgns
+For more information concerning the CGNS standard please refer to cgns.github.io
+
+For MS-Windows users, an unofficial version can be found on https://anaconda.org/conda-forge/pycgns
 
 ## CGNS Modules
 
