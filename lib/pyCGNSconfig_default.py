@@ -70,7 +70,7 @@ __version__=5 # @@UPDATEVERSION@@
 __release__=3 # @@UPDATERELEASE@@
 __revision__=1 # @@UPDATEREVISION@@
 __vid__ = "%s.%s.%s" % (__version__, __release__, __revision__)
-__doc__ = """pyCGNS - %s - Python package for CFD General Notation System""" \
+__doc__ = """pyCGNS - %s - Python package for CGNS (CFD General Notation System)""" \
           % (__vid__)
 version = __vid__
 #
