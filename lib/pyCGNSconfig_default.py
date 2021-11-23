@@ -112,7 +112,6 @@ __doc__="pyCGNS - %%s - Python package for CGNS (CFD General Notation System)"\
         %%(__vid__)
 version=__vid__
 
-REVISION = __revision__
 NAME="%(NAME)s"
 VERSION=__vid__
 DESCRIPTION=__doc__
@@ -122,6 +121,17 @@ LICENSE="%(LICENSE)s"
 
 """
 #
+__version__=6 # @@UPDATEVERSION@@
+__release__=0 # @@UPDATERELEASE@@
+__revision__=0 # @@UPDATEREVISION@@
+__vid__="%%s.%%s.%%s"%%(__version__,__release__,__revision__)
+__doc__="pyCGNS - %%s - Python package for CGNS (CFD General Notation System)"\
+        %%(__vid__)
+version=__vid__
+REVISION = __revision__
+
+
+
 
 # common meta data
 NAME = 'pyCGNS'
