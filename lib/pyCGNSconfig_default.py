@@ -66,16 +66,6 @@ LIBRARY_DIRS += LIBRARY_DIRS + HDF5_PATH_LIBRARIES \
 #
 PFX = '### pyCGNS:'
 #
-__version__=5 # @@UPDATEVERSION@@
-__release__=3 # @@UPDATERELEASE@@
-__revision__=1 # @@UPDATEREVISION@@
-__vid__ = "%s.%s.%s" % (__version__, __release__, __revision__)
-__doc__ = """pyCGNS - %s - Python package for CGNS (CFD General Notation System)""" \
-          % (__vid__)
-version = __vid__
-#
-REVISION = __revision__
-#
 file_pattern = """#  -------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System
 #  See license.txt file in the root directory of this Python module source  
@@ -122,6 +112,7 @@ __doc__="pyCGNS - %%s - Python package for CFD General Notation System"\
         %%(__vid__)
 version=__vid__
 
+REVISION = __revision__
 NAME="%(NAME)s"
 VERSION=__vid__
 DESCRIPTION=__doc__
