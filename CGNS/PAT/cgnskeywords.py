@@ -1844,6 +1844,9 @@ ElementType_hexa = [
 ElementType_trionly = ElementType_tetra
 ElementType_quadonly = ElementType_hexa
 ElementType_triquad = ElementType_pyra + ElementType_penta
+ElementOffset_s = "ElementOffset"
+Offset_s = "Offset"
+Offset_ts = "Offset_t"
 
 ElementRangeList_s = "ElementRangeList"
 #
