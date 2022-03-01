@@ -1608,7 +1608,7 @@ def removeFirstPathItem(path: str) -> str:
 
 
 # --------------------------------------------------
-def getNodeByPath(tree: TreeNode, path: str) -> Optional[TreeNode]:
+def getNodeByPath(tree: TreeNode, path: str, check: bool = True) -> Optional[TreeNode]:
     """
     Returns the CGNS/Python node with the argument path::
 
@@ -1643,7 +1643,7 @@ def getNodeByPath(tree: TreeNode, path: str) -> Optional[TreeNode]:
     path = getPathNormalize(path)
     if path in ["", "/", "."]:
         return tree
-    if not checkPath(path):
+    if check and not checkPath(path):
         return None
     lpath = path.split("/")
     if lpath[0] == "":
