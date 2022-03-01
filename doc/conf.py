@@ -19,8 +19,8 @@ source_suffix = ".txt"
 import os
 
 master_doc = os.environ["PYCGNSDOC"]
-project = u"pyCGNS"
-copyright = u"2001-2016, Marc Poinot"
+project = "pyCGNS"
+copyright = "2001-2016, Marc Poinot"
 version = "4"
 release = "4.2.0"
 unused_docs = ["license.txt"]
@@ -45,8 +45,8 @@ latex_documents = [
     (
         os.environ["PYCGNSDOC"],
         "pyCGNS_%s.tex" % os.environ["PYCGNSMOD"],
-        u"pyCGNS.%s/Manual" % os.environ["PYCGNSMOD"],
-        u"Marc Poinot",
+        "pyCGNS.%s/Manual" % os.environ["PYCGNSMOD"],
+        "Marc Poinot",
         "manual",
         False,
     ),
