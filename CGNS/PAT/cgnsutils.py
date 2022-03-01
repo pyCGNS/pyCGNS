@@ -2195,7 +2195,7 @@ def zipTypeOrNameList(tlist: List, nlist: List) -> List[List]:
     w = []
     r = []
     z = len(tlist)
-    for b in range(2 ** z):
+    for b in range(2**z):
         w.append([int(x) for x in "{0:0{width}{base}}".format(b, base="b", width=z)])
     for b in w:
         h = []
