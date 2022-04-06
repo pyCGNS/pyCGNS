@@ -2039,6 +2039,42 @@ def getNodeFromPath(path: List[str], node: TreeNode) -> Optional[TreeNode]:
 
 
 # --------------------------------------------------
+def getChildByName(node: TreeNode, name: str) -> Optional[TreeNode]:
+    """
+    Returns the first child node of provided node with matching name.
+
+      family=getChildByName(T,"FamilyName")
+
+    :arg CGNS/Python node: node tree to scan
+    :arg str name: name of the child to find
+    :return:
+      - the request node or None
+    """
+    for c in node[__CHILDREN__]:
+        if c[__NAME__] == name:
+            return c
+    return None
+
+
+# --------------------------------------------------
+def getChildByLabel(node: TreeNode, label: str) -> Optional[TreeNode]:
+    """
+    Returns the first child node of provided node with matching label.
+
+      zonetype=getChildByLabel(T,"ZoneType_t")
+
+    :arg CGNS/Python node: node tree to scan
+    :arg str label: type of the child to find
+    :return:
+      - the request node or None
+    """
+    for c in node[__CHILDREN__]:
+        if c[__LABEL__] == label:
+            return c
+    return None
+
+
+# --------------------------------------------------
 def getParentFromNode(tree: TreeNode, node: TreeNode) -> Optional[TreeNode]:
     """
     Returns the parent node of a node. If the node is root node, itself is
