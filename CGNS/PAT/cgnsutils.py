@@ -2037,6 +2037,7 @@ def getNodeFromPath(path: List[str], node: TreeNode) -> Optional[TreeNode]:
             return getNodeFromPath(path[1:], c)
     return None
 
+
 # --------------------------------------------------
 def getChildByName(node: TreeNode, name: str) -> Optional[TreeNode]:
     """
@@ -2054,6 +2055,7 @@ def getChildByName(node: TreeNode, name: str) -> Optional[TreeNode]:
             return c
     return None
 
+
 # --------------------------------------------------
 def getChildByLabel(node: TreeNode, label: str) -> Optional[TreeNode]:
     """
@@ -2070,6 +2072,7 @@ def getChildByLabel(node: TreeNode, label: str) -> Optional[TreeNode]:
         if c[__LABEL__] == label:
             return c
     return None
+
 
 # --------------------------------------------------
 def getParentFromNode(tree: TreeNode, node: TreeNode) -> Optional[TreeNode]:
