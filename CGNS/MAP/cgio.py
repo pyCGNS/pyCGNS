@@ -118,7 +118,7 @@ def load(filename, nodata=False, maxdata=65, subtree="", follow_links=False, **k
             else:
                 grp = grp[" link"]
 
-        node = [unicode(grp.attrs["name"]), None, [], unicode(grp.attrs["label"])]
+        node = [str(grp.attrs["name"]), None, [], str(grp.attrs["label"])]
 
         if " data" in grp:
             dset = grp[" data"]
@@ -130,8 +130,8 @@ def load(filename, nodata=False, maxdata=65, subtree="", follow_links=False, **k
                 paths.append([grp.name, 1, grp.attrs["type"], dset.shape])
 
             if load_data:
-                node[1] = numpy.copy(dset.value.transpose(), order="F")
-                if grp.attrs["type"] == "C1":
+                node[1] = numpy.copy(dset[()].transpose(), order="F")
+                if grp.attrs["type"] == b"C1":
                     node[1] = numpy.vectorize(chr)(node[1]).astype(numpy.dtype("c"))
 
         if load_children:
@@ -199,8 +199,8 @@ def save(filename, tree, links=[], **kwargs):
 
             data = node[1]
             if node[1].dtype == numpy.dtype("|S1"):
-                idx1 = numpy.nonzero(data != "")
-                idx2 = numpy.nonzero(data == "")
+                idx1 = numpy.nonzero(data != b"")
+                idx2 = numpy.nonzero(data == b"")
                 tmp = data.copy()
                 data = numpy.zeros(data.shape, dtype=numpy.int8)
                 data[idx1] = numpy.vectorize(ord)(tmp[idx1])
