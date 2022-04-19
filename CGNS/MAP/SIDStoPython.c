@@ -326,8 +326,8 @@ static int s2p_popHDF(s2p_ctx_t *context)
   S2P_TRACE(("# CHL:pop context [%d]\n", context->hdf_idx));
   if (context->hdf_idx > 0)
   {
-    L3_decRef(context->hdf_stk[context->hdf_idx]->l3db,
-      context->hdf_stk[context->hdf_idx]->l3db->root_id);
+    //L3_decRef(context->hdf_stk[context->hdf_idx]->l3db,
+    //  context->hdf_stk[context->hdf_idx]->l3db->root_id);
     context->hdf_idx--;
   }
   return context->hdf_idx;
