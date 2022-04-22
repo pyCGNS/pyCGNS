@@ -1084,7 +1084,7 @@ def setValue(
     ]:
         node[__VALUE__] = value
     else:
-        return None
+        node[__VALUE__] = None
     return node
 
 
