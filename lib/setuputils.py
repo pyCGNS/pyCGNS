@@ -18,6 +18,7 @@ import time
 import pathlib
 import distutils.util
 
+from setuptools import __version__ as setup_version
 from distutils.dir_util import remove_tree
 from distutils.command.clean import clean as _clean
 
@@ -112,6 +113,8 @@ def search(incs, libs, tag='pyCGNS',
         if com in ['help', 'clean']: state = 0
     pt = distutils.util.get_platform()
     vv = "%d.%d" % (sys.version_info[0], sys.version_info[1])
+    if setup_version >= "62.1.0":
+        vv = sys.implementation.cache_tag
     tg = "%s/./build/lib.%s-%s/CGNS" % (os.getcwd(), pt, vv)
     bptarget = tg
     if (not os.path.exists(bptarget)): os.makedirs(bptarget)
