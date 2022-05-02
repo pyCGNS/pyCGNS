@@ -147,6 +147,8 @@ printf("# L3 :HDF5 OBJ OPEN [%d] {%s} \n",id,tag);fflush(stdout);
 #else
 #define L3_H5_GCLOSE( msg, hid ) H5Gclose(hid);
 #endif
+/* To cope with negative value comparison warning */
+#define L3_H5_SENTINEL ((hsize_t) -1)
 
 /* ------------------------------------------------------------------------- */
 void objlist_status(char *tag)
@@ -735,7 +737,7 @@ void *HDF_Read_Array(L3_Cursor_t *ctxt, hid_t nid, hid_t did, hid_t yid,
   tsize = 1;
   for (n = 0; n < L3C_MAX_DIMS; n++)
   {
-    if (int_dim_vals[n] == -1) { break; }
+    if (int_dim_vals[n] == L3_H5_SENTINEL) { break; }
     tsize *= int_dim_vals[n];
     if (L3M_HASFLAG(ctxt, L3F_DEBUG))
     {
@@ -817,7 +819,7 @@ int HDF_Get_DataDimensionsPartial(L3_Cursor_t *ctxt, hid_t nid, int *dims,
   L3M_CLEARDIMS(dims);
 
   ndims = 0;
-  for (n = 0; dst_count[n] != -1; n++)
+  for (n = 0; dst_count[n] != L3_H5_SENTINEL; n++)
   {
     ndims += 1;
     dims[n] = dst_count[n] * dst_block[n] + dst_offset[n];
@@ -858,7 +860,7 @@ void *HDF_Get_DataArrayPartial(L3_Cursor_t *ctxt, hid_t nid, int *dst_dims,
   sid = H5Dget_space(did);
   src_ndims = H5Sget_simple_extent_ndims(sid);
   H5Sget_simple_extent_dims(sid, src_dim_vals, NULL);
-  src_dim_vals[src_ndims] = -1;
+  src_dim_vals[src_ndims] = L3_H5_SENTINEL;
 
   stat = H5Sselect_hyperslab(sid, H5S_SELECT_SET,
     src_offset, src_stride, src_count, src_block);
@@ -870,7 +872,7 @@ void *HDF_Get_DataArrayPartial(L3_Cursor_t *ctxt, hid_t nid, int *dst_dims,
     dst_ndims += 1;
     dst_dim_vals[n] = dst_dims[n];
   }
-  dst_dim_vals[dst_ndims] = -1;
+  dst_dim_vals[dst_ndims] = L3_H5_SENTINEL;
   blk_size = dst_size;
   if (tsize != -1)
   {
@@ -878,12 +880,12 @@ void *HDF_Get_DataArrayPartial(L3_Cursor_t *ctxt, hid_t nid, int *dst_dims,
     dst_size = tsize;
     dst_ndims = 1;
     dst_dim_vals[0] = tsize;
-    dst_dim_vals[1] = -1;
+    dst_dim_vals[1] = L3_H5_SENTINEL;
     memshift = 1;
   }
   if (L3M_HASFLAG(ctxt, L3F_DEBUG))
   {
-    for (n = 0; src_dim_vals[n] != -1; n++)
+    for (n = 0; src_dim_vals[n] != L3_H5_SENTINEL; n++)
     {
       L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial SRC  [%d]=%lld\n", n, src_dim_vals[n]));
       L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial OFF S[%d]=%lld\n", n, src_offset[n]));
@@ -891,7 +893,7 @@ void *HDF_Get_DataArrayPartial(L3_Cursor_t *ctxt, hid_t nid, int *dst_dims,
       L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial CNT S[%d]=%lld\n", n, src_count[n]));
       L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial BLK S[%d]=%lld\n", n, src_block[n]));
     }
-    for (n = 0; dst_dim_vals[n] != -1; n++)
+    for (n = 0; dst_dim_vals[n] != L3_H5_SENTINEL; n++)
     {
       L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial DST  [%d]=%lld\n", n, dst_dim_vals[n]));
       L3M_DBG(ctxt, ("HDF_Get_DataArrayPartial OFF D[%d]=%lld\n", n, dst_offset[n]));
@@ -916,9 +918,9 @@ void *HDF_Get_DataArrayPartial(L3_Cursor_t *ctxt, hid_t nid, int *dst_dims,
     return NULL;
   }
   H5Sget_select_bounds(mid, dst_start, dst_end);
-  dst_dim_vals[dst_ndims] = -1;
-  dst_start[dst_ndims] = -1;
-  dst_end[dst_ndims] = -1;
+  dst_dim_vals[dst_ndims] = L3_H5_SENTINEL;
+  dst_start[dst_ndims] = L3_H5_SENTINEL;
+  dst_end[dst_ndims] = L3_H5_SENTINEL;
   tid = ADF_to_HDF_datatype(HDF_Get_Dtype(ctxt, nid, buff));
   yid = H5Tget_native_type(tid, H5T_DIR_ASCEND);
   eltsize = H5Tget_size(yid);
@@ -2056,10 +2058,10 @@ L3_Node_t *L3_nodeRetrieveContiguous(L3_Cursor_t *ctxt, hid_t oid,
         src_count[n] = dims[n];
         src_block[n] = 1;
       }
-      src_offset[n] = -1;
-      src_stride[n] = -1;
-      src_count[n] = -1;
-      src_block[n] = -1;
+      src_offset[n] = L3_H5_SENTINEL;
+      src_stride[n] = L3_H5_SENTINEL;
+      src_count[n] = L3_H5_SENTINEL;
+      src_block[n] = L3_H5_SENTINEL;
       if (interlaced)
       {
         dst_offset[0] = (tsize - 1)*rank;
@@ -2072,10 +2074,10 @@ L3_Node_t *L3_nodeRetrieveContiguous(L3_Cursor_t *ctxt, hid_t oid,
       }
       dst_count[0] = tsize;
       dst_block[0] = 1;
-      dst_offset[1] = -1;
-      dst_stride[1] = -1;
-      dst_count[1] = -1;
-      dst_block[1] = -1;
+      dst_offset[1] = L3_H5_SENTINEL;
+      dst_stride[1] = L3_H5_SENTINEL;
+      dst_count[1] = L3_H5_SENTINEL;
+      dst_block[1] = L3_H5_SENTINEL;
       tsize *= count;
       if ((dims[0] != -1) && (L3M_HASFLAG(ctxt, L3F_WITHDATA)))
       {
@@ -2764,7 +2766,7 @@ hsize_t *L3_initHyperslab(hsize_t *hs, int d1, ...)
   }
   nhs[0] = d1;
   n = 1;
-  while (nhs[n - 1] != -1)
+  while (nhs[n - 1] != L3_H5_SENTINEL)
   {
     nhs[n++] = va_arg(intptr, int);
   }
