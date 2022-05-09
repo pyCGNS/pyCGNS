@@ -247,20 +247,24 @@ static int is_fortran_contiguous(PyArrayObject *ap)
      This function was taken (with a small modification
      for broadcast numarray) from f2py.
   */
-  int sd;
+  npy_intp sd;
+  npy_intp dim;
   int i;
-  sd = PyArray_DESCR(ap)->elsize;
+  sd = PyArray_ITEMSIZE(ap);
   for (i = 0; i < PyArray_NDIM(ap); ++i)
   {
-    if (PyArray_DIMS(ap)[i] == 0)
+    dim = PyArray_DIMS(ap)[i];
+    if (dim == 0)
     {
       return 0;  /* broadcast array */
     }
-    if (PyArray_STRIDES(ap)[i] != sd)
-    {
-      return 0;
+    if (dim != 1) {
+      if (PyArray_STRIDES(ap)[i] != sd)
+      {
+        return 0;
+      }
+      sd *= dim;
     }
-    sd *= PyArray_DIMS(ap)[i];
   }
   return 1;
 }
