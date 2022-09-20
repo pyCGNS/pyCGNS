@@ -449,8 +449,8 @@ CHL_INLINE char *HDF_Get_Attribute_As_Data(hid_t nodeid,
 /* ----------------------------------------------------------------- */
 CHL_INLINE int is_link(L3_Cursor_t *ctxt, hid_t nodeid)
 {
-  char ntype[L3C_MAX_DTYPE + 1];
-
+  char ntype[L3C_MAX_DTYPE + 1] = {0};
+  
   HDF_Get_Dtype(ctxt, nodeid, ntype);
   return ((ntype[0] != L3T_LK[0]) || (ntype[1] != L3T_LK[1])) ? 0 : 1;
 }
@@ -668,9 +668,9 @@ hid_t *HDF_Get_Children(hid_t nodeid, int asciiorder)
   nchildren = 0;
   /* order not used here */
 #if H5_VERSION_GE(1,12,0)
-  H5Literate2(nodeid, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren);
+  H5Literate2(nodeid, H5_INDEX_NAME, H5_ITER_NATIVE, NULL, count_children, (void *)&nchildren);
 #else
-  H5Literate(nodeid, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, count_children, (void *)&nchildren);
+  H5Literate(nodeid, H5_INDEX_NAME, H5_ITER_NATIVE, NULL, count_children, (void *)&nchildren);
 #endif
   if (!nchildren)
   {
