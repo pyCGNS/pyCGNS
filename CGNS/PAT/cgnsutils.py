@@ -22,10 +22,10 @@ import string
 
 import numpy
 
-import CGNS
-import CGNS.PAT.cgnserrors as CE
-import CGNS.PAT.cgnskeywords as CK
-import CGNS.PAT.cgnstypes as CT
+from ... import CGNS
+from ...CGNS.PAT import cgnserrors as CE
+from ...CGNS.PAT import cgnskeywords as CK
+from ...CGNS.PAT import cgnstypes as CT
 
 
 # Node Type definition
