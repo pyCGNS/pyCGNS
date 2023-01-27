@@ -7,7 +7,7 @@
 from qtpy.QtWidgets import QWidget
 from qtpy.QtGui import QTextCursor
 
-from CGNS.NAV.Q7HelpWindow import Ui_Q7HelpWindow
+from .Q7HelpWindow import Ui_Q7HelpWindow
 
 
 # -----------------------------------------------------------------

@@ -7,9 +7,9 @@
 #
 import unittest
 
-import CGNS.PAT.cgnslib as CGL
-import CGNS.PAT.cgnsutils as CGU
-import CGNS.PAT.cgnskeywords as CGK
+from ...PAT import cgnslib as CGL
+from ...PAT import cgnsutils as CGU
+from ...PAT import cgnskeywords as CGK
 import numpy as NPY
 
 import importlib
@@ -39,7 +39,7 @@ class NAVTestCase(unittest.TestCase):
         import qtpy.QtWidgets
 
     def test_001_Script(self):
-        import CGNS.NAV
+        from .. import CGNS
 
 
 # ---

@@ -165,5 +165,5 @@ class Ui_Q7VTKPlotWindow(object):
         self.bX.setText(QtGui.QApplication.translate("Q7VTKPlotWindow", "X/Y", None, QtGui.QApplication.UnicodeUTF8))
         self.bBackControl.setToolTip(QtGui.QApplication.translate("Q7VTKPlotWindow", "Raise CGNS.NAV control window", None, QtGui.QApplication.UnicodeUTF8))
 
-from CGNS.NAV.Q7VTKRenderWindowInteractor import Q7VTKRenderWindowInteractor
+from .Q7VTKRenderWindowInteractor import Q7VTKRenderWindowInteractor
 import Res_rc

@@ -6,9 +6,9 @@
 
 import numpy
 
-from ...CGNS.PAT import cgnserrors as CE
-from ...CGNS.PAT import cgnskeywords as CK
-from ...CGNS.PAT import cgnsutils as CU
+from . import cgnserrors as CE
+from . import cgnskeywords as CK
+from . import cgnsutils as CU
 
 
 # =============================================================================

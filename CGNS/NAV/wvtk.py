@@ -3,7 +3,7 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
 import numpy as NPY
 import math
@@ -11,20 +11,20 @@ import sys
 import random
 import vtk
 
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.cgnsutils as CGU
+from ..PAT import cgnskeywords as CGK
+from ..PAT import cgnsutils as CGU
 
 from qtpy.QtCore import Qt, Slot
 from qtpy.QtWidgets import QColorDialog
 from qtpy.QtGui import QColor, QIcon, QPixmap, QScreen
 
-from CGNS.NAV.Q7VTKWindow import Ui_Q7VTKWindow
-from CGNS.NAV.wfingerprint import Q7Window, Q7FingerPrint
-from CGNS.NAV.mparser import Mesh
-from CGNS.NAV.mparser import SIZE_PATTERN, LIST_PATTERN
-from CGNS.NAV.wfile import Q7File
+from .Q7VTKWindow import Ui_Q7VTKWindow
+from .wfingerprint import Q7Window, Q7FingerPrint
+from .mparser import Mesh
+from .mparser import SIZE_PATTERN, LIST_PATTERN
+from .wfile import Q7File
 
-import CGNS.NAV.wmessages as MSG
+from . import wmessages as MSG
 
 vers = vtk.vtkVersion()
 VTK_VERSION_MINOR = vers.GetVTKMinorVersion()

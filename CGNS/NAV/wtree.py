@@ -8,9 +8,9 @@ import sys
 import gc
 import functools
 
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.cgnsutils as CGU
-import CGNS.PAT.SIDS as CGS
+from ..PAT import cgnskeywords as CGK
+from ..PAT import cgnsutils as CGU
+from ..PAT import SIDS as CGS
 
 from qtpy.QtCore import Qt, QModelIndex
 from qtpy.QtWidgets import (
@@ -26,18 +26,18 @@ from qtpy.QtGui import QFont, QPalette, QScreen, QKeySequence
 
 from CGNS.pyCGNSconfig import HAS_VTK
 
-from CGNS.NAV.Q7TreeWindow import Ui_Q7TreeWindow
-from CGNS.NAV.wform import Q7Form
-from CGNS.NAV.wpattern import Q7PatternList
-from CGNS.NAV.wquery import Q7Query, Q7SelectionList
-from CGNS.NAV.wdiag import Q7CheckList
-from CGNS.NAV.wlink import Q7LinkList
-from CGNS.NAV.mtree import Q7TreeModel, Q7TreeItem
-from CGNS.NAV.wfingerprint import Q7Window, Q7FingerPrint
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .Q7TreeWindow import Ui_Q7TreeWindow
+from .wform import Q7Form
+from .wpattern import Q7PatternList
+from .wquery import Q7Query, Q7SelectionList
+from .wdiag import Q7CheckList
+from .wlink import Q7LinkList
+from .mtree import Q7TreeModel, Q7TreeItem
+from .wfingerprint import Q7Window, Q7FingerPrint
+from .moption import Q7OptionContext as OCTXT
 
-import CGNS.NAV.mtree as NMT
-import CGNS.NAV.wmessages as MSG
+from . import mtree as NMT
+from . import wmessages as MSG
 
 (CELLCOMBO, CELLTEXT) = range(2)
 CELLEDITMODE = (CELLCOMBO, CELLTEXT)
@@ -348,7 +348,7 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
         self.updateTreeStatus()
 
     def tools(self):
-        from CGNS.NAV.wtools import Q7ToolsView
+        from .wtools import Q7ToolsView
 
         if self._control._toolswindow is None:
             self._control._toolswindow = Q7ToolsView(self._control, self.FG, self)
@@ -919,7 +919,7 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
     def vtkview(self):
         if not HAS_VTK:
             return
-        from CGNS.NAV.wvtk import Q7VTK
+        from .wvtk import Q7VTK
 
         if self._vtkwindow is None:
             self.busyCursor()

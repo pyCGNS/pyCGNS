@@ -11,12 +11,12 @@ from qtpy.QtGui import QFont
 from qtpy.QtWidgets import QTreeView, QFileDialog, QTreeWidgetItem, QWidget
 
 
-import CGNS.NAV.wmessages as MSG
-import CGNS.VAL.parse.messages as CGM
-from CGNS.NAV.Q7DiagWindow import Ui_Q7DiagWindow
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
-from CGNS.NAV.wfingerprint import Q7Window as QW
-from CGNS.VAL.parse.findgrammar import locateGrammars
+from . import wmessages as MSG
+from ..VAL.parse import messages as CGM
+from .Q7DiagWindow import Ui_Q7DiagWindow
+from .moption import Q7OptionContext as OCTXT
+from .wfingerprint import Q7Window as QW
+from ..VAL.parse.findgrammar import locateGrammars
 
 
 # -----------------------------------------------------------------

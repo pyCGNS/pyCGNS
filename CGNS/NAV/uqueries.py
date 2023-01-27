@@ -6,8 +6,8 @@
 #  -------------------------------------------------------------------------
 #
 
-from CGNS.APP.lib.queries import asQuery
-from CGNS.APP.lib.queries import runQuery
+from ..APP.lib.queries import asQuery
+from ..APP.lib.queries import runQuery
 
 
 @asQuery
@@ -52,7 +52,7 @@ FILE = "HYB/vbv-part32_comp_period_links_dom_32_SUB.hdf"
 ARGS = ["GridLocation"]
 
 # -----------------------------------------------------------------
-import CGNS.MAP as CGM
+from .. import MAP as CGM
 
 (t, l, p) = CGM.load(FILE)
 print(runQuery(t, l, p, nodeNameSearch, ["GridLocation"]))

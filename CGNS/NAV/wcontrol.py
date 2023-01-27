@@ -13,23 +13,23 @@ from qtpy.QtWidgets import (
     QHeaderView,
 )
 
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from ..NAV.moption import Q7OptionContext as OCTXT
 
-import CGNS.config as config
+from .. import config
 
-import CGNS.PAT.cgnslib as CGL
+from ..PAT import cgnslib as CGL
 
-from CGNS.NAV.Q7ControlWindow import Ui_Q7ControlWindow
-from CGNS.NAV.wfile import Q7File
-from CGNS.NAV.winfo import Q7Info
-from CGNS.NAV.woption import Q7Option
-from CGNS.NAV.wfingerprint import Q7FingerPrint
-from CGNS.NAV.wquery import Q7Query
-from CGNS.NAV.whelp import Q7Help
+from .Q7ControlWindow import Ui_Q7ControlWindow
+from .wfile import Q7File
+from .winfo import Q7Info
+from .woption import Q7Option
+from .wfingerprint import Q7FingerPrint
+from .wquery import Q7Query
+from .whelp import Q7Help
 
-import CGNS.NAV.wmessages as MSG
+from . import wmessages as MSG
 
-from CGNS.NAV.wfingerprint import Q7Window as QW
+from .wfingerprint import Q7Window as QW
 
 
 # -----------------------------------------------------------------
@@ -501,8 +501,8 @@ class Q7Main(QW, Ui_Q7ControlWindow):
         return Q7Query._userFunction
 
     def loadQ7Tree(self, fgprint):
-        from CGNS.NAV.wtree import Q7Tree
-        from CGNS.NAV.mtree import Q7TreeModel
+        from .wtree import Q7Tree
+        from .mtree import Q7TreeModel
 
         Q7TreeModel(fgprint.index)
         return Q7Tree(self, "/", fgprint.index)

@@ -3,7 +3,7 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
 import sys
 import string
@@ -12,8 +12,8 @@ from qtpy.QtCore import Qt
 
 # from qtpy.QtWidgets import QWidget
 
-from CGNS.NAV.Q7InfoWindow import Ui_Q7InfoWindow
-from CGNS.NAV.wfingerprint import Q7Window
+from .Q7InfoWindow import Ui_Q7InfoWindow
+from .wfingerprint import Q7Window
 
 
 # -----------------------------------------------------------------

@@ -10,9 +10,9 @@ from qtpy.QtCore import (Qt, QAbstractTableModel)
 from qtpy.QtGui import (QFont, QFontMetrics)
 from qtpy.QtWidgets import QTableView
 
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.cgnsutils as CGU
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from ..PAT import cgnskeywords as CGK
+from ..PAT import cgnsutils as CGU
+from ..NAV.moption import Q7OptionContext as OCTXT
 
 
 # -----------------------------------------------------------------

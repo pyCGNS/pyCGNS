@@ -3,18 +3,18 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
-import CGNS.PAT.cgnsutils as CGU
+from ..PAT import cgnsutils as CGU
 
 from qtpy.QtCore import Qt, QModelIndex, QPoint
 from qtpy.QtWidgets import QStyledItemDelegate, QMenu
 from qtpy.QtGui import QColor, QFont, QIcon, QPixmap
 
-from CGNS.NAV.Q7MergeWindow import Ui_Q7MergeWindow
-from CGNS.NAV.wfingerprint import Q7Window
+from .Q7MergeWindow import Ui_Q7MergeWindow
+from .wfingerprint import Q7Window
 
-import CGNS.NAV.mtree as NMT
+from . import mtree as NMT
 
 (DIFF_NX, DIFF_NA, DIFF_ND, DIFF_CQ, DIFF_CT, DIFF_CS, DIFF_CV) = range(7)
 (MERGE_NX, MERGE_NA, MERGE_NB) = range(3)

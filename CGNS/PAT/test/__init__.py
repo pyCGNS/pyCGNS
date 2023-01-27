@@ -5,7 +5,7 @@
 
 
 def run():
-    import CGNS.PAT.test.cgu
+    from . import cgu
 
 
 # --- last line

@@ -4,19 +4,19 @@
 #  -------------------------------------------------------------------------
 #
 
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
-import CGNS.PAT.cgnsutils as CGU
+from ..PAT import cgnsutils as CGU
 
 from qtpy.QtCore import Qt, QModelIndex, QPoint
 from qtpy.QtWidgets import QStyledItemDelegate, QMenu
 from qtpy.QtGui import QColor, QFont
 
-from CGNS.NAV.Q7DiffWindow import Ui_Q7DiffWindow
-from CGNS.NAV.wfingerprint import Q7Window, Q7FingerPrint
-from CGNS.NAV.mdifftreeview import Q7DiffTreeModel
+from .Q7DiffWindow import Ui_Q7DiffWindow
+from .wfingerprint import Q7Window, Q7FingerPrint
+from .mdifftreeview import Q7DiffTreeModel
 
-import CGNS.NAV.mtree as NMT
+from . import mtree as NMT
 
 (DIFF_NX, DIFF_NA, DIFF_ND, DIFF_CQ, DIFF_CT, DIFF_CS, DIFF_CV) = range(7)
 

@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "C:\\Users\\d589055\\AppData\\Local\\Continuum\\anaconda3\\python.exe"
+    "python.pythonPath": "C:\\Users\\d589055\\AppData\\Local\\Continuum\\anaconda3\\python.exe",
+    "python.testing.unittestEnabled": true,
+    "python.testing.pytestEnabled": false
 }

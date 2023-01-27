@@ -5,9 +5,9 @@
 #
 
 #
-import CGNS.PAT.cgnslib as C
-import CGNS.PAT.cgnskeywords as K
-import CGNS.PAT.cgnserrors as E
+from .. import cgnslib as C
+from .. import cgnserrors as E
+from .. import cgnskeywords as K
 import numpy as N
 
 #
