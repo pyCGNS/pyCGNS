@@ -27,7 +27,6 @@ from . import cgnskeywords as CK
 from . import cgnstypes as CT
 
 
-
 # Node Type definition
 TreeNode = List[Union[str, Optional[numpy.ndarray], List["TreeNode"]]]
 # Keys to access TreeNode values

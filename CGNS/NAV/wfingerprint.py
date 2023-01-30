@@ -132,9 +132,7 @@ class Q7CHLoneThread(QThread):
                     loadfilename, flags=flags, lksearch=slp, maxdata=maxdataload
                 )
             else:
-                (tree, links, paths) = MAP.load(
-                    loadfilename, flags=flags, lksearch=slp
-                )
+                (tree, links, paths) = MAP.load(loadfilename, flags=flags, lksearch=slp)
         except MAP.error as chlex:
             Q7FingerPrint.Unlock()
             txt = """Load aborted by CGNS.MAP (file:%s)""" % loadfilename
