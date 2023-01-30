@@ -3,10 +3,12 @@
 #  See license.txt file in the root directory of this Python module source
 #  ---------------------------------------------------------------------------
 #
+
 from . import cgnskeywords as CK
 from . import cgnstypes as CT
 from . import cgnserrors as CE
 from . import cgnsutils as CU
+
 
 import numpy as NPY
 
