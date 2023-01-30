@@ -4,14 +4,14 @@
 #  -------------------------------------------------------------------------
 #
 
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
 import sys
 import numpy
 import os
 
-import CGNS.PAT.cgnsutils as CGU
-import CGNS.PAT.cgnskeywords as CGK
+from ..PAT import cgnsutils as CGU
+from ..PAT import cgnskeywords as CGK
 
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import (
@@ -24,18 +24,18 @@ from qtpy.QtWidgets import (
 )
 from qtpy.QtGui import QFont, QIcon, QPixmap
 
-from CGNS.NAV.Q7QueryWindow import Ui_Q7QueryWindow
-from CGNS.NAV.Q7SelectionWindow import Ui_Q7SelectionWindow
-from CGNS.NAV.wfingerprint import Q7Window
-from CGNS.NAV.mquery import Q7QueryEntry
-from CGNS.NAV.mtree import (
+from .Q7QueryWindow import Ui_Q7QueryWindow
+from .Q7SelectionWindow import Ui_Q7SelectionWindow
+from .wfingerprint import Q7Window
+from .mquery import Q7QueryEntry
+from .mtree import (
     COLUMN_VALUE,
     COLUMN_DATATYPE,
     COLUMN_SIDS,
     COLUMN_NAME,
     HIDEVALUE,
 )
-import CGNS.NAV.wmessages as MSG
+from . import wmessages as MSG
 
 (CELLCOMBO, CELLTEXT) = range(2)
 CELLEDITMODE = (CELLCOMBO, CELLTEXT)

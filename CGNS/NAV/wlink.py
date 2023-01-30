@@ -3,24 +3,24 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
 import sys
 import string
 import os.path
 
-import CGNS.MAP as CGM
-import CGNS.PAT.cgnsutils as CGU
-import CGNS.PAT.cgnskeywords as CGK
+from .. import MAP as CGM
+from ..PAT import cgnsutils as CGU
+from ..PAT import cgnskeywords as CGK
 
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QFileDialog
 from qtpy.QtWidgets import QTableWidgetItem, QStyledItemDelegate, QLineEdit, QHeaderView
 
-from CGNS.NAV.Q7LinkWindow import Ui_Q7LinkWindow
-from CGNS.NAV.wfingerprint import Q7Window as QW
+from .Q7LinkWindow import Ui_Q7LinkWindow
+from .wfingerprint import Q7Window as QW
 
-import CGNS.NAV.wmessages as MSG
+from . import wmessages as MSG
 
 
 # -----------------------------------------------------------------

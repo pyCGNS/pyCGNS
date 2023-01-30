@@ -15,14 +15,14 @@ if HAS_MSW:
     myappid = "pycgns.pycgns.cglook.version"  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
 from qtpy import QtCore
 from qtpy.QtWidgets import QApplication, QSplashScreen
 from qtpy.QtGui import QPixmap
 
 # from qtpy.QtGui import *
-from CGNS.NAV.wcontrol import Q7Main
+from .wcontrol import Q7Main
 
 splash = None
 wcontrol = None

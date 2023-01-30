@@ -20,20 +20,20 @@
 
 
 def show(T, *args):
-    from CGNS.NAV.moption import Q7OptionContext as OCTXT
+    from .moption import Q7OptionContext as OCTXT
     import qtpy.QtCore as QtCore
     from qtpy.QtWidgets import QApplication, QSplashScreen
     from qtpy.QtGui import QPixmap
-    from CGNS.NAV.wcontrol import Q7Main
+    from .wcontrol import Q7Main
 
-    from CGNS.NAV.wfile import Q7File
-    from CGNS.NAV.winfo import Q7Info
-    from CGNS.NAV.woption import Q7Option
-    from CGNS.NAV.wtree import Q7Tree
-    from CGNS.NAV.mtree import Q7TreeModel
-    from CGNS.NAV.wfingerprint import Q7FingerPrint
-    from CGNS.NAV.wquery import Q7Query
-    from CGNS.NAV.whelp import Q7Help
+    from .wfile import Q7File
+    from .winfo import Q7Info
+    from .woption import Q7Option
+    from .wtree import Q7Tree
+    from .mtree import Q7TreeModel
+    from .wfingerprint import Q7FingerPrint
+    from .wquery import Q7Query
+    from .whelp import Q7Help
 
     def dummy(*args):
         pass

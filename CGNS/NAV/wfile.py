@@ -4,7 +4,7 @@
 #  -------------------------------------------------------------------------
 #
 
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
 import os.path
 import stat
@@ -23,9 +23,9 @@ from qtpy.QtWidgets import (
 )
 from qtpy.QtGui import QIcon, QPixmap
 
-from CGNS.NAV.Q7FileWindow import Ui_Q7FileWindow
+from .Q7FileWindow import Ui_Q7FileWindow
 
-import CGNS.NAV.wmessages as MSG
+from . import wmessages as MSG
 
 LOADBUTTON = ["Load", "Load from selected file"]
 SAVEBUTTON = ["Save", "Save to selected file"]

@@ -26,10 +26,10 @@ def asQuery(f):
         global SELECTED
         global RESULT_LIST
 
-        import CGNS.PAT.cgnskeywords as CGK
-        import CGNS.PAT.cgnsutils as CGU
-        import CGNS.PAT.cgnslib as CGL
-        import CGNS.MAP as CGM
+        from ..PAT import cgnskeywords as CGK
+        from ..PAT import cgnsutils as CGU
+        from ..PAT import cgnslib as CGL
+        from .. import MAP as CGM
         import numpy
 
         QueryNoException = True

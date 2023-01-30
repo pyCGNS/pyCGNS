@@ -3,7 +3,7 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from ..NAV.moption import Q7OptionContext as OCTXT
 
 import numpy
 
@@ -15,7 +15,7 @@ SCRIPT_PATTERN = """#!/usr/bin/env python
 #  CGNS.NAV - GENERATED FILE - %(Q_VAR_DATE)s
 #  query: %(Q_VAR_QUERYNAME)s
 # -----------------------------------------------------------------
-import CGNS.MAP as CGM
+from .. import MAP as CGM
 
 FILE='%(Q_VAR_TREE_FILE)s'
 SCRIPT=\"\"\"%(Q_VAR_QUERY_SCRIPT)s\"\"\"

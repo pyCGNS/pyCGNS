@@ -5,11 +5,11 @@
 #
 
 import numpy
-import CGNS.PAT.cgnsutils as CGU
+from ..PAT import cgnsutils as CGU
 
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
-import CGNS.NAV.mtree as NMT
-from CGNS.NAV.mtree import (Q7TreeItem, Q7TreeModel, Q7TreeView)
+from ..NAV.moption import Q7OptionContext as OCTXT
+from ..NAV import mtree as NMT
+from ..NAV.mtree import (Q7TreeItem, Q7TreeModel, Q7TreeView)
 
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QColor

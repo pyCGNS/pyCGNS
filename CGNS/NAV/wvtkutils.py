@@ -3,7 +3,7 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
 from qtpy.QtCore import Qt, QEvent
 from qtpy.QtWidgets import QComboBox, QListWidget

@@ -4,7 +4,7 @@
 #  -------------------------------------------------------------------------
 #
 
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
 import sys
 import string
@@ -14,8 +14,8 @@ from qtpy.QtWidgets import QTextEdit, QDialog
 from qtpy.QtGui import QTextCursor, QSyntaxHighlighter, QTextCharFormat, QFont, QColor
 
 
-from CGNS.NAV.Q7MessageWindow import Ui_Q7MessageWindow
-from CGNS.NAV.Q7LogWindow import Ui_Q7LogWindow
+from .Q7MessageWindow import Ui_Q7MessageWindow
+from .Q7LogWindow import Ui_Q7LogWindow
 
 (INFO, QUESTION, ERROR, WARNING) = (0, 1, 2, 3)
 

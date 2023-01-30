@@ -5,7 +5,7 @@
 
 
 def run():
-    import CGNS.NAV.test.cgu
+    from . import cgu
 
 
 # --- last line

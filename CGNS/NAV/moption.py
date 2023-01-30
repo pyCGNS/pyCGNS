@@ -18,7 +18,7 @@ from CGNS.pyCGNSconfig import HAS_MSW
 
 WINOPTS = HAS_MSW
 
-import CGNS.PAT.cgnskeywords as CGK
+from ..PAT import cgnskeywords as CGK
 
 from qtpy.QtGui import QFont, QFontDatabase, QTextCursor
 

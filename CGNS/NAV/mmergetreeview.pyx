@@ -6,9 +6,9 @@
 
 import numpy
 
-import CGNS.NAV.mtree as NMT
-from CGNS.NAV.mtree import Q7TreeView, Q7TreeItem, Q7TreeModel
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from . import mtree as NMT
+from .mtree import Q7TreeView, Q7TreeItem, Q7TreeModel
+from .moption import Q7OptionContext as OCTXT
 
 
 ## -----------------------------------------------------------------

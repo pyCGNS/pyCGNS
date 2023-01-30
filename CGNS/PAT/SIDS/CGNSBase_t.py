@@ -3,9 +3,9 @@
 #  See license.txt file in the root directory of this Python module source
 #  ---------------------------------------------------------------------------
 #
-import CGNS.PAT.cgnslib as C
-import CGNS.PAT.cgnserrors as E
-import CGNS.PAT.cgnskeywords as K
+from .. import cgnslib as C
+from .. import cgnserrors as E
+from .. import cgnskeywords as K
 import numpy as N
 
 data = C.newBase(None, "{Base}", 3, 3)

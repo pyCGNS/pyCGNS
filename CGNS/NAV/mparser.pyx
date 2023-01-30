@@ -3,9 +3,9 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-import CGNS.PAT.cgnskeywords   as CGK
-import CGNS.PAT.cgnsutils      as CGU
-import CGNS.APP.lib.arrayutils as CGA
+from ..PAT import cgnskeywords   as CGK
+from ..PAT import cgnsutils      as CGU
+from ..PAT.APP.lib import arrayutils as CGA
 
 import numpy as NPY
 

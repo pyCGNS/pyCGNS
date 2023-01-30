@@ -11,7 +11,7 @@ import os
 import sys
 import copy
 
-from CGNS.PAT.cgnserrors import CGNSException as CHLoneException
+from ..PAT.cgnserrors import CGNSException as CHLoneException
 
 
 # ---------------------------------------------------------------------------

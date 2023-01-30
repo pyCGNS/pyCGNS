@@ -3,7 +3,7 @@
 #  See license.txt file in the root directory of this Python module source  
 #  -------------------------------------------------------------------------
 #
-import CGNS.PAT.cgnsutils as CGU
+from ..PAT import cgnsutils as CGU
 
 def mergeAB(ta, tb, tc, tag, diag, pfxA, pfxB, trace=False):
     paths = CGU.getAllPaths(ta)

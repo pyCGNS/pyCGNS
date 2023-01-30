@@ -8,21 +8,21 @@ from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QButtonGroup
 from qtpy.QtGui import QColor, QPalette
 
-from CGNS.NAV.wfingerprint import Q7FingerPrint
-from CGNS.NAV.Q7ToolsWindow import Ui_Q7ToolsWindow
-from CGNS.NAV.wfingerprint import Q7Window
-from CGNS.NAV.wquery import Q7Query, Q7SelectionList
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
-from CGNS.NAV.diff import diffAB
-from CGNS.NAV.merge import mergeAB
-from CGNS.NAV.mmergetreeview import Q7TreeMergeModel, TAG_FRONT, TAG_BACK
-from CGNS.NAV.wtree import Q7Tree
-from CGNS.NAV.wdifftreeview import Q7Diff
-from CGNS.NAV.wmergetreeview import Q7Merge
-from CGNS.NAV.mquery import Q7QueryEntry
+from .wfingerprint import Q7FingerPrint
+from .Q7ToolsWindow import Ui_Q7ToolsWindow
+from .wfingerprint import Q7Window
+from .wquery import Q7Query, Q7SelectionList
+from .moption import Q7OptionContext as OCTXT
+from .diff import diffAB
+from .merge import mergeAB
+from .mmergetreeview import Q7TreeMergeModel, TAG_FRONT, TAG_BACK
+from .wtree import Q7Tree
+from .wdifftreeview import Q7Diff
+from .wmergetreeview import Q7Merge
+from .mquery import Q7QueryEntry
 
-import CGNS.PAT.cgnslib as CGL
-import CGNS.PAT.cgnskeywords as CGK
+from ..PAT import cgnslib as CGL
+from ..PAT import cgnskeywords as CGK
 
 
 # -----------------------------------------------------------------

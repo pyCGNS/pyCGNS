@@ -4,15 +4,15 @@
 #  -------------------------------------------------------------------------
 #
 
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
 import string
 
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QFont
 
-from CGNS.NAV.Q7OptionsWindow import Ui_Q7OptionsWindow
-from CGNS.NAV.wfingerprint import Q7Window
+from .Q7OptionsWindow import Ui_Q7OptionsWindow
+from .wfingerprint import Q7Window
 
 combonames = []
 for tn in ["label", "edit", "table", "button", "rname", "nname"]:

@@ -3,7 +3,9 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from ...CGNS.PAT import cgnskeywords as CGK
+
+from . import cgnskeywords as CGK
+
 
 tlistA = [
     CGK.Descriptor_ts,

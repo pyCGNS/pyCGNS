@@ -3,7 +3,7 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
 import sys
 import numpy
@@ -11,16 +11,16 @@ import os
 import importlib
 import glob
 
-import CGNS.PAT.cgnsutils as CGU
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.SIDS
+from ..PAT import cgnsutils as CGU
+from ..PAT import cgnskeywords as CGK
+from ..PAT import SIDS
 
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QFileDialog, QTableWidgetItem, QStyledItemDelegate
 from qtpy.QtGui import QFont
 
-from CGNS.NAV.Q7PatternWindow import Ui_Q7PatternWindow
-from CGNS.NAV.wfingerprint import Q7Window as QW
+from .Q7PatternWindow import Ui_Q7PatternWindow
+from .wfingerprint import Q7Window as QW
 
 # -----------------------------------------------------------------
 class Q7PatternList(QW, Ui_Q7PatternWindow):
@@ -35,7 +35,7 @@ class Q7PatternList(QW, Ui_Q7PatternWindow):
         self.bDelete.setDisabled(True)
         self.bAdd.setDisabled(True)
         self._profiles = {}
-        self._profiles["SIDS"] = CGNS.PAT.SIDS.profile
+        self._profiles["SIDS"] = SIDS.profile
         self.loadUserProfiles()
         self._modified = False
         self._initialized = False

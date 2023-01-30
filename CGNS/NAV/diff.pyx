@@ -6,8 +6,8 @@
 
 import numpy
 
-import CGNS.PAT.cgnskeywords
-import CGNS.PAT.cgnsutils
+from ..PAT import cgnskeywords
+from ..PAT import cgnsutils
 
 
 def getChildren(t):
@@ -52,9 +52,9 @@ def diffAB(ta, tb, path, tag, diag, trace=False):
         diag[path].append(('CT',))
         if trace:
             print('CT %s %s' % (tag, path))
-    dta = CGNS.PAT.cgnsutils.getValueDataType(ta)
-    dtb = CGNS.PAT.cgnsutils.getValueDataType(tb)
-    if dta is not CGNS.PAT.cgnskeywords.MT:
+    dta = cgnsutils.getValueDataType(ta)
+    dtb = cgnsutils.getValueDataType(tb)
+    if dta is not cgnskeywords.MT:
         dnum = compareValues(ta, tb)
         if dnum:
             diag[path].append(('C%d' % dnum,))

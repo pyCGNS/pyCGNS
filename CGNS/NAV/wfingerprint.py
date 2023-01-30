@@ -3,7 +3,7 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
+from .moption import Q7OptionContext as OCTXT
 
 import os
 import os.path
@@ -11,19 +11,19 @@ import time
 import stat
 import sys
 
-import CGNS.MAP
-import CGNS.PAT.cgnsutils as CGU
+from .. import MAP
+from ..PAT import cgnsutils as CGU
 
 from qtpy.QtCore import QCoreApplication
 from qtpy.QtCore import Qt, QThread, QMutex, Signal
 from qtpy.QtWidgets import QWidget
 from qtpy.QtGui import QIcon, QPixmap, QFont, QCursor
 
-from CGNS.NAV.wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
-from CGNS.NAV.wstylesheets import Q7CONTROLVIEWSTYLESHEET
-from CGNS.NAV.wfile import checkFilePermission
+from .wstylesheets import Q7TREEVIEWSTYLESHEET, Q7TABLEVIEWSTYLESHEET
+from .wstylesheets import Q7CONTROLVIEWSTYLESHEET
+from .wfile import checkFilePermission
 
-import CGNS.NAV.wmessages as MSG
+from . import wmessages as MSG
 
 try:
     from pwd import getpwuid
@@ -108,17 +108,17 @@ class Q7CHLoneThread(QThread):
         slp += [filedir]
         slp = [str(lp) for lp in slp]
         loadfilename = selectedfile
-        flags = CGNS.MAP.S2P_DEFAULTS
+        flags = MAP.S2P_DEFAULTS
         maxdataload = -1
         if OCTXT.CHLoneTrace:
-            flags |= CGNS.MAP.S2P_TRACE
+            flags |= MAP.S2P_TRACE
         if OCTXT.DoNotLoadLargeArrays:
-            flags |= CGNS.MAP.S2P_NODATA
+            flags |= MAP.S2P_NODATA
             maxdataload = OCTXT.MaxLoadDataSize
         if OCTXT.FollowLinksAtLoad:
-            flags |= CGNS.MAP.S2P_FOLLOWLINKS
+            flags |= MAP.S2P_FOLLOWLINKS
         try:
-            if not CGNS.MAP.probe(loadfilename):
+            if not MAP.probe(loadfilename):
                 if (
                     os.path.splitext(filename)[1] in OCTXT.CGNSFileExtension
                 ) and OCTXT._ConvertADFFiles:
@@ -128,14 +128,12 @@ class Q7CHLoneThread(QThread):
                     kw["converted"] = True
                     kw["convertedAs"] = loadfilename
             if maxdataload:
-                (tree, links, paths) = CGNS.MAP.load(
+                (tree, links, paths) = MAP.load(
                     loadfilename, flags=flags, lksearch=slp, maxdata=maxdataload
                 )
             else:
-                (tree, links, paths) = CGNS.MAP.load(
-                    loadfilename, flags=flags, lksearch=slp
-                )
-        except CGNS.MAP.error as chlex:
+                (tree, links, paths) = MAP.load(loadfilename, flags=flags, lksearch=slp)
+        except MAP.error as chlex:
             Q7FingerPrint.Unlock()
             txt = """Load aborted by CGNS.MAP (file:%s)""" % loadfilename
             code = chlex.args[0][0]
@@ -557,17 +555,17 @@ class Q7FingerPrint:
 
     @classmethod
     def treeSave(cls, control, fgprint, f, saveas):
-        flags = CGNS.MAP.S2P_DEFAULT
+        flags = MAP.S2P_DEFAULT
         if OCTXT.CHLoneTrace:
-            flags |= CGNS.MAP.S2P_TRACE
+            flags |= MAP.S2P_TRACE
         if not saveas:
-            flags |= CGNS.MAP.S2P_UPDATE
-            flags |= CGNS.MAP.S2P_DELETEMISSING
+            flags |= MAP.S2P_UPDATE
+            flags |= MAP.S2P_DELETEMISSING
         tree = fgprint.tree
         lazylist = [CGU.getPathNoRoot(path) for path in list(fgprint.lazy)]
         try:
-            CGNS.MAP.save(f, tree, links=fgprint.links, flags=flags, skip=lazylist)
-        except (CGNS.MAP.error,) as chlex:
+            MAP.save(f, tree, links=fgprint.links, flags=flags, skip=lazylist)
+        except (MAP.error,) as chlex:
             txt = """The current save operation has been aborted (CHLone):"""
             control.readyCursor()
             MSG.wError(control, 130, txt, chlex.args[0][1])
@@ -737,12 +735,12 @@ class Q7FingerPrint:
         slp = OCTXT.LinkSearchPathList
         slp += [self.filedir]
         minpath = CGU.getPathListCommonAncestor(list(pathdict))
-        flags = CGNS.MAP.S2P_DEFAULTS
+        flags = MAP.S2P_DEFAULTS
         if OCTXT.CHLoneTrace:
-            flags |= CGNS.MAP.S2P_TRACE
+            flags |= MAP.S2P_TRACE
         if OCTXT.FollowLinksAtLoad:
-            flags |= CGNS.MAP.S2P_FOLLOWLINKS
-        (t, l, p) = CGNS.MAP.load(
+            flags |= MAP.S2P_FOLLOWLINKS
+        (t, l, p) = MAP.load(
             tfile, flags=flags, path=minpath, lksearch=slp, update=pathdict
         )
         return (t, l, p)

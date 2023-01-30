@@ -13,15 +13,15 @@ from qtpy.QtCore import (Qt, QModelIndex, QAbstractItemModel, QItemSelectionMode
 from qtpy.QtGui import (QIcon, QPixmap, QColor)
 from qtpy.QtWidgets import QTreeView
 
-import CGNS.NAV.wmessages as MSG
-import CGNS.PAT.cgnskeywords as CGK
-import CGNS.PAT.cgnsutils as CGU
-import CGNS.VAL.grammars.CGNS_VAL_USER_DEFAULT as CGV
-import CGNS.VAL.parse.findgrammar
-import CGNS.VAL.parse.messages as CGM
-import CGNS.VAL.simplecheck as CGV
-from CGNS.NAV.moption import Q7OptionContext as OCTXT
-from CGNS.NAV.wfingerprint import Q7FingerPrint
+from . import wmessages as MSG
+from ..PAT import cgnskeywords as CGK
+from ..PAT import cgnsutils as CGU
+from ..VAL.grammars import CGNS_VAL_USER_DEFAULT as CGV
+from ..VAL.parse import findgrammar
+from ..VAL.parse import messages as CGM
+from ..VAL import simplecheck as CGV
+from .moption import Q7OptionContext as OCTXT
+from .wfingerprint import Q7FingerPrint
 
 
 def trace(f):
@@ -1764,7 +1764,7 @@ class Q7TreeModel(QAbstractItemModel):
         self.FG.pushGrammarPaths()
         modset = set()
         for tag in self.FG.nextGrammarTag():
-            modset.add(CGNS.VAL.parse.findgrammar.importUserGrammars(tag))
+            modset.add(findgrammar.importUserGrammars(tag))
         self.FG.popGrammarPaths()
         for mod in modset:
             if mod is None:
