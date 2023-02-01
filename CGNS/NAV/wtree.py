@@ -302,7 +302,7 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
             ("Shape", NMT.COLUMN_SHAPE),
             ("Data type", NMT.COLUMN_DATATYPE),
         )
-        for (tag, idx) in self._tlist:
+        for tag, idx in self._tlist:
             a = QAction(tag, self._hmenu, checkable=True)
             self._hmenu._idx[idx] = a
             if self._column[idx]:
@@ -315,10 +315,10 @@ class Q7Tree(Q7Window, Ui_Q7TreeWindow):
         self.updateTreeStatus()
 
     def headerMenu(self, pos):
-        for (tag, idx) in self._tlist:
+        for tag, idx in self._tlist:
             self._hmenu._idx[idx].setChecked(self._column[idx])
         self._hmenu.exec_(self.treeview.mapToGlobal(pos))
-        for (tag, idx) in self._tlist:
+        for tag, idx in self._tlist:
             if self._hmenu._idx[idx].isChecked():
                 self._column[idx] = True
             else:

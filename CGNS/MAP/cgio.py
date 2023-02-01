@@ -102,7 +102,6 @@ def load(filename, nodata=False, maxdata=65, subtree="", follow_links=False, **k
     """
 
     def _load(grp, links, paths, load_children=True):
-
         if grp.attrs["type"] == "LK":
             if not follow_links:
                 links.append(
@@ -170,7 +169,6 @@ def save(filename, tree, links=[], **kwargs):
         return numpy.bytes_(bytes(s, "ascii").ljust(n, b"\x00"))
 
     def _save(grp, node):
-
         _cst_size_str(node[0], 33)
 
         if node[3] == "CGNSTree_t":
@@ -215,7 +213,6 @@ def save(filename, tree, links=[], **kwargs):
             _save(sgrp, child)
 
     def _add_links(h5f, links):
-
         for dname, filename, rpth, lpth, n in links:
             tmp = lpth.split("/")
             name = tmp[-1]

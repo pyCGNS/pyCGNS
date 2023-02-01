@@ -837,4 +837,3 @@ _keysyms = {
 if __name__ == "__main__":
     print(PyQtImpl)
     QVTKRenderWidgetConeExample()
-   

@@ -57,7 +57,7 @@ def runSuite(suite, trace, savefile=False, cgnscheck=False):
                 tlist.append(t[:-3])
     for t in tlist:
         tdlist = loadTree(suite, t)
-        for (tag, T, diag) in tdlist:
+        for tag, T, diag in tdlist:
             sr = valTree(suite, t, tag, T, diag, trace, count)
             if diag:
                 k = "pass"

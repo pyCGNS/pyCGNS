@@ -45,6 +45,7 @@ __R8 = numpy.dtype(numpy.float64)
 # undocumented functions are private (or obsolete)
 # -----------------------------------------------------------------------------
 
+
 # -----------------------------------------------------------------------------
 def nodeCreate(
     name: str,

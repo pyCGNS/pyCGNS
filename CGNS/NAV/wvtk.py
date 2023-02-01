@@ -1285,7 +1285,7 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
             else:
                 lact = self._currentactor
             if (lact is not None) and (type(lact) == list) and (lact[0] is not None):
-                for (col, act) in lact[2]:
+                for col, act in lact[2]:
                     self._vtkren.RemoveActor(act)
                     act.GetProperty().SetColor(col)
                     act.GetProperty().SetLineWidth(1.0)

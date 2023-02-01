@@ -29,7 +29,7 @@ messagetable = (
 )
 
 USER_MESSAGES = {}
-for (k, l, m) in messagetable:
+for k, l, m in messagetable:
     USER_MESSAGES[k] = (l, m)
 
 
@@ -68,7 +68,7 @@ class CGNS_VAL_USER_Checks(CGNS.VAL.parse.generic.GenericParser):
             famlist1 = CGU.getAllNodesByTypeOrNameList(tree, searchpath)
             searchpath = basepath + [CGK.AdditionalFamilyName_ts]
             famlist2 = CGU.getAllNodesByTypeOrNameList(tree, searchpath)
-            for (famlist, diagmessage) in ((famlist1, "S0301"), (famlist2, "S0302")):
+            for famlist, diagmessage in ((famlist1, "S0301"), (famlist2, "S0302")):
                 for fampath in famlist:
                     famdefinition = CGU.getNodeByPath(tree, fampath)
                     if famdefinition[1] is None:

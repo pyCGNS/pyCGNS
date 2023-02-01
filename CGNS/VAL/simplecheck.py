@@ -92,7 +92,7 @@ def compliant(
     diag = run(T, trace, userlist, stop=stop, warnings=warnings, failures=failures)
     ok = [True, []]
     for p in diag:
-        for (s, sp) in diag.diagnosticsByPath(p):
+        for s, sp in diag.diagnosticsByPath(p):
             if diag.status(s) == CGM.CHECK_FAIL:
                 ok[0] = False
                 ok[1].append((p, diag.message(s)))
@@ -105,7 +105,7 @@ def showDiag(diag, idlist, bypath=True):
         for p in diag:
             if not diag.hasOnlyKey(p, idlist):
                 print("\n%s\n%s" % ("-" * 75, p))
-                for (s, sp) in diag.diagnosticsByPath(p):
+                for s, sp in diag.diagnosticsByPath(p):
                     if (diag.status(s) != CGM.CHECK_GOOD) and (
                         diag.key(s) not in idlist
                     ):
@@ -122,7 +122,7 @@ def showDiag(diag, idlist, bypath=True):
                     print("\n%s\n[%s] %s" % ("-" * 75, m, ctxt))
                 else:
                     print("\n%s\n[%s]" % ("-" * 75, m))
-                for (d, dp) in diag.diagnosticsByMessage(m):
+                for d, dp in diag.diagnosticsByMessage(m):
                     if diag.status(d) != CGM.CHECK_GOOD:
                         if ctxt is None:
                             if not first:

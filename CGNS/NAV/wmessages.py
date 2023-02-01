@@ -108,7 +108,7 @@ class Q7PythonEditorHighlighter(QSyntaxHighlighter):
         text = str(textblock)
         fdef = self.format(0)
         fmax = len(text)
-        for (rex, fmt) in self.r_syntax:
+        for rex, fmt in self.r_syntax:
             mit = rex.finditer(text)
             for m in mit:
                 self.setFormat(m.span()[0], m.span()[1], fmt)
