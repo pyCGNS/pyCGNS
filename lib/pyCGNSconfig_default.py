@@ -123,7 +123,7 @@ LICENSE="%(LICENSE)s"
 #
 __version__=6 # @@UPDATEVERSION@@
 __release__=2 # @@UPDATERELEASE@@
-__revision__=1 # @@UPDATEREVISION@@
+__revision__=2 # @@UPDATEREVISION@@
 __vid__="%s.%s.%s"%(__version__,__release__,__revision__)
 __doc__="pyCGNS - %s - Python package for CGNS (CFD General Notation System)"\
         %(__vid__)
