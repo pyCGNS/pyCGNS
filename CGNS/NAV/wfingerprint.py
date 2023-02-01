@@ -592,7 +592,7 @@ class Q7FingerPrint:
         cls.Lock()
         for x in cls.__extension:
             for vtype in x.views:
-                for (v, i) in x.views[vtype]:
+                for v, i in x.views[vtype]:
                     for wid in v._lockableWidgets:
                         if not lock and wid in v._lockedWidgets:
                             wid.setDisabled(lock)
@@ -609,7 +609,7 @@ class Q7FingerPrint:
         cls.Lock()
         for x in cls.__extension:
             for vtype in x.views:
-                for (v, i) in x.views[vtype]:
+                for v, i in x.views[vtype]:
                     if i == int(idx):
                         v.raise_()
         cls.Unlock()
@@ -628,7 +628,7 @@ class Q7FingerPrint:
     def getView(cls, idx):
         for x in cls.__extension:
             for vtype in x.views:
-                for (v, i) in x.views[vtype]:
+                for v, i in x.views[vtype]:
                     if i == int(idx):
                         return v
         return None
@@ -638,7 +638,7 @@ class Q7FingerPrint:
         vw = cls.getView(idx)
         for x in cls.__extension:
             for vtype in x.views:
-                for (v, i) in x.views[vtype]:
+                for v, i in x.views[vtype]:
                     if (v == vw) and (i == int(idx)):
                         return vtype
         return None
@@ -648,7 +648,7 @@ class Q7FingerPrint:
         ix = int(idx)
         for x in cls.__extension:
             for vtype in x.views:
-                for (v, i) in x.views[vtype]:
+                for v, i in x.views[vtype]:
                     if i == ix:
                         return x
         return None
@@ -659,7 +659,7 @@ class Q7FingerPrint:
         for x in cls.__extension:
             for vtype in x.views:
                 if vtype == Q7Window.VIEW_TREE:
-                    for (v, i) in x.views[vtype]:
+                    for v, i in x.views[vtype]:
                         r.add(i)
         return list(r)
 
@@ -901,13 +901,13 @@ class Q7FingerPrint:
     def lockAllViews(self, lock=True):
         vtlist = list(self.views)
         for vtype in vtlist:
-            for (v, i) in self.views[vtype]:
+            for v, i in self.views[vtype]:
                 v.lockView(lock)
 
     def closeAllViews(self):
         vtlist = list(self.views)
         for vtype in vtlist:
-            for (v, i) in self.views[vtype]:
+            for v, i in self.views[vtype]:
                 self.closeView(i)
 
     def isModified(self):

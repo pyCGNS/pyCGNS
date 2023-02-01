@@ -144,7 +144,7 @@ class Q7CheckList(QW, Ui_Q7DiagWindow):
             elif (state == CGM.CHECK_WARN) and not warnings:
                 pass
             else:
-                for (diag, pth) in self._data.diagnosticsByPath(path):
+                for diag, pth in self._data.diagnosticsByPath(path):
                     if (diag.level == CGM.CHECK_WARN) and not warnings:
                         pass
                     elif diagfirst:

@@ -8,6 +8,7 @@ from .moption import Q7OptionContext as OCTXT
 from qtpy.QtCore import Qt, QEvent
 from qtpy.QtWidgets import QComboBox, QListWidget
 
+
 # -----------------------------------------------------------------
 class Q7ComboBox(QComboBox):
     def __init__(self, arg):

@@ -22,6 +22,7 @@ from qtpy.QtGui import QFont
 from .Q7PatternWindow import Ui_Q7PatternWindow
 from .wfingerprint import Q7Window as QW
 
+
 # -----------------------------------------------------------------
 class Q7PatternList(QW, Ui_Q7PatternWindow):
     def __init__(self, control, fgprint):

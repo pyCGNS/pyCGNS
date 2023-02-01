@@ -22,6 +22,7 @@ from . import cgnsutils as CU
 #   checkXXX:  check if node is ok for SIDS and for CGNS/Python
 # -----------------------------------------------------------------------------
 
+
 # -----------------------------------------------------------------------------
 def newCGNSTree(version=CK.CGNSLIBRARYVERSION):
     """
@@ -1982,6 +1983,7 @@ def newDiffusionModel(parent, value=None):
 # def newSection():
 #  pass
 
+
 # -----------------------------------------------------------------------------
 def newParentElements(parent, value):
     CU.checkDuplicatedName(parent, CK.ParentElements_s)
@@ -1999,6 +2001,7 @@ def newParentElementsPosition(parent, value):
 # -----------------------------------------------------------------------------
 # def newPart():
 #  pass
+
 
 # -----------------------------------------------------------------------------
 def nextRange(previous, etype, earray):
