@@ -39,7 +39,7 @@ class NAVTestCase(unittest.TestCase):
         import qtpy.QtWidgets
 
     def test_001_Script(self):
-        from .. import CGNS
+        from ...NAV import *
 
 
 # ---
