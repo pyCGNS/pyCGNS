@@ -5,7 +5,7 @@
 #
 from ..PAT import cgnskeywords   as CGK
 from ..PAT import cgnsutils      as CGU
-from ..PAT.APP.lib import arrayutils as CGA
+from ..APP.lib import arrayutils as CGA
 
 import numpy as NPY
 
