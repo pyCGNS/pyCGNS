@@ -151,11 +151,11 @@ elif QVTKRWIBase == "QGLWidget":
     QVTKRWIBaseClass = QGLWidget
 else:
     raise ImportError(
-        "Unknown base class for QVTKRenderWindowInteractor " + QVTKRWIBase
+        "Unknown base class for Q7VTKRenderWindowInteractor " + QVTKRWIBase
     )
 
 
-class QVTKRenderWindowInteractor(QVTKRWIBaseClass):
+class Q7VTKRenderWindowInteractor(QVTKRWIBaseClass):
 
     """A QVTKRenderWindowInteractor for Python and Qt.  Uses a
     vtkGenericRenderWindowInteractor to handle the interactions.  Use
@@ -578,7 +578,7 @@ def QVTKRenderWidgetConeExample():
     window = QMainWindow()
 
     # create the widget
-    widget = QVTKRenderWindowInteractor(window)
+    widget = Q7VTKRenderWindowInteractor(window)
     window.setCentralWidget(widget)
     # if you don't want the 'q' key to exit comment this.
     widget.AddObserver("ExitEvent", lambda o, e, a=app: a.quit())
@@ -837,7 +837,4 @@ _keysyms = {
 if __name__ == "__main__":
     print(PyQtImpl)
     QVTKRenderWidgetConeExample()
-
-if __name__ == "__main__":
-    print(PyQtImpl)
-    QVTKRenderWidgetConeExample()
+   
