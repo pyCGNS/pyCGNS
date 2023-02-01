@@ -33,7 +33,8 @@ JMAX_PATTERN = EXTRA_PATTERN % 'jmax'
 KMAX_PATTERN = EXTRA_PATTERN % 'kmax'
 
 QUAD_PATTERN = EXTRA_PATTERN % 'quad'
-TRI_PATTERN = EXTRA_PATTERN % 'tri '  # mandatory trailing space to have 4 chars
+TRI_PATTERN  = EXTRA_PATTERN % 'tri '  # mandatory trailing space to have 4 chars
+NGON_PATTERN = EXTRA_PATTERN % 'ngon'
 
 SIZE_PATTERN = len(TRI_PATTERN)
 LIST_PATTERN = (IMIN_PATTERN, JMIN_PATTERN, KMIN_PATTERN,
