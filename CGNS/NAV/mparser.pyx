@@ -39,7 +39,7 @@ NGON_PATTERN = EXTRA_PATTERN % 'ngon'
 SIZE_PATTERN = len(TRI_PATTERN)
 LIST_PATTERN = (IMIN_PATTERN, JMIN_PATTERN, KMIN_PATTERN,
                 IMAX_PATTERN, JMAX_PATTERN, KMAX_PATTERN,
-                QUAD_PATTERN, TRI_PATTERN)
+                QUAD_PATTERN, TRI_PATTERN, NGON_PATTERN)
 
 
 # ----------------------------------------------------------------------------
@@ -157,6 +157,124 @@ class CGNSparser(object):
     def resfreshScreen(self):
         QCoreApplication.processEvents()
 
+    def parseStructuredZones(self, zT):
+        gnode = CGU.getAllNodesByTypeSet(zT, [CGK.GridCoordinates_ts])
+        if gnode == []:
+            return False
+        for g in gnode:
+            zg = g
+            meshpath = zg
+            gT = CGU.nodeByPath(g, zT)
+            cx = CGU.nodeByPath("%s/CoordinateX" % gT[0], gT)
+            cy = CGU.nodeByPath("%s/CoordinateY" % gT[0], gT)
+            cz = CGU.nodeByPath("%s/CoordinateZ" % gT[0], gT)
+            if ((cx is None) or (cy is None) or (cz is None)): return False
+            if ((cx[1] is None) or (cy[1] is None) or (cz[1] is None)):
+                return False
+            acx = cx[1]
+            acy = cy[1]
+            acz = cz[1]
+            shx = cx[1].shape
+            scx = cx[1].reshape(shx)
+            scy = cy[1].reshape(shx)
+            scz = cz[1].reshape(shx)
+            simin = [scx[0, :, :], scy[0, :, :], scz[0, :, :]]
+            simax = [scx[-1, :, :], scy[-1, :, :], scz[-1, :, :]]
+            sjmin = [scx[:, 0, :], scy[:, 0, :], scz[:, 0, :]]
+            sjmax = [scx[:, -1, :], scy[:, -1, :], scz[:, -1, :]]
+            skmin = [scx[:, :, 0], scy[:, :, 0], scz[:, :, 0]]
+            skmax = [scx[:, :, -1], scy[:, :, -1], scz[:, :, -1]]
+            zp = zg
+            surfpaths = [zp + IMIN_PATTERN, zp + IMAX_PATTERN,
+                         zp + JMIN_PATTERN, zp + JMAX_PATTERN,
+                         zp + KMIN_PATTERN, zp + KMAX_PATTERN]
+            bclist = []
+            bcpaths = []
+            ctlist = []
+            ctpaths = []
+            bcfams = []
+            ctfams = []
+            solutions = []
+            bname = CGU.getPathAncestor(z)
+            znfams = ['%s/%s' % (bname, znf)
+                      for znf in CGU.getFamiliesFromZone(tree, z)]
+            for sol in CGU.getAllNodesByTypeSet(zT, [CGK.FlowSolution_ts]):
+                zsol = CGU.nodeByPath(sol, zT)
+                for data in CGU.getAllNodesByTypeSet(zsol, [CGK.DataArray_ts]):
+                    dsol = CGU.nodeByPath(data, zsol)
+                    solutions += [dsol]
+            for nzbc in CGU.getAllNodesByTypeSet(zT, [CGK.ZoneBC_ts]):
+                zbcT = CGU.nodeByPath(nzbc, zT)
+                for nbc in CGU.getAllNodesByTypeSet(zbcT, [CGK.BC_ts]):
+                    bcpaths += ['%s/ZoneBC/%s' % (z, nbc.split('/')[1])]
+                    bcfams.append(['%s/%s' % (bname, bcf)
+                                   for bcf in CGU.getFamiliesFromBC(zT, nbc)])
+                    bcfams[-1] += znfams
+                    bcT = CGU.nodeByPath(nbc, zbcT)
+                    for rbc in CGU.getAllNodesByTypeSet(bcT, [CGK.IndexRange_ts]):
+                        ptr = CGU.nodeByPath(rbc, bcT)[1].T.flat
+                        brg = [scx[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]],
+                               scy[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]],
+                               scz[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]]]
+                        bclist += [brg]
+            for nzbc in CGU.getAllNodesByTypeSet(zT, [CGK.ZoneGridConnectivity_ts]):
+                zbcT = CGU.nodeByPath(nzbc, zT)
+                for nbc in CGU.getAllNodesByTypeSet(zbcT, [CGK.GridConnectivity_ts,
+                                                           CGK.GridConnectivity1to1_ts]):
+                    ctpaths += ['%s/ZoneGridConnectivity/%s' % (z, nbc.split('/')[1])]
+                    ctfams += [znfams]
+                    bcnode = CGU.getNodeByPath(zbcT, nbc)
+                    bcT = CGU.nodeByPath(nbc, zbcT)
+                    rbc = CGU.hasChildNode(bcT, CGK.PointRange_s)
+                    if (rbc is not None):
+                        ptr = rbc[1].T.flat
+                        brg = [scx[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]],
+                               scy[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]],
+                               scz[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]]]
+                        ctlist += [brg]
+            self._zones[zg] = ZoneData([acx, acy, acz],
+                                       ctlist, bclist,
+                                       z, ctpaths, bcpaths, solutions,
+                                       bcfams, ctfams)
+        return True
+
+    def parseUnstructuredZones(self, zT):
+        gnode = CGU.getAllNodesByTypeSet(zT, [CGK.GridCoordinates_ts])
+        if gnode == []:
+            return False
+        for g in gnode:
+            zg = g
+            meshpath = zg
+            gT = CGU.nodeByPath(g, zT)
+            cx = CGU.nodeByPath("%s/CoordinateX" % gT[0], gT)
+            cy = CGU.nodeByPath("%s/CoordinateY" % gT[0], gT)
+            cz = CGU.nodeByPath("%s/CoordinateZ" % gT[0], gT)
+            if ((cx is None) or (cy is None) or (cz is None)): return False
+            if ((cx[1] is None) or (cy[1] is None) or (cz[1] is None)):
+                return False
+            volume = {}
+            surface = {}
+            typeset = [CGK.Elements_ts]
+            elist = CGU.getAllNodesByTypeSet(zT, typeset)
+            sp = CGA.SectionParse()
+            mr = 1
+            sn = 0
+            sl = []
+            for e in elist:
+                sn += 1
+                ne = CGU.getNodeByPath(zT, e)[1]
+                et = ne[0]
+                eb = ne[1]
+                ea = CGU.getNodeByPath(zT, e + '/' + CGK.ElementConnectivity_s)[1]
+                if (ea is not None) and (et in sp.QUAD_SURFACE):
+                    pth = CGU.getPathAncestor(meshpath) + e + QUAD_PATTERN
+                    sl.append(list(sp.extQuadFacesPoints(ea, et, sn, mr, eb)) + [pth])
+                if ((ea is not None) and (et in sp.TRI_SURFACE)):
+                    pth = e + TRI_PATTERN
+                    sl.append(list(sp.extTriFacesPoints(ea, et, sn, mr, eb)) + [pth])
+            self._zones_ns[z] = ([cx[1], cy[1], cz[1]], meshpath, et, sl)
+        return True
+
     def parseZones(self, zlist=[]):
         tree = self._tree
         if tree[0] is None:
@@ -166,113 +284,18 @@ class CGNSparser(object):
             self._rsd = CGU.nodeByPath(r, tree)
         allfamilies = CGU.getAllFamilies(tree)
         for z in CGU.getAllNodesByTypeSet(tree, [CGK.Zone_ts]):
+            if (zlist != []) and not (z in zlist):
+                continue
             zT = CGU.nodeByPath(z, tree)
-            if (zlist == []) or (z in zlist):
-                gnode = CGU.getAllNodesByTypeSet(zT, [CGK.GridCoordinates_ts])
-                if gnode == []:
-                    return False
-                for g in gnode:
-                    zg = g
-                    meshpath = zg
-                    gT = CGU.nodeByPath(g, zT)
-                    cx = CGU.nodeByPath("%s/CoordinateX" % gT[0], gT)
-                    cy = CGU.nodeByPath("%s/CoordinateY" % gT[0], gT)
-                    cz = CGU.nodeByPath("%s/CoordinateZ" % gT[0], gT)
-                    if ((cx is None) or (cy is None) or (cz is None)): return False
-                    if ((cx[1] is None) or (cy[1] is None) or (cz[1] is None)):
-                        return False
-                    zonetype = CGU.getAllNodesByTypeSet(zT, [CGK.ZoneType_ts])
-                    ztype = CGU.nodeByPath(zonetype[0], zT)
-                    if ztype[1].tostring().decode('ascii') == CGK.Structured_s:
-                        if cx[1] is None:
-                            return False
-                        acx = cx[1]
-                        acy = cy[1]
-                        acz = cz[1]
-                        shx = cx[1].shape
-                        scx = cx[1].reshape(shx)
-                        scy = cy[1].reshape(shx)
-                        scz = cz[1].reshape(shx)
-                        simin = [scx[0, :, :], scy[0, :, :], scz[0, :, :]]
-                        simax = [scx[-1, :, :], scy[-1, :, :], scz[-1, :, :]]
-                        sjmin = [scx[:, 0, :], scy[:, 0, :], scz[:, 0, :]]
-                        sjmax = [scx[:, -1, :], scy[:, -1, :], scz[:, -1, :]]
-                        skmin = [scx[:, :, 0], scy[:, :, 0], scz[:, :, 0]]
-                        skmax = [scx[:, :, -1], scy[:, :, -1], scz[:, :, -1]]
-                        zp = zg
-                        surfpaths = [zp + IMIN_PATTERN, zp + IMAX_PATTERN,
-                                     zp + JMIN_PATTERN, zp + JMAX_PATTERN,
-                                     zp + KMIN_PATTERN, zp + KMAX_PATTERN]
-                        bclist = []
-                        bcpaths = []
-                        ctlist = []
-                        ctpaths = []
-                        bcfams = []
-                        ctfams = []
-                        solutions = []
-                        bname = CGU.getPathAncestor(z)
-                        znfams = ['%s/%s' % (bname, znf)
-                                  for znf in CGU.getFamiliesFromZone(tree, z)]
-                        for sol in CGU.getAllNodesByTypeSet(zT, [CGK.FlowSolution_ts]):
-                            zsol = CGU.nodeByPath(sol, zT)
-                            for data in CGU.getAllNodesByTypeSet(zsol, [CGK.DataArray_ts]):
-                                dsol = CGU.nodeByPath(data, zsol)
-                                solutions += [dsol]
-                        for nzbc in CGU.getAllNodesByTypeSet(zT, [CGK.ZoneBC_ts]):
-                            zbcT = CGU.nodeByPath(nzbc, zT)
-                            for nbc in CGU.getAllNodesByTypeSet(zbcT, [CGK.BC_ts]):
-                                bcpaths += ['%s/ZoneBC/%s' % (z, nbc.split('/')[1])]
-                                bcfams.append(['%s/%s' % (bname, bcf)
-                                               for bcf in CGU.getFamiliesFromBC(zT, nbc)])
-                                bcfams[-1] += znfams
-                                bcT = CGU.nodeByPath(nbc, zbcT)
-                                for rbc in CGU.getAllNodesByTypeSet(bcT, [CGK.IndexRange_ts]):
-                                    ptr = CGU.nodeByPath(rbc, bcT)[1].T.flat
-                                    brg = [scx[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]],
-                                           scy[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]],
-                                           scz[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]]]
-                                    bclist += [brg]
-                        for nzbc in CGU.getAllNodesByTypeSet(zT, [CGK.ZoneGridConnectivity_ts]):
-                            zbcT = CGU.nodeByPath(nzbc, zT)
-                            for nbc in CGU.getAllNodesByTypeSet(zbcT, [CGK.GridConnectivity_ts,
-                                                                       CGK.GridConnectivity1to1_ts]):
-                                ctpaths += ['%s/ZoneGridConnectivity/%s' % (z, nbc.split('/')[1])]
-                                ctfams += [znfams]
-                                bcnode = CGU.getNodeByPath(zbcT, nbc)
-                                bcT = CGU.nodeByPath(nbc, zbcT)
-                                rbc = CGU.hasChildNode(bcT, CGK.PointRange_s)
-                                if (rbc is not None):
-                                    ptr = rbc[1].T.flat
-                                    brg = [scx[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]],
-                                           scy[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]],
-                                           scz[ptr[0] - 1:ptr[3], ptr[1] - 1:ptr[4], ptr[2] - 1:ptr[5]]]
-                                    ctlist += [brg]
-                        self._zones[zg] = ZoneData([acx, acy, acz],
-                                                   ctlist, bclist,
-                                                   z, ctpaths, bcpaths, solutions,
-                                                   bcfams, ctfams)
-                    elif ztype[1].tostring().decode('ascii') == CGK.Unstructured_s:
-                        volume = {}
-                        surface = {}
-                        typeset = [CGK.Elements_ts]
-                        elist = CGU.getAllNodesByTypeSet(zT, typeset)
-                        sp = CGA.SectionParse()
-                        mr = 1
-                        sn = 0
-                        sl = []
-                        for e in elist:
-                            sn += 1
-                            ne = CGU.getNodeByPath(zT, e)[1]
-                            et = ne[0]
-                            eb = ne[1]
-                            ea = CGU.getNodeByPath(zT, e + '/' + CGK.ElementConnectivity_s)[1]
-                            if (ea is not None) and (et in sp.QUAD_SURFACE):
-                                pth = CGU.getPathAncestor(meshpath) + e + QUAD_PATTERN
-                                sl.append(list(sp.extQuadFacesPoints(ea, et, sn, mr, eb)) + [pth])
-                            if ((ea is not None) and (et in sp.TRI_SURFACE)):
-                                pth = e + TRI_PATTERN
-                                sl.append(list(sp.extTriFacesPoints(ea, et, sn, mr, eb)) + [pth])
-                        self._zones_ns[z] = ([cx[1], cy[1], cz[1]], meshpath, et, sl)
+            zonetype = CGU.getAllNodesByTypeSet(zT, [CGK.ZoneType_ts])
+            ztype = CGU.nodeByPath(zonetype[0], zT)
+            status = True
+            if ztype[1].tostring().decode('ascii') == CGK.Structured_s:
+                status = self.parseStructuredZones(zT)
+            elif ztype[1].tostring().decode('ascii') == CGK.Unstructured_s:
+                status = self.parseUnstructuredZones(zT)
+            if not status:
+                return False
         return True
 
 
@@ -295,7 +318,7 @@ class Mesh(CGNSparser):
                          CGK.HEXA_20: (vtk.vtkHexahedron, (8, 20)),
                          CGK.HEXA_27: (vtk.vtkHexahedron, (8, 27))}
 
-        if VTK_VERSION_MAJOR <  8:
+        if VTK_VERSION_MAJOR <  9:
             raise RuntimeError("VTK version is too old, please upgrade.")
 
         self._vtkelts[CGK.PENTA_6] = (vtk.vtkPolyhedron, (6, 6))
