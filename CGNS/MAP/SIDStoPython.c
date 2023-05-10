@@ -213,9 +213,9 @@ extern void objlist_status(char *tag);
 
 /* Handle HDF5 API variability */
 #if H5_VERSION_GE(1,12,0) && !defined(H5_USE_110_API) && !defined(H5_USE_18_API) && !defined(H5_USE_16_API)
-#define ADFH_HDF5_HAVE_112_API 1
+#define SIDS_HDF5_HAVE_112_API 1
 #else
-#define ADFH_HDF5_HAVE_112_API 0
+#define SIDS_HDF5_HAVE_112_API 0
 #endif
 
 /* ------------------------------------------------------------------------- */
@@ -446,7 +446,7 @@ static L3_Cursor_t *s2p_addoneHDF(char* dirname, char *filename,
         free(fullpath);
         return NULL;
       }
-#if ADFH_HDF5_HAVE_112_API
+#if SIDS_HDF5_HAVE_112_API
       ishdf = H5Fis_accessible(fullpath, H5P_DEFAULT);
 #else
       ishdf = H5Fis_hdf5(fullpath);
