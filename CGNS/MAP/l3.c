@@ -151,6 +151,20 @@ printf("# L3 :HDF5 OBJ OPEN [%d] {%s} \n",id,tag);fflush(stdout);
 #define L3_H5_SENTINEL ((hsize_t) -1)
 
 /* ------------------------------------------------------------------------- */
+/* To handle HDF5 API changes */
+#if H5_VERSION_GE(1,10,3) && !defined(H5_USE_18_API) && !defined(H5_USE_16_API)
+#define L3_HDF5_HAVE_110_API 1
+#else
+#define L3_HDF5_HAVE_110_API 0
+#endif
+
+#if H5_VERSION_GE(1,12,0) && !defined(H5_USE_110_API) && !defined(H5_USE_18_API) && !defined(H5_USE_16_API)
+#define L3_HDF5_HAVE_112_API 1
+#else
+#define L3_HDF5_HAVE_112_API 0
+#endif
+
+/* ------------------------------------------------------------------------- */
 void objlist_status(char *tag)
 {
   int n, sname;
@@ -216,7 +230,7 @@ int findExternalLink(hid_t g_id, const char * name,
 }
 /* ------------------------------------------------------------------------- */
 
-//#if H5_VERSION_GE(1,12,0)
+//#if L3_HDF5_HAVE_112_API
 //#define has_child(ID,NAME) H5Literate2(ID, H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)NAME)
 //#define has_data(ID)       H5Literate2(ID, H5_INDEX_CRT_ORDER, H5_ITER_NATIVE, NULL, gfind_by_name, (void *)L3S_DATA)
 //#else
@@ -591,7 +605,7 @@ static herr_t delete_children(hid_t id, const char *name, const H5L_info_t* linf
   else
   {
     /* delete children loop */
-#if H5_VERSION_GE(1,12,0)
+#if L3_HDF5_HAVE_112_API
     H5Literate_by_name2(id, name, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, data, H5P_DEFAULT);
 #else
     H5Literate_by_name(id, name, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, data, H5P_DEFAULT);
@@ -667,7 +681,7 @@ hid_t *HDF_Get_Children(hid_t nodeid, int asciiorder)
 
   nchildren = 0;
   /* order not used here */
-#if H5_VERSION_GE(1,12,0)
+#if L3_HDF5_HAVE_112_API
   H5Literate2(nodeid, H5_INDEX_NAME, H5_ITER_NATIVE, NULL, count_children, (void *)&nchildren);
 #else
   H5Literate(nodeid, H5_INDEX_NAME, H5_ITER_NATIVE, NULL, count_children, (void *)&nchildren);
@@ -688,7 +702,7 @@ hid_t *HDF_Get_Children(hid_t nodeid, int asciiorder)
   }
   if (!asciiorder && ((order & H5_INDEX_CRT_ORDER) == H5_INDEX_CRT_ORDER))
   {
-#if H5_VERSION_GE(1,12,0)
+#if L3_HDF5_HAVE_112_API
     H5Literate2(nodeid, H5_INDEX_CRT_ORDER, H5_ITER_INC,
         NULL, feed_children_ids_list, (void*)idlist);
 #else
@@ -698,7 +712,7 @@ hid_t *HDF_Get_Children(hid_t nodeid, int asciiorder)
   }
   if ((nchildren > 0) && (idlist[0] == -1))
   {
-#if H5_VERSION_GE(1,12,0)
+#if L3_HDF5_HAVE_112_API
     H5Literate2(nodeid, H5_INDEX_NAME, H5_ITER_INC,
           NULL, feed_children_ids_list, (void*)idlist);
 #else
@@ -1662,7 +1676,7 @@ hid_t L3_nodeLink(L3_Cursor_t *ctxt, hid_t node,
   }
   if (L3M_HASFLAG(ctxt, L3F_LINKOVERWRITE) && has_child(node, srcname))
   {
-#if H5_VERSION_GE(1,12,0)
+#if L3_HDF5_HAVE_112_API
     H5Literate_by_name2(node, srcname, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, NULL, H5P_DEFAULT);
 #else
     H5Literate_by_name(node, srcname, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, NULL, H5P_DEFAULT);
@@ -1759,7 +1773,7 @@ L3_Cursor_t *L3_nodeDelete(L3_Cursor_t *ctxt, hid_t pid, char *nodename)
   if (has_child(pid, nodename))
   {
     /* do not change link id with actual here, stop deletion at link node */
-#if H5_VERSION_GE(1,12,0)
+#if L3_HDF5_HAVE_112_API
     H5Literate_by_name2(pid, nodename, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, NULL, H5P_DEFAULT);
 #else
     H5Literate_by_name(pid, nodename, H5_INDEX_CRT_ORDER, H5_ITER_INC, NULL, delete_children, NULL, H5P_DEFAULT);
@@ -2470,7 +2484,7 @@ L3_openFile(char *filename, int mode, long flags)
   }
   else
   {
-#if H5_VERSION_GE(1,10,3)
+#if L3_HDF5_HAVE_110_API
     H5Pset_libver_bounds(fapl, H5F_LIBVER_V18, H5F_LIBVER_V18);
 #else
     H5Pset_libver_bounds(fapl, H5F_LIBVER_LATEST, H5F_LIBVER_LATEST);
@@ -2694,7 +2708,7 @@ void L3_decRef(L3_Cursor_t *ctxt, hid_t id)
 int L3_isLocalNode(L3_Cursor_t *ctxt, hid_t id)
 {
   H5O_info_t info1, info2;
-#if H5_VERSION_GE(1,12,0)
+#if L3_HDF5_HAVE_112_API
   H5Oget_info3(ctxt->root_id, &info1, H5O_INFO_BASIC);
   H5Oget_info3(id, &info2, H5O_INFO_BASIC);
 #else
@@ -2710,7 +2724,7 @@ int L3_isLocalNode(L3_Cursor_t *ctxt, hid_t id)
 int L3_isSameNode(L3_Cursor_t *ctxt, hid_t id1, hid_t id2)
 {
   H5O_info_t info1, info2;
-#if H5_VERSION_GE(1,12,0)
+#if L3_HDF5_HAVE_112_API
   int token_cmp;
   H5Oget_info3(id1, &info1, H5O_INFO_BASIC);
   H5Oget_info3(id2, &info2, H5O_INFO_BASIC);
