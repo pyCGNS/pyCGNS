@@ -433,6 +433,7 @@ cgt[t].addChild(CGK.GeometryReference_ts)
 cgt[t].addChild(CGK.RotatingCoordinates_ts, CGK.RotatingCoordinates_s)
 cgt[t].addChild(CGK.FamilyName_ts, card=C_0N)
 cgt[t].addChild(CGK.UserDefinedData_ts)
+cgt[t].addChild(CGK.Family_ts, card=C_0N)
 
 # --------------------------------------------------------
 t = CGK.FamilyName_ts
