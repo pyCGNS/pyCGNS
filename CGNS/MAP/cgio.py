@@ -209,7 +209,7 @@ def save(filename, tree, links=[], **kwargs):
             grp.create_dataset(" data", data=data)
 
         for child in node[2]:
-            sgrp = grp.create_group(child[0])
+            sgrp = grp.create_group(child[0], track_order=True)
             _save(sgrp, child)
 
     def _add_links(h5f, links):
@@ -233,7 +233,7 @@ def save(filename, tree, links=[], **kwargs):
 
             assert dname == ""
 
-    with h5py.File(filename, "w") as h5f:
+    with h5py.File(filename, "w", libver=("v108","v108"), track_order=True) as h5f:
         h5f.create_dataset(
             " format", data=numpy.array([78, 65, 84, 73, 86, 69, 0], dtype=numpy.int8)
         )
