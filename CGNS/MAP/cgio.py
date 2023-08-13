@@ -205,8 +205,8 @@ def save(filename, tree, links=[], **kwargs):
                 data[idx2] = 0
                 data = data.astype(numpy.int8)
 
-            data = data.transpose()
-            grp.create_dataset(" data", data=data)
+            data_view = data.T
+            grp.create_dataset(" data", data=data_view)
 
         for child in node[2]:
             sgrp = grp.create_group(child[0], track_order=True)
