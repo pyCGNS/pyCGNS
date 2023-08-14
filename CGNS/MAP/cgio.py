@@ -205,8 +205,8 @@ def save(filename, tree, links=[], **kwargs):
                 data[idx2] = 0
                 data = data.astype(numpy.int8)
 
-            data = data.transpose()
-            grp.create_dataset(" data", data=data)
+            data_view = data.T
+            grp.create_dataset(" data", data=data_view)
 
         for child in node[2]:
             sgrp = grp.create_group(child[0], track_order=True)
@@ -233,7 +233,7 @@ def save(filename, tree, links=[], **kwargs):
 
             assert dname == ""
 
-    with h5py.File(filename, "w", libver=("v108","v108"), track_order=True) as h5f:
+    with h5py.File(filename, "w", libver=("v108", "v108"), track_order=True) as h5f:
         h5f.create_dataset(
             " format", data=numpy.array([78, 65, 84, 73, 86, 69, 0], dtype=numpy.int8)
         )
