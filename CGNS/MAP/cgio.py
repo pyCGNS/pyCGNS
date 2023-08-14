@@ -233,7 +233,7 @@ def save(filename, tree, links=[], **kwargs):
 
             assert dname == ""
 
-    with h5py.File(filename, "w", libver=("v108","v108"), track_order=True) as h5f:
+    with h5py.File(filename, "w", libver=("v108", "v108"), track_order=True) as h5f:
         h5f.create_dataset(
             " format", data=numpy.array([78, 65, 84, 73, 86, 69, 0], dtype=numpy.int8)
         )
