@@ -2330,7 +2330,12 @@ static int s2p_parseAndWriteHDF(hid_t        id,
         s_offset, s_stride, s_count, s_block,
         d_offset, d_stride, d_count, d_block);
 #if (CHLONE_USE_COMPACT_STORAGE == 1)
-      storage = (strcmp(altlabel, "DataArray_t") == 0) ? L3_CONTIGUOUS_STORE : L3_COMPACT_STORE;
+      if ((strcmp(altlabel, "DataArray_t") == 0) ||
+            (strcmp(altlabel, "IndexArray_t") == 0)) {
+        storage = L3_CONTIGUOUS_STORE;
+      } else {
+        storage = L3_COMPACT_STORE;
+      }
 #endif
       if (toupdate)
       {
