@@ -545,10 +545,11 @@ def find_numpy(pincs, plibs, libs):
     if sys.platform == 'win32':
         pth = guess_path_python()
         pincs += ['{}\\Library\\include'.format(pth)]
+    sysvers = "{}.{}".format(sys.version_info.major, sys.version_info.minor)
     pincs += ['%s/lib/python%s/site-packages/numpy/core/include' \
-              % (xdir, sys.version[:3])]
+              % (xdir, sysvers)]
     pincs += ['%s/lib/python%s/site-packages/numpy/core/include' \
-              % (pdir, sys.version[:3])]
+              % (pdir, sysvers)]
     pincs += [numpy.get_include()]
     notfound = 1
     pincs = unique_but_keep_order(pincs)

@@ -27,10 +27,10 @@ if False:
 if True:
     HDF5_VERSION = ""
     HDF5_PATH_INCLUDES = [
-        "",
+        "/usr/lib/x86_64-linux-gnu/hdf5/serial/include",
     ]
     HDF5_PATH_LIBRARIES = [
-        "",
+        "/usr/lib/x86_64-linux-gnu/hdf5/serial/",
     ]
     HDF5_LINK_LIBRARIES = ["hdf5"]
     HDF5_EXTRA_ARGS = ["-Wno-return-type"]

@@ -11,9 +11,9 @@
 #include "Python.h"
 #include "bytesobject.h"
 
-#include "CGNS/MAP/CHLone_config.h"
-#include "CGNS/MAP/sha256.h"
-#include "CGNS/MAP/l3.h"
+#include "CHLone_config.h"
+#include "sha256.h"
+#include "l3.h"
 
 #ifdef _WINDOWS
 #undef _DEBUG

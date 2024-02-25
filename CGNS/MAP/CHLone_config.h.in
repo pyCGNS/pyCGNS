@@ -5,11 +5,11 @@
 /*
    configuration file
 */
-#define CHLONE_ON_WINDOWS {CHLONE_ON_WINDOWS}
-#define CHLONE_H5CONF_STD {CHLONE_H5CONF_STD}
-#define CHLONE_H5CONF_64  {CHLONE_H5CONF_64}
-#define CHLONE_H5CONF_UP  {CHLONE_H5CONF_UP}
-#define CHLONE_USE_COMPACT_STORAGE  {CHLONE_USE_COMPACT_STORAGE}
+#define CHLONE_ON_WINDOWS ${CHLONE_ON_WINDOWS}
+#define CHLONE_H5CONF_STD ${CHLONE_H5CONF_STD}
+#define CHLONE_H5CONF_64  ${CHLONE_H5CONF_64}
+#define CHLONE_H5CONF_UP  ${CHLONE_H5CONF_UP}
+#define CHLONE_USE_COMPACT_STORAGE  ${CHLONE_USE_COMPACT_STORAGE}
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -48,7 +48,7 @@
 
 #ifdef H5_HAVE_THREADSAFE
 #ifdef H5_HAVE_PTHREAD
-#define CHLONE_HAS_PTHREAD {CHLONE_HAS_PTHREAD}
+#define CHLONE_HAS_PTHREAD ${CHLONE_HAS_PTHREAD}
 #else
 #define CHLONE_HAS_PTHREAD 0
 #endif
@@ -63,13 +63,13 @@
 #endif
 
 /* Flag indicating regexp is used for paths */
-#define CHLONE_HAS_REGEXP {CHLONE_HAS_REGEXP}
+#define CHLONE_HAS_REGEXP ${CHLONE_HAS_REGEXP}
 
 /* Flag indicating you have CHLone inside */
 #define CHLONE_IMPLEMENTATION 1
 
 /* Trace and debug using raw printf to stdout */
-#define CHLONE_PRINTF_TRACE {CHLONE_PRINTF_TRACE}
+#define CHLONE_PRINTF_TRACE ${CHLONE_PRINTF_TRACE}
 
 /* DEBUG ONLY */
 #ifdef CHLONE_TRACK_TIME

@@ -27,7 +27,7 @@
 
 /* $Id$ */
 
-#include "CGNS/MAP/sha256.h"
+#include "sha256.h"
 
 void hash_init_sha256(void * ctx);
 void hash_update_sha256(void * ctx, const unsigned char *buf, size_t len);

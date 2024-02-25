@@ -1,0 +1,8 @@
+option('has-pthread', type: 'boolean', value: true,
+       description: '')
+option('has-regexp',  type: 'boolean', value: true,
+       description: '')
+option('printf-trace', type: 'boolean', value: true,
+       description: '')
+option('use-compact-storage', type: 'boolean', value: true,
+       description: '')

@@ -19,7 +19,8 @@
     which means you should always have a & flags.ALL in your operation
 """
 #
-from CGNS.pyCGNSconfig import HAS_H5PY
+from CGNS import backend_h5py as HAS_H5PY
+
 
 if HAS_H5PY:
     from .cgio import load, save, probe, flags

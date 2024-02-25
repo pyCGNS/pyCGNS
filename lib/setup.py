@@ -131,7 +131,7 @@ pr.add_argument(
     help="use full h5py CGNS/HDF5 interface (ongoing work)",
 )
 
-modules = {"app": True, "map": True, "pat": True, "val": True, "nav": True}
+modules = {"app": False, "map": True, "pat": True, "val": False, "nav": False}
 
 for name, val in modules.items():
     pr.add_argument(
@@ -343,7 +343,7 @@ if MAP:
         conf = {
             "CHLONE_HAS_PTHREAD": 1,
             "CHLONE_HAS_REGEXP": 1,
-            "CHLONE_PRINTF_TRACE": 0,
+            "CHLONE_PRINTF_TRACE": 1,
             "CHLONE_ON_WINDOWS": HAS_MSW,
             "CHLONE_H5CONF_STD": CONFIG.HDF5_HST,
             "CHLONE_H5CONF_64": CONFIG.HDF5_H64,
@@ -579,6 +579,7 @@ Programming Language :: Python :: 3
 Programming Language :: Python :: 3.8
 Programming Language :: Python :: 3.9
 Programming Language :: Python :: 3.10
+Programming Language :: Python :: 3.12
 Programming Language :: Python :: Implementation :: CPython
 Topic :: Scientific/Engineering
 Topic :: Database
