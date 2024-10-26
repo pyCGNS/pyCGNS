@@ -6,3 +6,8 @@ option('printf-trace', type: 'boolean', value: true,
        description: '')
 option('use-compact-storage', type: 'boolean', value: true,
        description: '')
+# For NAV
+option('nav-gui', type: 'boolean', value: false,
+       description: 'enable CGNS.NAV')
+option('has-vtk', type: 'boolean', value: true,
+       description: '')

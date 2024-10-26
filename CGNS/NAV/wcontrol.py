@@ -15,7 +15,7 @@ from qtpy.QtWidgets import (
 
 from ..NAV.moption import Q7OptionContext as OCTXT
 
-from .. import config
+from . import config
 
 from ..PAT import cgnslib as CGL
 

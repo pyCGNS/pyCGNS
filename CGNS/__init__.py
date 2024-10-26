@@ -27,8 +27,8 @@ backend_h5py = False
 try:
     from CGNS.__config__ import show as show_config
 except ImportError as e:
-    msg = """Error importing SciPy: you cannot import SciPy while
-    being in scipy source directory; please exit the SciPy source
+    msg = """Error importing CGNS: you cannot import CGNS while
+    being in CGNS source directory; please exit the CGNS source
     tree first and relaunch your Python interpreter."""
     raise ImportError(msg) from e
 

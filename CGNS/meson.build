@@ -107,4 +107,6 @@ subdir('MAP')
 subdir('PAT')
 subdir('VAL')
 subdir('APP')
-#subdir('NAV')
+if get_option('nav-gui')
+  subdir('NAV')
+endif

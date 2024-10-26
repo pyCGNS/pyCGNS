@@ -51,7 +51,7 @@ tracker = "https://github.com/pyCGNS/pyCGNS/issues"
 
 
 [project.optional-dependencies]
-nav_gui = ['qtpy', 'vtk']
+nav_gui = ['qtpy', 'pyqt5', 'vtk']
 
 [project.scripts]
 "CGNS.VAL" = "CGNS.VAL.CGNS_VAL:main"

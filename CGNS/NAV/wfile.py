@@ -12,7 +12,7 @@ import string
 import time
 import sys
 
-from CGNS.pyCGNSconfig import HAS_MSW
+from CGNS.NAV.config import HAS_MSW
 
 from qtpy.QtCore import Qt, QSortFilterProxyModel, QModelIndex, QFileInfo
 from qtpy.QtWidgets import (

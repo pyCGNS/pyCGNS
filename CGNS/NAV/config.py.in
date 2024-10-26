@@ -1,0 +1,33 @@
+# ======================================================================
+# CHLone - CGNS NAV LIBRARY 
+# See license.txt in the root directory of this source release
+# ======================================================================
+#
+# ----------------------------------------------------------------------
+# Configuration template file for NAV
+# THIS FILE IS PRE-PROCESSED
+# ----------------------------------------------------------------------
+#
+
+from CGNS import __version__
+
+HAS_MSW = @HAS_MSW@
+
+HAS_VTK = @HAS_VTK@
+
+version = __version__
+
+VTK_VERSION = "9.4"
+
+CYTHON_VERSION = "3.0"
+
+HDF5_VERSION = "1.8.10" 
+
+NUMPY_VERSION = "1.3.0"
+
+PYQT_VERSION = "5.9.3"
+
+QT_VERSION = "5.9"
+
+
+# --- last line 

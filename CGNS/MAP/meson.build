@@ -244,4 +244,4 @@ py.install_sources(
   subdir: 'CGNS/MAP'
 )
 
-install_subdir('test', install_dir: cgns_dir / 'VAL', install_tag: 'python-runtime')
+install_subdir('test', install_dir: cgns_dir / 'MAP', install_tag: 'python-runtime')
