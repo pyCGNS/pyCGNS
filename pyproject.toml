@@ -4,6 +4,7 @@ requires = [
     "meson-python>=0.15.0",
     "Cython>=3.0.6", #keep in sync with meson.build
     "oldest-supported-numpy",
+    "pyside6",
 ]
 
 [project]
@@ -51,7 +52,8 @@ tracker = "https://github.com/pyCGNS/pyCGNS/issues"
 
 
 [project.optional-dependencies]
-nav_gui = ['qtpy', 'pyqt5', 'vtk']
+gui = ['qtpy', 'pyside6', 'vtk']
+test = ['unittest']
 
 [project.scripts]
 "CGNS.VAL" = "CGNS.VAL.CGNS_VAL:main"
@@ -65,7 +67,9 @@ nav_gui = ['qtpy', 'pyqt5', 'vtk']
 "cg_list"  = "CGNS.APP.tools.cg_list:main"
 "cg_scan"  = "CGNS.APP.tools.cg_scan:main"
 "cg_scatter"  = "CGNS.APP.tools.cg_scatter:main"
-"cg_look"  = "CGNS.APP.tools.cg_look:main"
+
+[project.gui-scripts]
+"cg_look"  = "CGNS.NAV.tools.cg_look:main"
 
 
 [tool.setuptools]
@@ -73,4 +77,8 @@ nav_gui = ['qtpy', 'pyqt5', 'vtk']
 include-package-data = false
 packages = [
     "CGNS.MAP",
+    "CGNS.PAT",
+    "CGNS.VAL",
+    "CGNS.APP",
+    "CGNS.NAV",
 ]

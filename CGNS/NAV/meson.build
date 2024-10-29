@@ -132,26 +132,10 @@ foreach mfile: mfile_list
   )
 endforeach
 
-pyuic_list = ['pyuic', 'pyuic5']
-pyrcc_list = ['pyrcc', 'pyrcc5']
+pyuic_list = ['pyuic', 'pyside6-uic', 'pyuic5']
+pyrcc_list = ['pyrcc', 'pyside6-rcc', 'pyrcc5']
 pyuic = find_program(pyuic_list, dirs:[fs.parent(py.full_path())], required:true)
 pyrcc = find_program(pyrcc_list, dirs:[fs.parent(py.full_path())], required:true)
-
-foreach mfile: modnamelist
-  # Handle UI generation
-  ui_src = custom_target(mfile+'.pyx',
-    input: 'T/'+mfile+'.ui',
-    output: mfile+'.pyx',
-    command: [pyuic, '--from-imports', '-o', '@OUTPUT@', '@INPUT@']
-    )
-  py.extension_module(mfile,
-    [ui_src],
-    include_directories: [inc_np],
-    dependencies: [np_dep, py_dep],
-    install: true,
-    subdir: 'CGNS/NAV',
-  )
-endforeach
 
 # Handle Resources
 res_py = custom_target('Res',
@@ -161,6 +145,24 @@ res_py = custom_target('Res',
     install: true,
     install_dir: py.get_install_dir(subdir:'CGNS/NAV')
 )
+
+
+foreach mfile: modnamelist
+  # Handle UI generation
+  ui_src = custom_target(mfile+'.pyx',
+    input: 'T/'+mfile+'.ui',
+    output: mfile+'.pyx',
+    #command: [pyuic, '--from-imports', '-o', '@OUTPUT@', '@INPUT@']
+    command: [pyuic, '-o', '@OUTPUT@', '@INPUT@']
+    )
+  py.extension_module(mfile,
+    [ui_src],
+    include_directories: [inc_np],
+    dependencies: [np_dep, py_dep],
+    install: true,
+    subdir: 'CGNS/NAV',
+  )
+endforeach
 
 python_sources = [
   '__init__.py',
@@ -196,4 +198,8 @@ py.install_sources(
   python_sources,
   subdir: 'CGNS/NAV'
 )
+
+
+install_subdir('test', install_dir: cgns_dir / 'NAV', install_tag: 'python-runtime')
+install_subdir('tools', install_dir: cgns_dir / 'NAV', install_tag: 'python-runtime')
 
