@@ -1,185 +1,267 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'CGNS/NAV/T/Q7DiffWindow.ui'
-#
-# Created by: PyQt5 UI code generator 5.12.3
-#
-# WARNING! All changes made in this file will be lost!
+################################################################################
+## Form generated from reading UI file 'Q7DiffWindow.ui'
+##
+## Created by: Qt User Interface Compiler version 6.8.0
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
 
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QHBoxLayout, QHeaderView,
+    QPushButton, QScrollBar, QSizePolicy, QSpacerItem,
+    QToolButton, QVBoxLayout, QWidget)
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-
+from CGNS.NAV.mdifftreeview import Q7DiffTreeView
+from . import Res_rc
 
 class Ui_Q7DiffWindow(object):
     def setupUi(self, Q7DiffWindow):
-        Q7DiffWindow.setObjectName("Q7DiffWindow")
+        if not Q7DiffWindow.objectName():
+            Q7DiffWindow.setObjectName(u"Q7DiffWindow")
         Q7DiffWindow.resize(1124, 300)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/icons/cgSpy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon = QIcon()
+        icon.addFile(u":/images/icons/cgSpy.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Q7DiffWindow.setWindowIcon(icon)
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(Q7DiffWindow)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.bLockScroll = QtWidgets.QPushButton(Q7DiffWindow)
-        self.bLockScroll.setMinimumSize(QtCore.QSize(25, 25))
-        self.bLockScroll.setMaximumSize(QtCore.QSize(25, 25))
-        self.bLockScroll.setText("")
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/icons/lock-scroll.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.verticalLayout_2 = QVBoxLayout(Q7DiffWindow)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.bLockScroll = QPushButton(Q7DiffWindow)
+        self.bLockScroll.setObjectName(u"bLockScroll")
+        self.bLockScroll.setMinimumSize(QSize(25, 25))
+        self.bLockScroll.setMaximumSize(QSize(25, 25))
+        icon1 = QIcon()
+        icon1.addFile(u":/images/icons/lock-scroll.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.bLockScroll.setIcon(icon1)
         self.bLockScroll.setCheckable(True)
         self.bLockScroll.setChecked(True)
-        self.bLockScroll.setObjectName("bLockScroll")
+
         self.horizontalLayout.addWidget(self.bLockScroll)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
-        self.bZoomOut = QtWidgets.QToolButton(Q7DiffWindow)
-        self.bZoomOut.setMinimumSize(QtCore.QSize(25, 25))
-        self.bZoomOut.setMaximumSize(QtCore.QSize(25, 25))
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/images/icons/level-out.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer)
+
+        self.bZoomOut = QToolButton(Q7DiffWindow)
+        self.bZoomOut.setObjectName(u"bZoomOut")
+        self.bZoomOut.setMinimumSize(QSize(25, 25))
+        self.bZoomOut.setMaximumSize(QSize(25, 25))
+        icon2 = QIcon()
+        icon2.addFile(u":/images/icons/level-out.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.bZoomOut.setIcon(icon2)
-        self.bZoomOut.setObjectName("bZoomOut")
+
         self.horizontalLayout.addWidget(self.bZoomOut)
-        self.bZoomAll = QtWidgets.QPushButton(Q7DiffWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+
+        self.bZoomAll = QPushButton(Q7DiffWindow)
+        self.bZoomAll.setObjectName(u"bZoomAll")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.bZoomAll.sizePolicy().hasHeightForWidth())
         self.bZoomAll.setSizePolicy(sizePolicy)
-        self.bZoomAll.setMinimumSize(QtCore.QSize(25, 25))
-        self.bZoomAll.setMaximumSize(QtCore.QSize(25, 25))
-        self.bZoomAll.setText("")
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/images/icons/level-all.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bZoomAll.setMinimumSize(QSize(25, 25))
+        self.bZoomAll.setMaximumSize(QSize(25, 25))
+        icon3 = QIcon()
+        icon3.addFile(u":/images/icons/level-all.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.bZoomAll.setIcon(icon3)
-        self.bZoomAll.setObjectName("bZoomAll")
+
         self.horizontalLayout.addWidget(self.bZoomAll)
-        self.bZoomIn = QtWidgets.QToolButton(Q7DiffWindow)
-        self.bZoomIn.setMinimumSize(QtCore.QSize(25, 25))
-        self.bZoomIn.setMaximumSize(QtCore.QSize(25, 25))
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/images/icons/level-in.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.bZoomIn = QToolButton(Q7DiffWindow)
+        self.bZoomIn.setObjectName(u"bZoomIn")
+        self.bZoomIn.setMinimumSize(QSize(25, 25))
+        self.bZoomIn.setMaximumSize(QSize(25, 25))
+        icon4 = QIcon()
+        icon4.addFile(u":/images/icons/level-in.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.bZoomIn.setIcon(icon4)
-        self.bZoomIn.setObjectName("bZoomIn")
+
         self.horizontalLayout.addWidget(self.bZoomIn)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem1)
-        self.bSaveDiff = QtWidgets.QToolButton(Q7DiffWindow)
-        self.bSaveDiff.setMinimumSize(QtCore.QSize(25, 25))
-        self.bSaveDiff.setMaximumSize(QtCore.QSize(25, 25))
-        icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/images/icons/select-save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_11)
+
+        self.bSaveDiff = QToolButton(Q7DiffWindow)
+        self.bSaveDiff.setObjectName(u"bSaveDiff")
+        self.bSaveDiff.setMinimumSize(QSize(25, 25))
+        self.bSaveDiff.setMaximumSize(QSize(25, 25))
+        icon5 = QIcon()
+        icon5.addFile(u":/images/icons/select-save.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.bSaveDiff.setIcon(icon5)
-        self.bSaveDiff.setObjectName("bSaveDiff")
+
         self.horizontalLayout.addWidget(self.bSaveDiff)
+
+
         self.verticalLayout_2.addLayout(self.horizontalLayout)
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.treeviewA = Q7DiffTreeView(Q7DiffWindow)
-        self.treeviewA.viewport().setProperty("cursor", QtGui.QCursor(QtCore.Qt.CrossCursor))
-        self.treeviewA.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.treeviewA.setObjectName(u"treeviewA")
+        self.treeviewA.viewport().setProperty(u"cursor", QCursor(Qt.CursorShape.CrossCursor))
+        self.treeviewA.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.treeviewA.setAutoScroll(False)
-        self.treeviewA.setProperty("showDropIndicator", False)
-        self.treeviewA.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerItem)
+        self.treeviewA.setProperty(u"showDropIndicator", False)
+        self.treeviewA.setHorizontalScrollMode(QAbstractItemView.ScrollPerItem)
         self.treeviewA.setIndentation(16)
         self.treeviewA.setRootIsDecorated(True)
         self.treeviewA.setUniformRowHeights(True)
         self.treeviewA.setExpandsOnDoubleClick(False)
-        self.treeviewA.setObjectName("treeviewA")
+
         self.horizontalLayout_2.addWidget(self.treeviewA)
-        self.verticalScrollBarA = QtWidgets.QScrollBar(Q7DiffWindow)
-        self.verticalScrollBarA.setOrientation(QtCore.Qt.Vertical)
-        self.verticalScrollBarA.setObjectName("verticalScrollBarA")
+
+        self.verticalScrollBarA = QScrollBar(Q7DiffWindow)
+        self.verticalScrollBarA.setObjectName(u"verticalScrollBarA")
+        self.verticalScrollBarA.setOrientation(Qt.Vertical)
+
         self.horizontalLayout_2.addWidget(self.verticalScrollBarA)
-        self.verticalScrollBarB = QtWidgets.QScrollBar(Q7DiffWindow)
-        self.verticalScrollBarB.setOrientation(QtCore.Qt.Vertical)
-        self.verticalScrollBarB.setObjectName("verticalScrollBarB")
+
+        self.verticalScrollBarB = QScrollBar(Q7DiffWindow)
+        self.verticalScrollBarB.setObjectName(u"verticalScrollBarB")
+        self.verticalScrollBarB.setOrientation(Qt.Vertical)
+
         self.horizontalLayout_2.addWidget(self.verticalScrollBarB)
+
         self.treeviewB = Q7DiffTreeView(Q7DiffWindow)
-        self.treeviewB.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.treeviewB.setObjectName("treeviewB")
+        self.treeviewB.setObjectName(u"treeviewB")
+        self.treeviewB.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
         self.horizontalLayout_2.addWidget(self.treeviewB)
+
+
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.bBackControl = QtWidgets.QPushButton(Q7DiffWindow)
-        self.bBackControl.setMinimumSize(QtCore.QSize(25, 25))
-        self.bBackControl.setMaximumSize(QtCore.QSize(25, 25))
-        self.bBackControl.setText("")
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/images/icons/top.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.bBackControl = QPushButton(Q7DiffWindow)
+        self.bBackControl.setObjectName(u"bBackControl")
+        self.bBackControl.setMinimumSize(QSize(25, 25))
+        self.bBackControl.setMaximumSize(QSize(25, 25))
+        icon6 = QIcon()
+        icon6.addFile(u":/images/icons/top.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.bBackControl.setIcon(icon6)
-        self.bBackControl.setObjectName("bBackControl")
+
         self.horizontalLayout_3.addWidget(self.bBackControl)
-        self.bInfo = QtWidgets.QPushButton(Q7DiffWindow)
-        self.bInfo.setMinimumSize(QtCore.QSize(25, 25))
-        self.bInfo.setMaximumSize(QtCore.QSize(25, 25))
-        self.bInfo.setText("")
-        icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/images/icons/help-view.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.bInfo = QPushButton(Q7DiffWindow)
+        self.bInfo.setObjectName(u"bInfo")
+        self.bInfo.setMinimumSize(QSize(25, 25))
+        self.bInfo.setMaximumSize(QSize(25, 25))
+        icon7 = QIcon()
+        icon7.addFile(u":/images/icons/help-view.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.bInfo.setIcon(icon7)
-        self.bInfo.setObjectName("bInfo")
+
         self.horizontalLayout_3.addWidget(self.bInfo)
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem2)
-        self.bPreviousMark = QtWidgets.QToolButton(Q7DiffWindow)
+
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_3.addItem(self.horizontalSpacer_6)
+
+        self.bPreviousMark = QToolButton(Q7DiffWindow)
+        self.bPreviousMark.setObjectName(u"bPreviousMark")
         self.bPreviousMark.setEnabled(True)
-        self.bPreviousMark.setMinimumSize(QtCore.QSize(25, 25))
-        self.bPreviousMark.setMaximumSize(QtCore.QSize(25, 25))
-        icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-opened.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bPreviousMark.setMinimumSize(QSize(25, 25))
+        self.bPreviousMark.setMaximumSize(QSize(25, 25))
+        icon8 = QIcon()
+        icon8.addFile(u":/images/icons/node-sids-opened.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.bPreviousMark.setIcon(icon8)
-        self.bPreviousMark.setObjectName("bPreviousMark")
+
         self.horizontalLayout_3.addWidget(self.bPreviousMark)
-        self.bUnmarkAll_1 = QtWidgets.QToolButton(Q7DiffWindow)
-        self.bUnmarkAll_1.setMinimumSize(QtCore.QSize(25, 25))
-        self.bUnmarkAll_1.setMaximumSize(QtCore.QSize(25, 25))
-        icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-leaf.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.bUnmarkAll_1 = QToolButton(Q7DiffWindow)
+        self.bUnmarkAll_1.setObjectName(u"bUnmarkAll_1")
+        self.bUnmarkAll_1.setMinimumSize(QSize(25, 25))
+        self.bUnmarkAll_1.setMaximumSize(QSize(25, 25))
+        icon9 = QIcon()
+        icon9.addFile(u":/images/icons/node-sids-leaf.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.bUnmarkAll_1.setIcon(icon9)
-        self.bUnmarkAll_1.setObjectName("bUnmarkAll_1")
+
         self.horizontalLayout_3.addWidget(self.bUnmarkAll_1)
-        self.bNextMark = QtWidgets.QToolButton(Q7DiffWindow)
-        self.bNextMark.setMinimumSize(QtCore.QSize(25, 25))
-        self.bNextMark.setMaximumSize(QtCore.QSize(25, 25))
-        icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(":/images/icons/node-sids-closed.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.bNextMark = QToolButton(Q7DiffWindow)
+        self.bNextMark.setObjectName(u"bNextMark")
+        self.bNextMark.setMinimumSize(QSize(25, 25))
+        self.bNextMark.setMaximumSize(QSize(25, 25))
+        icon10 = QIcon()
+        icon10.addFile(u":/images/icons/node-sids-closed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.bNextMark.setIcon(icon10)
-        self.bNextMark.setObjectName("bNextMark")
+
         self.horizontalLayout_3.addWidget(self.bNextMark)
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem3)
-        self.bClose = QtWidgets.QPushButton(Q7DiffWindow)
-        self.bClose.setObjectName("bClose")
+
+        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_3.addItem(self.horizontalSpacer_8)
+
+        self.bClose = QPushButton(Q7DiffWindow)
+        self.bClose.setObjectName(u"bClose")
+
         self.horizontalLayout_3.addWidget(self.bClose)
+
+
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
 
+
         self.retranslateUi(Q7DiffWindow)
-        QtCore.QMetaObject.connectSlotsByName(Q7DiffWindow)
+
+        QMetaObject.connectSlotsByName(Q7DiffWindow)
+    # setupUi
 
     def retranslateUi(self, Q7DiffWindow):
-        _translate = QtCore.QCoreApplication.translate
-        Q7DiffWindow.setWindowTitle(_translate("Q7DiffWindow", "Form"))
-        self.bLockScroll.setToolTip(_translate("Q7DiffWindow", "Lock scrollbars together"))
-        self.bZoomOut.setToolTip(_translate("Q7DiffWindow", "Collapse lowest tree level"))
-        self.bZoomOut.setText(_translate("Q7DiffWindow", "..."))
-        self.bZoomAll.setToolTip(_translate("Q7DiffWindow", "Expand all tree"))
-        self.bZoomIn.setToolTip(_translate("Q7DiffWindow", "Expand lowest tree level"))
-        self.bZoomIn.setText(_translate("Q7DiffWindow", "..."))
-        self.bSaveDiff.setToolTip(_translate("Q7DiffWindow", "Save tree view snapshot"))
-        self.bSaveDiff.setText(_translate("Q7DiffWindow", "..."))
-        self.verticalScrollBarA.setToolTip(_translate("Q7DiffWindow", "DiffA file"))
-        self.verticalScrollBarB.setToolTip(_translate("Q7DiffWindow", "DiffB file"))
-        self.bBackControl.setToolTip(_translate("Q7DiffWindow", "Raise Control window"))
-        self.bInfo.setToolTip(_translate("Q7DiffWindow", "Contextual help"))
-        self.bPreviousMark.setToolTip(_translate("Q7DiffWindow", "Select previous marked node"))
-        self.bPreviousMark.setText(_translate("Q7DiffWindow", "..."))
-        self.bUnmarkAll_1.setToolTip(_translate("Q7DiffWindow", "Unmark all nodes"))
-        self.bUnmarkAll_1.setText(_translate("Q7DiffWindow", "..."))
-        self.bNextMark.setToolTip(_translate("Q7DiffWindow", "Select next marked node"))
-        self.bNextMark.setText(_translate("Q7DiffWindow", "..."))
-        self.bClose.setText(_translate("Q7DiffWindow", "Close"))
-from CGNS.NAV.mdifftreeview import Q7DiffTreeView
-from . import Res_rc
+        Q7DiffWindow.setWindowTitle(QCoreApplication.translate("Q7DiffWindow", u"Form", None))
+#if QT_CONFIG(tooltip)
+        self.bLockScroll.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"Lock scrollbars together", None))
+#endif // QT_CONFIG(tooltip)
+        self.bLockScroll.setText("")
+#if QT_CONFIG(tooltip)
+        self.bZoomOut.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"Collapse lowest tree level", None))
+#endif // QT_CONFIG(tooltip)
+        self.bZoomOut.setText(QCoreApplication.translate("Q7DiffWindow", u"...", None))
+#if QT_CONFIG(tooltip)
+        self.bZoomAll.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"Expand all tree", None))
+#endif // QT_CONFIG(tooltip)
+        self.bZoomAll.setText("")
+#if QT_CONFIG(tooltip)
+        self.bZoomIn.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"Expand lowest tree level", None))
+#endif // QT_CONFIG(tooltip)
+        self.bZoomIn.setText(QCoreApplication.translate("Q7DiffWindow", u"...", None))
+#if QT_CONFIG(tooltip)
+        self.bSaveDiff.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"Save tree view snapshot", None))
+#endif // QT_CONFIG(tooltip)
+        self.bSaveDiff.setText(QCoreApplication.translate("Q7DiffWindow", u"...", None))
+#if QT_CONFIG(tooltip)
+        self.verticalScrollBarA.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"DiffA file", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.verticalScrollBarB.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"DiffB file", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.bBackControl.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"Raise Control window", None))
+#endif // QT_CONFIG(tooltip)
+        self.bBackControl.setText("")
+#if QT_CONFIG(tooltip)
+        self.bInfo.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"Contextual help", None))
+#endif // QT_CONFIG(tooltip)
+        self.bInfo.setText("")
+#if QT_CONFIG(tooltip)
+        self.bPreviousMark.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"Select previous marked node", None))
+#endif // QT_CONFIG(tooltip)
+        self.bPreviousMark.setText(QCoreApplication.translate("Q7DiffWindow", u"...", None))
+#if QT_CONFIG(tooltip)
+        self.bUnmarkAll_1.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"Unmark all nodes", None))
+#endif // QT_CONFIG(tooltip)
+        self.bUnmarkAll_1.setText(QCoreApplication.translate("Q7DiffWindow", u"...", None))
+#if QT_CONFIG(tooltip)
+        self.bNextMark.setToolTip(QCoreApplication.translate("Q7DiffWindow", u"Select next marked node", None))
+#endif // QT_CONFIG(tooltip)
+        self.bNextMark.setText(QCoreApplication.translate("Q7DiffWindow", u"...", None))
+        self.bClose.setText(QCoreApplication.translate("Q7DiffWindow", u"Close", None))
+    # retranslateUi
+

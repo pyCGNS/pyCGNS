@@ -152,8 +152,7 @@ foreach mfile: modnamelist
   ui_src = custom_target(mfile+'.pyx',
     input: 'T/'+mfile+'.ui',
     output: mfile+'.pyx',
-    #command: [pyuic, '--from-imports', '-o', '@OUTPUT@', '@INPUT@']
-    command: [pyuic, '-o', '@OUTPUT@', '@INPUT@']
+    command: [pyuic, '--from-imports', '-o', '@OUTPUT@', '@INPUT@']
     )
   py.extension_module(mfile,
     [ui_src],
