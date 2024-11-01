@@ -81,7 +81,8 @@ config_py = configure_file(
    output: '@BASENAME@',
    configuration: conf_nav,
    install: true,
-   install_dir: py.get_install_dir(subdir:'CGNS/NAV'))
+   install_dir: py.get_install_dir(subdir:'CGNS/NAV'),
+   install_tag: 'python-runtime')
 
 # Qt windows
 modnamelist = ['Q7TreeWindow',
@@ -144,7 +145,8 @@ res_py = custom_target('Res',
     output: 'Res_rc.py',
     command: [pyrcc, '-o', '@OUTPUT@', '@INPUT@'],
     install: true,
-    install_dir: py.get_install_dir(subdir:'CGNS/NAV')
+    install_dir: py.get_install_dir(subdir:'CGNS/NAV'),
+    install_tag: 'python-runtime'
 )
 
 
