@@ -22,7 +22,7 @@ import sys
 
 doc1 = """
   List tool on CGNS/HDF5 files
-  (part of pyCGNS distribution http://pycgns.sourceforge.net)
+  (part of pyCGNS distribution http://pycgns.github.io)
   pyCGNS v%s
   
   The result of the list is one line per found file/node.

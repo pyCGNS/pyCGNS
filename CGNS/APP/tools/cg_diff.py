@@ -17,7 +17,7 @@ import re
 
 doc1 = """
   CGNS/HDF5 diff tool
-  (part of pyCGNS distribution http://pycgns.sourceforge.net)
+  (part of pyCGNS distribution http://pycgns.github.io)
   pyCGNS v%s
   
   The result of the diff is a textual diagnostic. Comparing trees A and B,

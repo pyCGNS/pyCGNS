@@ -71,7 +71,7 @@ def main():
 
     doc1 = """
       Visual browsing of CGNS/HDF5 files 
-      (part of pyCGNS distribution http://pycgns.sourceforge.net)
+      (part of pyCGNS distribution http://pycgns.github.io)
       pyCGNS v%s
     """ % (
         CGNS.version.__version__

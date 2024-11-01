@@ -19,7 +19,7 @@ import os
 
 doc1 = """
   Scatter tool on CGNS/HDF5 files
-  (part of pyCGNS distribution http://pycgns.sourceforge.net)
+  (part of pyCGNS distribution http://pycgns.github.io)
   pyCGNS v%s
   
   Splits the file into several files linked together

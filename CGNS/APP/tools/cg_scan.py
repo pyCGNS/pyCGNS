@@ -13,7 +13,7 @@ import os.path
 
 doc1 = """
   CGNS/SIDS conformance checking tool on CGNS/HDF5 files
-  (part of pyCGNS distribution http://pycgns.sourceforge.net)
+  (part of pyCGNS distribution http://pycgns.github.io)
   pyCGNS v%s
   
   The result of the check is a textual diagnostic

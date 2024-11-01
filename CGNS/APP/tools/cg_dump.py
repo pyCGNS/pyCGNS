@@ -22,7 +22,7 @@ import sys
 
 doc1 = """
   Dump tool on CGNS/HDF5 files
-  (part of pyCGNS distribution http://pycgns.sourceforge.net)
+  (part of pyCGNS distribution http://pycgns.github.io)
   pyCGNS v%s
   
   Shows the file contents.

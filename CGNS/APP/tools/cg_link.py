@@ -15,7 +15,7 @@ import CGNS.version
 
 doc1 = """
   Browsing and editing links on CGNS/HDF5 files
-  (part of pyCGNS distribution http://pycgns.sourceforge.net)
+  (part of pyCGNS distribution http://pycgns.github.io)
   pyCGNS v%s
 
   Warning: translation of ADF files is made *in place*, in other word if a link
