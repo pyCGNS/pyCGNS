@@ -106,7 +106,11 @@ configure_file(
 subdir('MAP')
 subdir('PAT')
 subdir('VAL')
-subdir('APP')
-#if get_option('nav-gui')
-subdir('NAV')
-#endif
+
+# Activate app when nav requested (dependency requirement)
+if get_option('app') or get_option('nav')
+    subdir('APP')
+endif
+if get_option('nav')
+    subdir('NAV')
+endif

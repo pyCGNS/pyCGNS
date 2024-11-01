@@ -6,8 +6,10 @@ option('printf-trace', type: 'boolean', value: true,
        description: '')
 option('use-compact-storage', type: 'boolean', value: true,
        description: '')
-# For NAV
-option('nav-gui', type: 'boolean', value: false,
+# For NAV and APP optional packaging
+option('app', type: 'boolean', value: false,
        description: 'enable CGNS.NAV')
-option('has-vtk', type: 'boolean', value: true,
+option('nav', type: 'boolean', value: false,
+       description: 'enable CGNS.NAV')
+option('use-vtk', type: 'boolean', value: true,
        description: '')

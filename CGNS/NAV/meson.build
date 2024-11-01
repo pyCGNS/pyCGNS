@@ -70,11 +70,12 @@ if is_windows
 else
     conf_nav.set('HAS_MSW', 0)
 endif
-if get_option('has-vtk')
-    conf_nav.set('HAS_VTK', 1)
+if get_option('use-vtk')
+    conf_nav.set('USE_VTK', 1)
 else
-    conf_nav.set('HAS_VTK', 0)
+    conf_nav.set('USE_VTK', 0)
 endif
+
 config_py = configure_file(
    input:'config.py.in',
    output: '@BASENAME@',
@@ -83,7 +84,7 @@ config_py = configure_file(
    install_dir: py.get_install_dir(subdir:'CGNS/NAV'))
 
 # Qt windows
-modnamelist = [ 'Q7TreeWindow',
+modnamelist = ['Q7TreeWindow',
         'Q7DiffWindow',
         'Q7MergeWindow',
         'Q7ControlWindow',
@@ -100,9 +101,9 @@ modnamelist = [ 'Q7TreeWindow',
         'Q7PatternWindow',
         'Q7AnimationWindow',
         'Q7MessageWindow',
-        'Q7LogWindow' ]
+        'Q7LogWindow']
 
-if get_option('has-vtk')
+if get_option('use-vtk')
    modnamelist += ['Q7VTKWindow']
 endif
 
@@ -118,7 +119,7 @@ mfile_list = [
         'mmergetreeview',
 ]
 
-if get_option('has-vtk')
+if get_option('use-vtk')
   mfile_list += ['mparser']
 endif
 

@@ -1,2 +1,2 @@
-option('has-vtk', type: 'boolean', value: true,
+option('use-vtk', type: 'boolean', value: true,
        description: '')
