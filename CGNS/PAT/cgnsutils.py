@@ -1995,7 +1995,7 @@ def nodeByPath(path: str, tree: TreeNode) -> Optional[TreeNode]:
 
 
 # --------------------------------------------------
-def removeChildByName(parent: TreeNode, name: str) -> NoReturn:
+def removeChildByName(parent: TreeNode, name: str) -> None:
     """Remove the child from the parent node.
 
     :arg CGNS/Python node parent: node where to find the child name
@@ -3422,7 +3422,7 @@ def diff(
     # dta = CGNS.PAT.cgnsutils.getValueDataType(ta)
     # dtb = CGNS.PAT.cgnsutils.getValueDataType(tb)
     #
-    if dta is not CGNS.PAT.cgnskeywords.MT:
+    if dta is not CK.MT:
         dnum = compareValues(ta, tb)
         if dnum:
             diag[path].append(("C%d" % dnum,))

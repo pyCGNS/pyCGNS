@@ -4,10 +4,10 @@
 name: Upload Python Package
 
 on:
-  workflow_dispatch:
-  push:
-    branches: 
-      - master
+#  workflow_dispatch:
+#  push:
+#    branches: 
+#      - master
   release:
     types: [created]
 
@@ -42,5 +42,4 @@ jobs:
         bash .github/workflows/build-wheels.sh
         /opt/python/cp310-cp310/bin/python -m build --wheel --outdir buildwheel/
         /opt/python/cp310-cp310/bin/python -m build --sdist --outdir wheelhouse/
-        ls wheelhouse/
-        #        /opt/python/cp310-cp310/bin/python -m twine upload wheelhouse/*
+        /opt/python/cp310-cp310/bin/python -m twine upload wheelhouse/*
