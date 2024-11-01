@@ -39,7 +39,7 @@
                  path   : string (group dataset)
                  link   : actual HDF5 link object
 */
-#include "CGNS/MAP/l3P.h"
+#include "l3P.h"
 
 /* ------------------------------------------------------------------------- */
 static char *L3T_MT_s = L3T_MT;

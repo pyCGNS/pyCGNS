@@ -50,7 +50,7 @@ if test "x$WEBSITEUPDATE" != "x"
 then
 #  (cd build/doc/html;  scp -r . pycgns@pycgnsdoc2:/home/pycgns/public_html)
 cd build/doc
-sftp poinot,pycgns@web.sourceforge.net <<EOC   
+sftp poinot,pycgns@github.com <<EOC   
 cd htdocs
 put pyCGNS-html.tar
 exit
@@ -58,10 +58,10 @@ EOC
 
 if test "x$WEBSITEUPDATESTARTSSH" != "x"
 then
- ssh poinot,pycgns@shell.sourceforge.net create
+ ssh poinot,pycgns@github.com create
 fi
 
-ssh poinot,pycgns@shell.sourceforge.net <<EOC
+ssh poinot,pycgns@github.com <<EOC
 cd /home/project-web/pycgns/htdocs
 tar xvf pyCGNS-html.tar
 exit

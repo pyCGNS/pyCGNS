@@ -5,7 +5,7 @@
 #
 # ---------------------------------------------------------------------------
 # THIS FILE IS PRE-PROCESSED
-# ALWAYS USE DOUBLE {{}} INSTEAD OF A SINGLE ONE
+# ALWAYS USE DOUBLE {} INSTEAD OF A SINGLE ONE
 # ---------------------------------------------------------------------------
 import os
 import sys
@@ -22,18 +22,18 @@ class CHLoneExceptionInternal(Exception):
 
 
 class CHLoneException(Exception):
-    mTable = {{
-        900: "No such file [{{}}]",
-        901: "File already exists [{{}}]",
+    mTable = {
+        900: "No such file [{}]",
+        901: "File already exists [{}]",
         902: "File name should be a string",
-        903: "Cannot propagate save to non-existant linked-to file [{{}}]",
-        904: "Cannot propagate save to unreadable linked-to file [{{}}]",
-        905: "Cannot propagate save to non-existant node in linked-to file [{{}}]",
+        903: "Cannot propagate save to non-existant linked-to file [{}]",
+        904: "Cannot propagate save to unreadable linked-to file [{}]",
+        905: "Cannot propagate save to non-existant node in linked-to file [{}]",
         906: "Bad tree structure (root should be list of 4 items, refer to doc)",
         907: "Invalid combination of flags (refer to doc)",
         908: "Using a maxdata implies FNODATA flag",
-        909: "Cannot have attributes {{}} at the same time",
-        910: "Keyword argument [{{}}] unknown",
+        909: "Cannot have attributes {} at the same time",
+        910: "Keyword argument [{}] unknown",
         911: "Bad [flag] argument (should be int)",
         912: "Bad [depth] argument (should be int)",
         913: "Bad [path] argument (should be str)",
@@ -41,13 +41,13 @@ class CHLoneException(Exception):
         915: "Bad [maxdata] argument (should be int)",
         916: "Bad [skip] argument (should be list of str)",
         917: "Bad [links] argument (refer to doc)",
-        920: "Cannot write in file [{{}}]",
+        920: "Cannot write in file [{}]",
         930: "Filter dict requires a path (str) as key",
         931: "Filter dict value should be a tuple with int as first arg",
         932: 'SPARTIAL Filter requires a "list of 8 lists of integers" as value"',
         933: "SPARTIAL Filter bad parameters",
         934: "SCONTIGUOUS requires a tuple of index,rank (integers) as value",
-    }}
+    }
 
 
 def raiseException(code, *args):
@@ -150,7 +150,7 @@ def checkHyperslabBounds(h):
 
 def fillMaxRankForAll(adict):
     ctg_dict = copy.copy(adict)
-    cd = {{}}
+    cd = {}
     for k in list(ctg_dict):
         if (ctg_dict[k][0] & SCONTIGUOUS) or (ctg_dict[k][0] & SINTERLACED):
             if ctg_dict[k][1] not in cd:
@@ -223,7 +223,7 @@ def hasFlags(allflags, flag):
 
 def propagateUpdatePaths(links, obdict):
     upaths = list(obdict)
-    fpaths = {{}}
+    fpaths = {}
     for upath in upaths:
         for lk in links:
             if lk[3] in upath:
@@ -239,9 +239,9 @@ def propagateSkipPaths(links, sklist):
 def checkLinkedToFiles(links, propagate=True):
     for lk in links:
         if lk[0] is None:
-            fname = "./{{}}".format(lk[1])
+            fname = "./{}".format(lk[1])
         else:
-            fname = "{{}}/{{}}".format(lk[0], lk[1])
+            fname = "{}/{}".format(lk[0], lk[1])
         fname = os.path.normpath(fname)
         if propagate:
             if not os.path.exists(fname):
@@ -255,7 +255,7 @@ def checkLinkedToFiles(links, propagate=True):
 
 
 # ---------------------------------------------------------------------------
-cdef extern from "CGNS/MAP/SIDStoPython.h":
+cdef extern from "SIDStoPython.h":
     long S2P_FNONE
     long S2P_FALL
     long S2P_FTRACE
@@ -372,7 +372,7 @@ S_ALLOWED = [S2P_SNONE, S2P_SPARTIAL, S2P_SCONTIGUOUS, S2P_SSKIP]
 version_major = SIDSTOPYTHON_MAJOR
 version_minor = SIDSTOPYTHON_MINOR
 
-version = "v{{}}.{{}}".format(version_major, version_minor)
+version = "v{}.{}".format(version_major, version_minor)
 
 
 class Config:
@@ -381,9 +381,9 @@ class Config:
 
 # GENERATED STUFF HERE ----------------------------------------------
 # config=Config()
-# config.libraries='{{}}(CHLONE_INSTALL_LIBRARIES)s'
-# config.includes='{{}}(CHLONE_INSTALL_INCLUDES)s'
-# config.h5version='{{}}(HDF5_VERSION)s'
+# config.libraries='@CHLONE_INSTALL_LIBRARIES@'
+# config.includes='@CHLONE_INSTALL_INCLUDES@'
+# config.h5version='@HDF5_VERSION@'
 # -------------------------------------------------------------------
 
 load_keys = [
@@ -430,7 +430,7 @@ def showrefs(t, path=""):
     else:
         fg = t[1].flags["OWNDATA"]
     print(
-        "{{}} {{}} {{}} {{}} ({{}}) {{}}".format(
+        "{} {} {} {} ({}) {}".format(
             sys.getrefcount(t[0]) - 1,
             vc,
             sys.getrefcount(t[2]) - 1,
@@ -460,9 +460,9 @@ def load(filename, **kw):
     depth = 0
     path = ""
     lksearch = []
-    update = {{}}
+    update = {}
     maxdata = -1
-    array_filter = {{}}
+    array_filter = {}
     skip = []
     linkfull = False
     tpath = os.path.normpath(os.path.expanduser(filename))
@@ -569,8 +569,8 @@ def save(filename, tree, **kw):
     flags = S2P_FDEFAULT
     depth = 0
     lksearch = []
-    update = {{}}
-    array_filter = {{}}
+    update = {}
+    array_filter = {}
     skip = []
     linkfull = False
     _lkobdict = None

@@ -3,6 +3,8 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
+from qtpy import __version__ as PYQT_VERSION
+from qtpy.QtCore import __version__ as QT_VERSION
 from qtpy.QtCore import Qt, QObject, Signal
 from qtpy.QtWidgets import (
     QAction,
@@ -15,7 +17,7 @@ from qtpy.QtWidgets import (
 
 from ..NAV.moption import Q7OptionContext as OCTXT
 
-from .. import config
+from . import config
 
 from ..PAT import cgnslib as CGL
 
@@ -73,8 +75,8 @@ class Q7Main(QW, Ui_Q7ControlWindow):
             "hdf5version": "HDF5 v%s" % config.HDF5_VERSION,
             "numpyversion": "numpy v%s" % config.NUMPY_VERSION,
             "pythonversion": "python v%s" % platform.python_version(),
-            "pyqtversion": "PyQt v%s" % config.PYQT_VERSION,
-            "qtversion": "Qt v%s" % config.QT_VERSION,
+            "pyqtversion": "PyQt v%s" % PYQT_VERSION,
+            "qtversion": "Qt v%s" % QT_VERSION,
         }
         self.getHistory()
         self.bAbout.clicked.connect(self.about)

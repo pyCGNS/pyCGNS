@@ -24,7 +24,7 @@ from qtpy.QtWidgets import (
 )
 from qtpy.QtGui import QFont, QPalette, QScreen, QKeySequence
 
-from CGNS.pyCGNSconfig import HAS_VTK
+from CGNS.NAV.config import HAS_VTK
 
 from .Q7TreeWindow import Ui_Q7TreeWindow
 from .wform import Q7Form

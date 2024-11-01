@@ -1,0 +1,15 @@
+option('has-pthread', type: 'boolean', value: true,
+       description: '')
+option('has-regexp',  type: 'boolean', value: true,
+       description: '')
+option('printf-trace', type: 'boolean', value: true,
+       description: '')
+option('use-compact-storage', type: 'boolean', value: true,
+       description: '')
+# For NAV and APP optional packaging
+option('app', type: 'boolean', value: false,
+       description: 'enable CGNS.NAV')
+option('nav', type: 'boolean', value: false,
+       description: 'enable CGNS.NAV')
+option('use-vtk', type: 'boolean', value: true,
+       description: '')

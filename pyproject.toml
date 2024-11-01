@@ -1,0 +1,83 @@
+[build-system]
+build-backend = "mesonpy"
+requires = [
+    "meson-python>=0.15.0",
+    "Cython>=3.0.6", #keep in sync with meson.build
+    "numpy>=2.0.0",
+]
+
+[project]
+name = "pyCGNS"
+version = "6.3.0"
+description = "pyCGNS - Python package for CGNS (CFD General Notation System)"
+authors = [
+    {name = "Marc Poinot et al.", email = "marc.poinot@safrangroup.com"},
+]
+maintainers = [
+    {name = "Mickael Philit", email = "mickey.phy@gmail.com"},
+    {name = "Marc Poinot", email = "marc.poinot@safrangroup.com"},
+]
+readme = {file = 'README.md', content-type='text/markdown'}
+license = {text = "LGPL 2"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
+    "Operating System :: Unix",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Cython",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Database",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.23.5",
+]
+
+
+[project.urls]#
+homepage = "https://pycgns.github.io/"
+source = "https://github.com/pyCGNS/pyCGNS"
+documentation = "https://pycgns.github.io/"
+tracker = "https://github.com/pyCGNS/pyCGNS/issues"
+
+
+[project.optional-dependencies]
+gui = ['qtpy', 'pyside6', 'vtk']
+test = ['unittest']
+
+[project.scripts]
+"CGNS.VAL" = "CGNS.VAL.CGNS_VAL:main"
+"cg_checksum"  = "CGNS.APP.tools.cg_checksum:main"
+"cg_diff"  = "CGNS.APP.tools.cg_diff:main"
+"cg_dump"  = "CGNS.APP.tools.cg_dump:main"
+"cg_gather"  = "CGNS.APP.tools.cg_gather:main"
+"cg_grep"  = "CGNS.APP.tools.cg_grep:main"
+"cg_iges"  = "CGNS.APP.tools.cg_iges:main"
+"cg_link"  = "CGNS.APP.tools.cg_link:main"
+"cg_list"  = "CGNS.APP.tools.cg_list:main"
+"cg_scan"  = "CGNS.APP.tools.cg_scan:main"
+"cg_scatter"  = "CGNS.APP.tools.cg_scatter:main"
+
+[project.gui-scripts]
+"cg_look"  = "CGNS.NAV.tools.cg_look:main"
+
+
+[tool.setuptools]
+# to ignore .pxd and .pyx files in wheels
+include-package-data = false
+packages = [
+    "CGNS.MAP",
+    "CGNS.PAT",
+    "CGNS.VAL",
+    "CGNS.APP",
+    "CGNS.NAV",
+]

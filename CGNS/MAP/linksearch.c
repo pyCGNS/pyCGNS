@@ -2,7 +2,7 @@
  * CHLone - CGNS HDF5 LIBRARY only node edition
  * See license.txt in the root directory of this source release
  * ====================================================================== */
-#include "CGNS/MAP/l3P.h"
+#include "l3P.h"
 
 /* ------------------------------------------------------------------------- */
 int __checkFile(char *path)

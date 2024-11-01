@@ -75,7 +75,7 @@ The -h option returns the following usage notice::
   usage: cg_list [options] file1 file2 ...
 
     List tool on CGNS/HDF5 files
-    (part of pyCGNS distribution http://pycgns.sourceforge.net)'
+    (part of pyCGNS distribution http://pycgns.github.io)'
     The result of the list is one line per found file/node.
 
   positional arguments:
@@ -147,7 +147,7 @@ The -h option returns the following usage notice::
   usage: cg_grep [options] file1 file2 ...
 
     Grep tool on CGNS/HDF5 files
-    (part of pyCGNS distribution http://pycgns.sourceforge.net)'
+    (part of pyCGNS distribution http://pycgns.github.io)'
     The result of the grep is one line per found file/node, with the
     syntax <file>:<node-path>
 
@@ -201,7 +201,7 @@ or just to recursively browse existing links::
   usage: cg_link [options] file1 file2 ...
 
     Browsing and editing links on CGNS/HDF5 files
-    (part of pyCGNS distribution http://pycgns.sourceforge.net)
+    (part of pyCGNS distribution http://pycgns.github.io)
     pyCGNS v4.4.481
 
     Warning: translation of ADF files is made *in place*, in other word if a link

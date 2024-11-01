@@ -13,8 +13,8 @@ import imp
 import tempfile
 
 from time import gmtime, strftime
-from CGNS.pyCGNSconfig import version as __vid__
-from CGNS.pyCGNSconfig import HAS_MSW
+from CGNS import __version__ as __vid__
+from CGNS.NAV.config import HAS_MSW
 
 WINOPTS = HAS_MSW
 

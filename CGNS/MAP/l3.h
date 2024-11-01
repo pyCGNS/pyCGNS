@@ -7,7 +7,7 @@
 #ifndef __CHLONE_L3_H__
 #define __CHLONE_L3_H__
 
-#include "CGNS/MAP/CHLone_config.h"
+#include "CHLone_config.h"
 
 /* first letter of these three strings is a key */
 #define L3S_NAME    	   "name"

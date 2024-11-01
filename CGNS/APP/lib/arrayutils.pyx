@@ -11,7 +11,7 @@ import random
 
 NPY.import_array()
 
-cimport hashutils as HUT
+cimport CGNS.APP.lib.hashutils as HUT
 
 # ----------------------------------------------------------------------
 cdef int _trisFromTri(NPY.ndarray[NPY.int32_t, ndim=1] itris,

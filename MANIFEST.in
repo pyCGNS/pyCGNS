@@ -3,15 +3,16 @@ include README.md
 include LICENSE
 include license.txt
 include readme.txt
-include setup.py
-include setup_userConfig.py
 include tox.ini
+include pyproject.toml
+include meson.build
+include meson_options.txt
 
 recursive-include doc *
 prune doc/_build
 recursive-include demo *
 
-recursive-include CGNS *.h *.pyx *.pxd *.pxi *.py *.txt *.in
+recursive-include CGNS *.h *.pyx *.pxd *.pxi *.py *.txt *.in *.pyi
 recursive-include CGNS *.c
 recursive-include CGNS *.cgns
 recursive-include CGNS *.gif
@@ -21,9 +22,13 @@ recursive-include CGNS *.qrc
 recursive-include CGNS *.ui
 recursive-include CGNS *.supp
 recursive-include CGNS Makefile
+recursive-include CGNS meson.build
+recursive-include CGNS meson_options.txt
 
 recursive-include lib *.py *.txt *.ico *.bmp *.xcf *.iss *.tmp
 recursive-include windows *.h
+
+recursive-include _build_utils *.py *.txt
 
 include .pylintrc
 include CGNS/NAV/R/icons/ACKNOWLEDGEMENT

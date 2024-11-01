@@ -1233,13 +1233,25 @@ static int s2p_getData(PyArrayObject *dobject,
     }
     ddims[0] = PyArray_NDIM(dobject);
     transposedata = !is_fortran_contiguous(dobject);
-    /* S2P_TRACE(("\n# CHL:is_fortran_contiguous : %d\n",transposedata)); */
-    if (transposedata || reversedims)
+    if (PyArray_BASE(dobject) != NULL)
     {
-      for (n = 0; n < ddims[0]; n++)
-      {
-        dshape[n] = (int)PyArray_DIM(dobject, ddims[0] - n - 1);
+      // This is a view of an array
+      if (transposedata) {
+        S2P_TRACE(("\n# CHL:warning - array view should be fortran contiguous\n"));
+        return 0;
       }
+    }
+    /* S2P_TRACE(("\n# CHL:is_fortran_contiguous : %d\n",transposedata)); */
+    if (transposedata)
+    {
+      dobject = (PyArrayObject*)(PyArray_Transpose(dobject, NULL));
+    }
+    if (reversedims)
+    {
+        for (n = 0; n < ddims[0]; n++)
+        {
+          dshape[n] = (int)PyArray_DIM(dobject, ddims[0] - n - 1);
+        }
     }
     else
     {
@@ -1248,10 +1260,112 @@ static int s2p_getData(PyArrayObject *dobject,
         dshape[n] = (int)PyArray_DIM(dobject, n);
       }
     }
+
+    *dvalue = (char*)PyArray_DATA(dobject);
+  }
+  else if ((PyObject*)dobject == Py_None)
+  {
+    return 0;
+  }
+  else
+  {
+    S2P_TRACE(("\n# CHL:warning - not a numpy array\n"));
+    return 0;
+  }
+
+  for (n = 0; n < ddims[0]; n++)
+  {
+    pshape *= dshape[n];
+  }
+  if (S2P_HASFLAG(S2P_FFORTRANFLAG)
+    && (pshape > 1 && !PyArray_IS_F_CONTIGUOUS(dobject))
+    && (PyArray_NDIM(dobject) > 1)
+    && (PyArray_NDIM(dobject) < MAXDIMENSIONVALUES))
+  {
+    S2P_TRACE(("\n# CHL:warning - array should be fortran\n"));
+    return 0;
+  }
+
+  switch(PyArray_TYPE(dobject))
+  {
+  /* --- Integer */
+  case NPY_INT32:
+    *dtype = DT_I4;
+    break;
+  /* --- Long */
+  case NPY_INT64:
+    *dtype = DT_I8;
+    break;
+  /* --- Float */
+  case NPY_FLOAT32:
+    *dtype = DT_R4;
+    break;
+  /* --- Double */
+  case NPY_FLOAT64:
+    *dtype = DT_R8;
+    break;
+  /* --- String */
+  case NPY_STRING:
+    *dtype = DT_C1;
+    break;
+  case NPY_COMPLEX64:
+    *dtype = DT_X4;
+    break;
+  case NPY_COMPLEX128:
+    *dtype = DT_X8;
+  default:
+    S2P_TRACE(("\n# CHL: ERROR - numpy array dtype not in [C1,I4,I8,R4,R8,X4,X8]\n"));
+    return 0;
+  }
+  return 1;
+}
+/* ------------------------------------------------------------------------- */
+static int s2p_getFortranContiguousData(PyArrayObject *dobject,
+                       char **dtype, int *ddims, int *dshape, char **dvalue,
+                       int reversedims, int transposedata, s2p_ctx_t  *context)
+{
+  int n = 0;
+  int pshape = 1;
+  int viewdata = 0;
+
+  ddims[0] = 0;
+  *dtype = DT_MT;
+  *dvalue = NULL;
+
+  L3M_CLEARDIMS(dshape);
+
+  if (PyArray_Check(dobject))
+  {
+    if (PyArray_SIZE(dobject) == 0)
+    {
+      S2P_TRACE(("\n# CHL:warning - numpy array has a zero size\n"));
+      return 0;
+    }
+    ddims[0] = PyArray_NDIM(dobject);
+    if (!is_fortran_contiguous(dobject)) {
+      dobject = (PyArrayObject*)(PyArray_GETCONTIGUOUS(dobject));
+    }
+    transposedata = !is_fortran_contiguous(dobject);
+    /* S2P_TRACE(("\n# CHL:is_fortran_contiguous : %d\n",transposedata)); */
     if (transposedata)
     {
       dobject = (PyArrayObject*)(PyArray_Transpose(dobject, NULL));
     }
+    if (reversedims)
+    {
+        for (n = 0; n < ddims[0]; n++)
+        {
+          dshape[n] = (int)PyArray_DIM(dobject, ddims[0] - n - 1);
+        }
+    }
+    else
+    {
+      for (n = 0; n < ddims[0]; n++)
+      {
+        dshape[n] = (int)PyArray_DIM(dobject, n);
+      }
+    }
+
     *dvalue = (char*)PyArray_DATA(dobject);
   }
   else if ((PyObject*)dobject == Py_None)
@@ -2306,8 +2420,14 @@ static int s2p_parseAndWriteHDF(hid_t        id,
         &tdat, &ndat, ddat, &vdat,
         reverse, transpose, context))
       {
-        //TODO
-        ;
+        //Nasty hack
+        if (!s2p_getFortranContiguousData((PyArrayObject*)PyList_GetItem(tree, 1),
+            &tdat, &ndat, ddat, &vdat,
+            reverse, transpose, context)){
+          // Hack did not work
+          //TODO
+            ;
+          }
       }
       n = 0;
       tsize = 1;
@@ -2330,7 +2450,12 @@ static int s2p_parseAndWriteHDF(hid_t        id,
         s_offset, s_stride, s_count, s_block,
         d_offset, d_stride, d_count, d_block);
 #if (CHLONE_USE_COMPACT_STORAGE == 1)
-      storage = (strcmp(altlabel, "DataArray_t") == 0) ? L3_CONTIGUOUS_STORE : L3_COMPACT_STORE;
+      if ((strcmp(altlabel, "DataArray_t") == 0) ||
+            (strcmp(altlabel, "IndexArray_t") == 0)) {
+        storage = L3_CONTIGUOUS_STORE;
+      } else {
+        storage = L3_COMPACT_STORE;
+      }
 #endif
       if (toupdate)
       {

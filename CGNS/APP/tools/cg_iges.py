@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 # IGES reader -v0.0
-# marc.poinot@onera.fr
+# marc.poinot@safran.fr
 # ??? marks non understandable fixes
 import sys
 import re
@@ -19,13 +19,15 @@ import CGNS.version
 
 doc1 = """
   IGES to CGNS translator
-  (part of pyCGNS distribution http://pycgns.sourceforge.net)
+  (part of pyCGNS distribution http://pycgns.github.com)
   pyCGNS v%s
   
   The result of the grep is a file with a proprietatry translation
   from IGES to CGNS.
 
-""" % (CGNS.version.id)
+""" % (
+    CGNS.version.__version__
+)
 
 doc2 = """
   Exemples:
@@ -36,21 +38,41 @@ doc2 = """
 import argparse
 import re
 
-pr = argparse.ArgumentParser(description=doc1, epilog=doc2,
-                             formatter_class=argparse.RawDescriptionHelpFormatter,
-                             usage='%(prog)s [options] inputfile outputfile')
 
-pr.add_argument("-d", "--debug", action="store_true",
-                help='trace mode for debug')
-pr.add_argument('files', nargs=argparse.REMAINDER)
-args = pr.parse_args()
+def parse():
+    pr = argparse.ArgumentParser(
+        description=doc1,
+        epilog=doc2,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        usage="%(prog)s [options] inputfile outputfile",
+    )
+
+    pr.add_argument("-d", "--debug", action="store_true", help="trace mode for debug")
+    pr.add_argument("files", nargs=argparse.REMAINDER)
+    args = pr.parse_args()
+    return args
 
 
 # -----------------------------------------------------------------------------
 class IGESentity(object):
-    (BLANKED, VISIBLE, INDEPENDANT, PHYDEPEND, LOGDEPEND, ALLDEPEND,
-     CONSTRUCTION, PARAMETRIC2D, LOGICAL, OTHER, DEFINITION, ANNOTATION, GEOMETRY,
-     TOPDOWN, DEFER, PROPERTY) = range(16)
+    (
+        BLANKED,
+        VISIBLE,
+        INDEPENDANT,
+        PHYDEPEND,
+        LOGDEPEND,
+        ALLDEPEND,
+        CONSTRUCTION,
+        PARAMETRIC2D,
+        LOGICAL,
+        OTHER,
+        DEFINITION,
+        ANNOTATION,
+        GEOMETRY,
+        TOPDOWN,
+        DEFER,
+        PROPERTY,
+    ) = range(16)
     _directoryentries = {}
     _parameters = {}
     _entities = {}
@@ -79,7 +101,7 @@ class IGESentity(object):
 
     @classmethod
     def allentities(self, code=None):
-        if (code is None):
+        if code is None:
             el = []
             for e in IGESentity._entities.values():
                 el += e
@@ -90,7 +112,7 @@ class IGESentity(object):
         self.code = code
         self.text = text
         self.index = index
-        if text is '':
+        if text is "":
             self.text = ENTTABLE[(code, 0)]
         self.pending = False
         self.children = []
@@ -129,89 +151,93 @@ class IGESentity(object):
         pass
 
     def parsestatus(self, st):
-        if (st[0:2] == '00'):
+        if st[0:2] == "00":
             self.s_blank = IGESentity.BLANKED
         else:
             self.s_blank = IGESentity.VISIBLE
-        if (st[2:4] == '03'):
+        if st[2:4] == "03":
             self.s_depend = IGESentity.ALLDEPEND
-        if (st[2:4] == '02'):
+        if st[2:4] == "02":
             self.s_depend = IGESentity.LOGDEPEND
-        if (st[2:4] == '01'):
+        if st[2:4] == "01":
             self.s_depend = IGESentity.PHYDEPEND
         else:
             self.s_depend = IGESentity.INDEPENDANT
-        if (st[4:6] == '06'):
+        if st[4:6] == "06":
             self.s_use = IGESentity.CONSTRUCTION
-        if (st[4:6] == '05'):
+        if st[4:6] == "05":
             self.s_use = IGESentity.PARAMETRIC2D
-        if (st[4:6] == '04'):
+        if st[4:6] == "04":
             self.s_use = IGESentity.LOGICAL
-        if (st[4:6] == '03'):
+        if st[4:6] == "03":
             self.s_use = IGESentity.OTHER
-        if (st[4:6] == '02'):
+        if st[4:6] == "02":
             self.s_use = IGESentity.DEFINITION
-        if (st[4:6] == '01'):
+        if st[4:6] == "01":
             self.s_use = IGESentity.ANNOTATION
         else:
             self.s_use = IGESentity.GEOMETRY
-        if (st[6:8] == '02'):
+        if st[6:8] == "02":
             self.s_hierarchy = IGESentity.TOPDOWN
-        if (st[6:8] == '01'):
+        if st[6:8] == "01":
             self.s_hierarchy = IGESentity.DEFER
         else:
             self.s_hierarchy = IGESentity.PROPERTY
 
     def statusasstring(self):
         s = ""
-        if (self.s_blank == IGESentity.BLANKED):
+        if self.s_blank == IGESentity.BLANKED:
             s += "-"
-        if (self.s_blank == IGESentity.VISIBLE):
+        if self.s_blank == IGESentity.VISIBLE:
             s += "+"
-        if (self.s_depend == IGESentity.ALLDEPEND):
+        if self.s_depend == IGESentity.ALLDEPEND:
             s += "*"
-        if (self.s_depend == IGESentity.PHYDEPEND):
+        if self.s_depend == IGESentity.PHYDEPEND:
             s += "P"
-        if (self.s_depend == IGESentity.LOGDEPEND):
+        if self.s_depend == IGESentity.LOGDEPEND:
             s += "L"
-        if (self.s_depend == IGESentity.INDEPENDANT):
+        if self.s_depend == IGESentity.INDEPENDANT:
             s += "-"
-        if (self.s_use == IGESentity.CONSTRUCTION):
+        if self.s_use == IGESentity.CONSTRUCTION:
             s += "c"
-        if (self.s_use == IGESentity.PARAMETRIC2D):
+        if self.s_use == IGESentity.PARAMETRIC2D:
             s += "p"
-        if (self.s_use == IGESentity.LOGICAL):
+        if self.s_use == IGESentity.LOGICAL:
             s += "l"
-        if (self.s_use == IGESentity.OTHER):
+        if self.s_use == IGESentity.OTHER:
             s += "-"
-        if (self.s_use == IGESentity.DEFINITION):
+        if self.s_use == IGESentity.DEFINITION:
             s += "d"
-        if (self.s_use == IGESentity.ANNOTATION):
+        if self.s_use == IGESentity.ANNOTATION:
             s += "a"
-        if (self.s_use == IGESentity.GEOMETRY):
+        if self.s_use == IGESentity.GEOMETRY:
             s += "g"
-        if (self.s_hierarchy == IGESentity.PROPERTY):
+        if self.s_hierarchy == IGESentity.PROPERTY:
             s += "-"
-        if (self.s_hierarchy == IGESentity.TOPDOWN):
+        if self.s_hierarchy == IGESentity.TOPDOWN:
             s += "T"
-        if (self.s_hierarchy == IGESentity.DEFER):
+        if self.s_hierarchy == IGESentity.DEFER:
             s += "D"
         return s
 
     def __repr__(self):
         self.a_status_s = self.statusasstring()
         self.index_s = "%.4d:%.4d" % self.index
-        s = '=' * 70 + '\n'
+        s = "=" * 70 + "\n"
         s += """Entity  #%(index_s)s [%(text)s] (code %(code)d)\n"""
         s += """level : %(a_level)-8s label :%(a_label)-8s refcnt:%(refcnt)d\n"""
         s += """status: %(a_status_s)-8s color :%(a_color)-8s\n"""
         s += """params: %(a_linecount)-8s form  :%(a_form)-8s\n"""
         s = s % self.__dict__
-        if (self.children):
+        if self.children:
             s += """children :\n"""
             for e in self.children:
-                s += """         : %.4d:%.4d [%s] %s\n""" % \
-                     (e.index[0], e.index[1], e.text, e.asstring())
+                s += """         : %.4d:%.4d [%s] %s\n""" % (
+                    e.index[0],
+                    e.index[1],
+                    e.text,
+                    e.asstring(),
+                )
         return s
 
     def label(self):
@@ -220,40 +246,40 @@ class IGESentity(object):
     def asCGNS(self):
         t = []
         v = CGU.setStringAsArray(self.text)
-        t.append(['_text', v, [], 'DataArray_t'])
-        t.append(['_label', CGU.setStringAsArray(self.a_label), [], 'DataArray_t'])
-        t.append(['_code', numpy.array([self.code]), [], 'DataArray_t'])
-        t.append(['_color', numpy.array([self.a_color]), [], 'DataArray_t'])
-        t.append(['_level', numpy.array([self.a_level]), [], 'DataArray_t'])
-        t.append(['_view', numpy.array([self.a_view]), [], 'DataArray_t'])
+        t.append(["_text", v, [], "DataArray_t"])
+        t.append(["_label", CGU.setStringAsArray(self.a_label), [], "DataArray_t"])
+        t.append(["_code", numpy.array([self.code]), [], "DataArray_t"])
+        t.append(["_color", numpy.array([self.a_color]), [], "DataArray_t"])
+        t.append(["_level", numpy.array([self.a_level]), [], "DataArray_t"])
+        t.append(["_view", numpy.array([self.a_view]), [], "DataArray_t"])
         return t
 
     def remain(self, data):
-        if (data):
+        if data:
             n = data[0]
             cnt = 1
-            if (n):
-                for ptr in data[1:1 + n]:
-                    self.addchildid(ptr, 'ptr#%.4d' % cnt)
+            if n:
+                for ptr in data[1 : 1 + n]:
+                    self.addchildid(ptr, "ptr#%.4d" % cnt)
                     cnt += 1
             p = data[n + 1]
             cnt = 1
-            if (p):
-                for prop in data[n + 2:n + 2 + p]:
-                    self.addchildid(prop, 'prp#%.4d' % cnt)
+            if p:
+                for prop in data[n + 2 : n + 2 + p]:
+                    self.addchildid(prop, "prp#%.4d" % cnt)
 
     def allchildren(self):
         return self.childrenid
 
     def haschild(self, id):
-        if (id in self.childrenid):
+        if id in self.childrenid:
             return True
         return False
 
     def addchildid(self, idx, name):
-        if (idx):
+        if idx:
             self.pending = True
-            if (idx in IGESentity._parameters):
+            if idx in IGESentity._parameters:
                 e = IGESentity._parameters[idx]
                 idx = e.index[0]
             self.childrenid += [idx]
@@ -278,7 +304,7 @@ class IGESentity(object):
 # -----------------------------------------------------------------------------
 class BSpline(IGESentity):
     def __init__(self, index, *args):
-        t = '# Rational B-Spline Curve'
+        t = "# Rational B-Spline Curve"
         IGESentity.__init__(self, 126, t, index, *args)
 
     def parseparameters(self, k, m, p1, p2, p3, p4, *data):
@@ -290,34 +316,34 @@ class BSpline(IGESentity):
         self.p4 = p4
         n = 1 + k - m
         a = n + 2 * m
-        self.kn = numpy.array(data[0:a + 1])
-        self.wg = numpy.array(data[a + 1:a + (k + 1) + 1])
-        self.xyz = numpy.array(data[a + k + 2:a + 1 + 4 * (k + 1)])
-        self.v0v1 = numpy.array(data[a + 1 + 4 * (k + 1):a + 1 + 4 * (k + 1) + 2])
-        self.xyzn = numpy.array(data[a + 1 + 4 * (k + 1) + 2:a + 1 + 4 * (k + 1) + 5])
-        self.remain(data[a + 1 + 4 * (k + 1) + 5:])
+        self.kn = numpy.array(data[0 : a + 1])
+        self.wg = numpy.array(data[a + 1 : a + (k + 1) + 1])
+        self.xyz = numpy.array(data[a + k + 2 : a + 1 + 4 * (k + 1)])
+        self.v0v1 = numpy.array(data[a + 1 + 4 * (k + 1) : a + 1 + 4 * (k + 1) + 2])
+        self.xyzn = numpy.array(data[a + 1 + 4 * (k + 1) + 2 : a + 1 + 4 * (k + 1) + 5])
+        self.remain(data[a + 1 + 4 * (k + 1) + 5 :])
 
     def asCGNS(self):
         t = super(BSpline, self).asCGNS()
-        t.append(['k', CGU.setIntegerAsArray(self.k), [], 'DataArray_t'])
-        t.append(['m', CGU.setIntegerAsArray(self.m), [], 'DataArray_t'])
-        t.append(['p1', CGU.setIntegerAsArray(self.p1), [], 'DataArray_t'])
-        t.append(['p2', CGU.setIntegerAsArray(self.p2), [], 'DataArray_t'])
-        t.append(['p3', CGU.setIntegerAsArray(self.p3), [], 'DataArray_t'])
-        t.append(['p4', CGU.setIntegerAsArray(self.p4), [], 'DataArray_t'])
-        t.append(['p4', CGU.setIntegerAsArray(self.p4), [], 'DataArray_t'])
-        t.append(['knot', self.kn, [], 'DataArray_t'])
-        t.append(['weight', self.wg, [], 'DataArray_t'])
-        t.append(['control', self.xyz, [], 'DataArray_t'])
-        t.append(['v', self.v0v1, [], 'DataArray_t'])
-        t.append(['normal', self.xyzn, [], 'DataArray_t'])
+        t.append(["k", CGU.setIntegerAsArray(self.k), [], "DataArray_t"])
+        t.append(["m", CGU.setIntegerAsArray(self.m), [], "DataArray_t"])
+        t.append(["p1", CGU.setIntegerAsArray(self.p1), [], "DataArray_t"])
+        t.append(["p2", CGU.setIntegerAsArray(self.p2), [], "DataArray_t"])
+        t.append(["p3", CGU.setIntegerAsArray(self.p3), [], "DataArray_t"])
+        t.append(["p4", CGU.setIntegerAsArray(self.p4), [], "DataArray_t"])
+        t.append(["p4", CGU.setIntegerAsArray(self.p4), [], "DataArray_t"])
+        t.append(["knot", self.kn, [], "DataArray_t"])
+        t.append(["weight", self.wg, [], "DataArray_t"])
+        t.append(["control", self.xyz, [], "DataArray_t"])
+        t.append(["v", self.v0v1, [], "DataArray_t"])
+        t.append(["normal", self.xyzn, [], "DataArray_t"])
         return t
 
 
 # -----------------------------------------------------------------------------
 class ParametricSplineCurve(IGESentity):
     def __init__(self, index, *args):
-        t = '# Parametric Spline Curve'
+        t = "# Parametric Spline Curve"
         IGESentity.__init__(self, 112, t, index, *args)
         self.parseargs(*args)
 
@@ -326,29 +352,29 @@ class ParametricSplineCurve(IGESentity):
         self.h = h
         self.ndim = ndim
         self.n = n
-        self.t = numpy.array(data[0:n + 1])
-        self.px = numpy.array(data[n + 1:n + 1 + 5])
-        self.py = numpy.array(data[n + 1 + 5:n + 1 + 9])
-        self.pz = numpy.array(data[n + 1 + 9:n + 1 + 13])
+        self.t = numpy.array(data[0 : n + 1])
+        self.px = numpy.array(data[n + 1 : n + 1 + 5])
+        self.py = numpy.array(data[n + 1 + 5 : n + 1 + 9])
+        self.pz = numpy.array(data[n + 1 + 9 : n + 1 + 13])
         # self.remain(data[a+b+4*c+6:])
 
     def asCGNS(self):
         t = super(ParametricSplineCurve, self).asCGNS()
-        t.append(['ctype', CGU.setIntegerAsArray(self.ctype), [], 'DataArray_t'])
-        t.append(['h', CGU.setIntegerAsArray(self.h), [], 'DataArray_t'])
-        t.append(['ndim', CGU.setIntegerAsArray(self.ndim), [], 'DataArray_t'])
-        t.append(['n', CGU.setIntegerAsArray(self.n), [], 'DataArray_t'])
-        t.append(['t', self.t, [], 'DataArray_t'])
-        t.append(['px', self.px, [], 'DataArray_t'])
-        t.append(['py', self.py, [], 'DataArray_t'])
-        t.append(['pz', self.pz, [], 'DataArray_t'])
+        t.append(["ctype", CGU.setIntegerAsArray(self.ctype), [], "DataArray_t"])
+        t.append(["h", CGU.setIntegerAsArray(self.h), [], "DataArray_t"])
+        t.append(["ndim", CGU.setIntegerAsArray(self.ndim), [], "DataArray_t"])
+        t.append(["n", CGU.setIntegerAsArray(self.n), [], "DataArray_t"])
+        t.append(["t", self.t, [], "DataArray_t"])
+        t.append(["px", self.px, [], "DataArray_t"])
+        t.append(["py", self.py, [], "DataArray_t"])
+        t.append(["pz", self.pz, [], "DataArray_t"])
         return t
 
 
 # -----------------------------------------------------------------------------
 class RationalBSplineSurface(IGESentity):
     def __init__(self, index, *args):
-        t = '# Rational B-Spline Surface'
+        t = "# Rational B-Spline Surface"
         IGESentity.__init__(self, 128, t, index, *args)
         self.parseargs(*args)
 
@@ -362,33 +388,33 @@ class RationalBSplineSurface(IGESentity):
         a = n1 + 2 * m1
         b = n2 + 2 * m2
         c = (1 + k1) * (1 + k2)
-        self.s1 = numpy.array(data[0:a + 1])  # ??? why +1
-        self.s2 = numpy.array(data[a + 1:a + b + 2])  # ??? why +1
-        self.wg = numpy.array(data[a + b + 2:a + b + c + 2])
-        self.xyz = numpy.array(data[a + b + c + 2:a + b + 4 * c + 2])
-        self.u0u1 = numpy.array(data[a + b + 4 * c + 2:a + b + 4 * c + 4])
-        self.v0v1 = numpy.array(data[a + b + 4 * c + 4:a + b + 4 * c + 6])
-        self.remain(data[a + b + 4 * c + 6:])
+        self.s1 = numpy.array(data[0 : a + 1])  # ??? why +1
+        self.s2 = numpy.array(data[a + 1 : a + b + 2])  # ??? why +1
+        self.wg = numpy.array(data[a + b + 2 : a + b + c + 2])
+        self.xyz = numpy.array(data[a + b + c + 2 : a + b + 4 * c + 2])
+        self.u0u1 = numpy.array(data[a + b + 4 * c + 2 : a + b + 4 * c + 4])
+        self.v0v1 = numpy.array(data[a + b + 4 * c + 4 : a + b + 4 * c + 6])
+        self.remain(data[a + b + 4 * c + 6 :])
 
     def asCGNS(self):
         t = super(RationalBSplineSurface, self).asCGNS()
-        t.append(['k1', CGU.setIntegerAsArray(self.k1), [], 'DataArray_t'])
-        t.append(['k2', CGU.setIntegerAsArray(self.k2), [], 'DataArray_t'])
-        t.append(['m1', CGU.setIntegerAsArray(self.m1), [], 'DataArray_t'])
-        t.append(['m2', CGU.setIntegerAsArray(self.m2), [], 'DataArray_t'])
-        t.append(['knot1', self.s1, [], 'DataArray_t'])
-        t.append(['knot2', self.s2, [], 'DataArray_t'])
-        t.append(['weight', self.wg, [], 'DataArray_t'])
-        t.append(['control', self.xyz, [], 'DataArray_t'])
-        t.append(['u', self.u0u1, [], 'DataArray_t'])
-        t.append(['v', self.v0v1, [], 'DataArray_t'])
+        t.append(["k1", CGU.setIntegerAsArray(self.k1), [], "DataArray_t"])
+        t.append(["k2", CGU.setIntegerAsArray(self.k2), [], "DataArray_t"])
+        t.append(["m1", CGU.setIntegerAsArray(self.m1), [], "DataArray_t"])
+        t.append(["m2", CGU.setIntegerAsArray(self.m2), [], "DataArray_t"])
+        t.append(["knot1", self.s1, [], "DataArray_t"])
+        t.append(["knot2", self.s2, [], "DataArray_t"])
+        t.append(["weight", self.wg, [], "DataArray_t"])
+        t.append(["control", self.xyz, [], "DataArray_t"])
+        t.append(["u", self.u0u1, [], "DataArray_t"])
+        t.append(["v", self.v0v1, [], "DataArray_t"])
         return t
 
 
 # -----------------------------------------------------------------------------
 class PlaneUnbounded(IGESentity):
     def __init__(self, index, *args):
-        t = '# Plane:Unbounded'
+        t = "# Plane:Unbounded"
         IGESentity.__init__(self, 108, t, index, *args)
 
     def parseparameters(self, c1, c2, c3, c4, ptr, x, y, z, sz, *data):
@@ -397,14 +423,14 @@ class PlaneUnbounded(IGESentity):
 
     def asCGNS(self):
         t = super(PlaneUnbounded, self).asCGNS()
-        t.append(['coefs', self.coefs, [], 'DataArray_t'])
+        t.append(["coefs", self.coefs, [], "DataArray_t"])
         return t
 
 
 # -----------------------------------------------------------------------------
 class TrimmedParametricSurface(IGESentity):
     def __init__(self, index, *args):
-        t = '# Trimmed (Parametric) Surface'
+        t = "# Trimmed (Parametric) Surface"
         IGESentity.__init__(self, 144, t, index, *args)
 
     def parseparameters(self, pts, n1, n2, pt0, *data):
@@ -412,31 +438,31 @@ class TrimmedParametricSurface(IGESentity):
         self.n1 = n1
         self.n2 = n2
         self.pt0 = pt0
-        self.addchildid(self.pts, 'pts')
-        self.addchildid(self.pt0, 'pt0')
+        self.addchildid(self.pts, "pts")
+        self.addchildid(self.pt0, "pt0")
         for n in range(n2):
-            self.addchildid(data[n], 'pt#%d' % n)
+            self.addchildid(data[n], "pt#%d" % n)
         self.remain(data[n2:])
 
 
 # -----------------------------------------------------------------------------
 class CompositeCurve(IGESentity):
     def __init__(self, index, *args):
-        t = '# Composite Curve'
+        t = "# Composite Curve"
         IGESentity.__init__(self, 102, t, index, *args)
 
     def parseparameters(self, n, *data):
         self.n = n
         cnt = 1
         for ptr in data:
-            self.addchildid(ptr, 'ptr#%.4d' % cnt)
+            self.addchildid(ptr, "ptr#%.4d" % cnt)
             cnt += 1
 
 
 # -----------------------------------------------------------------------------
 class CurveParametricSurface(IGESentity):
     def __init__(self, index, *args):
-        t = '# Curve on a Parametric Surface'
+        t = "# Curve on a Parametric Surface"
         IGESentity.__init__(self, 142, t, index, *args)
 
     def parseparameters(self, crtn, sptr, bptr, cptr, pref, *data):
@@ -445,9 +471,9 @@ class CurveParametricSurface(IGESentity):
         self.bptr = bptr
         self.cptr = cptr
         self.pref = pref
-        self.addchildid(self.sptr, 'sptr')
-        self.addchildid(self.bptr, 'bptr')
-        self.addchildid(self.cptr, 'cptr')
+        self.addchildid(self.sptr, "sptr")
+        self.addchildid(self.bptr, "bptr")
+        self.addchildid(self.cptr, "cptr")
         self.remain(data)
 
 
@@ -456,7 +482,7 @@ class Property(IGESentity):
     _count = 0
 
     def __init__(self, index, *args):
-        t = '# Property'
+        t = "# Property"
         IGESentity.__init__(self, 406, t, index, *args)
 
     def parseattributes(self, *data):
@@ -464,7 +490,9 @@ class Property(IGESentity):
 
     def parseparameters(self, n, *data):
         self.properties = data[0:n]
-        if (type(data[0]) not in [str,]):
+        if type(data[0]) not in [
+            str,
+        ]:
             Property._count += 1
             self.property = "P%.4d" % Property._count
         else:
@@ -473,7 +501,7 @@ class Property(IGESentity):
     def asstring(self):
         print(self.properties)
         if self.properties:
-            if (type(self.properties == tuple)):
+            if type(self.properties == tuple):
                 return "%s" % str(self.properties)
             return "%s" % self.properties
         return ""
@@ -484,15 +512,14 @@ class Property(IGESentity):
 
     def asCGNS(self):
         t = super(Property, self).asCGNS()
-        t.append(['property',
-                  CGU.setStringAsArray(self.property), [], 'DataArray_t'])
+        t.append(["property", CGU.setStringAsArray(self.property), [], "DataArray_t"])
         return t
 
 
 # -----------------------------------------------------------------------------
 class Line(IGESentity):
     def __init__(self, index, *args):
-        t = '# Line:Bounded (default)'
+        t = "# Line:Bounded (default)"
         IGESentity.__init__(self, 110, t, index, *args)
 
     def parseparameters(self, x1, y1, z1, x2, y2, z2, *data):
@@ -502,133 +529,134 @@ class Line(IGESentity):
 
     def asCGNS(self):
         t = super(Line, self).asCGNS()
-        t.append(['pt1', self.p1, [], 'DataArray_t'])
-        t.append(['pt2', self.p2, [], 'DataArray_t'])
+        t.append(["pt1", self.p1, [], "DataArray_t"])
+        t.append(["pt2", self.p2, [], "DataArray_t"])
         return t
 
 
 # -----------------------------------------------------------------------------
 ENTTABLE = {
-    (000, 0): 'Null Entity',
-    (100, 0): 'Circular Arc',
+    (000, 0): "Null Entity",
+    (100, 0): "Circular Arc",
     (102, 0): CompositeCurve,
-    (104, 1): 'Conic Arc:Ellipse',
-    (104, 2): 'Conic Arc:Hyperbola',
-    (104, 3): 'Conic Arc:Parabola',
-    (106, 11): 'Copius Data:Piecewise Linear Curve (2D)',
-    (106, 12): 'Copius Data:Piecewise Linear Curve (3D)',
-    (106, 20): 'Copius Data:Centerline (through points)',
-    (106, 21): 'Copius Data:Centerline (through circle centers)',
-    (106, 31): 'Copius Data:Section (Iron, General Use)',
-    (106, 32): 'Copius Data:Section (Steel)',
-    (106, 33): 'Copius Data:Section (Bronze, brass, copper, etc.)',
-    (106, 34): 'Copius Data:Section (Rubber, plastic, etc.)',
-    (106, 35): 'Copius Data:Section (Titanium, etc.)',
-    (106, 36): 'Copius Data:Section (Marble, slate, glass, etc.)',
-    (106, 37): 'Copius Data:Section (Zinc, lead, etc.)',
-    (106, 38): 'Copius Data:Section (Magnesium, aluminum, etc.)',
-    (106, 40): 'Copius Data:Witness Line',
-    (106, 63): 'Copius Data:Simple Closed Planar Curve',
+    (104, 1): "Conic Arc:Ellipse",
+    (104, 2): "Conic Arc:Hyperbola",
+    (104, 3): "Conic Arc:Parabola",
+    (106, 11): "Copius Data:Piecewise Linear Curve (2D)",
+    (106, 12): "Copius Data:Piecewise Linear Curve (3D)",
+    (106, 20): "Copius Data:Centerline (through points)",
+    (106, 21): "Copius Data:Centerline (through circle centers)",
+    (106, 31): "Copius Data:Section (Iron, General Use)",
+    (106, 32): "Copius Data:Section (Steel)",
+    (106, 33): "Copius Data:Section (Bronze, brass, copper, etc.)",
+    (106, 34): "Copius Data:Section (Rubber, plastic, etc.)",
+    (106, 35): "Copius Data:Section (Titanium, etc.)",
+    (106, 36): "Copius Data:Section (Marble, slate, glass, etc.)",
+    (106, 37): "Copius Data:Section (Zinc, lead, etc.)",
+    (106, 38): "Copius Data:Section (Magnesium, aluminum, etc.)",
+    (106, 40): "Copius Data:Witness Line",
+    (106, 63): "Copius Data:Simple Closed Planar Curve",
     (108, 0): PlaneUnbounded,
-    (108, 1): 'Plane:Bounded',
+    (108, 1): "Plane:Bounded",
     (110, 0): Line,
     (112, 0): ParametricSplineCurve,
-    (114, 0): 'Parametric Spline Surface',
-    (116, 0): 'Point',
-    (118, 0): 'Ruled Surface:Equal Relative Arc Length',
-    (118, 1): 'Ruled Surface:Equal Relative Parametric Values',
-    (120, 0): 'Surface of Revolution',
-    (122, 0): 'Tabulated Cylinder',
-    (124, 0): 'Transformation Matrix:Right-handed (default)',
-    (124, 1): 'Transformation Matrix:Left-handed',
+    (114, 0): "Parametric Spline Surface",
+    (116, 0): "Point",
+    (118, 0): "Ruled Surface:Equal Relative Arc Length",
+    (118, 1): "Ruled Surface:Equal Relative Parametric Values",
+    (120, 0): "Surface of Revolution",
+    (122, 0): "Tabulated Cylinder",
+    (124, 0): "Transformation Matrix:Right-handed (default)",
+    (124, 1): "Transformation Matrix:Left-handed",
     (126, 0): BSpline,
-    (126, 1): 'Rational B-Spline Curve - Line',
-    (126, 2): 'Rational B-Spline Curve - Circular Arc',
-    (126, 3): 'Rational B-Spline Curve - Elliptical Arc',
-    (126, 4): 'Rational B-Spline Curve - Parabolic Arc',
-    (126, 5): 'Rational B-Spline Curve - Hyperbolic Arc',
+    (126, 1): "Rational B-Spline Curve - Line",
+    (126, 2): "Rational B-Spline Curve - Circular Arc",
+    (126, 3): "Rational B-Spline Curve - Elliptical Arc",
+    (126, 4): "Rational B-Spline Curve - Parabolic Arc",
+    (126, 5): "Rational B-Spline Curve - Hyperbolic Arc",
     (128, 0): RationalBSplineSurface,
-    (128, 2): 'Rational B-Spline Surface:Right Circular Cylinder',
-    (128, 3): 'Rational B-Spline Surface:Cone',
-    (128, 4): 'Rational B-Spline Surface:Sphere',
-    (128, 5): 'Rational B-Spline Surface:Torus',
-    (128, 9): 'Rational B-Spline Surface:General Quadratic Surface',
-    (130, 0): 'Offset Curve',
-    (140, 0): 'Offset Surface',
+    (128, 2): "Rational B-Spline Surface:Right Circular Cylinder",
+    (128, 3): "Rational B-Spline Surface:Cone",
+    (128, 4): "Rational B-Spline Surface:Sphere",
+    (128, 5): "Rational B-Spline Surface:Torus",
+    (128, 9): "Rational B-Spline Surface:General Quadratic Surface",
+    (130, 0): "Offset Curve",
+    (140, 0): "Offset Surface",
     (142, 0): CurveParametricSurface,
     (144, 0): TrimmedParametricSurface,
-    (202, 0): 'Angular Dimension',
-    (206, 0): 'Diameter Dimension',
-    (202, 0): 'General Label',
-    (212, 0): 'General Note:Simple Note (default)',
-    (212, 1): 'General Note:Dual Stack',
-    (212, 2): 'General Note:Imbedded Font Change',
-    (212, 3): 'General Note:Superscript',
-    (212, 4): 'General Note:Subscript',
-    (212, 5): 'General Note:Superscript, Subscript',
-    (212, 6): 'General Note:Multiple Stack, Left Justify',
-    (212, 7): 'General Note:Multiple Stack, Center Justify',
-    (212, 8): 'General Note:Multiple Stack, Right Justify',
-    (212, 100): 'General Note:Simple Fraction',
-    (212, 101): 'General Note:Dual Stack Fraction',
-    (212, 102): 'General Note:Imbedded Font Change, Double Fraction',
-    (212, 105): 'General Note:Superscript, Subscript Fraction',
-    (214, 1): 'Leader/Arrow:Wedge',
-    (214, 2): 'Leader/Arrow:Triangle',
-    (214, 3): 'Leader/Arrow:Filled Triangle',
-    (214, 4): 'Leader/Arrow:No Arrowhead',
-    (214, 5): 'Leader/Arrow:Circle',
-    (214, 6): 'Leader/Arrow:Filled Circle',
-    (214, 7): 'Leader/Arrow:Rectangle',
-    (214, 8): 'Leader/Arrow:Filled Rectangle',
-    (214, 9): 'Leader/Arrow:Slash',
-    (214, 10): 'Leader/Arrow:Integral Sign',
-    (214, 11): 'Leader/Arrow:Open Triangle',
-    (216, 0): 'Linear Dimension:Undetermined (default)',
-    (216, 0): 'Ordinate Dimension:Witness or Leader',
-    (220, 0): 'Point Dimension',
-    (222, 0): 'Radius Dimension:Single Leader Format',
-    (228, 0): 'General Symbol:General Symbol (default)',
-    (228, 1): 'General Symbol:Datum Feature Symbol',
-    (228, 2): 'General Symbol:Datum Target Symbol',
-    (228, 3): 'General Symbol:Feature Control Symbol',
-    (230, 0): 'Sectioned Area:Default',
-    (308, 0): 'Subfigure Definition',
-    (404, 0): 'Drawing:Normal Drawing (default)',
+    (202, 0): "Angular Dimension",
+    (206, 0): "Diameter Dimension",
+    (202, 0): "General Label",
+    (212, 0): "General Note:Simple Note (default)",
+    (212, 1): "General Note:Dual Stack",
+    (212, 2): "General Note:Imbedded Font Change",
+    (212, 3): "General Note:Superscript",
+    (212, 4): "General Note:Subscript",
+    (212, 5): "General Note:Superscript, Subscript",
+    (212, 6): "General Note:Multiple Stack, Left Justify",
+    (212, 7): "General Note:Multiple Stack, Center Justify",
+    (212, 8): "General Note:Multiple Stack, Right Justify",
+    (212, 100): "General Note:Simple Fraction",
+    (212, 101): "General Note:Dual Stack Fraction",
+    (212, 102): "General Note:Imbedded Font Change, Double Fraction",
+    (212, 105): "General Note:Superscript, Subscript Fraction",
+    (214, 1): "Leader/Arrow:Wedge",
+    (214, 2): "Leader/Arrow:Triangle",
+    (214, 3): "Leader/Arrow:Filled Triangle",
+    (214, 4): "Leader/Arrow:No Arrowhead",
+    (214, 5): "Leader/Arrow:Circle",
+    (214, 6): "Leader/Arrow:Filled Circle",
+    (214, 7): "Leader/Arrow:Rectangle",
+    (214, 8): "Leader/Arrow:Filled Rectangle",
+    (214, 9): "Leader/Arrow:Slash",
+    (214, 10): "Leader/Arrow:Integral Sign",
+    (214, 11): "Leader/Arrow:Open Triangle",
+    (216, 0): "Linear Dimension:Undetermined (default)",
+    (216, 0): "Ordinate Dimension:Witness or Leader",
+    (220, 0): "Point Dimension",
+    (222, 0): "Radius Dimension:Single Leader Format",
+    (228, 0): "General Symbol:General Symbol (default)",
+    (228, 1): "General Symbol:Datum Feature Symbol",
+    (228, 2): "General Symbol:Datum Target Symbol",
+    (228, 3): "General Symbol:Feature Control Symbol",
+    (230, 0): "Sectioned Area:Default",
+    (308, 0): "Subfigure Definition",
+    (404, 0): "Drawing:Normal Drawing (default)",
     (406, 0): Property,
-    (406, 15): 'Property:Name',
-    (406, 16): 'Property:Drawing Size',
-    (406, 17): 'Property:Drawing Units',
-    (408, 0): 'Singular Subfigure Instance',
-    (410, 0): 'View:Orthogonal (default)',
+    (406, 15): "Property:Name",
+    (406, 16): "Property:Drawing Size",
+    (406, 17): "Property:Drawing Units",
+    (408, 0): "Singular Subfigure Instance",
+    (410, 0): "View:Orthogonal (default)",
 }
 
 
 # -----------------------------------------------------------------------------
 class IGESfile(object):
-    _re_sep = re.compile('^1H(?P<sep_par>.).1H(?P<sep_rec>.).*$')
-    _re_str = re.compile('[0-9]+H(?P<str_val>.*)')
-    _re_flt = re.compile('^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$')
-    _re_stk = re.compile('(?P<first>[ ]*[0-9+-eE]+[^Ee])-[0-9+-eE]')
-    _re_sqn = re.compile('.*[ ,]+(?P<seq_num>[0-9]+)\Z')
+    _re_sep = re.compile("^1H(?P<sep_par>.).1H(?P<sep_rec>.).*$")
+    _re_str = re.compile("[0-9]+H(?P<str_val>.*)")
+    _re_flt = re.compile("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$")
+    _re_stk = re.compile("(?P<first>[ ]*[0-9+-eE]+[^Ee])-[0-9+-eE]")
+    _re_sqn = re.compile(".*[ ,]+(?P<seq_num>[0-9]+)\Z")
     (START, GLOBAL, DIRECTORY, PARAMETER, TERMINATE) = range(5)
     _tb_sec = {}
     _tb_ent = ENTTABLE
 
     def __init__(self, filename=None):
         self.de_counter = 0
-        self.sep_par = ','
-        self.sep_rec = ';'
+        self.sep_par = ","
+        self.sep_rec = ";"
         self.lineslist = []
         self.comment = []
         self.directory = []
-        IGESfile._tb_sec = {'S': (IGESfile.START, 'Start'),
-                            'G': (IGESfile.GLOBAL, 'Global'),
-                            'D': (IGESfile.DIRECTORY, 'Directory'),
-                            'P': (IGESfile.PARAMETER, 'Parameter'),
-                            'T': (IGESfile.TERMINATE, 'Terminate'),
-                            }
-        if (filename is not None):
+        IGESfile._tb_sec = {
+            "S": (IGESfile.START, "Start"),
+            "G": (IGESfile.GLOBAL, "Global"),
+            "D": (IGESfile.DIRECTORY, "Directory"),
+            "P": (IGESfile.PARAMETER, "Parameter"),
+            "T": (IGESfile.TERMINATE, "Terminate"),
+        }
+        if filename is not None:
             fd = open(sys.argv[1])
             self.lineslist = fd.readlines()
             fd.close()
@@ -638,7 +666,7 @@ class IGESfile(object):
         ecount = 1
         pcount = 1
         for e in self.directory:
-            if (code in [None, e[0]]):
+            if code in [None, e[0]]:
                 yield ((ecount, pcount), e)
             ecount += 1
             pcount += 2
@@ -669,11 +697,11 @@ class IGESfile(object):
         for sl in s:
             g = IGESfile._re_sqn.match(sl)
             try:
-                seq_num = g.group('seq_num')
-                rl += [sl[:-len(seq_num)]]
+                seq_num = g.group("seq_num")
+                rl += [sl[: -len(seq_num)]]
             except (AttributeError,):
                 rl += sl
-        return ''.join(rl)
+        return "".join(rl)
 
     def snaprecord(self, line):
         return line.split(self.sep_rec)
@@ -690,10 +718,21 @@ class IGESfile(object):
         two = False
         for de in line:
             self.de_counter += 1
-            tk = [self.guesstype(t) for t in [de[:9], de[8:16], de[16:24], de[24:32],
-                                              de[32:40], de[40:48], de[48:56],
-                                              de[56:64], de[64:72]]]
-            if (two):
+            tk = [
+                self.guesstype(t)
+                for t in [
+                    de[:9],
+                    de[8:16],
+                    de[16:24],
+                    de[24:32],
+                    de[32:40],
+                    de[40:48],
+                    de[48:56],
+                    de[56:64],
+                    de[64:72],
+                ]
+            ]
+            if two:
                 two = False
                 tkp += tk[1:]
                 tkl.append(tkp)
@@ -705,8 +744,8 @@ class IGESfile(object):
     def snapsticky(self, token):
         g = IGESfile._re_stk.match(token)
         try:
-            first = g.group('first')
-            token = first.strip() + self.sep_par + token[len(first):]
+            first = g.group("first")
+            token = first.strip() + self.sep_par + token[len(first) :]
         except (AttributeError,):
             pass
         return token
@@ -719,8 +758,8 @@ class IGESfile(object):
     def sepdetect(self, line):
         g = IGESfile._re_sep.match(line)
         try:
-            self.sep_par = g.group('sep_par')
-            self.sep_rec = g.group('sep_rec')
+            self.sep_par = g.group("sep_par")
+            self.sep_rec = g.group("sep_rec")
             return True
         except (AttributeError,):
             return False
@@ -738,11 +777,11 @@ class IGESfile(object):
             pass
         g = IGESfile._re_str.match(token)
         try:
-            v = g.group('str_val')
+            v = g.group("str_val")
             return v
         except (AttributeError,):
             pass
-        if (token == '        '):
+        if token == "        ":
             token = None
         return token
 
@@ -750,10 +789,9 @@ class IGESfile(object):
 # -----------------------------------------------------------------------------
 def IGESfactory(index, direntry):
     code = (direntry[0], 0)
-    if (code in ENTTABLE and
-            not isinstance(ENTTABLE[code], str)):
+    if code in ENTTABLE and not isinstance(ENTTABLE[code], str):
         return ENTTABLE[code](index, direntry[1:])
-    return IGESentity(direntry[0], '', index, direntry[1:])
+    return IGESentity(direntry[0], "", index, direntry[1:])
 
 
 # -----------------------------------------------------------------------------
@@ -791,15 +829,15 @@ class IGESbase:
 
     def parsechildren(self, index, name):
         e = IGESentity.find(index)
-        node = [name, None, [], 'UserDefinedData_t']
+        node = [name, None, [], "UserDefinedData_t"]
         node[2] += e.asCGNS()
-        if (e.code == 406):
+        if e.code == 406:
             fname = e.property
         else:
             fname = None
         for c in e.allchildren():
             if c not in e.childrenname:
-                name = 'Entity#%.4d' % c
+                name = "Entity#%.4d" % c
             else:
                 name = e.childrenname[c]
             f, n = self.parsechildren(c, name)
@@ -809,49 +847,56 @@ class IGESbase:
         return (fname, node)
 
     def tree(self, topindex):
-        (f, r) = self.parsechildren(topindex, 'Entity#%.4d' % topindex)
-        if (f is None):  # check if there's a label
+        (f, r) = self.parsechildren(topindex, "Entity#%.4d" % topindex)
+        if f is None:  # check if there's a label
             f = IGESentity.find(topindex).label()
-        if (f in ['', None]):
-            f = 'Unknown#%.4d' % IGESbase._cnt
+        if f in ["", None]:
+            f = "Unknown#%.4d" % IGESbase._cnt
             IGESbase._cnt += 1
         return f, r
 
 
 # -----------------------------------------------------------------------------
-debug = 1
-if len(args.files) < 2:
-    sys.exit(1)
+def main():
+    args = parse()
+    debug = 1
+    if len(args.files) < 2:
+        sys.exit(1)
 
-f = IGESfile(args.files[0])
-f.parse()
-db = IGESbase(args.files[0])
+    f = IGESfile(args.files[0])
+    f.parse()
+    db = IGESbase(args.files[0])
 
-for (ix, de) in f.entries():
-    e = IGESfactory(ix, de)
-    db.addentity(e)
+    for ix, de in f.entries():
+        e = IGESfactory(ix, de)
+        db.addentity(e)
 
-db.bind()
-db.dump()
+    db.bind()
+    db.dump()
 
-basename = 'B'
+    basename = "B"
 
-T = CGL.newCGNSTree()
-b = CGL.newCGNSBase(T, basename, 3, 3)
+    T = CGL.newCGNSTree()
+    b = CGL.newCGNSBase(T, basename, 3, 3)
 
-toplist = db.nodeps()
+    toplist = db.nodeps()
 
-for top in toplist:
-    (fname, et) = db.tree(top)
-    f = CGL.newFamily(b, fname)
-    g = CGL.newGeometryReference(f, 'Geometry IGES', CGK.NASAIGES_s)
-    CGU.setAsChild(g, et)
+    for top in toplist:
+        (fname, et) = db.tree(top)
+        f = CGL.newFamily(b, fname)
+        g = CGL.newGeometryReference(f, "Geometry IGES", CGK.NASAIGES_s)
+        CGU.setAsChild(g, et)
 
-if debug:
-    for p in CGU.getPathsFullTree(T):
-        print(p)
-    print(CGU.prettyPrint(T))
+    if debug:
+        for p in CGU.getPathsFullTree(T):
+            print(p)
+        print(CGU.prettyPrint(T))
 
-CGM.save(args.files[1], T)
+    CGM.save(args.files[1], T)
+
+
+if __name__ == "__main__":
+    main()
+
 
 # --- last line

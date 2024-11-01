@@ -7,7 +7,7 @@
 import sys
 import time
 
-from CGNS.pyCGNSconfig import HAS_MSW
+from CGNS.NAV.config import HAS_MSW
 
 if HAS_MSW:
     import ctypes

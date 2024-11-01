@@ -1,0 +1,40 @@
+# ======================================================================
+# pyCGNS - CGNS NAV LIBRARY 
+# See license.txt in the root directory of this source release
+# ======================================================================
+#
+# ----------------------------------------------------------------------
+# Configuration template file for NAV
+# THIS FILE IS PRE-PROCESSED
+# ----------------------------------------------------------------------
+#
+
+from qtpy import __version__ as PYQT_VERSION
+from qtpy.QtCore import __version__ as QT_VERSION
+
+from CGNS import __version__ as version
+from CGNS.__config__ import show
+
+_config = show("dicts")
+
+CYTHON_VERSION = _config["Compilers"]["cython"]["version"]
+NUMPY_VERSION = _config["Build Dependencies"]["numpy"]["version"]
+HDF5_VERSION = _config["Build Dependencies"]["hdf5"]["version"]
+
+HAS_MSW = @HAS_MSW@
+
+if @USE_VTK@:
+    try:
+        import vtk
+        v = vtk.vtkVersion()
+        HAS_VTK = True
+        VTK_VERSION = v.GetVTKVersion()
+    except:
+        HAS_VTK = False
+        VTK_VERSION = ""
+else:
+    HAS_VTK = False
+    VTK_VERSION = ""
+
+
+# --- last line 
