@@ -1,6 +1,6 @@
 #  -------------------------------------------------------------------------
 #  pyCGNS - Python package for CFD General Notation System -
-#  See license.txt file in the root directory of this Python module source  
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 """
@@ -19,8 +19,9 @@
     
 """
 #
-from . import version 
+from . import version
 from .version import __version__
+
 #
 backend_h5py = False
 #
@@ -33,18 +34,20 @@ except ImportError as e:
     raise ImportError(msg) from e
 
 
-
 submodules = [
-    'MAP',
-    'PAT',
+    "MAP",
+    "PAT",
 ]
 
 __all__ = submodules + [
-    'show_config',
-    '__version__',
+    "show_config",
+    "__version__",
 ]
+
 
 def __dir__():
     return __all__
+
+
 #
 # --- last line

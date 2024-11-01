@@ -24,23 +24,14 @@ def process_tempita(fromfile, outfile=None):
 
     content = template.substitute()
 
-    with open(outfile, 'w') as f:
+    with open(outfile, "w") as f:
         f.write(content)
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "infile",
-        type=str,
-        help="Path to the input file"
-    )
-    parser.add_argument(
-        "-o",
-        "--outfile",
-        type=str,
-        help="Path to the output file"
-    )
+    parser.add_argument("infile", type=str, help="Path to the input file")
+    parser.add_argument("-o", "--outfile", type=str, help="Path to the output file")
     parser.add_argument(
         "-i",
         "--ignore",
@@ -50,7 +41,7 @@ def main():
     )
     args = parser.parse_args()
 
-    if not args.infile.endswith('.in'):
+    if not args.infile.endswith(".in"):
         raise ValueError(f"Unexpected extension: {args.infile}")
 
     outfile_abs = os.path.join(os.getcwd(), args.outfile)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #  -------------------------------------------------------------------------
-#  pyCGNS - Python package for CFD General Notation System - 
-#  See license.txt file in the root directory of this Python module source  
+#  pyCGNS - Python package for CFD General Notation System -
+#  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 #
 import getopt
@@ -14,7 +14,8 @@ from CGNS.VAL import __vid__
 
 
 def usage():
-    print("""CGNS.VAL v%s
+    print(
+        """CGNS.VAL v%s
   
   CGNS.VAL [options] file.hdf
   
@@ -31,15 +32,18 @@ def usage():
   User requirements are identified by a <key>, all known
   keys can be listed with the -k option.
   See documentation for more details.
-  """ % __vid__)
+  """
+        % __vid__
+    )
     sys.exit(-1)
+
 
 def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], "klmfhvu:r:p:")
     except getopt.GetoptError:
         usage()
-    
+
     verbose = False
     mlist = False
     klist = False
@@ -48,7 +52,7 @@ def main():
     pathsort = True
     olist = []
     idlist = []
-    
+
     for o, v in opts:
         if o == "-k":
             klist = True
@@ -65,40 +69,43 @@ def main():
         if o == "-u":
             userlist += [v]
         if o == "-r":
-            idlist = v.split(':')
+            idlist = v.split(":")
         if o in ("-h", "--help"):
             usage()
-    
+
     try:
         filename = args[0]
     except IndexError:
         if (not mlist) and (not klist):
             usage()
-    
+
     if not userlist:
-        userlist = ['DEFAULT']
-    
+        userlist = ["DEFAULT"]
+
     if verbose:
-        print('### CGNS.VAL v%s' % __vid__)
-    
+        print("### CGNS.VAL v%s" % __vid__)
+
     if mlist:
         ml = CGV.listdiags(verbose, userlist)
         print(ml)
     elif klist:
-        print('### Looking for keys, parsing PYTHONPATH may be long...')
+        print("### Looking for keys, parsing PYTHONPATH may be long...")
         kl = CGV.listuserkeys(verbose)
         print(kl)
     else:
         if verbose:
-            print('### Loading file [%s]' % filename)
-        (tree, links, paths) = CGNS.MAP.load(filename,
-                                             flags=CGNS.MAP.S2P_DEFAULTS | CGNS.MAP.S2P_NODATA,
-                                             lksearch=['.'], maxdata=200)
+            print("### Loading file [%s]" % filename)
+        (tree, links, paths) = CGNS.MAP.load(
+            filename,
+            flags=CGNS.MAP.S2P_DEFAULTS | CGNS.MAP.S2P_NODATA,
+            lksearch=["."],
+            maxdata=200,
+        )
         checkdiag = CGV.run(tree, verbose, userlist)
         CGV.showDiag(checkdiag, idlist, bypath=pathsort)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
 # --- last line

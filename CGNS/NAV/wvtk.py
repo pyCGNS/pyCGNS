@@ -94,9 +94,9 @@ class Q7VTK(Q7Window, Ui_Q7VTKWindow):
         if not self.wCGNSTreeParse(self._tree, zlist):
             return
         self._vtkstatus = True
-        self._xmin = (
-            self._ymin
-        ) = self._zmin = self._xmax = self._ymax = self._zmax = 0.0
+        self._xmin = self._ymin = self._zmin = self._xmax = self._ymax = self._zmax = (
+            0.0
+        )
         self._epix = QIcon(QPixmap(":/images/icons/empty.png"))
         self._spix = QIcon(QPixmap(":/images/icons/selected.png"))
         self._npix = QIcon(QPixmap(":/images/icons/unselected.png"))

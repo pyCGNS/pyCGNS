@@ -15,7 +15,7 @@ def import_file(folder, module_name):
     import importlib
     import pathlib
 
-    fname = pathlib.Path(folder) / f'{module_name}.py'
+    fname = pathlib.Path(folder) / f"{module_name}.py"
     spec = importlib.util.spec_from_file_location(module_name, str(fname))
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
