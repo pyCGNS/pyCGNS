@@ -38,7 +38,9 @@ jobs:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
+        git config --global safe.directory "*"
         bash .github/workflows/build-wheels.sh
         /opt/python/cp310-cp310/bin/python -m build --wheel --outdir buildwheel/
         /opt/python/cp310-cp310/bin/python -m build --sdist --outdir wheelhouse/
-        #        /opt/python/cp38-cp38/bin/python -m twine upload wheelhouse/*
+        ls wheelhouse/
+        #        /opt/python/cp310-cp310/bin/python -m twine upload wheelhouse/*
