@@ -14,7 +14,7 @@ function repair_wheel {
 }
 
 # Compile wheels
-for PYBIN in cp38-cp38 cp310-cp310 cp312-cp312; do
+for PYBIN in cp310-cp310 cp312-cp312; do
     "/opt/python/${PYBIN}/bin/pip" install numpy cython meson-python
     "/opt/python/${PYBIN}/bin/pip" wheel . --no-deps -w dist/
 done
