@@ -21,8 +21,8 @@ jobs:
     - name: Install dev dependencies
       run: |
         yum -y install gcc
-        export HDF5_VERSION=1.8.20
-        curl -fsSLO "https://www.hdfgroup.org/ftp/HDF5/releases/hdf5-${HDF5_VERSION%.*}/hdf5-$HDF5_VERSION/src/hdf5-$HDF5_VERSION.tar.gz"
+        export HDF5_VERSION=1.12.1
+        curl -fsSLO "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${HDF5_VERSION%.*}/hdf5-$HDF5_VERSION/src/hdf5-$HDF5_VERSION.tar.gz"
         gunzip < hdf5-$HDF5_VERSION.tar.gz | tar xf -
         cd hdf5-$HDF5_VERSION
         export CFLAGS="-O3 -fPIC"
