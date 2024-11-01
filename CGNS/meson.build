@@ -75,10 +75,47 @@ conf_data.set('PYTHON_PATH', py.full_path())
 conf_data.set('PYTHON_VERSION', py.language_version())
 
 
+# Numpy include directory - needed by MAP and config
+#
+# this uses the path as is, and avoids running the interpreter.
+incdir_numpy = meson.get_external_property('numpy-include-dir', 'not-given')
+if incdir_numpy == 'not-given'
+  incdir_numpy = run_command(py,
+    [
+      '-c',
+      '''import os
+import numpy as np
+try:
+  incdir = os.path.relpath(np.get_include())
+except Exception:
+  incdir = np.get_include()
+print(incdir)
+  '''
+    ],
+    check: true
+  ).stdout().strip()
+
+  # We do need an absolute path to feed to `cc.find_library` below
+  _incdir_numpy_abs = run_command(py,
+    ['-c', 'import os; os.chdir(".."); import numpy; print(numpy.get_include())'],
+    check: true
+  ).stdout().strip()
+else
+  _incdir_numpy_abs = incdir_numpy
+endif
+inc_np = include_directories(incdir_numpy)
+# Don't use the deprecated NumPy C API. Define this to a fixed version instead of
+# NPY_API_VERSION in order not to break compilation for released MAP versions
+# when NumPy introduces a new deprecation.
+numpy_nodepr_api = ['-DNPY_NO_DEPRECATED_API=NPY_1_9_API_VERSION']
+np_dep = declare_dependency(include_directories: inc_np, compile_args: numpy_nodepr_api)
+
 hdf5_dep = dependency('hdf5', language: 'c')
 dependency_map = {
   'HDF5': hdf5_dep,
+  'NUMPY': np_dep,
 }
+
 
 foreach name, dep : dependency_map
   conf_data.set(name + '_NAME', dep.name())
@@ -93,6 +130,15 @@ foreach name, dep : dependency_map
     conf_data.set(name + '_PCFILEDIR', dep.get_variable('pcfiledir', default_value: 'unknown'))
   endif
 endforeach
+
+conf_data.set('PLATFORM', host_machine.system())
+
+generate_prod_tag = run_command(
+    '../_build_utils/prodtag.py',
+    check: true
+)
+conf_data.set('DATE', generate_prod_tag.stdout().strip())
+
 
 
 configure_file(

@@ -4,7 +4,7 @@
 #  See license.txt file in the root directory of this Python module source
 #  -------------------------------------------------------------------------
 # IGES reader -v0.0
-# marc.poinot@onera.fr
+# marc.poinot@safran.fr
 # ??? marks non understandable fixes
 import sys
 import re

@@ -28,6 +28,8 @@ recursive-include CGNS meson_options.txt
 recursive-include lib *.py *.txt *.ico *.bmp *.xcf *.iss *.tmp
 recursive-include windows *.h
 
+recursive-include _build_utils *.py *.txt
+
 include .pylintrc
 include CGNS/NAV/R/icons/ACKNOWLEDGEMENT
 
