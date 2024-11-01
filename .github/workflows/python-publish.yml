@@ -31,7 +31,7 @@ jobs:
         make check -i               # run test suite.
         make install
         make check-install        # verify installation.
-        /opt/python/cp38-cp38/bin/pip install twine auditwheel
+        /opt/python/cp310-cp310/bin/pip install twine auditwheel
         cd
     - name: Build and publish
       env:
@@ -39,6 +39,6 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         bash .github/workflows/build-wheels.sh
-        /opt/python/cp38-cp38/bin/python -m build --wheel --outdir buildwheel/
-        /opt/python/cp38-cp38/bin/python -m build --sdist --outdir wheelhouse/
+        /opt/python/cp310-cp310/bin/python -m build --wheel --outdir buildwheel/
+        /opt/python/cp310-cp310/bin/python -m build --sdist --outdir wheelhouse/
         #        /opt/python/cp38-cp38/bin/python -m twine upload wheelhouse/*
