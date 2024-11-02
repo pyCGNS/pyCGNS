@@ -191,7 +191,9 @@ c_args_common = [
   cflags_large_file_support,
 ]
 # flags for hdf5
-c_args_common += ['-Wno-return-type']
+if not is_windows or is_mingw
+  c_args_common += ['-Wno-return-type']
+endif
 
 if is_mingw
   c_args_common += ['-Wno-format-extra-args', '-Wno-format']
