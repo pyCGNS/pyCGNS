@@ -50,8 +50,9 @@ def enumAsKeyDict(l):
 # --- ADF-level Datatypes
 #
 # MT: No data; LK: Link
-adftypes = ("C1", "I4", "I8", "R4", "R8", "MT", "LK")
-(C1, I4, I8, R4, R8, MT, LK) = adftypes
+adftypes = ("C1", "I4", "I8", "R4", "R8", "X4", "X8", "MT", "LK")
+(C1, I4, I8, R4, R8, X4, X8, MT, LK) = adftypes
+
 
 # --------------------------------------------------
 # --- ADF-level Constants
