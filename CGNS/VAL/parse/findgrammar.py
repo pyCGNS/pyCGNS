@@ -7,7 +7,7 @@ import sys
 import os
 import os.path
 import fnmatch
-import imp
+import importlib
 import CGNS.VAL.grammars.etablesids as STB
 
 PROFILENAME = "grammars"
@@ -23,12 +23,14 @@ def readProfile():
     if not os.path.exists(pdir):
         return {}
     sys.path.append(pdir)
-    fp, pth, des = imp.find_module("grammars")
     try:
-        mod = imp.load_module("grammars", fp, pth, des)
-    finally:
-        if fp:
-            fp.close()
+        grammars_spec = importlib.util.find_spec("grammars")
+    except (ImportError, AttributeError, TypeError, ValueError) as ex:
+        raise Exception("Error while finding module specification for grammars")
+    if not grammars_spec:
+        raise Exception("Could not find grammars module")
+    mod = importlib.util.module_from_spec(grammars_spec)
+    grammars_spec.loader.exec_module(mod)
     return mod.Grammars
 
 
@@ -100,8 +102,10 @@ def importUserGrammars(key, recurse=False, verbose=False):
     if verbose:
         print("### Looking for grammar [%s]" % key)
     try:
-        tp = imp.find_module(modname)
-    except ImportError:
+        tp_spec = importlib.util.find_spec(modname)
+    except (ImportError, AttributeError, TypeError, ValueError) as ex:
+        raise Exception("Error while finding module specification for %s" % modname)
+    if not tp_spec:
         if verbose:
             print("### Error: grammar [%s] not found" % key)
         if recurse:
@@ -111,25 +115,20 @@ def importUserGrammars(key, recurse=False, verbose=False):
                 if verbose:
                     print("### Warning: not in search path [%s]" % dk[key])
                 try:
-                    tp = imp.find_module(modname)
-                except ImportError:
+                    tp_spec = importlib.util.find_spec(modname)
+                except (ImportError, AttributeError, TypeError, ValueError) as ex:
+                    raise Exception(
+                        "Error while finding module specification for %s" % modname
+                    )
+                if not tp_spec:
                     return None
             else:
                 return None
         else:
             return None
-    try:
-        fp = tp[0]
-        if tp[2][2] != imp.C_EXTENSION:
-            mod = imp.load_module(modname, *tp)
-        else:
-            # print '### CGNS.VAL [info]: Module info',tp
-            mod = imp.load_dynamic(modname, tp[1], tp[0])
-    except:
-        pass
-    finally:
-        if fp:
-            fp.close()
+    mod = importlib.util.module_from_spec(tp_spec)
+    tp_spec.loader.exec_module(mod)
+    # sys.modules[modname] = mod
     return mod
 
 

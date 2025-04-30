@@ -9,7 +9,7 @@ import shutil
 import os
 import os.path as op
 import sys
-import imp
+import importlib
 import tempfile
 
 from time import gmtime, strftime
@@ -953,14 +953,15 @@ if (PARENT[0]=='.Solver#Param'):
         sprev = sys.path
         sys.path = [dpath] + sys.path
         try:
-            fp, pathname, description = imp.find_module(name)
-        except IndexError:  # ImportError:
+            spec = importlib.util.find_spec(name)
+        except (ImportError, AttributeError, TypeError, ValueError) as ex:
+            # print("Error while finding module specification for %s" % name)
             return None
-        try:
-            mod = imp.load_module(name, fp, pathname, description)
-        finally:
-            if fp:
-                fp.close()
+        if not spec:
+            return None
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        # sys.modules[modname] = mod
         removeSubDirAndFiles(dpath)
         sys.path = sprev
         return mod
