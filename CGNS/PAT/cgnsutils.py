@@ -7,7 +7,6 @@ from functools import cmp_to_key
 from typing import (
     List,
     Optional,
-    NoReturn,
     Union,
     Tuple,
     Iterator,
@@ -599,7 +598,7 @@ def checkParentType(parent: Optional[TreeNode], stype: str) -> bool:
 
 
 # -----------------------------------------------------------------------------
-def checkTypeList(parent: Optional[TreeNode], ltype: List[str], name: str) -> NoReturn:
+def checkTypeList(parent: Optional[TreeNode], ltype: List[str], name: str) -> None:
     if parent is None:
         return None
     if parent[__LABEL__] not in ltype:
@@ -2015,7 +2014,7 @@ def removeChildByName(parent: TreeNode, name: str) -> None:
 
 
 # --------------------------------------------------
-def removeNodeFromPath(path: List[str], node: TreeNode) -> NoReturn:
+def removeNodeFromPath(path: List[str], node: TreeNode) -> None:
     target = getNodeFromPath(path, node)
     if len(path) > 1:
         father = getNodeFromPath(path[:-1], node)
@@ -2285,7 +2284,7 @@ def getPathsByTypeOrNameList(tree: TreeNode, typeornamelist: List[str]) -> List[
 
 
 # --------------------------------------------------
-def getAllParentTypePathsAux(ntype: str, path: str, plist: List[str]) -> NoReturn:
+def getAllParentTypePathsAux(ntype: str, path: str, plist: List[str]) -> None:
     tlist = CT.types[ntype].parents
     for pt in tlist:
         plist.append(path + "/" + pt)
@@ -2419,7 +2418,7 @@ def stackPathItem(path: str, *items: str) -> str:
 
 
 # --------------------------------------------------
-def getPaths(tree: TreeNode, path: str, plist: List[str]) -> NoReturn:
+def getPaths(tree: TreeNode, path: str, plist: List[str]) -> None:
     for c in tree[__CHILDREN__]:
         if (len(c) > 1) and isinstance(c[__NAME__], str):
             plist.append(path + "/" + c[__NAME__])
@@ -3528,7 +3527,7 @@ def toStringChildren(
 
 
 # --------------------------------------------------
-def prettyPrint(tree, path="", depth=0, sort=False, links=None, paths=None) -> NoReturn:
+def prettyPrint(tree, path="", depth=0, sort=False, links=None, paths=None) -> None:
     """ASCII pretty print of the whole tree."""
     if links is None:
         links = []
@@ -3611,7 +3610,7 @@ tree=\\\n"""
 
 
 # --------------------------------------------------
-def toFile(tree: TreeNode, filename: str) -> NoReturn:
+def toFile(tree: TreeNode, filename: str) -> None:
     """
     Writes the CGNS/Python tree as an ``import``-able string in a file::
 
