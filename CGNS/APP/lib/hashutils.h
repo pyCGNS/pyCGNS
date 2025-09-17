@@ -17,7 +17,7 @@ typedef struct __f_entry_t
 
 typedef __f_entry_t ** F_entry_ptr;
 
-__f_entry_t *newHashTable(int s);
+__f_entry_t **newHashTable(int s);
 void freeHashTable(__f_entry_t *t[],int);
 void addHashEntry(__f_entry_t *t[],int,int,int,int,int,int,int);
 int fetchHashEntry(__f_entry_t *t[],int,int,int,int,int,int);

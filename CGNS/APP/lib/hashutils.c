@@ -3,7 +3,7 @@
   http://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
  *===========================================================================*/
 
-#undef PROBE_DEBUG 
+#undef PROBE_DEBUG
 
 #ifdef PROBE_DEBUG
 #include <stdio.h>
@@ -27,7 +27,7 @@ unsigned long __f_hash(int *key,int hsize)
   return hash%hsize;
 }
 /* ------------------------------------------------------------------------  */
-int __f_hashLookUp(__f_entry_t *table[],int *key,int hsize,int ins,int sec, 
+int __f_hashLookUp(__f_entry_t *table[],int *key,int hsize,int ins,int sec,
 		   int *i)
 {
   __f_entry_t *e;
@@ -36,7 +36,7 @@ int __f_hashLookUp(__f_entry_t *table[],int *key,int hsize,int ins,int sec,
   *i=__f_hash(key,hsize);
   e=table[*i];
   t=4*sizeof(int);
-  
+
   if (e!=NULL)
   {
     while ((e->next!=NULL)&&memcmp(e->k,key,t)){e=e->next;}
@@ -57,7 +57,7 @@ int __f_hashLookUpExt(__f_entry_t *table[],int *key,int hsize,int sec)
   i=__f_hash(key,hsize);
   e=table[i];
   t=4*sizeof(int);
-  
+
   if (e!=NULL)
   {
     while ((e->next!=NULL)&&memcmp(e->k,key,t)){e=e->next;}
@@ -96,11 +96,12 @@ void __f_hashInsert(__f_entry_t *table[],int *key,int face,int hsize,int sec)
   e->next=NULL;
 }
 /* ------------------------------------------------------------------------  */
-__f_entry_t *newHashTable(int s)
+__f_entry_t **newHashTable(int s)
 {
-  __f_entry_t *ret=NULL;
+  __f_entry_t **ret=NULL;
 
-  ret=(__f_entry_t*)malloc(sizeof(__f_entry_t)*s);
+  ret=(__f_entry_t**)malloc(sizeof(__f_entry_t*)*s);
+  memset(ret, 0, sizeof(__f_entry_t*)*s);
   return ret;
 }
 /* ------------------------------------------------------------------------  */
