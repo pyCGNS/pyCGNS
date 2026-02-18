@@ -1843,7 +1843,7 @@ def getPathsByTokenFilter(tree: TreeNode, filter: str) -> List[str]:
 
 # --------------------------------------------------
 def getPathsByNameFilter(tree: TreeNode, filter: str) -> List[str]:
-    """
+    r"""
     Returns a list of paths from T matching the filter. The filter is a
     `regular expression <http://docs.python.org/library/re.html>`_
     used to match the path of **node names**::
