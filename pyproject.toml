@@ -67,9 +67,6 @@ test = ['unittest']
 "cg_scan"  = "CGNS.APP.tools.cg_scan:main"
 "cg_scatter"  = "CGNS.APP.tools.cg_scatter:main"
 
-[project.gui-scripts]
-"cg_look"  = "CGNS.NAV.tools.cg_look:main"
-
 
 [tool.setuptools]
 # to ignore .pxd and .pyx files in wheels

@@ -22,6 +22,52 @@
 from CGNS import backend_h5py as HAS_H5PY
 
 
+_dll_directory_handles = []
+
+
+def _add_windows_dll_directories():
+    """Register likely native DLL directories before loading extensions.
+
+    On Windows with Python >= 3.8, dependent DLLs of extension modules are
+    not reliably resolved from PATH alone.  CGNS.MAP's EmbeddedCHLone extension
+    links to HDF5, so allow packagers/users to expose HDF5 with HDF5_ROOT and
+    also support common conda and PATH-based installations.
+    """
+    import os
+    import sys
+
+    if os.name != "nt" or not hasattr(os, "add_dll_directory"):
+        return
+
+    candidates = []
+    for root_name in ("HDF5_ROOT", "CONDA_PREFIX"):
+        root = os.environ.get(root_name)
+        if root:
+            candidates.extend(
+                [
+                    os.path.join(root, "bin"),
+                    os.path.join(root, "Library", "bin"),
+                ]
+            )
+
+    candidates.append(os.path.join(sys.prefix, "Library", "bin"))
+    candidates.extend(os.environ.get("PATH", "").split(os.pathsep))
+
+    seen = set()
+    for path in candidates:
+        if not path:
+            continue
+        path = os.path.abspath(path)
+        path_key = os.path.normcase(path)
+        if path_key in seen or not os.path.isdir(path):
+            continue
+        seen.add(path_key)
+        try:
+            _dll_directory_handles.append(os.add_dll_directory(path))
+        except OSError:
+            pass
+
+
 if HAS_H5PY:
     from .cgio import load, save, probe, flags
 
@@ -57,6 +103,8 @@ if HAS_H5PY:
     LKIGNORED = flags.links.IGNORED
 
 else:
+    _add_windows_dll_directories()
+
     from .EmbeddedCHLone import load, save, probe
     from .EmbeddedCHLone import CHLoneException as error
 

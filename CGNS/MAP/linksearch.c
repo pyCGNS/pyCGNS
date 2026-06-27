@@ -39,7 +39,7 @@ int get_file_in_search_path(L3_Cursor_t *ctxt, char *file)
   {
     buf=(char*)malloc(strlen(current->path)+strlen(file)+2);
     strcpy(buf,current->path);
-#ifdef CHLONE_ON_WINDOWS
+#if CHLONE_ON_WINDOWS
     strcat(buf,"\\");
 #else
     strcat(buf,"/");

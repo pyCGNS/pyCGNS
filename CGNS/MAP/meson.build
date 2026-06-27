@@ -79,7 +79,6 @@ np_dep = declare_dependency(include_directories: inc_np, compile_args: numpy_nod
 
 # Define HDF5 dependency
 # Use meson to detect headers features
-hdf5_dep = dependency('hdf5', language:'c', required: true)
 have_hdf5  = hdf5_dep.found()
 if have_hdf5
    if cc.has_header('H5pubconf.h', dependencies: hdf5_dep)
@@ -201,7 +200,7 @@ endif
 
 # Add Macro definition for HDF5 on Windows
 # _extra_macro_definition_
-if is_windows
+if is_windows and not get_option('hdf5-static')
   c_args_common += ['-D_HDF5USEDLL_', '-DH5_BUILT_AS_DYNAMIC_LIB']
 endif
 
