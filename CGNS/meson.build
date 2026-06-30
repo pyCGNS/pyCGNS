@@ -7,6 +7,12 @@ py.install_sources(
   subdir: 'CGNS'
 )
 
+install_data(
+  '../licenses/HDF5-LICENSE.txt',
+  install_dir: py.get_install_dir() / 'pyCGNS.libs/licenses',
+  install_tag: 'python-runtime'
+)
+
 # Generate version.py for sdist
 meson.add_dist_script(
    ['../_build_utils/gitversion.py', '--meson-dist', '--write',
@@ -110,7 +116,19 @@ inc_np = include_directories(incdir_numpy)
 numpy_nodepr_api = ['-DNPY_NO_DEPRECATED_API=NPY_1_9_API_VERSION']
 np_dep = declare_dependency(include_directories: inc_np, compile_args: numpy_nodepr_api)
 
-hdf5_dep = dependency('hdf5', language: 'c')
+hdf5_root = get_option('hdf5-root')
+if hdf5_root != ''
+  hdf5_dependencies = [cc.find_library('hdf5', dirs: hdf5_root / 'lib', required: true)]
+  if host_machine.system() == 'windows' and get_option('hdf5-static')
+    hdf5_dependencies += cc.find_library('shlwapi', required: true)
+  endif
+  hdf5_dep = declare_dependency(
+    include_directories: include_directories(hdf5_root / 'include'),
+    dependencies: hdf5_dependencies,
+  )
+else
+  hdf5_dep = dependency('hdf5', language: 'c')
+endif
 dependency_map = {
   'HDF5': hdf5_dep,
   'NUMPY': np_dep,

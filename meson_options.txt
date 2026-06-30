@@ -6,9 +6,13 @@ option('printf-trace', type: 'boolean', value: true,
        description: '')
 option('use-compact-storage', type: 'boolean', value: true,
        description: '')
+option('hdf5-root', type: 'string', value: '',
+       description: 'HDF5 installation prefix, used when automatic dependency detection is not available')
+option('hdf5-static', type: 'boolean', value: false,
+       description: 'link HDF5 statically; disables Windows HDF5 DLL import macros')
 # For NAV and APP optional packaging
-option('app', type: 'boolean', value: false,
-       description: 'enable CGNS.NAV')
+option('app', type: 'boolean', value: true,
+       description: 'enable CGNS.APP')
 option('nav', type: 'boolean', value: false,
        description: 'enable CGNS.NAV')
 option('use-vtk', type: 'boolean', value: true,

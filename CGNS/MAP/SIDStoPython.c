@@ -12,7 +12,7 @@
 #include "numpy/arrayobject.h"
 #include "Python.h"
 
-#ifndef CHLONE_ON_WINDOWS
+#if !CHLONE_ON_WINDOWS
 #define S2P_PLATFORM_CURRENT S2P_PLATFORM_UNIX
 #else
 #define S2P_PLATFORM_CURRENT S2P_PLATFORM_WINDOWS
