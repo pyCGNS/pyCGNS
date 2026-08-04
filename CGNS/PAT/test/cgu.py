@@ -112,6 +112,85 @@ class PATTestCase(unittest.TestCase):
         )
         self.assertEqual(CGU.getPathAsTypes(zone, p, legacy=True), [CGK.ZoneBC_ts])
 
+    def test_02PathNormalizeUpward(self):
+        # getPathNormalize is documented as following os.path.normpath, which
+        # is used here as the reference. The single intended difference is the
+        # POSIX rule keeping a leading '//': a CGNS tree has one single root.
+        import itertools
+        import os.path
+        import CGNS.PAT.cgnsutils as CGU
+
+        def reference(path):
+            r = os.path.normpath(path)
+            if r.startswith("//") and not r.startswith("///"):
+                r = r[1:]
+            return r
+
+        tokens = ["", ".", "..", "Base", "Zone"]
+        paths = []
+        seen = set()
+        for size in range(1, 5):
+            for combination in itertools.product(tokens, repeat=size):
+                for absolute in (True, False):
+                    p = ("/" if absolute else "") + "/".join(combination)
+                    if p and p not in seen:
+                        seen.add(p)
+                        paths.append(p)
+        for p in paths:
+            self.assertEqual(CGU.getPathNormalize(p), reference(p), msg=p)
+
+        # an absolute path never normalizes to a path the library itself rejects
+        for p in paths:
+            n = CGU.getPathNormalize(p)
+            if n.startswith("/") and n != "/":
+                self.assertTrue(CGU.checkPath(n), msg=p)
+
+        # spelled out: '..' is clamped at the root of an absolute path...
+        self.assertEqual(CGU.getPathNormalize("/.."), "/")
+        self.assertEqual(CGU.getPathNormalize("/../Base"), "/Base")
+        self.assertEqual(CGU.getPathNormalize("/Base/../../Zone"), "/Zone")
+        self.assertEqual(CGU.getPathNormalize("/Base/Sub/../../../../Zone"), "/Zone")
+        # ...while a relative path keeps the '..' it cannot resolve
+        self.assertEqual(CGU.getPathNormalize("Base/../../Zone"), "../Zone")
+        self.assertEqual(CGU.getPathNormalize("../../Zone"), "../../Zone")
+        self.assertEqual(CGU.getPathNormalize("../.."), "../..")
+        self.assertEqual(CGU.getPathNormalize("../Base/.."), "..")
+        # unchanged cases
+        self.assertEqual(CGU.getPathNormalize("Base/.."), ".")
+        self.assertEqual(
+            CGU.getPathNormalize("///Base/././//Zone/../Zone/./ZoneBC//."),
+            "/Base/Zone/ZoneBC",
+        )
+
+    def test_02PathNormalizeCallers(self):
+        # every path helper builds on getPathNormalize, an absolute path
+        # overshooting the root has to behave as its clamped equivalent
+        import CGNS.PAT.cgnsutils as CGU
+        import CGNS.PAT.cgnskeywords as CGK
+
+        bc = ["ZoneBC", None, [], CGK.ZoneBC_ts]
+        zone = ["Zone", None, [bc], CGK.Zone_ts]
+        base = ["Base", None, [zone], CGK.CGNSBase_ts]
+        tree = [CGK.CGNSTree_s, None, [base], CGK.CGNSTree_ts]
+
+        p = "/Base/Sub/../../../Base/Zone"  # same node as '/Base/Zone'
+        self.assertEqual(CGU.getPathNormalize(p), "/Base/Zone")
+        self.assertTrue(CGU.checkPath(CGU.getPathNormalize(p)))
+        self.assertIs(CGU.getNodeByPath(tree, p), zone)
+        self.assertIs(CGU.getChildrenByPath(tree, p), zone[2])
+        self.assertEqual(CGU.getTypeByPath(tree, p), CGK.Zone_ts)
+        self.assertEqual(CGU.getPathToList(p), ["", "Base", "Zone"])
+        self.assertEqual(CGU.getPathNoRoot(p), "/Base/Zone")
+        self.assertEqual(CGU.getPathLeaf(p), "Zone")
+        self.assertEqual(CGU.getDepth(p), 2)
+        self.assertEqual(CGU.getPathAncestor(p), "/Base")
+        self.assertTrue(CGU.hasSameRootPath("/Base", p))
+        self.assertEqual(CGU.getPathListCommonAncestor(["/Base/Zone", p]), "/Base/Zone")
+        self.assertEqual(
+            CGU.stackPathItem("/Base/Sub", "..", "..", "..", "Base", "Zone"),
+            "/Base/Zone",
+        )
+
     def test_03NodeStructure(self):
         import CGNS.PAT.cgnsutils as CGU
         import CGNS.PAT.cgnserrors as CGE

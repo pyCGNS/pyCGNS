@@ -2746,7 +2746,11 @@ def getPathNormalize(path: str) -> str:
     :arg str path: the path of the node
     :return: The simplified path
     :Remarks:
-      - Uses *os.path.normpath* and replaces \\ if windows os.path
+      - Follows *os.path.normpath* semantics, with a single exception: a
+        CGNS tree has one single root, a leading `//` is collapsed to `/`
+        instead of being kept as POSIX allows
+      - A `..` in an absolute path never goes above the root, it is dropped
+      - A leading `..` in a relative path has no known ancestor, it is kept
       - Before its normalization a path can be **non-compliant**
     """
     if path == "":
@@ -2759,8 +2763,15 @@ def getPathNormalize(path: str) -> str:
     for token in tokens:
         if token in ["", "."]:
             continue
-        if result_tokens and (token == ".."):
-            result_tokens.pop()
+        if token == "..":
+            if result_tokens and (result_tokens[-1] != ".."):
+                # an ancestor is known, go back to it
+                result_tokens.pop()
+            elif not first:
+                # relative path with no known ancestor, the '..' has to stay
+                result_tokens.append(token)
+            # absolute path already at root: '..' has no ancestor to reach,
+            # it is dropped (the root is its own parent)
         else:
             result_tokens.append(token)
     path = "/".join(result_tokens)
