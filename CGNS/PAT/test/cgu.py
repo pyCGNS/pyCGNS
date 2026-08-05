@@ -363,6 +363,106 @@ class PATTestCase(unittest.TestCase):
         CGU.removeChildByName(r, "Data")
         self.assertIsNone(CGU.hasChildName(r, "Data"))
 
+    def test_10PathListCommonAncestor(self):
+        import itertools
+        import CGNS.PAT.cgnsutils as CGU
+        import CGNS.PAT.cgnskeywords as CGK
+
+        paths = [
+            "/",
+            "//",
+            "/Base",
+            "/Base/Zone",
+            "/Base/Zone/ZoneBC",
+            "/Base/./Zone//ZoneBC",
+            "/Base/../Base/Zone",
+            "Base/Zone",
+            "/" + CGK.CGNSTree_s,
+            "/" + CGK.CGNSTree_s + "/Base/Zone",
+            "/" + CGK.CGNSHDF5ROOT_s + "/Base/Zone",
+        ]
+        for p in paths:
+            # the common ancestor of a path with itself is that path
+            self.assertEqual(
+                CGU.getPathListCommonAncestor([p]),
+                CGU.getPathListCommonAncestor([p, p]),
+                msg=p,
+            )
+        for pl in itertools.product(paths, repeat=3):
+            c = CGU.getPathListCommonAncestor(list(pl))
+            # a common ancestor does not depend on the order of the list
+            self.assertEqual(
+                c, CGU.getPathListCommonAncestor(list(pl)[::-1]), msg=str(pl)
+            )
+            # it is already normalized, feeding it back is a no-op
+            self.assertEqual(c, CGU.getPathListCommonAncestor([c]), msg=str(pl))
+            # and it really is an ancestor of every path of the list
+            for p in pl:
+                self.assertTrue(CGU.hasSameRootPath(c, p), msg=str(pl))
+
+        self.assertEqual(CGU.getPathListCommonAncestor([]), "/")
+        self.assertEqual(
+            CGU.getPathListCommonAncestor(
+                ["/Base/Zone/Data-A", "/Base/Zone/Data-D", "/Base/Zone/ZoneBC/BC1"]
+            ),
+            "/Base/Zone",
+        )
+        # a list of one is normalized like a list of many
+        self.assertEqual(
+            CGU.getPathListCommonAncestor(["/Base/./Zone//ZoneBC"]), "/Base/Zone/ZoneBC"
+        )
+        self.assertEqual(CGU.getPathListCommonAncestor(["Base/Zone"]), "/Base/Zone")
+        self.assertEqual(CGU.getPathListCommonAncestor(["/Base/../Base"]), "/Base")
+        self.assertEqual(
+            CGU.getPathListCommonAncestor(["/" + CGK.CGNSHDF5ROOT_s + "/Base/Zone"]),
+            "/Base/Zone",
+        )
+        # the root as any element of the list is the common ancestor
+        self.assertEqual(CGU.getPathListCommonAncestor(["/Base/Zone", "/"]), "/")
+        self.assertEqual(CGU.getPathListCommonAncestor(["/Base/Zone", "//"]), "/")
+        self.assertEqual(
+            CGU.getPathListCommonAncestor(["/Base/Zone", "/" + CGK.CGNSTree_s]), "/"
+        )
+        self.assertEqual(
+            CGU.getPathListCommonAncestor(["/Base/Zone", "/" + CGK.CGNSHDF5ROOT_s]), "/"
+        )
+        self.assertEqual(
+            CGU.getPathListCommonAncestor(["/Base/Zone", "/Base/ZoneBC"]), "/Base"
+        )
+
+    def test_11PathAncestorLevelZero(self):
+        import CGNS.PAT.cgnsutils as CGU
+        import CGNS.PAT.cgnskeywords as CGK
+
+        for p in (
+            "/Base/./Zone//ZoneBC",
+            "Base/Zone/ZoneBC",
+            "/" + CGK.CGNSHDF5ROOT_s + "/Base/Zone",
+            "/Base/../Base/Zone",
+        ):
+            # level 0 is the node itself, normalized like every other level
+            self.assertEqual(
+                CGU.getPathAncestor(p, 0),
+                CGU.getPathNoRoot(CGU.getPathNormalize(p)),
+                msg=p,
+            )
+            self.assertEqual(
+                CGU.getPathAncestor(CGU.getPathAncestor(p, 0)),
+                CGU.getPathAncestor(p),
+                msg=p,
+            )
+        self.assertEqual(
+            CGU.getPathAncestor("/Base/./Zone//ZoneBC", 0), "/Base/Zone/ZoneBC"
+        )
+        self.assertEqual(CGU.getPathAncestor("/Base/Zone", 0), "/Base/Zone")
+        self.assertEqual(CGU.getPathAncestor("Base/Zone", 0, noroot=False), "Base/Zone")
+        self.assertEqual(CGU.getPathAncestor("/", 0), "/")
+        # levels above 0 are unchanged
+        self.assertEqual(CGU.getPathAncestor("/Base/Zone/ZoneBC"), "/Base/Zone")
+        self.assertEqual(CGU.getPathAncestor("/Base/Zone/ZoneBC", 2), "/Base")
+        self.assertEqual(CGU.getPathAncestor("/Base/Zone/ZoneBC", 3), "/")
+        self.assertIsNone(CGU.getPathAncestor("/"))
+
 
 # ---
 print("-" * 70 + "\nCGNS.PAT test suite")
