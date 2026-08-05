@@ -2542,11 +2542,12 @@ def getPathListCommonAncestor(pathlist: List[str]) -> str:
 
     :args list pathlist: list of path strings
     :return: The common root path (at least '/')
+    :Remarks:
+      - Each path is processed by :py:func:`getPathToList`, the result is
+        always a normalized absolute path without the implementation root
     """
     if len(pathlist) == 0:
         return "/"
-    if len(pathlist) == 1:
-        return pathlist[0]
     lp = []
     for p in pathlist:
         if p == "/":
@@ -2554,15 +2555,11 @@ def getPathListCommonAncestor(pathlist: List[str]) -> str:
         lp.append(getPathToList(p, True))
     t = lp[0]
     for p in lp:
+        m = min(len(p), len(t))
         n = 0
-        r = t
-        m = min(len(p), len(r))
-        for n in range(m):
-            if p[n] != r[n]:
-                t = r[:n]
-                break
-        else:
-            t = r[: n + 1]
+        while (n < m) and (p[n] == t[n]):
+            n += 1
+        t = t[:n]
     if t:
         t = [""] + t
         c = "/".join(t)
@@ -2619,8 +2616,11 @@ def getPathAncestor(path: str, level: int = 1, noroot: bool = True) -> Optional[
     :return:
       - The ancestor path
       - If the path is '/' its ancestor is None.
+      - With a level of 0 the path itself, normalized
     """
     lp = getPathToList(path, noroot=noroot)
+    if level == 0:
+        return "/".join(lp) if lp else "/"
     if (len(lp) == 2) and (lp[0] == ""):
         ancestor = "/"
     elif len(lp) > 1:
@@ -2629,8 +2629,6 @@ def getPathAncestor(path: str, level: int = 1, noroot: bool = True) -> Optional[
         ancestor = "/"
     else:
         ancestor = None
-    if level == 0:
-        ancestor = path
     if level > 1:
         ancestor = getPathAncestor(ancestor, level - 1)
     return ancestor
